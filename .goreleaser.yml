@@ -1,6 +1,7 @@
 # .goreleaser.yml for cisco-xe-wireless-restconf-go library package
 
 project_name: cisco-xe-wireless-restconf-go
+version: 2
 
 # Build destination
 github_urls:
@@ -20,7 +21,7 @@ builds:
 archives:
   - id: source
     name_template: '{{ .ProjectName }}-v{{ .Version }}_source'
-    format: tar.gz
+    formats: [ 'tar.gz' ]
     files:
       - "*.go"
       - "*.md"
