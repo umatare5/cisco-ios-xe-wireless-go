@@ -1,0 +1,86 @@
+# .goreleaser.yml for cisco-xe-wireless-restconf-go library package
+
+project_name: cisco-xe-wireless-restconf-go
+
+# Build destination
+github_urls:
+  # set to true if you use a self-signed certificate
+  skip_tls_verify: false
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod verify
+
+# No binary builds for a library package
+builds:
+  - skip: true
+
+# Create source archives for the library
+archives:
+  - id: source
+    name_template: '{{ .ProjectName }}-v{{ .Version }}_source'
+    format: tar.gz
+    files:
+      - "*.go"
+      - "*.md"
+      - "go.mod"
+      - "go.sum"
+      - "LICENSE*"
+
+# Generate documentation
+dockers: []
+
+# Release configuration
+release:
+  prerelease: auto
+  draft: false
+  replace_existing_draft: true
+  header: |
+    ## cisco-xe-wireless-restconf-go v{{ .Version }}
+
+    This release contains the Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
+
+    ### Installation
+    ```bash
+    go get github.com/umatare5/cisco-xe-wireless-restconf-go@v{{ .Version }}
+    ```
+
+    ### What's Changed
+  footer: |
+    **Full Changelog**: https://github.com/umatare5/cisco-xe-wireless-restconf-go/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    ### Documentation
+    - [API Reference](https://pkg.go.dev/github.com/umatare5/cisco-xe-wireless-restconf-go@v{{ .Version }})
+    - [Project README](https://github.com/umatare5/cisco-xe-wireless-restconf-go/blob/{{ .Tag }}/README.md)
+
+# Generate checksums for source archives
+checksum:
+  name_template: "{{ .ProjectName }}-v{{ .Version }}_checksums.txt"
+
+# Changelog configuration
+changelog:
+  use: github
+  sort: asc
+  abbrev: 0
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Documentation updates
+      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: Other work
+      order: 999
+  filters:
+    exclude:
+      - '^test:'
+      - '^chore:'
+      - '^ci:'
+
+# Metadata for Go proxy and pkg.go.dev
+metadata:
+  mod_timestamp: '{{ .CommitTimestamp }}'
