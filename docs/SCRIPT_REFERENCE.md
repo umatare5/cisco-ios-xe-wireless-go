@@ -1,4 +1,4 @@
-# 📋 WNC YANG Model Collection Scripts
+# 📋 Scripts Reference
 
 Scripts for collecting and analyzing YANG models from Cisco Wireless Network Controller.
 
