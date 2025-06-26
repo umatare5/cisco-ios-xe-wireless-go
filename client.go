@@ -42,26 +42,6 @@ func NewClient(config Config) (*Client, error) {
 	return NewClientWithConfig(config)
 }
 
-// NewClientWithLegacyParams creates a new WNC client with the specified controller and access token.
-// This function maintains backwards compatibility with the functional options pattern.
-// Deprecated: Use NewClient(config Config) instead.
-//
-// Example usage:
-//
-//	client, err := wnc.NewClientWithLegacyParams("controller.example.com", "access-token")
-//	client, err := wnc.NewClientWithLegacyParams("controller.example.com", "access-token", wnc.WithTimeout(30*time.Second))
-func NewClientWithLegacyParams(controller, accessToken string, options ...ClientOption) (*Client, error) {
-	config := Config{
-		Controller:         controller,
-		AccessToken:        accessToken,
-		Timeout:            DefaultTimeout,
-		InsecureSkipVerify: false,
-		Logger:             slog.Default(),
-	}
-
-	return NewClientWithConfig(config, options...)
-}
-
 // NewClientWithConfig creates a new WNC client using a configuration struct.
 // This is the preferred method for creating clients as it follows the architectural guidelines.
 // Additional configuration can still be provided through options for flexibility.

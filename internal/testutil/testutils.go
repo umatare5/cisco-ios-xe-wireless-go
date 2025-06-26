@@ -391,19 +391,6 @@ func CheckTestConfig(t *testing.T, config *TestConfig) {
 	}
 }
 
-// CheckEnvironmentVariables checks if required environment variables are set
-// Deprecated: Use CheckTestConfig with NewTestConfigFromEnv instead
-func CheckEnvironmentVariables(t *testing.T) (string, string) {
-	t.Helper()
-
-	config := NewTestConfigFromEnv()
-	if config == nil {
-		t.Skip("Required environment variables not set - skipping test")
-	}
-
-	return config.Controller, config.AccessToken
-}
-
 // CreateRealWNCClient creates a WNC client using the provided credentials for testing against real hardware
 func CreateRealWNCClient(controller, accessToken string, timeoutSeconds int) (*wnc.Client, error) {
 	timeoutDuration := time.Duration(timeoutSeconds) * time.Second
