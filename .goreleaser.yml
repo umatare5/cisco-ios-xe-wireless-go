@@ -27,7 +27,8 @@ archives:
       - "*.md"
       - "go.mod"
       - "go.sum"
-      - "LICENSE*"
+      - "LICENSE"
+      - "README.md"
 
 # Generate documentation
 dockers: []
@@ -52,8 +53,8 @@ release:
     **Full Changelog**: https://github.com/umatare5/cisco-xe-wireless-restconf-go/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ### Documentation
+    - [README](https://github.com/umatare5/cisco-xe-wireless-restconf-go/blob/{{ .Tag }}/README.md)
     - [API Reference](https://pkg.go.dev/github.com/umatare5/cisco-xe-wireless-restconf-go@v{{ .Version }})
-    - [Project README](https://github.com/umatare5/cisco-xe-wireless-restconf-go/blob/{{ .Tag }}/README.md)
 
 # Generate checksums for source archives
 checksum:
