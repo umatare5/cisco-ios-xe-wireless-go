@@ -134,14 +134,14 @@ func (c *Client) createHTTPRequest(ctx context.Context, endpoint string) (*http.
 
 	httpRequest, err := http.NewRequestWithContext(ctx, HTTPMethodGet, requestURL, nil)
 	if err != nil {
-		c.logger.Error("Failed to create HTTP request", "error", err, "url", requestURL)
+		c.logger.Error("Failed to create HTTP request", "error", err)
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	requestHeaders := c.buildHTTPHeaders()
 	c.setRequestHeaders(httpRequest, requestHeaders)
 
-	c.logger.Debug("Sending API request", "method", httpRequest.Method, "url", requestURL)
+	c.logger.Debug("Sending API request", "method", httpRequest.Method)
 	return httpRequest, nil
 }
 
@@ -154,7 +154,7 @@ func (c *Client) executeHTTPRequest(httpRequest *http.Request) (*http.Response, 
 
 	httpResponse, err := httpClient.Do(httpRequest)
 	if err != nil {
-		c.logger.Error("HTTP request failed", "error", err, "url", httpRequest.URL.String())
+		c.logger.Error("HTTP request failed", "error", err)
 
 		// Early return for timeout errors
 		if isDeadlineExceededError(err) {
