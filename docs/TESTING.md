@@ -36,7 +36,7 @@ Integration tests also require the following environment variables:
 | `WNC_CONTROLLER`   | WNC IP address or hostname | `192.168.1.100`        |
 | `WNC_ACCESS_TOKEN` | Base64 encoded credentials | `YWRtaW46cGFzc3dvcmQ=` |
 
-<details><summary>Example of Shell Configuration</summary>
+<details><summary>Environment Variable Configuration</summary>
 
 ```bash
 export WNC_CONTROLLER="192.168.1.100"          # Your WNC IP address
@@ -49,26 +49,33 @@ export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:passwor
 
 The project includes convenient Makefile targets for testing:
 
-| Command                 | Description                                          |
-| ----------------------- | ---------------------------------------------------- |
-| `make test-unit`        | Run unit tests only.                                 |
-| `make test-integration` | Run integration tests. \* Requires the access to WNC |
+| Command                   | Description                                                        |
+| ------------------------- | ------------------------------------------------------------------ |
+| `make test`               | Run all tests (unit + integration).                                |
+| `make test-unit`          | Run unit tests only with enhanced output formatting.               |
+| `make test-integration`   | Run integration tests with enhanced output. \* Requires WNC access |
+| `make test-coverage`      | Run tests with coverage analysis and enhanced output.              |
+| `make test-coverage-html` | Generate HTML coverage report after running tests.                 |
 
-<details><summary>Example of Test Output</summary>
+<details><summary>Example of gotestfmt Enhanced Output</summary>
 
-```bash
-# Successful test run
-PASS: TestNewClient (0.01s)
-PASS: TestGetApOper_Integration (2.34s)
-PASS: TestClientOperations_Integration (1.87s)
+```text
+📦 github.com/umatare5/cisco-xe-wireless-restconf-go (42.9% coverage)
+  ✅ TestClientConfig (0s)
+  ✅ TestClientFunctions (10.67s)
+  ✅ TestClientFunctions/GET_APOper (5.63s)
+    client_test.go:399: GET AP oper request successful
+  🚧 TestClientFunctions (0s)
+    client_test.go:364: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests
 
-# Skipped integration tests (missing environment)
-SKIP: TestGetApOper_Integration (environment variables not set)
-SKIP: TestClientOperations_Integration (environment variables not set)
+📦 github.com/umatare5/cisco-xe-wireless-restconf-go/ap (1.1% coverage)
+  ✅ TestApOperationFailFast/NilClient (0s)
+    oper_test.go:210: Correctly returned error with nil client: invalid client configuration: client cannot be nil
+  🚧 TestAPConfigurationFunctions (0s)
+    cfg_test.go:48: Required environment variables not set - skipping test
 
-# Failed integration test
-FAIL: TestGetApOper_Integration (2.34s)
-    client_test.go:45: Failed to connect to controller: dial timeout
+📦 github.com/umatare5/cisco-xe-wireless-restconf-go/internal/testutil
+    coverage: 0.0% of statements
 ```
 
 </details>
@@ -93,18 +100,57 @@ test_data/
 
 </details>
 
+## 📈 Coverage Analysis
+
+The project supports comprehensive test coverage analysis:
+
+### Coverage Reports
+
+| Output Type     | Command                   | Description                                  |
+| --------------- | ------------------------- | -------------------------------------------- |
+| Terminal Output | `make test-coverage`      | Run tests with coverage analysis.            |
+| Text Summary    | `make test-coverage-html` | Run tests and generate HTML coverage report. |
+
+<details><summary>Example of Coverage Output</summary>
+
+```text
+Coverage report generated at ./tmp/coverage.out
+total: (statements) 6.1%
+
+📦 github.com/umatare5/cisco-xe-wireless-restconf-go (42.9% coverage)
+📦 github.com/umatare5/cisco-xe-wireless-restconf-go/awips (75% coverage)
+📦 github.com/umatare5/cisco-xe-wireless-restconf-go/ap (1.1% coverage)
+```
+
+</details>
+
 ## 📚️ Appendix
 
 ### Testing Tips
 
 For efficient testing workflow, start with unit tests and gradually move to integration tests.
 
-1. **Unit Tests First**: `make test-unit` - Ensure basic functionality.
-2. **Environment Verification**: Check controller access to verify connectivity and credentials.
-3. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
-4. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
-5. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
-6. **Run All Tests**: `make test` - Run all tests including unit and integration tests.
+1. **Install Dependencies**: `make deps` - Install gotestfmt and other development tools.
+2. **Unit Tests First**: `make test-unit` - Ensure basic functionality with enhanced output.
+3. **Environment Setup**: Configure environment variables for integration tests.
+4. **Environment Verification**: Check controller access to verify connectivity and credentials.
+5. **Coverage Analysis**: `make test-coverage` - Run tests with coverage analysis.
+6. **HTML Coverage Report**: `make test-coverage-html` - Generate detailed HTML coverage report.
+7. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
+8. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
+9. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
+10. **Run All Tests**: `make test` - Run all tests including unit and integration tests.
+
+### 🔧 Development Dependencies
+
+The project uses several tools to enhance the testing experience:
+
+- **gotestfmt**: Provides emoji-enhanced, human-readable test output
+- **golangci-lint**: Code linting and static analysis
+- **goreleaser**: Release automation
+
+> [!Note]
+> Install all dependencies with: `make deps`
 
 ### References
 
