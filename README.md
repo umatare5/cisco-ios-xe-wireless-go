@@ -171,7 +171,7 @@ I welcome contributions to improve this library. Please follow these guidelines 
 
 ## 🙏 Acknowledgments
 
-This code was developed with the assistance of **GitHub Copilot Agent Mode**, an advanced AI-powered development assistant that helped create reliable, well-structured code for Cisco Catalyst 9800 WNC RESTCONF interactions. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge, code, and expertise to open source projects and public repositories.
+This code was developed with the assistance of **\*\*GitHub Copilot Agent Mode\*\***. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge, code, and expertise to open source projects and public repositories.
 
 ## 📄 License
 
