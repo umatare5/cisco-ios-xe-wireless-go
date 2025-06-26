@@ -4,7 +4,6 @@ tmp/
 # Test data files
 tests/
 test_data/
-*.json
 
 # Build artifacts
 *.exe
