@@ -53,8 +53,6 @@ The project includes convenient Makefile targets for testing:
 | ------------------------- | ------------------------------------------------------------------- |
 | `make test-unit`          | Run unit tests. WNC access is not required.                         |
 | `make test-integration`   | Run integration tests. **WNC access is required.**                  |
-| `make test-coverage`      | Run tests with coverage analysis and generate a coverage report.    |
-| `make test-coverage-html` | Run tests with coverage analysis and generate HTML coverage report. |
 
 <details><summary>Example of command result</summary>
 
@@ -108,7 +106,7 @@ The project supports comprehensive test coverage analysis:
 | Output Type     | Command                   | Description                                  |
 | --------------- | ------------------------- | -------------------------------------------- |
 | Terminal Output | `make test-coverage`      | Run tests with coverage analysis.            |
-| HTTP Report     | `make test-coverage-html` | Run tests and generate HTML coverage report. |
+| HTML Report     | `make test-coverage-html` | Run tests and generate HTML coverage report. |
 
 <details><summary>Example of Coverage Output</summary>
 
