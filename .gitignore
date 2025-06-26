@@ -21,7 +21,7 @@ test_data/
 .idea/
 *.swp
 *.swo
-.copilot_reports
+.copilot_reports/
 
 # OS files
 .DS_Store
