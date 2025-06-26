@@ -45,15 +45,21 @@ package main
 import (
     "context"
     "fmt"
-    "log"
     "time"
 
     wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
 func main() {
-    // Create client with controller and access token
-    client, err := wnc.NewClient("192.168.1.100", "YWRtaW46eW91ci1wYXNzd29yZA==")
+    // Create configuration
+    config := wnc.Config{
+        Controller:  "192.168.1.100",
+        AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
+        Timeout:     30 * time.Second,
+    }
+
+    // Create client with configuration
+    client, err := wnc.NewClient(config)
     if err != nil {
         fmt.Printf("Failed to create client: %v\n", err)
         return
@@ -85,13 +91,15 @@ import (
     wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
-// Create client with custom timeout and skip TLS verification
-client, err := wnc.NewClient(
-    "192.168.1.100",
-    "YWRtaW46eW91ci1wYXNzd29yZA==",
-    wnc.WithTimeout(30*time.Second),
-    wnc.WithInsecureSkipVerify(true), // Only for development
-)
+// Create client with custom configuration
+config := wnc.Config{
+    Controller:         "192.168.1.100",
+    AccessToken:        "YWRtaW46eW91ci1wYXNzd29yZA==",
+    Timeout:            30 * time.Second,
+    InsecureSkipVerify: true, // Only for development
+}
+
+client, err := wnc.NewClient(config)
 if err != nil {
     fmt.Printf("Failed to create client: %v\n", err)
     return
@@ -117,22 +125,26 @@ logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
     Level: slog.LevelDebug,
 }))
 
-client, err := wnc.NewClient(
-    "192.168.1.100",
-    "YWRtaW46eW91ci1wYXNzd29yZA==",
-    wnc.WithLogger(logger),
-)
+config := wnc.Config{
+    Controller:  "192.168.1.100",
+    AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
+    Logger:      logger,
+}
+
+client, err := wnc.NewClient(config)
 ```
 
 ## ⚙️ Configuration Options
 
-All configuration options are applied during client creation and cannot be changed afterward.
+All configuration options are set in the `Config` struct during client creation.
 
-| Option                   | Parameter       | Description                                          |
-| ------------------------ | --------------- | ---------------------------------------------------- |
-| `WithTimeout`            | `time.Duration` | Sets custom timeout for HTTP requests (default: 20s) |
-| `WithInsecureSkipVerify` | `bool`          | Skips TLS certificate verification (dev only)        |
-| `WithLogger`             | `*slog.Logger`  | Sets custom structured logger instance               |
+| Field                | Type            | Description                                    |
+| -------------------- | --------------- | ---------------------------------------------- |
+| `Controller`         | `string`        | Hostname or IP address of the WNC (required)   |
+| `AccessToken`        | `string`        | Authentication token for API access (required) |
+| `Timeout`            | `time.Duration` | HTTP request timeout (default: 15s)            |
+| `InsecureSkipVerify` | `bool`          | Skips TLS certificate verification (dev only)  |
+| `Logger`             | `*slog.Logger`  | Custom structured logger instance              |
 
 ## 🌐 API Reference
 
