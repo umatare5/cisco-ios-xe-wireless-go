@@ -5,7 +5,9 @@ applyTo: "**/*.md"
 
 # GitHub Copilot Agent Mode – Markdown Documentation Instructions
 
-Copilot **MUST** comply with all instructions described in this document when editing or creating Markdown files within this repository.
+Copilot **MUST** comply with all instructions described in this document when editing or creating any Markdown files in this repository.
+
+However, when there are conflicts between this document and `general.instructions.md`, **ALWAYS** prioritize the instructions in `general.instructions.md`.
 
 ---
 

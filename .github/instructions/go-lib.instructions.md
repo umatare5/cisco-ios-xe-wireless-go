@@ -1,11 +1,13 @@
 ---
-description: Go Development Instructions
+description: Go Library Development Instructions
 applyTo: "**/*.go"
 ---
 
-# GitHub Copilot Agent Mode – Go Development Instructions
+# GitHub Copilot Agent Mode – Go Library Development Instructions
 
-Copilot **MUST** comply with all instructions described in this document when editing or creating any code or documentation in the Go library.
+Copilot **MUST** comply with all instructions described in this document when editing or creating any Go code in this repository.
+
+However, when there are conflicts between this document and `general.instructions.md`, **ALWAYS** prioritize the instructions in `general.instructions.md`.
 
 ---
 

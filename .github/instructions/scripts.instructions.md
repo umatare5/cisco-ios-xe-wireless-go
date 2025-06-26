@@ -1,11 +1,13 @@
 ---
-description: Bash Shell Scripting Instructions
+description: Bash Shell Scripts Instructions
 applyTo: "**/*.sh"
 ---
 
-# GitHub Copilot Agent Mode – Bash Shell Scripting Instructions
+# GitHub Copilot Agent Mode – Bash Shell Scripts Instructions
 
-Copilot **MUST** comply with all instructions described in this document when editing or creating any code in this repository.
+Copilot **MUST** comply with all instructions described in this document when editing or creating any bash shell scripts in this repository.
+
+However, when there are conflicts between this document and `general.instructions.md`, **ALWAYS** prioritize the instructions in `general.instructions.md`.
 
 ---
 
