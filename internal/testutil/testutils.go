@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	wnc "github.com/umatare5/cisco-xe-wireless-restconf-go"
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
 // Test timeout constants in seconds for better readability

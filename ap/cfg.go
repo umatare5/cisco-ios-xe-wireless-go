@@ -4,7 +4,7 @@ package ap
 import (
 	"context"
 
-	wnc "github.com/umatare5/cisco-xe-wireless-restconf-go"
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
 const (

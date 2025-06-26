@@ -1,4 +1,4 @@
-module github.com/umatare5/cisco-xe-wireless-restconf-go
+module github.com/umatare5/cisco-ios-xe-wireless-go
 
 go 1.24.4
 

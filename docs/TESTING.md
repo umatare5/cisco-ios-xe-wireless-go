@@ -60,7 +60,7 @@ The project includes convenient Makefile targets for testing:
 <details><summary>Example of gotestfmt Enhanced Output</summary>
 
 ```text
-📦 github.com/umatare5/cisco-xe-wireless-restconf-go (42.9% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
   ✅ TestClientConfig (0s)
   ✅ TestClientFunctions (10.67s)
   ✅ TestClientFunctions/GET_APOper (5.63s)
@@ -68,13 +68,13 @@ The project includes convenient Makefile targets for testing:
   🚧 TestClientFunctions (0s)
     client_test.go:364: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests
 
-📦 github.com/umatare5/cisco-xe-wireless-restconf-go/ap (1.1% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (1.1% coverage)
   ✅ TestApOperationFailFast/NilClient (0s)
     oper_test.go:210: Correctly returned error with nil client: invalid client configuration: client cannot be nil
   🚧 TestAPConfigurationFunctions (0s)
     cfg_test.go:48: Required environment variables not set - skipping test
 
-📦 github.com/umatare5/cisco-xe-wireless-restconf-go/internal/testutil
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil
     coverage: 0.0% of statements
 ```
 
@@ -117,9 +117,9 @@ The project supports comprehensive test coverage analysis:
 Coverage report generated at ./tmp/coverage.out
 total: (statements) 6.1%
 
-📦 github.com/umatare5/cisco-xe-wireless-restconf-go (42.9% coverage)
-📦 github.com/umatare5/cisco-xe-wireless-restconf-go/awips (75% coverage)
-📦 github.com/umatare5/cisco-xe-wireless-restconf-go/ap (1.1% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/awips (75% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (1.1% coverage)
 ```
 
 </details>

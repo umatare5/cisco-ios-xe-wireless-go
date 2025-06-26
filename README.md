@@ -1,9 +1,9 @@
-# cisco-xe-wireless-restconf-go
+# cisco-ios-xe-wireless-go
 
-![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-xe-wireless-restconf-go?label=Latest%20version)
-[![Go Reference](https://pkg.go.dev/badge/umatare5/cisco-xe-wireless-restconf-go.svg)](https://pkg.go.dev/github.com/umatare5/cisco-xe-wireless-restconf-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/umatare5/cisco-xe-wireless-restconf-go?style=flat-square)](https://goreportcard.com/report/github.com/umatare5/cisco-xe-wireless-restconf-go)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-xe-wireless-restconf-go/blob/main/LICENSE)
+![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
+[![Go Reference](https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg)](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go?style=flat-square)](https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/main/LICENSE)
 
 A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
@@ -20,7 +20,7 @@ Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
 ## 📦 Installation
 
 ```bash
-go get github.com/umatare5/cisco-xe-wireless-restconf-go
+go get github.com/umatare5/cisco-ios-xe-wireless-go
 ```
 
 ## 🚀 Quick Start
@@ -48,7 +48,7 @@ import (
     "log"
     "time"
 
-    wnc "github.com/umatare5/cisco-xe-wireless-restconf-go"
+    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
 func main() {
@@ -82,7 +82,7 @@ import (
     "log/slog"
     "time"
 
-    wnc "github.com/umatare5/cisco-xe-wireless-restconf-go"
+    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
 // Create client with custom timeout and skip TLS verification
@@ -110,7 +110,7 @@ import (
     "log/slog"
     "os"
 
-    wnc "github.com/umatare5/cisco-xe-wireless-restconf-go"
+    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
 logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{

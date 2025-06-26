@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-xe-wireless-restconf-go/internal/testutil"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================

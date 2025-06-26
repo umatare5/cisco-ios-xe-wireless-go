@@ -1,4 +1,4 @@
-# Makefile for cisco-xe-wireless-restconf-go Go library package
+# Makefile for cisco-ios-xe-wireless-go Go library package
 
 .PHONY: help check clean deps lint test test-unit test-integration test-coverage test-coverage-html
 

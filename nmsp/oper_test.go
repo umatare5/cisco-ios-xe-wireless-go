@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	wnc "github.com/umatare5/cisco-xe-wireless-restconf-go"
-	"github.com/umatare5/cisco-xe-wireless-restconf-go/internal/testutil"
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================

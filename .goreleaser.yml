@@ -1,6 +1,6 @@
-# .goreleaser.yml for cisco-xe-wireless-restconf-go library package
+# .goreleaser.yml for cisco-ios-xe-wireless-go library package
 
-project_name: cisco-xe-wireless-restconf-go
+project_name: cisco-ios-xe-wireless-go
 version: 2
 
 # Build destination
@@ -39,22 +39,22 @@ release:
   draft: false
   replace_existing_draft: true
   header: |
-    ## cisco-xe-wireless-restconf-go v{{ .Version }}
+    ## cisco-ios-xe-wireless-go v{{ .Version }}
 
     This release contains the Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
     ### Installation
     ```bash
-    go get github.com/umatare5/cisco-xe-wireless-restconf-go@v{{ .Version }}
+    go get github.com/umatare5/cisco-ios-xe-wireless-go@v{{ .Version }}
     ```
 
     ### What's Changed
   footer: |
-    **Full Changelog**: https://github.com/umatare5/cisco-xe-wireless-restconf-go/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/umatare5/cisco-ios-xe-wireless-go/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ### Documentation
-    - [README](https://github.com/umatare5/cisco-xe-wireless-restconf-go/blob/{{ .Tag }}/README.md)
-    - [API Reference](https://pkg.go.dev/github.com/umatare5/cisco-xe-wireless-restconf-go@v{{ .Version }})
+    - [README](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/{{ .Tag }}/README.md)
+    - [API Reference](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@v{{ .Version }})
 
 # Generate checksums for source archives
 checksum:
