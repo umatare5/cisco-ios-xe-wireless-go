@@ -169,6 +169,19 @@ I welcome contributions to improve this library. Please follow these guidelines 
 5. **Ensure all tests pass** including unit and integration tests
 6. **Submit a pull request** with a clear description of changes
 
+## 🚀 Release Process
+
+To release a new version:
+
+1. **Update the version** in the `VERSION` file
+2. **Submit a pull request** with the updated `VERSION` file
+
+Once merged, the GitHub Workflow will automatically:
+
+- **Create and push a new tag** based on the `VERSION` file
+
+After that, manual release via [GitHub Actions: release workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/release.yaml).
+
 ## 🙏 Acknowledgments
 
 This code was developed with the assistance of **\*\*GitHub Copilot Agent Mode\*\***. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
