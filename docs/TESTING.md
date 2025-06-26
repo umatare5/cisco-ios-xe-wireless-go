@@ -108,7 +108,7 @@ The project supports comprehensive test coverage analysis:
 | Output Type     | Command                   | Description                                  |
 | --------------- | ------------------------- | -------------------------------------------- |
 | Terminal Output | `make test-coverage`      | Run tests with coverage analysis.            |
-| Text Summary    | `make test-coverage-html` | Run tests and generate HTML coverage report. |
+| HTTP Report     | `make test-coverage-html` | Run tests and generate HTML coverage report. |
 
 <details><summary>Example of Coverage Output</summary>
 
