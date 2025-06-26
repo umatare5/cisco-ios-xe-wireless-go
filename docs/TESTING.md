@@ -49,17 +49,14 @@ export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:passwor
 
 The project includes convenient Makefile targets for testing:
 
-| Command                   | Description                                                        |
-| ------------------------- | ------------------------------------------------------------------ |
-| `make test-unit`          | Run unit tests only with enhanced output formatting.               |
-| `make test-integration`   | Run integration tests with enhanced output. \* Requires WNC access |
-| `make test-coverage`      | Run tests with coverage analysis and enhanced output.              |
-| `make test-coverage-html` | Generate HTML coverage report after running tests.                 |
+| Command                   | Description                                                         |
+| ------------------------- | ------------------------------------------------------------------- |
+| `make test-unit`          | Run unit tests. WNC access is not required.                         |
+| `make test-integration`   | Run integration tests. **WNC access is required.**                  |
+| `make test-coverage`      | Run tests with coverage analysis and generate a coverage report.    |
+| `make test-coverage-html` | Run tests with coverage analysis and generate HTML coverage report. |
 
-> [!NOTE]
-> Run `make test-unit` for quick validation without WNC setup, and `make test-integration` for comprehensive testing with a real controller.
-
-<details><summary>Example of gotestfmt Enhanced Output</summary>
+<details><summary>Example of command result</summary>
 
 ```text
 📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
