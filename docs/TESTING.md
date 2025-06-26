@@ -51,11 +51,13 @@ The project includes convenient Makefile targets for testing:
 
 | Command                   | Description                                                        |
 | ------------------------- | ------------------------------------------------------------------ |
-| `make test`               | Run all tests (unit + integration).                                |
 | `make test-unit`          | Run unit tests only with enhanced output formatting.               |
 | `make test-integration`   | Run integration tests with enhanced output. \* Requires WNC access |
 | `make test-coverage`      | Run tests with coverage analysis and enhanced output.              |
 | `make test-coverage-html` | Generate HTML coverage report after running tests.                 |
+
+> [!NOTE]
+> Run `make test-unit` for quick validation without WNC setup, and `make test-integration` for comprehensive testing with a real controller.
 
 <details><summary>Example of gotestfmt Enhanced Output</summary>
 
@@ -139,7 +141,9 @@ For efficient testing workflow, start with unit tests and gradually move to inte
 7. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
 8. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
 9. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
-10. **Run All Tests**: `make test` - Run all tests including unit and integration tests.
+
+> [!TIP]
+> For comprehensive testing, run both `make test-unit` and `make test-integration` sequentially to validate all functionality.
 
 ### 🔧 Development Dependencies
 

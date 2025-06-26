@@ -1,23 +1,17 @@
 # Makefile for cisco-ios-xe-wireless-go Go library package
 
-.PHONY: help check clean deps lint test test-unit test-integration test-coverage test-coverage-html
+.PHONY: help clean deps lint test-unit test-integration test-coverage test-coverage-html
 
 # Default target
 help:
 	@echo "Available targets:"
-	@echo "  check            - Run tests and linting"
 	@echo "  clean            - Clean build artifacts"
 	@echo "  deps             - Install development dependencies (including gotestfmt)"
 	@echo "  lint             - Run linting tools"
-	@echo "  test             - Run all tests"
 	@echo "  test-unit        - Run unit tests only"
 	@echo "  test-integration - Run integration tests (requires environment variables)"
 	@echo "  test-coverage    - Run tests with coverage analysis"
 	@echo "  test-coverage-html - Generate HTML coverage report"
-
-# Run comprehensive checks
-check: test lint
-	@echo "All checks completed successfully!"
 
 # Clean build artifacts
 clean:
@@ -52,10 +46,6 @@ lint:
 		echo "golangci-lint not found, running go vet instead..."; \
 		cd ../.. && go vet ./...; \
 	fi
-
-# Run tests
-test: test-unit test-integration
-	@echo "Running tests..."
 
 .PHONY: test-unit
 test-unit:
