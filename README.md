@@ -1,5 +1,10 @@
 # cisco-xe-wireless-restconf-go
 
+![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-xe-wireless-restconf-go?label=Latest%20version)
+[![Go Reference](https://pkg.go.dev/badge/umatare5/cisco-xe-wireless-restconf-go.svg)](https://pkg.go.dev/github.com/umatare5/cisco-xe-wireless-restconf-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/umatare5/cisco-xe-wireless-restconf-go?style=flat-square)](https://goreportcard.com/report/github.com/umatare5/cisco-xe-wireless-restconf-go)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-xe-wireless-restconf-go/blob/main/LICENSE)
+
 A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
 - **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
