@@ -19,9 +19,9 @@ Copilot **MUST** comply with all instructions described in this document when ed
 
 ---
 
-## 💡 Special Instructions for Claude Sonnet 4 (Preview)
+## 💡 Special Instructions for Claude Sonnet 4
 
-When you using Claude Sonnet 4 (Preview):
+When you using Claude Sonnet 4:
 
 - **MUST** execute at the start of the prompt:
 
