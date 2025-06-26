@@ -108,7 +108,7 @@ func NewClientWithConfig(config Config, options ...ClientOption) (*Client, error
 // Returns an error if the request fails or if the response cannot be unmarshaled.
 func (c *Client) SendAPIRequest(ctx context.Context, endpoint string, result any) error {
 	if ctx == nil {
-		ctx = context.Background()
+		return fmt.Errorf("%w: context cannot be nil", ErrInvalidConfiguration)
 	}
 
 	requestContext, cancelFunc := context.WithTimeout(ctx, c.timeout)
