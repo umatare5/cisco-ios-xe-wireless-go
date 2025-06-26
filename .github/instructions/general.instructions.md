@@ -29,12 +29,14 @@ When you using Claude Sonnet 4:
 
 - **MUST** comply with the following during prompt processing:
 
+  - Use the command format corresponding to confirmed shell at the start.
   - Use `./tmp` for all temporary files, scripts and directories, including `.test` binaries and coverage reports.
 
 - **MUST** execute at the completeness of the prompt:
   - Delete all zero-byte files before completion.
   - **When modified go code**, run `go build` before completion. Repeat modifications until `go build` completeness.
   - **When modified go code**, run `make test` before completion. Repeat modifications until all tests pass.
+  - **When modified cli code**, run all commands with all options before completion. Repeat modifications until all scripts work.
   - **When modified shell scripts**, run all scripts under `./scripts/` before completion. Repeat modifications until all scripts work.
   - Summarize results and save to `./.copilot_reports` before completion. The name format should be `<prompt_title>_<timestamp YYYY-MM-DD_HH-mm-ss>.md`.
 

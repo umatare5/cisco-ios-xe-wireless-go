@@ -5,12 +5,6 @@ applyTo: "**/*.md"
 
 # GitHub Copilot Agent Mode – Markdown Documentation Instructions
 
-This repository's documentation, including `README.md`, `TESTING.md`, and other guides, serves to clearly explain the project's purpose, functionality, and usage.
-
-These documents provide essential information for users and developers, covering installation, configuration, API references, testing procedures, and contribution guidelines. They are crucial for ensuring the project is accessible, understandable, and easy to contribute to.
-
-All documentation is designed to be **clear, consistent, easy to navigate, and professional**, with a strong emphasis on overall quality, readability, and user experience.
-
 Copilot **MUST** comply with all instructions described in this document when editing or creating Markdown files within this repository.
 
 ---

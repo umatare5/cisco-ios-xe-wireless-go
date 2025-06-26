@@ -5,14 +5,6 @@ applyTo: "**/*.go"
 
 # GitHub Copilot Agent Mode – Go Development Instructions
 
-This repository has a Go client library (SDK) for the RESTCONF API of the Cisco Catalyst C9800 Wireless LAN Controller.
-
-This library enables developers to communicate with Cisco Catalyst 9800 controllers in an idiomatic, robust, simple, and maintainable way using Go.
-
-It is intended to be imported and used as a component in other Go applications—not as a standalone application.
-
-This Go SDK is designed to be **clear, stable, easy to use, highly readable, and maintainable**. It strictly follows established best practices for Go development, API design, and technical documentation, with a strong emphasis on overall code quality, readability, and maintainability.
-
 Copilot **MUST** comply with all instructions described in this document when editing or creating any code or documentation in the Go library.
 
 ---

@@ -5,15 +5,7 @@ applyTo: "**/*.sh"
 
 # GitHub Copilot Agent Mode – Bash Shell Scripting Instructions
 
-This repository's shell scripts are for collecting and analyzing YANG models from Cisco Wireless Network Controllers (WNC).
-
-These scripts help users discover available YANG models, retrieve model details, and support development, testing, validation, and automation tasks for Cisco Catalyst 9800 controllers.
-
-These tools are intended both for direct use and as companions to the Go-based RESTCONF API client library implemented in this repository.
-
-All scripts are designed to be **clear, robust, easy to use, highly readable, and maintainable**, and to follow established best practices for shell scripting and documentation, with a strong emphasis on overall script quality, readability, and maintainability.
-
-Copilot **MUST** comply with all instructions described in this document when editing or creating scripts within the `scripts` directory.
+Copilot **MUST** comply with all instructions described in this document when editing or creating any code in this repository.
 
 ---
 
