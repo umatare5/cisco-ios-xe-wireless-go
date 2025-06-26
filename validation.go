@@ -1,4 +1,3 @@
-// Package wnc provides validation functions for the Cisco Wireless Network Controller API client.
 package wnc
 
 import "time"

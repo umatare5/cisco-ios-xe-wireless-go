@@ -1,4 +1,3 @@
-// Package wnc provides error types and handling for the Cisco Wireless Network Controller API client.
 package wnc
 
 import (

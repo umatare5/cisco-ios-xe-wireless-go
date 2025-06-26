@@ -1,4 +1,4 @@
-// Package wnc provides a client for interacting with the Cisco Wireless Network Controller API.
+// Package wnc provides the components for interacting with the Cisco Wireless Network Controller API.
 package wnc
 
 import (

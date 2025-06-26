@@ -1,4 +1,3 @@
-// Package wnc provides RESTCONF API configuration constants and URL building utilities for the Cisco Wireless Network Controller.
 package wnc
 
 import (

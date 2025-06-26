@@ -1,4 +1,3 @@
-// Package wnc provides HTTP helper functions and utilities for the Cisco Wireless Network Controller API client.
 package wnc
 
 import (

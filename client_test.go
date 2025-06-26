@@ -1,4 +1,3 @@
-// Package wnc provides test functionality for the Cisco Wireless Network Controller API client.
 package wnc
 
 import (

@@ -1,4 +1,3 @@
-// Package wnc provides configuration types and options for the Cisco Wireless Network Controller API client.
 package wnc
 
 import (

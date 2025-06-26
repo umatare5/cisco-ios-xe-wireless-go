@@ -1,4 +1,3 @@
-// Package wnc provides common constants used throughout the Cisco WNC SDK.
 package wnc
 
 import (
