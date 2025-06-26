@@ -184,7 +184,7 @@ After that, manual release via [GitHub Actions: release workflow](https://github
 
 ## 🙏 Acknowledgments
 
-This code was developed with the assistance of **\*\*GitHub Copilot Agent Mode\*\***. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
+This code was developed with the assistance of **GitHub Copilot Agent Mode**. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
 
 ## 📄 License
 
