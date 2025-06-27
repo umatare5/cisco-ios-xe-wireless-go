@@ -123,7 +123,11 @@ func (c *Client) SendAPIRequest(ctx context.Context, endpoint string, result any
 	if err != nil {
 		return err
 	}
-	defer httpResponse.Body.Close()
+	defer func() {
+		if closeErr := httpResponse.Body.Close(); closeErr != nil {
+			c.logger.Error("Failed to close response body", "error", closeErr)
+		}
+	}()
 
 	return c.processHTTPResponse(httpResponse, endpoint, result)
 }
