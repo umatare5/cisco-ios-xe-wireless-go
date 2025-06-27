@@ -17,29 +17,6 @@ type GeneralOperTestDataCollector struct {
 	Data map[string]interface{} `json:"general_oper_test_data"`
 }
 
-func newGeneralOperTestDataCollector() *GeneralOperTestDataCollector {
-	return &GeneralOperTestDataCollector{
-		Data: make(map[string]interface{}),
-	}
-}
-
-func (collector *GeneralOperTestDataCollector) runTestAndCollectData(t *testing.T, testName string, testFunc func() (interface{}, error)) {
-	data, err := testFunc()
-	if err != nil {
-		t.Logf("%s returned error: %v", testName, err)
-		collector.Data[testName] = map[string]interface{}{
-			"error":   err.Error(),
-			"success": false,
-		}
-	} else {
-		t.Logf("%s executed successfully", testName)
-		collector.Data[testName] = map[string]interface{}{
-			"data":    data,
-			"success": true,
-		}
-	}
-}
-
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
 	return testutil.CreateTestClientFromEnv(t)

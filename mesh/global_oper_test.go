@@ -26,10 +26,6 @@ type MeshGlobalOperTestDataCollector struct {
 	Data map[string]interface{} `json:"mesh_global_oper_test_data"`
 }
 
-var meshGlobalOperTestDataCollector = MeshGlobalOperTestDataCollector{
-	Data: make(map[string]interface{}),
-}
-
 // =============================================================================
 // 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
 // =============================================================================

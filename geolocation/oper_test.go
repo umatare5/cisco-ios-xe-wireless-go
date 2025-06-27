@@ -26,13 +26,6 @@ type GeolocationOperTestDataCollector struct {
 	Data map[string]interface{} `json:"geolocation_oper_test_data"`
 }
 
-// newGeolocationOperTestDataCollector creates a new test data collector
-func newGeolocationOperTestDataCollector() *GeolocationOperTestDataCollector {
-	return &GeolocationOperTestDataCollector{
-		Data: make(map[string]interface{}),
-	}
-}
-
 // =============================================================================
 // 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
 // =============================================================================

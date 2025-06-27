@@ -153,7 +153,9 @@ func TestGetAwipsOper(t *testing.T) {
 		t.Logf("GetAwipsOper response received")
 
 		// Save to file for analysis
-		testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_oper_data"), result)
+		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_oper_data"), result); err != nil {
+			t.Logf("Failed to save test data: %v", err)
+		}
 	})
 
 }
@@ -177,7 +179,9 @@ func TestGetAwipsPerApInfo(t *testing.T) {
 		}
 
 		t.Logf("GetAwipsPerApInfo response received")
-		testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_per_ap_info_data"), result)
+		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_per_ap_info_data"), result); err != nil {
+			t.Logf("Failed to save test data: %v", err)
+		}
 	})
 
 }
@@ -201,7 +205,9 @@ func TestGetAwipsDwldStatus(t *testing.T) {
 		}
 
 		t.Logf("GetAwipsDwldStatus response received")
-		testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_dwld_status_data"), result)
+		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_dwld_status_data"), result); err != nil {
+			t.Logf("Failed to save test data: %v", err)
+		}
 	})
 
 }
@@ -225,7 +231,9 @@ func TestGetAwipsApDwldStatus(t *testing.T) {
 		}
 
 		t.Logf("GetAwipsApDwldStatus response received")
-		testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_ap_dwld_status_data"), result)
+		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_ap_dwld_status_data"), result); err != nil {
+			t.Logf("Failed to save test data: %v", err)
+		}
 	})
 
 }
@@ -284,7 +292,9 @@ func TestAWIPSComprehensiveOperations(t *testing.T) {
 	}
 
 	// Save comprehensive results
-	testutil.SaveTestDataToFile("test_data_awips_comprehensive_test_results.json", allResults)
+	if err := testutil.SaveTestDataToFile("test_data_awips_comprehensive_test_results.json", allResults); err != nil {
+		t.Logf("Failed to save comprehensive test results: %v", err)
+	}
 }
 
 // TestAWIPSOperClientInterfaceCompliance verifies that Client implements all AWIPS methods

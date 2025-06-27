@@ -22,10 +22,6 @@ type RrmGlobalOperTestDataCollector struct {
 	Data map[string]interface{} `json:"rrm_global_oper_test_data"`
 }
 
-var rrmGlobalOperTestDataCollector = RrmGlobalOperTestDataCollector{
-	Data: make(map[string]interface{}),
-}
-
 // =============================================================================
 // 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
 // =============================================================================
