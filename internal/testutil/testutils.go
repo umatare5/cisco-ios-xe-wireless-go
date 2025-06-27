@@ -154,7 +154,12 @@ func SaveTestDataToFile(filename string, data interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer targetFile.Close()
+	defer func() {
+		if closeErr := targetFile.Close(); closeErr != nil {
+			// Log error but don't return it since we're in a defer
+			fmt.Printf("Warning: Failed to close file %s: %v\n", targetFilePath, closeErr)
+		}
+	}()
 
 	jsonEncoder := json.NewEncoder(targetFile)
 	jsonEncoder.SetIndent(JSONIndentPrefix, JSONIndentString)
@@ -468,7 +473,12 @@ func executeAPIRequest(client *http.Client, req *http.Request) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			// Log error but don't return it since we're in a defer
+			fmt.Printf("Warning: Failed to close response body: %v\n", closeErr)
+		}
+	}()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
