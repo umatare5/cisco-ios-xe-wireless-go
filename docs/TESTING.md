@@ -49,10 +49,10 @@ export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:passwor
 
 The project includes convenient Makefile targets for testing:
 
-| Command                   | Description                                                         |
-| ------------------------- | ------------------------------------------------------------------- |
-| `make test-unit`          | Run unit tests. WNC access is not required.                         |
-| `make test-integration`   | Run integration tests. **WNC access is required.**                  |
+| Command                 | Description                                        |
+| ----------------------- | -------------------------------------------------- |
+| `make test-unit`        | Run unit tests. WNC access is not required.        |
+| `make test-integration` | Run integration tests. **WNC access is required.** |
 
 <details><summary>Example of command result</summary>
 
