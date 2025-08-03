@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-)
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
@@ -19,7 +19,7 @@ import (
 
 // TestRrmConfigurationFunctions tests all RRM configuration functions
 func TestRrmConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 
@@ -89,7 +89,7 @@ func TestRrmCfgEndpointConstants(t *testing.T) {
 
 // TestRrmCfgClientMethods tests client method existence
 func TestRrmCfgClientMethods(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 

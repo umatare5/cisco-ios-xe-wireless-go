@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-// Test constants
+// Test constants - using standard timeouts
 const (
-	defaultTestTimeout  = 20 * time.Second
-	quickTestTimeout    = 5 * time.Second
-	extendedTestTimeout = 30 * time.Second
-	microTestTimeout    = 2 * time.Microsecond
+	clientTestTimeout     = 20 * time.Second
+	clientQuickTimeout    = 5 * time.Second
+	clientExtendedTimeout = 30 * time.Second
+	clientMicroTimeout    = 2 * time.Microsecond
 )
 
-// createTestConfig creates a test configuration from environment variables
-func createTestConfig(t *testing.T) *testConfig {
+// createClientTestConfig creates a test configuration from environment variables
+func createClientTestConfig(t *testing.T) *clientTestConfig {
 	t.Helper()
 
 	controller := os.Getenv(EnvVarController)
@@ -26,15 +26,15 @@ func createTestConfig(t *testing.T) *testConfig {
 		t.Skip("WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests")
 	}
 
-	return &testConfig{
+	return &clientTestConfig{
 		Controller:  controller,
 		AccessToken: accessToken,
-		Timeout:     defaultTestTimeout,
+		Timeout:     clientTestTimeout,
 	}
 }
 
-// testConfig represents configuration for test operations
-type testConfig struct {
+// clientTestConfig represents configuration for client test operations
+type clientTestConfig struct {
 	Controller  string
 	AccessToken string
 	Timeout     time.Duration
@@ -296,11 +296,11 @@ func TestClientFailures(t *testing.T) {
 
 // TestContextCancellation tests context cancellation for client operations
 func TestContextCancellation(t *testing.T) {
-	testConfig := createTestConfig(t)
+	testConfig := createClientTestConfig(t)
 	config := Config{
 		Controller:  testConfig.Controller,
 		AccessToken: testConfig.AccessToken,
-		Timeout:     extendedTestTimeout,
+		Timeout:     clientExtendedTimeout,
 	}
 
 	client, err := NewClient(config)
@@ -322,10 +322,10 @@ func TestContextCancellation(t *testing.T) {
 	}
 
 	// Test context timeout
-	ctx, cancel = context.WithTimeout(context.Background(), microTestTimeout)
+	ctx, cancel = context.WithTimeout(context.Background(), clientMicroTimeout)
 	defer cancel()
 
-	time.Sleep(2 * microTestTimeout) // Ensure timeout
+	time.Sleep(2 * clientMicroTimeout) // Ensure timeout
 
 	err = client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 	if err == nil {
@@ -338,14 +338,14 @@ func TestInvalidEndpoint(t *testing.T) {
 	config := Config{
 		Controller:  "invalid.controller.local",
 		AccessToken: TestAccessTokenValue,
-		Timeout:     quickTestTimeout,
+		Timeout:     clientQuickTimeout,
 	}
 	client, err := NewClient(config)
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), quickTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), clientQuickTimeout)
 	defer cancel()
 
 	var response interface{}
@@ -360,7 +360,7 @@ func TestSendAPIRequestFailures(t *testing.T) {
 	config := Config{
 		Controller:  ExampleTestHostname,
 		AccessToken: TestAccessTokenValue,
-		Timeout:     quickTestTimeout,
+		Timeout:     clientQuickTimeout,
 	}
 	client, err := NewClient(config)
 	if err != nil {
@@ -399,7 +399,7 @@ func TestCreateHTTPRequestCoverage(t *testing.T) {
 	config := Config{
 		Controller:  ExampleTestHostname,
 		AccessToken: TestAccessTokenValue,
-		Timeout:     quickTestTimeout,
+		Timeout:     clientQuickTimeout,
 	}
 	client, err := NewClient(config)
 	if err != nil {
@@ -437,7 +437,7 @@ func TestExecuteHTTPRequestCoverage(t *testing.T) {
 	config := Config{
 		Controller:  "invalid.controller.local", // Use invalid controller to ensure error
 		AccessToken: TestAccessTokenValue,
-		Timeout:     quickTestTimeout,
+		Timeout:     clientQuickTimeout,
 	}
 	client, err := NewClient(config)
 	if err != nil {
@@ -475,11 +475,11 @@ func TestProcessHTTPResponseCoverage(t *testing.T) {
 
 // TestClientFunctions tests the core client functions
 func TestClientFunctions(t *testing.T) {
-	testConfig := createTestConfig(t)
+	testConfig := createClientTestConfig(t)
 	config := Config{
 		Controller:         testConfig.Controller,
 		AccessToken:        testConfig.AccessToken,
-		Timeout:            defaultTestTimeout,
+		Timeout:            clientTestTimeout,
 		InsecureSkipVerify: true,
 	}
 
@@ -488,7 +488,7 @@ func TestClientFunctions(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), clientTestTimeout)
 	defer cancel()
 
 	t.Run("GET_GeneralOper", func(t *testing.T) {
@@ -520,11 +520,11 @@ func TestClientFunctions(t *testing.T) {
 
 // TestRealController tests client with real controller
 func TestRealController(t *testing.T) {
-	testConfig := createTestConfig(t)
+	testConfig := createClientTestConfig(t)
 	config := Config{
 		Controller:         testConfig.Controller,
 		AccessToken:        testConfig.AccessToken,
-		Timeout:            defaultTestTimeout,
+		Timeout:            clientTestTimeout,
 		InsecureSkipVerify: true,
 	}
 
@@ -533,7 +533,7 @@ func TestRealController(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), clientTestTimeout)
 	defer cancel()
 
 	// Test basic connectivity

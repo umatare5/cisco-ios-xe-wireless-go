@@ -8,7 +8,7 @@ import (
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-)
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
@@ -16,7 +16,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testhelpers.CreateTestClientFromEnv(t)
 }
 
 // APGlobalOperTestDataCollector holds test data for AP global operation functions

@@ -10,7 +10,7 @@ import (
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-)
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
@@ -128,7 +128,7 @@ func TestAWIPSOperDataStructures(t *testing.T) {
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testhelpers.CreateTestClientFromEnv(t)
 }
 
 // TestGetAwipsOper tests the GetAwipsOper method
