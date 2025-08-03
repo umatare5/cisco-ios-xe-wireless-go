@@ -2,8 +2,12 @@
 package rfid
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
+	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -46,22 +50,74 @@ func TestRfidCfgDataStructures(t *testing.T) {
 }
 
 // =============================================================================
-// 2. TABLE-DRIVEN TEST PATTERNS
+// 2. INTEGRATION TESTS (Actual API Calls to Live Controller)
+// =============================================================================
+
+// TestRfidConfigurationFunctions tests all RFID configuration functions with a live controller
+func TestRfidConfigurationFunctions(t *testing.T) {
+	client := testutil.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Test GetRfidCfg function
+	t.Run("GetRfidCfg", func(t *testing.T) {
+		data, err := GetRfidCfg(client, ctx)
+		if err != nil {
+			t.Fatalf("GetRfidCfg failed: %v", err)
+		}
+
+		// Validate basic structure
+		if data == nil {
+			t.Fatal("GetRfidCfg returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("rfid_cfg_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("RFID config data saved to test_data/rfid_cfg_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := RfidCfgEndpoint
+		if endpoint == "" {
+			t.Error("RfidCfgEndpoint should not be empty")
+		}
+		if endpoint != "/restconf/data/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data" {
+			t.Errorf("RfidCfgEndpoint unexpected value: got %s", endpoint)
+		}
+	})
+}
+
+// TestRfidConfigurationEndpoints validates RFID configuration endpoint constants
+func TestRfidConfigurationEndpoints(t *testing.T) {
+	// Test base path validation
+	t.Run("Validate_RfidCfgBasePath", func(t *testing.T) {
+		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
+		if RfidCfgBasePath != expectedBasePath {
+			t.Errorf("RfidCfgBasePath mismatch: expected %s, got %s", expectedBasePath, RfidCfgBasePath)
+		}
+	})
+
+	// Test endpoint validation
+	t.Run("Validate_RfidCfgEndpoint", func(t *testing.T) {
+		if RfidCfgEndpoint != RfidCfgBasePath {
+			t.Errorf("RfidCfgEndpoint should equal RfidCfgBasePath: expected %s, got %s", RfidCfgBasePath, RfidCfgEndpoint)
+		}
+	})
+}
+
+// =============================================================================
+// 3. TABLE-DRIVEN TEST PATTERNS
 // =============================================================================
 
 // Currently no table-driven tests specific to RFID configuration
 
 // =============================================================================
-// 3. FAIL-FAST ERROR DETECTION TESTS
+// 4. FAIL-FAST ERROR DETECTION TESTS
 // =============================================================================
 
 // Currently no fail-fast error detection tests specific to RFID configuration
-
-// =============================================================================
-// 4. INTEGRATION TESTS (API Communication & Full Workflow Tests)
-// =============================================================================
-
-// Currently no integration tests specific to RFID configuration
 
 // =============================================================================
 // 5. OTHER TESTS

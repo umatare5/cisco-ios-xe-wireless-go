@@ -2,8 +2,12 @@
 package dot11
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
+	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -207,4 +211,73 @@ func TestDot11CfgDataStructures(t *testing.T) {
 			t.Errorf("Expected index '7', got '%s'", entry.Index)
 		}
 	})
+}
+
+// =============================================================================
+// 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
+// =============================================================================
+
+// TestDot11ConfigurationFunctions tests all Dot11 configuration functions with real WNC data collection
+func TestDot11ConfigurationFunctions(t *testing.T) {
+	client := testutil.CreateTestClientFromEnv(t)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Create a comprehensive test data collection
+	collector := testutil.NewTestDataCollector()
+	endpointMapping := map[string]string{
+		"Dot11CfgEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
+		"Dot11ConfiguredCountriesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
+		"Dot11acMcsEntriesEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11ac-mcs-entries",
+		"Dot11EntriesEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
+	}
+
+	t.Run("GetDot11Cfg", func(t *testing.T) {
+		result, err := GetDot11Cfg(client, ctx)
+		testutil.CollectTestResult(collector, "GetDot11Cfg", endpointMapping["Dot11CfgEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetDot11Cfg failed: %v", err)
+		}
+	})
+
+	t.Run("GetDot11ConfiguredCountries", func(t *testing.T) {
+		result, err := GetDot11ConfiguredCountries(client, ctx)
+		testutil.CollectTestResult(collector, "GetDot11ConfiguredCountries", endpointMapping["Dot11ConfiguredCountriesEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetDot11ConfiguredCountries failed: %v", err)
+		}
+	})
+
+	t.Run("GetDot11acMcsEntries", func(t *testing.T) {
+		result, err := GetDot11acMcsEntries(client, ctx)
+		testutil.CollectTestResult(collector, "GetDot11acMcsEntries", endpointMapping["Dot11acMcsEntriesEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetDot11acMcsEntries failed: %v", err)
+		}
+	})
+
+	t.Run("GetDot11Entries", func(t *testing.T) {
+		result, err := GetDot11Entries(client, ctx)
+		testutil.CollectTestResult(collector, "GetDot11Entries", endpointMapping["Dot11EntriesEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetDot11Entries failed: %v", err)
+		}
+	})
+
+	// Save collected test data to JSON file
+	testutil.SaveCollectedTestData(t, collector, "dot11_cfg_test_data_collected.json")
+}
+
+// TestDot11ConfigurationEndpoints tests that all 802.11 configuration endpoints are correctly defined
+func TestDot11ConfigurationEndpoints(t *testing.T) {
+	endpoints := map[string]string{
+		"Dot11CfgBasePath":                 Dot11CfgBasePath,
+		"Dot11CfgEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
+		"Dot11ConfiguredCountriesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
+		"Dot11acMcsEntriesEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11ac-mcs-entries",
+		"Dot11EntriesEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
+	}
+
+	testutil.ValidateEndpoints(t, endpoints)
 }

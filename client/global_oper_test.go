@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
@@ -48,7 +47,7 @@ func (collector *ClientGlobalOperTestDataCollector) runTestAndCollectData(t *tes
 
 // TestClientGlobalOperationFunctions tests all client global operation functions with real WNC data collection
 func TestClientGlobalOperationFunctions(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()

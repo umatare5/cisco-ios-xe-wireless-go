@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
@@ -16,7 +15,7 @@ import (
 
 // getTestClientCfg creates a test client using environment variables
 func getTestClientCfg(t *testing.T) *wnc.Client {
-	return testhelpers.CreateTestClientFromEnv(t)
+	return testutil.CreateTestClientFromEnv(t)
 }
 
 // GeneralCfgTestDataCollector holds test data for general configuration functions

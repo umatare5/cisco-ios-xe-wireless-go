@@ -76,10 +76,10 @@ test-coverage:
 	@echo "Running tests with coverage..."
 	@mkdir -p ./tmp
 	@if command -v gotestsum >/dev/null 2>&1; then \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" gotestsum --format testname -- -race -coverprofile=./tmp/coverage.out ./...; \
+		gotestsum --format testname -- -race -coverprofile=./tmp/coverage.out $$(go list ./... | grep -v '/internal/'); \
 	else \
 		echo "gotestsum not found, running go test with verbose output..."; \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -v -race -coverprofile=./tmp/coverage.out ./...; \
+		go test -v -race -coverprofile=./tmp/coverage.out $$(go list ./... | grep -v '/internal/'); \
 	fi
 	@if [ -f ./tmp/coverage.out ]; then \
 		echo "Coverage report generated at ./tmp/coverage.out"; \

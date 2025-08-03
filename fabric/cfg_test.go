@@ -2,8 +2,12 @@
 package fabric
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
+	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -120,5 +124,121 @@ func TestFabricCfgDataStructures(t *testing.T) {
 		}
 
 		// Since fabric is an empty struct, just verify it unmarshals successfully
+	})
+}
+
+// =============================================================================
+// 2. INTEGRATION TESTS (Actual API Calls to Live Controller)
+// =============================================================================
+
+// TestFabricConfigurationFunctions tests all fabric configuration functions with a live controller
+func TestFabricConfigurationFunctions(t *testing.T) {
+	client := testutil.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Test GetFabricCfg function
+	t.Run("GetFabricCfg", func(t *testing.T) {
+		data, err := GetFabricCfg(client, ctx)
+		if err != nil {
+			t.Fatalf("GetFabricCfg failed: %v", err)
+		}
+
+		// Validate basic structure
+		if data == nil {
+			t.Fatal("GetFabricCfg returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("fabric_cfg_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("Fabric config data saved to test_data/fabric_cfg_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := FabricCfgEndpoint
+		if endpoint == "" {
+			t.Error("FabricCfgEndpoint should not be empty")
+		}
+		if endpoint != "/restconf/data/Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data" {
+			t.Errorf("FabricCfgEndpoint unexpected value: got %s", endpoint)
+		}
+	})
+
+	// Test GetFabricControlplaneNames function
+	t.Run("GetFabricControlplaneNames", func(t *testing.T) {
+		data, err := GetFabricControlplaneNames(client, ctx)
+		if err != nil {
+			t.Fatalf("GetFabricControlplaneNames failed: %v", err)
+		}
+
+		// Validate basic structure
+		if data == nil {
+			t.Fatal("GetFabricControlplaneNames returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("fabric_controlplane_names_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("Fabric controlplane names data saved to test_data/fabric_controlplane_names_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := FabricControlplaneNamesEndpoint
+		if endpoint == "" {
+			t.Error("FabricControlplaneNamesEndpoint should not be empty")
+		}
+		expectedEndpoint := "/restconf/data/Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data/fabric-controlplane-names"
+		if endpoint != expectedEndpoint {
+			t.Errorf("FabricControlplaneNamesEndpoint unexpected value: expected %s, got %s", expectedEndpoint, endpoint)
+		}
+	})
+
+	// Test GetFabric function
+	t.Run("GetFabric", func(t *testing.T) {
+		data, err := GetFabric(client, ctx)
+		if err != nil {
+			t.Fatalf("GetFabric failed: %v", err)
+		}
+
+		// Validate basic structure
+		if data == nil {
+			t.Fatal("GetFabric returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("fabric_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("Fabric data saved to test_data/fabric_data.json")
+		}
+	})
+}
+
+// TestFabricConfigurationEndpoints validates fabric configuration endpoint constants
+func TestFabricConfigurationEndpoints(t *testing.T) {
+	// Test base path validation
+	t.Run("Validate_FabricCfgBasePath", func(t *testing.T) {
+		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"
+		if FabricCfgBasePath != expectedBasePath {
+			t.Errorf("FabricCfgBasePath mismatch: expected %s, got %s", expectedBasePath, FabricCfgBasePath)
+		}
+	})
+
+	// Test endpoint validation
+	t.Run("Validate_FabricCfgEndpoint", func(t *testing.T) {
+		if FabricCfgEndpoint != FabricCfgBasePath {
+			t.Errorf("FabricCfgEndpoint should equal FabricCfgBasePath: expected %s, got %s", FabricCfgBasePath, FabricCfgEndpoint)
+		}
+	})
+
+	// Test controlplane names endpoint validation
+	t.Run("Validate_FabricControlplaneNamesEndpoint", func(t *testing.T) {
+		expectedEndpoint := FabricCfgBasePath + "/fabric-controlplane-names"
+		if FabricControlplaneNamesEndpoint != expectedEndpoint {
+			t.Errorf("FabricControlplaneNamesEndpoint mismatch: expected %s, got %s", expectedEndpoint, FabricControlplaneNamesEndpoint)
+		}
 	})
 }

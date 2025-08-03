@@ -10,8 +10,8 @@ import (
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 )
+
 // GeneralOperTestDataCollector holds test data for general operation functions
 type GeneralOperTestDataCollector struct {
 	Data map[string]interface{} `json:"general_oper_test_data"`
@@ -19,7 +19,7 @@ type GeneralOperTestDataCollector struct {
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testhelpers.CreateTestClientFromEnv(t)
+	return testutil.CreateTestClientFromEnv(t)
 }
 
 // =============================================================================

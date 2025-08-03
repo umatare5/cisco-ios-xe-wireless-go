@@ -2,8 +2,12 @@
 package cts
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
+	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -88,6 +92,102 @@ func TestCtsSxpCfgDataStructures(t *testing.T) {
 
 		if config.SxpProfileName != "test-sxp-profile" {
 			t.Errorf("Expected profile name 'test-sxp-profile', got '%s'", config.SxpProfileName)
+		}
+	})
+}
+
+// =============================================================================
+// 2. INTEGRATION TESTS (Actual API Calls to Live Controller)
+// =============================================================================
+
+// TestCtsConfigurationFunctions tests all CTS configuration functions with a live controller
+func TestCtsConfigurationFunctions(t *testing.T) {
+	client := testutil.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Test GetCtsSxpCfg function
+	t.Run("GetCtsSxpCfg", func(t *testing.T) {
+		data, err := GetCtsSxpCfg(client, ctx)
+		if err != nil {
+			t.Fatalf("GetCtsSxpCfg failed: %v", err)
+		}
+
+		// Validate basic structure
+		if data == nil {
+			t.Fatal("GetCtsSxpCfg returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("cts_cfg_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("CTS config data saved to test_data/cts_cfg_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := CtsSxpCfgEndpoint
+		if endpoint == "" {
+			t.Error("CtsSxpCfgEndpoint should not be empty")
+		}
+		if endpoint != "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data" {
+			t.Errorf("CtsSxpCfgEndpoint unexpected value: got %s", endpoint)
+		}
+	})
+
+	// Test GetCtsSxpConfiguration function
+	t.Run("GetCtsSxpConfiguration", func(t *testing.T) {
+		data, err := GetCtsSxpConfiguration(client, ctx)
+		if err != nil {
+			t.Fatalf("GetCtsSxpConfiguration failed: %v", err)
+		}
+
+		// Validate basic structure
+		if data == nil {
+			t.Fatal("GetCtsSxpConfiguration returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("cts_sxp_configuration_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("CTS SXP configuration data saved to test_data/cts_sxp_configuration_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := CtsSxpConfigurationEndpoint
+		if endpoint == "" {
+			t.Error("CtsSxpConfigurationEndpoint should not be empty")
+		}
+		expectedEndpoint := "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data/cts-sxp-configuration"
+		if endpoint != expectedEndpoint {
+			t.Errorf("CtsSxpConfigurationEndpoint unexpected value: expected %s, got %s", expectedEndpoint, endpoint)
+		}
+	})
+}
+
+// TestCtsConfigurationEndpoints validates CTS configuration endpoint constants
+func TestCtsConfigurationEndpoints(t *testing.T) {
+	// Test base path validation
+	t.Run("Validate_CtsSxpCfgBasePath", func(t *testing.T) {
+		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"
+		if CtsSxpCfgBasePath != expectedBasePath {
+			t.Errorf("CtsSxpCfgBasePath mismatch: expected %s, got %s", expectedBasePath, CtsSxpCfgBasePath)
+		}
+	})
+
+	// Test endpoint validation
+	t.Run("Validate_CtsSxpCfgEndpoint", func(t *testing.T) {
+		if CtsSxpCfgEndpoint != CtsSxpCfgBasePath {
+			t.Errorf("CtsSxpCfgEndpoint should equal CtsSxpCfgBasePath: expected %s, got %s", CtsSxpCfgBasePath, CtsSxpCfgEndpoint)
+		}
+	})
+
+	// Test specific configuration endpoint validation
+	t.Run("Validate_CtsSxpConfigurationEndpoint", func(t *testing.T) {
+		expectedEndpoint := CtsSxpCfgBasePath + "/cts-sxp-configuration"
+		if CtsSxpConfigurationEndpoint != expectedEndpoint {
+			t.Errorf("CtsSxpConfigurationEndpoint mismatch: expected %s, got %s", expectedEndpoint, CtsSxpConfigurationEndpoint)
 		}
 	})
 }

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
@@ -46,7 +45,7 @@ func (collector *APCfgTestDataCollector) runTestAndCollectData(t *testing.T, tes
 // =============================================================================
 
 func TestAPConfigurationFunctions(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 
 	ctx, cancel := testutil.CreateDefaultTestContext()
 	defer cancel()

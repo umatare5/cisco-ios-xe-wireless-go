@@ -2,8 +2,13 @@
 package mesh
 
 import (
+	"context"
 	"encoding/json"
+	"strings"
 	"testing"
+	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -122,6 +127,91 @@ func TestMeshCfgDataStructures(t *testing.T) {
 
 		if profile.Description != "Retail store mesh configuration" {
 			t.Errorf("Expected description 'Retail store mesh configuration', got '%s'", profile.Description)
+		}
+	})
+}
+
+// =============================================================================
+// 2. INTEGRATION TESTS (Live API Endpoint Testing)
+// =============================================================================
+
+func TestMeshConfigurationFunctions(t *testing.T) {
+	client := testutil.CreateTestClientFromEnv(t)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Create a comprehensive test data collection
+	collector := testutil.NewTestDataCollector()
+	endpointMapping := map[string]string{
+		"MeshCfgEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data",
+		"MeshMeshEndpoint":     "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh",
+		"MeshProfilesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh-profiles",
+	}
+
+	t.Run("GetMeshCfg", func(t *testing.T) {
+		result, err := GetMeshCfg(client, ctx)
+		testutil.CollectTestResult(collector, "GetMeshCfg", endpointMapping["MeshCfgEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetMeshCfg failed: %v", err)
+		}
+	})
+
+	t.Run("GetMesh", func(t *testing.T) {
+		result, err := GetMesh(client, ctx)
+		testutil.CollectTestResult(collector, "GetMesh", endpointMapping["MeshMeshEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetMesh failed: %v", err)
+		}
+	})
+
+	t.Run("GetMeshProfiles", func(t *testing.T) {
+		result, err := GetMeshProfiles(client, ctx)
+		testutil.CollectTestResult(collector, "GetMeshProfiles", endpointMapping["MeshProfilesEndpoint"], result, err)
+		if err != nil {
+			t.Logf("GetMeshProfiles failed: %v", err)
+		}
+	})
+
+	// Save collected test data to JSON file
+	testutil.SaveCollectedTestData(t, collector, "mesh_cfg_test_data_collected.json")
+}
+
+// TestMeshConfigurationEndpoints tests endpoint validation
+func TestMeshConfigurationEndpoints(t *testing.T) {
+	t.Run("Validate_MeshCfgBasePath", func(t *testing.T) {
+		if MeshCfgBasePath == "" {
+			t.Error("MeshCfgBasePath is empty")
+		}
+		if !strings.HasPrefix(MeshCfgBasePath, "/restconf/data/") {
+			t.Errorf("MeshCfgBasePath should start with '/restconf/data/', got: %s", MeshCfgBasePath)
+		}
+	})
+
+	t.Run("Validate_MeshCfgEndpoint", func(t *testing.T) {
+		if MeshCfgEndpoint == "" {
+			t.Error("MeshCfgEndpoint is empty")
+		}
+		if MeshCfgEndpoint != MeshCfgBasePath {
+			t.Errorf("MeshCfgEndpoint should equal MeshCfgBasePath, got: %s", MeshCfgEndpoint)
+		}
+	})
+
+	t.Run("Validate_MeshMeshEndpoint", func(t *testing.T) {
+		if MeshMeshEndpoint == "" {
+			t.Error("MeshMeshEndpoint is empty")
+		}
+		if !strings.HasSuffix(MeshMeshEndpoint, "/mesh") {
+			t.Errorf("MeshMeshEndpoint should end with '/mesh', got: %s", MeshMeshEndpoint)
+		}
+	})
+
+	t.Run("Validate_MeshProfilesEndpoint", func(t *testing.T) {
+		if MeshProfilesEndpoint == "" {
+			t.Error("MeshProfilesEndpoint is empty")
+		}
+		if !strings.HasSuffix(MeshProfilesEndpoint, "/mesh-profiles") {
+			t.Errorf("MeshProfilesEndpoint should end with '/mesh-profiles', got: %s", MeshProfilesEndpoint)
 		}
 	})
 }

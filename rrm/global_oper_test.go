@@ -10,7 +10,6 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
@@ -28,7 +27,7 @@ type RrmGlobalOperTestDataCollector struct {
 // =============================================================================
 
 func TestRrmGlobalOperGetRrmGlobalOper(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -53,7 +52,7 @@ func TestRrmGlobalOperGetRrmGlobalOper(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalOneShotCounters(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -78,7 +77,7 @@ func TestRrmGlobalOperGetRrmGlobalOneShotCounters(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalChannelParams(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -103,7 +102,7 @@ func TestRrmGlobalOperGetRrmGlobalChannelParams(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalSpectrumAqWorstTable(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -128,7 +127,7 @@ func TestRrmGlobalOperGetRrmGlobalSpectrumAqWorstTable(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperData24G(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -153,7 +152,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData24G(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperData5G(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -178,7 +177,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData5G(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperData6G(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -208,7 +207,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData6G(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalSpectrumBandConfigData(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -233,7 +232,7 @@ func TestRrmGlobalOperGetRrmGlobalSpectrumBandConfigData(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperDataDualband(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -258,7 +257,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperDataDualband(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalClientData(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -283,7 +282,7 @@ func TestRrmGlobalOperGetRrmGlobalClientData(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalFraStats(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -308,7 +307,7 @@ func TestRrmGlobalOperGetRrmGlobalFraStats(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalCoverage(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -333,7 +332,7 @@ func TestRrmGlobalOperGetRrmGlobalCoverage(t *testing.T) {
 }
 
 func TestRrmGlobalOperCollectAllData(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 

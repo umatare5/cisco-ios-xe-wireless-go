@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
@@ -137,7 +136,7 @@ func TestApOperDataStructures(t *testing.T) {
 
 // TestApOperationEndpoints tests AP operation endpoints with table-driven approach
 func TestApOperationEndpoints(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -213,7 +212,7 @@ func TestApOperationFailFast(t *testing.T) {
 
 	// Test with nil context - expect error (not panic)
 	t.Run("NilContext", func(t *testing.T) {
-		client := testhelpers.CreateTestClientFromEnv(t)
+		client := testutil.CreateTestClientFromEnv(t)
 		_, err := GetApOper(client, nil)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
@@ -223,7 +222,7 @@ func TestApOperationFailFast(t *testing.T) {
 
 	// Test with canceled context
 	t.Run("CanceledContext", func(t *testing.T) {
-		client := testhelpers.CreateTestClientFromEnv(t)
+		client := testutil.CreateTestClientFromEnv(t)
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
@@ -241,7 +240,7 @@ func TestApOperationFailFast(t *testing.T) {
 // TestApOperationFunctions tests all AP operation functions with real WNC data collection
 func TestApOperationFunctions(t *testing.T) {
 	collector := newAPOperTestDataCollector()
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
@@ -372,6 +371,42 @@ func TestApOperationFunctions(t *testing.T) {
 		})
 	})
 
+	t.Run("GetApCapwapPkts", func(t *testing.T) {
+		runAPOperTestAndCollectData(t, collector, "GetApCapwapPkts", func() (interface{}, error) {
+			return GetApCapwapPkts(client, ctx)
+		})
+	})
+
+	t.Run("GetApCountryOper", func(t *testing.T) {
+		runAPOperTestAndCollectData(t, collector, "GetApCountryOper", func() (interface{}, error) {
+			return GetApCountryOper(client, ctx)
+		})
+	})
+
+	t.Run("GetApSuppCountryOper", func(t *testing.T) {
+		runAPOperTestAndCollectData(t, collector, "GetApSuppCountryOper", func() (interface{}, error) {
+			return GetApSuppCountryOper(client, ctx)
+		})
+	})
+
+	t.Run("GetApNhGlobalData", func(t *testing.T) {
+		runAPOperTestAndCollectData(t, collector, "GetApNhGlobalData", func() (interface{}, error) {
+			return GetApNhGlobalData(client, ctx)
+		})
+	})
+
+	t.Run("GetApImagePrepareLocation", func(t *testing.T) {
+		runAPOperTestAndCollectData(t, collector, "GetApImagePrepareLocation", func() (interface{}, error) {
+			return GetApImagePrepareLocation(client, ctx)
+		})
+	})
+
+	t.Run("GetApImageActiveLocation", func(t *testing.T) {
+		runAPOperTestAndCollectData(t, collector, "GetApImageActiveLocation", func() (interface{}, error) {
+			return GetApImageActiveLocation(client, ctx)
+		})
+	})
+
 	// Save collected test data
 	if len(collector.Data) > 0 {
 		if err := testutil.SaveTestDataToFile("ap_oper_test_data_collected.json", collector.Data); err != nil {
@@ -392,7 +427,7 @@ func TestApOperationPerformance(t *testing.T) {
 		t.Skip("Skipping performance test in short mode")
 	}
 
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.ExtendedTestTimeout)
 	defer cancel()
 

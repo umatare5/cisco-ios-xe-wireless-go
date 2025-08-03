@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 )
+
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // =============================================================================
@@ -46,7 +46,7 @@ func runWlanGlobalOperTestAndCollectData(t *testing.T, testName string, testFunc
 
 // TestWlanGlobalOperFunctions tests all WLAN global operation functions with real WNC data collection
 func TestWlanGlobalOperFunctions(t *testing.T) {
-	client := testhelpers.CreateTestClientFromEnv(t)
+	client := testutil.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
