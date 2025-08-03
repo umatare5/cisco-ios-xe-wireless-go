@@ -1,0 +1,18 @@
+name: CodeQL Analysis
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Run weekly on Sundays at 12:00 UTC
+    - cron: "0 12 * * 0"
+
+permissions:
+  security-events: write
+  packages: read
+
+jobs:
+  codeql:
+    uses: umatare5/common/.github/workflows/codeql.yml@c70780f0ddb98d15dbdc6b2a89cf01f766c65b7d # v0.9.0

@@ -1,0 +1,16 @@
+name: Test and Build
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: umatare5/common/.github/workflows/go-test-build.yml@v0.10.0
+    with:
+      go_version: "1.24.5"
+      skip_build: true
