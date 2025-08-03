@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 )
-
 // WlanCfgTestDataCollector holds test data for WLAN configuration functions
 type WlanCfgTestDataCollector struct {
 	Data map[string]interface{} `json:"wlan_cfg_test_data"`
@@ -256,7 +256,7 @@ func TestWlanCfgDataStructures(t *testing.T) {
 
 // TestWlanConfigurationFunctions tests all WLAN configuration functions with real WNC data collection
 func TestWlanConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -279,7 +279,7 @@ func TestWlanConfigurationFunctions(t *testing.T) {
 
 // TestWlanGlobalOperationFunctions tests all WLAN global operation functions
 func TestWlanGlobalOperationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()

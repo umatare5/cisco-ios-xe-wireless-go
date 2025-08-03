@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
@@ -136,7 +137,7 @@ func TestApOperDataStructures(t *testing.T) {
 
 // TestApOperationEndpoints tests AP operation endpoints with table-driven approach
 func TestApOperationEndpoints(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
 
@@ -212,7 +213,7 @@ func TestApOperationFailFast(t *testing.T) {
 
 	// Test with nil context - expect error (not panic)
 	t.Run("NilContext", func(t *testing.T) {
-		client := testutil.CreateTestClientFromEnv(t)
+		client := testhelpers.CreateTestClientFromEnv(t)
 		_, err := GetApOper(client, nil)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
@@ -222,7 +223,7 @@ func TestApOperationFailFast(t *testing.T) {
 
 	// Test with canceled context
 	t.Run("CanceledContext", func(t *testing.T) {
-		client := testutil.CreateTestClientFromEnv(t)
+		client := testhelpers.CreateTestClientFromEnv(t)
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
@@ -240,7 +241,7 @@ func TestApOperationFailFast(t *testing.T) {
 // TestApOperationFunctions tests all AP operation functions with real WNC data collection
 func TestApOperationFunctions(t *testing.T) {
 	collector := newAPOperTestDataCollector()
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()
@@ -391,7 +392,7 @@ func TestApOperationPerformance(t *testing.T) {
 		t.Skip("Skipping performance test in short mode")
 	}
 
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.ExtendedTestTimeout)
 	defer cancel()
 

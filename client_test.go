@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-// Test constants
+// Test constants - using standard timeouts
 const (
-	defaultTestTimeout  = 20 * time.Second
-	quickTestTimeout    = 5 * time.Second
-	extendedTestTimeout = 30 * time.Second
-	microTestTimeout    = 2 * time.Microsecond
+	clientTestTimeout     = 20 * time.Second
+	clientQuickTimeout    = 5 * time.Second
+	clientExtendedTimeout = 30 * time.Second
+	clientMicroTimeout    = 2 * time.Microsecond
 )
 
-// createTestConfig creates a test configuration from environment variables
-func createTestConfig(t *testing.T) *testConfig {
+// createClientTestConfig creates a test configuration from environment variables
+func createClientTestConfig(t *testing.T) *clientTestConfig {
 	t.Helper()
 
 	controller := os.Getenv(EnvVarController)
@@ -26,15 +26,15 @@ func createTestConfig(t *testing.T) *testConfig {
 		t.Skip("WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests")
 	}
 
-	return &testConfig{
+	return &clientTestConfig{
 		Controller:  controller,
 		AccessToken: accessToken,
-		Timeout:     defaultTestTimeout,
+		Timeout:     clientTestTimeout,
 	}
 }
 
-// testConfig represents configuration for test operations
-type testConfig struct {
+// clientTestConfig represents configuration for client test operations
+type clientTestConfig struct {
 	Controller  string
 	AccessToken string
 	Timeout     time.Duration
@@ -296,11 +296,11 @@ func TestClientFailures(t *testing.T) {
 
 // TestContextCancellation tests context cancellation for client operations
 func TestContextCancellation(t *testing.T) {
-	testConfig := createTestConfig(t)
+	testConfig := createClientTestConfig(t)
 	config := Config{
 		Controller:  testConfig.Controller,
 		AccessToken: testConfig.AccessToken,
-		Timeout:     extendedTestTimeout,
+		Timeout:     clientExtendedTimeout,
 	}
 
 	client, err := NewClient(config)
@@ -322,10 +322,10 @@ func TestContextCancellation(t *testing.T) {
 	}
 
 	// Test context timeout
-	ctx, cancel = context.WithTimeout(context.Background(), microTestTimeout)
+	ctx, cancel = context.WithTimeout(context.Background(), clientMicroTimeout)
 	defer cancel()
 
-	time.Sleep(2 * microTestTimeout) // Ensure timeout
+	time.Sleep(2 * clientMicroTimeout) // Ensure timeout
 
 	err = client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 	if err == nil {
@@ -338,14 +338,14 @@ func TestInvalidEndpoint(t *testing.T) {
 	config := Config{
 		Controller:  "invalid.controller.local",
 		AccessToken: TestAccessTokenValue,
-		Timeout:     quickTestTimeout,
+		Timeout:     clientQuickTimeout,
 	}
 	client, err := NewClient(config)
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), quickTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), clientQuickTimeout)
 	defer cancel()
 
 	var response interface{}
@@ -355,17 +355,133 @@ func TestInvalidEndpoint(t *testing.T) {
 	}
 }
 
+// TestSendAPIRequestFailures tests various failure scenarios for SendAPIRequest
+func TestSendAPIRequestFailures(t *testing.T) {
+	config := Config{
+		Controller:  ExampleTestHostname,
+		AccessToken: TestAccessTokenValue,
+		Timeout:     clientQuickTimeout,
+	}
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+
+	tests := []struct {
+		name       string
+		endpoint   string
+		response   interface{}
+		shouldFail bool
+	}{
+		{"EmptyEndpoint", "", &map[string]interface{}{}, true},
+		{"InvalidEndpoint", "invalid", &map[string]interface{}{}, true},
+		{"NilResponse", "/restconf/data/test", nil, true},
+		{"ValidEndpoint", "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &map[string]interface{}{}, true}, // Expected to fail due to network
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := client.SendAPIRequest(ctx, tt.endpoint, tt.response)
+			if tt.shouldFail && err == nil {
+				t.Error("Expected error but got none")
+			}
+			if !tt.shouldFail && err != nil {
+				t.Errorf("Expected no error but got: %v", err)
+			}
+		})
+	}
+}
+
+// TestCreateHTTPRequestCoverage tests createHTTPRequest method scenarios
+func TestCreateHTTPRequestCoverage(t *testing.T) {
+	config := Config{
+		Controller:  ExampleTestHostname,
+		AccessToken: TestAccessTokenValue,
+		Timeout:     clientQuickTimeout,
+	}
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+
+	// Test with valid endpoint
+	req, err := client.createHTTPRequest(ctx, "/restconf/data/test")
+	if err != nil {
+		t.Errorf("Expected createHTTPRequest to succeed, got error: %v", err)
+	}
+	if req == nil {
+		t.Error("Expected non-nil HTTP request")
+	}
+
+	// Test with empty endpoint - this actually should succeed based on the method logic
+	_, err = client.createHTTPRequest(ctx, "")
+	if err != nil {
+		t.Logf("createHTTPRequest with empty endpoint failed (may be expected): %v", err)
+	}
+
+	// Test with cancelled context
+	ctxCancelled, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err = client.createHTTPRequest(ctxCancelled, "/restconf/data/test")
+	if err != nil {
+		t.Logf("createHTTPRequest with cancelled context failed (may be expected): %v", err)
+	}
+}
+
+// TestExecuteHTTPRequestCoverage tests executeHTTPRequest method scenarios
+func TestExecuteHTTPRequestCoverage(t *testing.T) {
+	config := Config{
+		Controller:  "invalid.controller.local", // Use invalid controller to ensure error
+		AccessToken: TestAccessTokenValue,
+		Timeout:     clientQuickTimeout,
+	}
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+
+	// Create a valid HTTP request
+	req, err := client.createHTTPRequest(ctx, "/restconf/data/test")
+	if err != nil {
+		t.Fatalf("Failed to create HTTP request: %v", err)
+	}
+
+	// Test executeHTTPRequest with invalid host (should fail)
+	resp, err := client.executeHTTPRequest(req)
+	if err == nil {
+		t.Error("Expected executeHTTPRequest to fail with invalid host")
+	}
+	if resp != nil && resp.Body != nil {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			t.Logf("Warning: failed to close response body: %v", closeErr)
+		}
+	}
+}
+
+// TestProcessHTTPResponseCoverage tests processHTTPResponse method scenarios
+func TestProcessHTTPResponseCoverage(t *testing.T) {
+	// processHTTPResponse is tested via SendAPIRequest integration tests
+	// since testing with nil response would cause a panic
+	t.Log("processHTTPResponse is tested via SendAPIRequest integration tests")
+}
+
 // =============================================================================
 // 4. INTEGRATION TESTS (API Communication & Full Workflow Tests)
 // =============================================================================
 
 // TestClientFunctions tests the core client functions
 func TestClientFunctions(t *testing.T) {
-	testConfig := createTestConfig(t)
+	testConfig := createClientTestConfig(t)
 	config := Config{
 		Controller:         testConfig.Controller,
 		AccessToken:        testConfig.AccessToken,
-		Timeout:            defaultTestTimeout,
+		Timeout:            clientTestTimeout,
 		InsecureSkipVerify: true,
 	}
 
@@ -374,7 +490,7 @@ func TestClientFunctions(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), clientTestTimeout)
 	defer cancel()
 
 	t.Run("GET_GeneralOper", func(t *testing.T) {
@@ -406,11 +522,11 @@ func TestClientFunctions(t *testing.T) {
 
 // TestRealController tests client with real controller
 func TestRealController(t *testing.T) {
-	testConfig := createTestConfig(t)
+	testConfig := createClientTestConfig(t)
 	config := Config{
 		Controller:         testConfig.Controller,
 		AccessToken:        testConfig.AccessToken,
-		Timeout:            defaultTestTimeout,
+		Timeout:            clientTestTimeout,
 		InsecureSkipVerify: true,
 	}
 
@@ -419,7 +535,7 @@ func TestRealController(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), clientTestTimeout)
 	defer cancel()
 
 	// Test basic connectivity

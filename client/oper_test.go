@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 )
-
 // ClientOperTestDataCollector holds test data for client operation functions
 type ClientOperTestDataCollector struct {
 	Data map[string]interface{} `json:"client_oper_test_data"`
@@ -237,7 +237,7 @@ func TestClientOperDataStructures(t *testing.T) {
 
 // TestClientOperationFunctions tests all client operation functions with real WNC data collection
 func TestClientOperationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
 	defer cancel()

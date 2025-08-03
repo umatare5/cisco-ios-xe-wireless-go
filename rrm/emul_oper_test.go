@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
 )
-
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // =============================================================================
@@ -101,7 +101,7 @@ func TestRrmEmulOperStructValidation(t *testing.T) {
 
 func TestRrmEmulOperMethods(t *testing.T) {
 	// Create test client
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 
 	ctx, cancel := testutil.CreateDefaultTestContext()
 	defer cancel()
@@ -174,7 +174,7 @@ func TestRrmEmulOperResponseFields(t *testing.T) {
 
 func TestRrmEmulOperCompleteWorkflow(t *testing.T) {
 	// Create test client
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testhelpers.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
