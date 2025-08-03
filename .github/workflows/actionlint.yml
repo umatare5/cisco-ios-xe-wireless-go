@@ -2,11 +2,11 @@ name: actionlint
 
 on:
   push:
-    paths:
-      - ".github/workflows/**"
+    branches: ["main"]
+    paths: [".github/workflows/**"]
   pull_request:
-    paths:
-      - ".github/workflows/**"
+    branches: ["main"]
+    paths: [".github/workflows/**"]
 
 permissions:
   contents: read
