@@ -418,7 +418,7 @@ func TestCreateHTTPRequestCoverage(t *testing.T) {
 	}
 
 	// Test with empty endpoint - this actually should succeed based on the method logic
-	req, err = client.createHTTPRequest(ctx, "")
+	_, err = client.createHTTPRequest(ctx, "")
 	if err != nil {
 		t.Logf("createHTTPRequest with empty endpoint failed (may be expected): %v", err)
 	}
@@ -426,7 +426,7 @@ func TestCreateHTTPRequestCoverage(t *testing.T) {
 	// Test with cancelled context
 	ctxCancelled, cancel := context.WithCancel(context.Background())
 	cancel()
-	req, err = client.createHTTPRequest(ctxCancelled, "/restconf/data/test")
+	_, err = client.createHTTPRequest(ctxCancelled, "/restconf/data/test")
 	if err != nil {
 		t.Logf("createHTTPRequest with cancelled context failed (may be expected): %v", err)
 	}
@@ -458,7 +458,9 @@ func TestExecuteHTTPRequestCoverage(t *testing.T) {
 		t.Error("Expected executeHTTPRequest to fail with invalid host")
 	}
 	if resp != nil && resp.Body != nil {
-		resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			t.Logf("Warning: failed to close response body: %v", closeErr)
+		}
 	}
 }
 

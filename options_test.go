@@ -35,16 +35,17 @@ func TestOptionNilClient(t *testing.T) {
 
 // TestClientOptionType tests the ClientOption type
 func TestClientOptionType(t *testing.T) {
-	// Test that ClientOption is a function type
-	var option ClientOption
-
 	// Test creating a simple option
-	option = func(c *Client) {
+	option := func(c *Client) {
 		c.timeout = 30 * time.Second
 	}
 
-	if option == nil {
-		t.Error("Expected created ClientOption to not be nil")
+	// Test applying the option
+	client := &Client{}
+	option(client)
+
+	if client.timeout != 30*time.Second {
+		t.Errorf("Expected timeout to be 30s, got %v", client.timeout)
 	}
 }
 

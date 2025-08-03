@@ -62,12 +62,29 @@ func TestConfigDefaults(t *testing.T) {
 			// Test that config can be created with various combinations
 			config := tt.config
 
-			// All fields should be accessible
-			_ = config.Controller
-			_ = config.AccessToken
-			_ = config.Timeout
-			_ = config.InsecureSkipVerify
-			_ = config.Logger
+			// Verify the config structure is valid and accessible
+			if config.Controller != tt.config.Controller {
+				t.Errorf("Expected Controller to match, got '%s'", config.Controller)
+			}
+
+			if config.AccessToken != tt.config.AccessToken {
+				t.Errorf("Expected AccessToken to match, got '%s'", config.AccessToken)
+			}
+
+			// Test that zero values are handled correctly
+			if config.Timeout < 0 {
+				t.Error("Timeout should not be negative")
+			}
+
+			// Test that boolean field is properly set
+			if config.InsecureSkipVerify != tt.config.InsecureSkipVerify {
+				t.Error("InsecureSkipVerify should match original")
+			}
+
+			// Test logger field accessibility
+			if config.Logger != tt.config.Logger {
+				t.Error("Logger should match original")
+			}
 		})
 	}
 }
@@ -161,32 +178,67 @@ func TestConfigValidation(t *testing.T) {
 func TestConfigFieldTypes(t *testing.T) {
 	config := Config{}
 
-	// Test field types
+	// Test field types and assignments
 	config.Controller = "string"
-	config.AccessToken = "string"
-	config.Timeout = time.Duration(0)
-	config.InsecureSkipVerify = false
-	config.Logger = (*slog.Logger)(nil)
-
-	// Verify assignments work without type errors
-	if config.Controller == "" {
-		config.Controller = "default"
+	if config.Controller != "string" {
+		t.Error("Controller field assignment failed")
 	}
 
-	if config.AccessToken == "" {
-		config.AccessToken = "default"
+	config.AccessToken = "string"
+	if config.AccessToken != "string" {
+		t.Error("AccessToken field assignment failed")
+	}
+
+	config.Timeout = time.Duration(0)
+	if config.Timeout != 0 {
+		t.Error("Timeout field assignment failed")
+	}
+
+	config.InsecureSkipVerify = false
+	if config.InsecureSkipVerify != false {
+		t.Error("InsecureSkipVerify field assignment failed")
+	}
+
+	config.Logger = (*slog.Logger)(nil)
+	if config.Logger != nil {
+		t.Error("Logger field assignment failed")
+	}
+
+	// Verify conditional assignments work without type errors
+	if config.Controller == "string" {
+		config.Controller = "default"
+		if config.Controller != "default" {
+			t.Error("Conditional Controller assignment failed")
+		}
+	}
+
+	if config.AccessToken == "string" {
+		config.AccessToken = "default-token"
+		if config.AccessToken != "default-token" {
+			t.Error("Conditional AccessToken assignment failed")
+		}
 	}
 
 	if config.Timeout == 0 {
 		config.Timeout = DefaultTimeout
+		if config.Timeout != DefaultTimeout {
+			t.Error("Conditional Timeout assignment failed")
+		}
 	}
 
 	// Test boolean toggle
+	originalSkipVerify := config.InsecureSkipVerify
 	config.InsecureSkipVerify = !config.InsecureSkipVerify
+	if config.InsecureSkipVerify == originalSkipVerify {
+		t.Error("Boolean toggle assignment failed")
+	}
 
 	// Test logger assignment
 	if config.Logger == nil {
 		config.Logger = slog.Default()
+		if config.Logger == nil {
+			t.Error("Logger assignment to default failed")
+		}
 	}
 }
 

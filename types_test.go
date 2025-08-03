@@ -153,13 +153,13 @@ func TestClientPointerBehavior(t *testing.T) {
 		timeout:     30 * time.Second,
 	}
 
-	if client == nil {
-		t.Fatal("Expected client pointer to not be nil")
-	}
-
-	// Test field access through pointer
+	// Test that pointer fields are accessible
 	if client.controller != "test.com" {
 		t.Errorf("Expected controller 'test.com', got '%s'", client.controller)
+	}
+
+	if client.accessToken != "token" {
+		t.Errorf("Expected accessToken 'token', got '%s'", client.accessToken)
 	}
 
 	// Test copying client
@@ -174,6 +174,18 @@ func TestClientPointerBehavior(t *testing.T) {
 	// Copy should be changed
 	if client2.controller != "different.com" {
 		t.Error("Expected copied client controller to be changed")
+	}
+
+	// Test deferred assignment behavior
+	nilClient := &Client{controller: "assigned.com"}
+	if nilClient.controller != "assigned.com" {
+		t.Errorf("Expected assigned controller 'assigned.com', got '%s'", nilClient.controller)
+	}
+
+	// Test pointer comparison
+	client3 := &Client{controller: "test.com", accessToken: "token"}
+	if client == client3 {
+		t.Error("Expected different Client pointers to not be equal")
 	}
 }
 
