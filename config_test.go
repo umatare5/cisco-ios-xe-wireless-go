@@ -166,6 +166,19 @@ func TestConfigValidation(t *testing.T) {
 			if isValid != tt.expectedValid {
 				t.Errorf("Expected config validity to be %v, got %v", tt.expectedValid, isValid)
 			}
+
+			// Test all fields are properly set
+			if config.Timeout != tt.timeout {
+				t.Errorf("Expected Timeout to be %v, got %v", tt.timeout, config.Timeout)
+			}
+
+			if config.InsecureSkipVerify != tt.insecureSkipVerify {
+				t.Errorf("Expected InsecureSkipVerify to be %v, got %v", tt.insecureSkipVerify, config.InsecureSkipVerify)
+			}
+
+			if config.Logger != tt.logger {
+				t.Errorf("Expected Logger to match test case logger")
+			}
 		})
 	}
 }

@@ -191,13 +191,7 @@ func TestClientPointerBehavior(t *testing.T) {
 
 // TestClientDefaultValues tests default value handling
 func TestClientDefaultValues(t *testing.T) {
-	client := Client{
-		controller:  "test.com",
-		accessToken: "token",
-		// timeout not set - should be zero
-		// insecureSkipVerify not set - should be false
-		// logger not set - should be nil
-	}
+	client := Client{}
 
 	if client.timeout != 0 {
 		t.Errorf("Expected unset timeout to be 0, got %v", client.timeout)
