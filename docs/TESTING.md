@@ -127,7 +127,7 @@ total: (statements) 6.1%
 
 For efficient testing workflow, start with unit tests and gradually move to integration tests.
 
-1. **Install Dependencies**: `make deps` - Install gotestfmt and other development tools.
+1. **Install Dependencies**: `make deps` - Install gotestsum and other development tools.
 2. **Unit Tests First**: `make test-unit` - Ensure basic functionality with enhanced output.
 3. **Environment Setup**: Configure environment variables for integration tests.
 4. **Environment Verification**: Check controller access to verify connectivity and credentials.
@@ -144,7 +144,7 @@ For efficient testing workflow, start with unit tests and gradually move to inte
 
 The project uses several tools to enhance the testing experience:
 
-- **gotestfmt**: Provides emoji-enhanced, human-readable test output
+- **gotestsum**: Provides enhanced, human-readable test output with various formats
 - **golangci-lint**: Code linting and static analysis
 - **goreleaser**: Release automation
 

@@ -6,7 +6,7 @@
 help:
 	@echo "Available targets:"
 	@echo "  clean            - Clean build artifacts"
-	@echo "  deps             - Install development dependencies (including gotestfmt)"
+	@echo "  deps             - Install development dependencies (including gotestsum)"
 	@echo "  lint             - Run linting tools"
 	@echo "  test-unit        - Run unit tests only"
 	@echo "  test-integration - Run integration tests (requires environment variables)"
@@ -31,9 +31,9 @@ deps:
 		echo "Installing goreleaser..."; \
 		go install github.com/goreleaser/goreleaser@latest; \
 	fi
-	@if ! command -v gotestfmt >/dev/null 2>&1; then \
-		echo "Installing gotestfmt..."; \
-		go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest; \
+	@if ! command -v gotestsum >/dev/null 2>&1; then \
+		echo "Installing gotestsum..."; \
+		go install gotest.tools/gotestsum@latest; \
 	fi
 	@echo "Development dependencies installed!"
 
@@ -50,10 +50,10 @@ lint:
 .PHONY: test-unit
 test-unit:
 	@echo "Running unit tests only (no environment variables required)..."
-	@if command -v gotestfmt >/dev/null 2>&1; then \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -json -race ./... | gotestfmt; \
+	@if command -v gotestsum >/dev/null 2>&1; then \
+		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" gotestsum --format testname -- -race ./...; \
 	else \
-		echo "gotestfmt not found, running go test with verbose output..."; \
+		echo "gotestsum not found, running go test with verbose output..."; \
 		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -v -race ./...; \
 	fi
 
@@ -64,10 +64,10 @@ test-integration:
 		echo "Error: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set"; \
 		exit 1; \
 	fi
-	@if command -v gotestfmt >/dev/null 2>&1; then \
-		go test -json -race ./... | gotestfmt; \
+	@if command -v gotestsum >/dev/null 2>&1; then \
+		gotestsum --format testname -- -race ./...; \
 	else \
-		echo "gotestfmt not found, running go test with verbose output..."; \
+		echo "gotestsum not found, running go test with verbose output..."; \
 		go test -v -race ./...; \
 	fi
 
@@ -75,10 +75,10 @@ test-integration:
 test-coverage:
 	@echo "Running tests with coverage..."
 	@mkdir -p ./tmp
-	@if command -v gotestfmt >/dev/null 2>&1; then \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -json -race -coverprofile=./tmp/coverage.out ./... | gotestfmt; \
+	@if command -v gotestsum >/dev/null 2>&1; then \
+		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" gotestsum --format testname -- -race -coverprofile=./tmp/coverage.out ./...; \
 	else \
-		echo "gotestfmt not found, running go test with verbose output..."; \
+		echo "gotestsum not found, running go test with verbose output..."; \
 		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -v -race -coverprofile=./tmp/coverage.out ./...; \
 	fi
 	@if [ -f ./tmp/coverage.out ]; then \
