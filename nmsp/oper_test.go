@@ -8,9 +8,8 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
-
+)
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // =============================================================================

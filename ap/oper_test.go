@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+)
 
 // APOperTestDataCollector holds test data for AP operation functions
 type APOperTestDataCollector struct {

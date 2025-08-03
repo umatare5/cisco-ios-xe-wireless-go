@@ -8,7 +8,7 @@ import (
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
-
+)
 // ClientOperTestDataCollector holds test data for client operation functions
 type ClientOperTestDataCollector struct {
 	Data map[string]interface{} `json:"client_oper_test_data"`

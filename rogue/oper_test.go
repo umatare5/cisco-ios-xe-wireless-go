@@ -11,7 +11,7 @@ import (
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
-
+)
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
 	return testhelpers.CreateTestClientFromEnv(t)

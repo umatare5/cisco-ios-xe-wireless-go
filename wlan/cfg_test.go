@@ -9,7 +9,7 @@ import (
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testhelpers"
-
+)
 // WlanCfgTestDataCollector holds test data for WLAN configuration functions
 type WlanCfgTestDataCollector struct {
 	Data map[string]interface{} `json:"wlan_cfg_test_data"`
