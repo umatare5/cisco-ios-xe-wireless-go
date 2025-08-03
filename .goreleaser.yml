@@ -38,16 +38,16 @@ release:
   draft: false
   replace_existing_draft: true
   header: |
-    ## cisco-ios-xe-wireless-go v{{ .Version }}
+    ## {{ .ProjectName }} v{{ .Version }}
 
     This release contains the Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
-    ### Installation
+    ###.  �Installation
+
     ```bash
     go get github.com/umatare5/cisco-ios-xe-wireless-go@v{{ .Version }}
     ```
 
-    ### What's Changed
   footer: |
     **Full Changelog**: https://github.com/umatare5/cisco-ios-xe-wireless-go/compare/{{ .PreviousTag }}...{{ .Tag }}
 
@@ -68,19 +68,20 @@ changelog:
     - title: Features
       regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
       order: 0
-    - title: Bug fixes
+    - title: Bug Fixes
       regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
       order: 1
-    - title: Documentation updates
+    - title: Documentation Updates
       regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
       order: 2
-    - title: Other work
+    - title: Others
       order: 999
   filters:
     exclude:
-      - '^test:'
-      - '^chore:'
+      - '^Merge branch '
+      - '^release:'
       - '^ci:'
+      - '^test:'
 
 # Metadata for Go proxy and pkg.go.dev
 metadata:
