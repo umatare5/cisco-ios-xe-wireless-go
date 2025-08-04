@@ -6,8 +6,7 @@ import (
 	"testing"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -178,7 +177,7 @@ func TestClientGlobalOperErrorHandling(t *testing.T) {
 
 // TestClientGlobalOperFunctions tests all client global operation functions with real API endpoints
 func TestClientGlobalOperFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 	ctx := context.Background()
 
 	// Function test configurations
@@ -284,7 +283,7 @@ func TestClientGlobalOperFunctions(t *testing.T) {
 		"client_global_oper_test_data": collector,
 	}
 
-	if err := testutil.SaveTestDataToFile("client_global_oper_test_data_collected.json", testDataMap); err != nil {
+	if err := testutils.SaveTestDataToFile("client_global_oper_test_data_collected.json", testDataMap); err != nil {
 		t.Errorf("Failed to save test data: %v", err)
 		return
 	}

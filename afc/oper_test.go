@@ -7,8 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -153,7 +152,7 @@ func TestAfcOperFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("afc_oper_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("afc_oper_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("AFC oper data saved to test_data/afc_oper_data.json")
@@ -177,7 +176,7 @@ func TestAfcOperFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("afc_ewlc_afc_ap_resp_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("afc_ewlc_afc_ap_resp_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("AFC EWLC AP response data saved to test_data/afc_ewlc_afc_ap_resp_data.json")

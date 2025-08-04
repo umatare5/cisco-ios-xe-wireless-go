@@ -7,8 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -137,7 +136,7 @@ func TestRadioConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("radio_cfg_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("radio_cfg_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Radio config data saved to test_data/radio_cfg_data.json")
@@ -163,7 +162,7 @@ func TestRadioConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("radio_profiles_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("radio_profiles_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Radio profiles data saved to test_data/radio_profiles_data.json")

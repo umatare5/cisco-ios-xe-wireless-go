@@ -2,13 +2,12 @@
 package rf
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"testing"
 	"time"
-
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -21,7 +20,7 @@ const (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // RfCfgTestDataCollector holds test data for RF configuration functions
@@ -98,7 +97,7 @@ func TestRfConfigurationFunctions(t *testing.T) {
 
 	// Save collected test data to file
 	if len(rfCfgTestDataCollector.Data) > 0 {
-		if err := testutil.SaveTestDataToFile("rf_cfg_test_data_collected.json", rfCfgTestDataCollector.Data); err != nil {
+		if err := testutils.SaveTestDataToFile("rf_cfg_test_data_collected.json", rfCfgTestDataCollector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Test data saved to %s/rf_cfg_test_data_collected.json", TestDataDir)

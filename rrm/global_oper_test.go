@@ -10,7 +10,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -27,8 +27,8 @@ type RrmGlobalOperTestDataCollector struct {
 // =============================================================================
 
 func TestRrmGlobalOperGetRrmGlobalOper(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalOper(client, ctx)
@@ -42,7 +42,7 @@ func TestRrmGlobalOperGetRrmGlobalOper(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_oper_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -52,8 +52,8 @@ func TestRrmGlobalOperGetRrmGlobalOper(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalOneShotCounters(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalOneShotCounters(client, ctx)
@@ -67,7 +67,7 @@ func TestRrmGlobalOperGetRrmGlobalOneShotCounters(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_one_shot_counters_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -77,8 +77,8 @@ func TestRrmGlobalOperGetRrmGlobalOneShotCounters(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalChannelParams(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalChannelParams(client, ctx)
@@ -92,7 +92,7 @@ func TestRrmGlobalOperGetRrmGlobalChannelParams(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_channel_params_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -102,8 +102,8 @@ func TestRrmGlobalOperGetRrmGlobalChannelParams(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalSpectrumAqWorstTable(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalSpectrumAqWorstTable(client, ctx)
@@ -117,7 +117,7 @@ func TestRrmGlobalOperGetRrmGlobalSpectrumAqWorstTable(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_spectrum_aq_worst_table_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -127,8 +127,8 @@ func TestRrmGlobalOperGetRrmGlobalSpectrumAqWorstTable(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperData24G(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalRadioOperData24G(client, ctx)
@@ -142,7 +142,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData24G(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_radio_oper_data_24g_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -152,8 +152,8 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData24G(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperData5G(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalRadioOperData5G(client, ctx)
@@ -167,7 +167,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData5G(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_radio_oper_data_5g_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -177,8 +177,8 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData5G(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperData6G(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalRadioOperData6G(client, ctx)
@@ -197,7 +197,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData6G(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_radio_oper_data_6g_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -207,8 +207,8 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData6G(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalSpectrumBandConfigData(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalSpectrumBandConfigData(client, ctx)
@@ -222,7 +222,7 @@ func TestRrmGlobalOperGetRrmGlobalSpectrumBandConfigData(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_spectrum_band_config_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -232,8 +232,8 @@ func TestRrmGlobalOperGetRrmGlobalSpectrumBandConfigData(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalRadioOperDataDualband(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalRadioOperDataDualband(client, ctx)
@@ -247,7 +247,7 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperDataDualband(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_radio_oper_data_dualband_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -257,8 +257,8 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperDataDualband(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalClientData(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalClientData(client, ctx)
@@ -272,7 +272,7 @@ func TestRrmGlobalOperGetRrmGlobalClientData(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_client_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -282,8 +282,8 @@ func TestRrmGlobalOperGetRrmGlobalClientData(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalFraStats(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalFraStats(client, ctx)
@@ -297,7 +297,7 @@ func TestRrmGlobalOperGetRrmGlobalFraStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_fra_stats_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -307,8 +307,8 @@ func TestRrmGlobalOperGetRrmGlobalFraStats(t *testing.T) {
 }
 
 func TestRrmGlobalOperGetRrmGlobalCoverage(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetRrmGlobalCoverage(client, ctx)
@@ -322,7 +322,7 @@ func TestRrmGlobalOperGetRrmGlobalCoverage(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("rrm_global_coverage_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -332,8 +332,8 @@ func TestRrmGlobalOperGetRrmGlobalCoverage(t *testing.T) {
 }
 
 func TestRrmGlobalOperCollectAllData(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	allData := make(map[string]interface{})
@@ -370,7 +370,7 @@ func TestRrmGlobalOperCollectAllData(t *testing.T) {
 
 	// Save all collected data to a comprehensive JSON file
 	filename := fmt.Sprintf("rrm_global_oper_comprehensive_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, allData); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, allData); err != nil {
 		t.Logf("Warning: Failed to save comprehensive data to %s: %v", filename, err)
 	} else {
 		t.Logf("Comprehensive RRM global operational data saved to %s", filename)

@@ -1,5 +1,5 @@
-// Package testutil provides basic testing utilities and helper functions.
-package testutil
+// Package tests provides comprehensive testing utilities for the cisco-ios-xe-wireless-go library.
+package tests
 
 import (
 	"context"
@@ -32,24 +32,6 @@ const (
 	// MicroTestTimeoutMicroseconds defines timeout for immediate cancellation tests
 	MicroTestTimeoutMicroseconds = 1
 )
-
-// GetTestCredentials returns test credentials from environment variables.
-// It supports both WNC_CONTROLLERS (new format) and WNC_CONTROLLER/WNC_ACCESS_TOKEN (legacy format)
-func GetTestCredentials() (controller, accessToken string, ok bool) {
-	// Check for new format first (WNC_CONTROLLERS)
-	if controllers := os.Getenv("WNC_CONTROLLERS"); controllers != "" {
-		parts := strings.Split(controllers, ":")
-		if len(parts) >= 2 {
-			return parts[0], parts[1], true
-		}
-	}
-
-	// Fall back to legacy format
-	controller = os.Getenv("WNC_CONTROLLER")
-	accessToken = os.Getenv("WNC_ACCESS_TOKEN")
-
-	return controller, accessToken, controller != "" && accessToken != ""
-}
 
 // Test-related constants
 const (
@@ -84,29 +66,6 @@ const (
 	MicroTestTimeout = MicroTestTimeoutMicroseconds * time.Microsecond
 )
 
-// TestConfig represents configuration for test operations
-type TestConfig struct {
-	Controller  string
-	AccessToken string
-	Timeout     time.Duration
-}
-
-// NewTestConfig creates a new test configuration
-func NewTestConfig(controller, accessToken string, timeout time.Duration) *TestConfig {
-	return &TestConfig{
-		Controller:  controller,
-		AccessToken: accessToken,
-		Timeout:     timeout,
-	}
-}
-
-// NewTestConfigFromEnv creates a test configuration from environment variables
-// Environment variable names - to avoid circular dependency
-const (
-	EnvVarController  = "WNC_CONTROLLER"
-	EnvVarAccessToken = "WNC_ACCESS_TOKEN"
-)
-
 // Common test endpoint validation constants
 const (
 	MinEndpointLength             = 10 // Minimum endpoint length
@@ -127,11 +86,52 @@ const (
 	HTTPHeaderContentType      = "application/yang-data+json"
 )
 
+// Environment variable names - to avoid circular dependency
+const (
+	EnvVarController  = "WNC_CONTROLLER"
+	EnvVarAccessToken = "WNC_ACCESS_TOKEN"
+	EnvVarControllers = "WNC_CONTROLLERS"
+)
+
+// GetTestCredentials returns test credentials from environment variables.
+// It supports both WNC_CONTROLLERS (new format) and WNC_CONTROLLER/WNC_ACCESS_TOKEN (legacy format)
+func GetTestCredentials() (controller, accessToken string, ok bool) {
+	// Check for new format first (WNC_CONTROLLERS)
+	if controllers := os.Getenv(EnvVarControllers); controllers != "" {
+		parts := strings.Split(controllers, ":")
+		if len(parts) >= 2 {
+			return parts[0], parts[1], true
+		}
+	}
+
+	// Fall back to legacy format
+	controller = os.Getenv(EnvVarController)
+	accessToken = os.Getenv(EnvVarAccessToken)
+
+	return controller, accessToken, controller != "" && accessToken != ""
+}
+
+// TestConfig represents configuration for test operations
+type TestConfig struct {
+	Controller  string
+	AccessToken string
+	Timeout     time.Duration
+}
+
+// NewTestConfig creates a new test configuration
+func NewTestConfig(controller, accessToken string, timeout time.Duration) *TestConfig {
+	return &TestConfig{
+		Controller:  controller,
+		AccessToken: accessToken,
+		Timeout:     timeout,
+	}
+}
+
 // NewTestConfigFromEnv creates a new test configuration from environment variables.
 // It supports both WNC_CONTROLLERS (new format) and WNC_CONTROLLER/WNC_ACCESS_TOKEN (legacy format)
 func NewTestConfigFromEnv() *wnc.Config {
 	// Check for new format first (WNC_CONTROLLERS)
-	if controllers := os.Getenv("WNC_CONTROLLERS"); controllers != "" {
+	if controllers := os.Getenv(EnvVarControllers); controllers != "" {
 		parts := strings.Split(controllers, ":")
 		if len(parts) >= 2 {
 			host := parts[0]
@@ -153,8 +153,8 @@ func NewTestConfigFromEnv() *wnc.Config {
 	}
 
 	// Fall back to legacy format (WNC_CONTROLLER and WNC_ACCESS_TOKEN)
-	host := os.Getenv("WNC_CONTROLLER")
-	accessToken := os.Getenv("WNC_ACCESS_TOKEN")
+	host := os.Getenv(EnvVarController)
+	accessToken := os.Getenv(EnvVarAccessToken)
 
 	if host == "" || accessToken == "" {
 		return nil
@@ -362,6 +362,50 @@ func GenerateEndpointValidationTest(t *testing.T, expectedEndpoints map[string]s
 	}
 }
 
+// GetTestClient returns a test client using environment variables.
+// This is a common helper used across all test packages.
+func GetTestClient(t *testing.T) *wnc.Client {
+	t.Helper()
+
+	// Check if we can create the client
+	config := NewTestConfigFromEnv()
+	if config == nil {
+		t.Skip("Required environment variables not set - skipping test")
+		return nil
+	}
+
+	return CreateTestClientFromEnv(t)
+}
+
+// GetTestClientWithTimeout returns a test client with specified timeout.
+func GetTestClientWithTimeout(t *testing.T, timeout time.Duration) *wnc.Client {
+	t.Helper()
+
+	// Check if we can create the client
+	config := NewTestConfigFromEnv()
+	if config == nil {
+		t.Skip("Required environment variables not set - skipping test")
+		return nil
+	}
+
+	return CreateTestClientWithTimeout(t, timeout)
+}
+
+// GetTestClientWithContext returns a test client with context.
+func GetTestClientWithContext(t *testing.T, ctx context.Context) *wnc.Client {
+	t.Helper()
+
+	// Check if we can create the client
+	config := NewTestConfigFromEnv()
+	if config == nil {
+		t.Skip("Required environment variables not set - skipping test")
+		return nil
+	}
+
+	client := CreateTestClientFromEnv(t)
+	return client
+}
+
 // CreateTestClientFromEnv creates a test client using environment variables
 func CreateTestClientFromEnv(t *testing.T) *wnc.Client {
 	t.Helper()
@@ -408,4 +452,24 @@ func CreateTestClientWithTimeout(t *testing.T, timeout time.Duration) *wnc.Clien
 	}
 
 	return client
+}
+
+// ValidateClient performs common client validation checks.
+func ValidateClient(t *testing.T, client *wnc.Client) {
+	t.Helper()
+	if client == nil {
+		t.Fatal("Client should not be nil")
+	}
+}
+
+// CreateStandardTestContext creates a context with standard timeout (30 seconds).
+func CreateStandardTestContext() (context.Context, context.CancelFunc) {
+	return context.WithTimeout(context.Background(), 30*time.Second)
+}
+
+// CreateCancelledTestContext creates a cancelled context for testing cancellation scenarios.
+func CreateCancelledTestContext() (context.Context, context.CancelFunc) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel() // Cancel immediately
+	return ctx, cancel
 }

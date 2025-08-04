@@ -9,7 +9,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -18,7 +18,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // =============================================================================
@@ -87,10 +87,10 @@ func collectBleLtxTestResult(testResults map[string]interface{}, methodName, end
 
 // saveBleLtxTestData helper function to save test data to JSON file
 func saveBleLtxTestData(t *testing.T, testResults map[string]interface{}, filename string) {
-	if err := testutil.SaveTestDataToFile(filename, testResults); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, testResults); err != nil {
 		t.Logf("Failed to save test data to %s: %v", filename, err)
 	} else {
-		t.Logf("Test data saved to %s/%s", testutil.TestDataDir, filename)
+		t.Logf("Test data saved to %s/%s", testutils.TestDataDir, filename)
 	}
 }
 

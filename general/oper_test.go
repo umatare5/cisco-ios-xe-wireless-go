@@ -9,7 +9,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // GeneralOperTestDataCollector holds test data for general operation functions
@@ -19,7 +19,7 @@ type GeneralOperTestDataCollector struct {
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // =============================================================================
@@ -87,7 +87,7 @@ func TestGeneralOperDataStructures(t *testing.T) {
 // TestGeneralOperEndpoints tests general operation endpoints with table-driven approach
 func TestGeneralOperEndpoints(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	// Table-driven test cases for various general endpoints
@@ -171,7 +171,7 @@ func TestGeneralOperFailFast(t *testing.T) {
 // TestGeneralOperGetGeneralOper tests GetGeneralOper with real WNC data collection
 func TestGeneralOperGetGeneralOper(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetGeneralOper(client, ctx)
@@ -185,7 +185,7 @@ func TestGeneralOperGetGeneralOper(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("general_oper_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -197,7 +197,7 @@ func TestGeneralOperGetGeneralOper(t *testing.T) {
 // TestGeneralOperGetGeneralOperMgmtIntfData tests GetGeneralOperMgmtIntfData with real WNC data collection
 func TestGeneralOperGetGeneralOperMgmtIntfData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetGeneralOperMgmtIntfData(client, ctx)
@@ -211,7 +211,7 @@ func TestGeneralOperGetGeneralOperMgmtIntfData(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("general_oper_mgmt_intf_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -223,7 +223,7 @@ func TestGeneralOperGetGeneralOperMgmtIntfData(t *testing.T) {
 // TestGeneralOperCollectAllData runs all general operational tests and collects comprehensive data
 func TestGeneralOperCollectAllData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 	allData := make(map[string]interface{})
 
@@ -253,7 +253,7 @@ func TestGeneralOperCollectAllData(t *testing.T) {
 
 	// Save all collected data to a comprehensive JSON file
 	filename := fmt.Sprintf("general_oper_comprehensive_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, allData); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, allData); err != nil {
 		t.Logf("Warning: Failed to save comprehensive data to %s: %v", filename, err)
 	} else {
 		t.Logf("Comprehensive data saved to %s", filename)
@@ -273,7 +273,7 @@ func TestGeneralOperPerformance(t *testing.T) {
 	}
 
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.ExtendedTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.ExtendedTestTimeout)
 	defer cancel()
 
 	// Test concurrent requests

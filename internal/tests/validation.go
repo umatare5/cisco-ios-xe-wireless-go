@@ -1,5 +1,5 @@
-// Package testutils provides common validation utilities for tests.
-package testutils
+// Package tests provides validation utilities for tests.
+package tests
 
 import (
 	"encoding/json"

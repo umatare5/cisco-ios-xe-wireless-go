@@ -9,7 +9,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -18,7 +18,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // TestMcastOperEndpoints tests that all Multicast operation endpoint constants are correctly defined
@@ -127,7 +127,7 @@ func TestMcastOperDataStructures(t *testing.T) {
 func TestGetMcastOper(t *testing.T) {
 	client := getTestClient(t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	t.Run("GetMcastOper", func(t *testing.T) {
@@ -155,7 +155,7 @@ func TestGetMcastOper(t *testing.T) {
 func TestGetMcastFlexMediastreamClientSummary(t *testing.T) {
 	client := getTestClient(t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	t.Run("GetMcastFlexMediastreamClientSummary", func(t *testing.T) {
@@ -180,7 +180,7 @@ func TestGetMcastFlexMediastreamClientSummary(t *testing.T) {
 func TestGetMcastVlanL2MgidOp(t *testing.T) {
 	client := getTestClient(t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	t.Run("GetMcastVlanL2MgidOp", func(t *testing.T) {
@@ -205,7 +205,7 @@ func TestGetMcastVlanL2MgidOp(t *testing.T) {
 func TestMcastComprehensiveOperations(t *testing.T) {
 	client := getTestClient(t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.ExtendedTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.ExtendedTestTimeout)
 	defer cancel()
 
 	operations := map[string]func() (interface{}, error){
@@ -260,10 +260,10 @@ func saveMcastTestData(filename string, data interface{}) {
 		return
 	}
 
-	if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", filename), data); err != nil {
+	if err := testutils.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", filename), data); err != nil {
 		fmt.Printf("Error saving test data for %s: %v\n", filename, err)
 	} else {
-		fmt.Printf("Test data saved to %s/test_data_%s.json\n", testutil.TestDataDir, filename)
+		fmt.Printf("Test data saved to %s/test_data_%s.json\n", testutils.TestDataDir, filename)
 	}
 }
 
@@ -271,7 +271,7 @@ func saveMcastTestData(filename string, data interface{}) {
 func TestMcastOperClientInterfaceCompliance(t *testing.T) {
 	client := getTestClient(t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.QuickTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.QuickTestTimeout)
 	defer cancel()
 
 	// Test that all methods exist and can be called

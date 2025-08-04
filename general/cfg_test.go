@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -15,7 +15,7 @@ import (
 
 // getTestClientCfg creates a test client using environment variables
 func getTestClientCfg(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // GeneralCfgTestDataCollector holds test data for general configuration functions
@@ -56,7 +56,7 @@ func TestGeneralConfigurationFunctions(t *testing.T) {
 	client := getTestClientCfg(t)
 	collector := newGeneralCfgTestDataCollector()
 
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetGeneralCfg", func(t *testing.T) {
@@ -223,7 +223,7 @@ func TestGeneralConfigurationFunctions(t *testing.T) {
 
 	// Save collected test data to file
 	if len(collector.Data) > 0 {
-		testutil.SaveTestDataWithLogging("general_cfg_test_data_collected.json", collector.Data)
+		testutils.SaveTestDataWithLogging("general_cfg_test_data_collected.json", collector.Data)
 	}
 }
 

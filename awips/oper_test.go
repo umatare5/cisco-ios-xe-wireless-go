@@ -9,7 +9,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -34,7 +34,7 @@ func TestAWIPSOperEndpoints(t *testing.T) {
 		"AwipsApDwldStatusEndpoint": AwipsApDwldStatusEndpoint,
 	}
 
-	testutil.GenerateEndpointValidationTest(t, expectedEndpoints, actualEndpoints)
+	testutils.GenerateEndpointValidationTest(t, expectedEndpoints, actualEndpoints)
 }
 
 // TestAWIPSOperDataStructures tests the basic structure of AWIPS operational data types
@@ -128,13 +128,13 @@ func TestAWIPSOperDataStructures(t *testing.T) {
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // TestGetAwipsOper tests the GetAwipsOper method
 func TestGetAwipsOper(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetAwipsOper", func(t *testing.T) {
@@ -153,7 +153,7 @@ func TestGetAwipsOper(t *testing.T) {
 		t.Logf("GetAwipsOper response received")
 
 		// Save to file for analysis
-		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_oper_data"), result); err != nil {
+		if err := testutils.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_oper_data"), result); err != nil {
 			t.Logf("Failed to save test data: %v", err)
 		}
 	})
@@ -163,7 +163,7 @@ func TestGetAwipsOper(t *testing.T) {
 // TestGetAwipsPerApInfo tests the GetAwipsPerApInfo method
 func TestGetAwipsPerApInfo(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetAwipsPerApInfo", func(t *testing.T) {
@@ -179,7 +179,7 @@ func TestGetAwipsPerApInfo(t *testing.T) {
 		}
 
 		t.Logf("GetAwipsPerApInfo response received")
-		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_per_ap_info_data"), result); err != nil {
+		if err := testutils.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_per_ap_info_data"), result); err != nil {
 			t.Logf("Failed to save test data: %v", err)
 		}
 	})
@@ -189,7 +189,7 @@ func TestGetAwipsPerApInfo(t *testing.T) {
 // TestGetAwipsDwldStatus tests the GetAwipsDwldStatus method
 func TestGetAwipsDwldStatus(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetAwipsDwldStatus", func(t *testing.T) {
@@ -205,7 +205,7 @@ func TestGetAwipsDwldStatus(t *testing.T) {
 		}
 
 		t.Logf("GetAwipsDwldStatus response received")
-		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_dwld_status_data"), result); err != nil {
+		if err := testutils.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_dwld_status_data"), result); err != nil {
 			t.Logf("Failed to save test data: %v", err)
 		}
 	})
@@ -215,7 +215,7 @@ func TestGetAwipsDwldStatus(t *testing.T) {
 // TestGetAwipsApDwldStatus tests the GetAwipsApDwldStatus method
 func TestGetAwipsApDwldStatus(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetAwipsApDwldStatus", func(t *testing.T) {
@@ -231,7 +231,7 @@ func TestGetAwipsApDwldStatus(t *testing.T) {
 		}
 
 		t.Logf("GetAwipsApDwldStatus response received")
-		if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_ap_dwld_status_data"), result); err != nil {
+		if err := testutils.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", "awips_ap_dwld_status_data"), result); err != nil {
 			t.Logf("Failed to save test data: %v", err)
 		}
 	})
@@ -292,7 +292,7 @@ func TestAWIPSComprehensiveOperations(t *testing.T) {
 	}
 
 	// Save comprehensive results
-	if err := testutil.SaveTestDataToFile("test_data_awips_comprehensive_test_results.json", allResults); err != nil {
+	if err := testutils.SaveTestDataToFile("test_data_awips_comprehensive_test_results.json", allResults); err != nil {
 		t.Logf("Failed to save comprehensive test results: %v", err)
 	}
 }

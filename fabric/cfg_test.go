@@ -5,8 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 func TestFabricNilClientHandling(t *testing.T) {
@@ -70,7 +69,7 @@ func TestFabricContextHandling(t *testing.T) {
 }
 
 func TestFabricConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -82,7 +81,7 @@ func TestFabricConfigurationFunctions(t *testing.T) {
 		if data == nil {
 			t.Fatal("GetFabricCfg returned nil data")
 		}
-		testutil.SaveTestDataToFile("fabric_cfg_data.json", data)
+		testutils.SaveTestDataToFile("fabric_cfg_data.json", data)
 	})
 
 	t.Run("GetFabricControlplaneNames", func(t *testing.T) {
@@ -93,7 +92,7 @@ func TestFabricConfigurationFunctions(t *testing.T) {
 		if data == nil {
 			t.Fatal("GetFabricControlplaneNames returned nil data")
 		}
-		testutil.SaveTestDataToFile("fabric_controlplane_names_data.json", data)
+		testutils.SaveTestDataToFile("fabric_controlplane_names_data.json", data)
 	})
 
 	t.Run("GetFabric", func(t *testing.T) {
@@ -104,7 +103,7 @@ func TestFabricConfigurationFunctions(t *testing.T) {
 		if data == nil {
 			t.Fatal("GetFabric returned nil data")
 		}
-		testutil.SaveTestDataToFile("fabric_data.json", data)
+		testutils.SaveTestDataToFile("fabric_data.json", data)
 	})
 }
 

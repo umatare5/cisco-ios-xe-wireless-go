@@ -6,8 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -102,7 +101,7 @@ func TestDot15ContextHandling(t *testing.T) {
 
 // TestDot15ConfigurationFunctions tests all 802.15 configuration functions with a live controller
 func TestDot15ConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -119,7 +118,7 @@ func TestDot15ConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("dot15_cfg_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("dot15_cfg_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Dot15 config data saved to test_data/dot15_cfg_data.json")
@@ -139,7 +138,7 @@ func TestDot15ConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("dot15_global_config_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("dot15_global_config_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Dot15 global config data saved to test_data/dot15_global_config_data.json")

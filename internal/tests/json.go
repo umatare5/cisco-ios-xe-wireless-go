@@ -1,5 +1,5 @@
-// Package testutils provides common JSON testing utilities for tests.
-package testutils
+// Package tests provides JSON testing utilities for tests.
+package tests
 
 import (
 	"encoding/json"

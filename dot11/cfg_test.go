@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -219,13 +219,13 @@ func TestDot11CfgDataStructures(t *testing.T) {
 
 // TestDot11ConfigurationFunctions tests all Dot11 configuration functions with real WNC data collection
 func TestDot11ConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// Create a comprehensive test data collection
-	collector := testutil.NewTestDataCollector()
+	collector := testutils.NewTestDataCollector()
 	endpointMapping := map[string]string{
 		"Dot11CfgEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
 		"Dot11ConfiguredCountriesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
@@ -235,7 +235,7 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetDot11Cfg", func(t *testing.T) {
 		result, err := GetDot11Cfg(client, ctx)
-		testutil.CollectTestResult(collector, "GetDot11Cfg", endpointMapping["Dot11CfgEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetDot11Cfg", endpointMapping["Dot11CfgEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetDot11Cfg failed: %v", err)
 		}
@@ -243,7 +243,7 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetDot11ConfiguredCountries", func(t *testing.T) {
 		result, err := GetDot11ConfiguredCountries(client, ctx)
-		testutil.CollectTestResult(collector, "GetDot11ConfiguredCountries", endpointMapping["Dot11ConfiguredCountriesEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetDot11ConfiguredCountries", endpointMapping["Dot11ConfiguredCountriesEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetDot11ConfiguredCountries failed: %v", err)
 		}
@@ -251,7 +251,7 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetDot11acMcsEntries", func(t *testing.T) {
 		result, err := GetDot11acMcsEntries(client, ctx)
-		testutil.CollectTestResult(collector, "GetDot11acMcsEntries", endpointMapping["Dot11acMcsEntriesEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetDot11acMcsEntries", endpointMapping["Dot11acMcsEntriesEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetDot11acMcsEntries failed: %v", err)
 		}
@@ -259,14 +259,14 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetDot11Entries", func(t *testing.T) {
 		result, err := GetDot11Entries(client, ctx)
-		testutil.CollectTestResult(collector, "GetDot11Entries", endpointMapping["Dot11EntriesEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetDot11Entries", endpointMapping["Dot11EntriesEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetDot11Entries failed: %v", err)
 		}
 	})
 
 	// Save collected test data to JSON file
-	testutil.SaveCollectedTestData(t, collector, "dot11_cfg_test_data_collected.json")
+	testutils.SaveCollectedTestData(t, collector, "dot11_cfg_test_data_collected.json")
 
 	// Test error handling with nil client
 	t.Run("GetDot11CfgWithNilClient", func(t *testing.T) {
@@ -320,5 +320,5 @@ func TestDot11ConfigurationEndpoints(t *testing.T) {
 		"Dot11EntriesEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
 	}
 
-	testutil.ValidateEndpoints(t, endpoints)
+	testutils.ValidateEndpoints(t, endpoints)
 }

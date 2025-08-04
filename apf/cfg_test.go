@@ -7,8 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -137,7 +136,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("apf_cfg_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("apf_cfg_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("APF config data saved to test_data/apf_cfg_data.json")
@@ -166,7 +165,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("apf_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("apf_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("APF data saved to test_data/apf_data.json")

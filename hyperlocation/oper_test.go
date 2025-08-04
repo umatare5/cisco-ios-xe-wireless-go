@@ -9,7 +9,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -18,7 +18,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // TestHyperlocationOperEndpoints tests that all Hyperlocation operation endpoint constants are correctly defined
@@ -117,7 +117,7 @@ func TestHyperlocationOperDataStructures(t *testing.T) {
 // TestGetHyperlocationOper tests the GetHyperlocationOper method
 func TestGetHyperlocationOper(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetHyperlocationOper", func(t *testing.T) {
@@ -136,7 +136,7 @@ func TestGetHyperlocationOper(t *testing.T) {
 		t.Logf("GetHyperlocationOper response received")
 
 		// Save to file for analysis
-		testutil.SaveTestDataWithLogging(fmt.Sprintf("test_data_%s.json", "hyperlocation_oper_data"), result)
+		testutils.SaveTestDataWithLogging(fmt.Sprintf("test_data_%s.json", "hyperlocation_oper_data"), result)
 	})
 
 }
@@ -144,7 +144,7 @@ func TestGetHyperlocationOper(t *testing.T) {
 // TestGetHyperlocationProfiles tests the GetHyperlocationProfiles method
 func TestGetHyperlocationProfiles(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetHyperlocationProfiles", func(t *testing.T) {
@@ -160,7 +160,7 @@ func TestGetHyperlocationProfiles(t *testing.T) {
 		}
 
 		t.Logf("GetHyperlocationProfiles response received")
-		testutil.SaveTestDataWithLogging(fmt.Sprintf("test_data_%s.json", "hyperlocation_profiles_data"), result)
+		testutils.SaveTestDataWithLogging(fmt.Sprintf("test_data_%s.json", "hyperlocation_profiles_data"), result)
 	})
 
 }
@@ -213,7 +213,7 @@ func TestHyperlocationComprehensiveOperations(t *testing.T) {
 	}
 
 	// Save comprehensive results
-	testutil.SaveTestDataWithLogging("test_data_hyperlocation_comprehensive_test_results.json", allResults)
+	testutils.SaveTestDataWithLogging("test_data_hyperlocation_comprehensive_test_results.json", allResults)
 }
 
 // TestHyperlocationOperClientInterfaceCompliance verifies that Client implements all Hyperlocation methods

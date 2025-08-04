@@ -2,19 +2,18 @@
 package rogue
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"fmt"
 	"testing"
 	"time"
-
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // =============================================================================
@@ -389,9 +388,9 @@ func saveRogueTestData(filename string, data interface{}) {
 		return
 	}
 
-	if err := testutil.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", filename), data); err != nil {
+	if err := testutils.SaveTestDataToFile(fmt.Sprintf("test_data_%s.json", filename), data); err != nil {
 		fmt.Printf("Error saving test data for %s: %v\n", filename, err)
 	} else {
-		fmt.Printf("Test data saved to %s/test_data_%s.json\n", testutil.TestDataDir, filename)
+		fmt.Printf("Test data saved to %s/test_data_%s.json\n", testutils.TestDataDir, filename)
 	}
 }

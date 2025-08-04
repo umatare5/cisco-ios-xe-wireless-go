@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -16,7 +16,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // APGlobalOperTestDataCollector holds test data for AP global operation functions
@@ -56,7 +56,7 @@ func TestAPGlobalOperationFunctions(t *testing.T) {
 	collector := newAPGlobalOperTestDataCollector()
 	client := getTestClient(t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	t.Run("GetApGlobalOper", func(t *testing.T) {
@@ -103,10 +103,10 @@ func TestAPGlobalOperationFunctions(t *testing.T) {
 
 	// Save collected test data to file
 	if len(collector.Data) > 0 {
-		if err := testutil.SaveTestDataToFile("ap_global_oper_test_data_collected.json", collector.Data); err != nil {
+		if err := testutils.SaveTestDataToFile("ap_global_oper_test_data_collected.json", collector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("AP global operation test data saved to %s/ap_global_oper_test_data_collected.json", testutil.TestDataDir)
+			t.Logf("AP global operation test data saved to %s/ap_global_oper_test_data_collected.json", testutils.TestDataDir)
 		}
 	}
 }

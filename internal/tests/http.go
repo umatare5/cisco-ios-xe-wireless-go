@@ -1,5 +1,5 @@
-// Package testutils provides common HTTP testing utilities for tests.
-package testutils
+// Package tests provides HTTP testing utilities for tests.
+package tests
 
 import (
 	"context"
@@ -134,8 +134,8 @@ func TestAPIFunctionWithContext(t *testing.T, testName string, setupMock func(*M
 	})
 }
 
-// TestTimeout tests function behavior with timeout scenarios.
-func TestTimeout(t *testing.T, testName string, testFunc func(context.Context, *wnc.Client) error) {
+// TestTimeoutAPI tests function behavior with timeout scenarios.
+func TestTimeoutAPI(t *testing.T, testName string, testFunc func(context.Context, *wnc.Client) error) {
 	t.Helper()
 
 	t.Run(testName, func(t *testing.T) {

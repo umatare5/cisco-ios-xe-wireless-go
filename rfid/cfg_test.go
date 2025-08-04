@@ -2,12 +2,11 @@
 package rfid
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"testing"
 	"time"
-
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -55,7 +54,7 @@ func TestRfidCfgDataStructures(t *testing.T) {
 
 // TestRfidConfigurationFunctions tests all RFID configuration functions with a live controller
 func TestRfidConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -72,7 +71,7 @@ func TestRfidConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("rfid_cfg_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("rfid_cfg_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("RFID config data saved to test_data/rfid_cfg_data.json")

@@ -2,12 +2,11 @@
 package site
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"testing"
 	"time"
-
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -229,13 +228,13 @@ func TestSiteCfgDataStructures(t *testing.T) {
 
 // TestSiteConfigurationFunctions tests all Site configuration functions with real WNC data collection
 func TestSiteConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// Create a comprehensive test data collection
-	collector := testutil.NewTestDataCollector()
+	collector := testutils.NewTestDataCollector()
 	endpointMapping := map[string]string{
 		"SiteCfgEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data",
 		"SiteApCfgProfilesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles",
@@ -244,7 +243,7 @@ func TestSiteConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetSiteCfg", func(t *testing.T) {
 		result, err := GetSiteCfg(client, ctx)
-		testutil.CollectTestResult(collector, "GetSiteCfg", endpointMapping["SiteCfgEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetSiteCfg", endpointMapping["SiteCfgEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetSiteCfg failed: %v", err)
 		}
@@ -252,7 +251,7 @@ func TestSiteConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetSiteApCfgProfiles", func(t *testing.T) {
 		result, err := GetSiteApCfgProfiles(client, ctx)
-		testutil.CollectTestResult(collector, "GetSiteApCfgProfiles", endpointMapping["SiteApCfgProfilesEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetSiteApCfgProfiles", endpointMapping["SiteApCfgProfilesEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetSiteApCfgProfiles failed: %v", err)
 		}
@@ -260,14 +259,14 @@ func TestSiteConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetSiteTagConfigs", func(t *testing.T) {
 		result, err := GetSiteTagConfigs(client, ctx)
-		testutil.CollectTestResult(collector, "GetSiteTagConfigs", endpointMapping["SiteTagConfigsEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetSiteTagConfigs", endpointMapping["SiteTagConfigsEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetSiteTagConfigs failed: %v", err)
 		}
 	})
 
 	// Save collected test data to JSON file
-	testutil.SaveCollectedTestData(t, collector, "site_cfg_test_data_collected.json")
+	testutils.SaveCollectedTestData(t, collector, "site_cfg_test_data_collected.json")
 }
 
 // TestSiteConfigurationEndpoints tests that all Site configuration endpoints are correctly defined
@@ -279,5 +278,5 @@ func TestSiteConfigurationEndpoints(t *testing.T) {
 		"SiteTagConfigsEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs",
 	}
 
-	testutil.ValidateEndpoints(t, endpoints)
+	testutils.ValidateEndpoints(t, endpoints)
 }

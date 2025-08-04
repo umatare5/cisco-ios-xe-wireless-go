@@ -2,13 +2,12 @@
 package mesh
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -136,13 +135,13 @@ func TestMeshCfgDataStructures(t *testing.T) {
 // =============================================================================
 
 func TestMeshConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// Create a comprehensive test data collection
-	collector := testutil.NewTestDataCollector()
+	collector := testutils.NewTestDataCollector()
 	endpointMapping := map[string]string{
 		"MeshCfgEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data",
 		"MeshMeshEndpoint":     "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh",
@@ -151,7 +150,7 @@ func TestMeshConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetMeshCfg", func(t *testing.T) {
 		result, err := GetMeshCfg(client, ctx)
-		testutil.CollectTestResult(collector, "GetMeshCfg", endpointMapping["MeshCfgEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetMeshCfg", endpointMapping["MeshCfgEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetMeshCfg failed: %v", err)
 		}
@@ -159,7 +158,7 @@ func TestMeshConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetMesh", func(t *testing.T) {
 		result, err := GetMesh(client, ctx)
-		testutil.CollectTestResult(collector, "GetMesh", endpointMapping["MeshMeshEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetMesh", endpointMapping["MeshMeshEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetMesh failed: %v", err)
 		}
@@ -167,14 +166,14 @@ func TestMeshConfigurationFunctions(t *testing.T) {
 
 	t.Run("GetMeshProfiles", func(t *testing.T) {
 		result, err := GetMeshProfiles(client, ctx)
-		testutil.CollectTestResult(collector, "GetMeshProfiles", endpointMapping["MeshProfilesEndpoint"], result, err)
+		testutils.CollectTestResult(collector, "GetMeshProfiles", endpointMapping["MeshProfilesEndpoint"], result, err)
 		if err != nil {
 			t.Logf("GetMeshProfiles failed: %v", err)
 		}
 	})
 
 	// Save collected test data to JSON file
-	testutil.SaveCollectedTestData(t, collector, "mesh_cfg_test_data_collected.json")
+	testutils.SaveCollectedTestData(t, collector, "mesh_cfg_test_data_collected.json")
 }
 
 // TestMeshConfigurationEndpoints tests endpoint validation

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -17,7 +17,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // =============================================================================
@@ -26,7 +26,7 @@ func getTestClient(t *testing.T) *wnc.Client {
 
 func TestMobilityOperGetMobilityOper(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityOper(client, ctx)
@@ -40,7 +40,7 @@ func TestMobilityOperGetMobilityOper(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_oper_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -51,7 +51,7 @@ func TestMobilityOperGetMobilityOper(t *testing.T) {
 
 func TestMobilityOperGetMobilityMmIfGlobalStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityMmIfGlobalStats(client, ctx)
@@ -65,7 +65,7 @@ func TestMobilityOperGetMobilityMmIfGlobalStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_mm_if_global_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -76,7 +76,7 @@ func TestMobilityOperGetMobilityMmIfGlobalStats(t *testing.T) {
 
 func TestMobilityOperGetMobilityMmIfGlobalMsgStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityMmIfGlobalMsgStats(client, ctx)
@@ -90,7 +90,7 @@ func TestMobilityOperGetMobilityMmIfGlobalMsgStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_mm_if_global_msg_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -101,7 +101,7 @@ func TestMobilityOperGetMobilityMmIfGlobalMsgStats(t *testing.T) {
 
 func TestMobilityOperGetMobilityGlobalStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityGlobalStats(client, ctx)
@@ -115,7 +115,7 @@ func TestMobilityOperGetMobilityGlobalStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_global_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -126,7 +126,7 @@ func TestMobilityOperGetMobilityGlobalStats(t *testing.T) {
 
 func TestMobilityOperGetMobilityMmGlobalData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityMmGlobalData(client, ctx)
@@ -140,7 +140,7 @@ func TestMobilityOperGetMobilityMmGlobalData(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_mm_global_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -151,7 +151,7 @@ func TestMobilityOperGetMobilityMmGlobalData(t *testing.T) {
 
 func TestMobilityOperGetMobilityGlobalMsgStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityGlobalMsgStats(client, ctx)
@@ -165,7 +165,7 @@ func TestMobilityOperGetMobilityGlobalMsgStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_global_msg_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -176,7 +176,7 @@ func TestMobilityOperGetMobilityGlobalMsgStats(t *testing.T) {
 
 func TestMobilityOperGetMobilityClientData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityClientData(client, ctx)
@@ -190,7 +190,7 @@ func TestMobilityOperGetMobilityClientData(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_client_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -201,7 +201,7 @@ func TestMobilityOperGetMobilityClientData(t *testing.T) {
 
 func TestMobilityOperGetMobilityApCache(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityApCache(client, ctx)
@@ -215,7 +215,7 @@ func TestMobilityOperGetMobilityApCache(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_ap_cache_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -226,7 +226,7 @@ func TestMobilityOperGetMobilityApCache(t *testing.T) {
 
 func TestMobilityOperGetMobilityApPeerList(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityApPeerList(client, ctx)
@@ -240,7 +240,7 @@ func TestMobilityOperGetMobilityApPeerList(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_ap_peer_list_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -251,7 +251,7 @@ func TestMobilityOperGetMobilityApPeerList(t *testing.T) {
 
 func TestMobilityOperGetMobilityClientStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityClientStats(client, ctx)
@@ -265,7 +265,7 @@ func TestMobilityOperGetMobilityClientStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_client_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -276,7 +276,7 @@ func TestMobilityOperGetMobilityClientStats(t *testing.T) {
 
 func TestMobilityOperGetMobilityWlanClientLimit(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityWlanClientLimit(client, ctx)
@@ -290,7 +290,7 @@ func TestMobilityOperGetMobilityWlanClientLimit(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_wlan_client_limit_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -301,7 +301,7 @@ func TestMobilityOperGetMobilityWlanClientLimit(t *testing.T) {
 
 func TestMobilityOperGetMobilityGlobalDTLSStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	result, err := GetMobilityGlobalDTLSStats(client, ctx)
@@ -315,7 +315,7 @@ func TestMobilityOperGetMobilityGlobalDTLSStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mobility_global_dtls_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -326,7 +326,7 @@ func TestMobilityOperGetMobilityGlobalDTLSStats(t *testing.T) {
 
 func TestMobilityOperCollectAllData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	allData := make(map[string]interface{})
@@ -363,7 +363,7 @@ func TestMobilityOperCollectAllData(t *testing.T) {
 
 	// Save all collected data to a comprehensive JSON file
 	filename := fmt.Sprintf("mobility_oper_comprehensive_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, allData); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, allData); err != nil {
 		t.Logf("Warning: Failed to save comprehensive data to %s: %v", filename, err)
 	} else {
 		t.Logf("Comprehensive mobility operational data saved to %s", filename)

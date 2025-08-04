@@ -2,12 +2,11 @@
 package rrm
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"testing"
 	"time"
-
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -101,9 +100,9 @@ func TestRrmEmulOperStructValidation(t *testing.T) {
 
 func TestRrmEmulOperMethods(t *testing.T) {
 	// Create test client
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	t.Run("GetRrmEmulOper", func(t *testing.T) {
@@ -174,7 +173,7 @@ func TestRrmEmulOperResponseFields(t *testing.T) {
 
 func TestRrmEmulOperCompleteWorkflow(t *testing.T) {
 	// Create test client
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()

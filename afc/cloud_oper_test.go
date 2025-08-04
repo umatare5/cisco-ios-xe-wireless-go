@@ -7,8 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -149,7 +148,7 @@ func TestAfcCloudOperFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("afc_cloud_oper_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("afc_cloud_oper_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("AFC cloud oper data saved to test_data/afc_cloud_oper_data.json")
@@ -173,7 +172,7 @@ func TestAfcCloudOperFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("afc_cloud_stats_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("afc_cloud_stats_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("AFC cloud stats data saved to test_data/afc_cloud_stats_data.json")

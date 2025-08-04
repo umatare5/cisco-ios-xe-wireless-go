@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -45,9 +45,9 @@ func (collector *APCfgTestDataCollector) runTestAndCollectData(t *testing.T, tes
 // =============================================================================
 
 func TestAPConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
-	ctx, cancel := testutil.CreateDefaultTestContext()
+	ctx, cancel := testutils.CreateDefaultTestContext()
 	defer cancel()
 
 	collector := newAPCfgTestDataCollector()
@@ -78,10 +78,10 @@ func TestAPConfigurationFunctions(t *testing.T) {
 
 	// Save collected test data to file
 	if len(collector.Data) > 0 {
-		if err := testutil.SaveTestDataToFile("ap_cfg_test_data_collected.json", collector.Data); err != nil {
+		if err := testutils.SaveTestDataToFile("ap_cfg_test_data_collected.json", collector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("AP configuration test data saved to %s/ap_cfg_test_data_collected.json", testutil.TestDataDir)
+			t.Logf("AP configuration test data saved to %s/ap_cfg_test_data_collected.json", testutils.TestDataDir)
 		}
 	}
 }

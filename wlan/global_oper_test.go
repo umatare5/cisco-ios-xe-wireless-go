@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -46,7 +46,7 @@ func runWlanGlobalOperTestAndCollectData(t *testing.T, testName string, testFunc
 
 // TestWlanGlobalOperFunctions tests all WLAN global operation functions with real WNC data collection
 func TestWlanGlobalOperFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -65,10 +65,10 @@ func TestWlanGlobalOperFunctions(t *testing.T) {
 
 	// Save collected test data to file
 	if len(wlanGlobalOperTestDataCollector.Data) > 0 {
-		if err := testutil.SaveTestDataToFile("wlan_global_oper_test_data_collected.json", wlanGlobalOperTestDataCollector.Data); err != nil {
+		if err := testutils.SaveTestDataToFile("wlan_global_oper_test_data_collected.json", wlanGlobalOperTestDataCollector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("Test data saved to %s/wlan_global_oper_test_data_collected.json", testutil.TestDataDir)
+			t.Logf("Test data saved to %s/wlan_global_oper_test_data_collected.json", testutils.TestDataDir)
 		}
 	}
 }

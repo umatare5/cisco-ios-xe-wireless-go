@@ -1,5 +1,5 @@
-// Package testutils provides common error handling utilities for tests.
-package testutils
+// Package tests provides error handling utilities for tests.
+package tests
 
 import (
 	"context"
@@ -8,7 +8,6 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // CommonErrorTestCases is an alias for ErrorTestCase for backward compatibility.
@@ -42,7 +41,7 @@ func RunCommonErrorTests(t *testing.T, testCaseName string, testCases []ErrorTes
 	t.Helper()
 
 	// Check if environment variables are available
-	config := testutil.NewTestConfigFromEnv()
+	config := NewTestConfigFromEnv()
 	if config == nil {
 		t.Skip("Required environment variables not set - skipping test")
 		return

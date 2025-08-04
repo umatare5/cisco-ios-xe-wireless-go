@@ -2,14 +2,13 @@
 package mesh
 
 import (
-	"context"
 	"encoding/json"
+	"context"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"fmt"
 	"testing"
 	"time"
-
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // =============================================================================
@@ -18,7 +17,7 @@ import (
 
 // getTestClient creates a test client using environment variables
 func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
+	return testutils.CreateTestClientFromEnv(t)
 }
 
 // MeshGlobalOperTestDataCollector holds test data for mesh global operation functions
@@ -32,7 +31,7 @@ type MeshGlobalOperTestDataCollector struct {
 
 func TestMeshGlobalOperGetMeshGlobalOper(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetMeshGlobalOper(client, ctx)
@@ -46,7 +45,7 @@ func TestMeshGlobalOperGetMeshGlobalOper(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mesh_global_oper_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -57,7 +56,7 @@ func TestMeshGlobalOperGetMeshGlobalOper(t *testing.T) {
 
 func TestMeshGlobalOperGetMeshGlobalStats(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetMeshGlobalStats(client, ctx)
@@ -71,7 +70,7 @@ func TestMeshGlobalOperGetMeshGlobalStats(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mesh_global_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -82,7 +81,7 @@ func TestMeshGlobalOperGetMeshGlobalStats(t *testing.T) {
 
 func TestMeshGlobalOperGetMeshApTreeData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	result, err := GetMeshApTreeData(client, ctx)
@@ -96,7 +95,7 @@ func TestMeshGlobalOperGetMeshApTreeData(t *testing.T) {
 
 	// Save result to JSON file
 	filename := fmt.Sprintf("mesh_ap_tree_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, result); err != nil {
 		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
 	} else {
 		t.Logf("Data saved to %s", filename)
@@ -107,7 +106,7 @@ func TestMeshGlobalOperGetMeshApTreeData(t *testing.T) {
 
 func TestMeshGlobalOperCollectAllData(t *testing.T) {
 	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
 	defer cancel()
 
 	allData := make(map[string]interface{})
@@ -135,7 +134,7 @@ func TestMeshGlobalOperCollectAllData(t *testing.T) {
 
 	// Save all collected data to a comprehensive JSON file
 	filename := fmt.Sprintf("mesh_global_oper_comprehensive_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, allData); err != nil {
+	if err := testutils.SaveTestDataToFile(filename, allData); err != nil {
 		t.Logf("Warning: Failed to save comprehensive data to %s: %v", filename, err)
 	} else {
 		t.Logf("Comprehensive mesh global operational data saved to %s", filename)

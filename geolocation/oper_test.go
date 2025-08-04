@@ -7,8 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -101,7 +100,7 @@ func TestGeolocationOperFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("geolocation_oper_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("geolocation_oper_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Geolocation oper data saved to test_data/geolocation_oper_data.json")
@@ -125,7 +124,7 @@ func TestGeolocationOperFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("geolocation_ap_geo_loc_stats_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("geolocation_ap_geo_loc_stats_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Geolocation AP geo loc stats data saved to test_data/geolocation_ap_geo_loc_stats_data.json")

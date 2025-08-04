@@ -7,8 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -154,7 +153,7 @@ func TestFlexConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("flex_cfg_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("flex_cfg_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Flex config data saved to test_data/flex_cfg_data.json")
@@ -180,7 +179,7 @@ func TestFlexConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("flex_cfg_policy_entries_data.json", data); err != nil {
+		if err := testutils.SaveTestDataToFile("flex_cfg_policy_entries_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
 			t.Logf("Flex policy entries data saved to test_data/flex_cfg_policy_entries_data.json")

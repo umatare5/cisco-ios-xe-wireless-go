@@ -5,8 +5,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -75,7 +74,7 @@ func TestLocationErrorHandling(t *testing.T) {
 // =============================================================================
 
 func TestLocationConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.CreateTestClientFromEnv(t)
 	ctx := context.Background()
 
 	// Function test configurations
@@ -127,7 +126,7 @@ func TestLocationConfigurationFunctions(t *testing.T) {
 		"location_configuration_test_data": collector,
 	}
 
-	if err := testutil.SaveTestDataToFile("location_configuration_test_data_collected.json", testDataMap); err != nil {
+	if err := testutils.SaveTestDataToFile("location_configuration_test_data_collected.json", testDataMap); err != nil {
 		t.Errorf("Failed to save test data: %v", err)
 		return
 	}
