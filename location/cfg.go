@@ -3,6 +3,7 @@ package location
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -30,6 +31,9 @@ type LocationNmspConfigResponse struct {
 
 // GetLocationCfg retrieves complete location configuration data.
 func GetLocationCfg(client *wnc.Client, ctx context.Context) (*LocationCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LocationCfgResponse
 	if err := client.SendAPIRequest(ctx, LocationCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -39,6 +43,9 @@ func GetLocationCfg(client *wnc.Client, ctx context.Context) (*LocationCfgRespon
 
 // GetLocationNmspConfig retrieves NMSP configuration data.
 func GetLocationNmspConfig(client *wnc.Client, ctx context.Context) (*LocationNmspConfigResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LocationNmspConfigResponse
 	if err := client.SendAPIRequest(ctx, LocationCfgNmspConfigEndpoint, &data); err != nil {
 		return nil, err

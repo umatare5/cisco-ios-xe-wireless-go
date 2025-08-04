@@ -3,6 +3,7 @@ package cts
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -40,6 +41,9 @@ type CtsSxpConfig struct {
 
 // GetCtsSxpCfg retrieves complete CTS SXP configuration data.
 func GetCtsSxpCfg(client *wnc.Client, ctx context.Context) (*CtsSxpCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data CtsSxpCfgResponse
 	if err := client.SendAPIRequest(ctx, CtsSxpCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -49,6 +53,9 @@ func GetCtsSxpCfg(client *wnc.Client, ctx context.Context) (*CtsSxpCfgResponse, 
 
 // GetCtsSxpConfiguration retrieves CTS SXP configuration entries.
 func GetCtsSxpConfiguration(client *wnc.Client, ctx context.Context) (*CtsSxpConfigurationResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data CtsSxpConfigurationResponse
 	if err := client.SendAPIRequest(ctx, CtsSxpConfigurationEndpoint, &data); err != nil {
 		return nil, err

@@ -3,6 +3,7 @@ package afc
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -62,6 +63,9 @@ type EwlcAfcApResp struct {
 
 // GetAfcOper retrieves AFC operational data.
 func GetAfcOper(client *wnc.Client, ctx context.Context) (*AfcOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data AfcOperResponse
 	if err := client.SendAPIRequest(ctx, AfcOperEndpoint, &data); err != nil {
 		return nil, err
@@ -71,6 +75,9 @@ func GetAfcOper(client *wnc.Client, ctx context.Context) (*AfcOperResponse, erro
 
 // GetAfcEwlcAfcApResp retrieves EWLC AFC AP response data.
 func GetAfcEwlcAfcApResp(client *wnc.Client, ctx context.Context) (*AfcOperEwlcAfcApRespResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data AfcOperEwlcAfcApRespResponse
 	if err := client.SendAPIRequest(ctx, AfcOperEwlcAfcApRespEndpoint, &data); err != nil {
 		return nil, err

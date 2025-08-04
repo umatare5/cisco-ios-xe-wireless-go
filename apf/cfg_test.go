@@ -3,11 +3,12 @@ package apf
 
 import (
 	"context"
-	"encoding/json"
 	"testing"
 	"time"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
 )
 
 // =============================================================================
@@ -15,77 +16,101 @@ import (
 // =============================================================================
 
 func TestApfCfgDataStructures(t *testing.T) {
-	// Test ApfCfgResponse structure
-	t.Run("ApfCfgResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data": {
-				"apf": {
-					"system-mgmt-via-wireless": true,
-					"network-name": "corporate-network"
+	testCases := []testutils.JSONTestCase{
+		{
+			Name: "ApfCfgResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data": {
+					"apf": {
+						"system-mgmt-via-wireless": true,
+						"network-name": "corporate-network"
+					}
 				}
-			}
-		}`
+			}`,
+			Target:     &ApfCfgResponse{},
+			TypeName:   "ApfCfgResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "ApfCfgApfResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-apf-cfg:apf": {
+					"system-mgmt-via-wireless": false,
+					"network-name": "guest-network"
+				}
+			}`,
+			Target:     &ApfCfgApfResponse{},
+			TypeName:   "ApfCfgApfResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "Apf",
+			JSONData: `{
+				"system-mgmt-via-wireless": true,
+				"network-name": "production-network"
+			}`,
+			Target:     &Apf{},
+			TypeName:   "Apf",
+			ShouldFail: false,
+		},
+		{
+			Name: "InvalidApfCfgResponse",
+			JSONData: `{
+				"invalid-field": "invalid-value"
+			}`,
+			Target:     &ApfCfgResponse{},
+			TypeName:   "ApfCfgResponse",
+			ShouldFail: false, // JSON unmarshaling is lenient with extra fields
+		},
+	}
 
+	testutils.RunJSONTests(t, testCases)
+
+	// Additional field validation for successfully unmarshaled structures
+	t.Run("ApfCfgResponseFieldValidation", func(t *testing.T) {
 		var response ApfCfgResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal ApfCfgResponse: %v", err)
-		}
+		testutils.TestJSONUnmarshal(t, testCases[0].JSONData, &response, "ApfCfgResponse")
 
-		if !response.CiscoIOSXEWirelessApfCfgApfCfgData.Apf.SystemMgmtViaWireless {
-			t.Error("Expected system-mgmt-via-wireless to be true")
-		}
-
-		if response.CiscoIOSXEWirelessApfCfgApfCfgData.Apf.NetworkName != "corporate-network" {
-			t.Errorf("Expected network name 'corporate-network', got '%s'",
-				response.CiscoIOSXEWirelessApfCfgApfCfgData.Apf.NetworkName)
-		}
-	})
-
-	// Test ApfCfgApfResponse structure
-	t.Run("ApfCfgApfResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-apf-cfg:apf": {
-				"system-mgmt-via-wireless": false,
-				"network-name": "guest-network"
+		testutils.ValidateJSONStructFields(t, "ApfCfgResponse", func() error {
+			if !response.CiscoIOSXEWirelessApfCfgApfCfgData.Apf.SystemMgmtViaWireless {
+				t.Error("Expected system-mgmt-via-wireless to be true")
 			}
-		}`
-
-		var response ApfCfgApfResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal ApfCfgApfResponse: %v", err)
-		}
-
-		if response.Apf.SystemMgmtViaWireless {
-			t.Error("Expected system-mgmt-via-wireless to be false")
-		}
-
-		if response.Apf.NetworkName != "guest-network" {
-			t.Errorf("Expected network name 'guest-network', got '%s'", response.Apf.NetworkName)
-		}
+			if response.CiscoIOSXEWirelessApfCfgApfCfgData.Apf.NetworkName != "corporate-network" {
+				t.Errorf("Expected network name 'corporate-network', got '%s'",
+					response.CiscoIOSXEWirelessApfCfgApfCfgData.Apf.NetworkName)
+			}
+			return nil
+		})
 	})
 
-	// Test Apf structure
-	t.Run("Apf", func(t *testing.T) {
-		sampleJSON := `{
-			"system-mgmt-via-wireless": true,
-			"network-name": "production-network"
-		}`
+	t.Run("ApfCfgApfResponseFieldValidation", func(t *testing.T) {
+		var response ApfCfgApfResponse
+		testutils.TestJSONUnmarshal(t, testCases[1].JSONData, &response, "ApfCfgApfResponse")
 
+		testutils.ValidateJSONStructFields(t, "ApfCfgApfResponse", func() error {
+			if response.Apf.SystemMgmtViaWireless {
+				t.Error("Expected system-mgmt-via-wireless to be false")
+			}
+			if response.Apf.NetworkName != "guest-network" {
+				t.Errorf("Expected network name 'guest-network', got '%s'", response.Apf.NetworkName)
+			}
+			return nil
+		})
+	})
+
+	t.Run("ApfFieldValidation", func(t *testing.T) {
 		var apf Apf
-		err := json.Unmarshal([]byte(sampleJSON), &apf)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal Apf: %v", err)
-		}
+		testutils.TestJSONUnmarshal(t, testCases[2].JSONData, &apf, "Apf")
 
-		if !apf.SystemMgmtViaWireless {
-			t.Error("Expected system-mgmt-via-wireless to be true")
-		}
-
-		if apf.NetworkName != "production-network" {
-			t.Errorf("Expected network name 'production-network', got '%s'", apf.NetworkName)
-		}
+		testutils.ValidateJSONStructFields(t, "Apf", func() error {
+			if !apf.SystemMgmtViaWireless {
+				t.Error("Expected system-mgmt-via-wireless to be true")
+			}
+			if apf.NetworkName != "production-network" {
+				t.Errorf("Expected network name 'production-network', got '%s'", apf.NetworkName)
+			}
+			return nil
+		})
 	})
 }
 
@@ -95,7 +120,7 @@ func TestApfCfgDataStructures(t *testing.T) {
 
 // TestApfConfigurationFunctions tests all APF configuration functions with a live controller
 func TestApfConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.GetTestClient(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -156,6 +181,39 @@ func TestApfConfigurationFunctions(t *testing.T) {
 		if endpoint != expectedEndpoint {
 			t.Errorf("ApfEndpoint unexpected value: expected %s, got %s", expectedEndpoint, endpoint)
 		}
+	})
+
+	// Test error handling with common error patterns
+	testutils.RunCommonErrorTests(t, "ApfErrorHandling", []testutils.ErrorTestCase{
+		{
+			Name: "GetApfCfgWithNilClient",
+			TestFunc: func(client *wnc.Client) error {
+				_, err := GetApfCfg(nil, ctx)
+				return err
+			},
+			ExpectedError: "client is nil",
+		},
+		{
+			Name: "GetApfWithNilClient",
+			TestFunc: func(client *wnc.Client) error {
+				_, err := GetApf(nil, ctx)
+				return err
+			},
+			ExpectedError: "client is nil",
+		},
+	})
+
+	// Test context handling
+	t.Run("ContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApfCfg(client, ctx)
+			return err
+		})
+
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApf(client, ctx)
+			return err
+		})
 	})
 }
 

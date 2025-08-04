@@ -3,6 +3,7 @@ package fabric
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -47,6 +48,9 @@ type FabricControlplaneName struct {
 
 // GetFabricCfg retrieves complete fabric configuration data.
 func GetFabricCfg(client *wnc.Client, ctx context.Context) (*FabricCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data FabricCfgResponse
 	if err := client.SendAPIRequest(ctx, FabricCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -56,6 +60,9 @@ func GetFabricCfg(client *wnc.Client, ctx context.Context) (*FabricCfgResponse, 
 
 // GetFabricControlplaneNames retrieves fabric control plane names.
 func GetFabricControlplaneNames(client *wnc.Client, ctx context.Context) (*FabricControlplaneNamesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data FabricControlplaneNamesResponse
 	if err := client.SendAPIRequest(ctx, FabricControlplaneNamesEndpoint, &data); err != nil {
 		return nil, err
@@ -64,6 +71,9 @@ func GetFabricControlplaneNames(client *wnc.Client, ctx context.Context) (*Fabri
 }
 
 func GetFabric(client *wnc.Client, ctx context.Context) (*FabricResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data FabricResponse
 	if err := client.SendAPIRequest(ctx, FabricCfgEndpoint+"/fabric", &data); err != nil {
 		return nil, err

@@ -3,6 +3,7 @@ package dot15
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -28,6 +29,9 @@ type Dot15GlobalConfigResponse struct {
 
 // GetDot15Cfg retrieves complete 802.15 configuration data.
 func GetDot15Cfg(client *wnc.Client, ctx context.Context) (*Dot15CfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data Dot15CfgResponse
 	if err := client.SendAPIRequest(ctx, Dot15CfgEndpoint, &data); err != nil {
 		return nil, err
@@ -37,6 +41,9 @@ func GetDot15Cfg(client *wnc.Client, ctx context.Context) (*Dot15CfgResponse, er
 
 // GetDot15GlobalConfig retrieves 802.15 global configuration.
 func GetDot15GlobalConfig(client *wnc.Client, ctx context.Context) (*Dot15GlobalConfigResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data Dot15GlobalConfigResponse
 	if err := client.SendAPIRequest(ctx, Dot15CfgEndpoint+"/dot15-global-config", &data); err != nil {
 		return nil, err

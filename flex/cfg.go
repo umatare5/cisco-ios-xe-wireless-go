@@ -3,6 +3,7 @@ package flex
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -47,6 +48,10 @@ type FlexPolicyEntry struct {
 
 // GetFlexCfg retrieves complete FlexConnect configuration data.
 func GetFlexCfg(client *wnc.Client, ctx context.Context) (*FlexCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
+
 	var data FlexCfgResponse
 	if err := client.SendAPIRequest(ctx, FlexCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -56,6 +61,10 @@ func GetFlexCfg(client *wnc.Client, ctx context.Context) (*FlexCfgResponse, erro
 
 // GetFlexCfgData retrieves FlexConnect policy entries.
 func GetFlexCfgData(client *wnc.Client, ctx context.Context) (*FlexCfgDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
+
 	var data FlexCfgDataResponse
 	if err := client.SendAPIRequest(ctx, FlexCfgDataEndpoint, &data); err != nil {
 		return nil, err

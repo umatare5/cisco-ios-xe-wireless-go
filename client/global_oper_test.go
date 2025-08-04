@@ -3,242 +3,336 @@ package client
 
 import (
 	"context"
-	"encoding/json"
 	"testing"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
 )
 
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // =============================================================================
 
-// ClientGlobalOperTestDataCollector holds test data for client global operation functions
-type ClientGlobalOperTestDataCollector struct {
-	Data map[string]interface{} `json:"client_global_oper_test_data"`
-}
-
-func newClientGlobalOperTestDataCollector() *ClientGlobalOperTestDataCollector {
-	return &ClientGlobalOperTestDataCollector{
-		Data: make(map[string]interface{}),
-	}
-}
-
-func (collector *ClientGlobalOperTestDataCollector) runTestAndCollectData(t *testing.T, testName string, testFunc func() (interface{}, error)) {
-	data, err := testFunc()
-	if err != nil {
-		t.Logf("%s returned error: %v", testName, err)
-		collector.Data[testName] = map[string]interface{}{
-			"error":   err.Error(),
-			"success": false,
-		}
-	} else {
-		t.Logf("%s executed successfully", testName)
-		collector.Data[testName] = map[string]interface{}{
-			"data":    data,
-			"success": true,
-		}
-	}
-}
-
-// =============================================================================
-// 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
-// =============================================================================
-
-// TestClientGlobalOperationFunctions tests all client global operation functions with real WNC data collection
-func TestClientGlobalOperationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
-
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
-	defer cancel()
-
-	collector := newClientGlobalOperTestDataCollector()
-
-	t.Run("GetClientGlobalOper", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientGlobalOper", func() (interface{}, error) {
-			return GetClientGlobalOper(client, ctx)
-		})
-	})
-
-	t.Run("GetClientLiveStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientLiveStats", func() (interface{}, error) {
-			return GetClientLiveStats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientGlobalStatsData", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientGlobalStatsData", func() (interface{}, error) {
-			return GetClientGlobalStatsData(client, ctx)
-		})
-	})
-
-	t.Run("GetClientStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientStats", func() (interface{}, error) {
-			return GetClientStats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientDot11Stats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientDot11Stats", func() (interface{}, error) {
-			return GetClientDot11Stats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientLatencyStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientLatencyStats", func() (interface{}, error) {
-			return GetClientLatencyStats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientSmWebauthStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientSmWebauthStats", func() (interface{}, error) {
-			return GetClientSmWebauthStats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientDot1XGlobalStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientDot1XGlobalStats", func() (interface{}, error) {
-			return GetClientDot1XGlobalStats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientExclusionStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientExclusionStats", func() (interface{}, error) {
-			return GetClientExclusionStats(client, ctx)
-		})
-	})
-
-	t.Run("GetClientSmDeviceCount", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientSmDeviceCount", func() (interface{}, error) {
-			return GetClientSmDeviceCount(client, ctx)
-		})
-	})
-
-	t.Run("GetClientTofStats", func(t *testing.T) {
-		collector.runTestAndCollectData(t, "GetClientTofStats", func() (interface{}, error) {
-			return GetClientTofStats(client, ctx)
-		})
-	})
-
-	// Save collected test data to file
-	if len(collector.Data) > 0 {
-		if err := testutil.SaveTestDataToFile("client_global_oper_test_data_collected.json", collector.Data); err != nil {
-			t.Logf("Warning: Could not save test data: %v", err)
-		} else {
-			t.Logf("Test data saved to %s/client_global_oper_test_data_collected.json", testutil.TestDataDir)
-		}
-	}
-}
-
-// TestClientGlobalOperDataStructures tests the basic structure of client global operational data types
 func TestClientGlobalOperDataStructures(t *testing.T) {
-	tests := []struct {
+	testCases := []testutils.JSONTestCase{
+		{
+			Name: "ClientGlobalOperResponse",
+			JSONData: `{
+				"cisco-ios-xe-wireless-client-global-oper:client-global-oper-data": {}
+			}`,
+			Target:     &ClientGlobalOperResponse{},
+			TypeName:   "ClientGlobalOperResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "ClientLiveStatsResponse",
+			JSONData: `{
+				"cisco-ios-xe-wireless-client-global-oper:live-stats": {}
+			}`,
+			Target:     &ClientLiveStatsResponse{},
+			TypeName:   "ClientLiveStatsResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "ClientGlobalStatsDataResponse",
+			JSONData: `{
+				"cisco-ios-xe-wireless-client-global-oper:global-stats-data": {}
+			}`,
+			Target:     &ClientGlobalStatsDataResponse{},
+			TypeName:   "ClientGlobalStatsDataResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "ClientStatsResponse",
+			JSONData: `{
+				"cisco-ios-xe-wireless-client-global-oper:stats": {}
+			}`,
+			Target:     &ClientStatsResponse{},
+			TypeName:   "ClientStatsResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "ClientDot11StatsResponse",
+			JSONData: `{
+				"cisco-ios-xe-wireless-client-global-oper:dot11-stats": {}
+			}`,
+			Target:     &ClientDot11StatsResponse{},
+			TypeName:   "ClientDot11StatsResponse",
+			ShouldFail: false,
+		},
+	}
+
+	testutils.RunJSONTests(t, testCases)
+}
+
+// =============================================================================
+// 2. ERROR HANDLING TESTS
+// =============================================================================
+
+func TestClientGlobalOperErrorHandling(t *testing.T) {
+	// Test nil client scenarios
+	t.Run("NilClientTests", func(t *testing.T) {
+		var nilClient *wnc.Client = nil
+		ctx := context.Background()
+
+		tests := []struct {
+			name     string
+			testFunc func() error
+		}{
+			{
+				name: "GetClientGlobalOper_NilClient",
+				testFunc: func() error {
+					_, err := GetClientGlobalOper(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientLiveStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientLiveStats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientGlobalStatsData_NilClient",
+				testFunc: func() error {
+					_, err := GetClientGlobalStatsData(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientStats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientDot11Stats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientDot11Stats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientLatencyStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientLatencyStats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientSmWebauthStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientSmWebauthStats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientDot1XGlobalStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientDot1XGlobalStats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientExclusionStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientExclusionStats(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientSmDeviceCount_NilClient",
+				testFunc: func() error {
+					_, err := GetClientSmDeviceCount(nilClient, ctx)
+					return err
+				},
+			},
+			{
+				name: "GetClientTofStats_NilClient",
+				testFunc: func() error {
+					_, err := GetClientTofStats(nilClient, ctx)
+					return err
+				},
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				err := tt.testFunc()
+				if err == nil {
+					t.Errorf("Expected error for nil client, but got nil")
+					return
+				}
+				testutils.ValidateErrorContains(t, err, "client is nil")
+			})
+		}
+	})
+}
+
+// =============================================================================
+// INTEGRATION TESTS - Live API Data Validation
+// =============================================================================
+
+// TestClientGlobalOperFunctions tests all client global operation functions with real API endpoints
+func TestClientGlobalOperFunctions(t *testing.T) {
+	client := testutil.CreateTestClientFromEnv(t)
+	ctx := context.Background()
+
+	// Function test configurations
+	testCases := []struct {
 		name     string
-		jsonData string
-		dataType interface{}
+		testFunc func() (interface{}, error)
 	}{
 		{
-			name: "ClientGlobalOperResponse",
-			jsonData: `{
-				"Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data": {
-					"client-live-stats": {
-						"assoc-count": 10,
-						"auth-count": 8,
-						"mobility-count": 2,
-						"iplearn-count": 7,
-						"webauth-pending-count": 1,
-						"run-count": 6,
-						"delete-count": 0
-					},
-					"client-global-stats-data": {
-						"current-clients": 25,
-						"excluded-clients": 2,
-						"reauthentication-clients": 1,
-						"assisted-roaming-stats": {
-							"ar-11k-attempts": 5,
-							"ar-11k-success": 4,
-							"ar-11v-attempts": 3,
-							"ar-11v-success": 2
-						}
-					}
-				}
-			}`,
-			dataType: &ClientGlobalOperResponse{},
+			name: "GetClientGlobalOper",
+			testFunc: func() (interface{}, error) {
+				return GetClientGlobalOper(client, ctx)
+			},
 		},
 		{
-			name: "ClientLiveStatsResponse",
-			jsonData: `{
-				"Cisco-IOS-XE-wireless-client-global-oper:client-live-stats": {
-					"assoc-count": 15,
-					"auth-count": 12,
-					"mobility-count": 3,
-					"iplearn-count": 10,
-					"webauth-pending-count": 2,
-					"run-count": 9,
-					"delete-count": 1
-				}
-			}`,
-			dataType: &ClientLiveStatsResponse{},
+			name: "GetClientLiveStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientLiveStats(client, ctx)
+			},
 		},
 		{
-			name: "ClientGlobalStatsDataResponse",
-			jsonData: `{
-				"Cisco-IOS-XE-wireless-client-global-oper:client-global-stats-data": {
-					"current-clients": 50,
-					"excluded-clients": 5,
-					"reauthentication-clients": 3,
-					"assisted-roaming-stats": {
-						"ar-11k-attempts": 10,
-						"ar-11k-success": 8,
-						"ar-11v-attempts": 6,
-						"ar-11v-success": 4,
-						"ar-ota-attempts": 2,
-						"ar-ota-success": 1
-					}
-				}
-			}`,
-			dataType: &ClientGlobalStatsDataResponse{},
+			name: "GetClientGlobalStatsData",
+			testFunc: func() (interface{}, error) {
+				return GetClientGlobalStatsData(client, ctx)
+			},
 		},
 		{
-			name: "ClientStatsResponse",
-			jsonData: `{
-				"Cisco-IOS-XE-wireless-client-global-oper:client-stats": {
-					"no-of-clients": 100,
-					"client-summary": [
-						{
-							"wtp-mac": "aa:bb:cc:dd:ee:01",
-							"client-mac": "11:22:33:44:55:66",
-							"ap-name": "ap-01",
-							"client-state": "associated",
-							"client-username": "user1"
-						}
-					]
-				}
-			}`,
-			dataType: &ClientStatsResponse{},
+			name: "GetClientStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientStats(client, ctx)
+			},
 		},
 		{
-			name: "ClientDot11StatsResponse",
-			jsonData: `{
-				"Cisco-IOS-XE-wireless-client-global-oper:client-dot11-stats": {
-					"tx-bytes": 1024000,
-					"rx-bytes": 2048000,
-					"tx-packets": 1000,
-					"rx-packets": 2000,
-					"tx-data-packets": 950,
-					"rx-data-packets": 1900
+			name: "GetClientDot11Stats",
+			testFunc: func() (interface{}, error) {
+				return GetClientDot11Stats(client, ctx)
+			},
+		},
+		{
+			name: "GetClientLatencyStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientLatencyStats(client, ctx)
+			},
+		},
+		{
+			name: "GetClientSmWebauthStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientSmWebauthStats(client, ctx)
+			},
+		},
+		{
+			name: "GetClientDot1XGlobalStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientDot1XGlobalStats(client, ctx)
+			},
+		},
+		{
+			name: "GetClientExclusionStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientExclusionStats(client, ctx)
+			},
+		},
+		{
+			name: "GetClientSmDeviceCount",
+			testFunc: func() (interface{}, error) {
+				return GetClientSmDeviceCount(client, ctx)
+			},
+		},
+		{
+			name: "GetClientTofStats",
+			testFunc: func() (interface{}, error) {
+				return GetClientTofStats(client, ctx)
+			},
+		},
+	}
+
+	// Execute tests and collect data
+	collector := make(map[string]interface{})
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			data, err := tc.testFunc()
+			if err != nil {
+				t.Logf("%s returned error: %v", tc.name, err)
+				collector[tc.name] = map[string]interface{}{
+					"error": err.Error(),
 				}
-			}`,
-			dataType: &ClientDot11StatsResponse{},
+				return
+			}
+
+			if data == nil {
+				t.Logf("%s returned nil data", tc.name)
+				collector[tc.name] = nil
+				return
+			}
+
+			t.Logf("%s executed successfully", tc.name)
+			collector[tc.name] = data
+		})
+	}
+
+	// Save collected data to file
+	testDataMap := map[string]interface{}{
+		"client_global_oper_test_data": collector,
+	}
+
+	if err := testutil.SaveTestDataToFile("client_global_oper_test_data_collected.json", testDataMap); err != nil {
+		t.Errorf("Failed to save test data: %v", err)
+		return
+	}
+
+	t.Logf("Test data saved to test_data/client_global_oper_test_data_collected.json")
+}
+
+// =============================================================================
+// ENDPOINT TESTS - API URL Validation
+// =============================================================================
+
+// TestClientGlobalOperEndpoints tests the endpoint URL generation and validation
+func TestClientGlobalOperEndpoints(t *testing.T) {
+	tests := []struct {
+		name        string
+		endpoint    string
+		description string
+	}{
+		{
+			name:        "ClientGlobalOperEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data",
+			description: "Client global operational data endpoint",
+		},
+		{
+			name:        "ClientLiveStatsEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/live-stats",
+			description: "Client live statistics endpoint",
+		},
+		{
+			name:        "ClientGlobalStatsDataEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/global-stats-data",
+			description: "Client global statistics data endpoint",
+		},
+		{
+			name:        "ClientStatsEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/stats",
+			description: "Client statistics endpoint",
+		},
+		{
+			name:        "ClientDot11StatsEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/dot11-stats",
+			description: "Client 802.11 statistics endpoint",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := json.Unmarshal([]byte(tt.jsonData), tt.dataType)
-			if err != nil {
-				t.Errorf("Failed to unmarshal %s: %v", tt.name, err)
-			}
+			testutils.EndpointValidationTest(t, tt.endpoint, tt.endpoint)
 		})
 	}
 }

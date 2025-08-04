@@ -267,6 +267,47 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 
 	// Save collected test data to JSON file
 	testutil.SaveCollectedTestData(t, collector, "dot11_cfg_test_data_collected.json")
+
+	// Test error handling with nil client
+	t.Run("GetDot11CfgWithNilClient", func(t *testing.T) {
+		_, err := GetDot11Cfg(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetDot11ConfiguredCountriesWithNilClient", func(t *testing.T) {
+		_, err := GetDot11ConfiguredCountries(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetDot11acMcsEntriesWithNilClient", func(t *testing.T) {
+		_, err := GetDot11acMcsEntries(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetDot11EntriesWithNilClient", func(t *testing.T) {
+		_, err := GetDot11Entries(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
 }
 
 // TestDot11ConfigurationEndpoints tests that all 802.11 configuration endpoints are correctly defined

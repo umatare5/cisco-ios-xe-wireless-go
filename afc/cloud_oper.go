@@ -3,6 +3,7 @@ package afc
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -62,6 +63,9 @@ type AfcCloudStats struct {
 
 // GetAfcCloudOper retrieves AFC cloud operational data.
 func GetAfcCloudOper(client *wnc.Client, ctx context.Context) (*AfcCloudOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data AfcCloudOperResponse
 	if err := client.SendAPIRequest(ctx, AfcCloudOperEndpoint, &data); err != nil {
 		return nil, err
@@ -71,6 +75,9 @@ func GetAfcCloudOper(client *wnc.Client, ctx context.Context) (*AfcCloudOperResp
 
 // GetAfcCloudStats retrieves AFC cloud statistics.
 func GetAfcCloudStats(client *wnc.Client, ctx context.Context) (*AfcCloudOperAfcCloudStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data AfcCloudOperAfcCloudStatsResponse
 	if err := client.SendAPIRequest(ctx, AfcCloudStatsEndpoint, &data); err != nil {
 		return nil, err

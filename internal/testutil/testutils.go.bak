@@ -136,7 +136,7 @@ func NewTestConfigFromEnv() *wnc.Config {
 		if len(parts) >= 2 {
 			host := parts[0]
 			encodedCreds := parts[1]
-
+			
 			// Decode base64 credentials
 			if decodedCreds, err := base64.StdEncoding.DecodeString(encodedCreds); err == nil {
 				credParts := strings.Split(string(decodedCreds), ":")

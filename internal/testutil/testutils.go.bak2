@@ -136,7 +136,7 @@ func NewTestConfigFromEnv() *wnc.Config {
 		if len(parts) >= 2 {
 			host := parts[0]
 			encodedCreds := parts[1]
-
+			
 			// Decode base64 credentials
 			if decodedCreds, err := base64.StdEncoding.DecodeString(encodedCreds); err == nil {
 				credParts := strings.Split(string(decodedCreds), ":")
@@ -377,7 +377,7 @@ func CreateTestClientFromEnv(t *testing.T) *wnc.Client {
 		Timeout:            config.Timeout,
 		InsecureSkipVerify: true,
 	}
-	client, err := wnc.NewClient(wncConfig)
+	client, err := wnc.NewClient(*wncConfig)
 	if err != nil {
 		t.Fatalf("Failed to create test client: %v", err)
 	}
@@ -402,7 +402,7 @@ func CreateTestClientWithTimeout(t *testing.T, timeout time.Duration) *wnc.Clien
 		Timeout:            config.Timeout,
 		InsecureSkipVerify: true,
 	}
-	client, err := wnc.NewClient(wncConfig)
+	client, err := wnc.NewClient(*wncConfig)
 	if err != nil {
 		t.Fatalf("Failed to create test client: %v", err)
 	}

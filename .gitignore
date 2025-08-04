@@ -2,7 +2,6 @@
 tmp/
 
 # Test data files
-tests/
 test_data/
 
 # Build artifacts

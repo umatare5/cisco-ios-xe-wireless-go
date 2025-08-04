@@ -663,9 +663,6 @@ func GetClientGlobalOper(client *wnc.Client, ctx context.Context) (*ClientGlobal
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientGlobalOperResponse
 	if err := client.SendAPIRequest(ctx, ClientGlobalOperEndpoint, &data); err != nil {
 		return nil, err
@@ -675,9 +672,6 @@ func GetClientGlobalOper(client *wnc.Client, ctx context.Context) (*ClientGlobal
 
 // GetClientLiveStats retrieves client live statistics.
 func GetClientLiveStats(client *wnc.Client, ctx context.Context) (*ClientLiveStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientLiveStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientLiveStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -687,9 +681,6 @@ func GetClientLiveStats(client *wnc.Client, ctx context.Context) (*ClientLiveSta
 
 // GetClientGlobalStatsData retrieves client global statistics data.
 func GetClientGlobalStatsData(client *wnc.Client, ctx context.Context) (*ClientGlobalStatsDataResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientGlobalStatsDataResponse
 	if err := client.SendAPIRequest(ctx, ClientGlobalStatsDataEndpoint, &data); err != nil {
 		return nil, err
@@ -699,9 +690,6 @@ func GetClientGlobalStatsData(client *wnc.Client, ctx context.Context) (*ClientG
 
 // GetClientStats retrieves client statistics.
 func GetClientStats(client *wnc.Client, ctx context.Context) (*ClientStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -711,9 +699,6 @@ func GetClientStats(client *wnc.Client, ctx context.Context) (*ClientStatsRespon
 
 // GetClientDot11Stats retrieves client 802.11 statistics.
 func GetClientDot11Stats(client *wnc.Client, ctx context.Context) (*ClientDot11StatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientDot11StatsResponse
 	if err := client.SendAPIRequest(ctx, ClientDot11StatsEndpoint, &data); err != nil {
 		return nil, err
@@ -723,9 +708,6 @@ func GetClientDot11Stats(client *wnc.Client, ctx context.Context) (*ClientDot11S
 
 // GetClientLatencyStats retrieves client latency statistics.
 func GetClientLatencyStats(client *wnc.Client, ctx context.Context) (*ClientLatencyStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientLatencyStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientLatencyStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -735,9 +717,6 @@ func GetClientLatencyStats(client *wnc.Client, ctx context.Context) (*ClientLate
 
 // GetClientSmWebauthStats retrieves session manager web authentication statistics.
 func GetClientSmWebauthStats(client *wnc.Client, ctx context.Context) (*SmWebauthStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data SmWebauthStatsResponse
 	if err := client.SendAPIRequest(ctx, SmWebauthStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -747,9 +726,6 @@ func GetClientSmWebauthStats(client *wnc.Client, ctx context.Context) (*SmWebaut
 
 // GetClientDot1XGlobalStats retrieves 802.1X global statistics.
 func GetClientDot1XGlobalStats(client *wnc.Client, ctx context.Context) (*Dot1XGlobalStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data Dot1XGlobalStatsResponse
 	if err := client.SendAPIRequest(ctx, Dot1XGlobalStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -759,9 +735,6 @@ func GetClientDot1XGlobalStats(client *wnc.Client, ctx context.Context) (*Dot1XG
 
 // GetClientExclusionStats retrieves client exclusion statistics.
 func GetClientExclusionStats(client *wnc.Client, ctx context.Context) (*ClientExclusionStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientExclusionStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientExclusionStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -771,9 +744,6 @@ func GetClientExclusionStats(client *wnc.Client, ctx context.Context) (*ClientEx
 
 // GetClientSmDeviceCount retrieves session manager device count data.
 func GetClientSmDeviceCount(client *wnc.Client, ctx context.Context) (*SmDeviceCountResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data SmDeviceCountResponse
 	if err := client.SendAPIRequest(ctx, SmDeviceCountEndpoint, &data); err != nil {
 		return nil, err
@@ -783,9 +753,6 @@ func GetClientSmDeviceCount(client *wnc.Client, ctx context.Context) (*SmDeviceC
 
 // GetClientTofStats retrieves time-of-flight statistics.
 func GetClientTofStats(client *wnc.Client, ctx context.Context) (*TofStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data TofStatsResponse
 	if err := client.SendAPIRequest(ctx, TofStatsEndpoint, &data); err != nil {
 		return nil, err

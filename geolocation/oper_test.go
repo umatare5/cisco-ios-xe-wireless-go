@@ -3,171 +3,183 @@ package geolocation
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"testing"
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
 )
 
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // =============================================================================
 
-// getTestClient creates a test client using environment variables
-func getTestClient(t *testing.T) *wnc.Client {
-	return testutil.CreateTestClientFromEnv(t)
-}
-
-// GeolocationOperTestDataCollector holds test data for geolocation operation functions
-type GeolocationOperTestDataCollector struct {
-	Data map[string]interface{} `json:"geolocation_oper_test_data"`
-}
-
-// =============================================================================
-// 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
-// =============================================================================
-
-func TestGeolocationOperGetGeolocationOper(t *testing.T) {
-	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
-	defer cancel()
-
-	result, err := GetGeolocationOper(client, ctx)
-	if err != nil {
-		t.Fatalf("GetGeolocationOper failed: %v", err)
-	}
-
-	if result == nil {
-		t.Fatal("GetGeolocationOper returned nil result")
-	}
-
-	// Save result to JSON file
-	filename := fmt.Sprintf("geolocation_oper_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
-		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
-	} else {
-		t.Logf("Data saved to %s", filename)
-	}
-
-	t.Logf("GetGeolocationOper successful, collected geolocation operational data")
-}
-
-func TestGeolocationOperGetGeolocationOperApGeoLocStats(t *testing.T) {
-	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
-	defer cancel()
-
-	result, err := GetGeolocationOperApGeoLocStats(client, ctx)
-	if err != nil {
-		t.Fatalf("GetGeolocationOperApGeoLocStats failed: %v", err)
-	}
-
-	if result == nil {
-		t.Fatal("GetGeolocationOperApGeoLocStats returned nil result")
-	}
-
-	// Save result to JSON file
-	filename := fmt.Sprintf("geolocation_oper_ap_geo_loc_stats_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, result); err != nil {
-		t.Logf("Warning: Failed to save data to %s: %v", filename, err)
-	} else {
-		t.Logf("Data saved to %s", filename)
-	}
-
-	t.Logf("GetGeolocationOperApGeoLocStats successful")
-}
-
-func TestGeolocationOperCollectAllData(t *testing.T) {
-	client := getTestClient(t)
-	ctx, cancel := context.WithTimeout(context.Background(), testutil.DefaultTestTimeout)
-	defer cancel()
-
-	allData := make(map[string]interface{})
-
-	// Collect data from all geolocation operational endpoints
-	tests := []struct {
-		name string
-		fn   func() (interface{}, error)
-	}{
-		{"GetGeolocationOper", func() (interface{}, error) { return GetGeolocationOper(client, ctx) }},
-		{"GetGeolocationOperApGeoLocStats", func() (interface{}, error) { return GetGeolocationOperApGeoLocStats(client, ctx) }},
-	}
-
-	for _, test := range tests {
-		result, err := test.fn()
-		if err != nil {
-			t.Logf("Warning: %s failed: %v", test.name, err)
-			allData[test.name] = map[string]string{"error": err.Error()}
-		} else {
-			allData[test.name] = result
-			t.Logf("%s successful", test.name)
-		}
-	}
-
-	// Save all collected data to a comprehensive JSON file
-	filename := fmt.Sprintf("geolocation_oper_comprehensive_data_%d.json", time.Now().Unix())
-	if err := testutil.SaveTestDataToFile(filename, allData); err != nil {
-		t.Logf("Warning: Failed to save comprehensive data to %s: %v", filename, err)
-	} else {
-		t.Logf("Comprehensive geolocation operational data saved to %s", filename)
-	}
-}
-
-// TestGeolocationOperDataStructures tests the basic structure of geolocation operational data types
 func TestGeolocationOperDataStructures(t *testing.T) {
-	tests := []struct {
-		name     string
-		jsonData string
-		dataType interface{}
-	}{
+	testCases := []testutils.JSONTestCase{
 		{
-			name: "GeolocationOperResponse",
-			jsonData: `{
+			Name: "GeolocationOperResponse",
+			JSONData: `{
 				"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data": {
 					"ap-geo-loc-stats": {
-						"num-ap-gnss": 10,
-						"num-ap-man-height": 5,
-						"num-ap-derived": 3,
-						"num-ap-manual": 15,
-						"num-ap-auto": 8,
-						"num-ap-invalid": 2,
-						"num-ap-total": 33
-					    }
-				    }
-			    }`,
-			dataType: &GeolocationOperResponse{},
+						"num-ap-gnss": 5,
+						"num-ap-man-height": 3,
+						"num-ap-derived": 2,
+						"last-derivation-timestamp": "2024-01-01T12:00:00.000Z"
+					}
+				}
+			}`,
+			Target:     &GeolocationOperResponse{},
+			TypeName:   "GeolocationOperResponse",
+			ShouldFail: false,
 		},
 		{
-			name: "GeolocationOperApGeoLocStatsResponse",
-			jsonData: `{
+			Name: "GeolocationOperApGeoLocStatsResponse",
+			JSONData: `{
 				"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-stats": {
 					"num-ap-gnss": 10,
-					"num-ap-man-height": 5,
+					"num-ap-man-height": 7,
 					"num-ap-derived": 3,
-					"num-ap-manual": 15,
-					"num-ap-auto": 8,
-					"num-ap-invalid": 2,
-					"num-ap-total": 33
-				    }
-			    }`,
-			dataType: &GeolocationOperApGeoLocStatsResponse{},
+					"last-derivation-timestamp": "2024-01-01T13:00:00.000Z"
+				}
+			}`,
+			Target:     &GeolocationOperApGeoLocStatsResponse{},
+			TypeName:   "GeolocationOperApGeoLocStatsResponse",
+			ShouldFail: false,
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := json.Unmarshal([]byte(tt.jsonData), tt.dataType)
-			if err != nil {
-				t.Errorf("Failed to unmarshal %s: %v", tt.name, err)
-			}
+	testutils.RunJSONTests(t, testCases)
+}
 
-			_, err = json.Marshal(tt.dataType)
-			if err != nil {
-				t.Errorf("Failed to marshal %s: %v", tt.name, err)
-			}
-		})
-	}
+// =============================================================================
+// 2. ERROR HANDLING TESTS (Nil Client Validation)
+// =============================================================================
+
+func TestGeolocationOperErrorHandling(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	t.Run("GetGeolocationOperWithNilClient", func(t *testing.T) {
+		_, err := GetGeolocationOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetGeolocationOperApGeoLocStatsWithNilClient", func(t *testing.T) {
+		_, err := GetGeolocationOperApGeoLocStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// =============================================================================
+// 3. INTEGRATION TESTS (Actual API Calls to Live Controller)
+// =============================================================================
+
+func TestGeolocationOperFunctions(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	t.Run("GetGeolocationOper", func(t *testing.T) {
+		data, err := GetGeolocationOper(client, ctx)
+		if err != nil {
+			t.Fatalf("GetGeolocationOper failed: %v", err)
+		}
+
+		if data == nil {
+			t.Fatal("GetGeolocationOper returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("geolocation_oper_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("Geolocation oper data saved to test_data/geolocation_oper_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := GeolocationOperEndpoint
+		if endpoint == "" {
+			t.Error("GeolocationOperEndpoint should not be empty")
+		}
+	})
+
+	t.Run("GetGeolocationOperApGeoLocStats", func(t *testing.T) {
+		data, err := GetGeolocationOperApGeoLocStats(client, ctx)
+		if err != nil {
+			t.Fatalf("GetGeolocationOperApGeoLocStats failed: %v", err)
+		}
+
+		if data == nil {
+			t.Fatal("GetGeolocationOperApGeoLocStats returned nil data")
+		}
+
+		// Save test data for analysis
+		if err := testutil.SaveTestDataToFile("geolocation_ap_geo_loc_stats_data.json", data); err != nil {
+			t.Logf("Warning: Could not save test data: %v", err)
+		} else {
+			t.Logf("Geolocation AP geo loc stats data saved to test_data/geolocation_ap_geo_loc_stats_data.json")
+		}
+
+		// Validate endpoint was constructed correctly
+		endpoint := GeolocationApGeoLocStatsEndpoint
+		if endpoint == "" {
+			t.Error("GeolocationApGeoLocStatsEndpoint should not be empty")
+		}
+	})
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+func TestGeolocationOperContextHandling(t *testing.T) {
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetGeolocationOper(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetGeolocationOperApGeoLocStats(client, ctx)
+		return err
+	})
+}
+
+// =============================================================================
+// 5. ENDPOINT VALIDATION TESTS
+// =============================================================================
+
+func TestGeolocationOperEndpoints(t *testing.T) {
+	// Test base path validation
+	t.Run("Validate_GeolocationOperBasePath", func(t *testing.T) {
+		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
+		if GeolocationOperBasePath != expectedBasePath {
+			t.Errorf("GeolocationOperBasePath mismatch: expected %s, got %s", expectedBasePath, GeolocationOperBasePath)
+		}
+	})
+
+	// Test endpoint validation
+	t.Run("Validate_GeolocationOperEndpoint", func(t *testing.T) {
+		if GeolocationOperEndpoint != GeolocationOperBasePath {
+			t.Errorf("GeolocationOperEndpoint should equal GeolocationOperBasePath: expected %s, got %s", GeolocationOperBasePath, GeolocationOperEndpoint)
+		}
+	})
+
+	// Test AP geo loc stats endpoint validation
+	t.Run("Validate_GeolocationApGeoLocStatsEndpoint", func(t *testing.T) {
+		expectedEndpoint := GeolocationOperBasePath + "/ap-geo-loc-stats"
+		if GeolocationApGeoLocStatsEndpoint != expectedEndpoint {
+			t.Errorf("GeolocationApGeoLocStatsEndpoint mismatch: expected %s, got %s", expectedEndpoint, GeolocationApGeoLocStatsEndpoint)
+		}
+	})
 }

@@ -3,7 +3,7 @@ package client
 
 import (
 	"context"
-	"errors"
+
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
@@ -391,9 +391,6 @@ type DcInfo struct {
 
 // GetClientOper retrieves complete client operational data.
 func GetClientOper(client *wnc.Client, ctx context.Context) (*ClientOperResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperResponse
 	if err := client.SendAPIRequest(ctx, ClientOperEndpoint, &data); err != nil {
 		return nil, err
@@ -403,9 +400,6 @@ func GetClientOper(client *wnc.Client, ctx context.Context) (*ClientOperResponse
 
 // GetClientOperCommonOperData retrieves common operational data for wireless clients.
 func GetClientOperCommonOperData(client *wnc.Client, ctx context.Context) (*ClientOperCommonOperDataResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperCommonOperDataResponse
 	if err := client.SendAPIRequest(ctx, CommonOperDataEndpoint, &data); err != nil {
 		return nil, err
@@ -415,9 +409,6 @@ func GetClientOperCommonOperData(client *wnc.Client, ctx context.Context) (*Clie
 
 // GetClientOperDot11OperData retrieves 802.11 operational data for wireless clients.
 func GetClientOperDot11OperData(client *wnc.Client, ctx context.Context) (*ClientOperDot11OperDataResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperDot11OperDataResponse
 	if err := client.SendAPIRequest(ctx, Dot11OperDataEndpoint, &data); err != nil {
 		return nil, err
@@ -427,9 +418,6 @@ func GetClientOperDot11OperData(client *wnc.Client, ctx context.Context) (*Clien
 
 // GetClientOperMobilityOperData retrieves mobility operational data for wireless clients.
 func GetClientOperMobilityOperData(client *wnc.Client, ctx context.Context) (*ClientOperMobilityOperDataResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperMobilityOperDataResponse
 	if err := client.SendAPIRequest(ctx, MobilityOperDataEndpoint, &data); err != nil {
 		return nil, err
@@ -439,9 +427,6 @@ func GetClientOperMobilityOperData(client *wnc.Client, ctx context.Context) (*Cl
 
 // GetClientOperMmIfClientStats retrieves mobility manager interface client statistics.
 func GetClientOperMmIfClientStats(client *wnc.Client, ctx context.Context) (*ClientOperMmIfClientStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperMmIfClientStatsResponse
 	if err := client.SendAPIRequest(ctx, MmIfClientStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -451,9 +436,6 @@ func GetClientOperMmIfClientStats(client *wnc.Client, ctx context.Context) (*Cli
 
 // GetClientOperMmIfClientHistory retrieves mobility manager interface client history.
 func GetClientOperMmIfClientHistory(client *wnc.Client, ctx context.Context) (*ClientOperMmIfClientHistoryResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperMmIfClientHistoryResponse
 	if err := client.SendAPIRequest(ctx, MmIfClientHistoryEndpoint, &data); err != nil {
 		return nil, err
@@ -463,9 +445,6 @@ func GetClientOperMmIfClientHistory(client *wnc.Client, ctx context.Context) (*C
 
 // GetClientOperTrafficStats retrieves traffic statistics for wireless clients.
 func GetClientOperTrafficStats(client *wnc.Client, ctx context.Context) (*ClientOperTrafficStatsResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperTrafficStatsResponse
 	if err := client.SendAPIRequest(ctx, TrafficStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -475,9 +454,6 @@ func GetClientOperTrafficStats(client *wnc.Client, ctx context.Context) (*Client
 
 // GetClientOperPolicyData retrieves policy data for wireless clients.
 func GetClientOperPolicyData(client *wnc.Client, ctx context.Context) (*ClientOperPolicyDataResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperPolicyDataResponse
 	if err := client.SendAPIRequest(ctx, PolicyDataEndpoint, &data); err != nil {
 		return nil, err
@@ -487,9 +463,6 @@ func GetClientOperPolicyData(client *wnc.Client, ctx context.Context) (*ClientOp
 
 // GetClientOperSisfDbMac retrieves SISF database MAC information.
 func GetClientOperSisfDbMac(client *wnc.Client, ctx context.Context) (*ClientOperSisfDbMacResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperSisfDbMacResponse
 	if err := client.SendAPIRequest(ctx, SisfDbMacEndpoint, &data); err != nil {
 		return nil, err
@@ -499,9 +472,6 @@ func GetClientOperSisfDbMac(client *wnc.Client, ctx context.Context) (*ClientOpe
 
 // GetClientOperDcInfo retrieves discovery client information.
 func GetClientOperDcInfo(client *wnc.Client, ctx context.Context) (*ClientOperDcInfoResponse, error) {
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientOperDcInfoResponse
 	if err := client.SendAPIRequest(ctx, DcInfoEndpoint, &data); err != nil {
 		return nil, err

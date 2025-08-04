@@ -1,13 +1,14 @@
-// Package cts provides CTS (Cisco TrustSec) configuration test functionality for the Cisco Wireless Network Controller API.
+// Package cts provides Cisco TrustSec configuration test functionality for the Cisco Wireless Network Controller API.
 package cts
 
 import (
 	"context"
-	"encoding/json"
 	"testing"
 	"time"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/tests/utils"
 )
 
 // =============================================================================
@@ -15,84 +16,98 @@ import (
 // =============================================================================
 
 func TestCtsSxpCfgDataStructures(t *testing.T) {
-	// Test CtsSxpCfgResponse structure
-	t.Run("CtsSxpCfgResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data": {
-				"cts-sxp-configuration": {
+	testCases := []testutils.JSONTestCase{
+		{
+			Name: "CtsSxpCfgResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data": {
+					"cts-sxp-configuration": {
+						"cts-sxp-config": [
+							{
+								"sxp-profile-name": "corporate-sxp"
+							},
+							{
+								"sxp-profile-name": "guest-sxp"
+							}
+						]
+					}
+				}
+			}`,
+			Target:     &CtsSxpCfgResponse{},
+			TypeName:   "CtsSxpCfgResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "CtsSxpConfigurationResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-configuration": {
 					"cts-sxp-config": [
 						{
-							"sxp-profile-name": "corporate-sxp"
-						},
-						{
-							"sxp-profile-name": "guest-sxp"
+							"sxp-profile-name": "production-sxp"
 						}
 					]
 				}
-			}
-		}`
+			}`,
+			Target:     &CtsSxpConfigurationResponse{},
+			TypeName:   "CtsSxpConfigurationResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "CtsSxpConfig",
+			JSONData: `{
+				"sxp-profile-name": "test-sxp"
+			}`,
+			Target:     &CtsSxpConfig{},
+			TypeName:   "CtsSxpConfig",
+			ShouldFail: false,
+		},
+	}
 
+	testutils.RunJSONTests(t, testCases)
+
+	// Additional field validation for successfully unmarshaled structures
+	t.Run("CtsSxpCfgResponseFieldValidation", func(t *testing.T) {
 		var response CtsSxpCfgResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal CtsSxpCfgResponse: %v", err)
-		}
+		testutils.TestJSONUnmarshal(t, testCases[0].JSONData, &response, "CtsSxpCfgResponse")
 
-		if len(response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig) != 2 {
-			t.Errorf("Expected 2 cts-sxp-config entries, got %d",
-				len(response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig))
-		}
-
-		if response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName != "corporate-sxp" {
-			t.Errorf("Expected first profile name 'corporate-sxp', got '%s'",
-				response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName)
-		}
-	})
-
-	// Test CtsSxpConfigurationResponse structure
-	t.Run("CtsSxpConfigurationResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-configuration": {
-				"cts-sxp-config": [
-					{
-						"sxp-profile-name": "production-sxp"
-					}
-				]
+		testutils.ValidateJSONStructFields(t, "CtsSxpCfgResponse", func() error {
+			if len(response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig) != 2 {
+				t.Errorf("Expected 2 cts-sxp-config entries, got %d",
+					len(response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig))
 			}
-		}`
-
-		var response CtsSxpConfigurationResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal CtsSxpConfigurationResponse: %v", err)
-		}
-
-		if len(response.CtsSxpConfiguration.CtsSxpConfig) != 1 {
-			t.Errorf("Expected 1 cts-sxp-config entry, got %d",
-				len(response.CtsSxpConfiguration.CtsSxpConfig))
-		}
-
-		if response.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName != "production-sxp" {
-			t.Errorf("Expected profile name 'production-sxp', got '%s'",
-				response.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName)
-		}
+			if response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName != "corporate-sxp" {
+				t.Errorf("Expected first profile name 'corporate-sxp', got '%s'",
+					response.CiscoIOSXEWirelessCtsSxpCfgCtsSxpCfgData.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName)
+			}
+			return nil
+		})
 	})
 
-	// Test CtsSxpConfig structure
-	t.Run("CtsSxpConfig", func(t *testing.T) {
-		sampleJSON := `{
-			"sxp-profile-name": "test-sxp-profile"
-		}`
+	t.Run("CtsSxpConfigurationResponseFieldValidation", func(t *testing.T) {
+		var response CtsSxpConfigurationResponse
+		testutils.TestJSONUnmarshal(t, testCases[1].JSONData, &response, "CtsSxpConfigurationResponse")
 
+		testutils.ValidateJSONStructFields(t, "CtsSxpConfigurationResponse", func() error {
+			if len(response.CtsSxpConfiguration.CtsSxpConfig) != 1 {
+				t.Errorf("Expected 1 cts-sxp-config entry, got %d", len(response.CtsSxpConfiguration.CtsSxpConfig))
+			}
+			if response.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName != "production-sxp" {
+				t.Errorf("Expected profile name 'production-sxp', got '%s'", response.CtsSxpConfiguration.CtsSxpConfig[0].SxpProfileName)
+			}
+			return nil
+		})
+	})
+
+	t.Run("CtsSxpConfigFieldValidation", func(t *testing.T) {
 		var config CtsSxpConfig
-		err := json.Unmarshal([]byte(sampleJSON), &config)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal CtsSxpConfig: %v", err)
-		}
+		testutils.TestJSONUnmarshal(t, testCases[2].JSONData, &config, "CtsSxpConfig")
 
-		if config.SxpProfileName != "test-sxp-profile" {
-			t.Errorf("Expected profile name 'test-sxp-profile', got '%s'", config.SxpProfileName)
-		}
+		testutils.ValidateJSONStructFields(t, "CtsSxpConfig", func() error {
+			if config.SxpProfileName != "test-sxp" {
+				t.Errorf("Expected profile name 'test-sxp', got '%s'", config.SxpProfileName)
+			}
+			return nil
+		})
 	})
 }
 
@@ -102,7 +117,7 @@ func TestCtsSxpCfgDataStructures(t *testing.T) {
 
 // TestCtsConfigurationFunctions tests all CTS configuration functions with a live controller
 func TestCtsConfigurationFunctions(t *testing.T) {
-	client := testutil.CreateTestClientFromEnv(t)
+	client := testutils.GetTestClient(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -119,19 +134,16 @@ func TestCtsConfigurationFunctions(t *testing.T) {
 		}
 
 		// Save test data for analysis
-		if err := testutil.SaveTestDataToFile("cts_cfg_data.json", data); err != nil {
+		if err := testutil.SaveTestDataToFile("cts_sxp_cfg_data.json", data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("CTS config data saved to test_data/cts_cfg_data.json")
+			t.Logf("CTS SXP config data saved to test_data/cts_sxp_cfg_data.json")
 		}
 
 		// Validate endpoint was constructed correctly
 		endpoint := CtsSxpCfgEndpoint
 		if endpoint == "" {
 			t.Error("CtsSxpCfgEndpoint should not be empty")
-		}
-		if endpoint != "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data" {
-			t.Errorf("CtsSxpCfgEndpoint unexpected value: got %s", endpoint)
 		}
 	})
 
@@ -159,10 +171,39 @@ func TestCtsConfigurationFunctions(t *testing.T) {
 		if endpoint == "" {
 			t.Error("CtsSxpConfigurationEndpoint should not be empty")
 		}
-		expectedEndpoint := "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data/cts-sxp-configuration"
-		if endpoint != expectedEndpoint {
-			t.Errorf("CtsSxpConfigurationEndpoint unexpected value: expected %s, got %s", expectedEndpoint, endpoint)
-		}
+	})
+
+	// Test error handling with common error patterns
+	testutils.RunCommonErrorTests(t, "CtsErrorHandling", []testutils.ErrorTestCase{
+		{
+			Name: "GetCtsSxpCfgWithNilClient",
+			TestFunc: func(client *wnc.Client) error {
+				_, err := GetCtsSxpCfg(nil, ctx)
+				return err
+			},
+			ExpectedError: "client is nil",
+		},
+		{
+			Name: "GetCtsSxpConfigurationWithNilClient",
+			TestFunc: func(client *wnc.Client) error {
+				_, err := GetCtsSxpConfiguration(nil, ctx)
+				return err
+			},
+			ExpectedError: "client is nil",
+		},
+	})
+
+	// Test context handling
+	t.Run("ContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetCtsSxpCfg(client, ctx)
+			return err
+		})
+
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetCtsSxpConfiguration(client, ctx)
+			return err
+		})
 	})
 }
 
@@ -183,7 +224,7 @@ func TestCtsConfigurationEndpoints(t *testing.T) {
 		}
 	})
 
-	// Test specific configuration endpoint validation
+	// Test CTS SXP configuration endpoint validation
 	t.Run("Validate_CtsSxpConfigurationEndpoint", func(t *testing.T) {
 		expectedEndpoint := CtsSxpCfgBasePath + "/cts-sxp-configuration"
 		if CtsSxpConfigurationEndpoint != expectedEndpoint {
