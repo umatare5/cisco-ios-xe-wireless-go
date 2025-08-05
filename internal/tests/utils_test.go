@@ -114,7 +114,6 @@ func TestNewTestConfigFromEnv(t *testing.T) {
 	// Save original environment values
 	originalController := os.Getenv("WNC_CONTROLLER")
 	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
-	originalControllers := os.Getenv("WNC_CONTROLLERS")
 
 	// Restore environment after test
 	defer func() {
@@ -128,60 +127,41 @@ func TestNewTestConfigFromEnv(t *testing.T) {
 		} else {
 			os.Unsetenv("WNC_ACCESS_TOKEN")
 		}
-		if originalControllers != "" {
-			os.Setenv("WNC_CONTROLLERS", originalControllers)
-		} else {
-			os.Unsetenv("WNC_CONTROLLERS")
-		}
 	}()
 
 	tests := []struct {
 		name               string
 		envController      string
 		envToken           string
-		envControllers     string
 		expectNil          bool
 		expectedController string
 		expectedToken      string
 	}{
 		{
-			name:               "ValidEnvironment_Individual",
+			name:               "ValidEnvironment",
 			envController:      "test_controller",
 			envToken:           "test_token",
-			envControllers:     "",
 			expectNil:          false,
 			expectedController: "test_controller",
 			expectedToken:      "test_token",
 		},
 		{
-			name:               "ValidEnvironment_Controllers",
-			envController:      "",
-			envToken:           "",
-			envControllers:     "test_controller:dGVzdF91c2VyOnRlc3RfcGFzcw==",
-			expectNil:          false,
-			expectedController: "test_controller",
-			expectedToken:      "dGVzdF91c2VyOnRlc3RfcGFzcw==",
+			name:          "MissingController",
+			envController: "",
+			envToken:      "test_token",
+			expectNil:     true,
 		},
 		{
-			name:           "MissingController",
-			envController:  "",
-			envToken:       "test_token",
-			envControllers: "",
-			expectNil:      true,
+			name:          "MissingToken",
+			envController: "test_controller",
+			envToken:      "",
+			expectNil:     true,
 		},
 		{
-			name:           "MissingToken",
-			envController:  "test_controller",
-			envToken:       "",
-			envControllers: "",
-			expectNil:      true,
-		},
-		{
-			name:           "MissingBoth",
-			envController:  "",
-			envToken:       "",
-			envControllers: "",
-			expectNil:      true,
+			name:          "MissingBoth",
+			envController: "",
+			envToken:      "",
+			expectNil:     true,
 		},
 	}
 
@@ -190,7 +170,6 @@ func TestNewTestConfigFromEnv(t *testing.T) {
 			// Clear all environment variables first
 			os.Unsetenv("WNC_CONTROLLER")
 			os.Unsetenv("WNC_ACCESS_TOKEN")
-			os.Unsetenv("WNC_CONTROLLERS")
 
 			// Set environment variables
 			if test.envController != "" {
@@ -198,9 +177,6 @@ func TestNewTestConfigFromEnv(t *testing.T) {
 			}
 			if test.envToken != "" {
 				os.Setenv("WNC_ACCESS_TOKEN", test.envToken)
-			}
-			if test.envControllers != "" {
-				os.Setenv("WNC_CONTROLLERS", test.envControllers)
 			}
 
 			config := NewTestConfigFromEnv()

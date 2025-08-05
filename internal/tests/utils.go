@@ -3,12 +3,10 @@ package tests
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 	"time"
 
@@ -90,21 +88,11 @@ const (
 const (
 	EnvVarController  = "WNC_CONTROLLER"
 	EnvVarAccessToken = "WNC_ACCESS_TOKEN"
-	EnvVarControllers = "WNC_CONTROLLERS"
 )
 
 // GetTestCredentials returns test credentials from environment variables.
-// It supports both WNC_CONTROLLERS (new format) and WNC_CONTROLLER/WNC_ACCESS_TOKEN (legacy format)
+// Uses WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables.
 func GetTestCredentials() (controller, accessToken string, ok bool) {
-	// Check for new format first (WNC_CONTROLLERS)
-	if controllers := os.Getenv(EnvVarControllers); controllers != "" {
-		parts := strings.Split(controllers, ":")
-		if len(parts) >= 2 {
-			return parts[0], parts[1], true
-		}
-	}
-
-	// Fall back to legacy format
 	controller = os.Getenv(EnvVarController)
 	accessToken = os.Getenv(EnvVarAccessToken)
 
@@ -128,31 +116,8 @@ func NewTestConfig(controller, accessToken string, timeout time.Duration) *TestC
 }
 
 // NewTestConfigFromEnv creates a new test configuration from environment variables.
-// It supports both WNC_CONTROLLERS (new format) and WNC_CONTROLLER/WNC_ACCESS_TOKEN (legacy format)
+// Uses WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables.
 func NewTestConfigFromEnv() *wnc.Config {
-	// Check for new format first (WNC_CONTROLLERS)
-	if controllers := os.Getenv(EnvVarControllers); controllers != "" {
-		parts := strings.Split(controllers, ":")
-		if len(parts) >= 2 {
-			host := parts[0]
-			encodedCreds := parts[1]
-
-			// Decode base64 credentials
-			if decodedCreds, err := base64.StdEncoding.DecodeString(encodedCreds); err == nil {
-				credParts := strings.Split(string(decodedCreds), ":")
-				if len(credParts) >= 2 {
-					// Create access token in the expected format (base64 encoded username:password)
-					return &wnc.Config{
-						Controller:         host,
-						AccessToken:        encodedCreds,
-						InsecureSkipVerify: true,
-					}
-				}
-			}
-		}
-	}
-
-	// Fall back to legacy format (WNC_CONTROLLER and WNC_ACCESS_TOKEN)
 	host := os.Getenv(EnvVarController)
 	accessToken := os.Getenv(EnvVarAccessToken)
 
