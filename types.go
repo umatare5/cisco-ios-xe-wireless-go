@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"time"
+
+	wnccore "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 // WirelessControllerAPI defines the comprehensive interface for the Cisco Wireless Network Controller API client.
@@ -328,9 +330,10 @@ type WNCClient interface {
 // This is the main client structure used to interact with the Cisco Wireless Network Controller.
 // It implements the comprehensive WirelessControllerAPI interface providing unified access to all features.
 type Client struct {
-	controller         string        // WNC hostname or IP address
-	accessToken        string        // Authentication token for API access
-	timeout            time.Duration // Request timeout duration
-	insecureSkipVerify bool          // Whether to skip TLS certificate verification
-	logger             *slog.Logger  // Logger instance for debugging and monitoring
+	coreClient         *wnccore.Client // New core client implementation
+	controller         string          // WNC hostname or IP address (legacy)
+	accessToken        string          // Authentication token for API access (legacy)
+	timeout            time.Duration   // Request timeout duration (legacy)
+	insecureSkipVerify bool            // Whether to skip TLS certificate verification (legacy)
+	logger             *slog.Logger    // Logger instance for debugging and monitoring (legacy)
 }

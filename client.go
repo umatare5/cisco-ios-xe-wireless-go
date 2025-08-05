@@ -3,11 +3,10 @@ package wnc
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"io"
 	"log/slog"
 	"net/http"
+
+	wnccore "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 // HTTP method constants
@@ -28,6 +27,8 @@ const (
 // NewClient creates a new WNC client using a configuration struct.
 // This is the primary constructor that follows the architectural guidelines.
 //
+// Deprecated: Use wnc.New() from the wnc package instead.
+//
 // Example usage:
 //
 //	config := wnc.Config{
@@ -46,6 +47,8 @@ func NewClient(config Config) (*Client, error) {
 // This is the preferred method for creating clients as it follows the architectural guidelines.
 // Additional configuration can still be provided through options for flexibility.
 //
+// Deprecated: Use wnc.New() from the wnc package instead.
+//
 // Example usage:
 //
 //	config := wnc.Config{
@@ -57,48 +60,73 @@ func NewClient(config Config) (*Client, error) {
 //	}
 //	client, err := wnc.NewClientWithConfig(config)
 func NewClientWithConfig(config Config, options ...ClientOption) (*Client, error) {
-	// Early return for invalid controller
-	if !isValidController(config.Controller) {
-		return nil, fmt.Errorf("%w: controller address is required", ErrInvalidConfiguration)
+	// Convert old Config to new client creation
+	var opts []wnccore.Option
+
+	// Handle timeout - set default if not specified
+	finalTimeout := config.Timeout
+	if finalTimeout <= 0 {
+		finalTimeout = DefaultTimeout
+	}
+	if config.Timeout > 0 {
+		opts = append(opts, wnccore.WithTimeout(config.Timeout))
 	}
 
-	// Early return for invalid access token
-	if !isValidAccessToken(config.AccessToken) {
-		return nil, fmt.Errorf("%w: access token is required", ErrInvalidConfiguration)
+	// Handle InsecureSkipVerify
+	if config.InsecureSkipVerify {
+		opts = append(opts, wnccore.WithInsecureSkipVerify(true))
 	}
 
-	// Apply defaults for missing configuration values
-	if config.Timeout <= ZeroTimeoutSeconds {
-		config.Timeout = DefaultTimeout
+	// Handle Logger - set default if not specified
+	finalLogger := config.Logger
+	if finalLogger == nil {
+		finalLogger = slog.Default()
+	}
+	if config.Logger != nil {
+		opts = append(opts, wnccore.WithLogger(config.Logger))
 	}
 
-	if config.Logger == nil {
-		config.Logger = slog.Default()
+	// Apply additional legacy options by converting them
+	for _, option := range options {
+		// Create a temporary client to extract the option values
+		tempClient := &Client{
+			timeout: DefaultTimeout,
+			logger:  slog.Default(),
+		}
+		option(tempClient)
+
+		// Convert to new options and track values for legacy fields
+		if tempClient.timeout != DefaultTimeout {
+			opts = append(opts, wnccore.WithTimeout(tempClient.timeout))
+			finalTimeout = tempClient.timeout
+		}
+		if tempClient.logger != slog.Default() && tempClient.logger != nil {
+			opts = append(opts, wnccore.WithLogger(tempClient.logger))
+			finalLogger = tempClient.logger
+		}
 	}
 
-	client := &Client{
+	// Create new core client
+	coreClient, err := wnccore.New(config.Controller, config.AccessToken, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create legacy wrapper
+	return &Client{
+		coreClient:         coreClient,
 		controller:         config.Controller,
 		accessToken:        config.AccessToken,
-		timeout:            config.Timeout,
+		timeout:            finalTimeout,
 		insecureSkipVerify: config.InsecureSkipVerify,
-		logger:             config.Logger,
-	}
-
-	// Apply additional options
-	for _, option := range options {
-		option(client)
-	}
-
-	// Final validation with early return for invalid timeout
-	if !isPositiveTimeout(client.timeout) {
-		return nil, fmt.Errorf("%w: timeout must be positive", ErrInvalidConfiguration)
-	}
-
-	return client, nil
+		logger:             finalLogger,
+	}, nil
 }
 
 // SendAPIRequest sends an API request to the specified endpoint and unmarshals the response into the result.
 // This is the core method used by all feature-specific methods in the individual packages.
+//
+// Deprecated: This method now delegates to the new core client implementation.
 //
 // Parameters:
 //   - ctx: Context for request cancellation and timeouts
@@ -107,88 +135,6 @@ func NewClientWithConfig(config Config, options ...ClientOption) (*Client, error
 //
 // Returns an error if the request fails or if the response cannot be unmarshaled.
 func (c *Client) SendAPIRequest(ctx context.Context, endpoint string, result any) error {
-	if ctx == nil {
-		return fmt.Errorf("%w: context cannot be nil", ErrInvalidConfiguration)
-	}
-
-	requestContext, cancelFunc := context.WithTimeout(ctx, c.timeout)
-	defer cancelFunc()
-
-	httpRequest, err := c.createHTTPRequest(requestContext, endpoint)
-	if err != nil {
-		return err
-	}
-
-	httpResponse, err := c.executeHTTPRequest(httpRequest)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if closeErr := httpResponse.Body.Close(); closeErr != nil {
-			c.logger.Error("Failed to close response body", "error", closeErr)
-		}
-	}()
-
-	return c.processHTTPResponse(httpResponse, endpoint, result)
-}
-
-// createHTTPRequest creates and configures an HTTP request
-func (c *Client) createHTTPRequest(ctx context.Context, endpoint string) (*http.Request, error) {
-	requestURL := c.buildRequestURL(endpoint)
-
-	httpRequest, err := http.NewRequestWithContext(ctx, HTTPMethodGet, requestURL, nil)
-	if err != nil {
-		c.logger.Error("Failed to create HTTP request", "error", err)
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
-
-	requestHeaders := c.buildHTTPHeaders()
-	c.setRequestHeaders(httpRequest, requestHeaders)
-
-	c.logger.Debug("Sending API request", "method", httpRequest.Method)
-	return httpRequest, nil
-}
-
-// executeHTTPRequest executes an HTTP request and handles common errors
-func (c *Client) executeHTTPRequest(httpRequest *http.Request) (*http.Response, error) {
-	httpTransport := c.createHTTPTransport()
-	httpClient := &http.Client{
-		Transport: httpTransport,
-	}
-
-	httpResponse, err := httpClient.Do(httpRequest)
-	if err != nil {
-		c.logger.Error("HTTP request failed", "error", err)
-
-		// Early return for timeout errors
-		if isDeadlineExceededError(err) {
-			return nil, ErrRequestTimeout
-		}
-		return nil, fmt.Errorf("request failed: %w", err)
-	}
-
-	return httpResponse, nil
-}
-
-// processHTTPResponse processes the HTTP response and unmarshals the result
-func (c *Client) processHTTPResponse(httpResponse *http.Response, endpoint string, result any) error {
-	responseBody, err := io.ReadAll(httpResponse.Body)
-	if err != nil {
-		c.logger.Error("Failed to read response body", "error", err)
-		return fmt.Errorf("failed to read response: %w", err)
-	}
-
-	c.logger.Debug("Received API response", "status", httpResponse.StatusCode, "content_length", len(responseBody))
-
-	if err := c.handleHTTPError(httpResponse.StatusCode, responseBody, httpResponse.Request.URL.String()); err != nil {
-		return err
-	}
-
-	if err := json.Unmarshal(responseBody, result); err != nil {
-		c.logger.Error("Failed to unmarshal JSON response", "error", err, "body_length", len(responseBody))
-		return fmt.Errorf("failed to unmarshal response: %w", err)
-	}
-
-	c.logger.Debug("Successfully processed API response", "endpoint", endpoint)
-	return nil
+	// Delegate to the new core client's Do method
+	return c.coreClient.Do(ctx, "GET", endpoint, result)
 }

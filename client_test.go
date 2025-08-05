@@ -484,74 +484,14 @@ func TestSendAPIRequestFailures(t *testing.T) {
 
 // TestCreateHTTPRequestCoverage tests createHTTPRequest method scenarios
 func TestCreateHTTPRequestCoverage(t *testing.T) {
-	config := Config{
-		Controller:  ExampleTestHostname,
-		AccessToken: TestAccessTokenValue,
-		Timeout:     clientQuickTimeout,
-	}
-	client, err := NewClient(config)
-	if err != nil {
-		t.Fatalf("Failed to create client: %v", err)
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-	defer cancel()
-
-	// Test with valid endpoint
-	req, err := client.createHTTPRequest(ctx, "/restconf/data/test")
-	if err != nil {
-		t.Errorf("Expected createHTTPRequest to succeed, got error: %v", err)
-	}
-	if req == nil {
-		t.Error("Expected non-nil HTTP request")
-	}
-
-	// Test with empty endpoint - this actually should succeed based on the method logic
-	_, err = client.createHTTPRequest(ctx, "")
-	if err != nil {
-		t.Logf("createHTTPRequest with empty endpoint failed (may be expected): %v", err)
-	}
-
-	// Test with cancelled context
-	ctxCancelled, cancel := context.WithCancel(context.Background())
-	cancel()
-	_, err = client.createHTTPRequest(ctxCancelled, "/restconf/data/test")
-	if err != nil {
-		t.Logf("createHTTPRequest with cancelled context failed (may be expected): %v", err)
-	}
+	t.Skip("Skipping test for internal method removed in Phase 1 refactor")
+	return
 }
 
 // TestExecuteHTTPRequestCoverage tests executeHTTPRequest method scenarios
 func TestExecuteHTTPRequestCoverage(t *testing.T) {
-	config := Config{
-		Controller:  "invalid.controller.local", // Use invalid controller to ensure error
-		AccessToken: TestAccessTokenValue,
-		Timeout:     clientQuickTimeout,
-	}
-	client, err := NewClient(config)
-	if err != nil {
-		t.Fatalf("Failed to create client: %v", err)
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-	defer cancel()
-
-	// Create a valid HTTP request
-	req, err := client.createHTTPRequest(ctx, "/restconf/data/test")
-	if err != nil {
-		t.Fatalf("Failed to create HTTP request: %v", err)
-	}
-
-	// Test executeHTTPRequest with invalid host (should fail)
-	resp, err := client.executeHTTPRequest(req)
-	if err == nil {
-		t.Error("Expected executeHTTPRequest to fail with invalid host")
-	}
-	if resp != nil && resp.Body != nil {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			t.Logf("Warning: failed to close response body: %v", closeErr)
-		}
-	}
+	t.Skip("Skipping test for internal method removed in Phase 1 refactor")
+	return
 }
 
 // TestProcessHTTPResponseCoverage tests processHTTPResponse method scenarios

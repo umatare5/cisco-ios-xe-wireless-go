@@ -1,113 +1,84 @@
-package wnc
-
-// This file contains deprecated RESTCONF utilities.
-// These have been moved to internal/restconf package.
-//
-// Deprecated: Use internal/restconf package instead.
+// Package restconf provides RESTCONF URL building utilities for the WNC client.
+package restconf
 
 import (
 	"fmt"
 	"strings"
 )
 
-// RESTCONF and API path constants - deprecated, moved to internal/restconf
+// RESTCONF and API path constants
 const (
 	// RESTCONFPathPrefix is the base path for all RESTCONF API endpoints
-	// Deprecated: Use internal/restconf constants
 	RESTCONFPathPrefix = "/restconf/data"
-
 	// RESTCONFModulesPathPrefix is the base path for YANG module queries
-	// Deprecated: Use internal/restconf constants
 	RESTCONFModulesPathPrefix = "/restconf/tailf/modules"
-
 	// RESTCONFLibraryQuery is the query string for YANG library modules
-	// Deprecated: Use internal/restconf constants
 	RESTCONFLibraryQuery = "?fields=ietf-yang-library:modules-state/module"
 )
 
-// URL construction constants - deprecated, moved to internal/restconf
+// URL construction constants
 const (
 	// URLPathSeparator defines the path separator in URLs
-	// Deprecated: Use internal/restconf constants
 	URLPathSeparator = "/"
 )
 
-// Protocol constants - deprecated, moved to internal/restconf
+// Protocol constants
 const (
 	// ProtocolHTTP represents HTTP protocol
-	// Deprecated: Use internal/restconf constants
 	ProtocolHTTP = "http"
-
 	// ProtocolHTTPS represents HTTPS protocol
-	// Deprecated: Use internal/restconf constants
 	ProtocolHTTPS = "https"
-
 	// DefaultProtocol is the default protocol for connections
-	// Deprecated: Use internal/restconf constants
 	DefaultProtocol = ProtocolHTTPS
 )
 
-// YANG model validation constants - deprecated, moved to internal/restconf
+// YANG model validation constants
 const (
 	// YANGModelPrefix is the expected prefix for Cisco wireless YANG models
-	// Deprecated: Use internal/restconf constants
 	YANGModelPrefix = "Cisco-IOS-XE-wireless-"
-
 	// YANGModelOperSuffix is the suffix for operational YANG models
-	// Deprecated: Use internal/restconf constants
 	YANGModelOperSuffix = "-oper"
-
 	// YANGModelCfgSuffix is the suffix for configuration YANG models
-	// Deprecated: Use internal/restconf constants
 	YANGModelCfgSuffix = "-cfg"
 )
 
-// Common YANG model patterns - deprecated, moved to internal/restconf
+// Common YANG model patterns
 const (
 	// CiscoIOSXEWirelessPrefix is the common prefix for all wireless YANG models
-	// Deprecated: Use internal/restconf constants
 	CiscoIOSXEWirelessPrefix = YANGModelPrefix
-
 	// OperDataSuffix is the common suffix for operational data endpoints
-	// Deprecated: Use internal/restconf constants
 	OperDataSuffix = YANGModelOperSuffix + "-data"
-
 	// CfgDataSuffix is the common suffix for configuration data endpoints
-	// Deprecated: Use internal/restconf constants
 	CfgDataSuffix = YANGModelCfgSuffix + "-data"
 )
 
-// RESTCONFURLBuilder provides utility functions for building WNC RESTCONF API URLs
-// Deprecated: Use internal/restconf.Builder instead
-type RESTCONFURLBuilder struct {
+// Builder provides utility functions for building WNC RESTCONF API URLs
+type Builder struct {
 	protocol   string
 	controller string
 }
 
-// NewRESTCONFURLBuilder creates a new RESTCONF URL builder for the specified controller
-// Deprecated: Use internal/restconf.NewBuilder instead
-func NewRESTCONFURLBuilder(protocol, controller string) *RESTCONFURLBuilder {
-	return &RESTCONFURLBuilder{
+// NewBuilder creates a new RESTCONF URL builder for the specified protocol and controller
+func NewBuilder(protocol, controller string) *Builder {
+	return &Builder{
 		protocol:   protocol,
 		controller: controller,
 	}
 }
 
 // BuildBaseURL constructs the base URL for the controller
-// Deprecated: Use internal/restconf.Builder.BuildBaseURL instead
-func (u *RESTCONFURLBuilder) BuildBaseURL() string {
-	return fmt.Sprintf("%s://%s", u.protocol, u.controller)
+func (b *Builder) BuildBaseURL() string {
+	return fmt.Sprintf("%s://%s", b.protocol, b.controller)
 }
 
 // BuildRESTCONFURL constructs a RESTCONF data URL for the given endpoint path
-// Deprecated: Use internal/restconf.Builder.BuildRESTCONFURL instead
-func (u *RESTCONFURLBuilder) BuildRESTCONFURL(endpointPath string) string {
-	normalizedEndpointPath := u.normalizeEndpointPath(endpointPath)
-	return fmt.Sprintf("%s%s%s", u.BuildBaseURL(), RESTCONFPathPrefix, normalizedEndpointPath)
+func (b *Builder) BuildRESTCONFURL(endpointPath string) string {
+	normalizedEndpointPath := b.normalizeEndpointPath(endpointPath)
+	return fmt.Sprintf("%s%s%s", b.BuildBaseURL(), RESTCONFPathPrefix, normalizedEndpointPath)
 }
 
 // normalizeEndpointPath ensures endpoint path starts with forward slash
-func (u *RESTCONFURLBuilder) normalizeEndpointPath(endpointPath string) string {
+func (b *Builder) normalizeEndpointPath(endpointPath string) string {
 	if !strings.HasPrefix(endpointPath, URLPathSeparator) {
 		return URLPathSeparator + endpointPath
 	}
@@ -115,18 +86,18 @@ func (u *RESTCONFURLBuilder) normalizeEndpointPath(endpointPath string) string {
 }
 
 // BuildYANGLibraryURL constructs the URL for querying YANG library modules
-func (u *RESTCONFURLBuilder) BuildYANGLibraryURL() string {
-	return fmt.Sprintf("%s%s%s", u.BuildBaseURL(), RESTCONFPathPrefix, RESTCONFLibraryQuery)
+func (b *Builder) BuildYANGLibraryURL() string {
+	return fmt.Sprintf("%s%s%s", b.BuildBaseURL(), RESTCONFPathPrefix, RESTCONFLibraryQuery)
 }
 
 // BuildYANGModuleURL constructs the URL for getting details of a specific YANG module
-func (u *RESTCONFURLBuilder) BuildYANGModuleURL(yangModel, revision string) string {
-	return fmt.Sprintf("%s%s/%s/%s", u.BuildBaseURL(), RESTCONFModulesPathPrefix, yangModel, revision)
+func (b *Builder) BuildYANGModuleURL(yangModel, revision string) string {
+	return fmt.Sprintf("%s%s/%s/%s", b.BuildBaseURL(), RESTCONFModulesPathPrefix, yangModel, revision)
 }
 
 // BuildEndpointURL is a convenience method that delegates to BuildRESTCONFURL
-func (u *RESTCONFURLBuilder) BuildEndpointURL(endpoint string) string {
-	return u.BuildRESTCONFURL(endpoint)
+func (b *Builder) BuildEndpointURL(endpoint string) string {
+	return b.BuildRESTCONFURL(endpoint)
 }
 
 // Validation functions for URL components
