@@ -4,13 +4,12 @@
 # Input validation and format checking functions
 
 # Source constants
-# shellcheck source=./constants.sh
 source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
 
 # Helper function to exit with invalid arguments error
 exit_with_invalid_args() {
     local message="$1"
-    echo "Error: $message" >&2
+    show_error "$message"
     exit "$(get_exit_invalid_args)"
 }
 

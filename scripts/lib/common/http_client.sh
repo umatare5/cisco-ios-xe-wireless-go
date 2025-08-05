@@ -4,7 +4,6 @@
 # HTTP communication and request handling functions
 
 # Source constants
-# shellcheck source=./constants.sh
 source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
 
 # Execute curl request with standard WNC API headers

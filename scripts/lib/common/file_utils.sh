@@ -4,7 +4,6 @@
 # File handling and temporary file management functions
 
 # Source constants
-# shellcheck source=./constants.sh
 source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
 
 # Setup temporary file with automatic cleanup
@@ -15,7 +14,7 @@ setup_temp_file_with_cleanup() {
     if ! temp_file=$(mktemp); then
         local exit_error
         exit_error="$(get_exit_error)"
-        echo "Error: Failed to create temporary file" >&2
+        show_error "Failed to create temporary file"
         exit "$exit_error"
     fi
 

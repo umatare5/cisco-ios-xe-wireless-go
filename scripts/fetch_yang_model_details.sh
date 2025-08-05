@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # @meta version 1.0.0
 # @meta author "@umatare5"
-# @describe List Cisco wireless YANG models from a Wireless Network Controller
+# @describe Cisco WNC YANG Model Details - Fetch comprehensive model information
 
-# @option -c --controller <HOST>       WNC controller hostname or IP [default: wnc1.example.internal]
-# @option -t --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
-# @option -p --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
-# @flag   -k --insecure               Skip TLS certificate verification
-# @flag   -v --verbose                Enable verbose output
-# @flag      --no-color               Disable colored output
+# @arg model!                          YANG model name to fetch details for
+# @option -c --controller <HOST>       WNC controller hostname/IP
+# @option -t --token <TOKEN>           Base64 encoded credentials
+# @option -o --output <FILE>           Output file path (default: stdout)
+# @flag   -v --verbose                 Enable verbose output
+# @flag   -r --raw                     Output raw JSON without formatting
+# @flag      --no-color                Disable colored output
 
 set -euo pipefail
 
@@ -27,11 +28,11 @@ source "${MODULE_DIR}/core.sh"
 # Predicate functions for improved readability
 is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
 is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }
-is_insecure_enabled() { [[ "${argc_insecure:-0}" == "1" ]]; }
+is_raw_enabled() { [[ "${argc_raw:-false}" == "true" ]]; }
 is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
 
 main() {
-    run_yang_list_operation
+    run_yang_get_model_operation
 }
 
 eval "$(argc --argc-eval "$0" "$@")"

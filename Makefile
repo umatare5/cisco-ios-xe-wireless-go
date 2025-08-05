@@ -1,98 +1,77 @@
 # Makefile for cisco-ios-xe-wireless-go Go library package
+#
+# This Makefile provides direct access to specialized build and test scripts
+# located in the scripts/ directory for focused development tasks.
+#
+# For comprehensive help, use: make help
+# For specific script options, use: ./scripts/<script_name>.sh --help
 
-.PHONY: help clean deps lint test-unit test-integration test-coverage test-coverage-html
+.PHONY: help clean deps lint test-unit test-integration test-coverage \
+        test-coverage-html build yang-list yang-model yang-statement \
+        fetch-yang-model fetch-yang-statement
 
 # Default target
 help:
-	@echo "Available targets:"
-	@echo "  clean            - Clean build artifacts"
-	@echo "  deps             - Install development dependencies (including gotestsum)"
-	@echo "  lint             - Run linting tools"
-	@echo "  test-unit        - Run unit tests only"
-	@echo "  test-integration - Run integration tests (requires environment variables)"
-	@echo "  test-coverage    - Run tests with coverage analysis"
-	@echo "  test-coverage-html - Generate HTML coverage report"
+	@./scripts/show_help.sh
 
 # Clean build artifacts
 clean:
-	@echo "Cleaning build artifacts..."
-	rm -f coverage.out
-	rm -rf ./tmp
-	cd ../.. && go clean -cache -testcache
+	@./scripts/clean_artifacts.sh
 
 # Install development dependencies
 deps:
-	@echo "Installing development dependencies..."
-	@if ! command -v golangci-lint >/dev/null 2>&1; then \
-		echo "Installing golangci-lint..."; \
-		go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest; \
-	fi
-	@if ! command -v goreleaser >/dev/null 2>&1; then \
-		echo "Installing goreleaser..."; \
-		go install github.com/goreleaser/goreleaser@latest; \
-	fi
-	@if ! command -v gotestsum >/dev/null 2>&1; then \
-		echo "Installing gotestsum..."; \
-		go install gotest.tools/gotestsum@latest; \
-	fi
-	@echo "Development dependencies installed!"
+	@./scripts/install_dependencies.sh
 
-# Run linting (if tools are available)
+# Run linting tools
 lint:
-	@echo "Running linting..."
-	@if command -v golangci-lint >/dev/null 2>&1; then \
-		cd ../.. && golangci-lint run ./...; \
-	else \
-		echo "golangci-lint not found, running go vet instead..."; \
-		cd ../.. && go vet ./...; \
-	fi
+	@./scripts/lint_code.sh
 
-.PHONY: test-unit
+# Run unit tests only
 test-unit:
-	@echo "Running unit tests only (no environment variables required)..."
-	@if command -v gotestsum >/dev/null 2>&1; then \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" gotestsum --format testname -- -race ./...; \
-	else \
-		echo "gotestsum not found, running go test with verbose output..."; \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -v -race ./...; \
-	fi
+	@./scripts/run_unit_tests.sh
 
-.PHONY: test-integration
+# Run integration tests (requires environment variables)
 test-integration:
-	@echo "Running integration tests (requires WNC_CONTROLLER and WNC_ACCESS_TOKEN)..."
-	@if [ -z "$$WNC_CONTROLLER" ] || [ -z "$$WNC_ACCESS_TOKEN" ]; then \
-		echo "Error: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set"; \
-		exit 1; \
-	fi
-	@if command -v gotestsum >/dev/null 2>&1; then \
-		gotestsum --format testname -- -race ./...; \
-	else \
-		echo "gotestsum not found, running go test with verbose output..."; \
-		go test -v -race ./...; \
-	fi
+	@./scripts/run_integration_tests.sh
 
-.PHONY: test-coverage
+# Run tests with coverage analysis
 test-coverage:
-	@echo "Running tests with coverage..."
-	@mkdir -p ./tmp
-	@if command -v gotestsum >/dev/null 2>&1; then \
-		gotestsum --format testname -- -race -coverprofile=./tmp/coverage.out $$(go list ./... | grep -v '/internal/'); \
-	else \
-		echo "gotestsum not found, running go test with verbose output..."; \
-		go test -v -race -coverprofile=./tmp/coverage.out $$(go list ./... | grep -v '/internal/'); \
-	fi
-	@if [ -f ./tmp/coverage.out ]; then \
-		echo "Coverage report generated at ./tmp/coverage.out"; \
-		go tool cover -func=./tmp/coverage.out | tail -1; \
-	fi
+	@./scripts/run_coverage_tests.sh
 
-.PHONY: test-coverage-html
-test-coverage-html: test-coverage
-	@echo "Generating HTML coverage report..."
-	@mkdir -p ./tmp
-	@if [ -f ./tmp/coverage.out ]; then \
-		go tool cover -html=./tmp/coverage.out -o ./tmp/coverage.html; \
-		echo "HTML coverage report generated at ./tmp/coverage.html"; \
-	else \
-		echo "No coverage file found. Run 'make test-coverage' first."; \
-	fi
+# Generate HTML coverage report
+test-coverage-html:
+	@./scripts/generate_coverage_html.sh
+
+# Verify build compilation
+build:
+	@go build ./...
+
+# YANG Model Development Tools
+# List all available YANG models
+yang-list:
+	@./scripts/list_yang_models.sh
+
+# Get YANG model details (usage: make yang-model MODEL=model-name)
+yang-model:
+	@./scripts/get_yang_model_details.sh \
+		$(if $(MODEL),--model $(MODEL),)
+
+# Get YANG statement details (usage: make yang-statement MODEL=model-name
+# STATEMENT=statement-name)
+yang-statement:
+	@./scripts/get_yang_statement_details.sh \
+		$(if $(MODEL),--model $(MODEL),) \
+		$(if $(STATEMENT),--statement $(STATEMENT),)
+
+# Fetch YANG model details from controller
+# (usage: make fetch-yang-model MODEL=model-name)
+fetch-yang-model:
+	@./scripts/fetch_yang_model_details.sh \
+		$(if $(MODEL),--model $(MODEL),)
+
+# Fetch YANG statement details from controller
+# (usage: make fetch-yang-statement MODEL=model-name STATEMENT=statement-name)
+fetch-yang-statement:
+	@./scripts/fetch_yang_statement_details.sh \
+		$(if $(MODEL),--model $(MODEL),) \
+		$(if $(STATEMENT),--statement $(STATEMENT),)

@@ -3,18 +3,11 @@
 # Cisco WNC Dependencies Library
 # System dependencies and requirements checking functions
 
-# Source constants and validation
-# shellcheck source=./constants.sh
-source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
-# shellcheck source=./validation.sh
-source "$(dirname "${BASH_SOURCE[0]}")/validation.sh"
+set -euo pipefail
 
-# Check all dependencies (used by main scripts)
-check_all_dependencies() {
-    check_curl_dependency
-    check_mktemp_dependency
-    check_grep_dependency
-}
+# Source constants and validation
+source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/validation.sh"
 
 # Check if curl is available
 check_curl_dependency() {
@@ -27,7 +20,7 @@ check_curl_dependency() {
     local exit_error
     exit_error="$(get_exit_error)"
 
-    echo "Error: curl is required but not installed." >&2
+    show_error "curl is required but not installed."
     echo "Please install curl and try again." >&2
     echo "" >&2
     echo "Installation instructions:" >&2
@@ -48,7 +41,7 @@ check_mktemp_dependency() {
     local exit_error
     exit_error="$(get_exit_error)"
 
-    echo "Error: mktemp is required but not available." >&2
+    show_error "mktemp is required but not available."
     echo "Please install coreutils and try again." >&2
     exit "$exit_error"
 }
@@ -83,7 +76,7 @@ check_grep_dependency() {
     local exit_error
     exit_error="$(get_exit_error)"
 
-    echo "Error: grep is required but not available." >&2
+    show_error "grep is required but not available."
     echo "Please install grep and try again." >&2
     exit "$exit_error"
 }

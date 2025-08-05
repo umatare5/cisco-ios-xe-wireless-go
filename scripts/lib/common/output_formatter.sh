@@ -4,7 +4,6 @@
 # Output formatting and display functions
 
 # Source validation for helper functions
-# shellcheck source=./validation.sh
 source "$(dirname "${BASH_SOURCE[0]}")/validation.sh"
 
 # Format JSON output using jq if available
