@@ -283,3 +283,63 @@ func TestMcastOperClientInterfaceCompliance(t *testing.T) {
 		t.Log("All Mcast operation methods exist and are callable")
 	})
 }
+
+// TestMcastOperErrorHandling tests error handling for all functions
+func TestMcastOperErrorHandling(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.QuickTestTimeout)
+	defer cancel()
+
+	t.Run("GetMcastOperWithNilClient", func(t *testing.T) {
+		_, err := GetMcastOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMcastFlexMediastreamClientSummaryWithNilClient", func(t *testing.T) {
+		_, err := GetMcastFlexMediastreamClientSummary(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMcastVlanL2MgidOpWithNilClient", func(t *testing.T) {
+		_, err := GetMcastVlanL2MgidOp(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// TestMcastOperContextHandling tests context handling for all functions
+func TestMcastOperContextHandling(t *testing.T) {
+	t.Run("GetMcastOperContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMcastOper(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetMcastFlexMediastreamClientSummaryContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMcastFlexMediastreamClientSummary(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetMcastVlanL2MgidOpContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMcastVlanL2MgidOp(client, ctx)
+			return err
+		})
+	})
+}

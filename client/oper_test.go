@@ -336,3 +336,80 @@ func TestClientOperEndpoints(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+func TestClientOperContextHandling(t *testing.T) {
+	// Test each client operation function with context handling
+	t.Run("GetClientOper", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOper(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperCommonOperData", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperCommonOperData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperDot11OperData", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperDot11OperData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperMobilityOperData", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperMobilityOperData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperTrafficStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperTrafficStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperPolicyData", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperPolicyData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperSisfDbMac", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperSisfDbMac(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperDcInfo", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperDcInfo(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperMmIfClientStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperMmIfClientStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientOperMmIfClientHistory", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientOperMmIfClientHistory(client, ctx)
+			return err
+		})
+	})
+}

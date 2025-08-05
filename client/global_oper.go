@@ -663,9 +663,6 @@ func GetClientGlobalOper(client *wnc.Client, ctx context.Context) (*ClientGlobal
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	if client == nil {
-		return nil, errors.New("client is nil")
-	}
 	var data ClientGlobalOperResponse
 	if err := client.SendAPIRequest(ctx, ClientGlobalOperEndpoint, &data); err != nil {
 		return nil, err

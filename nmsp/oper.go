@@ -3,6 +3,7 @@ package nmsp
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -123,6 +124,9 @@ type CloudStats struct {
 
 // GetNmspOper retrieves NMSP operational data.
 func GetNmspOper(client *wnc.Client, ctx context.Context) (*NmspOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data NmspOperResponse
 	if err := client.SendAPIRequest(ctx, NmspOperEndpoint, &data); err != nil {
 		return nil, err
@@ -132,6 +136,9 @@ func GetNmspOper(client *wnc.Client, ctx context.Context) (*NmspOperResponse, er
 
 // GetNmspClientRegistration retrieves NMSP client registration data.
 func GetNmspClientRegistration(client *wnc.Client, ctx context.Context) (*NmspClientRegistrationResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data NmspClientRegistrationResponse
 	if err := client.SendAPIRequest(ctx, ClientRegistrationEndpoint, &data); err != nil {
 		return nil, err
@@ -141,6 +148,9 @@ func GetNmspClientRegistration(client *wnc.Client, ctx context.Context) (*NmspCl
 
 // GetNmspCmxConnection retrieves NMSP CMX connection data.
 func GetNmspCmxConnection(client *wnc.Client, ctx context.Context) (*NmspCmxConnectionResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data NmspCmxConnectionResponse
 	if err := client.SendAPIRequest(ctx, CmxConnectionEndpoint, &data); err != nil {
 		return nil, err
@@ -150,6 +160,9 @@ func GetNmspCmxConnection(client *wnc.Client, ctx context.Context) (*NmspCmxConn
 
 // GetNmspCmxCloudInfo retrieves NMSP CMX cloud information.
 func GetNmspCmxCloudInfo(client *wnc.Client, ctx context.Context) (*NmspCmxCloudInfoResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data NmspCmxCloudInfoResponse
 	if err := client.SendAPIRequest(ctx, CmxCloudInfoEndpoint, &data); err != nil {
 		return nil, err

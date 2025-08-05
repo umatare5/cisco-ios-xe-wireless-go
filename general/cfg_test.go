@@ -2,6 +2,7 @@
 package general
 
 import (
+	"context"
 	"encoding/json"
 	"testing"
 
@@ -384,6 +385,115 @@ func TestGeneralCfgDataStructures(t *testing.T) {
 			if err != nil {
 				t.Errorf("Failed to marshal %s: %v", tt.name, err)
 			}
+		})
+	}
+}
+
+// =============================================================================
+// 4. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestGeneralCfgErrorHandling tests error handling for all general configuration functions
+func TestGeneralCfgErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	// Test all 14 functions with nil client
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetGeneralCfg", func() (interface{}, error) { return GetGeneralCfg(nil, ctx) }},
+		{"GetGeneralMewlcConfig", func() (interface{}, error) { return GetGeneralMewlcConfig(nil, ctx) }},
+		{"GetGeneralCacConfig", func() (interface{}, error) { return GetGeneralCacConfig(nil, ctx) }},
+		{"GetGeneralMfp", func() (interface{}, error) { return GetGeneralMfp(nil, ctx) }},
+		{"GetGeneralFipsCfg", func() (interface{}, error) { return GetGeneralFipsCfg(nil, ctx) }},
+		{"GetGeneralWsaApClientEvent", func() (interface{}, error) { return GetGeneralWsaApClientEvent(nil, ctx) }},
+		{"GetGeneralSimL3InterfaceCacheData", func() (interface{}, error) { return GetGeneralSimL3InterfaceCacheData(nil, ctx) }},
+		{"GetGeneralWlcManagementData", func() (interface{}, error) { return GetGeneralWlcManagementData(nil, ctx) }},
+		{"GetGeneralLaginfo", func() (interface{}, error) { return GetGeneralLaginfo(nil, ctx) }},
+		{"GetGeneralMulticastConfig", func() (interface{}, error) { return GetGeneralMulticastConfig(nil, ctx) }},
+		{"GetGeneralFeatureUsageCfg", func() (interface{}, error) { return GetGeneralFeatureUsageCfg(nil, ctx) }},
+		{"GetGeneralThresholdWarnCfg", func() (interface{}, error) { return GetGeneralThresholdWarnCfg(nil, ctx) }},
+		{"GetGeneralApLocRangingCfg", func() (interface{}, error) { return GetGeneralApLocRangingCfg(nil, ctx) }},
+		{"GetGeneralGeolocationCfg", func() (interface{}, error) { return GetGeneralGeolocationCfg(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil || err.Error() != "client is nil" {
+				t.Errorf("Expected 'client is nil' error, got: %v", err)
+			}
+		})
+	}
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestGeneralCfgContextHandling tests context handling for all general configuration functions
+func TestGeneralCfgContextHandling(t *testing.T) {
+	// Test all 14 functions with context handling
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetGeneralCfg", func(ctx context.Context, client *wnc.Client) error { _, err := GetGeneralCfg(client, ctx); return err }},
+		{"GetGeneralMewlcConfig", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralMewlcConfig(client, ctx)
+			return err
+		}},
+		{"GetGeneralCacConfig", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralCacConfig(client, ctx)
+			return err
+		}},
+		{"GetGeneralMfp", func(ctx context.Context, client *wnc.Client) error { _, err := GetGeneralMfp(client, ctx); return err }},
+		{"GetGeneralFipsCfg", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralFipsCfg(client, ctx)
+			return err
+		}},
+		{"GetGeneralWsaApClientEvent", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralWsaApClientEvent(client, ctx)
+			return err
+		}},
+		{"GetGeneralSimL3InterfaceCacheData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralSimL3InterfaceCacheData(client, ctx)
+			return err
+		}},
+		{"GetGeneralWlcManagementData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralWlcManagementData(client, ctx)
+			return err
+		}},
+		{"GetGeneralLaginfo", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralLaginfo(client, ctx)
+			return err
+		}},
+		{"GetGeneralMulticastConfig", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralMulticastConfig(client, ctx)
+			return err
+		}},
+		{"GetGeneralFeatureUsageCfg", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralFeatureUsageCfg(client, ctx)
+			return err
+		}},
+		{"GetGeneralThresholdWarnCfg", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralThresholdWarnCfg(client, ctx)
+			return err
+		}},
+		{"GetGeneralApLocRangingCfg", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralApLocRangingCfg(client, ctx)
+			return err
+		}},
+		{"GetGeneralGeolocationCfg", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetGeneralGeolocationCfg(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
 		})
 	}
 }

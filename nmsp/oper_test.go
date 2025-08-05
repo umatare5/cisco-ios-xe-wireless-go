@@ -2,12 +2,13 @@
 package nmsp
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"testing"
 	"time"
+
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -381,4 +382,66 @@ func TestNmspOperDataStructures(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to marshal NmspOperResponse back to JSON: %v", err)
 	}
+}
+
+// TestNmspOperErrorHandling tests error handling for all NMSP functions.
+func TestNmspOperErrorHandling(t *testing.T) {
+	t.Run("GetNmspOperWithNilClient", func(t *testing.T) {
+		_, err := GetNmspOper(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetNmspClientRegistrationWithNilClient", func(t *testing.T) {
+		_, err := GetNmspClientRegistration(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetNmspCmxConnectionWithNilClient", func(t *testing.T) {
+		_, err := GetNmspCmxConnection(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetNmspCmxCloudInfoWithNilClient", func(t *testing.T) {
+		_, err := GetNmspCmxCloudInfo(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// TestNmspOperContextHandling tests context handling for all NMSP functions.
+func TestNmspOperContextHandling(t *testing.T) {
+	t.Run("GetNmspOperContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetNmspOper(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetNmspClientRegistrationContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetNmspClientRegistration(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetNmspCmxConnectionContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetNmspCmxConnection(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetNmspCmxCloudInfoContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetNmspCmxCloudInfo(client, ctx)
+			return err
+		})
+	})
 }

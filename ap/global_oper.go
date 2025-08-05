@@ -3,6 +3,7 @@ package ap
 
 import (
 	"context"
+	"errors"
 
 	"time"
 
@@ -222,6 +223,9 @@ type EmltdJoinCountStat struct {
 
 // GetApGlobalOper retrieves the entire AP global operational data.
 func GetApGlobalOper(client *wnc.Client, ctx context.Context) (*ApGlobalOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperResponse
 	if err := client.SendAPIRequest(ctx, ApGlobalOperEndpoint, &data); err != nil {
 		return nil, err
@@ -231,6 +235,9 @@ func GetApGlobalOper(client *wnc.Client, ctx context.Context) (*ApGlobalOperResp
 
 // GetApHistory retrieves AP history data.
 func GetApHistory(client *wnc.Client, ctx context.Context) (*ApGlobalOperApHistoryResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperApHistoryResponse
 	if err := client.SendAPIRequest(ctx, ApHistoryEndpoint, &data); err != nil {
 		return nil, err
@@ -240,6 +247,9 @@ func GetApHistory(client *wnc.Client, ctx context.Context) (*ApGlobalOperApHisto
 
 // GetApEwlcApStats retrieves EWLC AP statistics.
 func GetApEwlcApStats(client *wnc.Client, ctx context.Context) (*ApGlobalOperEwlcApStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperEwlcApStatsResponse
 	if err := client.SendAPIRequest(ctx, EwlcApStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -249,6 +259,9 @@ func GetApEwlcApStats(client *wnc.Client, ctx context.Context) (*ApGlobalOperEwl
 
 // GetApImgPredownloadStats retrieves AP image predownload statistics.
 func GetApImgPredownloadStats(client *wnc.Client, ctx context.Context) (*ApGlobalOperApImgPredownloadStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperApImgPredownloadStatsResponse
 	if err := client.SendAPIRequest(ctx, ApImgPredownloadStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -258,6 +271,9 @@ func GetApImgPredownloadStats(client *wnc.Client, ctx context.Context) (*ApGloba
 
 // GetApJoinStats retrieves AP join statistics.
 func GetApJoinStats(client *wnc.Client, ctx context.Context) (*ApGlobalOperApJoinStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperApJoinStatsResponse
 	if err := client.SendAPIRequest(ctx, ApJoinStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -267,6 +283,9 @@ func GetApJoinStats(client *wnc.Client, ctx context.Context) (*ApGlobalOperApJoi
 
 // GetApWlanClientStats retrieves WLAN client statistics.
 func GetApWlanClientStats(client *wnc.Client, ctx context.Context) (*ApGlobalOperWlanClientStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperWlanClientStatsResponse
 	if err := client.SendAPIRequest(ctx, WlanClientStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -276,6 +295,9 @@ func GetApWlanClientStats(client *wnc.Client, ctx context.Context) (*ApGlobalOpe
 
 // GetApEmltdJoinCountStat retrieves EMLTD join count statistics.
 func GetApEmltdJoinCountStat(client *wnc.Client, ctx context.Context) (*ApGlobalOperEmltdJoinCountStatResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApGlobalOperEmltdJoinCountStatResponse
 	if err := client.SendAPIRequest(ctx, EmltdJoinCountStatEndpoint, &data); err != nil {
 		return nil, err

@@ -3,6 +3,7 @@ package rrm
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -44,6 +45,9 @@ type RrmEmulOperRrmFraStats struct {
 
 // GetRrmEmulOper retrieves RRM emulation operational data.
 func GetRrmEmulOper(client *wnc.Client, ctx context.Context) (*RrmEmulOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RrmEmulOperResponse
 	if err := client.SendAPIRequest(ctx, RrmEmulOperEndpoint, &data); err != nil {
 		return nil, err
@@ -53,6 +57,9 @@ func GetRrmEmulOper(client *wnc.Client, ctx context.Context) (*RrmEmulOperRespon
 
 // GetRrmEmulRrmFraStats retrieves RRM emulation FRA statistics.
 func GetRrmEmulRrmFraStats(client *wnc.Client, ctx context.Context) (*RrmEmulOperRrmFraStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RrmEmulOperRrmFraStatsResponse
 	if err := client.SendAPIRequest(ctx, RrmEmulOperRrmFraStatsEndpoint, &data); err != nil {
 		return nil, err

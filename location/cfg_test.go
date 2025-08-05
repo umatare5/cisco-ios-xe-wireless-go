@@ -5,6 +5,7 @@ import (
 	"context"
 	"testing"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -164,6 +165,30 @@ func TestLocationConfigurationEndpoints(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testutils.EndpointValidationTest(t, tt.endpoint, tt.endpoint)
+		})
+	}
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestLocationCfgContextHandling tests context handling for all configuration functions
+func TestLocationCfgContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetLocationCfg", func(ctx context.Context, client *wnc.Client) error { _, err := GetLocationCfg(client, ctx); return err }},
+		{"GetLocationNmspConfig", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetLocationNmspConfig(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
 		})
 	}
 }

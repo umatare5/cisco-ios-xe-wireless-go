@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -321,4 +322,36 @@ func TestDot11ConfigurationEndpoints(t *testing.T) {
 	}
 
 	testutils.ValidateEndpoints(t, endpoints)
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestDot11CfgContextHandling tests context handling for all configuration functions
+func TestDot11CfgContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetDot11Cfg", func(ctx context.Context, client *wnc.Client) error { _, err := GetDot11Cfg(client, ctx); return err }},
+		{"GetDot11ConfiguredCountries", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetDot11ConfiguredCountries(client, ctx)
+			return err
+		}},
+		{"GetDot11acMcsEntries", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetDot11acMcsEntries(client, ctx)
+			return err
+		}},
+		{"GetDot11Entries", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetDot11Entries(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
 }

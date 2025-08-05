@@ -2,13 +2,14 @@
 package mesh
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
+
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -215,4 +216,72 @@ func TestMeshGlobalOperDataStructures(t *testing.T) {
 			}
 		})
 	}
+}
+
+// =============================================================================
+// 4. ERROR HANDLING TESTS
+// =============================================================================
+
+func TestMeshGlobalOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("GetMeshGlobalOper_NilClient", func(t *testing.T) {
+		result, err := GetMeshGlobalOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+
+	t.Run("GetMeshGlobalStats_NilClient", func(t *testing.T) {
+		result, err := GetMeshGlobalStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+
+	t.Run("GetMeshApTreeData_NilClient", func(t *testing.T) {
+		result, err := GetMeshApTreeData(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+func TestMeshGlobalOperContextHandling(t *testing.T) {
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetMeshGlobalOper(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetMeshGlobalStats(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetMeshApTreeData(client, ctx)
+		return err
+	})
 }

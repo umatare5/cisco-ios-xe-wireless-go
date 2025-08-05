@@ -2,11 +2,13 @@
 package rfid
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"testing"
 	"time"
+
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -122,4 +124,22 @@ func TestRfidConfigurationEndpoints(t *testing.T) {
 // 5. OTHER TESTS
 // =============================================================================
 
-// Currently no other tests specific to RFID configuration
+// TestRfidCfgErrorHandling tests error handling for all RFID configuration functions.
+func TestRfidCfgErrorHandling(t *testing.T) {
+	t.Run("GetRfidCfgWithNilClient", func(t *testing.T) {
+		_, err := GetRfidCfg(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// TestRfidCfgContextHandling tests context handling for all RFID configuration functions.
+func TestRfidCfgContextHandling(t *testing.T) {
+	t.Run("GetRfidCfgContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfidCfg(client, ctx)
+			return err
+		})
+	})
+}

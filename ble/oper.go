@@ -3,6 +3,7 @@ package ble
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -150,6 +151,9 @@ type BleLtxAp struct {
 }
 
 func GetBleLtxOper(client *wnc.Client, ctx context.Context) (*BleLtxOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data BleLtxOperResponse
 	err := client.SendAPIRequest(ctx, BleLtxOperEndpoint, &data)
 	if err != nil {
@@ -159,6 +163,9 @@ func GetBleLtxOper(client *wnc.Client, ctx context.Context) (*BleLtxOperResponse
 }
 
 func GetBleLtxApAntenna(client *wnc.Client, ctx context.Context) (*BleLtxApAntennaResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data BleLtxApAntennaResponse
 	err := client.SendAPIRequest(ctx, BleLtxApAntennaEndpoint, &data)
 	if err != nil {
@@ -168,6 +175,9 @@ func GetBleLtxApAntenna(client *wnc.Client, ctx context.Context) (*BleLtxApAnten
 }
 
 func GetBleLtxAp(client *wnc.Client, ctx context.Context) (*BleLtxApResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data BleLtxApResponse
 	err := client.SendAPIRequest(ctx, BleLtxApEndpoint, &data)
 	if err != nil {

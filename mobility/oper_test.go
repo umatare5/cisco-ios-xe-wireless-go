@@ -2,6 +2,7 @@
 package mobility
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"testing"
@@ -435,6 +436,195 @@ func TestMobilityOperDataStructures(t *testing.T) {
 			if err != nil {
 				t.Errorf("Failed to marshal %s: %v", tt.name, err)
 			}
+		})
+	}
+}
+
+// TestMobilityOperErrorHandling tests error handling for all functions
+func TestMobilityOperErrorHandling(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.QuickTestTimeout)
+	defer cancel()
+
+	t.Run("GetMobilityOperWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityMmIfGlobalStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityMmIfGlobalStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityMmIfGlobalMsgStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityMmIfGlobalMsgStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityGlobalStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityGlobalStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityMmGlobalDataWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityMmGlobalData(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityGlobalMsgStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityGlobalMsgStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityClientDataWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityClientData(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityApCacheWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityApCache(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityApPeerListWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityApPeerList(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityClientStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityClientStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityWlanClientLimitWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityWlanClientLimit(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMobilityGlobalDTLSStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMobilityGlobalDTLSStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// TestMobilityOperContextHandling tests context handling for all functions
+func TestMobilityOperContextHandling(t *testing.T) {
+	testFunctions := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetMobilityOper", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityOper(client, ctx)
+			return err
+		}},
+		{"GetMobilityMmIfGlobalStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityMmIfGlobalStats(client, ctx)
+			return err
+		}},
+		{"GetMobilityMmIfGlobalMsgStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityMmIfGlobalMsgStats(client, ctx)
+			return err
+		}},
+		{"GetMobilityGlobalStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityGlobalStats(client, ctx)
+			return err
+		}},
+		{"GetMobilityMmGlobalData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityMmGlobalData(client, ctx)
+			return err
+		}},
+		{"GetMobilityGlobalMsgStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityGlobalMsgStats(client, ctx)
+			return err
+		}},
+		{"GetMobilityClientData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityClientData(client, ctx)
+			return err
+		}},
+		{"GetMobilityApCache", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityApCache(client, ctx)
+			return err
+		}},
+		{"GetMobilityApPeerList", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityApPeerList(client, ctx)
+			return err
+		}},
+		{"GetMobilityClientStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityClientStats(client, ctx)
+			return err
+		}},
+		{"GetMobilityWlanClientLimit", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityWlanClientLimit(client, ctx)
+			return err
+		}},
+		{"GetMobilityGlobalDTLSStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMobilityGlobalDTLSStats(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tf := range testFunctions {
+		t.Run(tf.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tf.fn)
 		})
 	}
 }

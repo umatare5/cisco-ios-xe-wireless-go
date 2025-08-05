@@ -2,13 +2,14 @@
 package rogue
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
+
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // getTestClient creates a test client using environment variables
@@ -393,4 +394,80 @@ func saveRogueTestData(filename string, data interface{}) {
 	} else {
 		fmt.Printf("Test data saved to %s/test_data_%s.json\n", testutils.TestDataDir, filename)
 	}
+}
+
+// TestRogueOperErrorHandling tests error handling for all rogue functions.
+func TestRogueOperErrorHandling(t *testing.T) {
+	t.Run("GetRogueOperWithNilClient", func(t *testing.T) {
+		_, err := GetRogueOper(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetRogueStatsWithNilClient", func(t *testing.T) {
+		_, err := GetRogueStats(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetRogueDataWithNilClient", func(t *testing.T) {
+		_, err := GetRogueData(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetRogueClientDataWithNilClient", func(t *testing.T) {
+		_, err := GetRogueClientData(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetRldpStatsWithNilClient", func(t *testing.T) {
+		_, err := GetRldpStats(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// TestRogueOperContextHandling tests context handling for all rogue functions.
+func TestRogueOperContextHandling(t *testing.T) {
+	t.Run("GetRogueOperContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRogueOper(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetRogueStatsContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRogueStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetRogueDataContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRogueData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetRogueClientDataContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRogueClientData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetRldpStatsContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRldpStats(client, ctx)
+			return err
+		})
+	})
 }

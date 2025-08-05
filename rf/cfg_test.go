@@ -2,17 +2,185 @@
 package rf
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"testing"
 	"time"
+
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // =============================================================================
+
+func TestRfCfgDataStructures(t *testing.T) {
+	testCases := []testutils.JSONTestCase{
+		{
+			Name: "RfCfgResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data": {
+					"multi-bssid-profiles": {
+						"multi-bssid-profile": [
+							{
+								"profile-name": "default-multi-bssid",
+								"description": "Default multi-BSSID profile"
+							}
+						]
+					},
+					"atf-policies": {
+						"atf-policy": [
+							{
+								"policy-id": 1,
+								"atfpolicy-name": "default"
+							}
+						]
+					},
+					"rf-tags": {
+						"rf-tag": [
+							{
+								"tag-name": "default-rf-tag",
+								"description": "Default RF tag"
+							}
+						]
+					},
+					"rf-profiles": {
+						"rf-profile": [
+							{
+								"name": "default-rf-profile",
+								"description": "Default RF profile",
+								"status": true,
+								"band": "2.4GHz",
+								"data-rate-6m": "mandatory",
+								"data-rate-12m": "supported",
+								"data-rate-24m": "supported"
+							}
+						]
+					},
+					"rf-profile-default-entries": {
+						"rf-profile-default-entry": [
+							{
+								"band": "2.4GHz",
+								"name": "default-rf-profile-2g",
+								"description": "Default 2.4GHz RF profile",
+								"data-rate-6m": "mandatory",
+								"data-rate-12m": "supported",
+								"data-rate-24m": "supported",
+								"rf-mcs-default-entries": {
+									"rf-mcs-default-entry": []
+								}
+							}
+						]
+					}
+				}
+			}`,
+			Target:     &RfCfgResponse{},
+			TypeName:   "RfCfgResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "MultiBssidProfilesResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-rf-cfg:multi-bssid-profiles": {
+					"multi-bssid-profile": [
+						{
+							"profile-name": "test-profile",
+							"description": "Test multi-BSSID profile"
+						}
+					]
+				}
+			}`,
+			Target:     &MultiBssidProfilesResponse{},
+			TypeName:   "MultiBssidProfilesResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "AtfPoliciesResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-rf-cfg:atf-policies": {
+					"atf-policy": [
+						{
+							"policy-id": 2,
+							"atfpolicy-name": "priority-policy"
+						}
+					]
+				}
+			}`,
+			Target:     &AtfPoliciesResponse{},
+			TypeName:   "AtfPoliciesResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "RfTagsResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-rf-cfg:rf-tags": {
+					"rf-tag": [
+						{
+							"tag-name": "test-rf-tag",
+							"description": "Test RF tag",
+							"rf-tag-radio-profiles": {
+								"rf-tag-radio-profile": [
+									{
+										"slot-id": "0",
+										"band-id": "2.4GHz"
+									}
+								]
+							}
+						}
+					]
+				}
+			}`,
+			Target:     &RfTagsResponse{},
+			TypeName:   "RfTagsResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "RfProfilesResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-rf-cfg:rf-profiles": {
+					"rf-profile": [
+						{
+							"name": "high-power",
+							"description": "High power RF profile",
+							"status": true,
+							"band": "5GHz",
+							"data-rate-6m": "mandatory",
+							"data-rate-12m": "supported",
+							"data-rate-24m": "supported"
+						}
+					]
+				}
+			}`,
+			Target:     &RfProfilesResponse{},
+			TypeName:   "RfProfilesResponse",
+			ShouldFail: false,
+		},
+	}
+
+	testutils.RunJSONTests(t, testCases)
+
+	// Additional field validation for successfully unmarshaled structures
+	t.Run("RfCfgResponseFieldValidation", func(t *testing.T) {
+		var response RfCfgResponse
+		testutils.TestJSONUnmarshal(t, testCases[0].JSONData, &response, "RfCfgResponse")
+
+		testutils.ValidateJSONStructFields(t, "RfCfgResponse", func() error {
+			if len(response.CiscoIOSXEWirelessRfCfgRfCfgData.MultiBssidProfiles.MultiBssidProfile) != 1 {
+				t.Errorf("Expected 1 multi-BSSID profile, got %d",
+					len(response.CiscoIOSXEWirelessRfCfgRfCfgData.MultiBssidProfiles.MultiBssidProfile))
+			}
+			if len(response.CiscoIOSXEWirelessRfCfgRfCfgData.AtfPolicies.AtfPolicy) != 1 {
+				t.Errorf("Expected 1 ATF policy, got %d",
+					len(response.CiscoIOSXEWirelessRfCfgRfCfgData.AtfPolicies.AtfPolicy))
+			}
+			if len(response.CiscoIOSXEWirelessRfCfgRfCfgData.RfTags.RfTag) != 1 {
+				t.Errorf("Expected 1 RF tag, got %d",
+					len(response.CiscoIOSXEWirelessRfCfgRfCfgData.RfTags.RfTag))
+			}
+			return nil
+		})
+	})
+}
 
 const (
 	TestDataDir = "test_data"
@@ -105,166 +273,92 @@ func TestRfConfigurationFunctions(t *testing.T) {
 	}
 }
 
-// TestRfCfgDataStructures tests the basic structure of RF configuration data types
-func TestRfCfgDataStructures(t *testing.T) {
-	// Sample RF configuration data based on real WNC response structure
-	sampleJSON := `{
-		"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data": {
-			"multi-bssid-profiles": {
-				"multi-bssid-profile": [
-					{
-						"profile-name": "default-multi-bssid",
-						"description": "Default multi-BSSID profile"
-					    }
-				]
-			    },
-			"atf-policies": {
-				"atf-policy": []
-			    },
-			"rf-tags": {
-				"rf-tag": [
-					{
-						"tag-name": "default-rf-tag",
-						"dot11a-rf-profile-name": "default-rf-profile-5g",
-						"dot11b-rf-profile-name": "default-rf-profile-2g",
-						"description": "Default RF tag configuration",
-						"rf-tag-radio-profiles": {
-							"rf-tag-radio-profile": [
-								{
-									"slot-id": "0",
-									"band-id": "2.4GHz"
-								    },
-								{
-									"slot-id": "1",
-									"band-id": "5GHz"
-								    }
-							]
-						    }
-					    }
-				]
-			    },
-			"rf-profiles": {
-				"rf-profile": [
-					{
-						"name": "default-rf-profile-2g",
-						"description": "Default 2.4GHz RF profile",
-						"status": true,
-						"band": "2.4GHz",
-						"data-rate-6m": "mandatory",
-						"data-rate-12m": "supported",
-						"data-rate-24m": "supported",
-						"rx-sen-sop-custom": -80,
-						"rf-dca-chan-width": "20MHz",
-						"tx-power-v1-threshold": 6,
-						"coverage-data-packet-rssi-threshold": -80,
-						"min-num-clients": 5,
-						"coverage-voice-packet-rssi-threshold": -75
-					    }
-				]
-			    },
-			"rf-profile-default-entries": {
-				"rf-profile-default-entry": [
-					{
-						"rf-profile-name": "default-rf-profile-2g",
-						"band": "2.4GHz"
-					    }
-				]
-			    }
-		    }
-	    }`
-
-	// Test unmarshaling into RfCfgResponse
-	var rfCfg RfCfgResponse
-	err := json.Unmarshal([]byte(sampleJSON), &rfCfg)
-	if err != nil {
-		t.Fatalf("Failed to unmarshal RfCfgResponse: %v", err)
-	}
-
-	// Test Multi-BSSID profiles
-	multiBssidProfiles := rfCfg.CiscoIOSXEWirelessRfCfgRfCfgData.MultiBssidProfiles.MultiBssidProfile
-	if len(multiBssidProfiles) == 0 {
-		t.Error("Expected at least one multi-BSSID profile")
-	} else {
-		profile := multiBssidProfiles[0]
-		if profile.ProfileName != "default-multi-bssid" {
-			t.Errorf("Expected profile name 'default-multi-bssid', got '%s'", profile.ProfileName)
+// TestRfCfgErrorHandling tests error handling for all RF configuration functions.
+func TestRfCfgErrorHandling(t *testing.T) {
+	t.Run("GetRfCfgWithNilClient", func(t *testing.T) {
+		_, err := GetRfCfg(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
-	}
+	})
 
-	// Test RF tags
-	rfTags := rfCfg.CiscoIOSXEWirelessRfCfgRfCfgData.RfTags.RfTag
-	if len(rfTags) == 0 {
-		t.Error("Expected at least one RF tag")
-	} else {
-		tag := rfTags[0]
-		if tag.TagName != "default-rf-tag" {
-			t.Errorf("Expected tag name 'default-rf-tag', got '%s'", tag.TagName)
+	t.Run("GetRfMultiBssidProfilesWithNilClient", func(t *testing.T) {
+		_, err := GetRfMultiBssidProfiles(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
+	})
 
-		if tag.Dot11ARfProfileName != "default-rf-profile-5g" {
-			t.Errorf("Expected 5G profile name 'default-rf-profile-5g', got '%s'", tag.Dot11ARfProfileName)
+	t.Run("GetRfAtfPoliciesWithNilClient", func(t *testing.T) {
+		_, err := GetRfAtfPolicies(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
+	})
 
-		if len(tag.RfTagRadioProfiles.RfTagRadioProfile) < 2 {
-			t.Error("Expected at least 2 radio profiles in RF tag")
+	t.Run("GetRfTagsWithNilClient", func(t *testing.T) {
+		_, err := GetRfTags(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
-	}
+	})
 
-	// Test RF profiles
-	rfProfiles := rfCfg.CiscoIOSXEWirelessRfCfgRfCfgData.RfProfiles.RfProfile
-	if len(rfProfiles) == 0 {
-		t.Error("Expected at least one RF profile")
-	} else {
-		profile := rfProfiles[0]
-		if profile.Name != "default-rf-profile-2g" {
-			t.Errorf("Expected profile name 'default-rf-profile-2g', got '%s'", profile.Name)
+	t.Run("GetRfProfilesWithNilClient", func(t *testing.T) {
+		_, err := GetRfProfiles(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
+	})
 
-		if !profile.Status {
-			t.Error("Expected RF profile status to be true")
+	t.Run("GetRfProfileDefaultEntriesWithNilClient", func(t *testing.T) {
+		_, err := GetRfProfileDefaultEntries(nil, context.Background())
+		if err == nil || err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
+	})
+}
 
-		if profile.Band != "2.4GHz" {
-			t.Errorf("Expected band '2.4GHz', got '%s'", profile.Band)
-		}
+// TestRfCfgContextHandling tests context handling for all RF configuration functions.
+func TestRfCfgContextHandling(t *testing.T) {
+	t.Run("GetRfCfgContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfCfg(client, ctx)
+			return err
+		})
+	})
 
-		if profile.DataRate6M != "mandatory" {
-			t.Errorf("Expected data rate 6M 'mandatory', got '%s'", profile.DataRate6M)
-		}
-	}
+	t.Run("GetRfMultiBssidProfilesContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfMultiBssidProfiles(client, ctx)
+			return err
+		})
+	})
 
-	// Test RfTagsResponse structure separately
-	sampleTagsJSON := `{
-		"Cisco-IOS-XE-wireless-rf-cfg:rf-tags": {
-			"rf-tag": [
-				{
-					"tag-name": "test-rf-tag",
-					"description": "Test RF tag",
-					"rf-tag-radio-profiles": {
-						"rf-tag-radio-profile": []
-					    }
-				    }
-			]
-		    }
-	    }`
+	t.Run("GetRfAtfPoliciesContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfAtfPolicies(client, ctx)
+			return err
+		})
+	})
 
-	var tagsResp RfTagsResponse
-	err = json.Unmarshal([]byte(sampleTagsJSON), &tagsResp)
-	if err != nil {
-		t.Fatalf("Failed to unmarshal RfTagsResponse: %v", err)
-	}
+	t.Run("GetRfTagsContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfTags(client, ctx)
+			return err
+		})
+	})
 
-	if len(tagsResp.RfTags.RfTag) == 0 {
-		t.Error("Expected at least one RF tag in tags response")
-	}
+	t.Run("GetRfProfilesContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfProfiles(client, ctx)
+			return err
+		})
+	})
 
-	_, err = json.Marshal(rfCfg)
-	if err != nil {
-		t.Errorf("Failed to marshal RfCfgResponse back to JSON: %v", err)
-	}
-
-	_, err = json.Marshal(tagsResp)
-	if err != nil {
-		t.Errorf("Failed to marshal RfTagsResponse back to JSON: %v", err)
-	}
+	t.Run("GetRfProfileDefaultEntriesContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRfProfileDefaultEntries(client, ctx)
+			return err
+		})
+	})
 }

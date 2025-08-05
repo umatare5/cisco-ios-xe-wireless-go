@@ -3,6 +3,7 @@ package mcast
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -60,6 +61,9 @@ type VlanL2MgidOp struct {
 
 // GetMcastOper retrieves multicast operational data.
 func GetMcastOper(client *wnc.Client, ctx context.Context) (*McastOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data McastOperResponse
 	if err := client.SendAPIRequest(ctx, McastOperEndpoint, &data); err != nil {
 		return nil, err
@@ -69,6 +73,9 @@ func GetMcastOper(client *wnc.Client, ctx context.Context) (*McastOperResponse, 
 
 // GetMcastFlexMediastreamClientSummary retrieves FlexConnect mediastream client summary data.
 func GetMcastFlexMediastreamClientSummary(client *wnc.Client, ctx context.Context) (*McastOperFlexMediastreamClientSummaryResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data McastOperFlexMediastreamClientSummaryResponse
 	if err := client.SendAPIRequest(ctx, FlexMediastreamClientSummaryEndpoint, &data); err != nil {
 		return nil, err
@@ -78,6 +85,9 @@ func GetMcastFlexMediastreamClientSummary(client *wnc.Client, ctx context.Contex
 
 // GetMcastVlanL2MgidOp retrieves VLAN Layer 2 multicast group ID operational data.
 func GetMcastVlanL2MgidOp(client *wnc.Client, ctx context.Context) (*McastOperVlanL2MgidOpResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data McastOperVlanL2MgidOpResponse
 	if err := client.SendAPIRequest(ctx, VlanL2MgidOpEndpoint, &data); err != nil {
 		return nil, err

@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -194,4 +195,44 @@ func TestWlanGlobalOperDataStructures(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to marshal WlanGlobalOperWlanInfoResponse back to JSON: %v", err)
 	}
+}
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestWlanGlobalOperErrorHandling tests error handling for all global operational functions
+func TestWlanGlobalOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	// Test GetWlanGlobalOper with nil client
+	_, err := GetWlanGlobalOper(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetWlanGlobalOperWlanInfo with nil client
+	_, err = GetWlanGlobalOperWlanInfo(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestWlanGlobalOperContextHandling tests context handling for all global operational functions
+func TestWlanGlobalOperContextHandling(t *testing.T) {
+	// Test GetWlanGlobalOper with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetWlanGlobalOper(client, ctx)
+		return err
+	})
+
+	// Test GetWlanGlobalOperWlanInfo with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetWlanGlobalOperWlanInfo(client, ctx)
+		return err
+	})
 }

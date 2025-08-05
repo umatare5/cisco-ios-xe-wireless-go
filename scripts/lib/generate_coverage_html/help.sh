@@ -3,6 +3,10 @@
 # Cisco WNC Coverage HTML Generator - Help Functions
 # Provides help and documentation functionality for coverage HTML generation
 
+# Source common predicates
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
+
 show_coverage_html_banner() {
     if ! is_no_color_enabled; then
         echo -e "\033[32m╔════════════════════════════════════════╗\033[0m"

@@ -3,6 +3,10 @@
 # Cisco WNC Testing Operations - Help Functions
 # Provides help and documentation functionality for testing operations
 
+# Source common predicates
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
+
 show_test_banner() {
     local test_type="$1"
     if ! is_no_color_enabled; then

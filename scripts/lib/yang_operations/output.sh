@@ -3,6 +3,8 @@
 # Cisco WNC YANG Operations - Output Functions
 # Handles output formatting and display for YANG operations
 
+source "$(dirname "${BASH_SOURCE[0]}")/../argument_parsing.sh"
+
 format_yang_error() {
     local message="$1"
     if ! is_no_color_enabled; then

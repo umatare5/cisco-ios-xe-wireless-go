@@ -3,6 +3,7 @@ package lisp
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -71,6 +72,9 @@ type LispApCapability struct {
 
 // GetLispAgentOper retrieves LISP agent operational data.
 func GetLispAgentOper(client *wnc.Client, ctx context.Context) (*LispAgentOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LispAgentOperResponse
 	if err := client.SendAPIRequest(ctx, LispAgentOperEndpoint, &data); err != nil {
 		return nil, err
@@ -80,6 +84,9 @@ func GetLispAgentOper(client *wnc.Client, ctx context.Context) (*LispAgentOperRe
 
 // GetLispAgentMemoryStats retrieves LISP agent memory statistics.
 func GetLispAgentMemoryStats(client *wnc.Client, ctx context.Context) (*LispAgentMemoryStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LispAgentMemoryStatsResponse
 	if err := client.SendAPIRequest(ctx, LispAgentMemoryStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -89,6 +96,9 @@ func GetLispAgentMemoryStats(client *wnc.Client, ctx context.Context) (*LispAgen
 
 // GetLispWlcCapabilities retrieves LISP WLC capabilities.
 func GetLispWlcCapabilities(client *wnc.Client, ctx context.Context) (*LispWlcCapabilitiesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LispWlcCapabilitiesResponse
 	if err := client.SendAPIRequest(ctx, LispWlcCapabilitiesEndpoint, &data); err != nil {
 		return nil, err
@@ -98,6 +108,9 @@ func GetLispWlcCapabilities(client *wnc.Client, ctx context.Context) (*LispWlcCa
 
 // GetLispApCapabilities retrieves LISP AP capabilities.
 func GetLispApCapabilities(client *wnc.Client, ctx context.Context) (*LispApCapabilitiesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LispApCapabilitiesResponse
 	if err := client.SendAPIRequest(ctx, LispApCapabilitiesEndpoint, &data); err != nil {
 		return nil, err

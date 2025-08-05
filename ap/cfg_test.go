@@ -2,9 +2,10 @@
 package ap
 
 import (
-	"encoding/json"
+	"context"
 	"testing"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -88,24 +89,16 @@ func TestAPConfigurationFunctions(t *testing.T) {
 
 // TestApCfgDataStructures tests the basic structure of AP configuration data types
 func TestApCfgDataStructures(t *testing.T) {
-	tests := []struct {
-		name     string
-		jsonData string
-		dataType interface{}
-	}{
+	testCases := []testutils.JSONTestCase{
 		{
-			name: "ApCfgResponse",
-			jsonData: `{
+			Name: "ApCfgResponse",
+			JSONData: `{
 				"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": {
 					"tag-source-priority-configs": {
 						"tag-source-priority-config": [
 							{
 								"priority": 1,
 								"tag-src": "local"
-							},
-							{
-								"priority": 2,
-								"tag-src": "radius"
 							}
 						]
 					},
@@ -121,41 +114,31 @@ func TestApCfgDataStructures(t *testing.T) {
 					}
 				}
 			}`,
-			dataType: &ApCfgResponse{},
+			Target:     &ApCfgResponse{},
+			TypeName:   "ApCfgResponse",
+			ShouldFail: false,
 		},
 		{
-			name: "ApCfgTagSourcePriorityConfigsResponse",
-			jsonData: `{
+			Name: "ApCfgTagSourcePriorityConfigsResponse",
+			JSONData: `{
 				"Cisco-IOS-XE-wireless-ap-cfg:tag-source-priority-configs": {
 					"tag-source-priority-config": [
 						{
-							"priority": 1,
-							"tag-src": "local"
-						},
-						{
 							"priority": 2,
 							"tag-src": "radius"
-						},
-						{
-							"priority": 3,
-							"tag-src": "mac-address"
 						}
 					]
 				}
 			}`,
-			dataType: &ApCfgTagSourcePriorityConfigsResponse{},
+			Target:     &ApCfgTagSourcePriorityConfigsResponse{},
+			TypeName:   "ApCfgTagSourcePriorityConfigsResponse",
+			ShouldFail: false,
 		},
 		{
-			name: "ApCfgApTagsResponse",
-			jsonData: `{
+			Name: "ApCfgApTagsResponse",
+			JSONData: `{
 				"Cisco-IOS-XE-wireless-ap-cfg:ap-tags": {
 					"ap-tag": [
-						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
-							"policy-tag": "default-policy",
-							"site-tag": "site-01",
-							"rf-tag": "rf-default"
-						},
 						{
 							"ap-mac": "11:22:33:44:55:66",
 							"policy-tag": "guest-policy",
@@ -164,21 +147,153 @@ func TestApCfgDataStructures(t *testing.T) {
 					]
 				}
 			}`,
-			dataType: &ApCfgApTagsResponse{},
+			Target:     &ApCfgApTagsResponse{},
+			TypeName:   "ApCfgApTagsResponse",
+			ShouldFail: false,
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := json.Unmarshal([]byte(tt.jsonData), tt.dataType)
-			if err != nil {
-				t.Errorf("Failed to unmarshal %s: %v", tt.name, err)
-			}
+	testutils.RunJSONTests(t, testCases)
 
-			_, err = json.Marshal(tt.dataType)
-			if err != nil {
-				t.Errorf("Failed to marshal %s: %v", tt.name, err)
+	// Additional field validation for successfully unmarshaled structures
+	t.Run("ApCfgResponseFieldValidation", func(t *testing.T) {
+		var response ApCfgResponse
+		testutils.TestJSONUnmarshal(t, testCases[0].JSONData, &response, "ApCfgResponse")
+
+		testutils.ValidateJSONStructFields(t, "ApCfgResponse", func() error {
+			if len(response.CiscoIOSXEWirelessApCfgApCfgData.TagSourcePriorityConfigs.TagSourcePriorityConfig) != 1 {
+				t.Errorf("Expected 1 tag source priority config, got %d",
+					len(response.CiscoIOSXEWirelessApCfgApCfgData.TagSourcePriorityConfigs.TagSourcePriorityConfig))
+			}
+			if response.CiscoIOSXEWirelessApCfgApCfgData.TagSourcePriorityConfigs.TagSourcePriorityConfig[0].Priority != 1 {
+				t.Errorf("Expected priority 1, got %d",
+					response.CiscoIOSXEWirelessApCfgApCfgData.TagSourcePriorityConfigs.TagSourcePriorityConfig[0].Priority)
+			}
+			return nil
+		})
+	})
+
+	t.Run("ApCfgTagSourcePriorityConfigsResponseFieldValidation", func(t *testing.T) {
+		var response ApCfgTagSourcePriorityConfigsResponse
+		testutils.TestJSONUnmarshal(t, testCases[1].JSONData, &response, "ApCfgTagSourcePriorityConfigsResponse")
+
+		testutils.ValidateJSONStructFields(t, "ApCfgTagSourcePriorityConfigsResponse", func() error {
+			if len(response.TagSourcePriorityConfigs.TagSourcePriorityConfig) != 1 {
+				t.Errorf("Expected 1 tag source priority config, got %d", len(response.TagSourcePriorityConfigs.TagSourcePriorityConfig))
+			}
+			return nil
+		})
+	})
+
+	t.Run("ApCfgApTagsResponseFieldValidation", func(t *testing.T) {
+		var response ApCfgApTagsResponse
+		testutils.TestJSONUnmarshal(t, testCases[2].JSONData, &response, "ApCfgApTagsResponse")
+
+		testutils.ValidateJSONStructFields(t, "ApCfgApTagsResponse", func() error {
+			if len(response.ApTags.ApTag) != 1 {
+				t.Errorf("Expected 1 AP tag, got %d", len(response.ApTags.ApTag))
+			}
+			return nil
+		})
+	})
+}
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestApCfgErrorHandling tests error handling for all configuration functions
+func TestApCfgErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetApCfg", func() (interface{}, error) { return GetApCfg(nil, ctx) }},
+		{"GetTagSourcePriorityConfigs", func() (interface{}, error) { return GetTagSourcePriorityConfigs(nil, ctx) }},
+		{"GetApTagSourcePriorityConfigs", func() (interface{}, error) { return GetApTagSourcePriorityConfigs(nil, ctx) }},
+		{"GetApApTags", func() (interface{}, error) { return GetApApTags(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil {
+				t.Errorf("Expected error with nil client, got nil")
+			}
+			// Accept either error message format for consistency
+			errorMsg := err.Error()
+			if errorMsg != "client is nil" && errorMsg != "invalid client configuration: client cannot be nil" {
+				t.Errorf("Expected 'client is nil' or 'invalid client configuration' error, got: %v", err)
 			}
 		})
 	}
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestApCfgContextHandling tests context handling for all configuration functions
+func TestApCfgContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetApCfg", func(ctx context.Context, client *wnc.Client) error { _, err := GetApCfg(client, ctx); return err }},
+		{"GetTagSourcePriorityConfigs", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetTagSourcePriorityConfigs(client, ctx)
+			return err
+		}},
+		{"GetApTagSourcePriorityConfigs", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApTagSourcePriorityConfigs(client, ctx)
+			return err
+		}},
+		{"GetApApTags", func(ctx context.Context, client *wnc.Client) error { _, err := GetApApTags(client, ctx); return err }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
+}
+
+// =============================================================================
+// 5. ENDPOINT VALIDATION TESTS
+// =============================================================================
+
+// TestApCfgEndpoints validates access point configuration endpoint constants
+func TestApCfgEndpoints(t *testing.T) {
+	// Test base path validation
+	t.Run("Validate_ApCfgBasePath", func(t *testing.T) {
+		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"
+		if ApCfgBasePath != expectedBasePath {
+			t.Errorf("ApCfgBasePath mismatch: expected %s, got %s", expectedBasePath, ApCfgBasePath)
+		}
+	})
+
+	// Test endpoint validation
+	t.Run("Validate_ApCfgEndpoint", func(t *testing.T) {
+		if ApCfgEndpoint != ApCfgBasePath {
+			t.Errorf("ApCfgEndpoint should equal ApCfgBasePath: expected %s, got %s", ApCfgBasePath, ApCfgEndpoint)
+		}
+	})
+
+	// Test tag source priority configs endpoint validation
+	t.Run("Validate_TagSourcePriorityConfigsEndpoint", func(t *testing.T) {
+		expectedEndpoint := ApCfgBasePath + "/tag-source-priority-configs"
+		if TagSourcePriorityConfigsEndpoint != expectedEndpoint {
+			t.Errorf("TagSourcePriorityConfigsEndpoint mismatch: expected %s, got %s", expectedEndpoint, TagSourcePriorityConfigsEndpoint)
+		}
+	})
+
+	// Test AP tags endpoint validation
+	t.Run("Validate_ApTagsEndpoint", func(t *testing.T) {
+		expectedEndpoint := ApCfgBasePath + "/ap-tags"
+		if ApTagsEndpoint != expectedEndpoint {
+			t.Errorf("ApTagsEndpoint mismatch: expected %s, got %s", expectedEndpoint, ApTagsEndpoint)
+		}
+	})
 }

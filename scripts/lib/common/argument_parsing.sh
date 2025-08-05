@@ -24,6 +24,12 @@ is_verbose_enabled() { [[ "${VERBOSE:-false}" == "true" ]]; }
 # Check if race detection is enabled
 is_race_detection_enabled() { [[ "${RACE_FLAG:-true}" == "true" ]]; }
 
+# Check if HTML coverage report generation is enabled
+is_html_enabled() { [[ "${HTML_COVERAGE:-false}" == "true" ]]; }
+
+# Check if browser opening is enabled
+is_open_enabled() { [[ "${OPEN_BROWSER:-false}" == "true" ]]; }
+
 # Check if directory exists and is valid
 is_directory_valid() { [[ -d "$1" ]]; }
 

@@ -3,6 +3,7 @@ package general
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -148,6 +149,9 @@ type GeolocationCfg struct{}
 
 // GetGeneralCfg retrieves general configuration with context support
 func GetGeneralCfg(client *wnc.Client, ctx context.Context) (*GeneralCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data GeneralCfgResponse
 	if err := client.SendAPIRequest(ctx, GeneralCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -156,6 +160,9 @@ func GetGeneralCfg(client *wnc.Client, ctx context.Context) (*GeneralCfgResponse
 }
 
 func GetGeneralMewlcConfig(client *wnc.Client, ctx context.Context) (*MewlcConfigResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MewlcConfigResponse
 	if err := client.SendAPIRequest(ctx, MewlcConfigEndpoint, &data); err != nil {
 		return nil, err
@@ -164,6 +171,9 @@ func GetGeneralMewlcConfig(client *wnc.Client, ctx context.Context) (*MewlcConfi
 }
 
 func GetGeneralCacConfig(client *wnc.Client, ctx context.Context) (*CacConfigResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data CacConfigResponse
 	if err := client.SendAPIRequest(ctx, CacConfigEndpoint, &data); err != nil {
 		return nil, err
@@ -172,6 +182,9 @@ func GetGeneralCacConfig(client *wnc.Client, ctx context.Context) (*CacConfigRes
 }
 
 func GetGeneralMfp(client *wnc.Client, ctx context.Context) (*MfpResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MfpResponse
 	if err := client.SendAPIRequest(ctx, MfpEndpoint, &data); err != nil {
 		return nil, err
@@ -180,6 +193,9 @@ func GetGeneralMfp(client *wnc.Client, ctx context.Context) (*MfpResponse, error
 }
 
 func GetGeneralFipsCfg(client *wnc.Client, ctx context.Context) (*FipsCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data FipsCfgResponse
 	if err := client.SendAPIRequest(ctx, FipsCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -188,6 +204,9 @@ func GetGeneralFipsCfg(client *wnc.Client, ctx context.Context) (*FipsCfgRespons
 }
 
 func GetGeneralWsaApClientEvent(client *wnc.Client, ctx context.Context) (*WsaApClientEventResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WsaApClientEventResponse
 	if err := client.SendAPIRequest(ctx, WsaApClientEventEndpoint, &data); err != nil {
 		return nil, err
@@ -196,6 +215,9 @@ func GetGeneralWsaApClientEvent(client *wnc.Client, ctx context.Context) (*WsaAp
 }
 
 func GetGeneralSimL3InterfaceCacheData(client *wnc.Client, ctx context.Context) (*SimL3InterfaceCacheDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data SimL3InterfaceCacheDataResponse
 	if err := client.SendAPIRequest(ctx, SimL3InterfaceCacheDataEndpoint, &data); err != nil {
 		return nil, err
@@ -204,6 +226,9 @@ func GetGeneralSimL3InterfaceCacheData(client *wnc.Client, ctx context.Context) 
 }
 
 func GetGeneralWlcManagementData(client *wnc.Client, ctx context.Context) (*WlcManagementDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlcManagementDataResponse
 	if err := client.SendAPIRequest(ctx, WlcManagementDataEndpoint, &data); err != nil {
 		return nil, err
@@ -212,6 +237,9 @@ func GetGeneralWlcManagementData(client *wnc.Client, ctx context.Context) (*WlcM
 }
 
 func GetGeneralLaginfo(client *wnc.Client, ctx context.Context) (*LaginfoResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data LaginfoResponse
 	if err := client.SendAPIRequest(ctx, LaginfoEndpoint, &data); err != nil {
 		return nil, err
@@ -220,6 +248,9 @@ func GetGeneralLaginfo(client *wnc.Client, ctx context.Context) (*LaginfoRespons
 }
 
 func GetGeneralMulticastConfig(client *wnc.Client, ctx context.Context) (*MulticastConfigResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MulticastConfigResponse
 	if err := client.SendAPIRequest(ctx, MulticastConfigEndpoint, &data); err != nil {
 		return nil, err
@@ -228,6 +259,9 @@ func GetGeneralMulticastConfig(client *wnc.Client, ctx context.Context) (*Multic
 }
 
 func GetGeneralFeatureUsageCfg(client *wnc.Client, ctx context.Context) (*FeatureUsageCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data FeatureUsageCfgResponse
 	if err := client.SendAPIRequest(ctx, FeatureUsageCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -236,6 +270,9 @@ func GetGeneralFeatureUsageCfg(client *wnc.Client, ctx context.Context) (*Featur
 }
 
 func GetGeneralThresholdWarnCfg(client *wnc.Client, ctx context.Context) (*ThresholdWarnCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ThresholdWarnCfgResponse
 	if err := client.SendAPIRequest(ctx, ThresholdWarnCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -244,6 +281,9 @@ func GetGeneralThresholdWarnCfg(client *wnc.Client, ctx context.Context) (*Thres
 }
 
 func GetGeneralApLocRangingCfg(client *wnc.Client, ctx context.Context) (*ApLocRangingCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApLocRangingCfgResponse
 	if err := client.SendAPIRequest(ctx, ApLocRangingCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -252,6 +292,9 @@ func GetGeneralApLocRangingCfg(client *wnc.Client, ctx context.Context) (*ApLocR
 }
 
 func GetGeneralGeolocationCfg(client *wnc.Client, ctx context.Context) (*GeolocationCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data GeolocationCfgResponse
 	if err := client.SendAPIRequest(ctx, GeolocationCfgEndpoint, &data); err != nil {
 		return nil, err

@@ -229,3 +229,43 @@ func TestHyperlocationOperClientInterfaceCompliance(t *testing.T) {
 		_, _ = GetHyperlocationProfiles(client, ctx)
 	})
 }
+
+// =============================================================================
+// 4. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestHyperlocationOperErrorHandling tests error handling for all hyperlocation operational functions
+func TestHyperlocationOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	// Test GetHyperlocationOper with nil client
+	_, err := GetHyperlocationOper(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetHyperlocationProfiles with nil client
+	_, err = GetHyperlocationProfiles(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestHyperlocationOperContextHandling tests context handling for all hyperlocation operational functions
+func TestHyperlocationOperContextHandling(t *testing.T) {
+	// Test GetHyperlocationOper with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetHyperlocationOper(client, ctx)
+		return err
+	})
+
+	// Test GetHyperlocationProfiles with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetHyperlocationProfiles(client, ctx)
+		return err
+	})
+}

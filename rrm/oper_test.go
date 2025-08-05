@@ -447,3 +447,87 @@ func TestRrmOperDataStructures(t *testing.T) {
 		t.Errorf("Failed to marshal RrmOperResponse back to JSON: %v", err)
 	}
 }
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestRrmOperErrorHandling tests error handling for all operational functions
+func TestRrmOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetRrmOper", func() (interface{}, error) { return GetRrmOper(nil, ctx) }},
+		{"GetApAutoRfDot11Data", func() (interface{}, error) { return GetApAutoRfDot11Data(nil, ctx) }},
+		{"GetApDot11RadarData", func() (interface{}, error) { return GetApDot11RadarData(nil, ctx) }},
+		{"GetApDot11SpectrumData", func() (interface{}, error) { return GetApDot11SpectrumData(nil, ctx) }},
+		{"GetRrmMeasurement", func() (interface{}, error) { return GetRrmMeasurement(nil, ctx) }},
+		{"GetRadioSlot", func() (interface{}, error) { return GetRadioSlot(nil, ctx) }},
+		{"GetMainData", func() (interface{}, error) { return GetMainData(nil, ctx) }},
+		{"GetSpectrumDeviceTable", func() (interface{}, error) { return GetSpectrumDeviceTable(nil, ctx) }},
+		{"GetSpectrumAqTable", func() (interface{}, error) { return GetSpectrumAqTable(nil, ctx) }},
+		{"GetRegDomainOper", func() (interface{}, error) { return GetRegDomainOper(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil || err.Error() != "client is nil" {
+				t.Errorf("Expected 'client is nil' error, got: %v", err)
+			}
+		})
+	}
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestRrmOperContextHandling tests context handling for all operational functions
+func TestRrmOperContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetRrmOper", func(ctx context.Context, client *wnc.Client) error { _, err := GetRrmOper(client, ctx); return err }},
+		{"GetApAutoRfDot11Data", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApAutoRfDot11Data(client, ctx)
+			return err
+		}},
+		{"GetApDot11RadarData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApDot11RadarData(client, ctx)
+			return err
+		}},
+		{"GetApDot11SpectrumData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApDot11SpectrumData(client, ctx)
+			return err
+		}},
+		{"GetRrmMeasurement", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmMeasurement(client, ctx)
+			return err
+		}},
+		{"GetRadioSlot", func(ctx context.Context, client *wnc.Client) error { _, err := GetRadioSlot(client, ctx); return err }},
+		{"GetMainData", func(ctx context.Context, client *wnc.Client) error { _, err := GetMainData(client, ctx); return err }},
+		{"GetSpectrumDeviceTable", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetSpectrumDeviceTable(client, ctx)
+			return err
+		}},
+		{"GetSpectrumAqTable", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetSpectrumAqTable(client, ctx)
+			return err
+		}},
+		{"GetRegDomainOper", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRegDomainOper(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
+}

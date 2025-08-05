@@ -2,12 +2,14 @@
 package mesh
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"strings"
 	"testing"
 	"time"
+
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -212,5 +214,73 @@ func TestMeshConfigurationEndpoints(t *testing.T) {
 		if !strings.HasSuffix(MeshProfilesEndpoint, "/mesh-profiles") {
 			t.Errorf("MeshProfilesEndpoint should end with '/mesh-profiles', got: %s", MeshProfilesEndpoint)
 		}
+	})
+}
+
+// =============================================================================
+// 4. ERROR HANDLING TESTS
+// =============================================================================
+
+func TestMeshCfgErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("GetMeshCfg_NilClient", func(t *testing.T) {
+		result, err := GetMeshCfg(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+
+	t.Run("GetMesh_NilClient", func(t *testing.T) {
+		result, err := GetMesh(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+
+	t.Run("GetMeshProfiles_NilClient", func(t *testing.T) {
+		result, err := GetMeshProfiles(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+func TestMeshCfgContextHandling(t *testing.T) {
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetMeshCfg(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetMesh(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetMeshProfiles(client, ctx)
+		return err
 	})
 }

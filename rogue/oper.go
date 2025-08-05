@@ -3,6 +3,7 @@ package rogue
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -448,6 +449,9 @@ type RldpStats struct {
 
 // GetRogueOper retrieves rogue operational data.
 func GetRogueOper(client *wnc.Client, ctx context.Context) (*RogueOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RogueOperResponse
 	if err := client.SendAPIRequest(ctx, RogueOperEndpoint, &data); err != nil {
 		return nil, err
@@ -457,6 +461,9 @@ func GetRogueOper(client *wnc.Client, ctx context.Context) (*RogueOperResponse, 
 
 // GetRogueStats retrieves rogue statistics.
 func GetRogueStats(client *wnc.Client, ctx context.Context) (*RogueStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RogueStatsResponse
 	if err := client.SendAPIRequest(ctx, RogueStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -466,6 +473,9 @@ func GetRogueStats(client *wnc.Client, ctx context.Context) (*RogueStatsResponse
 
 // GetRogueData retrieves rogue data.
 func GetRogueData(client *wnc.Client, ctx context.Context) (*RogueDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RogueDataResponse
 	if err := client.SendAPIRequest(ctx, RogueDataEndpoint, &data); err != nil {
 		return nil, err
@@ -475,6 +485,9 @@ func GetRogueData(client *wnc.Client, ctx context.Context) (*RogueDataResponse, 
 
 // GetRogueClientData retrieves rogue client data.
 func GetRogueClientData(client *wnc.Client, ctx context.Context) (*RogueClientDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RogueClientDataResponse
 	if err := client.SendAPIRequest(ctx, RogueClientDataEndpoint, &data); err != nil {
 		return nil, err
@@ -484,6 +497,9 @@ func GetRogueClientData(client *wnc.Client, ctx context.Context) (*RogueClientDa
 
 // GetRldpStats retrieves RLDP statistics.
 func GetRldpStats(client *wnc.Client, ctx context.Context) (*RldpStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RldpStatsResponse
 	if err := client.SendAPIRequest(ctx, RldpStatsEndpoint, &data); err != nil {
 		return nil, err

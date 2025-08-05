@@ -328,3 +328,80 @@ func TestApGlobalOperDataStructures(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestApGlobalOperErrorHandling tests error handling for all global operational functions
+func TestApGlobalOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetApGlobalOper", func() (interface{}, error) { return GetApGlobalOper(nil, ctx) }},
+		{"GetApHistory", func() (interface{}, error) { return GetApHistory(nil, ctx) }},
+		{"GetApEwlcApStats", func() (interface{}, error) { return GetApEwlcApStats(nil, ctx) }},
+		{"GetApImgPredownloadStats", func() (interface{}, error) { return GetApImgPredownloadStats(nil, ctx) }},
+		{"GetApJoinStats", func() (interface{}, error) { return GetApJoinStats(nil, ctx) }},
+		{"GetApWlanClientStats", func() (interface{}, error) { return GetApWlanClientStats(nil, ctx) }},
+		{"GetApEmltdJoinCountStat", func() (interface{}, error) { return GetApEmltdJoinCountStat(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil {
+				t.Errorf("Expected error with nil client, got nil")
+			}
+			// Accept either error message format for consistency
+			errorMsg := err.Error()
+			if errorMsg != "client is nil" && errorMsg != "invalid client configuration: client cannot be nil" {
+				t.Errorf("Expected 'client is nil' or 'invalid client configuration' error, got: %v", err)
+			}
+		})
+	}
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestApGlobalOperContextHandling tests context handling for all global operational functions
+func TestApGlobalOperContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetApGlobalOper", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApGlobalOper(client, ctx)
+			return err
+		}},
+		{"GetApHistory", func(ctx context.Context, client *wnc.Client) error { _, err := GetApHistory(client, ctx); return err }},
+		{"GetApEwlcApStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApEwlcApStats(client, ctx)
+			return err
+		}},
+		{"GetApImgPredownloadStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApImgPredownloadStats(client, ctx)
+			return err
+		}},
+		{"GetApJoinStats", func(ctx context.Context, client *wnc.Client) error { _, err := GetApJoinStats(client, ctx); return err }},
+		{"GetApWlanClientStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApWlanClientStats(client, ctx)
+			return err
+		}},
+		{"GetApEmltdJoinCountStat", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApEmltdJoinCountStat(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
+}

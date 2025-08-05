@@ -3,6 +3,7 @@ package wlan
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -213,6 +214,9 @@ type WirelessAaaPolicyConfig struct {
 
 // GetWlanCfg retrieves WLAN configuration with context support
 func GetWlanCfg(client *wnc.Client, ctx context.Context) (*WlanCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlanCfgResponse
 	if err := client.SendAPIRequest(ctx, WlanCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -221,6 +225,9 @@ func GetWlanCfg(client *wnc.Client, ctx context.Context) (*WlanCfgResponse, erro
 }
 
 func GetWlanCfgEntries(client *wnc.Client, ctx context.Context) (*WlanCfgEntriesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlanCfgEntriesResponse
 	if err := client.SendAPIRequest(ctx, WlanCfgEntriesEndpoint, &data); err != nil {
 		return nil, err
@@ -229,6 +236,9 @@ func GetWlanCfgEntries(client *wnc.Client, ctx context.Context) (*WlanCfgEntries
 }
 
 func GetWlanPolicies(client *wnc.Client, ctx context.Context) (*WlanPoliciesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlanPoliciesResponse
 	if err := client.SendAPIRequest(ctx, WlanPoliciesEndpoint, &data); err != nil {
 		return nil, err
@@ -237,6 +247,9 @@ func GetWlanPolicies(client *wnc.Client, ctx context.Context) (*WlanPoliciesResp
 }
 
 func GetPolicyListEntries(client *wnc.Client, ctx context.Context) (*PolicyListEntriesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data PolicyListEntriesResponse
 	if err := client.SendAPIRequest(ctx, PolicyListEntriesEndpoint, &data); err != nil {
 		return nil, err
@@ -245,6 +258,9 @@ func GetPolicyListEntries(client *wnc.Client, ctx context.Context) (*PolicyListE
 }
 
 func GetWirelessAaaPolicyConfigs(client *wnc.Client, ctx context.Context) (*WirelessAaaPolicyConfigsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WirelessAaaPolicyConfigsResponse
 	if err := client.SendAPIRequest(ctx, WirelessAaaPolicyConfigsEndpoint, &data); err != nil {
 		return nil, err

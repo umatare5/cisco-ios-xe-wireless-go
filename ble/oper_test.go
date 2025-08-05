@@ -208,3 +208,55 @@ func TestBleLtxOperDataStructures(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// 4. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestBleOperErrorHandling tests error handling for all BLE operational functions
+func TestBleOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	// Test GetBleLtxOper with nil client
+	_, err := GetBleLtxOper(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetBleLtxApAntenna with nil client
+	_, err = GetBleLtxApAntenna(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetBleLtxAp with nil client
+	_, err = GetBleLtxAp(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestBleOperContextHandling tests context handling for all BLE operational functions
+func TestBleOperContextHandling(t *testing.T) {
+	// Test GetBleLtxOper with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetBleLtxOper(client, ctx)
+		return err
+	})
+
+	// Test GetBleLtxApAntenna with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetBleLtxApAntenna(client, ctx)
+		return err
+	})
+
+	// Test GetBleLtxAp with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetBleLtxAp(client, ctx)
+		return err
+	})
+}

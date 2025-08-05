@@ -3,6 +3,7 @@ package ap
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -1285,6 +1286,9 @@ func GetApOper(client *wnc.Client, ctx context.Context) (*ApOperResponse, error)
 // GetApRadioNeighbor retrieves access point radio neighbor information.
 // Returns data about neighboring access points detected by each radio.
 func GetApRadioNeighbor(client *wnc.Client, ctx context.Context) (*ApOperApRadioNeighborResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperApRadioNeighborResponse
 	err := client.SendAPIRequest(ctx, ApRadioNeighborEndpoint, &result)
 	if err != nil {
@@ -1297,6 +1301,9 @@ func GetApRadioNeighbor(client *wnc.Client, ctx context.Context) (*ApOperApRadio
 // Returns detailed operational information for each radio including configuration,
 // capabilities, and current operational state.
 func GetApRadioOperData(client *wnc.Client, ctx context.Context) (*ApOperRadioOperDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperRadioOperDataResponse
 	err := client.SendAPIRequest(ctx, RadioOperDataEndpoint, &result)
 	if err != nil {
@@ -1308,6 +1315,9 @@ func GetApRadioOperData(client *wnc.Client, ctx context.Context) (*ApOperRadioOp
 // GetApRadioResetStats retrieves radio reset statistics for troubleshooting.
 // Returns information about radio resets including causes and occurrence counts.
 func GetApRadioResetStats(client *wnc.Client, ctx context.Context) (*ApOperRadioResetStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperRadioResetStatsResponse
 	err := client.SendAPIRequest(ctx, RadioResetStatsEndpoint, &result)
 	if err != nil {
@@ -1319,6 +1329,9 @@ func GetApRadioResetStats(client *wnc.Client, ctx context.Context) (*ApOperRadio
 // GetApQosClientData retrieves Quality of Service data for clients connected to access points.
 // Returns QoS parameters and statistics for client traffic management.
 func GetApQosClientData(client *wnc.Client, ctx context.Context) (*ApOperQosClientDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperQosClientDataResponse
 	err := client.SendAPIRequest(ctx, QosClientDataEndpoint, &result)
 	if err != nil {
@@ -1330,6 +1343,9 @@ func GetApQosClientData(client *wnc.Client, ctx context.Context) (*ApOperQosClie
 // GetApCapwapData retrieves CAPWAP (Control and Provisioning of Wireless Access Points) protocol data.
 // Returns CAPWAP tunnel and communication information between APs and the controller.
 func GetApCapwapData(client *wnc.Client, ctx context.Context) (*ApOperCapwapDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperCapwapDataResponse
 	err := client.SendAPIRequest(ctx, CapwapDataEndpoint, &result)
 	if err != nil {
@@ -1341,6 +1357,9 @@ func GetApCapwapData(client *wnc.Client, ctx context.Context) (*ApOperCapwapData
 // GetApNameMacMap retrieves the mapping between access point names and MAC addresses.
 // Returns the correlation between AP logical names and their physical MAC addresses.
 func GetApNameMacMap(client *wnc.Client, ctx context.Context) (*ApOperApNameMacMapResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperApNameMacMapResponse
 	err := client.SendAPIRequest(ctx, ApNameMacMapEndpoint, &result)
 	if err != nil {
@@ -1352,6 +1371,9 @@ func GetApNameMacMap(client *wnc.Client, ctx context.Context) (*ApOperApNameMacM
 // GetApWtpSlotWlanStats retrieves WTP (Wireless Termination Point) slot WLAN statistics.
 // Returns per-slot WLAN statistics for wireless termination points.
 func GetApWtpSlotWlanStats(client *wnc.Client, ctx context.Context) (*ApOperWtpSlotWlanStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperWtpSlotWlanStatsResponse
 	err := client.SendAPIRequest(ctx, WtpSlotWlanStatsEndpoint, &result)
 	if err != nil {
@@ -1363,6 +1385,9 @@ func GetApWtpSlotWlanStats(client *wnc.Client, ctx context.Context) (*ApOperWtpS
 // GetApEthernetMacWtpMacMap retrieves the mapping between Ethernet MAC addresses and WTP MAC addresses.
 // Returns the correlation between wired and wireless interface MAC addresses for access points.
 func GetApEthernetMacWtpMacMap(client *wnc.Client, ctx context.Context) (*ApOperEthernetMacWtpMacMapResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperEthernetMacWtpMacMapResponse
 	err := client.SendAPIRequest(ctx, EthernetMacWtpMacMapEndpoint, &result)
 	if err != nil {
@@ -1374,6 +1399,9 @@ func GetApEthernetMacWtpMacMap(client *wnc.Client, ctx context.Context) (*ApOper
 // GetApRadioOperStats retrieves radio operational statistics for access points.
 // Returns detailed operational metrics and performance statistics for AP radios.
 func GetApRadioOperStats(client *wnc.Client, ctx context.Context) (*ApOperRadioOperStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperRadioOperStatsResponse
 	err := client.SendAPIRequest(ctx, RadioOperStatsEndpoint, &result)
 	if err != nil {
@@ -1385,6 +1413,9 @@ func GetApRadioOperStats(client *wnc.Client, ctx context.Context) (*ApOperRadioO
 // GetApEthernetIfStats retrieves Ethernet interface statistics for access points.
 // Returns network interface statistics for AP wired connections.
 func GetApEthernetIfStats(client *wnc.Client, ctx context.Context) (*ApOperEthernetIfStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperEthernetIfStatsResponse
 	err := client.SendAPIRequest(ctx, EthernetIfStatsEndpoint, &result)
 	if err != nil {
@@ -1396,6 +1427,9 @@ func GetApEthernetIfStats(client *wnc.Client, ctx context.Context) (*ApOperEther
 // GetApEwlcWncdStats retrieves EWLC (Embedded Wireless LAN Controller) WNCD statistics.
 // Returns statistics for the wireless network control daemon on embedded controllers.
 func GetApEwlcWncdStats(client *wnc.Client, ctx context.Context) (*ApOperEwlcWncdStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperEwlcWncdStatsResponse
 	err := client.SendAPIRequest(ctx, EwlcWncdStatsEndpoint, &result)
 	if err != nil {
@@ -1407,6 +1441,9 @@ func GetApEwlcWncdStats(client *wnc.Client, ctx context.Context) (*ApOperEwlcWnc
 // GetApIoxOperData retrieves IOx (Cisco's application framework) operational data for access points.
 // Returns information about applications and containers running on IOx-enabled access points.
 func GetApIoxOperData(client *wnc.Client, ctx context.Context) (*ApOperApIoxOperDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperApIoxOperDataResponse
 	err := client.SendAPIRequest(ctx, ApIoxOperDataEndpoint, &result)
 	if err != nil {
@@ -1418,6 +1455,9 @@ func GetApIoxOperData(client *wnc.Client, ctx context.Context) (*ApOperApIoxOper
 // GetApQosGlobalStats retrieves global Quality of Service statistics for access points.
 // Returns system-wide QoS metrics and performance statistics.
 func GetApQosGlobalStats(client *wnc.Client, ctx context.Context) (*ApOperQosGlobalStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperQosGlobalStatsResponse
 	err := client.SendAPIRequest(ctx, QosGlobalStatsEndpoint, &result)
 	if err != nil {
@@ -1429,6 +1469,9 @@ func GetApQosGlobalStats(client *wnc.Client, ctx context.Context) (*ApOperQosGlo
 // GetApOperData retrieves general operational data for access points.
 // Returns comprehensive operational information about AP status and configuration.
 func GetApOperData(client *wnc.Client, ctx context.Context) (*ApOperOperDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperOperDataResponse
 	err := client.SendAPIRequest(ctx, OperDataEndpoint, &result)
 	if err != nil {
@@ -1440,6 +1483,9 @@ func GetApOperData(client *wnc.Client, ctx context.Context) (*ApOperOperDataResp
 // GetApRlanOper retrieves RLAN (Remote LAN) operational data for access points.
 // Returns information about remote LAN connections and bridging.
 func GetApRlanOper(client *wnc.Client, ctx context.Context) (*ApOperRlanOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperRlanOperResponse
 	err := client.SendAPIRequest(ctx, RlanOperEndpoint, &result)
 	if err != nil {
@@ -1451,6 +1497,9 @@ func GetApRlanOper(client *wnc.Client, ctx context.Context) (*ApOperRlanOperResp
 // GetApEwlcMewlcPredownloadRec retrieves EWLC MEWLC predownload records.
 // Returns information about image predownload operations for mobility controllers.
 func GetApEwlcMewlcPredownloadRec(client *wnc.Client, ctx context.Context) (*ApOperEwlcMewlcPredownloadRecResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperEwlcMewlcPredownloadRecResponse
 	err := client.SendAPIRequest(ctx, EwlcMewlcPredownloadRecEndpoint, &result)
 	if err != nil {
@@ -1462,6 +1511,9 @@ func GetApEwlcMewlcPredownloadRec(client *wnc.Client, ctx context.Context) (*ApO
 // GetApCdpCacheData retrieves CDP (Cisco Discovery Protocol) cache data for access points.
 // Returns information about neighboring Cisco devices discovered via CDP.
 func GetApCdpCacheData(client *wnc.Client, ctx context.Context) (*ApOperCdpCacheDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperCdpCacheDataResponse
 	err := client.SendAPIRequest(ctx, CdpCacheDataEndpoint, &result)
 	if err != nil {
@@ -1473,6 +1525,9 @@ func GetApCdpCacheData(client *wnc.Client, ctx context.Context) (*ApOperCdpCache
 // GetApLldpNeigh retrieves LLDP (Link Layer Discovery Protocol) neighbor information.
 // Returns data about neighboring devices discovered through LLDP.
 func GetApLldpNeigh(client *wnc.Client, ctx context.Context) (*ApOperLldpNeighResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperLldpNeighResponse
 	err := client.SendAPIRequest(ctx, LldpNeighEndpoint, &result)
 	if err != nil {
@@ -1484,6 +1539,9 @@ func GetApLldpNeigh(client *wnc.Client, ctx context.Context) (*ApOperLldpNeighRe
 // GetApTpCertInfo retrieves trustpoint certificate information for access points.
 // Returns PKI certificate data and trust relationships.
 func GetApTpCertInfo(client *wnc.Client, ctx context.Context) (*ApOperTpCertInfoResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperTpCertInfoResponse
 	err := client.SendAPIRequest(ctx, TpCertInfoEndpoint, &result)
 	if err != nil {
@@ -1495,6 +1553,9 @@ func GetApTpCertInfo(client *wnc.Client, ctx context.Context) (*ApOperTpCertInfo
 // GetApDiscData retrieves discovery data for access points.
 // Returns information about AP discovery process and neighbor detection.
 func GetApDiscData(client *wnc.Client, ctx context.Context) (*ApOperDiscDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperDiscDataResponse
 	err := client.SendAPIRequest(ctx, DiscDataEndpoint, &result)
 	if err != nil {
@@ -1506,6 +1567,9 @@ func GetApDiscData(client *wnc.Client, ctx context.Context) (*ApOperDiscDataResp
 // GetApCapwapPkts retrieves CAPWAP packet statistics for access points.
 // Returns detailed packet-level statistics for CAPWAP protocol communications.
 func GetApCapwapPkts(client *wnc.Client, ctx context.Context) (*ApOperCapwapPktsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperCapwapPktsResponse
 	err := client.SendAPIRequest(ctx, CapwapPktsEndpoint, &result)
 	if err != nil {
@@ -1516,6 +1580,9 @@ func GetApCapwapPkts(client *wnc.Client, ctx context.Context) (*ApOperCapwapPkts
 
 // GetApCountryOper retrieves AP country operational data with context.
 func GetApCountryOper(client *wnc.Client, ctx context.Context) (*ApOperCountryOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperCountryOperResponse
 	err := client.SendAPIRequest(ctx, CountryOperEndpoint, &result)
 	if err != nil {
@@ -1526,6 +1593,9 @@ func GetApCountryOper(client *wnc.Client, ctx context.Context) (*ApOperCountryOp
 
 // GetApSuppCountryOper retrieves AP supported country operational data with context.
 func GetApSuppCountryOper(client *wnc.Client, ctx context.Context) (*ApOperSuppCountryOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperSuppCountryOperResponse
 	err := client.SendAPIRequest(ctx, SuppCountryOperEndpoint, &result)
 	if err != nil {
@@ -1537,6 +1607,9 @@ func GetApSuppCountryOper(client *wnc.Client, ctx context.Context) (*ApOperSuppC
 // GetApNhGlobalData retrieves access point next hop global data.
 // Returns global routing and next hop information for access points.
 func GetApNhGlobalData(client *wnc.Client, ctx context.Context) (*ApOperApNhGlobalDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperApNhGlobalDataResponse
 	err := client.SendAPIRequest(ctx, ApNhGlobalDataEndpoint, &result)
 	if err != nil {
@@ -1548,6 +1621,9 @@ func GetApNhGlobalData(client *wnc.Client, ctx context.Context) (*ApOperApNhGlob
 // GetApImagePrepareLocation retrieves access point image prepare location information.
 // Returns data about AP image preparation and staging locations.
 func GetApImagePrepareLocation(client *wnc.Client, ctx context.Context) (*ApOperApImagePrepareLocationResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperApImagePrepareLocationResponse
 	err := client.SendAPIRequest(ctx, ApImagePrepareLocationEndpoint, &result)
 	if err != nil {
@@ -1559,6 +1635,9 @@ func GetApImagePrepareLocation(client *wnc.Client, ctx context.Context) (*ApOper
 // GetApImageActiveLocation retrieves access point image active location information.
 // Returns data about currently active AP image locations and versions.
 func GetApImageActiveLocation(client *wnc.Client, ctx context.Context) (*ApOperApImageActiveLocationResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result ApOperApImageActiveLocationResponse
 	err := client.SendAPIRequest(ctx, ApImageActiveLocationEndpoint, &result)
 	if err != nil {

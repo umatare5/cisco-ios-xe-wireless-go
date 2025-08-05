@@ -3,6 +3,8 @@
 # Cisco WNC YANG Operations - Help Functions
 # Provides help and documentation functionality for YANG operations
 
+source "$(dirname "${BASH_SOURCE[0]}")/../argument_parsing.sh"
+
 show_yang_banner() {
     if ! is_no_color_enabled; then
         echo -e "\033[35m╔════════════════════════════════════════╗\033[0m"

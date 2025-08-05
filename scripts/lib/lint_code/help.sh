@@ -3,6 +3,8 @@
 # Cisco WNC Lint Code - Help Functions
 # Provides help and documentation functionality for lint_code operations
 
+source "$(dirname "${BASH_SOURCE[0]}")/../argument_parsing.sh"
+
 show_lint_banner() {
     if ! is_no_color_enabled; then
         echo -e "\033[34m╔════════════════════════════════════════╗\033[0m"

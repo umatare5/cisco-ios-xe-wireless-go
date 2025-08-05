@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -334,7 +335,83 @@ func TestWlanGlobalOperationFunctions(t *testing.T) {
 }
 
 // =============================================================================
-// 5. OTHER TESTS
+// 5. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestWlanCfgErrorHandling tests error handling for all configuration functions
+func TestWlanCfgErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	// Test GetWlanCfg with nil client
+	_, err := GetWlanCfg(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetWlanCfgEntries with nil client
+	_, err = GetWlanCfgEntries(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetWlanPolicies with nil client
+	_, err = GetWlanPolicies(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetPolicyListEntries with nil client
+	_, err = GetPolicyListEntries(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetWirelessAaaPolicyConfigs with nil client
+	_, err = GetWirelessAaaPolicyConfigs(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+}
+
+// =============================================================================
+// 6. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestWlanCfgContextHandling tests context handling for all configuration functions
+func TestWlanCfgContextHandling(t *testing.T) {
+	// Test GetWlanCfg with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetWlanCfg(client, ctx)
+		return err
+	})
+
+	// Test GetWlanCfgEntries with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetWlanCfgEntries(client, ctx)
+		return err
+	})
+
+	// Test GetWlanPolicies with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetWlanPolicies(client, ctx)
+		return err
+	})
+
+	// Test GetPolicyListEntries with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetPolicyListEntries(client, ctx)
+		return err
+	})
+
+	// Test GetWirelessAaaPolicyConfigs with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetWirelessAaaPolicyConfigs(client, ctx)
+		return err
+	})
+}
+
+// =============================================================================
+// 7. OTHER TESTS
 // =============================================================================
 
 // Currently no other tests specific to WLAN configuration

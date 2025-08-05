@@ -5,6 +5,7 @@
 
 # Source common predicates
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
 
 # Global variables
 declare -a TEST_ARGS
@@ -183,8 +184,8 @@ run_coverage_test_operation() {
     display_test_summary "Coverage" "$exit_code" "${TEST_DURATION:-unknown}"
     display_coverage_summary "$coverage_file" "$exit_code"
 
-    # Generate HTML report if requested
-    if [[ "$exit_code" -eq 0 ]] && is_html_enabled; then
+    # Generate HTML report if requested (currently disabled)
+    if [[ "$exit_code" -eq 0 ]] && [[ "${HTML_COVERAGE:-false}" == "true" ]]; then
         local html_file="${coverage_file%.out}.html"
         show_test_progress "Generating HTML coverage report..."
 
@@ -192,7 +193,7 @@ run_coverage_test_operation() {
             format_test_success "HTML report generated: $html_file"
 
             # Open in browser if requested
-            if is_open_enabled && command -v open >/dev/null 2>&1; then
+            if [[ "${OPEN_BROWSER:-false}" == "true" ]] && command -v open >/dev/null 2>&1; then
                 open "$html_file"
                 format_test_info "Opened HTML report in browser"
             fi

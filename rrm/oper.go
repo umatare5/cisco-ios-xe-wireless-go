@@ -3,7 +3,7 @@ package rrm
 
 import (
 	"context"
-
+	"errors"
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
@@ -275,6 +275,9 @@ type RegDomainOper struct {
 
 // GetRrmOper retrieves RRM operational data with context.
 func GetRrmOper(client *wnc.Client, ctx context.Context) (*RrmOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var result RrmOperResponse
 	err := client.SendAPIRequest(ctx, RrmOperEndpoint, &result)
 	if err != nil {
@@ -284,6 +287,9 @@ func GetRrmOper(client *wnc.Client, ctx context.Context) (*RrmOperResponse, erro
 }
 
 func GetApAutoRfDot11Data(client *wnc.Client, ctx context.Context) (*ApAutoRfDot11DataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApAutoRfDot11DataResponse
 	err := client.SendAPIRequest(ctx, RrmOperApAutoRfDot11DataEndpoint, &data)
 	if err != nil {
@@ -293,6 +299,9 @@ func GetApAutoRfDot11Data(client *wnc.Client, ctx context.Context) (*ApAutoRfDot
 }
 
 func GetApDot11RadarData(client *wnc.Client, ctx context.Context) (*ApDot11RadarDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApDot11RadarDataResponse
 	err := client.SendAPIRequest(ctx, RrmOperApDot11RadarDataEndpoint, &data)
 	if err != nil {
@@ -302,6 +311,9 @@ func GetApDot11RadarData(client *wnc.Client, ctx context.Context) (*ApDot11Radar
 }
 
 func GetApDot11SpectrumData(client *wnc.Client, ctx context.Context) (*ApDot11SpectrumDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApDot11SpectrumDataResponse
 	err := client.SendAPIRequest(ctx, RrmOperApDot11SpectrumDataEndpoint, &data)
 	if err != nil {
@@ -311,6 +323,9 @@ func GetApDot11SpectrumData(client *wnc.Client, ctx context.Context) (*ApDot11Sp
 }
 
 func GetRrmMeasurement(client *wnc.Client, ctx context.Context) (*RrmMeasurementResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RrmMeasurementResponse
 	err := client.SendAPIRequest(ctx, RrmOperRrmMeasurementEndpoint, &data)
 	if err != nil {
@@ -320,6 +335,9 @@ func GetRrmMeasurement(client *wnc.Client, ctx context.Context) (*RrmMeasurement
 }
 
 func GetRadioSlot(client *wnc.Client, ctx context.Context) (*RadioSlotResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RadioSlotResponse
 	err := client.SendAPIRequest(ctx, RrmOperRadioSlotEndpoint, &data)
 	if err != nil {
@@ -329,6 +347,9 @@ func GetRadioSlot(client *wnc.Client, ctx context.Context) (*RadioSlotResponse, 
 }
 
 func GetMainData(client *wnc.Client, ctx context.Context) (*MainDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MainDataResponse
 	err := client.SendAPIRequest(ctx, RrmOperMainDataEndpoint, &data)
 	if err != nil {
@@ -338,6 +359,9 @@ func GetMainData(client *wnc.Client, ctx context.Context) (*MainDataResponse, er
 }
 
 func GetSpectrumDeviceTable(client *wnc.Client, ctx context.Context) (*SpectrumDeviceTableResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data SpectrumDeviceTableResponse
 	err := client.SendAPIRequest(ctx, RrmOperSpectrumDeviceTableEndpoint, &data)
 	if err != nil {
@@ -347,6 +371,9 @@ func GetSpectrumDeviceTable(client *wnc.Client, ctx context.Context) (*SpectrumD
 }
 
 func GetSpectrumAqTable(client *wnc.Client, ctx context.Context) (*SpectrumAqTableResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data SpectrumAqTableResponse
 	err := client.SendAPIRequest(ctx, RrmOperSpectrumAqTableEndpoint, &data)
 	if err != nil {
@@ -356,6 +383,9 @@ func GetSpectrumAqTable(client *wnc.Client, ctx context.Context) (*SpectrumAqTab
 }
 
 func GetRegDomainOper(client *wnc.Client, ctx context.Context) (*RegDomainOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RegDomainOperResponse
 	err := client.SendAPIRequest(ctx, RrmOperRegDomainOperEndpoint, &data)
 	if err != nil {

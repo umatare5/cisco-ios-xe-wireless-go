@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -99,4 +100,56 @@ func TestRrmCfgClientMethods(t *testing.T) {
 	_, _ = GetRrmMgrCfgEntries(client, ctx)
 
 	t.Log("All RRM configuration methods exist")
+}
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestRrmCfgErrorHandling tests error handling for all configuration functions
+func TestRrmCfgErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetRrmCfg", func() (interface{}, error) { return GetRrmCfg(nil, ctx) }},
+		{"GetRrmRrms", func() (interface{}, error) { return GetRrmRrms(nil, ctx) }},
+		{"GetRrmMgrCfgEntries", func() (interface{}, error) { return GetRrmMgrCfgEntries(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil || err.Error() != "client is nil" {
+				t.Errorf("Expected 'client is nil' error, got: %v", err)
+			}
+		})
+	}
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestRrmCfgContextHandling tests context handling for all configuration functions
+func TestRrmCfgContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetRrmCfg", func(ctx context.Context, client *wnc.Client) error { _, err := GetRrmCfg(client, ctx); return err }},
+		{"GetRrmRrms", func(ctx context.Context, client *wnc.Client) error { _, err := GetRrmRrms(client, ctx); return err }},
+		{"GetRrmMgrCfgEntries", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmMgrCfgEntries(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
 }

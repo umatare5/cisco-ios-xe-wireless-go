@@ -3,6 +3,10 @@
 # Cisco WNC Coverage HTML Generator - Output Functions
 # Handles output formatting and display for coverage HTML operations
 
+# Source common predicates
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
+
 format_coverage_error() {
     local message="$1"
     if ! is_no_color_enabled; then

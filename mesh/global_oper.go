@@ -3,6 +3,7 @@ package mesh
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -57,6 +58,9 @@ type MeshApTreeData struct {
 
 // GetMeshGlobalOper retrieves mesh global operational data.
 func GetMeshGlobalOper(client *wnc.Client, ctx context.Context) (*MeshGlobalOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MeshGlobalOperResponse
 	if err := client.SendAPIRequest(ctx, MeshGlobalOperEndpoint, &data); err != nil {
 		return nil, err
@@ -66,6 +70,9 @@ func GetMeshGlobalOper(client *wnc.Client, ctx context.Context) (*MeshGlobalOper
 
 // GetMeshGlobalStats retrieves mesh global statistics.
 func GetMeshGlobalStats(client *wnc.Client, ctx context.Context) (*MeshGlobalStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MeshGlobalStatsResponse
 	if err := client.SendAPIRequest(ctx, MeshGlobalStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -75,6 +82,9 @@ func GetMeshGlobalStats(client *wnc.Client, ctx context.Context) (*MeshGlobalSta
 
 // GetMeshApTreeData retrieves mesh AP tree data.
 func GetMeshApTreeData(client *wnc.Client, ctx context.Context) (*MeshApTreeDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MeshApTreeDataResponse
 	if err := client.SendAPIRequest(ctx, MeshApTreeDataEndpoint, &data); err != nil {
 		return nil, err

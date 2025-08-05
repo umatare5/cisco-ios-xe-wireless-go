@@ -3,6 +3,7 @@ package wlan
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -37,6 +38,9 @@ type WlanInfo struct {
 
 // GetWlanGlobalOper retrieves WLAN global operational data.
 func GetWlanGlobalOper(client *wnc.Client, ctx context.Context) (*WlanGlobalOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlanGlobalOperResponse
 	if err := client.SendAPIRequest(ctx, WlanGlobalOperDataEndpoint, &data); err != nil {
 		return nil, err
@@ -46,6 +50,9 @@ func GetWlanGlobalOper(client *wnc.Client, ctx context.Context) (*WlanGlobalOper
 
 // GetWlanGlobalOperWlanInfo retrieves WLAN information.
 func GetWlanGlobalOperWlanInfo(client *wnc.Client, ctx context.Context) (*WlanGlobalOperWlanInfoResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlanGlobalOperWlanInfoResponse
 	if err := client.SendAPIRequest(ctx, WlanGlobalOperWlanInfoEndpoint, &data); err != nil {
 		return nil, err

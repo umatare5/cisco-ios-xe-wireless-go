@@ -3,6 +3,7 @@ package mdns
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -82,6 +83,9 @@ type MdnsStats struct {
 
 // GetMdnsOper retrieves mDNS operational data.
 func GetMdnsOper(client *wnc.Client, ctx context.Context) (*MdnsOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MdnsOperResponse
 	if err := client.SendAPIRequest(ctx, MdnsOperEndpoint, &data); err != nil {
 		return nil, err
@@ -91,6 +95,9 @@ func GetMdnsOper(client *wnc.Client, ctx context.Context) (*MdnsOperResponse, er
 
 // GetMdnsGlobalStats retrieves mDNS global statistics.
 func GetMdnsGlobalStats(client *wnc.Client, ctx context.Context) (*MdnsGlobalStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MdnsGlobalStatsResponse
 	if err := client.SendAPIRequest(ctx, MdnsGlobalStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -100,6 +107,9 @@ func GetMdnsGlobalStats(client *wnc.Client, ctx context.Context) (*MdnsGlobalSta
 
 // GetMdnsWlanStats retrieves mDNS WLAN statistics.
 func GetMdnsWlanStats(client *wnc.Client, ctx context.Context) (*MdnsWlanStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MdnsWlanStatsResponse
 	if err := client.SendAPIRequest(ctx, MdnsWlanStatsEndpoint, &data); err != nil {
 		return nil, err

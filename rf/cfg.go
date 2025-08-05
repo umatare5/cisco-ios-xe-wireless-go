@@ -3,6 +3,7 @@ package rf
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -72,7 +73,7 @@ type AtfPolicies struct {
 	AtfPolicy []AtfPolicy `json:"atf-policy"`
 }
 
-type AtfPolicy []struct {
+type AtfPolicy struct {
 	PolicyID      int    `json:"policy-id"`
 	AtfpolicyName string `json:"atfpolicy-name"`
 }
@@ -153,6 +154,9 @@ type RfProfileDefaultEntry struct {
 }
 
 func GetRfCfg(client *wnc.Client, ctx context.Context) (*RfCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RfCfgResponse
 	if err := client.SendAPIRequest(ctx, RfCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -161,6 +165,9 @@ func GetRfCfg(client *wnc.Client, ctx context.Context) (*RfCfgResponse, error) {
 }
 
 func GetRfMultiBssidProfiles(client *wnc.Client, ctx context.Context) (*MultiBssidProfilesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MultiBssidProfilesResponse
 	if err := client.SendAPIRequest(ctx, MultiBssidProfilesEndpoint, &data); err != nil {
 		return nil, err
@@ -169,6 +176,9 @@ func GetRfMultiBssidProfiles(client *wnc.Client, ctx context.Context) (*MultiBss
 }
 
 func GetRfAtfPolicies(client *wnc.Client, ctx context.Context) (*AtfPoliciesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data AtfPoliciesResponse
 	if err := client.SendAPIRequest(ctx, AtfPoliciesEndpoint, &data); err != nil {
 		return nil, err
@@ -177,6 +187,9 @@ func GetRfAtfPolicies(client *wnc.Client, ctx context.Context) (*AtfPoliciesResp
 }
 
 func GetRfTags(client *wnc.Client, ctx context.Context) (*RfTagsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RfTagsResponse
 	if err := client.SendAPIRequest(ctx, RfTagsEndpoint, &data); err != nil {
 		return nil, err
@@ -185,6 +198,9 @@ func GetRfTags(client *wnc.Client, ctx context.Context) (*RfTagsResponse, error)
 }
 
 func GetRfProfiles(client *wnc.Client, ctx context.Context) (*RfProfilesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RfProfilesResponse
 	if err := client.SendAPIRequest(ctx, RfProfilesEndpoint, &data); err != nil {
 		return nil, err
@@ -193,6 +209,9 @@ func GetRfProfiles(client *wnc.Client, ctx context.Context) (*RfProfilesResponse
 }
 
 func GetRfProfileDefaultEntries(client *wnc.Client, ctx context.Context) (*RfProfileDefaultEntriesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data RfProfileDefaultEntriesResponse
 	if err := client.SendAPIRequest(ctx, RfProfileDefaultEntriesEndpoint, &data); err != nil {
 		return nil, err

@@ -3,6 +3,7 @@ package site
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -19,19 +20,27 @@ const (
 // SiteCfgResponse represents the complete site configuration response
 type SiteCfgResponse struct {
 	CiscoIOSXEWirelessSiteCfgData struct {
-		ApCfgProfiles  []ApCfgProfile  `json:"ap-cfg-profiles"`
-		SiteTagConfigs []SiteTagConfig `json:"site-tag-configs"`
+		ApCfgProfiles struct {
+			ApCfgProfile []ApCfgProfile `json:"ap-cfg-profile"`
+		} `json:"ap-cfg-profiles"`
+		SiteTagConfigs struct {
+			SiteTagConfig []SiteTagConfig `json:"site-tag-config"`
+		} `json:"site-tag-configs"`
 	} `json:"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data"`
 }
 
 // SiteApCfgProfilesResponse represents the AP configuration profiles response
 type SiteApCfgProfilesResponse struct {
-	ApCfgProfiles []ApCfgProfile `json:"Cisco-IOS-XE-wireless-site-cfg:ap-cfg-profiles"`
+	ApCfgProfiles struct {
+		ApCfgProfile []ApCfgProfile `json:"ap-cfg-profile"`
+	} `json:"Cisco-IOS-XE-wireless-site-cfg:ap-cfg-profiles"`
 }
 
 // SiteTagConfigsResponse represents the site tag configurations response
 type SiteTagConfigsResponse struct {
-	SiteTagConfigs []SiteTagConfig `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
+	SiteTagConfigs struct {
+		SiteTagConfig []SiteTagConfig `json:"site-tag-config"`
+	} `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
 }
 
 // ApCfgProfile represents an access point configuration profile with various settings
@@ -96,6 +105,9 @@ type SiteTagConfig struct {
 }
 
 func GetSiteCfg(client *wnc.Client, ctx context.Context) (*SiteCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data SiteCfgResponse
 	if err := client.SendAPIRequest(ctx, SiteCfgBasePath, &data); err != nil {
 		return nil, err
@@ -104,6 +116,9 @@ func GetSiteCfg(client *wnc.Client, ctx context.Context) (*SiteCfgResponse, erro
 }
 
 func GetSiteApCfgProfiles(client *wnc.Client, ctx context.Context) (*SiteApCfgProfilesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data SiteApCfgProfilesResponse
 	if err := client.SendAPIRequest(ctx, ApCfgProfilesEndpoint, &data); err != nil {
 		return nil, err
@@ -112,6 +127,9 @@ func GetSiteApCfgProfiles(client *wnc.Client, ctx context.Context) (*SiteApCfgPr
 }
 
 func GetSiteTagConfigs(client *wnc.Client, ctx context.Context) (*SiteTagConfigsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data SiteTagConfigsResponse
 	if err := client.SendAPIRequest(ctx, SiteTagConfigsEndpoint, &data); err != nil {
 		return nil, err

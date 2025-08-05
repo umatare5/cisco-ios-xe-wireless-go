@@ -2,12 +2,13 @@
 package mdns
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"testing"
 	"time"
+
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -390,4 +391,64 @@ func TestMdnsOperDataStructures(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestMdnsOperErrorHandling tests error handling for all functions
+func TestMdnsOperErrorHandling(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.QuickTestTimeout)
+	defer cancel()
+
+	t.Run("GetMdnsOperWithNilClient", func(t *testing.T) {
+		_, err := GetMdnsOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMdnsGlobalStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMdnsGlobalStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+
+	t.Run("GetMdnsWlanStatsWithNilClient", func(t *testing.T) {
+		_, err := GetMdnsWlanStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error with nil client, got nil")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %v", err)
+		}
+	})
+}
+
+// TestMdnsOperContextHandling tests context handling for all functions
+func TestMdnsOperContextHandling(t *testing.T) {
+	t.Run("GetMdnsOperContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMdnsOper(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetMdnsGlobalStatsContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMdnsGlobalStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetMdnsWlanStatsContextHandling", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetMdnsWlanStats(client, ctx)
+			return err
+		})
+	})
 }

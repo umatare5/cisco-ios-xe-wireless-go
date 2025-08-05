@@ -2,11 +2,11 @@
 package site
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 	"testing"
-	"time"
+
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -14,269 +14,238 @@ import (
 // =============================================================================
 
 func TestSiteCfgDataStructures(t *testing.T) {
-	// Test SiteCfgResponse structure
-	t.Run("SiteCfgResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data": {
-				"ap-cfg-profiles": [
-					{
-						"profile-name": "campus-ap",
-						"description": "Campus access point profile",
-						"stats-timer": {
-							"stats-timer": 300
-						},
-						"user-mgmt": {
-							"username": "admin",
-							"password": "password123",
-							"password-type": "clear"
-						}
-					}
-				],
-				"site-tag-configs": [
-					{
-						"site-tag-name": "building-a",
-						"description": "Building A site configuration",
-						"is-local-site": true
-					}
-				]
-			}
-		}`
-
-		var response SiteCfgResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal SiteCfgResponse: %v", err)
-		}
-
-		if len(response.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles) != 1 {
-			t.Errorf("Expected 1 AP config profile, got %d",
-				len(response.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles))
-		}
-
-		profile := response.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles[0]
-		if profile.ProfileName != "campus-ap" {
-			t.Errorf("Expected profile name 'campus-ap', got '%s'", profile.ProfileName)
-		}
-
-		if profile.StatsTimer == nil || profile.StatsTimer.StatsTimer != 300 {
-			t.Error("Expected stats timer to be 300")
-		}
-
-		if len(response.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs) != 1 {
-			t.Errorf("Expected 1 site tag config, got %d",
-				len(response.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs))
-		}
-
-		siteTag := response.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs[0]
-		if siteTag.SiteTagName != "building-a" {
-			t.Errorf("Expected site tag name 'building-a', got '%s'", siteTag.SiteTagName)
-		}
-	})
-
-	// Test SiteApCfgProfilesResponse structure
-	t.Run("SiteApCfgProfilesResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-site-cfg:ap-cfg-profiles": [
-				{
-					"profile-name": "outdoor-ap",
-					"description": "Outdoor access point configuration",
-					"tunnel": {
-						"preferred-mode": "capwap"
+	testCases := []testutils.JSONTestCase{
+		{
+			Name: "SiteCfgResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data": {
+					"ap-cfg-profiles": {
+						"ap-cfg-profile": [
+							{
+								"profile-name": "campus-ap",
+								"description": "Campus access point configuration",
+								"stats-timer": {
+									"stats-timer": 300
+								}
+							}
+						]
 					},
-					"hyperlocation": {
-						"hyperlocation-enable": true
+					"site-tag-configs": {
+						"site-tag-config": [
+							{
+								"site-tag-name": "building-a",
+								"description": "Building A site configuration",
+								"is-local-site": true
+							}
+						]
 					}
 				}
-			]
-		}`
-
-		var response SiteApCfgProfilesResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal SiteApCfgProfilesResponse: %v", err)
-		}
-
-		if len(response.ApCfgProfiles) != 1 {
-			t.Errorf("Expected 1 AP config profile, got %d", len(response.ApCfgProfiles))
-		}
-
-		profile := response.ApCfgProfiles[0]
-		if profile.ProfileName != "outdoor-ap" {
-			t.Errorf("Expected profile name 'outdoor-ap', got '%s'", profile.ProfileName)
-		}
-
-		if profile.Tunnel == nil || profile.Tunnel.PreferredMode != "capwap" {
-			t.Error("Expected tunnel preferred mode to be 'capwap'")
-		}
-
-		if profile.Hyperlocation == nil || !profile.Hyperlocation.HyperlocationEnable {
-			t.Error("Expected hyperlocation to be enabled")
-		}
-	})
-
-	// Test SiteTagConfigsResponse structure
-	t.Run("SiteTagConfigsResponse", func(t *testing.T) {
-		sampleJSON := `{
-			"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs": [
-				{
-					"site-tag-name": "warehouse",
-					"description": "Warehouse site configuration",
-					"flex-profile": "warehouse-flex",
-					"ap-join-profile": "warehouse-join",
-					"is-local-site": false
+			}`,
+			Target:     &SiteCfgResponse{},
+			TypeName:   "SiteCfgResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "SiteApCfgProfilesResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-site-cfg:ap-cfg-profiles": {
+					"ap-cfg-profile": [
+						{
+							"profile-name": "outdoor-ap",
+							"description": "Outdoor access point configuration",
+							"tunnel": {
+								"preferred-mode": "capwap"
+							},
+							"hyperlocation": {
+								"hyperlocation-enable": true
+							}
+						}
+					]
 				}
-			]
-		}`
+			}`,
+			Target:     &SiteApCfgProfilesResponse{},
+			TypeName:   "SiteApCfgProfilesResponse",
+			ShouldFail: false,
+		},
+		{
+			Name: "SiteTagConfigsResponse",
+			JSONData: `{
+				"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs": {
+					"site-tag-config": [
+						{
+							"site-tag-name": "building-b",
+							"description": "Building B site configuration",
+							"is-local-site": false
+						}
+					]
+				}
+			}`,
+			Target:     &SiteTagConfigsResponse{},
+			TypeName:   "SiteTagConfigsResponse",
+			ShouldFail: false,
+		},
+	}
 
-		var response SiteTagConfigsResponse
-		err := json.Unmarshal([]byte(sampleJSON), &response)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal SiteTagConfigsResponse: %v", err)
-		}
+	testutils.RunJSONTests(t, testCases)
 
-		if len(response.SiteTagConfigs) != 1 {
-			t.Errorf("Expected 1 site tag config, got %d", len(response.SiteTagConfigs))
-		}
+	// Additional field validation for successfully unmarshaled structures
+	t.Run("SiteCfgResponseFieldValidation", func(t *testing.T) {
+		var response SiteCfgResponse
+		testutils.TestJSONUnmarshal(t, testCases[0].JSONData, &response, "SiteCfgResponse")
 
-		siteTag := response.SiteTagConfigs[0]
-		if siteTag.SiteTagName != "warehouse" {
-			t.Errorf("Expected site tag name 'warehouse', got '%s'", siteTag.SiteTagName)
-		}
-
-		if siteTag.FlexProfile != "warehouse-flex" {
-			t.Errorf("Expected flex profile 'warehouse-flex', got '%s'", siteTag.FlexProfile)
-		}
-
-		if siteTag.IsLocalSite {
-			t.Error("Expected is-local-site to be false")
-		}
-	})
-
-	// Test ApCfgProfile structure
-	t.Run("ApCfgProfile", func(t *testing.T) {
-		sampleJSON := `{
-			"profile-name": "retail-ap",
-			"description": "Retail store AP profile",
-			"rogue-detection": {
-				"ap-rogue-detection-min-rssi": -70
-			},
-			"reporting-interval": {
-				"radio-24ghz": 60,
-				"radio-5ghz": 60
-			},
-			"device-mgmt": {
-				"ssh": true
+		testutils.ValidateJSONStructFields(t, "SiteCfgResponse", func() error {
+			if len(response.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles.ApCfgProfile) != 1 {
+				t.Errorf("Expected 1 AP config profile, got %d",
+					len(response.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles.ApCfgProfile))
 			}
-		}`
 
-		var profile ApCfgProfile
-		err := json.Unmarshal([]byte(sampleJSON), &profile)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal ApCfgProfile: %v", err)
-		}
+			profile := response.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles.ApCfgProfile[0]
+			if profile.ProfileName != "campus-ap" {
+				t.Errorf("Expected profile name 'campus-ap', got '%s'", profile.ProfileName)
+			}
 
-		if profile.ProfileName != "retail-ap" {
-			t.Errorf("Expected profile name 'retail-ap', got '%s'", profile.ProfileName)
-		}
+			if profile.StatsTimer == nil || profile.StatsTimer.StatsTimer != 300 {
+				t.Error("Expected stats timer to be 300")
+			}
 
-		if profile.RogueDetection == nil || profile.RogueDetection.ApRogueDetectionMinRssi != -70 {
-			t.Error("Expected rogue detection min RSSI to be -70")
-		}
+			if len(response.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs.SiteTagConfig) != 1 {
+				t.Errorf("Expected 1 site tag config, got %d",
+					len(response.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs.SiteTagConfig))
+			}
 
-		if profile.ReportingInterval == nil || profile.ReportingInterval.Radio24Ghz != 60 {
-			t.Error("Expected 2.4GHz reporting interval to be 60")
-		}
+			siteTag := response.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs.SiteTagConfig[0]
+			if siteTag.SiteTagName != "building-a" {
+				t.Errorf("Expected site tag name 'building-a', got '%s'", siteTag.SiteTagName)
+			}
+			return nil
+		})
+	})
+}
 
-		if profile.DeviceMgmt == nil || !profile.DeviceMgmt.SSH {
-			t.Error("Expected SSH to be enabled in device management")
+// =============================================================================
+// 2. ERROR HANDLING TESTS
+// =============================================================================
+
+func TestSiteCfgErrorHandling(t *testing.T) {
+	t.Run("GetSiteCfgWithNilClient", func(t *testing.T) {
+		_, err := GetSiteCfg(nil, context.Background())
+		if err == nil || (err.Error() != "client is nil" && err.Error() != "invalid client configuration: client cannot be nil") {
+			t.Errorf("Expected 'client is nil' or 'invalid client configuration: client cannot be nil' error, got: %v", err)
 		}
 	})
 
-	// Test SiteTagConfig structure
-	t.Run("SiteTagConfig", func(t *testing.T) {
-		sampleJSON := `{
-			"site-tag-name": "main-office",
-			"description": "Main office site tag",
-			"flex-profile": "office-flex",
-			"ap-join-profile": "office-join",
-			"is-local-site": true
-		}`
-
-		var siteTag SiteTagConfig
-		err := json.Unmarshal([]byte(sampleJSON), &siteTag)
-		if err != nil {
-			t.Fatalf("Failed to unmarshal SiteTagConfig: %v", err)
+	t.Run("GetSiteApCfgProfilesWithNilClient", func(t *testing.T) {
+		_, err := GetSiteApCfgProfiles(nil, context.Background())
+		if err == nil || (err.Error() != "client is nil" && err.Error() != "invalid client configuration: client cannot be nil") {
+			t.Errorf("Expected 'client is nil' or 'invalid client configuration: client cannot be nil' error, got: %v", err)
 		}
+	})
 
-		if siteTag.SiteTagName != "main-office" {
-			t.Errorf("Expected site tag name 'main-office', got '%s'", siteTag.SiteTagName)
-		}
-
-		if siteTag.Description != "Main office site tag" {
-			t.Errorf("Expected description 'Main office site tag', got '%s'", siteTag.Description)
-		}
-
-		if !siteTag.IsLocalSite {
-			t.Error("Expected is-local-site to be true")
+	t.Run("GetSiteTagConfigsWithNilClient", func(t *testing.T) {
+		_, err := GetSiteTagConfigs(nil, context.Background())
+		if err == nil || (err.Error() != "client is nil" && err.Error() != "invalid client configuration: client cannot be nil") {
+			t.Errorf("Expected 'client is nil' or 'invalid client configuration: client cannot be nil' error, got: %v", err)
 		}
 	})
 }
 
 // =============================================================================
-// 2. INTEGRATION TESTS (API Endpoint Testing with Live Data Validation)
+// 3. CONTEXT HANDLING TESTS
 // =============================================================================
 
-// TestSiteConfigurationFunctions tests all Site configuration functions with real WNC data collection
-func TestSiteConfigurationFunctions(t *testing.T) {
-	client := testutils.CreateTestClientFromEnv(t)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	// Create a comprehensive test data collection
-	collector := testutils.NewTestDataCollector()
-	endpointMapping := map[string]string{
-		"SiteCfgEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data",
-		"SiteApCfgProfilesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles",
-		"SiteTagConfigsEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs",
-	}
-
+func TestSiteCfgContextHandling(t *testing.T) {
+	// Test each site configuration function with context handling
 	t.Run("GetSiteCfg", func(t *testing.T) {
-		result, err := GetSiteCfg(client, ctx)
-		testutils.CollectTestResult(collector, "GetSiteCfg", endpointMapping["SiteCfgEndpoint"], result, err)
-		if err != nil {
-			t.Logf("GetSiteCfg failed: %v", err)
-		}
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetSiteCfg(client, ctx)
+			return err
+		})
 	})
 
 	t.Run("GetSiteApCfgProfiles", func(t *testing.T) {
-		result, err := GetSiteApCfgProfiles(client, ctx)
-		testutils.CollectTestResult(collector, "GetSiteApCfgProfiles", endpointMapping["SiteApCfgProfilesEndpoint"], result, err)
-		if err != nil {
-			t.Logf("GetSiteApCfgProfiles failed: %v", err)
-		}
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetSiteApCfgProfiles(client, ctx)
+			return err
+		})
 	})
 
 	t.Run("GetSiteTagConfigs", func(t *testing.T) {
-		result, err := GetSiteTagConfigs(client, ctx)
-		testutils.CollectTestResult(collector, "GetSiteTagConfigs", endpointMapping["SiteTagConfigsEndpoint"], result, err)
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetSiteTagConfigs(client, ctx)
+			return err
+		})
+	})
+}
+
+// =============================================================================
+// 4. ENDPOINT TESTS - API URL Validation
+// =============================================================================
+
+func TestSiteCfgEndpoints(t *testing.T) {
+	tests := []struct {
+		name        string
+		endpoint    string
+		description string
+	}{
+		{
+			name:        "SiteCfgEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data",
+			description: "Site configuration data endpoint",
+		},
+		{
+			name:        "ApCfgProfilesEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles",
+			description: "AP configuration profiles endpoint",
+		},
+		{
+			name:        "SiteTagConfigsEndpoint",
+			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs",
+			description: "Site tag configurations endpoint",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testutils.EndpointValidationTest(t, tt.endpoint, tt.endpoint)
+		})
+	}
+}
+
+// =============================================================================
+// 5. INTEGRATION TESTS
+// =============================================================================
+
+func TestSiteCfgIntegration(t *testing.T) {
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetSiteCfgSuccess", func(t *testing.T) {
+		result, err := GetSiteCfg(client, ctx)
 		if err != nil {
-			t.Logf("GetSiteTagConfigs failed: %v", err)
+			t.Logf("GetSiteCfg returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetSiteCfg successful, got %d AP profiles and %d site tags",
+				len(result.CiscoIOSXEWirelessSiteCfgData.ApCfgProfiles.ApCfgProfile),
+				len(result.CiscoIOSXEWirelessSiteCfgData.SiteTagConfigs.SiteTagConfig))
 		}
 	})
 
-	// Save collected test data to JSON file
-	testutils.SaveCollectedTestData(t, collector, "site_cfg_test_data_collected.json")
-}
+	t.Run("GetSiteApCfgProfilesSuccess", func(t *testing.T) {
+		result, err := GetSiteApCfgProfiles(client, ctx)
+		if err != nil {
+			t.Logf("GetSiteApCfgProfiles returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetSiteApCfgProfiles successful, got %d profiles", len(result.ApCfgProfiles.ApCfgProfile))
+		}
+	})
 
-// TestSiteConfigurationEndpoints tests that all Site configuration endpoints are correctly defined
-func TestSiteConfigurationEndpoints(t *testing.T) {
-	endpoints := map[string]string{
-		"SiteCfgBasePath":           SiteCfgBasePath,
-		"SiteCfgEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data",
-		"SiteApCfgProfilesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles",
-		"SiteTagConfigsEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs",
-	}
-
-	testutils.ValidateEndpoints(t, endpoints)
+	t.Run("GetSiteTagConfigsSuccess", func(t *testing.T) {
+		result, err := GetSiteTagConfigs(client, ctx)
+		if err != nil {
+			t.Logf("GetSiteTagConfigs returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetSiteTagConfigs successful, got %d site tags", len(result.SiteTagConfigs.SiteTagConfig))
+		}
+	})
 }

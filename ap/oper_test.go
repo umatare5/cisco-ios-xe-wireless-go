@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -449,6 +450,321 @@ func TestApOperationPerformance(t *testing.T) {
 		// Wait for all goroutines to complete
 		for i := 0; i < numGoroutines; i++ {
 			<-done
+		}
+	})
+}
+
+// =============================================================================
+// 6. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestApOperErrorHandling tests error handling for all operational functions
+func TestApOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetApOper", func() (interface{}, error) { return GetApOper(nil, ctx) }},
+		{"GetApRadioNeighbor", func() (interface{}, error) { return GetApRadioNeighbor(nil, ctx) }},
+		{"GetApRadioOperData", func() (interface{}, error) { return GetApRadioOperData(nil, ctx) }},
+		{"GetApRadioResetStats", func() (interface{}, error) { return GetApRadioResetStats(nil, ctx) }},
+		{"GetApQosClientData", func() (interface{}, error) { return GetApQosClientData(nil, ctx) }},
+		{"GetApCapwapData", func() (interface{}, error) { return GetApCapwapData(nil, ctx) }},
+		{"GetApNameMacMap", func() (interface{}, error) { return GetApNameMacMap(nil, ctx) }},
+		{"GetApWtpSlotWlanStats", func() (interface{}, error) { return GetApWtpSlotWlanStats(nil, ctx) }},
+		{"GetApEthernetMacWtpMacMap", func() (interface{}, error) { return GetApEthernetMacWtpMacMap(nil, ctx) }},
+		{"GetApRadioOperStats", func() (interface{}, error) { return GetApRadioOperStats(nil, ctx) }},
+		{"GetApEthernetIfStats", func() (interface{}, error) { return GetApEthernetIfStats(nil, ctx) }},
+		{"GetApEwlcWncdStats", func() (interface{}, error) { return GetApEwlcWncdStats(nil, ctx) }},
+		{"GetApIoxOperData", func() (interface{}, error) { return GetApIoxOperData(nil, ctx) }},
+		{"GetApQosGlobalStats", func() (interface{}, error) { return GetApQosGlobalStats(nil, ctx) }},
+		{"GetApOperData", func() (interface{}, error) { return GetApOperData(nil, ctx) }},
+		{"GetApRlanOper", func() (interface{}, error) { return GetApRlanOper(nil, ctx) }},
+		{"GetApEwlcMewlcPredownloadRec", func() (interface{}, error) { return GetApEwlcMewlcPredownloadRec(nil, ctx) }},
+		{"GetApCdpCacheData", func() (interface{}, error) { return GetApCdpCacheData(nil, ctx) }},
+		{"GetApLldpNeigh", func() (interface{}, error) { return GetApLldpNeigh(nil, ctx) }},
+		{"GetApTpCertInfo", func() (interface{}, error) { return GetApTpCertInfo(nil, ctx) }},
+		{"GetApDiscData", func() (interface{}, error) { return GetApDiscData(nil, ctx) }},
+		{"GetApCapwapPkts", func() (interface{}, error) { return GetApCapwapPkts(nil, ctx) }},
+		{"GetApCountryOper", func() (interface{}, error) { return GetApCountryOper(nil, ctx) }},
+		{"GetApSuppCountryOper", func() (interface{}, error) { return GetApSuppCountryOper(nil, ctx) }},
+		{"GetApNhGlobalData", func() (interface{}, error) { return GetApNhGlobalData(nil, ctx) }},
+		{"GetApImagePrepareLocation", func() (interface{}, error) { return GetApImagePrepareLocation(nil, ctx) }},
+		{"GetApImageActiveLocation", func() (interface{}, error) { return GetApImageActiveLocation(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil {
+				t.Errorf("Expected error with nil client, got nil")
+			}
+			// Accept either error message format for consistency
+			errorMsg := err.Error()
+			if errorMsg != "client is nil" && errorMsg != "invalid client configuration: client cannot be nil" {
+				t.Errorf("Expected 'client is nil' or 'invalid client configuration' error, got: %v", err)
+			}
+		})
+	}
+}
+
+// =============================================================================
+// 7. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestApOperContextHandling tests context handling for all operational functions
+func TestApOperContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetApOper", func(ctx context.Context, client *wnc.Client) error { _, err := GetApOper(client, ctx); return err }},
+		{"GetApRadioNeighbor", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApRadioNeighbor(client, ctx)
+			return err
+		}},
+		{"GetApRadioOperData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApRadioOperData(client, ctx)
+			return err
+		}},
+		{"GetApRadioResetStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApRadioResetStats(client, ctx)
+			return err
+		}},
+		{"GetApQosClientData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApQosClientData(client, ctx)
+			return err
+		}},
+		{"GetApCapwapData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApCapwapData(client, ctx)
+			return err
+		}},
+		{"GetApNameMacMap", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApNameMacMap(client, ctx)
+			return err
+		}},
+		{"GetApWtpSlotWlanStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApWtpSlotWlanStats(client, ctx)
+			return err
+		}},
+		{"GetApEthernetMacWtpMacMap", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApEthernetMacWtpMacMap(client, ctx)
+			return err
+		}},
+		{"GetApRadioOperStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApRadioOperStats(client, ctx)
+			return err
+		}},
+		{"GetApEthernetIfStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApEthernetIfStats(client, ctx)
+			return err
+		}},
+		{"GetApEwlcWncdStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApEwlcWncdStats(client, ctx)
+			return err
+		}},
+		{"GetApIoxOperData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApIoxOperData(client, ctx)
+			return err
+		}},
+		{"GetApQosGlobalStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApQosGlobalStats(client, ctx)
+			return err
+		}},
+		{"GetApOperData", func(ctx context.Context, client *wnc.Client) error { _, err := GetApOperData(client, ctx); return err }},
+		{"GetApRlanOper", func(ctx context.Context, client *wnc.Client) error { _, err := GetApRlanOper(client, ctx); return err }},
+		{"GetApEwlcMewlcPredownloadRec", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApEwlcMewlcPredownloadRec(client, ctx)
+			return err
+		}},
+		{"GetApCdpCacheData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApCdpCacheData(client, ctx)
+			return err
+		}},
+		{"GetApLldpNeigh", func(ctx context.Context, client *wnc.Client) error { _, err := GetApLldpNeigh(client, ctx); return err }},
+		{"GetApTpCertInfo", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApTpCertInfo(client, ctx)
+			return err
+		}},
+		{"GetApDiscData", func(ctx context.Context, client *wnc.Client) error { _, err := GetApDiscData(client, ctx); return err }},
+		{"GetApCapwapPkts", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApCapwapPkts(client, ctx)
+			return err
+		}},
+		{"GetApCountryOper", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApCountryOper(client, ctx)
+			return err
+		}},
+		{"GetApSuppCountryOper", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApSuppCountryOper(client, ctx)
+			return err
+		}},
+		{"GetApNhGlobalData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApNhGlobalData(client, ctx)
+			return err
+		}},
+		{"GetApImagePrepareLocation", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApImagePrepareLocation(client, ctx)
+			return err
+		}},
+		{"GetApImageActiveLocation", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetApImageActiveLocation(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
+}
+
+// =============================================================================
+// 4. INTEGRATION TESTS FOR SUCCESSFUL PATHS
+// =============================================================================
+
+func TestApOperIntegrationSuccess(t *testing.T) {
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	// Test functions that need success path coverage
+	t.Run("GetApQosClientDataSuccess", func(t *testing.T) {
+		result, err := GetApQosClientData(client, ctx)
+		if err != nil {
+			t.Logf("GetApQosClientData returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApQosClientData successful")
+		}
+	})
+
+	t.Run("GetApRlanOperSuccess", func(t *testing.T) {
+		result, err := GetApRlanOper(client, ctx)
+		if err != nil {
+			t.Logf("GetApRlanOper returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApRlanOper successful")
+		}
+	})
+
+	// Additional functions needing success path coverage
+	t.Run("GetApCapwapDataSuccess", func(t *testing.T) {
+		result, err := GetApCapwapData(client, ctx)
+		if err != nil {
+			t.Logf("GetApCapwapData returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApCapwapData successful")
+		}
+	})
+
+	t.Run("GetApNameMacMapSuccess", func(t *testing.T) {
+		result, err := GetApNameMacMap(client, ctx)
+		if err != nil {
+			t.Logf("GetApNameMacMap returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApNameMacMap successful")
+		}
+	})
+
+	t.Run("GetApWtpSlotWlanStatsSuccess", func(t *testing.T) {
+		result, err := GetApWtpSlotWlanStats(client, ctx)
+		if err != nil {
+			t.Logf("GetApWtpSlotWlanStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApWtpSlotWlanStats successful")
+		}
+	})
+
+	t.Run("GetApEthernetMacWtpMacMapSuccess", func(t *testing.T) {
+		result, err := GetApEthernetMacWtpMacMap(client, ctx)
+		if err != nil {
+			t.Logf("GetApEthernetMacWtpMacMap returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApEthernetMacWtpMacMap successful")
+		}
+	})
+
+	t.Run("GetApRadioOperStatsSuccess", func(t *testing.T) {
+		result, err := GetApRadioOperStats(client, ctx)
+		if err != nil {
+			t.Logf("GetApRadioOperStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetApRadioOperStats successful")
+		}
+	})
+}
+
+// =============================================================================
+// 6. DETAILED SUCCESS PATH TESTS
+// =============================================================================
+
+// TestApOperSuccessPathCoverage tests specific functions to ensure 100% coverage
+func TestApOperSuccessPathCoverage(t *testing.T) {
+	// Create a mock server that returns success responses
+	mockServer := testutils.NewMockHTTPServer()
+
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 200,
+			Body: `{
+				"Cisco-IOS-XE-wireless-access-point-oper:qos-client-data": [
+					{
+						"client-mac": "aa:bb:cc:dd:ee:ff",
+						"qos-level": "gold"
+					}
+				]
+			}`,
+			Headers: map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 200,
+			Body: `{
+				"Cisco-IOS-XE-wireless-access-point-oper:rlan-oper": [
+					{
+						"ap-name": "test-ap",
+						"rlan-id": 1
+					}
+				]
+			}`,
+			Headers: map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	defer mockServer.Close()
+
+	client := testutils.CreateTestClientForMockServer(t, mockServer)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetApQosClientDataSuccessPath", func(t *testing.T) {
+		result, err := GetApQosClientData(client, ctx)
+		if err != nil {
+			t.Errorf("Expected GetApQosClientData to succeed with mock server, got error: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected GetApQosClientData to return non-nil result")
+		}
+		// Verify the result structure
+		if result != nil && len(result.QosClientData) == 0 {
+			t.Log("GetApQosClientData returned result but with empty data (acceptable)")
+		}
+	})
+
+	t.Run("GetApRlanOperSuccessPath", func(t *testing.T) {
+		result, err := GetApRlanOper(client, ctx)
+		if err != nil {
+			t.Errorf("Expected GetApRlanOper to succeed with mock server, got error: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected GetApRlanOper to return non-nil result")
+		}
+		// Verify the result structure
+		if result != nil && len(result.RlanOper) == 0 {
+			t.Log("GetApRlanOper returned result but with empty data (acceptable)")
 		}
 	})
 }

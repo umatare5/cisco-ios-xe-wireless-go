@@ -3,6 +3,7 @@ package hyperlocation
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -44,6 +45,9 @@ type EwlcHyperlocationProfile struct {
 
 // GetHyperlocationOper retrieves hyperlocation operational data.
 func GetHyperlocationOper(client *wnc.Client, ctx context.Context) (*HyperlocationOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data HyperlocationOperResponse
 	if err := client.SendAPIRequest(ctx, HyperlocationOperEndpoint, &data); err != nil {
 		return nil, err
@@ -53,6 +57,9 @@ func GetHyperlocationOper(client *wnc.Client, ctx context.Context) (*Hyperlocati
 
 // GetHyperlocationProfiles retrieves hyperlocation profiles.
 func GetHyperlocationProfiles(client *wnc.Client, ctx context.Context) (*HyperlocationProfilesResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data HyperlocationProfilesResponse
 	if err := client.SendAPIRequest(ctx, HyperlocationProfilesEndpoint, &data); err != nil {
 		return nil, err

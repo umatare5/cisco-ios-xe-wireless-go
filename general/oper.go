@@ -3,7 +3,7 @@ package general
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -42,7 +42,7 @@ type MgmtIntfData struct {
 // GetGeneralOper retrieves general operational data.
 func GetGeneralOper(client *wnc.Client, ctx context.Context) (*GeneralOperResponse, error) {
 	if client == nil {
-		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
+		return nil, errors.New("client is nil")
 	}
 	var data GeneralOperResponse
 	if err := client.SendAPIRequest(ctx, GeneralOperEndpoint, &data); err != nil {
@@ -54,7 +54,7 @@ func GetGeneralOper(client *wnc.Client, ctx context.Context) (*GeneralOperRespon
 // GetGeneralOperMgmtIntfData retrieves management interface operational data.
 func GetGeneralOperMgmtIntfData(client *wnc.Client, ctx context.Context) (*GeneralOperMgmtIntfDataResponse, error) {
 	if client == nil {
-		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
+		return nil, errors.New("client is nil")
 	}
 	var data GeneralOperMgmtIntfDataResponse
 	if err := client.SendAPIRequest(ctx, GeneralOperMgmtIntfDataEndpoint, &data); err != nil {

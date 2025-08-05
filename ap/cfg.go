@@ -3,6 +3,7 @@ package ap
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -59,6 +60,9 @@ type ApTag struct {
 
 // GetApCfg retrieves complete access point configuration data.
 func GetApCfg(client *wnc.Client, ctx context.Context) (*ApCfgResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApCfgResponse
 	if err := client.SendAPIRequest(ctx, ApCfgEndpoint, &data); err != nil {
 		return nil, err
@@ -68,6 +72,9 @@ func GetApCfg(client *wnc.Client, ctx context.Context) (*ApCfgResponse, error) {
 
 // GetTagSourcePriorityConfigs retrieves tag source priority configurations.
 func GetTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*TagSourcePriorityConfigs, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data TagSourcePriorityConfigs
 	if err := client.SendAPIRequest(ctx, TagSourcePriorityConfigsEndpoint, &data); err != nil {
 		return nil, err
@@ -77,6 +84,9 @@ func GetTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*TagS
 
 // GetApTagSourcePriorityConfigs retrieves tag source priority configurations with full response wrapper.
 func GetApTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*ApCfgTagSourcePriorityConfigsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApCfgTagSourcePriorityConfigsResponse
 	if err := client.SendAPIRequest(ctx, TagSourcePriorityConfigsEndpoint, &data); err != nil {
 		return nil, err
@@ -86,6 +96,9 @@ func GetApTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*Ap
 
 // GetApApTags retrieves access point tag configurations.
 func GetApApTags(client *wnc.Client, ctx context.Context) (*ApCfgApTagsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApCfgApTagsResponse
 	if err := client.SendAPIRequest(ctx, ApTagsEndpoint, &data); err != nil {
 		return nil, err

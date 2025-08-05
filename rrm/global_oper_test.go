@@ -616,3 +616,106 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 		t.Errorf("Failed to marshal RrmOneShotCountersResponse back to JSON: %v", err)
 	}
 }
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestRrmGlobalOperErrorHandling tests error handling for all global operation functions
+func TestRrmGlobalOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	testCases := []struct {
+		name string
+		fn   func() (interface{}, error)
+	}{
+		{"GetRrmGlobalOper", func() (interface{}, error) { return GetRrmGlobalOper(nil, ctx) }},
+		{"GetRrmGlobalOneShotCounters", func() (interface{}, error) { return GetRrmGlobalOneShotCounters(nil, ctx) }},
+		{"GetRrmGlobalChannelParams", func() (interface{}, error) { return GetRrmGlobalChannelParams(nil, ctx) }},
+		{"GetRrmGlobalSpectrumAqWorstTable", func() (interface{}, error) { return GetRrmGlobalSpectrumAqWorstTable(nil, ctx) }},
+		{"GetRrmGlobalRadioOperData24G", func() (interface{}, error) { return GetRrmGlobalRadioOperData24G(nil, ctx) }},
+		{"GetRrmGlobalRadioOperData5G", func() (interface{}, error) { return GetRrmGlobalRadioOperData5G(nil, ctx) }},
+		{"GetRrmGlobalRadioOperData6G", func() (interface{}, error) { return GetRrmGlobalRadioOperData6G(nil, ctx) }},
+		{"GetRrmGlobalSpectrumBandConfigData", func() (interface{}, error) { return GetRrmGlobalSpectrumBandConfigData(nil, ctx) }},
+		{"GetRrmGlobalRadioOperDataDualband", func() (interface{}, error) { return GetRrmGlobalRadioOperDataDualband(nil, ctx) }},
+		{"GetRrmGlobalClientData", func() (interface{}, error) { return GetRrmGlobalClientData(nil, ctx) }},
+		{"GetRrmGlobalFraStats", func() (interface{}, error) { return GetRrmGlobalFraStats(nil, ctx) }},
+		{"GetRrmGlobalCoverage", func() (interface{}, error) { return GetRrmGlobalCoverage(nil, ctx) }},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
+			_, err := tc.fn()
+			if err == nil || err.Error() != "client is nil" {
+				t.Errorf("Expected 'client is nil' error, got: %v", err)
+			}
+		})
+	}
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestRrmGlobalOperContextHandling tests context handling for all global operation functions
+func TestRrmGlobalOperContextHandling(t *testing.T) {
+	testCases := []struct {
+		name string
+		fn   func(context.Context, *wnc.Client) error
+	}{
+		{"GetRrmGlobalOper", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalOper(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalOneShotCounters", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalOneShotCounters(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalChannelParams", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalChannelParams(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalSpectrumAqWorstTable", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalSpectrumAqWorstTable(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalRadioOperData24G", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalRadioOperData24G(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalRadioOperData5G", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalRadioOperData5G(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalRadioOperData6G", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalRadioOperData6G(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalSpectrumBandConfigData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalSpectrumBandConfigData(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalRadioOperDataDualband", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalRadioOperDataDualband(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalClientData", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalClientData(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalFraStats", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalFraStats(client, ctx)
+			return err
+		}},
+		{"GetRrmGlobalCoverage", func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetRrmGlobalCoverage(client, ctx)
+			return err
+		}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name+"ContextHandling", func(t *testing.T) {
+			testutils.TestContextHandling(t, tc.fn)
+		})
+	}
+}

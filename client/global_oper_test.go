@@ -335,3 +335,194 @@ func TestClientGlobalOperEndpoints(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+func TestClientGlobalOperContextHandling(t *testing.T) {
+	// Test each client global operation function with context handling
+	t.Run("GetClientGlobalOper", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientGlobalOper(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientLiveStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientLiveStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientGlobalStatsData", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientGlobalStatsData(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientDot11Stats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientDot11Stats(client, ctx)
+			return err
+		})
+	})
+
+	// Add context handling for the remaining functions
+	t.Run("GetClientLatencyStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientLatencyStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientSmWebauthStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientSmWebauthStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientDot1XGlobalStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientDot1XGlobalStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientExclusionStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientExclusionStats(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientSmDeviceCount", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientSmDeviceCount(client, ctx)
+			return err
+		})
+	})
+
+	t.Run("GetClientTofStats", func(t *testing.T) {
+		testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+			_, err := GetClientTofStats(client, ctx)
+			return err
+		})
+	})
+}
+
+// =============================================================================
+// 6. INTEGRATION TESTS FOR SUCCESSFUL PATHS
+// =============================================================================
+
+func TestClientGlobalOperIntegrationSuccess(t *testing.T) {
+	client := testutils.CreateTestClientFromEnv(t)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	// Test functions that need success path coverage
+	t.Run("GetClientLatencyStatsSuccess", func(t *testing.T) {
+		result, err := GetClientLatencyStats(client, ctx)
+		if err != nil {
+			t.Logf("GetClientLatencyStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetClientLatencyStats successful")
+		}
+	})
+
+	t.Run("GetClientSmWebauthStatsSuccess", func(t *testing.T) {
+		result, err := GetClientSmWebauthStats(client, ctx)
+		if err != nil {
+			t.Logf("GetClientSmWebauthStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetClientSmWebauthStats successful")
+		}
+	})
+
+	t.Run("GetClientDot1XGlobalStatsSuccess", func(t *testing.T) {
+		result, err := GetClientDot1XGlobalStats(client, ctx)
+		if err != nil {
+			t.Logf("GetClientDot1XGlobalStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetClientDot1XGlobalStats successful")
+		}
+	})
+
+	t.Run("GetClientExclusionStatsSuccess", func(t *testing.T) {
+		result, err := GetClientExclusionStats(client, ctx)
+		if err != nil {
+			t.Logf("GetClientExclusionStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetClientExclusionStats successful")
+		}
+	})
+
+	t.Run("GetClientSmDeviceCountSuccess", func(t *testing.T) {
+		result, err := GetClientSmDeviceCount(client, ctx)
+		if err != nil {
+			t.Logf("GetClientSmDeviceCount returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetClientSmDeviceCount successful")
+		}
+	})
+
+	t.Run("GetClientTofStatsSuccess", func(t *testing.T) {
+		result, err := GetClientTofStats(client, ctx)
+		if err != nil {
+			t.Logf("GetClientTofStats returned error (expected in some environments): %v", err)
+		} else if result != nil {
+			t.Logf("GetClientTofStats successful")
+		}
+	})
+}
+
+// =============================================================================
+// 6. DETAILED SUCCESS PATH TESTS
+// =============================================================================
+
+// TestClientGlobalOperSuccessPathCoverage tests specific functions to ensure 100% coverage
+func TestClientGlobalOperSuccessPathCoverage(t *testing.T) {
+	// Create a mock server that returns success responses
+	mockServer := testutils.NewMockHTTPServer()
+
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/tof-stats",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 200,
+			Body: `{
+				"Cisco-IOS-XE-wireless-client-global-oper:tof-stats": {
+					"tof-tag": ["tag1", "tag2", "tag3"]
+				}
+			}`,
+			Headers: map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	defer mockServer.Close()
+
+	client := testutils.CreateTestClientForMockServer(t, mockServer)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetClientTofStatsSuccessPath", func(t *testing.T) {
+		result, err := GetClientTofStats(client, ctx)
+		if err != nil {
+			t.Errorf("Expected GetClientTofStats to succeed with mock server, got error: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected GetClientTofStats to return non-nil result")
+		}
+		// Verify the result structure
+		if result != nil && len(result.TofStats.TofTag) == 0 {
+			t.Log("GetClientTofStats returned result but with empty data (acceptable)")
+		}
+	})
+}

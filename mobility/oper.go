@@ -3,6 +3,7 @@ package mobility
 
 import (
 	"context"
+	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -372,6 +373,9 @@ type DTLSMsgStat struct {
 
 // GetMobilityOper retrieves mobility operational data.
 func GetMobilityOper(client *wnc.Client, ctx context.Context) (*MobilityOperResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MobilityOperResponse
 	if err := client.SendAPIRequest(ctx, MobilityOperEndpoint, &data); err != nil {
 		return nil, err
@@ -381,6 +385,9 @@ func GetMobilityOper(client *wnc.Client, ctx context.Context) (*MobilityOperResp
 
 // GetMobilityMmIfGlobalStats retrieves mobility manager interface global statistics.
 func GetMobilityMmIfGlobalStats(client *wnc.Client, ctx context.Context) (*MmIfGlobalStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MmIfGlobalStatsResponse
 	if err := client.SendAPIRequest(ctx, MmIfGlobalStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -390,6 +397,9 @@ func GetMobilityMmIfGlobalStats(client *wnc.Client, ctx context.Context) (*MmIfG
 
 // GetMobilityMmIfGlobalMsgStats retrieves mobility manager interface global message statistics.
 func GetMobilityMmIfGlobalMsgStats(client *wnc.Client, ctx context.Context) (*MmIfGlobalMsgStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MmIfGlobalMsgStatsResponse
 	if err := client.SendAPIRequest(ctx, MmIfGlobalMsgStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -399,6 +409,9 @@ func GetMobilityMmIfGlobalMsgStats(client *wnc.Client, ctx context.Context) (*Mm
 
 // GetMobilityGlobalStats retrieves mobility global statistics.
 func GetMobilityGlobalStats(client *wnc.Client, ctx context.Context) (*MobilityGlobalStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MobilityGlobalStatsResponse
 	if err := client.SendAPIRequest(ctx, MobilityGlobalStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -408,6 +421,9 @@ func GetMobilityGlobalStats(client *wnc.Client, ctx context.Context) (*MobilityG
 
 // GetMobilityMmGlobalData retrieves mobility manager global data.
 func GetMobilityMmGlobalData(client *wnc.Client, ctx context.Context) (*MmGlobalDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MmGlobalDataResponse
 	if err := client.SendAPIRequest(ctx, MmGlobalDataEndpoint, &data); err != nil {
 		return nil, err
@@ -417,6 +433,9 @@ func GetMobilityMmGlobalData(client *wnc.Client, ctx context.Context) (*MmGlobal
 
 // GetMobilityGlobalMsgStats retrieves mobility global message statistics.
 func GetMobilityGlobalMsgStats(client *wnc.Client, ctx context.Context) (*MobilityGlobalMsgStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MobilityGlobalMsgStatsResponse
 	if err := client.SendAPIRequest(ctx, MobilityGlobalMsgStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -426,6 +445,9 @@ func GetMobilityGlobalMsgStats(client *wnc.Client, ctx context.Context) (*Mobili
 
 // GetMobilityClientData retrieves mobility client data.
 func GetMobilityClientData(client *wnc.Client, ctx context.Context) (*MobilityClientDataResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MobilityClientDataResponse
 	if err := client.SendAPIRequest(ctx, MobilityClientDataEndpoint, &data); err != nil {
 		return nil, err
@@ -435,6 +457,9 @@ func GetMobilityClientData(client *wnc.Client, ctx context.Context) (*MobilityCl
 
 // GetMobilityApCache retrieves AP cache data.
 func GetMobilityApCache(client *wnc.Client, ctx context.Context) (*ApCacheResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApCacheResponse
 	if err := client.SendAPIRequest(ctx, ApCacheEndpoint, &data); err != nil {
 		return nil, err
@@ -444,6 +469,9 @@ func GetMobilityApCache(client *wnc.Client, ctx context.Context) (*ApCacheRespon
 
 // GetMobilityApPeerList retrieves AP peer list data.
 func GetMobilityApPeerList(client *wnc.Client, ctx context.Context) (*ApPeerListResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data ApPeerListResponse
 	if err := client.SendAPIRequest(ctx, ApPeerListEndpoint, &data); err != nil {
 		return nil, err
@@ -453,6 +481,9 @@ func GetMobilityApPeerList(client *wnc.Client, ctx context.Context) (*ApPeerList
 
 // GetMobilityClientStats retrieves mobility client statistics.
 func GetMobilityClientStats(client *wnc.Client, ctx context.Context) (*MobilityClientStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MobilityClientStatsResponse
 	if err := client.SendAPIRequest(ctx, MobilityClientStatsEndpoint, &data); err != nil {
 		return nil, err
@@ -462,6 +493,9 @@ func GetMobilityClientStats(client *wnc.Client, ctx context.Context) (*MobilityC
 
 // GetMobilityWlanClientLimit retrieves WLAN client limit data.
 func GetMobilityWlanClientLimit(client *wnc.Client, ctx context.Context) (*WlanClientLimitResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data WlanClientLimitResponse
 	if err := client.SendAPIRequest(ctx, WlanClientLimitEndpoint, &data); err != nil {
 		return nil, err
@@ -471,6 +505,9 @@ func GetMobilityWlanClientLimit(client *wnc.Client, ctx context.Context) (*WlanC
 
 // GetMobilityGlobalDTLSStats retrieves mobility global DTLS statistics.
 func GetMobilityGlobalDTLSStats(client *wnc.Client, ctx context.Context) (*MobilityGlobalDTLSStatsResponse, error) {
+	if client == nil {
+		return nil, errors.New("client is nil")
+	}
 	var data MobilityGlobalDTLSStatsResponse
 	if err := client.SendAPIRequest(ctx, MobilityGlobalDTLSStatsEndpoint, &data); err != nil {
 		return nil, err

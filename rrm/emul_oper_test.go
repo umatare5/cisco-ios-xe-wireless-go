@@ -2,11 +2,13 @@
 package rrm
 
 import (
-	"encoding/json"
 	"context"
-	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	"encoding/json"
 	"testing"
 	"time"
+
+	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // =============================================================================
@@ -321,4 +323,56 @@ func TestRrmEmulOperDataStructures(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to marshal RrmEmulOperRrmFraStatsResponse back to JSON: %v", err)
 	}
+}
+
+// =============================================================================
+// 3. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestRrmEmulOperErrorHandling tests error handling for all emul operation functions
+func TestRrmEmulOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("GetRrmEmulOper_NilClient", func(t *testing.T) {
+		result, err := GetRrmEmulOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+
+	t.Run("GetRrmEmulRrmFraStats_NilClient", func(t *testing.T) {
+		result, err := GetRrmEmulRrmFraStats(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+}
+
+// =============================================================================
+// 4. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestRrmEmulOperContextHandling tests context handling for all emul operation functions
+func TestRrmEmulOperContextHandling(t *testing.T) {
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetRrmEmulOper(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetRrmEmulRrmFraStats(client, ctx)
+		return err
+	})
 }

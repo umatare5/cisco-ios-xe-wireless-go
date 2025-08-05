@@ -297,3 +297,55 @@ func TestGeneralOperPerformance(t *testing.T) {
 		}
 	})
 }
+
+// =============================================================================
+// 6. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestGeneralOperErrorHandling tests error handling for all general operational functions
+func TestGeneralOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("GetGeneralOper_NilClient", func(t *testing.T) {
+		result, err := GetGeneralOper(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+
+	t.Run("GetGeneralOperMgmtIntfData_NilClient", func(t *testing.T) {
+		result, err := GetGeneralOperMgmtIntfData(nil, ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for nil client")
+		}
+		if err.Error() != "client is nil" {
+			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
+		}
+	})
+}
+
+// =============================================================================
+// 7. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestGeneralOperContextHandling tests context handling for all general operational functions
+func TestGeneralOperContextHandling(t *testing.T) {
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetGeneralOper(client, ctx)
+		return err
+	})
+
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetGeneralOperMgmtIntfData(client, ctx)
+		return err
+	})
+}

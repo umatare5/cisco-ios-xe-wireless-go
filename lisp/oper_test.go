@@ -422,3 +422,67 @@ func TestLispAgentOperDataStructures(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// 4. ERROR HANDLING TESTS
+// =============================================================================
+
+// TestLispOperErrorHandling tests error handling for all LISP operational functions
+func TestLispOperErrorHandling(t *testing.T) {
+	ctx := context.Background()
+
+	// Test GetLispAgentOper with nil client
+	_, err := GetLispAgentOper(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetLispAgentMemoryStats with nil client
+	_, err = GetLispAgentMemoryStats(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetLispWlcCapabilities with nil client
+	_, err = GetLispWlcCapabilities(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+
+	// Test GetLispApCapabilities with nil client
+	_, err = GetLispApCapabilities(nil, ctx)
+	if err == nil || err.Error() != "client is nil" {
+		t.Errorf("Expected 'client is nil' error, got: %v", err)
+	}
+}
+
+// =============================================================================
+// 5. CONTEXT HANDLING TESTS
+// =============================================================================
+
+// TestLispOperContextHandling tests context handling for all LISP operational functions
+func TestLispOperContextHandling(t *testing.T) {
+	// Test GetLispAgentOper with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetLispAgentOper(client, ctx)
+		return err
+	})
+
+	// Test GetLispAgentMemoryStats with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetLispAgentMemoryStats(client, ctx)
+		return err
+	})
+
+	// Test GetLispWlcCapabilities with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetLispWlcCapabilities(client, ctx)
+		return err
+	})
+
+	// Test GetLispApCapabilities with context handling
+	testutils.TestContextHandling(t, func(ctx context.Context, client *wnc.Client) error {
+		_, err := GetLispApCapabilities(client, ctx)
+		return err
+	})
+}

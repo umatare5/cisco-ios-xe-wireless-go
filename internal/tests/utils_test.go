@@ -395,6 +395,69 @@ func TestHelperFunctions(t *testing.T) {
 			t.Error("Context deadline doesn't match expected default timeout")
 		}
 	})
+
+	// Test other context creation functions
+	t.Run("CreateExtendedTestContext", func(t *testing.T) {
+		ctx, cancel := CreateExtendedTestContext()
+		defer cancel()
+
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateComprehensiveTestContext", func(t *testing.T) {
+		ctx, cancel := CreateComprehensiveTestContext()
+		defer cancel()
+
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateQuickTestContext", func(t *testing.T) {
+		ctx, cancel := CreateQuickTestContext()
+		defer cancel()
+
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateMicroTestContext", func(t *testing.T) {
+		ctx, cancel := CreateMicroTestContext()
+		defer cancel()
+
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateStandardTestContext", func(t *testing.T) {
+		ctx, cancel := CreateStandardTestContext()
+		defer cancel()
+
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateCancelledTestContext", func(t *testing.T) {
+		ctx, cancel := CreateCancelledTestContext()
+		defer cancel()
+
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+
+		// Context should be cancelled
+		select {
+		case <-ctx.Done():
+			// Expected
+		default:
+			t.Error("Expected context to be cancelled")
+		}
+	})
 }
 
 func TestCollectTestResult(t *testing.T) {
@@ -695,4 +758,135 @@ func TestRunTableTests(t *testing.T) {
 	if !executed {
 		t.Error("Table test was not executed")
 	}
+}
+
+func TestAdditionalUtilityFunctions(t *testing.T) {
+	t.Run("GetTestCredentials", func(t *testing.T) {
+		// Save original environment values
+		originalController := os.Getenv("WNC_CONTROLLER")
+		originalToken := os.Getenv("WNC_ACCESS_TOKEN")
+
+		// Restore environment after test
+		defer func() {
+			if originalController != "" {
+				os.Setenv("WNC_CONTROLLER", originalController)
+			} else {
+				os.Unsetenv("WNC_CONTROLLER")
+			}
+			if originalToken != "" {
+				os.Setenv("WNC_ACCESS_TOKEN", originalToken)
+			} else {
+				os.Unsetenv("WNC_ACCESS_TOKEN")
+			}
+		}()
+
+		// Test with environment variables set
+		os.Setenv("WNC_CONTROLLER", "test_controller")
+		os.Setenv("WNC_ACCESS_TOKEN", "test_token")
+
+		controller, token, ok := GetTestCredentials()
+		if !ok {
+			t.Error("Expected credentials to be available")
+		}
+		if controller != "test_controller" {
+			t.Errorf("Expected controller 'test_controller', got %s", controller)
+		}
+		if token != "test_token" {
+			t.Errorf("Expected token 'test_token', got %s", token)
+		}
+
+		// Test with missing environment variables
+		os.Unsetenv("WNC_CONTROLLER")
+		os.Unsetenv("WNC_ACCESS_TOKEN")
+
+		_, _, ok = GetTestCredentials()
+		if ok {
+			t.Error("Expected credentials to be unavailable when env vars are missing")
+		}
+	})
+
+	t.Run("SaveCollectedTestData", func(t *testing.T) {
+		collector := NewTestDataCollector()
+		collector.Data["test"] = "data"
+
+		// Create temporary test data directory
+		tempDir := filepath.Join(os.TempDir(), "testutil_save_"+fmt.Sprintf("%d", time.Now().UnixNano()))
+		defer func() {
+			if err := os.RemoveAll(tempDir); err != nil {
+				t.Logf("Warning: Failed to clean up temp directory: %v", err)
+			}
+		}()
+
+		// Create the directory structure
+		testDataDir := filepath.Join(tempDir, "test_data")
+		if err := os.MkdirAll(testDataDir, 0755); err != nil {
+			t.Fatalf("Failed to create temp directory: %v", err)
+		}
+
+		// Change working directory temporarily to test relative paths
+		originalWd, _ := os.Getwd()
+		defer os.Chdir(originalWd)
+		os.Chdir(tempDir)
+
+		SaveCollectedTestData(t, collector, "test_output.json")
+
+		// Verify file was created
+		filePath := filepath.Join(testDataDir, "test_output.json")
+		if _, err := os.Stat(filePath); os.IsNotExist(err) {
+			t.Errorf("Test data file was not created: %s", filePath)
+		}
+	})
+
+	t.Run("DebugJSONResponse", func(t *testing.T) {
+		// Create temporary test data directory
+		tempDir := filepath.Join(os.TempDir(), "testutil_debug_"+fmt.Sprintf("%d", time.Now().UnixNano()))
+		defer func() {
+			if err := os.RemoveAll(tempDir); err != nil {
+				t.Logf("Warning: Failed to clean up temp directory: %v", err)
+			}
+		}()
+
+		// Create the directory structure
+		testDataDir := filepath.Join(tempDir, "test_data")
+		if err := os.MkdirAll(testDataDir, 0755); err != nil {
+			t.Fatalf("Failed to create temp directory: %v", err)
+		}
+
+		// Change working directory temporarily to test relative paths
+		originalWd, _ := os.Getwd()
+		defer os.Chdir(originalWd)
+		os.Chdir(tempDir)
+
+		DebugJSONResponse(t, "test_endpoint", `{"test": "data"}`)
+
+		// Verify debug file was created
+		files, err := filepath.Glob(filepath.Join(testDataDir, "debug_test_endpoint_response.json"))
+		if err != nil {
+			t.Errorf("Error searching for debug files: %v", err)
+		}
+		if len(files) == 0 {
+			t.Error("Debug file was not created")
+		}
+	})
+
+	t.Run("ValidateEndpoints", func(t *testing.T) {
+		endpointsToValidate := map[string]string{
+			"ValidEndpoint":   "/api/v1/valid-endpoint",
+			"AnotherEndpoint": "/api/v1/another-endpoint",
+		}
+
+		ValidateEndpoints(t, endpointsToValidate)
+		t.Log("Endpoint validation completed successfully")
+	})
+
+	t.Run("GenerateEndpointValidationTest", func(t *testing.T) {
+		expectedEndpoints := map[string]string{
+			"TestEndpoint": "/api/v1/test",
+		}
+		actualEndpoints := map[string]string{
+			"TestEndpoint": "/api/v1/test",
+		}
+
+		GenerateEndpointValidationTest(t, expectedEndpoints, actualEndpoints)
+	})
 }

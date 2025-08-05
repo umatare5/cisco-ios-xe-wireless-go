@@ -5,6 +5,7 @@
 
 # Source common predicates
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
 
 validate_coverage_environment() {
     local project_root="$1"
