@@ -128,7 +128,7 @@ func TestRfidConfigurationEndpoints(t *testing.T) {
 func TestRfidCfgErrorHandling(t *testing.T) {
 	t.Run("GetRfidCfgWithNilClient", func(t *testing.T) {
 		_, err := GetRfidCfg(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})

@@ -344,31 +344,31 @@ func TestWlanCfgErrorHandling(t *testing.T) {
 
 	// Test GetWlanCfg with nil client
 	_, err := GetWlanCfg(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetWlanCfgEntries with nil client
 	_, err = GetWlanCfgEntries(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetWlanPolicies with nil client
 	_, err = GetWlanPolicies(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetPolicyListEntries with nil client
 	_, err = GetPolicyListEntries(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetWirelessAaaPolicyConfigs with nil client
 	_, err = GetWirelessAaaPolicyConfigs(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 }

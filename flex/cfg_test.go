@@ -200,7 +200,7 @@ func TestFlexConfigurationFunctions(t *testing.T) {
 				_, err := GetFlexCfg(nil, ctx)
 				return err
 			},
-			ExpectedError: "client is nil",
+			ExpectedError: "invalid client configuration: client cannot be nil",
 		},
 		{
 			Name: "GetFlexCfgDataWithNilClient",
@@ -208,7 +208,7 @@ func TestFlexConfigurationFunctions(t *testing.T) {
 				_, err := GetFlexCfgData(nil, ctx)
 				return err
 			},
-			ExpectedError: "client is nil",
+			ExpectedError: "invalid client configuration: client cannot be nil",
 		},
 	})
 

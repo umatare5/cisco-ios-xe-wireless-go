@@ -180,7 +180,7 @@ func TestCtsConfigurationFunctions(t *testing.T) {
 				_, err := GetCtsSxpCfg(nil, ctx)
 				return err
 			},
-			ExpectedError: "client is nil",
+			ExpectedError: "invalid client configuration: client cannot be nil",
 		},
 		{
 			Name: "GetCtsSxpConfigurationWithNilClient",
@@ -188,7 +188,7 @@ func TestCtsConfigurationFunctions(t *testing.T) {
 				_, err := GetCtsSxpConfiguration(nil, ctx)
 				return err
 			},
-			ExpectedError: "client is nil",
+			ExpectedError: "invalid client configuration: client cannot be nil",
 		},
 	})
 

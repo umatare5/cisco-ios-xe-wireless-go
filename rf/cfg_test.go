@@ -277,42 +277,42 @@ func TestRfConfigurationFunctions(t *testing.T) {
 func TestRfCfgErrorHandling(t *testing.T) {
 	t.Run("GetRfCfgWithNilClient", func(t *testing.T) {
 		_, err := GetRfCfg(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRfMultiBssidProfilesWithNilClient", func(t *testing.T) {
 		_, err := GetRfMultiBssidProfiles(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRfAtfPoliciesWithNilClient", func(t *testing.T) {
 		_, err := GetRfAtfPolicies(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRfTagsWithNilClient", func(t *testing.T) {
 		_, err := GetRfTags(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRfProfilesWithNilClient", func(t *testing.T) {
 		_, err := GetRfProfiles(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRfProfileDefaultEntriesWithNilClient", func(t *testing.T) {
 		_, err := GetRfProfileDefaultEntries(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})

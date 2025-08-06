@@ -3,7 +3,7 @@ package rrm
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
@@ -276,7 +276,7 @@ type RegDomainOper struct {
 // GetRrmOper retrieves RRM operational data with context.
 func GetRrmOper(client *wnc.Client, ctx context.Context) (*RrmOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var result RrmOperResponse
 	err := client.SendAPIRequest(ctx, RrmOperEndpoint, &result)
@@ -288,7 +288,7 @@ func GetRrmOper(client *wnc.Client, ctx context.Context) (*RrmOperResponse, erro
 
 func GetApAutoRfDot11Data(client *wnc.Client, ctx context.Context) (*ApAutoRfDot11DataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ApAutoRfDot11DataResponse
 	err := client.SendAPIRequest(ctx, RrmOperApAutoRfDot11DataEndpoint, &data)
@@ -300,7 +300,7 @@ func GetApAutoRfDot11Data(client *wnc.Client, ctx context.Context) (*ApAutoRfDot
 
 func GetApDot11RadarData(client *wnc.Client, ctx context.Context) (*ApDot11RadarDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ApDot11RadarDataResponse
 	err := client.SendAPIRequest(ctx, RrmOperApDot11RadarDataEndpoint, &data)
@@ -312,7 +312,7 @@ func GetApDot11RadarData(client *wnc.Client, ctx context.Context) (*ApDot11Radar
 
 func GetApDot11SpectrumData(client *wnc.Client, ctx context.Context) (*ApDot11SpectrumDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ApDot11SpectrumDataResponse
 	err := client.SendAPIRequest(ctx, RrmOperApDot11SpectrumDataEndpoint, &data)
@@ -324,7 +324,7 @@ func GetApDot11SpectrumData(client *wnc.Client, ctx context.Context) (*ApDot11Sp
 
 func GetRrmMeasurement(client *wnc.Client, ctx context.Context) (*RrmMeasurementResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmMeasurementResponse
 	err := client.SendAPIRequest(ctx, RrmOperRrmMeasurementEndpoint, &data)
@@ -336,7 +336,7 @@ func GetRrmMeasurement(client *wnc.Client, ctx context.Context) (*RrmMeasurement
 
 func GetRadioSlot(client *wnc.Client, ctx context.Context) (*RadioSlotResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioSlotResponse
 	err := client.SendAPIRequest(ctx, RrmOperRadioSlotEndpoint, &data)
@@ -348,7 +348,7 @@ func GetRadioSlot(client *wnc.Client, ctx context.Context) (*RadioSlotResponse, 
 
 func GetMainData(client *wnc.Client, ctx context.Context) (*MainDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data MainDataResponse
 	err := client.SendAPIRequest(ctx, RrmOperMainDataEndpoint, &data)
@@ -360,7 +360,7 @@ func GetMainData(client *wnc.Client, ctx context.Context) (*MainDataResponse, er
 
 func GetSpectrumDeviceTable(client *wnc.Client, ctx context.Context) (*SpectrumDeviceTableResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SpectrumDeviceTableResponse
 	err := client.SendAPIRequest(ctx, RrmOperSpectrumDeviceTableEndpoint, &data)
@@ -372,7 +372,7 @@ func GetSpectrumDeviceTable(client *wnc.Client, ctx context.Context) (*SpectrumD
 
 func GetSpectrumAqTable(client *wnc.Client, ctx context.Context) (*SpectrumAqTableResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SpectrumAqTableResponse
 	err := client.SendAPIRequest(ctx, RrmOperSpectrumAqTableEndpoint, &data)
@@ -384,7 +384,7 @@ func GetSpectrumAqTable(client *wnc.Client, ctx context.Context) (*SpectrumAqTab
 
 func GetRegDomainOper(client *wnc.Client, ctx context.Context) (*RegDomainOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RegDomainOperResponse
 	err := client.SendAPIRequest(ctx, RrmOperRegDomainOperEndpoint, &data)

@@ -1,14 +1,57 @@
 # 🧪 Testing
 
-This library includes following tests that validate API functionality and client behavior:
+This library includes comprehensive tests that validate API functionality and client behavior:
 
 - **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
 - **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
 - **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
 - **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
+- **Error handling tests**: Validates standardized error patterns across all functions.
 
-> [!Note]
-> Currently, the test coverage is insufficient. All tests will be covered in the future release `v0.3.0`.
+## 📊 Coverage Investigation Procedures
+
+When coverage degradation is detected:
+
+1. **Identify Uncovered Functions**:
+
+   ```bash
+   make test-unit-coverage
+   go tool cover -func=coverage.out | grep -v 100.0% | grep -E "(cfg|oper)\.go"
+   ```
+
+2. **Mock Server URL Validation**:
+   - Ensure URLs use full RESTCONF paths
+   - Pattern: `/restconf/data/[YANG-MODULE]:[CONTAINER]/[ENDPOINT]`
+   - Example: `/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data/ap-name-mac-list`
+
+3. **HTTP Error Path Testing**:
+   Add comprehensive tests for both success and error scenarios:
+
+   ```go
+   func TestFunctionSuccessPathCoverage(t *testing.T) {
+       // Test success path with mock server
+   }
+
+   func TestFunctionHTTPErrorCoverage(t *testing.T) {
+       // Test HTTP error scenarios
+   }
+   ```
+
+4. **Coverage Restoration**:
+   - Fix mock server URLs
+   - Add missing error path tests
+   - Validate import statements with `goimports`
+   - Verify coverage meets targets (≥98% main, ≥92% total)
+
+### Coverage by Package
+
+```text
+📦 github.com/umatare5/cisco-ios-xe-wireless-go (100.0% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/afc (100.0% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (99.3% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/general (100.0% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/rrm (99.5% coverage)
+```
 
 ## 🎯 Prerequisites
 
@@ -122,6 +165,44 @@ total: (statements) 6.1%
 </details>
 
 ## 📚️ Appendix
+
+### Code Quality & Error Handling
+
+The project enforces strict code quality standards:
+
+#### Error Handling Standards
+
+All client validation follows standardized error patterns:
+
+```go
+// ✅ Correct - standardized error handling
+if client == nil {
+    return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
+}
+
+// ❌ Incorrect - basic error handling (deprecated)
+if client == nil {
+    return nil, errors.New("client is nil")
+}
+```
+
+#### Test Error Expectations
+
+When testing error conditions, expect the standardized error message:
+
+```go
+func TestFunction(t *testing.T) {
+    _, err := SomeFunction(nil)
+    if err == nil {
+        t.Fatal("Expected error for nil client")
+    }
+
+    expectedError := "invalid client configuration: client cannot be nil"
+    if err.Error() != expectedError {
+        t.Errorf("Expected %q, got %q", expectedError, err.Error())
+    }
+}
+```
 
 ### Testing Tips
 

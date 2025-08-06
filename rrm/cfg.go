@@ -3,7 +3,7 @@ package rrm
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -64,7 +64,7 @@ type RrmMgrCfgEntry struct {
 // Returns RRM configuration including band settings and manager entries.
 func GetRrmCfg(client *wnc.Client, ctx context.Context) (*RrmCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmCfgResponse
 	err := client.SendAPIRequest(ctx, RrmCfgEndpoint, &data)
@@ -78,7 +78,7 @@ func GetRrmCfg(client *wnc.Client, ctx context.Context) (*RrmCfgResponse, error)
 // Returns RRM configuration settings for different radio bands.
 func GetRrmRrms(client *wnc.Client, ctx context.Context) (*RrmRrmsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmRrmsResponse
 	err := client.SendAPIRequest(ctx, RrmCfgRrmsEndpoint, &data)
@@ -92,7 +92,7 @@ func GetRrmRrms(client *wnc.Client, ctx context.Context) (*RrmRrmsResponse, erro
 // Returns RRM manager configuration for different radio bands.
 func GetRrmMgrCfgEntries(client *wnc.Client, ctx context.Context) (*RrmMgrCfgEntriesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmMgrCfgEntriesResponse
 	err := client.SendAPIRequest(ctx, RrmCfgRrmMgrCfgEntriesEndpoint, &data)

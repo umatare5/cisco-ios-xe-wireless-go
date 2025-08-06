@@ -3,7 +3,7 @@ package rrm
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
@@ -225,7 +225,7 @@ type RrmCoverage struct {
 
 func GetRrmGlobalOper(client *wnc.Client, ctx context.Context) (*RrmGlobalOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmGlobalOperResponse
 	err := client.SendAPIRequest(ctx, RrmGlobalOperEndpoint, &data)
@@ -237,7 +237,7 @@ func GetRrmGlobalOper(client *wnc.Client, ctx context.Context) (*RrmGlobalOperRe
 
 func GetRrmGlobalOneShotCounters(client *wnc.Client, ctx context.Context) (*RrmOneShotCountersResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmOneShotCountersResponse
 	err := client.SendAPIRequest(ctx, RrmOneShotCountersEndpoint, &data)
@@ -249,7 +249,7 @@ func GetRrmGlobalOneShotCounters(client *wnc.Client, ctx context.Context) (*RrmO
 
 func GetRrmGlobalChannelParams(client *wnc.Client, ctx context.Context) (*RrmChannelParamsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmChannelParamsResponse
 	err := client.SendAPIRequest(ctx, RrmChannelParamsEndpoint, &data)
@@ -261,7 +261,7 @@ func GetRrmGlobalChannelParams(client *wnc.Client, ctx context.Context) (*RrmCha
 
 func GetRrmGlobalSpectrumAqWorstTable(client *wnc.Client, ctx context.Context) (*SpectrumAqWorstTableResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SpectrumAqWorstTableResponse
 	err := client.SendAPIRequest(ctx, SpectrumAqWorstTableEndpoint, &data)
@@ -273,7 +273,7 @@ func GetRrmGlobalSpectrumAqWorstTable(client *wnc.Client, ctx context.Context) (
 
 func GetRrmGlobalRadioOperData24G(client *wnc.Client, ctx context.Context) (*RadioOperData24GResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioOperData24GResponse
 	err := client.SendAPIRequest(ctx, RadioOperData24GEndpoint, &data)
@@ -285,7 +285,7 @@ func GetRrmGlobalRadioOperData24G(client *wnc.Client, ctx context.Context) (*Rad
 
 func GetRrmGlobalRadioOperData5G(client *wnc.Client, ctx context.Context) (*RadioOperData5GResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioOperData5GResponse
 	err := client.SendAPIRequest(ctx, RadioOperData5GEndpoint, &data)
@@ -297,7 +297,7 @@ func GetRrmGlobalRadioOperData5G(client *wnc.Client, ctx context.Context) (*Radi
 
 func GetRrmGlobalRadioOperData6G(client *wnc.Client, ctx context.Context) (*RadioOperData6GResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioOperData6GResponse
 	err := client.SendAPIRequest(ctx, RadioOperData6GEndpoint, &data)
@@ -309,7 +309,7 @@ func GetRrmGlobalRadioOperData6G(client *wnc.Client, ctx context.Context) (*Radi
 
 func GetRrmGlobalSpectrumBandConfigData(client *wnc.Client, ctx context.Context) (*SpectrumBandConfigDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SpectrumBandConfigDataResponse
 	err := client.SendAPIRequest(ctx, SpectrumBandConfigDataEndpoint, &data)
@@ -321,7 +321,7 @@ func GetRrmGlobalSpectrumBandConfigData(client *wnc.Client, ctx context.Context)
 
 func GetRrmGlobalRadioOperDataDualband(client *wnc.Client, ctx context.Context) (*RadioOperDataDualbandResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioOperDataDualbandResponse
 	err := client.SendAPIRequest(ctx, RadioOperDataDualbandEndpoint, &data)
@@ -333,7 +333,7 @@ func GetRrmGlobalRadioOperDataDualband(client *wnc.Client, ctx context.Context) 
 
 func GetRrmGlobalClientData(client *wnc.Client, ctx context.Context) (*RrmClientDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmClientDataResponse
 	err := client.SendAPIRequest(ctx, RrmClientDataEndpoint, &data)
@@ -345,7 +345,7 @@ func GetRrmGlobalClientData(client *wnc.Client, ctx context.Context) (*RrmClient
 
 func GetRrmGlobalFraStats(client *wnc.Client, ctx context.Context) (*RrmFraStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmFraStatsResponse
 	err := client.SendAPIRequest(ctx, RrmFraStatsEndpoint, &data)
@@ -357,7 +357,7 @@ func GetRrmGlobalFraStats(client *wnc.Client, ctx context.Context) (*RrmFraStats
 
 func GetRrmGlobalCoverage(client *wnc.Client, ctx context.Context) (*RrmCoverageResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RrmCoverageResponse
 	err := client.SendAPIRequest(ctx, RrmCoverageEndpoint, &data)

@@ -3,7 +3,7 @@ package ble
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -152,7 +152,7 @@ type BleLtxAp struct {
 
 func GetBleLtxOper(client *wnc.Client, ctx context.Context) (*BleLtxOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data BleLtxOperResponse
 	err := client.SendAPIRequest(ctx, BleLtxOperEndpoint, &data)
@@ -164,7 +164,7 @@ func GetBleLtxOper(client *wnc.Client, ctx context.Context) (*BleLtxOperResponse
 
 func GetBleLtxApAntenna(client *wnc.Client, ctx context.Context) (*BleLtxApAntennaResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data BleLtxApAntennaResponse
 	err := client.SendAPIRequest(ctx, BleLtxApAntennaEndpoint, &data)
@@ -176,7 +176,7 @@ func GetBleLtxApAntenna(client *wnc.Client, ctx context.Context) (*BleLtxApAnten
 
 func GetBleLtxAp(client *wnc.Client, ctx context.Context) (*BleLtxApResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data BleLtxApResponse
 	err := client.SendAPIRequest(ctx, BleLtxApEndpoint, &data)

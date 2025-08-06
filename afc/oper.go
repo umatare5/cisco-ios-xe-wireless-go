@@ -3,7 +3,7 @@ package afc
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -21,7 +21,7 @@ const (
 // Deprecated: use service-based API instead.
 func GetAfcOper(client *wnc.Client, ctx context.Context) (*model.AfcOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Oper(ctx)
@@ -30,7 +30,7 @@ func GetAfcOper(client *wnc.Client, ctx context.Context) (*model.AfcOperResponse
 // Deprecated: use service-based API instead.
 func GetAfcEwlcAfcApResp(client *wnc.Client, ctx context.Context) (*model.AfcOperEwlcAfcApRespResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.APResp(ctx)

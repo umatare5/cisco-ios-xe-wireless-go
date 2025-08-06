@@ -3,7 +3,7 @@ package geolocation
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -40,7 +40,7 @@ type ApGeoLocStats struct {
 // GetGeolocationOper retrieves geolocation operational data.
 func GetGeolocationOper(client *wnc.Client, ctx context.Context) (*GeolocationOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data GeolocationOperResponse
 	if err := client.SendAPIRequest(ctx, GeolocationOperEndpoint, &data); err != nil {
@@ -52,7 +52,7 @@ func GetGeolocationOper(client *wnc.Client, ctx context.Context) (*GeolocationOp
 // GetGeolocationOperApGeoLocStats retrieves AP geolocation statistics.
 func GetGeolocationOperApGeoLocStats(client *wnc.Client, ctx context.Context) (*GeolocationOperApGeoLocStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data GeolocationOperApGeoLocStatsResponse
 	if err := client.SendAPIRequest(ctx, GeolocationApGeoLocStatsEndpoint, &data); err != nil {

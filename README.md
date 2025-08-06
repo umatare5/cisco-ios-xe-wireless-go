@@ -260,6 +260,16 @@ I welcome contributions to improve this library. Please follow these guidelines 
 5. **Ensure all tests pass** including unit and integration tests
 6. **Submit a pull request** with a clear description of changes
 
+### 🔧 Code Quality Standards
+
+This project maintains high code quality standards:
+
+- **Error Handling**: All client validation uses standardized error wrapping: `fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)`
+- **Test Coverage**: Maintains ≥98% coverage for main codebase, ≥92% total project coverage
+- **Mock Testing**: HTTP tests use full RESTCONF paths: `/restconf/data/[YANG-MODULE]:[CONTAINER]/[ENDPOINT]`
+- **Code Consistency**: Follows established Go best practices and project conventions
+- **Import Management**: Uses `goimports` for consistent import formatting
+
 ## 🚀 Release Process
 
 To release a new version:

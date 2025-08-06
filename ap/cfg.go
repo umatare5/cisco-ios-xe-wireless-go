@@ -3,7 +3,7 @@ package ap
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -43,7 +43,7 @@ type ApTag = model.ApTag
 // Deprecated: Use ap.NewService(client.CoreClient()).Cfg(ctx) instead.
 func GetApCfg(client *wnc.Client, ctx context.Context) (*ApCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Cfg(ctx)
@@ -54,7 +54,7 @@ func GetApCfg(client *wnc.Client, ctx context.Context) (*ApCfgResponse, error) {
 // Deprecated: Use ap.NewService(client.CoreClient()).TagSourcePriorityConfigs(ctx) instead.
 func GetTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*TagSourcePriorityConfigs, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.TagSourcePriorityConfigs(ctx)
@@ -65,7 +65,7 @@ func GetTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*TagS
 // Deprecated: Use ap.NewService(client.CoreClient()).ApTags(ctx) instead.
 func GetApTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*ApCfgTagSourcePriorityConfigsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ApCfgTagSourcePriorityConfigsResponse
 	if err := client.SendAPIRequest(ctx, TagSourcePriorityConfigsEndpoint, &data); err != nil {
@@ -79,7 +79,7 @@ func GetApTagSourcePriorityConfigs(client *wnc.Client, ctx context.Context) (*Ap
 // Deprecated: Use ap.NewService(client.CoreClient()).ApTags(ctx) instead.
 func GetApApTags(client *wnc.Client, ctx context.Context) (*ApCfgApTagsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.ApTags(ctx)

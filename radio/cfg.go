@@ -3,7 +3,7 @@ package radio
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -44,7 +44,7 @@ type RadioProfile struct {
 // GetRadioCfg retrieves complete radio configuration data.
 func GetRadioCfg(client *wnc.Client, ctx context.Context) (*RadioCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioCfgResponse
 	if err := client.SendAPIRequest(ctx, RadioCfgEndpoint, &data); err != nil {
@@ -56,7 +56,7 @@ func GetRadioCfg(client *wnc.Client, ctx context.Context) (*RadioCfgResponse, er
 // GetRadioProfiles retrieves radio profile configurations.
 func GetRadioProfiles(client *wnc.Client, ctx context.Context) (*RadioProfilesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RadioProfilesResponse
 	if err := client.SendAPIRequest(ctx, RadioProfilesEndpoint, &data); err != nil {

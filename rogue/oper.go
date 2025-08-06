@@ -3,7 +3,7 @@ package rogue
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -50,7 +50,7 @@ type (
 // GetRogueOper retrieves rogue operational data.
 func GetRogueOper(client *wnc.Client, ctx context.Context) (*RogueOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Oper(ctx)
@@ -60,7 +60,7 @@ func GetRogueOper(client *wnc.Client, ctx context.Context) (*RogueOperResponse, 
 // GetRogueStats retrieves rogue statistics.
 func GetRogueStats(client *wnc.Client, ctx context.Context) (*RogueStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Stats(ctx)
@@ -70,7 +70,7 @@ func GetRogueStats(client *wnc.Client, ctx context.Context) (*RogueStatsResponse
 // GetRogueData retrieves rogue data.
 func GetRogueData(client *wnc.Client, ctx context.Context) (*RogueDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Data(ctx)
@@ -80,7 +80,7 @@ func GetRogueData(client *wnc.Client, ctx context.Context) (*RogueDataResponse, 
 // GetRogueClientData retrieves rogue client data.
 func GetRogueClientData(client *wnc.Client, ctx context.Context) (*RogueClientDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.ClientData(ctx)
@@ -90,7 +90,7 @@ func GetRogueClientData(client *wnc.Client, ctx context.Context) (*RogueClientDa
 // GetRldpStats retrieves RLDP statistics.
 func GetRldpStats(client *wnc.Client, ctx context.Context) (*RldpStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.RldpStats(ctx)

@@ -3,7 +3,7 @@ package site
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -106,7 +106,7 @@ type SiteTagConfig struct {
 
 func GetSiteCfg(client *wnc.Client, ctx context.Context) (*SiteCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SiteCfgResponse
 	if err := client.SendAPIRequest(ctx, SiteCfgBasePath, &data); err != nil {
@@ -117,7 +117,7 @@ func GetSiteCfg(client *wnc.Client, ctx context.Context) (*SiteCfgResponse, erro
 
 func GetSiteApCfgProfiles(client *wnc.Client, ctx context.Context) (*SiteApCfgProfilesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SiteApCfgProfilesResponse
 	if err := client.SendAPIRequest(ctx, ApCfgProfilesEndpoint, &data); err != nil {
@@ -128,7 +128,7 @@ func GetSiteApCfgProfiles(client *wnc.Client, ctx context.Context) (*SiteApCfgPr
 
 func GetSiteTagConfigs(client *wnc.Client, ctx context.Context) (*SiteTagConfigsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SiteTagConfigsResponse
 	if err := client.SendAPIRequest(ctx, SiteTagConfigsEndpoint, &data); err != nil {

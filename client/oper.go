@@ -3,7 +3,7 @@ package client
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -38,7 +38,7 @@ const (
 // GetClientOper retrieves complete client operational data.
 func GetClientOper(client *wnc.Client, ctx context.Context) (*model.ClientOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperResponse
 	if err := client.SendAPIRequest(ctx, ClientOperEndpoint, &data); err != nil {
@@ -50,7 +50,7 @@ func GetClientOper(client *wnc.Client, ctx context.Context) (*model.ClientOperRe
 // GetClientOperCommonOperData retrieves common operational data for wireless clients.
 func GetClientOperCommonOperData(client *wnc.Client, ctx context.Context) (*model.ClientOperCommonOperDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperCommonOperDataResponse
 	if err := client.SendAPIRequest(ctx, CommonOperDataEndpoint, &data); err != nil {
@@ -62,7 +62,7 @@ func GetClientOperCommonOperData(client *wnc.Client, ctx context.Context) (*mode
 // GetClientOperDot11OperData retrieves 802.11 operational data for wireless clients.
 func GetClientOperDot11OperData(client *wnc.Client, ctx context.Context) (*model.ClientOperDot11OperDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperDot11OperDataResponse
 	if err := client.SendAPIRequest(ctx, Dot11OperDataEndpoint, &data); err != nil {
@@ -74,7 +74,7 @@ func GetClientOperDot11OperData(client *wnc.Client, ctx context.Context) (*model
 // GetClientOperMobilityOperData retrieves mobility operational data for wireless clients.
 func GetClientOperMobilityOperData(client *wnc.Client, ctx context.Context) (*model.ClientOperMobilityOperDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperMobilityOperDataResponse
 	if err := client.SendAPIRequest(ctx, MobilityOperDataEndpoint, &data); err != nil {
@@ -86,7 +86,7 @@ func GetClientOperMobilityOperData(client *wnc.Client, ctx context.Context) (*mo
 // GetClientOperMmIfClientStats retrieves mobility manager interface client statistics.
 func GetClientOperMmIfClientStats(client *wnc.Client, ctx context.Context) (*model.ClientOperMmIfClientStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperMmIfClientStatsResponse
 	if err := client.SendAPIRequest(ctx, MmIfClientStatsEndpoint, &data); err != nil {
@@ -98,7 +98,7 @@ func GetClientOperMmIfClientStats(client *wnc.Client, ctx context.Context) (*mod
 // GetClientOperMmIfClientHistory retrieves mobility manager interface client history.
 func GetClientOperMmIfClientHistory(client *wnc.Client, ctx context.Context) (*model.ClientOperMmIfClientHistoryResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperMmIfClientHistoryResponse
 	if err := client.SendAPIRequest(ctx, MmIfClientHistoryEndpoint, &data); err != nil {
@@ -110,7 +110,7 @@ func GetClientOperMmIfClientHistory(client *wnc.Client, ctx context.Context) (*m
 // GetClientOperTrafficStats retrieves traffic statistics for wireless clients.
 func GetClientOperTrafficStats(client *wnc.Client, ctx context.Context) (*model.ClientOperTrafficStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperTrafficStatsResponse
 	if err := client.SendAPIRequest(ctx, TrafficStatsEndpoint, &data); err != nil {
@@ -122,7 +122,7 @@ func GetClientOperTrafficStats(client *wnc.Client, ctx context.Context) (*model.
 // GetClientOperPolicyData retrieves policy data for wireless clients.
 func GetClientOperPolicyData(client *wnc.Client, ctx context.Context) (*model.ClientOperPolicyDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperPolicyDataResponse
 	if err := client.SendAPIRequest(ctx, PolicyDataEndpoint, &data); err != nil {
@@ -134,7 +134,7 @@ func GetClientOperPolicyData(client *wnc.Client, ctx context.Context) (*model.Cl
 // GetClientOperSisfDbMac retrieves SISF database MAC information.
 func GetClientOperSisfDbMac(client *wnc.Client, ctx context.Context) (*model.ClientOperSisfDbMacResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperSisfDbMacResponse
 	if err := client.SendAPIRequest(ctx, SisfDbMacEndpoint, &data); err != nil {
@@ -146,7 +146,7 @@ func GetClientOperSisfDbMac(client *wnc.Client, ctx context.Context) (*model.Cli
 // GetClientOperDcInfo retrieves discovery client information.
 func GetClientOperDcInfo(client *wnc.Client, ctx context.Context) (*model.ClientOperDcInfoResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data model.ClientOperDcInfoResponse
 	if err := client.SendAPIRequest(ctx, DcInfoEndpoint, &data); err != nil {

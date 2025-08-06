@@ -3,7 +3,7 @@ package mdns
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -39,7 +39,7 @@ type (
 // Deprecated: Use mdns.NewService(client).Oper(ctx) instead. Will be removed in v2.0.0.
 func GetMdnsOper(client *wnc.Client, ctx context.Context) (*model.MdnsOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).Oper(ctx)
 }
@@ -47,7 +47,7 @@ func GetMdnsOper(client *wnc.Client, ctx context.Context) (*model.MdnsOperRespon
 // Deprecated: Use mdns.NewService(client).GlobalStats(ctx) instead. Will be removed in v2.0.0.
 func GetMdnsGlobalStats(client *wnc.Client, ctx context.Context) (*model.MdnsGlobalStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).GlobalStats(ctx)
 }
@@ -55,7 +55,7 @@ func GetMdnsGlobalStats(client *wnc.Client, ctx context.Context) (*model.MdnsGlo
 // Deprecated: Use mdns.NewService(client).WlanStats(ctx) instead. Will be removed in v2.0.0.
 func GetMdnsWlanStats(client *wnc.Client, ctx context.Context) (*model.MdnsWlanStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).WlanStats(ctx)
 }

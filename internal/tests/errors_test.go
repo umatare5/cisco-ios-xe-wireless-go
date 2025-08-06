@@ -3,6 +3,8 @@ package tests
 import (
 	"context"
 	"errors"
+	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -88,6 +90,88 @@ func TestGetNilClientErrorTestsExtended(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestErrorTestCaseAdditionalCoverage tests additional error test case patterns
+func TestErrorTestCaseAdditionalCoverage(t *testing.T) {
+	t.Run("GetNilClientErrorTests_Coverage", func(t *testing.T) {
+		testCases := GetNilClientErrorTests()
+		if len(testCases) == 0 {
+			t.Error("Expected non-empty test cases")
+		}
+
+		// Test the actual function logic
+		for _, tc := range testCases {
+			t.Run(tc.Name, func(t *testing.T) {
+				// Test with nil client
+				err := tc.TestFunc(nil)
+				if err == nil {
+					t.Error("Expected error with nil client")
+				}
+				if err.Error() != tc.ExpectedError {
+					t.Errorf("Expected error %q, got %q", tc.ExpectedError, err.Error())
+				}
+
+				// Test with valid client (if environment allows)
+				if os.Getenv("WNC_CONTROLLER") != "" && os.Getenv("WNC_ACCESS_TOKEN") != "" {
+					client := GetTestClient(t)
+					err = tc.TestFunc(client)
+					if err != nil {
+						t.Logf("Got error with valid client (acceptable): %v", err)
+					}
+				}
+			})
+		}
+	})
+
+	t.Run("RunCommonErrorTests_Coverage", func(t *testing.T) {
+		testCases := []ErrorTestCase{
+			{
+				Name: "TestCase1",
+				TestFunc: func(client *wnc.Client) error {
+					if client == nil {
+						return fmt.Errorf("test error")
+					}
+					// Return a different error for non-nil client that still validates our error handling
+					return fmt.Errorf("test error with valid client")
+				},
+				ExpectedError: "test error",
+			},
+		}
+
+		RunCommonErrorTests(t, "TestCoverage", testCases)
+	})
+
+	t.Run("TestWithCancelledContext_Coverage", func(t *testing.T) {
+		TestWithCancelledContext(t, func(ctx context.Context, c *wnc.Client) error {
+			// Simulate checking context cancellation
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			default:
+				return fmt.Errorf("context not cancelled")
+			}
+		})
+	})
+
+	t.Run("TestWithTimeout_Coverage", func(t *testing.T) {
+		TestWithTimeout(t, func(ctx context.Context, c *wnc.Client) error {
+			// Simple function that should complete within timeout
+			return nil
+		}, 100*time.Millisecond)
+	})
+
+	t.Run("TestContextHandling_Coverage", func(t *testing.T) {
+		TestContextHandling(t, func(ctx context.Context, c *wnc.Client) error {
+			// Function that simulates work and checks for context cancellation
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			case <-time.After(50 * time.Millisecond):
+				return nil
+			}
+		})
+	})
 }
 
 func TestRunCommonErrorTestsWithMultipleCases(t *testing.T) {

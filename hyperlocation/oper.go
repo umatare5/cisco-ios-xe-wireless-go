@@ -3,7 +3,7 @@ package hyperlocation
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -31,7 +31,7 @@ type (
 // Deprecated: Use hyperlocation.NewService(client).Oper(ctx) instead. Will be removed in v2.0.0.
 func GetHyperlocationOper(client *wnc.Client, ctx context.Context) (*model.HyperlocationOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).Oper(ctx)
 }
@@ -39,7 +39,7 @@ func GetHyperlocationOper(client *wnc.Client, ctx context.Context) (*model.Hyper
 // Deprecated: Use hyperlocation.NewService(client).Profiles(ctx) instead. Will be removed in v2.0.0.
 func GetHyperlocationProfiles(client *wnc.Client, ctx context.Context) (*model.HyperlocationProfilesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).Profiles(ctx)
 }

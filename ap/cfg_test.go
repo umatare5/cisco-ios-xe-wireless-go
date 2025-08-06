@@ -224,7 +224,7 @@ func TestApCfgErrorHandling(t *testing.T) {
 			}
 			// Accept either error message format for consistency
 			errorMsg := err.Error()
-			if errorMsg != "client is nil" && errorMsg != "invalid client configuration: client cannot be nil" {
+			if errorMsg != "invalid client configuration: client cannot be nil" {
 				t.Errorf("Expected 'client is nil' or 'invalid client configuration' error, got: %v", err)
 			}
 		})

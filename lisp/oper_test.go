@@ -433,25 +433,25 @@ func TestLispOperErrorHandling(t *testing.T) {
 
 	// Test GetLispAgentOper with nil client
 	_, err := GetLispAgentOper(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetLispAgentMemoryStats with nil client
 	_, err = GetLispAgentMemoryStats(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetLispWlcCapabilities with nil client
 	_, err = GetLispWlcCapabilities(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetLispApCapabilities with nil client
 	_, err = GetLispApCapabilities(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 }

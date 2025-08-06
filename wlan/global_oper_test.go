@@ -207,13 +207,13 @@ func TestWlanGlobalOperErrorHandling(t *testing.T) {
 
 	// Test GetWlanGlobalOper with nil client
 	_, err := GetWlanGlobalOper(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetWlanGlobalOperWlanInfo with nil client
 	_, err = GetWlanGlobalOperWlanInfo(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 }

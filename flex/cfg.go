@@ -3,7 +3,7 @@ package flex
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -49,7 +49,7 @@ type FlexPolicyEntry struct {
 // GetFlexCfg retrieves complete FlexConnect configuration data.
 func GetFlexCfg(client *wnc.Client, ctx context.Context) (*FlexCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 
 	var data FlexCfgResponse
@@ -62,7 +62,7 @@ func GetFlexCfg(client *wnc.Client, ctx context.Context) (*FlexCfgResponse, erro
 // GetFlexCfgData retrieves FlexConnect policy entries.
 func GetFlexCfgData(client *wnc.Client, ctx context.Context) (*FlexCfgDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 
 	var data FlexCfgDataResponse

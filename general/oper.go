@@ -3,7 +3,7 @@ package general
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -22,7 +22,7 @@ const (
 // Deprecated: Use general.NewService(client.CoreClient()).Oper(ctx) instead.
 func GetGeneralOper(client *wnc.Client, ctx context.Context) (*model.GeneralOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Oper(ctx)
@@ -33,7 +33,7 @@ func GetGeneralOper(client *wnc.Client, ctx context.Context) (*model.GeneralOper
 // Deprecated: Use general.NewService(client.CoreClient()).MgmtIntfData(ctx) instead.
 func GetGeneralOperMgmtIntfData(client *wnc.Client, ctx context.Context) (*model.GeneralOperMgmtIntfDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.MgmtIntfData(ctx)

@@ -17,7 +17,7 @@ func TestFabricNilClientHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error when client is nil")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil', got %v", err)
 		}
 	})
@@ -27,7 +27,7 @@ func TestFabricNilClientHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error when client is nil")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil', got %v", err)
 		}
 	})
@@ -37,7 +37,7 @@ func TestFabricNilClientHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error when client is nil")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil', got %v", err)
 		}
 	})
@@ -169,7 +169,7 @@ func TestGetFabricErrorPaths(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error with nil client")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil', got '%s'", err.Error())
 		}
 	})

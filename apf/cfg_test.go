@@ -190,7 +190,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 				_, err := GetApfCfg(nil, ctx)
 				return err
 			},
-			ExpectedError: "client is nil",
+			ExpectedError: "invalid client configuration: client cannot be nil",
 		},
 		{
 			Name: "GetApfWithNilClient",
@@ -198,7 +198,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 				_, err := GetApf(nil, ctx)
 				return err
 			},
-			ExpectedError: "client is nil",
+			ExpectedError: "invalid client configuration: client cannot be nil",
 		},
 	})
 

@@ -341,7 +341,7 @@ func TestRrmEmulOperErrorHandling(t *testing.T) {
 		if result != nil {
 			t.Error("Expected nil result for nil client")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
 		}
 	})
@@ -354,7 +354,7 @@ func TestRrmEmulOperErrorHandling(t *testing.T) {
 		if result != nil {
 			t.Error("Expected nil result for nil client")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %s", err.Error())
 		}
 	})

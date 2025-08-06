@@ -3,7 +3,7 @@ package client
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -661,7 +661,7 @@ type TofStats struct {
 // GetClientGlobalOper retrieves client global operational data.
 func GetClientGlobalOper(client *wnc.Client, ctx context.Context) (*ClientGlobalOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientGlobalOperResponse
 	if err := client.SendAPIRequest(ctx, ClientGlobalOperEndpoint, &data); err != nil {
@@ -673,7 +673,7 @@ func GetClientGlobalOper(client *wnc.Client, ctx context.Context) (*ClientGlobal
 // GetClientLiveStats retrieves client live statistics.
 func GetClientLiveStats(client *wnc.Client, ctx context.Context) (*ClientLiveStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientLiveStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientLiveStatsEndpoint, &data); err != nil {
@@ -685,7 +685,7 @@ func GetClientLiveStats(client *wnc.Client, ctx context.Context) (*ClientLiveSta
 // GetClientGlobalStatsData retrieves client global statistics data.
 func GetClientGlobalStatsData(client *wnc.Client, ctx context.Context) (*ClientGlobalStatsDataResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientGlobalStatsDataResponse
 	if err := client.SendAPIRequest(ctx, ClientGlobalStatsDataEndpoint, &data); err != nil {
@@ -697,7 +697,7 @@ func GetClientGlobalStatsData(client *wnc.Client, ctx context.Context) (*ClientG
 // GetClientStats retrieves client statistics.
 func GetClientStats(client *wnc.Client, ctx context.Context) (*ClientStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientStatsEndpoint, &data); err != nil {
@@ -709,7 +709,7 @@ func GetClientStats(client *wnc.Client, ctx context.Context) (*ClientStatsRespon
 // GetClientDot11Stats retrieves client 802.11 statistics.
 func GetClientDot11Stats(client *wnc.Client, ctx context.Context) (*ClientDot11StatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientDot11StatsResponse
 	if err := client.SendAPIRequest(ctx, ClientDot11StatsEndpoint, &data); err != nil {
@@ -721,7 +721,7 @@ func GetClientDot11Stats(client *wnc.Client, ctx context.Context) (*ClientDot11S
 // GetClientLatencyStats retrieves client latency statistics.
 func GetClientLatencyStats(client *wnc.Client, ctx context.Context) (*ClientLatencyStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientLatencyStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientLatencyStatsEndpoint, &data); err != nil {
@@ -733,7 +733,7 @@ func GetClientLatencyStats(client *wnc.Client, ctx context.Context) (*ClientLate
 // GetClientSmWebauthStats retrieves session manager web authentication statistics.
 func GetClientSmWebauthStats(client *wnc.Client, ctx context.Context) (*SmWebauthStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SmWebauthStatsResponse
 	if err := client.SendAPIRequest(ctx, SmWebauthStatsEndpoint, &data); err != nil {
@@ -745,7 +745,7 @@ func GetClientSmWebauthStats(client *wnc.Client, ctx context.Context) (*SmWebaut
 // GetClientDot1XGlobalStats retrieves 802.1X global statistics.
 func GetClientDot1XGlobalStats(client *wnc.Client, ctx context.Context) (*Dot1XGlobalStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data Dot1XGlobalStatsResponse
 	if err := client.SendAPIRequest(ctx, Dot1XGlobalStatsEndpoint, &data); err != nil {
@@ -757,7 +757,7 @@ func GetClientDot1XGlobalStats(client *wnc.Client, ctx context.Context) (*Dot1XG
 // GetClientExclusionStats retrieves client exclusion statistics.
 func GetClientExclusionStats(client *wnc.Client, ctx context.Context) (*ClientExclusionStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ClientExclusionStatsResponse
 	if err := client.SendAPIRequest(ctx, ClientExclusionStatsEndpoint, &data); err != nil {
@@ -769,7 +769,7 @@ func GetClientExclusionStats(client *wnc.Client, ctx context.Context) (*ClientEx
 // GetClientSmDeviceCount retrieves session manager device count data.
 func GetClientSmDeviceCount(client *wnc.Client, ctx context.Context) (*SmDeviceCountResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data SmDeviceCountResponse
 	if err := client.SendAPIRequest(ctx, SmDeviceCountEndpoint, &data); err != nil {
@@ -781,7 +781,7 @@ func GetClientSmDeviceCount(client *wnc.Client, ctx context.Context) (*SmDeviceC
 // GetClientTofStats retrieves time-of-flight statistics.
 func GetClientTofStats(client *wnc.Client, ctx context.Context) (*TofStatsResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data TofStatsResponse
 	if err := client.SendAPIRequest(ctx, TofStatsEndpoint, &data); err != nil {

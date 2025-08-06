@@ -150,7 +150,7 @@ func TestClientOperErrorHandling(t *testing.T) {
 					t.Errorf("Expected error for nil client, but got nil")
 					return
 				}
-				testutils.ValidateErrorContains(t, err, "client is nil")
+				testutils.ValidateErrorContains(t, err, "invalid client configuration: client cannot be nil")
 			})
 		}
 	})

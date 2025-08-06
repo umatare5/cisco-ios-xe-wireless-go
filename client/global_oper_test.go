@@ -167,7 +167,7 @@ func TestClientGlobalOperErrorHandling(t *testing.T) {
 					t.Errorf("Expected error for nil client, but got nil")
 					return
 				}
-				testutils.ValidateErrorContains(t, err, "client is nil")
+				testutils.ValidateErrorContains(t, err, "invalid client configuration: client cannot be nil")
 			})
 		}
 	})
@@ -497,7 +497,7 @@ func TestClientGlobalOperSuccessPathCoverage(t *testing.T) {
 	// Create a mock server that returns success responses
 	mockServer := testutils.NewMockHTTPServer()
 
-	mockServer.AddHandler("Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/tof-stats",
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/tof-stats",
 		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
 			StatusCode: 200,
 			Body: `{
@@ -530,6 +530,36 @@ func TestClientGlobalOperSuccessPathCoverage(t *testing.T) {
 		// Verify the result structure
 		if result != nil && len(result.TofStats.TofTag) == 0 {
 			t.Log("GetClientTofStats returned result but with empty data (acceptable)")
+		}
+	})
+}
+
+// TestClientGlobalOperHTTPErrorCoverage tests HTTP error scenarios to ensure full coverage
+func TestClientGlobalOperHTTPErrorCoverage(t *testing.T) {
+	// Create a mock server that returns HTTP errors
+	mockServer := testutils.NewMockHTTPServer()
+
+	// Add handlers that return server errors for complete error path coverage
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data/tof-stats",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 500,
+			Body:       `{"error": "internal server error"}`,
+			Headers:    map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	defer mockServer.Close()
+
+	client := testutils.CreateTestClientForMockServer(t, mockServer)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetClientTofStatsHTTPError", func(t *testing.T) {
+		result, err := GetClientTofStats(client, ctx)
+		if err == nil {
+			t.Error("Expected GetClientTofStats to return an error with 500 response")
+		}
+		if result != nil {
+			t.Error("Expected GetClientTofStats to return nil result on error")
 		}
 	})
 }

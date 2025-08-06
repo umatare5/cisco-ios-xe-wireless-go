@@ -648,7 +648,7 @@ func TestRrmGlobalOperErrorHandling(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
 			_, err := tc.fn()
-			if err == nil || err.Error() != "client is nil" {
+			if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 				t.Errorf("Expected 'client is nil' error, got: %v", err)
 			}
 		})
@@ -720,4 +720,71 @@ func TestRrmGlobalOperContextHandling(t *testing.T) {
 			testutils.TestContextHandling(t, tc.fn)
 		})
 	}
+}
+
+// TestRrmGlobalOperSuccessPathCoverage tests specific functions to ensure 100% coverage
+func TestRrmGlobalOperSuccessPathCoverage(t *testing.T) {
+	// Create a mock server that returns success responses
+	mockServer := testutils.NewMockHTTPServer()
+
+	// Need to find the correct endpoint for RadioOperData6G
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data/radio-oper-data-6g",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 200,
+			Body: `{
+				"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-6g": [
+					{
+						"radio-slot-id": 2,
+						"radio-type": "6g"
+					}
+				]
+			}`,
+			Headers: map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	defer mockServer.Close()
+
+	client := testutils.CreateTestClientForMockServer(t, mockServer)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetRrmGlobalRadioOperData6GSuccessPath", func(t *testing.T) {
+		result, err := GetRrmGlobalRadioOperData6G(client, ctx)
+		if err != nil {
+			t.Errorf("Expected GetRrmGlobalRadioOperData6G to succeed with mock server, got error: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected GetRrmGlobalRadioOperData6G to return non-nil result")
+		}
+	})
+}
+
+// TestRrmGlobalOperHTTPErrorCoverage tests HTTP error scenarios to ensure full coverage
+func TestRrmGlobalOperHTTPErrorCoverage(t *testing.T) {
+	// Create a mock server that returns HTTP errors
+	mockServer := testutils.NewMockHTTPServer()
+
+	// Add handlers that return server errors for complete error path coverage
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data/radio-oper-data-6g",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 500,
+			Body:       `{"error": "internal server error"}`,
+			Headers:    map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	defer mockServer.Close()
+
+	client := testutils.CreateTestClientForMockServer(t, mockServer)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetRrmGlobalRadioOperData6GHTTPError", func(t *testing.T) {
+		result, err := GetRrmGlobalRadioOperData6G(client, ctx)
+		if err == nil {
+			t.Error("Expected GetRrmGlobalRadioOperData6G to return an error with 500 response")
+		}
+		if result != nil {
+			t.Error("Expected GetRrmGlobalRadioOperData6G to return nil result on error")
+		}
+	})
 }

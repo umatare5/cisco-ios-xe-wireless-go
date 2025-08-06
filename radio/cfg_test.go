@@ -182,7 +182,7 @@ func TestRadioConfigurationFunctions(t *testing.T) {
 			if err == nil {
 				t.Error("Expected error with nil client, got nil")
 			}
-			if err.Error() != "client is nil" {
+			if err.Error() != "invalid client configuration: client cannot be nil" {
 				t.Errorf("Expected 'client is nil' error, got: %v", err)
 			}
 		})
@@ -192,7 +192,7 @@ func TestRadioConfigurationFunctions(t *testing.T) {
 			if err == nil {
 				t.Error("Expected error with nil client, got nil")
 			}
-			if err.Error() != "client is nil" {
+			if err.Error() != "invalid client configuration: client cannot be nil" {
 				t.Errorf("Expected 'client is nil' error, got: %v", err)
 			}
 		})

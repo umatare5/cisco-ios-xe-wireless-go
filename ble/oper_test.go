@@ -219,19 +219,19 @@ func TestBleOperErrorHandling(t *testing.T) {
 
 	// Test GetBleLtxOper with nil client
 	_, err := GetBleLtxOper(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetBleLtxApAntenna with nil client
 	_, err = GetBleLtxApAntenna(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetBleLtxAp with nil client
 	_, err = GetBleLtxAp(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 }

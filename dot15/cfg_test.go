@@ -51,7 +51,7 @@ func TestDot15NilClientHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error when client is nil")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil', got %v", err)
 		}
 	})
@@ -62,7 +62,7 @@ func TestDot15NilClientHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error when client is nil")
 		}
-		if err.Error() != "client is nil" {
+		if err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil', got %v", err)
 		}
 	})

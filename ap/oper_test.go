@@ -505,7 +505,7 @@ func TestApOperErrorHandling(t *testing.T) {
 			}
 			// Accept either error message format for consistency
 			errorMsg := err.Error()
-			if errorMsg != "client is nil" && errorMsg != "invalid client configuration: client cannot be nil" {
+			if errorMsg != "invalid client configuration: client cannot be nil" {
 				t.Errorf("Expected 'client is nil' or 'invalid client configuration' error, got: %v", err)
 			}
 		})
@@ -708,7 +708,7 @@ func TestApOperSuccessPathCoverage(t *testing.T) {
 	// Create a mock server that returns success responses
 	mockServer := testutils.NewMockHTTPServer()
 
-	mockServer.AddHandler("Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data",
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data",
 		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
 			StatusCode: 200,
 			Body: `{
@@ -722,7 +722,7 @@ func TestApOperSuccessPathCoverage(t *testing.T) {
 			Headers: map[string]string{"Content-Type": "application/yang-data+json"},
 		}))
 
-	mockServer.AddHandler("Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper",
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper",
 		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
 			StatusCode: 200,
 			Body: `{
@@ -777,6 +777,53 @@ func TestApOperSuccessPathCoverage(t *testing.T) {
 		// Verify the result structure
 		if result != nil && len(result.RlanOper) == 0 {
 			t.Log("GetApRlanOper returned result but with empty data (acceptable)")
+		}
+	})
+}
+
+// TestApOperHTTPErrorCoverage tests HTTP error scenarios to ensure full coverage
+func TestApOperHTTPErrorCoverage(t *testing.T) {
+	// Create a mock server that returns HTTP errors
+	mockServer := testutils.NewMockHTTPServer()
+
+	// Add handlers that return server errors for complete error path coverage
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 500,
+			Body:       `{"error": "internal server error"}`,
+			Headers:    map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	mockServer.AddHandler("/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper",
+		testutils.CreateJSONResponse(testutils.TestHTTPResponse{
+			StatusCode: 500,
+			Body:       `{"error": "internal server error"}`,
+			Headers:    map[string]string{"Content-Type": "application/yang-data+json"},
+		}))
+
+	defer mockServer.Close()
+
+	client := testutils.CreateTestClientForMockServer(t, mockServer)
+	ctx, cancel := context.WithTimeout(context.Background(), testutils.DefaultTestTimeout)
+	defer cancel()
+
+	t.Run("GetApQosClientDataHTTPError", func(t *testing.T) {
+		result, err := GetApQosClientData(client, ctx)
+		if err == nil {
+			t.Error("Expected GetApQosClientData to return an error with 500 response")
+		}
+		if result != nil {
+			t.Error("Expected GetApQosClientData to return nil result on error")
+		}
+	})
+
+	t.Run("GetApRlanOperHTTPError", func(t *testing.T) {
+		result, err := GetApRlanOper(client, ctx)
+		if err == nil {
+			t.Error("Expected GetApRlanOper to return an error with 500 response")
+		}
+		if result != nil {
+			t.Error("Expected GetApRlanOper to return nil result on error")
 		}
 	})
 }

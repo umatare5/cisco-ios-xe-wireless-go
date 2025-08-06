@@ -129,21 +129,21 @@ func TestSiteCfgDataStructures(t *testing.T) {
 func TestSiteCfgErrorHandling(t *testing.T) {
 	t.Run("GetSiteCfgWithNilClient", func(t *testing.T) {
 		_, err := GetSiteCfg(nil, context.Background())
-		if err == nil || (err.Error() != "client is nil" && err.Error() != "invalid client configuration: client cannot be nil") {
+		if err == nil || (err.Error() != "invalid client configuration: client cannot be nil" && err.Error() != "invalid client configuration: client cannot be nil") {
 			t.Errorf("Expected 'client is nil' or 'invalid client configuration: client cannot be nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetSiteApCfgProfilesWithNilClient", func(t *testing.T) {
 		_, err := GetSiteApCfgProfiles(nil, context.Background())
-		if err == nil || (err.Error() != "client is nil" && err.Error() != "invalid client configuration: client cannot be nil") {
+		if err == nil || (err.Error() != "invalid client configuration: client cannot be nil" && err.Error() != "invalid client configuration: client cannot be nil") {
 			t.Errorf("Expected 'client is nil' or 'invalid client configuration: client cannot be nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetSiteTagConfigsWithNilClient", func(t *testing.T) {
 		_, err := GetSiteTagConfigs(nil, context.Background())
-		if err == nil || (err.Error() != "client is nil" && err.Error() != "invalid client configuration: client cannot be nil") {
+		if err == nil || (err.Error() != "invalid client configuration: client cannot be nil" && err.Error() != "invalid client configuration: client cannot be nil") {
 			t.Errorf("Expected 'client is nil' or 'invalid client configuration: client cannot be nil' error, got: %v", err)
 		}
 	})

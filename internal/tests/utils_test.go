@@ -325,9 +325,304 @@ func TestUtilityFunctions(t *testing.T) {
 			t.Errorf("Expected 1 result, got %d", len(collector.Data))
 		}
 	})
+
+	t.Run("isTestDataDirExists", func(t *testing.T) {
+		exists := isTestDataDirExists()
+		// Just test that the function returns without error
+		_ = exists
+	})
+
+	t.Run("ensureTestDataDir", func(t *testing.T) {
+		err := ensureTestDataDir()
+		if err != nil {
+			t.Errorf("Failed to ensure test data dir: %v", err)
+		}
+	})
+
+	t.Run("SaveTestDataToFile", func(t *testing.T) {
+		testData := map[string]interface{}{
+			"test": "data",
+			"time": time.Now(),
+		}
+
+		err := SaveTestDataToFile("test_coverage_data.json", testData)
+		if err != nil {
+			t.Errorf("Failed to save test data: %v", err)
+		}
+	})
+
+	t.Run("SaveCollectedTestData", func(t *testing.T) {
+		collector := NewTestDataCollector()
+		collector.Data["test"] = map[string]interface{}{"test": "data"}
+
+		SaveCollectedTestData(t, collector, "test_collected_data.json")
+		// Function logs on success/failure, so just ensure it doesn't panic
+	})
+
+	t.Run("SaveTestDataWithLogging", func(t *testing.T) {
+		testData := map[string]interface{}{"test": "logging"}
+		SaveTestDataWithLogging("test_logging_data.json", testData)
+		// Function logs on success/failure, so just ensure it doesn't panic
+	})
+
+	t.Run("DebugJSONResponse", func(t *testing.T) {
+		rawJSON := `{"debug": "test", "data": [1, 2, 3]}`
+		DebugJSONResponse(t, "test_endpoint", rawJSON)
+		// Function logs and saves data, so just ensure it doesn't panic
+	})
 }
 
-// TestJSONHelpers tests JSON-related helper functions
+// TestAdditionalUtilityFunctions tests more utility functions for coverage
+func TestAdditionalUtilityFunctions(t *testing.T) {
+	t.Run("CreateExtendedTestContext", func(t *testing.T) {
+		ctx, cancel := CreateExtendedTestContext()
+		defer cancel()
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+		deadline, ok := ctx.Deadline()
+		if !ok {
+			t.Error("Expected context with deadline")
+		}
+		if time.Until(deadline) > ExtendedTestTimeout+time.Second {
+			t.Error("Context deadline not set correctly for extended timeout")
+		}
+	})
+
+	t.Run("CreateComprehensiveTestContext", func(t *testing.T) {
+		ctx, cancel := CreateComprehensiveTestContext()
+		defer cancel()
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateQuickTestContext", func(t *testing.T) {
+		ctx, cancel := CreateQuickTestContext()
+		defer cancel()
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateMicroTestContext", func(t *testing.T) {
+		ctx, cancel := CreateMicroTestContext()
+		defer cancel()
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("CreateStandardTestContext", func(t *testing.T) {
+		ctx, cancel := CreateStandardTestContext()
+		defer cancel()
+		if ctx == nil {
+			t.Error("Expected non-nil context")
+		}
+	})
+
+	t.Run("GetTestClientWithTimeout", func(t *testing.T) {
+		// Skip if no environment variables
+		if os.Getenv("WNC_CONTROLLER") == "" || os.Getenv("WNC_ACCESS_TOKEN") == "" {
+			t.Skip("Required environment variables not set - skipping test")
+		}
+
+		client := GetTestClientWithTimeout(t, 10*time.Second)
+		if client == nil {
+			t.Error("Expected non-nil client")
+		}
+	})
+
+	t.Run("GetTestClientWithContext", func(t *testing.T) {
+		// Skip if no environment variables
+		if os.Getenv("WNC_CONTROLLER") == "" || os.Getenv("WNC_ACCESS_TOKEN") == "" {
+			t.Skip("Required environment variables not set - skipping test")
+		}
+
+		ctx := context.Background()
+		client := GetTestClientWithContext(t, ctx)
+		if client == nil {
+			t.Error("Expected non-nil client")
+		}
+	})
+
+	t.Run("CreateTestClientWithTimeout", func(t *testing.T) {
+		// Skip if no environment variables
+		if os.Getenv("WNC_CONTROLLER") == "" || os.Getenv("WNC_ACCESS_TOKEN") == "" {
+			t.Skip("Required environment variables not set - skipping test")
+		}
+
+		client := CreateTestClientWithTimeout(t, 15*time.Second)
+		if client == nil {
+			t.Error("Expected non-nil client")
+		}
+	})
+
+	t.Run("ValidateClient", func(t *testing.T) {
+		// Skip if no environment variables
+		if os.Getenv("WNC_CONTROLLER") == "" || os.Getenv("WNC_ACCESS_TOKEN") == "" {
+			t.Skip("Required environment variables not set - skipping test")
+		}
+
+		client := GetTestClient(t)
+		ValidateClient(t, client)
+	})
+
+	t.Run("GenerateEndpointValidationTest", func(t *testing.T) {
+		expected := map[string]string{
+			"TestEndpoint": "/api/v1/test",
+		}
+		actual := map[string]string{
+			"TestEndpoint": "/api/v1/test",
+		}
+
+		GenerateEndpointValidationTest(t, expected, actual)
+	})
+}
+
+// TestStringHelperFunctions tests string helper functions for coverage
+func TestStringHelperFunctions(t *testing.T) {
+	t.Run("contains", func(t *testing.T) {
+		tests := []struct {
+			s      string
+			substr string
+			want   bool
+		}{
+			{"hello world", "hello", true},
+			{"hello world", "world", true},
+			{"hello world", "lo wo", true},
+			{"hello world", "xyz", false},
+			{"test", "test", true},
+			{"", "", true},
+			{"test", "", true},
+			{"", "test", false},
+		}
+
+		for _, tt := range tests {
+			got := contains(tt.s, tt.substr)
+			if got != tt.want {
+				t.Errorf("contains(%q, %q) = %v, want %v", tt.s, tt.substr, got, tt.want)
+			}
+		}
+	})
+
+	t.Run("indexOf", func(t *testing.T) {
+		tests := []struct {
+			s      string
+			substr string
+			want   int
+		}{
+			{"hello world", "hello", 0},
+			{"hello world", "world", 6},
+			{"hello world", "lo wo", 3},
+			{"hello world", "xyz", -1},
+			{"test", "test", 0},
+			{"", "", 0},
+			{"test", "", 0},
+			{"", "test", -1},
+		}
+
+		for _, tt := range tests {
+			got := indexOf(tt.s, tt.substr)
+			if got != tt.want {
+				t.Errorf("indexOf(%q, %q) = %v, want %v", tt.s, tt.substr, got, tt.want)
+			}
+		}
+	})
+
+	t.Run("isAcceptableServiceError", func(t *testing.T) {
+		tests := []struct {
+			err  error
+			want bool
+		}{
+			{nil, true},
+			{fmt.Errorf("connection refused"), true},
+			{fmt.Errorf("timeout occurred"), true},
+			{fmt.Errorf("no such host"), true},
+			{fmt.Errorf("network unreachable"), true},
+			{fmt.Errorf("404 Not Found"), true},
+			{fmt.Errorf("500 Internal Server Error"), true},
+			{fmt.Errorf("some other error"), false},
+		}
+
+		for _, tt := range tests {
+			got := isAcceptableServiceError(tt.err)
+			if got != tt.want {
+				t.Errorf("isAcceptableServiceError(%v) = %v, want %v", tt.err, got, tt.want)
+			}
+		}
+	})
+}
+
+// TestConfigurationHelpers tests configuration helper functions
+func TestConfigurationHelpers(t *testing.T) {
+	t.Run("TestConfig_IsValid", func(t *testing.T) {
+		tests := []struct {
+			name     string
+			config   *TestConfig
+			expected bool
+		}{
+			{
+				name:     "valid config",
+				config:   &TestConfig{Controller: "test", AccessToken: "token"},
+				expected: true,
+			},
+			{
+				name:     "empty controller",
+				config:   &TestConfig{Controller: "", AccessToken: "token"},
+				expected: false,
+			},
+			{
+				name:     "empty token",
+				config:   &TestConfig{Controller: "test", AccessToken: ""},
+				expected: false,
+			},
+			{
+				name:     "both empty",
+				config:   &TestConfig{Controller: "", AccessToken: ""},
+				expected: false,
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				got := tt.config.IsValid()
+				if got != tt.expected {
+					t.Errorf("IsValid() = %v, want %v", got, tt.expected)
+				}
+			})
+		}
+	})
+
+	t.Run("NewTestConfigFromEnv_EmptyEnv", func(t *testing.T) {
+		// Save original environment
+		origController := os.Getenv("WNC_CONTROLLER")
+		origToken := os.Getenv("WNC_ACCESS_TOKEN")
+		defer func() {
+			if origController != "" {
+				os.Setenv("WNC_CONTROLLER", origController)
+			} else {
+				os.Unsetenv("WNC_CONTROLLER")
+			}
+			if origToken != "" {
+				os.Setenv("WNC_ACCESS_TOKEN", origToken)
+			} else {
+				os.Unsetenv("WNC_ACCESS_TOKEN")
+			}
+		}()
+
+		// Test with empty environment
+		os.Unsetenv("WNC_CONTROLLER")
+		os.Unsetenv("WNC_ACCESS_TOKEN")
+
+		config := NewTestConfigFromEnv()
+		if config != nil {
+			t.Error("Expected nil config with empty environment")
+		}
+	})
+}
+
+// TestJSONHelpers tests JSON-related helper functions (updated with enhanced coverage)
 func TestJSONHelpers(t *testing.T) {
 	t.Run("TestJSONUnmarshal", func(t *testing.T) {
 		type TestStruct struct {

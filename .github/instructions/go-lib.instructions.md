@@ -151,6 +151,8 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
   - Never call `panic` or `log.Fatal`.
   - Always return errors to the caller—wrap with `fmt.Errorf("...: %w", err)`.
   - Define custom error types for actionable API errors.
+  - **Standardized Error Patterns:** All client nil validation must use: `fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)`
+  - **Consistency:** Avoid basic `errors.New()` for nil client checks; use wrapped errors for better error handling.
 
 ---
 
@@ -181,6 +183,21 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
   Validate testing environment and inputs before running tests.
 
 - **High Test Coverage:**
-  Target 80% or higher code coverage for all packages.
+  Target 98% or higher code coverage for main codebase packages. Maintain overall project coverage above 92%.
+
+- **Error Message Testing:**
+  When testing error handling, use the standardized error format: `"invalid client configuration: client cannot be nil"`
+
+- **Test Consistency:**
+  Ensure all nil client tests follow the same pattern and expect the same error message format.
+
+- **Mock Server Testing:**
+  For HTTP client testing, use full RESTCONF paths in mock handlers: `/restconf/data/[YANG-MODULE]:[CONTAINER]/[ENDPOINT]`
+
+- **Comprehensive Path Coverage:**
+  Test both success and error paths for all functions. Add dedicated HTTP error tests for functions with mock servers.
+
+- **Coverage Investigation:**
+  When coverage drops below targets, investigate specific functions and add missing test cases for uncovered code paths.
 
 ---

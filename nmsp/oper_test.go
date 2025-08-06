@@ -388,28 +388,28 @@ func TestNmspOperDataStructures(t *testing.T) {
 func TestNmspOperErrorHandling(t *testing.T) {
 	t.Run("GetNmspOperWithNilClient", func(t *testing.T) {
 		_, err := GetNmspOper(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetNmspClientRegistrationWithNilClient", func(t *testing.T) {
 		_, err := GetNmspClientRegistration(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetNmspCmxConnectionWithNilClient", func(t *testing.T) {
 		_, err := GetNmspCmxConnection(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetNmspCmxCloudInfoWithNilClient", func(t *testing.T) {
 		_, err := GetNmspCmxCloudInfo(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})

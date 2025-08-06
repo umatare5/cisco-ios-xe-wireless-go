@@ -3,7 +3,7 @@ package rfid
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -37,7 +37,7 @@ type RfidResponse struct {
 // GetRfidCfg retrieves complete RFID configuration data.
 func GetRfidCfg(client *wnc.Client, ctx context.Context) (*RfidCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data RfidCfgResponse
 	if err := client.SendAPIRequest(ctx, RfidCfgEndpoint, &data); err != nil {

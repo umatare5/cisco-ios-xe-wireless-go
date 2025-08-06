@@ -5,11 +5,69 @@ This document provides an overview of the API functions available in the WNC Go 
 - **Functional Organization**: The API is organized by functional areas such as Access Points, Clients and others.
 - **Context-Aware Requests**: All API functions require a `context.Context` as the first parameter for proper request lifecycle management.
 - **Structured Responses and Errors**: Each API returns structured data with comprehensive error handling based on original responses.
+- **Service-Based Architecture**: The library uses a modern three-layer architecture with domain-specific services.
 
 To know the meaning of the response from APIs, please refer to the [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme).
 
-> [!Note]
-> Currently, all APIs do not support filtering with keys. This feature will be implemented in the next release `v0.2.0`.
+## 🏗️ Service-Based API Architecture
+
+The library uses a service-based architecture for better organization and maintainability:
+
+```go
+// Create client and services
+client, _ := wnc.NewClient(config)
+afcService := afc.NewService(client.CoreClient())
+apService := ap.NewService(client.CoreClient())
+generalService := general.NewService(client.CoreClient())
+
+// Use typed service methods
+afcData, _ := afcService.Oper(ctx)
+apData, _ := apService.Oper(ctx)
+generalData, _ := generalService.Oper(ctx)
+```
+
+### 🛡️ Error Handling Standards
+
+All functions in this SDK follow standardized error handling patterns:
+
+#### Client Validation Errors
+
+Functions validate the client parameter consistently:
+
+```go
+if c == nil {
+    return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
+}
+```
+
+#### HTTP Error Responses
+
+HTTP errors are handled uniformly across all packages:
+
+```go
+if resp.StatusCode != http.StatusOK {
+    return nil, fmt.Errorf("HTTP request failed with status %d: %s", resp.StatusCode, resp.Status)
+}
+```
+
+#### JSON Unmarshaling Errors
+
+JSON parsing errors include context:
+
+```go
+if err := json.Unmarshal(body, &result); err != nil {
+    return nil, fmt.Errorf("failed to unmarshal response: %w", err)
+}
+```
+
+### 📊 Testing Coverage Information
+
+This SDK maintains high test coverage standards:
+
+- **Main Codebase Coverage**: ≥98% for all business logic functions
+- **Total Project Coverage**: ≥92% including test utilities
+- **Mock Server Testing**: Uses full RESTCONF paths for accurate simulation
+- **Error Path Coverage**: 100% coverage of error scenarios and edge cases
 
 ## Core Functions
 
@@ -348,6 +406,34 @@ Understanding error types helps you implement proper error handling and debuggin
 | `NotFoundError`       | `ErrResourceNotFound`     | Requested resource not found          | 404         |
 | `ConfigError`         | `ErrInvalidConfiguration` | Invalid client configuration          | -           |
 | `TimeoutError`        | `ErrRequestTimeout`       | Request timeout exceeded              | -           |
+
+### Error Handling Best Practices
+
+When implementing error handling in your applications:
+
+```go
+// Check for specific error types
+if errors.Is(err, wnc.ErrInvalidConfiguration) {
+    // Handle configuration errors
+    log.Printf("Configuration error: %v", err)
+    return
+}
+
+// Handle HTTP errors
+var apiErr *wnc.APIError
+if errors.As(err, &apiErr) {
+    log.Printf("API error: status %d, message: %s", apiErr.StatusCode, apiErr.Message)
+    return
+}
+```
+
+### Standardized Error Messages
+
+The library uses consistent error message patterns:
+
+- **Client validation**: `"invalid client configuration: client cannot be nil"`
+- **Authentication**: `"authentication failed: invalid credentials"`
+- **Network errors**: `"request failed: <underlying error>"`
 
 > [!TIP]
 > Use type assertions or `errors.As()` to handle specific error types and provide appropriate user feedback or retry logic.

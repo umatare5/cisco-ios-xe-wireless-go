@@ -58,7 +58,7 @@ func TestLocationErrorHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error with nil client, got nil")
 		}
-		testutils.ValidateErrorContains(t, err, "client is nil")
+		testutils.ValidateErrorContains(t, err, "invalid client configuration: client cannot be nil")
 	})
 
 	t.Run("GetLocationNmspConfigWithNilClient", func(t *testing.T) {
@@ -66,7 +66,7 @@ func TestLocationErrorHandling(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error with nil client, got nil")
 		}
-		testutils.ValidateErrorContains(t, err, "client is nil")
+		testutils.ValidateErrorContains(t, err, "invalid client configuration: client cannot be nil")
 	})
 }
 

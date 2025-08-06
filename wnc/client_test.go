@@ -723,3 +723,88 @@ func TestDoMethodEmptyResponseBody(t *testing.T) {
 		t.Logf("Got error (JSON parsing expected): %v", err)
 	}
 }
+
+// TestDoMethodInvalidJSONInResponse tests handling of invalid JSON in responses
+func TestDoMethodInvalidJSONInResponse(t *testing.T) {
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"invalid": json}`)) // Invalid JSON
+	}))
+	defer server.Close()
+
+	serverURL := strings.TrimPrefix(server.URL, "https://")
+	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	var response map[string]interface{}
+
+	err = client.Do(ctx, "GET", "/test", &response)
+	if err == nil {
+		t.Error("Expected error due to invalid JSON response")
+	}
+
+	// Should be a JSON unmarshaling error
+	if !strings.Contains(err.Error(), "failed to unmarshal response") {
+		t.Errorf("Expected JSON unmarshal error, got: %v", err)
+	}
+}
+
+// TestDoMethodWithNilContext tests handling of nil context
+func TestDoMethodWithNilContext(t *testing.T) {
+	client, err := New("example.com", "token")
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	var response map[string]interface{}
+	err = client.Do(nil, "GET", "/test", &response)
+	if err == nil {
+		t.Error("Expected error with nil context")
+	}
+
+	if !strings.Contains(err.Error(), "context cannot be nil") {
+		t.Errorf("Expected context error, got: %v", err)
+	}
+}
+
+// TestDoMethodWithNilOutput tests handling of nil output parameter
+func TestDoMethodWithNilOutput(t *testing.T) {
+	client, err := New("example.com", "token")
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	err = client.Do(ctx, "GET", "/test", nil)
+	if err == nil {
+		t.Error("Expected error with nil output parameter")
+	}
+
+	if !strings.Contains(err.Error(), "output parameter cannot be nil") {
+		t.Errorf("Expected output parameter error, got: %v", err)
+	}
+}
+
+// TestDoMethodWithRequestCreationError tests handling of request creation errors
+func TestDoMethodWithRequestCreationError(t *testing.T) {
+	client, err := New("example.com", "token")
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	var response map[string]interface{}
+
+	// Use an invalid HTTP method to trigger request creation error
+	err = client.Do(ctx, "INVALID METHOD\nWITH\nNEWLINES", "/test", &response)
+	if err == nil {
+		t.Error("Expected error with invalid HTTP method")
+	}
+
+	if !strings.Contains(err.Error(), "failed to create request") {
+		t.Errorf("Expected request creation error, got: %v", err)
+	}
+}

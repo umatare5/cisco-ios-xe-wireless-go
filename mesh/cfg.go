@@ -3,7 +3,7 @@ package mesh
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -52,7 +52,7 @@ type MeshProfile struct {
 // Returns mesh configuration including global settings and profiles.
 func GetMeshCfg(client *wnc.Client, ctx context.Context) (*MeshCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data MeshCfgResponse
 	err := client.SendAPIRequest(ctx, MeshCfgEndpoint, &data)
@@ -66,7 +66,7 @@ func GetMeshCfg(client *wnc.Client, ctx context.Context) (*MeshCfgResponse, erro
 // Returns global mesh configuration settings.
 func GetMesh(client *wnc.Client, ctx context.Context) (*MeshResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data MeshResponse
 	err := client.SendAPIRequest(ctx, MeshMeshEndpoint, &data)
@@ -80,7 +80,7 @@ func GetMesh(client *wnc.Client, ctx context.Context) (*MeshResponse, error) {
 // Returns mesh profile settings and descriptions.
 func GetMeshProfiles(client *wnc.Client, ctx context.Context) (*MeshProfilesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data MeshProfilesResponse
 	err := client.SendAPIRequest(ctx, MeshProfilesEndpoint, &data)

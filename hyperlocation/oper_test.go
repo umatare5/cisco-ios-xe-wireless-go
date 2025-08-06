@@ -240,13 +240,13 @@ func TestHyperlocationOperErrorHandling(t *testing.T) {
 
 	// Test GetHyperlocationOper with nil client
 	_, err := GetHyperlocationOper(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 
 	// Test GetHyperlocationProfiles with nil client
 	_, err = GetHyperlocationProfiles(nil, ctx)
-	if err == nil || err.Error() != "client is nil" {
+	if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 		t.Errorf("Expected 'client is nil' error, got: %v", err)
 	}
 }

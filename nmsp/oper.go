@@ -3,7 +3,7 @@ package nmsp
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -53,7 +53,7 @@ type (
 // Deprecated: Use nmsp.NewService(client).Oper(ctx) instead. Will be removed in v2.0.0.
 func GetNmspOper(client *wnc.Client, ctx context.Context) (*model.NmspOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).Oper(ctx)
 }
@@ -61,7 +61,7 @@ func GetNmspOper(client *wnc.Client, ctx context.Context) (*model.NmspOperRespon
 // Deprecated: Use nmsp.NewService(client).ClientRegistration(ctx) instead. Will be removed in v2.0.0.
 func GetNmspClientRegistration(client *wnc.Client, ctx context.Context) (*model.NmspClientRegistrationResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).ClientRegistration(ctx)
 }
@@ -69,7 +69,7 @@ func GetNmspClientRegistration(client *wnc.Client, ctx context.Context) (*model.
 // Deprecated: Use nmsp.NewService(client).CmxConnection(ctx) instead. Will be removed in v2.0.0.
 func GetNmspCmxConnection(client *wnc.Client, ctx context.Context) (*model.NmspCmxConnectionResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).CmxConnection(ctx)
 }
@@ -77,7 +77,7 @@ func GetNmspCmxConnection(client *wnc.Client, ctx context.Context) (*model.NmspC
 // Deprecated: Use nmsp.NewService(client).CmxCloudInfo(ctx) instead. Will be removed in v2.0.0.
 func GetNmspCmxCloudInfo(client *wnc.Client, ctx context.Context) (*model.NmspCmxCloudInfoResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	return NewService(client).CmxCloudInfo(ctx)
 }

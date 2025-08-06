@@ -3,7 +3,7 @@ package apf
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -40,7 +40,7 @@ type Apf struct {
 // GetApfCfg retrieves complete APF configuration data.
 func GetApfCfg(client *wnc.Client, ctx context.Context) (*ApfCfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ApfCfgResponse
 	if err := client.SendAPIRequest(ctx, ApfCfgEndpoint, &data); err != nil {
@@ -52,7 +52,7 @@ func GetApfCfg(client *wnc.Client, ctx context.Context) (*ApfCfgResponse, error)
 // GetApf retrieves APF specific configuration data.
 func GetApf(client *wnc.Client, ctx context.Context) (*ApfCfgApfResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data ApfCfgApfResponse
 	if err := client.SendAPIRequest(ctx, ApfEndpoint, &data); err != nil {

@@ -3,7 +3,7 @@ package mcast
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
@@ -40,7 +40,7 @@ type (
 // GetMcastOper retrieves multicast operational data.
 func GetMcastOper(client *wnc.Client, ctx context.Context) (*McastOperResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.Oper(ctx)
@@ -50,7 +50,7 @@ func GetMcastOper(client *wnc.Client, ctx context.Context) (*McastOperResponse, 
 // GetMcastFlexMediastreamClientSummary retrieves FlexConnect mediastream client summary data.
 func GetMcastFlexMediastreamClientSummary(client *wnc.Client, ctx context.Context) (*McastOperFlexMediastreamClientSummaryResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.FlexMediastreamClientSummary(ctx)
@@ -60,7 +60,7 @@ func GetMcastFlexMediastreamClientSummary(client *wnc.Client, ctx context.Contex
 // GetMcastVlanL2MgidOp retrieves VLAN Layer 2 multicast group ID operational data.
 func GetMcastVlanL2MgidOp(client *wnc.Client, ctx context.Context) (*McastOperVlanL2MgidOpResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	service := NewService(client.CoreClient())
 	return service.VlanL2MgidOp(ctx)

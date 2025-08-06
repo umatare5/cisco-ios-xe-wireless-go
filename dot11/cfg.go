@@ -3,7 +3,7 @@ package dot11
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
@@ -106,7 +106,7 @@ type Dot11Entry struct {
 // GetDot11Cfg returns 802.11 configuration.
 func GetDot11Cfg(client *wnc.Client, ctx context.Context) (*Dot11CfgResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 
 	var data Dot11CfgResponse
@@ -119,7 +119,7 @@ func GetDot11Cfg(client *wnc.Client, ctx context.Context) (*Dot11CfgResponse, er
 // GetDot11ConfiguredCountries retrieves configured country codes.
 func GetDot11ConfiguredCountries(client *wnc.Client, ctx context.Context) (*Dot11ConfiguredCountriesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data Dot11ConfiguredCountriesResponse
 	if err := client.SendAPIRequest(ctx, ConfiguredCountriesEndpoint, &data); err != nil {
@@ -131,7 +131,7 @@ func GetDot11ConfiguredCountries(client *wnc.Client, ctx context.Context) (*Dot1
 // GetDot11acMcsEntries retrieves 802.11ac MCS configuration entries.
 func GetDot11acMcsEntries(client *wnc.Client, ctx context.Context) (*Dot11acMcsEntriesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data Dot11acMcsEntriesResponse
 	if err := client.SendAPIRequest(ctx, Dot11acMcsEntriesEndpoint, &data); err != nil {
@@ -143,7 +143,7 @@ func GetDot11acMcsEntries(client *wnc.Client, ctx context.Context) (*Dot11acMcsE
 // GetDot11Entries retrieves 802.11 band configuration entries.
 func GetDot11Entries(client *wnc.Client, ctx context.Context) (*Dot11EntriesResponse, error) {
 	if client == nil {
-		return nil, errors.New("client is nil")
+		return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
 	}
 	var data Dot11EntriesResponse
 	if err := client.SendAPIRequest(ctx, Dot11EntriesEndpoint, &data); err != nil {

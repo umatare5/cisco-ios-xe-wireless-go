@@ -400,35 +400,35 @@ func saveRogueTestData(filename string, data interface{}) {
 func TestRogueOperErrorHandling(t *testing.T) {
 	t.Run("GetRogueOperWithNilClient", func(t *testing.T) {
 		_, err := GetRogueOper(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRogueStatsWithNilClient", func(t *testing.T) {
 		_, err := GetRogueStats(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRogueDataWithNilClient", func(t *testing.T) {
 		_, err := GetRogueData(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRogueClientDataWithNilClient", func(t *testing.T) {
 		_, err := GetRogueClientData(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})
 
 	t.Run("GetRldpStatsWithNilClient", func(t *testing.T) {
 		_, err := GetRldpStats(nil, context.Background())
-		if err == nil || err.Error() != "client is nil" {
+		if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 			t.Errorf("Expected 'client is nil' error, got: %v", err)
 		}
 	})

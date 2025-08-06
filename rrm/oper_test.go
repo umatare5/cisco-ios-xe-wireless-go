@@ -475,7 +475,7 @@ func TestRrmOperErrorHandling(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name+"WithNilClient", func(t *testing.T) {
 			_, err := tc.fn()
-			if err == nil || err.Error() != "client is nil" {
+			if err == nil || err.Error() != "invalid client configuration: client cannot be nil" {
 				t.Errorf("Expected 'client is nil' error, got: %v", err)
 			}
 		})
