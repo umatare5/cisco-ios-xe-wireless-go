@@ -11,20 +11,28 @@ To know the meaning of the response from APIs, please refer to the [YANG Models 
 
 ## 🏗️ Service-Based API Architecture
 
-The library uses a service-based architecture for better organization and maintainability:
+The library uses a three-layer service-based architecture for better organization and maintainability:
 
 ```go
-// Create client and services
-client, _ := wnc.NewClient(config)
-afcService := afc.NewService(client.CoreClient())
-apService := ap.NewService(client.CoreClient())
-generalService := general.NewService(client.CoreClient())
+// Create client using constructor pattern
+client, _ := wnc.New("192.168.1.100", "YWRtaW46eW91ci1wYXNzd29yZA==")
+
+// Create domain services
+afcService := afc.NewService(client)
+apService := ap.NewService(client)
+generalService := general.NewService(client)
 
 // Use typed service methods
 afcData, _ := afcService.Oper(ctx)
 apData, _ := apService.Oper(ctx)
 generalData, _ := generalService.Oper(ctx)
 ```
+
+### 🏗️ Three-Layer Architecture
+
+- **Core Layer**: `wnc/` package containing HTTP client and infrastructure
+- **Domain Service Layer**: Service packages (`afc/`, `ap/`, `general/`, etc.) with business logic
+- **Generated Type Layer**: `internal/model/` package with auto-generated YANG model structs
 
 ### 🛡️ Error Handling Standards
 
@@ -64,17 +72,19 @@ if err := json.Unmarshal(body, &result); err != nil {
 
 This SDK maintains high test coverage standards:
 
-- **Main Codebase Coverage**: ≥98% for all business logic functions
-- **Total Project Coverage**: ≥92% including test utilities
-- **Mock Server Testing**: Uses full RESTCONF paths for accurate simulation
+- **Main Codebase Coverage**: ≥98% for all business logic functions (wnc package: 98.9%)
+- **Total Project Coverage**: ≥92% including test utilities and service layers
+- **SA1012 Compliance**: All nil context tests use `var nilCtx context.Context` pattern
+- **Mock Server Testing**: Uses full RESTCONF paths for accurate HTTP simulation
+- **Service Architecture Testing**: Validates `NewService(client)` patterns and typed method signatures
 - **Error Path Coverage**: 100% coverage of error scenarios and edge cases
 
 ## Core Functions
 
-| Function         | Parameters                                                 | Return Type        | Description                             |
-| ---------------- | ---------------------------------------------------------- | ------------------ | --------------------------------------- |
-| `NewClient`      | `controller, accessToken string, options ...ClientOption`  | `(*Client, error)` | Creates a new WNC client with options   |
-| `SendAPIRequest` | `ctx context.Context, endpoint string, result interface{}` | `error`            | Sends API request to specified endpoint |
+| Function    | Parameters                                             | Return Type        | Description                           |
+| ----------- | ------------------------------------------------------ | ------------------ | ------------------------------------- |
+| `New`       | `controller, accessToken string, options ...Option`   | `(*Client, error)` | Creates a new WNC client with options |
+| `Do`        | `ctx context.Context, method, endpoint string, result interface{}` | `error`     | Sends HTTP request to specified endpoint |
 
 > [!Note]
 > Currently, this library supports only `GET` requests. To send other type of requests, please use `SendAPIRequest()`.

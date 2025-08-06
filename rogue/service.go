@@ -1,4 +1,3 @@
-// Package rogue provides rogue access point detection operational data functionality for the Cisco Wireless Network Controller API.
 package rogue
 
 import (
@@ -7,6 +6,21 @@ import (
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+)
+
+const (
+	// RogueOperBasePath defines the base path for rogue operational data endpoints.
+	RogueOperBasePath = "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data"
+	// RogueOperEndpoint defines the endpoint for rogue operational data.
+	RogueOperEndpoint = RogueOperBasePath
+	// RogueStatsEndpoint defines the endpoint for rogue statistics.
+	RogueStatsEndpoint = RogueOperBasePath + "/rogue-stats"
+	// RogueDataEndpoint defines the endpoint for rogue data.
+	RogueDataEndpoint = RogueOperBasePath + "/rogue-data"
+	// RogueClientDataEndpoint defines the endpoint for rogue client data.
+	RogueClientDataEndpoint = RogueOperBasePath + "/rogue-client-data"
+	// RldpStatsEndpoint defines the endpoint for RLDP (Rogue Location Discovery Protocol) statistics.
+	RldpStatsEndpoint = RogueOperBasePath + "/rldp-stats"
 )
 
 // Service provides rogue access point detection operational data access.

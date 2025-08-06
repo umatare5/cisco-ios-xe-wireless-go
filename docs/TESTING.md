@@ -2,11 +2,12 @@
 
 This library includes comprehensive tests that validate API functionality and client behavior:
 
-- **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
-- **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
-- **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
-- **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
-- **Error handling tests**: Validates standardized error patterns across all functions.
+- **Unit tests**: Validate serialization/deserialization between JSON and Go structs
+- **Table-driven tests**: Execute multiple test cases efficiently using structured test tables
+- **SA1012 compliant tests**: Use `var nilCtx context.Context` instead of `nil` literals for static analysis compliance
+- **Integration tests**: Interact with real WNC endpoints to verify API communication
+- **Service architecture tests**: Validate `NewService(client)` patterns and typed method signatures
+- **Error handling tests**: Validate standardized error patterns across all functions
 
 ## 📊 Coverage Investigation Procedures
 
@@ -38,15 +39,16 @@ When coverage degradation is detected:
    ```
 
 4. **Coverage Restoration**:
-   - Fix mock server URLs
-   - Add missing error path tests
+   - Fix mock server URLs to use full RESTCONF paths
+   - Add missing error path tests for uncovered scenarios
+   - Ensure SA1012 compliance in nil context tests
    - Validate import statements with `goimports`
    - Verify coverage meets targets (≥98% main, ≥92% total)
 
 ### Coverage by Package
 
 ```text
-📦 github.com/umatare5/cisco-ios-xe-wireless-go (100.0% coverage)
+📦 github.com/umatare5/cisco-ios-xe-wireless-go/wnc (98.9% coverage)
 📦 github.com/umatare5/cisco-ios-xe-wireless-go/afc (100.0% coverage)
 📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (99.3% coverage)
 📦 github.com/umatare5/cisco-ios-xe-wireless-go/general (100.0% coverage)
@@ -169,6 +171,50 @@ total: (statements) 6.1%
 ### Code Quality & Error Handling
 
 The project enforces strict code quality standards:
+
+#### SA1012 Compliance Testing
+
+All nil context tests must follow static analysis requirements:
+
+```go
+func TestFunctionWithNilContext(t *testing.T) {
+    client, _ := wnc.New("192.168.1.100", "token")
+
+    // ✅ Correct - SA1012 compliant
+    var nilCtx context.Context
+    _, err := SomeFunction(nilCtx, client)
+
+    // ❌ Incorrect - SA1012 violation
+    // _, err := SomeFunction(nil, client)
+
+    if err == nil {
+        t.Fatal("Expected error for nil context")
+    }
+}
+```
+
+#### Service Architecture Testing
+
+All services must be tested with consistent patterns:
+
+```go
+func TestServiceConstructor(t *testing.T) {
+    client, _ := wnc.New("192.168.1.100", "token")
+    service := domain.NewService(client)
+
+    if service == nil {
+        t.Fatal("Expected non-nil service")
+    }
+}
+
+func TestServiceMethod(t *testing.T) {
+    // Test typed method signature: Method(ctx) (*model.Type, error)
+    ctx := context.Background()
+    result, err := service.Method(ctx)
+
+    // Validate return types and error handling
+}
+```
 
 #### Error Handling Standards
 

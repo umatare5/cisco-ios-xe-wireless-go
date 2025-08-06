@@ -1,12 +1,46 @@
-// Package ap provides access point domain services for the Cisco Wireless Network Controller API.
 package ap
 
 import (
 	"context"
 	"net/http"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+)
+
+const (
+	// ApCfgBasePath defines the base path for access point configuration endpoints
+	ApCfgBasePath = "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"
+	// ApCfgEndpoint retrieves complete access point configuration data
+	ApCfgEndpoint = ApCfgBasePath
+	// TagSourcePriorityConfigsEndpoint retrieves tag source priority configurations
+	TagSourcePriorityConfigsEndpoint = ApCfgBasePath + "/tag-source-priority-configs"
+	// ApTagsEndpoint retrieves access point tag configurations
+	ApTagsEndpoint = ApCfgBasePath + "/ap-tags"
+
+	// ApOperBasePath is the base path for access point operational data endpoints
+	ApOperBasePath = "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"
+	// ApOperEndpoint retrieves complete access point operational data
+	ApOperEndpoint = ApOperBasePath
+	// ApRadioNeighborEndpoint retrieves access point radio neighbor information
+	ApRadioNeighborEndpoint = ApOperBasePath + "/ap-radio-neighbor"
+	// RadioOperDataEndpoint retrieves radio operational data for access points
+	RadioOperDataEndpoint = ApOperBasePath + "/radio-oper-data"
+	// QosClientDataEndpoint retrieves QoS client data information
+	QosClientDataEndpoint = ApOperBasePath + "/qos-client-data"
+	// CapwapDataEndpoint retrieves CAPWAP data for access points
+	CapwapDataEndpoint = ApOperBasePath + "/capwap-data"
+	// ApNameMacMapEndpoint retrieves AP name to MAC address mapping
+	ApNameMacMapEndpoint = ApOperBasePath + "/ap-name-mac-map"
+
+	// ApGlobalOperBasePath defines the base path for AP global operational data endpoints
+	ApGlobalOperBasePath = "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data"
+	// ApGlobalOperEndpoint retrieves complete AP global operational data
+	ApGlobalOperEndpoint = ApGlobalOperBasePath
+	// ApHistoryEndpoint retrieves AP history data
+	ApHistoryEndpoint = ApGlobalOperBasePath + "/ap-history"
+	// EwlcApStatsEndpoint retrieves EWLC AP statistics
+	EwlcApStatsEndpoint = ApGlobalOperBasePath + "/ewlc-ap-stats"
 )
 
 // Service provides access to all access point operations.

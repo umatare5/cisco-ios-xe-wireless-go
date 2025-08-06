@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 

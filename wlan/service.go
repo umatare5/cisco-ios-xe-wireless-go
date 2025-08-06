@@ -5,8 +5,28 @@ import (
 	"context"
 	"net/http"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+)
+
+const (
+	// WlanCfgBasePath defines the base path for WLAN configuration endpoints
+	WlanCfgBasePath = "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"
+	// WlanCfgEndpoint retrieves complete WLAN configuration data
+	WlanCfgEndpoint = WlanCfgBasePath
+	// WlanCfgEntriesEndpoint retrieves WLAN configuration entries
+	WlanCfgEntriesEndpoint = WlanCfgBasePath + "/wlan-cfg-entries"
+	// WlanPoliciesEndpoint retrieves WLAN policies
+	WlanPoliciesEndpoint = WlanCfgBasePath + "/wlan-policies"
+	// PolicyListEntriesEndpoint retrieves policy list entries
+	PolicyListEntriesEndpoint = WlanCfgBasePath + "/policy-list-entries"
+	// WirelessAaaPolicyConfigsEndpoint retrieves wireless AAA policy configurations
+	WirelessAaaPolicyConfigsEndpoint = WlanCfgBasePath + "/wireless-aaa-policy-configs"
+
+	// WlanGlobalOperBasePath defines the base path for WLAN global operational data endpoints
+	WlanGlobalOperBasePath = "Cisco-IOS-XE-wireless-wlan-global-oper:wlan-global-oper-data"
+	// WlanGlobalOperDataEndpoint retrieves WLAN global operational data
+	WlanGlobalOperDataEndpoint = WlanGlobalOperBasePath
 )
 
 // Service provides access to all WLAN operations.

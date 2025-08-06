@@ -50,7 +50,7 @@ import (
     "fmt"
     "time"
 
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
     "github.com/umatare5/cisco-ios-xe-wireless-go/afc"
     "github.com/umatare5/cisco-ios-xe-wireless-go/general"
 )
@@ -63,30 +63,31 @@ func main() {
         Timeout:     30 * time.Second,
     }
 
-    // Create client with configuration
-    client, err := wnc.NewClient(config)
+    // Create client
+    client, err := wnc.New(config.Controller, config.AccessToken,
+        wnc.WithTimeout(config.Timeout))
     if err != nil {
         fmt.Printf("Failed to create client: %v\n", err)
         return
     }
 
     // Create services using the core client
-    afcService := afc.NewService(client.CoreClient())
-    generalService := general.NewService(client.CoreClient())
+    afcService := afc.NewService(client)
+    generalService := general.NewService(client)
 
     // Use service-based API
     ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
     defer cancel()
 
     // Get AFC 6 GHz statistics
-    stats, err := afcService.CloudStats(ctx)
+    stats, err := afcService.CloudOper(ctx)
     if err != nil {
         fmt.Printf("Failed to get AFC stats: %v\n", err)
         return
     }
 
     fmt.Printf("Successfully connected to WNC!\n")
-    fmt.Printf("6 GHz APs: %d\n", stats.Num6GhzAp)
+    fmt.Printf("AFC status: %s\n", stats.Cisco.Response.Code)
 
     // Get general operational data
     operData, err := generalService.Oper(ctx)
@@ -95,7 +96,8 @@ func main() {
         return
     }
 
-    fmt.Printf("Controller model: %s\n", operData.CiscoIOSXEWirelessGeneralOperGeneralOperData.ControllerDetail.Model)
+    fmt.Printf("Controller model: %s\n",
+        operData.GeneralOperData.ControllerDetail.Model)
 }
 ```
 
@@ -108,19 +110,15 @@ import (
     "log/slog"
     "time"
 
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 // Create client with custom configuration
-config := wnc.Config{
-    Controller:         "192.168.1.100",
-    AccessToken:        "YWRtaW46eW91ci1wYXNzd29yZA==",
-    Timeout:            30 * time.Second,
-    InsecureSkipVerify: true, // Only for development
-    Logger:             customLogger,
-}
-
-client, err := wnc.NewClient(config)
+client, err := wnc.New("192.168.1.100", "YWRtaW46eW91ci1wYXNzd29yZA==",
+    wnc.WithTimeout(30*time.Second),
+    wnc.WithInsecureSkipVerify(true), // Only for development
+    wnc.WithLogger(customLogger),
+)
 if err != nil {
     fmt.Printf("Failed to create client: %v\n", err)
     return
@@ -139,33 +137,27 @@ import (
     "log/slog"
     "os"
 
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
     Level: slog.LevelDebug,
 }))
 
-config := wnc.Config{
-    Controller:  "192.168.1.100",
-    AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
-    Logger:      logger,
-}
-
-client, err := wnc.NewClient(config)
+client, err := wnc.New("192.168.1.100", "YWRtaW46eW91ci1wYXNzd29yZA==",
+    wnc.WithLogger(logger),
+)
 ```
 
 ## ⚙️ Configuration Options
 
-All configuration options are set in the `Config` struct during client creation.
+All configuration options are set using functional options in the `wnc.New()` constructor.
 
-| Field                | Type            | Description                                    |
-| -------------------- | --------------- | ---------------------------------------------- |
-| `Controller`         | `string`        | Hostname or IP address of the WNC (required)   |
-| `AccessToken`        | `string`        | Authentication token for API access (required) |
-| `Timeout`            | `time.Duration` | HTTP request timeout (default: 15s)            |
-| `InsecureSkipVerify` | `bool`          | Skips TLS certificate verification (dev only)  |
-| `Logger`             | `*slog.Logger`  | Custom structured logger instance              |
+| Option                         | Type            | Description                                    |
+| ------------------------------ | --------------- | ---------------------------------------------- |
+| `WithTimeout(d)`               | `time.Duration` | HTTP request timeout (default: 15s)            |
+| `WithInsecureSkipVerify(bool)` | `bool`          | Skips TLS certificate verification (dev only)  |
+| `WithLogger(l)`                | `*slog.Logger`  | Custom structured logger instance              |
 
 ## 🔄 Service-Based API
 
@@ -175,7 +167,7 @@ This library uses a modern three-layer architecture with domain-specific service
 
 ```go
 import (
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
     "github.com/umatare5/cisco-ios-xe-wireless-go/afc"
     "github.com/umatare5/cisco-ios-xe-wireless-go/ap"
     "github.com/umatare5/cisco-ios-xe-wireless-go/general"
@@ -185,13 +177,13 @@ import (
 )
 
 // Create client and services
-client, _ := wnc.NewClient(config)
-afcService := afc.NewService(client.CoreClient())
-apService := ap.NewService(client.CoreClient())
-generalService := general.NewService(client.CoreClient())
-rogueService := rogue.NewService(client.CoreClient())
-rrmService := rrm.NewService(client.CoreClient())
-wlanService := wlan.NewService(client.CoreClient())
+client, _ := wnc.New("192.168.1.100", "YWRtaW46eW91ci1wYXNzd29yZA==")
+afcService := afc.NewService(client)
+apService := ap.NewService(client)
+generalService := general.NewService(client)
+rogueService := rogue.NewService(client)
+rrmService := rrm.NewService(client)
+wlanService := wlan.NewService(client)
 
 // Use domain services with typed methods
 afcOper, _ := afcService.Oper(ctx)                       // AFC operational data
@@ -209,7 +201,7 @@ wlanCfg, _ := wlanService.Cfg(ctx)                       // WLAN configuration
 
 All services follow a consistent pattern:
 
-- **Service Creation**: Automatic via `client.<Domain>()`
+- **Service Creation**: `service.NewService(client)` pattern
 - **Typed Methods**: Each method returns strongly-typed structs from `internal/model`
 - **Context Support**: All methods accept `context.Context` for timeouts and cancellation
 - **Error Handling**: Consistent error types including HTTP status details
@@ -224,8 +216,8 @@ apData, err := ap.GetApOper(ctx, client)
 afcData, err := afc.GetAfcOper(ctx, client)
 
 // ✅ Use service-based API instead
-apService := ap.NewService(client.CoreClient())
-afcService := afc.NewService(client.CoreClient())
+apService := ap.NewService(client)
+afcService := afc.NewService(client)
 apData, err := apService.Oper(ctx)
 afcData, err := afcService.Oper(ctx)
 ```

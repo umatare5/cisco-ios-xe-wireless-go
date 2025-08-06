@@ -19,29 +19,30 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
 
 ## 🧭 Architecture & Design Principles
 
-- **Organize by Package-per-Resource:**
-  Group related features into distinct packages/directories (e.g., `/client`, `/api`, `/models`).
-  Place the main `Client` and `NewClient(...)` in the root package.
-  Isolate private/internal logic in the `internal/` directory.
-  Minimize dependencies between packages to ensure clear responsibilities and avoid coupling.
+- **Three-Layer Architecture:**
+  - **Core Layer**: `wnc/` package containing HTTP client and core infrastructure
+  - **Domain Service Layer**: Service packages (`afc/`, `ap/`, `general/`, etc.) with business logic
+  - **Generated Type Layer**: `internal/model/` package with auto-generated YANG model structs
+
+- **Service-Based Design Pattern:**
+  Each domain has a `service.go` file with `NewService(c *wnc.Client)` constructor and typed methods.
+  Services use the core client's `Do()` method for all HTTP operations.
+  All service methods follow: `func (s *Service) Method(ctx context.Context) (*model.ResponseType, error)`
+
+- **Package Organization:**
+  Place core client in `wnc/` package with `New()` constructor.
+  Domain services in separate packages with consistent patterns.
+  Internal utilities in `internal/` directory (validation, model, httpx, restconf).
+  Minimize cross-package dependencies to ensure clear responsibilities.
 
 - **Strict Dependency Injection:**
-  Inject dependencies (such as `*http.Client`) via constructors like `NewClient`.
+  Inject dependencies via constructors like `NewService(client *wnc.Client)`.
   **Do not** use global state or singletons for shared state/configuration.
-  Always pass dependencies explicitly through struct fields, function arguments, or constructors.
-  This enhances testability, composability, and long-term maintainability.
+  Pass dependencies explicitly through struct fields, function arguments, or constructors.
 
 - **Clean API Design:**
-  Export only intended public types and functions (start with uppercase), keeping the API minimal and stable.
-  Define small, focused interfaces (Interface Segregation, Dependency Inversion).
-
-  - Example:
-
-    ```go
-    type Storage interface {
-        Save(ctx context.Context, obj MyObj) error
-    }
-    ```
+  Export only intended public types and functions, keeping API minimal and stable.
+  Define focused interfaces following Interface Segregation and Dependency Inversion principles.
 
 ---
 
@@ -52,6 +53,7 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
 
 - **Style & Linting:**
   Format all code with `gofmt` and ensure it passes `golangci-lint`.
+  Static analysis must pass without SA1012 warnings (use `var nilCtx context.Context` instead of `nil` literals in tests).
 
 - **Functions:**
   Keep functions **ideally between 20 to 40 lines**.
@@ -138,11 +140,13 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
 
 ## ⚙️ Core API Design
 
-- **Construction:**
-  Use `NewClient(config Config)` as the entry point to instantiate the client.
+- **Three-Layer Construction Pattern:**
+  - Core client: `wnc.New(controller, token, ...options)`
+  - Domain services: `service.NewService(client)`
+  - Typed methods: `service.Method(ctx)`
 
 - **Configuration:**
-  Do not read configuration from environment variables or files. Always accept a configuration struct.
+  Accept configuration via `wnc.Config` struct, never read from environment/files directly.
 
 - **Context Usage:**
   All functions that perform I/O or network operations must take `context.Context` as their first argument.
@@ -164,6 +168,10 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
 - **Subtest Isolation:**
   Use `t.Run()` for structured and named subtests.
 
+- **SA1012 Compliance:**
+  For nil context tests, use: `var nilCtx context.Context` instead of `nil` literals.
+  Add `//nolint:SA1012` when necessary for intentional nil context testing.
+
 - **Test Utilities:**
   Factor out common setup, environment checks, and data helpers.
 
@@ -183,21 +191,67 @@ Contribute to the SDK/library. **DO NOT** build a standalone application.
   Validate testing environment and inputs before running tests.
 
 - **High Test Coverage:**
-  Target 98% or higher code coverage for main codebase packages. Maintain overall project coverage above 92%.
+  Target 98% or higher for main codebase packages. Maintain ≥92% total project coverage.
 
-- **Error Message Testing:**
-  When testing error handling, use the standardized error format: `"invalid client configuration: client cannot be nil"`
-
-- **Test Consistency:**
-  Ensure all nil client tests follow the same pattern and expect the same error message format.
+- **Standardized Error Testing:**
+  Expect consistent error format: `"invalid client configuration: client cannot be nil"`
 
 - **Mock Server Testing:**
-  For HTTP client testing, use full RESTCONF paths in mock handlers: `/restconf/data/[YANG-MODULE]:[CONTAINER]/[ENDPOINT]`
+  Use full RESTCONF paths: `/restconf/data/[YANG-MODULE]:[CONTAINER]/[ENDPOINT]`
 
 - **Comprehensive Path Coverage:**
-  Test both success and error paths for all functions. Add dedicated HTTP error tests for functions with mock servers.
+  Test both success and error paths. Add dedicated HTTP error tests.
 
-- **Coverage Investigation:**
-  When coverage drops below targets, investigate specific functions and add missing test cases for uncovered code paths.
+- **Service Architecture Testing:**
+  Test service constructors: `NewService(client)` patterns
+  Validate typed method signatures: `Method(ctx) (*model.Type, error)`
+  Ensure proper client.Do() usage in service implementations
+
+---
+
+## 🏗️ Service Implementation Pattern
+
+All domain services follow this standardized pattern:
+
+```go
+// Service provides [domain] operations using the WNC client
+type Service struct {
+    c *wnc.Client
+}
+
+// NewService creates a new [domain] service instance
+func NewService(c *wnc.Client) *Service {
+    return &Service{c: c}
+}
+
+// Method returns [domain] operational data
+func (s *Service) Method(ctx context.Context) (*model.ResponseType, error) {
+    const endpoint = "Cisco-IOS-XE-wireless-[module]-[type]:[container]"
+
+    var result model.ResponseType
+    err := s.c.Do(ctx, http.MethodGet, endpoint, &result)
+    if err != nil {
+        return nil, err
+    }
+
+    return &result, nil
+}
+```
+
+**Service Requirements:**
+- All services accept `*wnc.Client` in constructor
+- Methods use `s.c.Do()` for HTTP operations
+- Return typed structs from `internal/model/`
+- Include descriptive documentation
+- Follow consistent naming: `NewService`, domain-specific method names
+
+**Client Integration:**
+Services integrate with core client through accessor methods that return `nil` (placeholder pattern):
+```go
+// Domain service accessor (returns nil as placeholder)
+func (c *Client) ServiceName() ServiceInterface {
+    return nil // Placeholder for future service integration
+}
+```
 
 ---

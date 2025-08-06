@@ -1,4 +1,3 @@
-// Package mcast provides multicast operational data functionality for the Cisco Wireless Network Controller API.
 package mcast
 
 import (
@@ -7,6 +6,17 @@ import (
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+)
+
+const (
+	// McastOperBasePath defines the base path for multicast operational data endpoints.
+	McastOperBasePath = "Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"
+	// McastOperEndpoint defines the endpoint for multicast operational data.
+	McastOperEndpoint = McastOperBasePath
+	// FlexMediastreamClientSummaryEndpoint defines the endpoint for FlexConnect mediastream client summary data.
+	FlexMediastreamClientSummaryEndpoint = McastOperBasePath + "/flex-mediastream-client-summary"
+	// VlanL2MgidOpEndpoint defines the endpoint for VLAN Layer 2 multicast group ID operational data.
+	VlanL2MgidOpEndpoint = McastOperBasePath + "/vlan-l2-mgid-op"
 )
 
 // Service provides multicast operational data access.

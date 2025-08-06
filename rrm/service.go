@@ -1,12 +1,33 @@
-// Package rrm provides Radio Resource Management domain services for the Cisco Wireless Network Controller API.
 package rrm
 
 import (
 	"context"
 	"net/http"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+)
+
+const (
+	// RrmCfgBasePath defines the base path for RRM configuration endpoints
+	RrmCfgBasePath = "Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"
+	// RrmCfgEndpoint retrieves complete RRM configuration data
+	RrmCfgEndpoint = RrmCfgBasePath
+
+	// RrmOperBasePath defines the base path for RRM operational data endpoints
+	RrmOperBasePath = "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"
+	// RrmOperEndpoint retrieves RRM operational data
+	RrmOperEndpoint = RrmOperBasePath
+
+	// RrmGlobalOperBasePath defines the base path for RRM global operational data endpoints
+	RrmGlobalOperBasePath = "Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data"
+	// RrmGlobalOperEndpoint retrieves RRM global operational data
+	RrmGlobalOperEndpoint = RrmGlobalOperBasePath
+
+	// RrmEmulOperBasePath defines the base path for RRM emulation operational data endpoints
+	RrmEmulOperBasePath = "Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data"
+	// RrmEmulOperEndpoint retrieves RRM emulation operational data
+	RrmEmulOperEndpoint = RrmEmulOperBasePath
 )
 
 // Service provides access to all RRM operations.

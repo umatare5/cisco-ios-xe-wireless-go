@@ -13,6 +13,7 @@ import (
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/httpx"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // Default timeout constant
@@ -20,16 +21,6 @@ const (
 	// DefaultTimeout is the default timeout for API requests
 	DefaultTimeout = 60 * time.Second
 )
-
-// HTTPError represents an HTTP error response from the API
-type HTTPError struct {
-	Status int    // HTTP status code
-	Body   []byte // Response body
-}
-
-func (e *HTTPError) Error() string {
-	return fmt.Sprintf("HTTP %d: %s", e.Status, string(e.Body))
-}
 
 // Client represents the core WNC API client with connection pooling and structured logging
 type Client struct {
@@ -86,14 +77,12 @@ func WithUserAgent(userAgent string) Option {
 // New creates a new WNC client with the specified host, token, and options
 func New(host, token string, opts ...Option) (*Client, error) {
 	// Validate inputs using existing validation functions
-	if !isValidController(host) {
-		return nil, fmt.Errorf("controller address is required")
+	if !validation.IsValidController(host) {
+		return nil, fmt.Errorf("invalid controller address: %s", host)
 	}
-	if !isValidAccessToken(token) {
-		return nil, fmt.Errorf("access token is required")
-	}
-
-	// Create HTTP transport with default settings
+	if !validation.IsValidAccessToken(token) {
+		return nil, fmt.Errorf("invalid access token")
+	} // Create HTTP transport with default settings
 	transport := httpx.NewTransport(false) // Default to secure
 
 	// Create HTTP client with transport
@@ -171,9 +160,10 @@ func (c *Client) Do(ctx context.Context, method, path string, out any) error {
 	// Check for HTTP errors
 	if resp.StatusCode >= 400 {
 		c.logger.Error("HTTP error response", "status", resp.StatusCode, "body", string(body))
-		return &HTTPError{
-			Status: resp.StatusCode,
-			Body:   body,
+		return &APIError{
+			StatusCode: resp.StatusCode,
+			Message:    string(body),
+			Body:       body,
 		}
 	}
 
@@ -247,6 +237,86 @@ type GeolocationService interface {
 // McastService defines the interface for multicast operations
 type McastService interface {
 	// Methods will be added as the mcast package is refactored
+}
+
+// APFService defines the interface for Application Policy Framework operations
+type APFService interface {
+	// Methods will be added as the apf package is refactored
+}
+
+// AWIPSService defines the interface for Advanced Weather Interactive Processing System operations
+type AWIPSService interface {
+	// Methods will be added as the awips package is refactored
+}
+
+// BLEService defines the interface for Bluetooth Low Energy operations
+type BLEService interface {
+	// Methods will be added as the ble package is refactored
+}
+
+// CTSService defines the interface for Cisco TrustSec operations
+type CTSService interface {
+	// Methods will be added as the cts package is refactored
+}
+
+// Dot11Service defines the interface for 802.11 wireless standard operations
+type Dot11Service interface {
+	// Methods will be added as the dot11 package is refactored
+}
+
+// Dot15Service defines the interface for 802.15 standard operations
+type Dot15Service interface {
+	// Methods will be added as the dot15 package is refactored
+}
+
+// FabricService defines the interface for Fabric operations
+type FabricService interface {
+	// Methods will be added as the fabric package is refactored
+}
+
+// FlexService defines the interface for FlexConnect operations
+type FlexService interface {
+	// Methods will be added as the flex package is refactored
+}
+
+// LocationService defines the interface for Location services operations
+type LocationService interface {
+	// Methods will be added as the location package is refactored
+}
+
+// RadioService defines the interface for Radio operations
+type RadioService interface {
+	// Methods will be added as the radio package is refactored
+}
+
+// RFService defines the interface for Radio Frequency operations
+type RFService interface {
+	// Methods will be added as the rf package is refactored
+}
+
+// RFIDService defines the interface for RFID operations
+type RFIDService interface {
+	// Methods will be added as the rfid package is refactored
+}
+
+// MobilityService defines the interface for Mobility operations
+type MobilityService interface {
+	// Methods will be added as the mobility package is refactored
+}
+
+// MeshService defines the interface for Mesh operations
+type MeshService interface {
+	// Methods will be added as the mesh package is refactored
+}
+
+// SiteService defines the interface for Site operations
+type SiteService interface {
+	// Methods will be added as the site package is refactored
+}
+
+// LISPService defines the interface for LISP operations
+type LISPService interface {
+	// Methods will be added as the lisp package is refactored
 }
 
 // Domain service accessors - these create service instances that use the client's Do() method
@@ -324,14 +394,98 @@ func (c *Client) Mcast() McastService {
 	return nil // Placeholder
 }
 
-// Helper functions - these need to be imported or defined
-
-// isValidController checks if controller address is valid
-func isValidController(controller string) bool {
-	return controller != ""
+// APF returns an APF service instance
+func (c *Client) APF() APFService {
+	// This will be implemented when apf package is refactored to use the new client
+	return nil // Placeholder
 }
 
-// isValidAccessToken checks if access token is valid
-func isValidAccessToken(accessToken string) bool {
-	return accessToken != ""
+// AWIPS returns an AWIPS service instance
+func (c *Client) AWIPS() AWIPSService {
+	// This will be implemented when awips package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// BLE returns a BLE service instance
+func (c *Client) BLE() BLEService {
+	// This will be implemented when ble package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// CTS returns a CTS service instance
+func (c *Client) CTS() CTSService {
+	// This will be implemented when cts package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Dot11 returns a 802.11 service instance
+func (c *Client) Dot11() Dot11Service {
+	// This will be implemented when dot11 package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Dot15 returns a 802.15 service instance
+func (c *Client) Dot15() Dot15Service {
+	// This will be implemented when dot15 package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Fabric returns a Fabric service instance
+func (c *Client) Fabric() FabricService {
+	// This will be implemented when fabric package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Flex returns a FlexConnect service instance
+func (c *Client) Flex() FlexService {
+	// This will be implemented when flex package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Location returns a Location service instance
+func (c *Client) Location() LocationService {
+	// This will be implemented when location package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Radio returns a Radio service instance
+func (c *Client) Radio() RadioService {
+	// This will be implemented when radio package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// RF returns a Radio Frequency service instance
+func (c *Client) RF() RFService {
+	// This will be implemented when rf package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// RFID returns an RFID service instance
+func (c *Client) RFID() RFIDService {
+	// This will be implemented when rfid package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Mobility returns a Mobility service instance
+func (c *Client) Mobility() MobilityService {
+	// This will be implemented when mobility package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Mesh returns a Mesh service instance
+func (c *Client) Mesh() MeshService {
+	// This will be implemented when mesh package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Site returns a Site service instance
+func (c *Client) Site() SiteService {
+	// This will be implemented when site package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// LISP returns a LISP service instance
+func (c *Client) LISP() LISPService {
+	// This will be implemented when lisp package is refactored to use the new client
+	return nil // Placeholder
 }
