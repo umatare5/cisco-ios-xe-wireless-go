@@ -185,11 +185,11 @@ func TestCreateTestClientForMockServerWithNilServer(t *testing.T) {
 		// We cannot test t.Fatal directly as it would stop the test
 		// Instead, we test the underlying condition that triggers t.Fatal
 		var mockServer *MockHTTPServer = nil
-		
+
 		if mockServer == nil {
 			t.Log("Nil mock server correctly detected - would call t.Fatal in CreateTestClientForMockServer")
 		}
-		
+
 		// The actual call would be:
 		// CreateTestClientForMockServer(t, nil)
 		// but this would call t.Fatal and stop the test
@@ -199,7 +199,7 @@ func TestCreateTestClientForMockServerWithNilServer(t *testing.T) {
 func TestTestAPIFunctionWithError(t *testing.T) {
 	// Skip this test as TestAPIFunction calls t.Errorf for errors
 	t.Skip("Skipping test that exercises error path which calls t.Errorf")
-	
+
 	setupMock := func(mock *MockHTTPServer) {
 		mock.AddHandler("/error-endpoint", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -215,7 +215,7 @@ func TestTestAPIFunctionWithError(t *testing.T) {
 	// TestAPIFunction logs the error but doesn't fail the test for network errors
 	// This exercises the error handling path
 	TestAPIFunction(t, "ErrorEndpoint", setupMock, testFunc)
-	
+
 	// Since TestAPIFunction logs errors but continues, we just verify it ran
 	t.Log("TestAPIFunction completed error handling test")
 }
@@ -244,7 +244,7 @@ func TestTestAPIFunctionWithCancelledContext(t *testing.T) {
 func TestTestTimeoutAPIWithTimeout(t *testing.T) {
 	// Skip this test as TestTimeoutAPI expects timeout errors in specific format
 	t.Skip("Skipping test that exercises timeout path which expects specific error format")
-	
+
 	testFunc := func(ctx context.Context, client *wnc.Client) error {
 		// Check if context is already done
 		select {
@@ -260,7 +260,7 @@ func TestTestTimeoutAPIWithTimeout(t *testing.T) {
 	// TestTimeoutAPI may handle timeouts gracefully rather than failing
 	// This exercises the timeout handling code path
 	TestTimeoutAPI(t, "SlowFunction", testFunc)
-	
+
 	t.Log("TestTimeoutAPI completed timeout handling test")
 }
 

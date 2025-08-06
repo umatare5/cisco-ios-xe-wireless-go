@@ -1149,27 +1149,27 @@ func TestEnsureTestDataDirError(t *testing.T) {
 	t.Run("DirectoryCreationError", func(t *testing.T) {
 		// Test the error path in ensureTestDataDir by trying to save to an invalid location
 		testData := map[string]interface{}{"test": "data"}
-		
+
 		// Save current working directory
 		originalWd, _ := os.Getwd()
 		defer os.Chdir(originalWd)
-		
+
 		// Change to a temporary directory that we'll make read-only
 		tempDir := filepath.Join(os.TempDir(), "readonly_test_"+fmt.Sprintf("%d", time.Now().UnixNano()))
 		os.MkdirAll(tempDir, 0755)
 		defer os.RemoveAll(tempDir)
-		
+
 		// Make the directory read-only to trigger directory creation error
 		os.Chmod(tempDir, 0444)
 		os.Chdir(tempDir)
-		
+
 		err := SaveTestDataToFile("test.json", testData)
 		if err == nil {
 			t.Log("SaveTestDataToFile handled read-only directory gracefully")
 		} else {
 			t.Logf("SaveTestDataToFile correctly failed with error: %v", err)
 		}
-		
+
 		// Restore permissions for cleanup
 		os.Chmod(tempDir, 0755)
 	})
@@ -1181,22 +1181,22 @@ func TestValidateEndpointEdgeCases(t *testing.T) {
 		// Test the logic manually to ensure coverage of validateEndpoint
 		endpointValue := ""
 		endpointName := "EmptyEndpoint"
-		
+
 		// This mimics the logic in validateEndpoint
 		if endpointValue == "" {
 			t.Logf("Empty endpoint detected correctly for %s", endpointName)
 		}
 	})
-	
+
 	// Test short endpoint path
 	t.Run("ShortEndpoint", func(t *testing.T) {
-		// Test the logic manually to ensure coverage of validateEndpoint  
+		// Test the logic manually to ensure coverage of validateEndpoint
 		endpointValue := "/short"
 		endpointName := "ShortEndpoint"
-		
+
 		// This mimics the logic in validateEndpoint
 		if len(endpointValue) < MinEndpointLength {
-			t.Logf("Short endpoint detected correctly for %s: %s (length: %d, min: %d)", 
+			t.Logf("Short endpoint detected correctly for %s: %s (length: %d, min: %d)",
 				endpointName, endpointValue, len(endpointValue), MinEndpointLength)
 		}
 	})
@@ -1294,7 +1294,7 @@ func TestCreateTestClientWithTimeoutErrorHandling(t *testing.T) {
 	t.Run("MissingEnvironmentVariables", func(t *testing.T) {
 		os.Unsetenv("WNC_CONTROLLER")
 		os.Unsetenv("WNC_ACCESS_TOKEN")
-		
+
 		// CreateTestClientWithTimeout will call t.Skip when env vars are missing
 		// We can test the underlying condition
 		config := NewTestConfigFromEnv()

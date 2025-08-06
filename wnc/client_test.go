@@ -417,7 +417,8 @@ func TestDoMethodSpecificCoverage(t *testing.T) {
 	})
 
 	t.Run("ValidRequestCreation", func(t *testing.T) {
-		ctx := context.Background()
+		ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+		defer cancel()
 		var response interface{}
 
 		// Test that request creation works with valid parameters

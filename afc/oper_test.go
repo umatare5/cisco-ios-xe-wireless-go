@@ -235,3 +235,46 @@ func TestAfcOperEndpoints(t *testing.T) {
 		}
 	})
 }
+
+// =============================================================================
+// 6. SERVICE TESTS
+// =============================================================================
+
+func TestAFCService(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test operational methods
+	t.Run("Service_Oper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Oper(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_APResp", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.APResp(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_CloudOper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.CloudOper(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_CloudStats", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.CloudStats(ctx)
+			return err
+		})
+	})
+}

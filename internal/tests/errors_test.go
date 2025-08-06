@@ -100,7 +100,7 @@ func TestRunCommonErrorTestsWithMultipleCases(t *testing.T) {
 			ExpectedError: "connection refused",
 		},
 		{
-			Name: "TimeoutError", 
+			Name: "TimeoutError",
 			TestFunc: func(client *wnc.Client) error {
 				return errors.New("timeout occurred")
 			},
