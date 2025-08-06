@@ -282,6 +282,14 @@ func TestHandleHTTPError(t *testing.T) {
 		{"AccessForbiddenError", 403, []byte("Forbidden"), "https://test.com/api", ErrAccessForbidden},
 		{"NotFoundError", 404, []byte("Not Found"), "https://test.com/api", ErrResourceNotFound},
 		{"SuccessStatus", 200, []byte("OK"), "https://test.com/api", nil},
+		{"SuccessStatusCreated", 201, []byte("Created"), "https://test.com/api", nil},
+		{"SuccessStatusAccepted", 202, []byte("Accepted"), "https://test.com/api", nil},
+		{"SuccessStatusNoContent", 204, []byte(""), "https://test.com/api", nil},
+		{"ServerError", 500, []byte("Internal Server Error"), "https://test.com/api", nil},      // Should return error
+		{"BadGateway", 502, []byte("Bad Gateway"), "https://test.com/api", nil},                 // Should return error
+		{"ServiceUnavailable", 503, []byte("Service Unavailable"), "https://test.com/api", nil}, // Should return error
+		{"BadRequest", 400, []byte("Bad Request"), "https://test.com/api", nil},                 // Should return error
+		{"Conflict", 409, []byte("Conflict"), "https://test.com/api", nil},                      // Should return error
 	}
 
 	for _, tt := range tests {
@@ -296,17 +304,24 @@ func TestHandleHTTPError(t *testing.T) {
 			err := client.handleHTTPError(tt.statusCode, tt.responseBody, tt.requestURL)
 
 			if tt.expectedErr == nil {
-				if err != nil {
-					t.Errorf("Expected no error, got %v", err)
+				// For success status codes (200-299), expect no error
+				if tt.statusCode >= 200 && tt.statusCode < 300 {
+					if err != nil {
+						t.Errorf("Expected no error for success status %d, got %v", tt.statusCode, err)
+					}
+				} else {
+					// For non-success status codes, expect an error
+					if err == nil {
+						t.Errorf("Expected an error for status %d, got nil", tt.statusCode)
+					} else if !strings.Contains(err.Error(), "HTTP error") {
+						t.Errorf("Expected HTTP error message for status %d, got %v", tt.statusCode, err)
+					}
 				}
 			} else {
 				if err == nil {
 					t.Errorf("Expected error %v, got nil", tt.expectedErr)
 				} else if err != tt.expectedErr {
-					// For other HTTP errors, check if it contains the status code
-					if tt.statusCode >= 400 && !strings.Contains(err.Error(), "HTTP error") {
-						t.Errorf("Expected HTTP error message, got %v", err)
-					}
+					t.Errorf("Expected error %v, got %v", tt.expectedErr, err)
 				}
 			}
 		})

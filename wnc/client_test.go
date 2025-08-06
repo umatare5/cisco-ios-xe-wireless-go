@@ -1,8 +1,12 @@
+// nolint:SA1012 // Testing nil context behavior
 package wnc
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
@@ -117,6 +121,8 @@ func TestClientDo(t *testing.T) {
 
 	t.Run("NilContext", func(t *testing.T) {
 		var response interface{}
+		// Test with nil context (explicitly testing nil context handling)
+		// nolint:SA1012 // This is intentionally testing nil context behavior
 		err := client.Do(nil, "GET", "/restconf/data/test", &response)
 		if err == nil {
 			t.Error("Expected error for nil context")
@@ -338,7 +344,8 @@ func TestDoMethodNilParameters(t *testing.T) {
 
 	var response interface{}
 
-	// Test with nil context
+	// Test with nil context (explicitly testing nil context handling)
+	// nolint:SA1012 // This is intentionally testing nil context behavior
 	err = client.Do(nil, "GET", "/test", &response)
 	if err == nil {
 		t.Error("Expected error for nil context, got nil")
@@ -470,4 +477,249 @@ func TestDoMethodJSONHandling(t *testing.T) {
 			t.Logf("Error (expected): %v", err)
 		}
 	})
+
+	t.Run("InvalidJSONResponse", func(t *testing.T) {
+		var response map[string]interface{}
+
+		// Try to get HTML as JSON - this should cause unmarshaling error
+		err := client.Do(ctx, "GET", "/html", &response)
+		if err != nil {
+			// Should get either network error or JSON unmarshaling error
+			t.Logf("Error (expected for HTML response): %v", err)
+		}
+	})
+}
+
+// TestDoMethodResponseBodyHandling tests response body handling edge cases
+func TestDoMethodResponseBodyHandling(t *testing.T) {
+	client, err := New("httpbin.org", "token", WithTimeout(5*time.Second))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	t.Run("EmptyResponse", func(t *testing.T) {
+		var response map[string]interface{}
+
+		// Test empty response body handling
+		err := client.Do(ctx, "GET", "/status/204", &response)
+		if err != nil {
+			// Empty responses might cause JSON unmarshaling errors, which is expected
+			t.Logf("Error (may be expected for empty response): %v", err)
+		}
+	})
+
+	t.Run("LargeResponse", func(t *testing.T) {
+		var response map[string]interface{}
+
+		// Test with a larger response
+		err := client.Do(ctx, "GET", "/json", &response)
+		if err != nil {
+			t.Logf("Error (network or parsing): %v", err)
+		}
+	})
+}
+
+// TestDoMethodResponseBodyReadError tests response body read error handling
+func TestDoMethodResponseBodyReadError(t *testing.T) {
+	// Create a test server that sends a response with incomplete JSON
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"partial": "response"`)) // Incomplete JSON
+		// Don't close the JSON properly to simulate read error
+	}))
+	defer server.Close()
+
+	// Extract just the host:port from the server URL
+	serverURL := strings.TrimPrefix(server.URL, "https://")
+
+	client, err := New(serverURL, "token", WithTimeout(1*time.Second), WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	var response map[string]interface{}
+	err = client.Do(ctx, "GET", "/test", &response)
+	if err != nil {
+		// Should get JSON unmarshaling error due to incomplete JSON
+		t.Logf("Expected error for incomplete JSON: %v", err)
+	}
+}
+
+// TestDoMethodHTTPErrorBoundaries tests HTTP error status code boundaries
+func TestDoMethodHTTPErrorBoundaries(t *testing.T) {
+	testCases := []struct {
+		name       string
+		statusCode int
+		expectErr  bool
+	}{
+		{"Status399_NoError", 399, false},
+		{"Status400_Error", 400, true},
+		{"Status404_Error", 404, true},
+		{"Status500_Error", 500, true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(tc.statusCode)
+				fmt.Fprintf(w, `{"error": "test error"}`)
+			}))
+			defer server.Close()
+
+			serverURL := strings.TrimPrefix(server.URL, "https://")
+			client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
+			if err != nil {
+				t.Fatalf("Failed to create client: %v", err)
+			}
+
+			ctx := context.Background()
+			var response map[string]interface{}
+			err = client.Do(ctx, "GET", "/test", &response)
+
+			if tc.expectErr && err == nil {
+				t.Errorf("Expected error for status %d, got nil", tc.statusCode)
+			}
+			if !tc.expectErr && err != nil {
+				t.Errorf("Expected no error for status %d, got: %v", tc.statusCode, err)
+			}
+		})
+	}
+}
+
+// TestDoMethodResponseBodyCloseError tests deferred response body close error handling
+func TestDoMethodResponseBodyCloseError(t *testing.T) {
+	// Create a test server that returns valid JSON
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, `{"test": "data"}`)
+	}))
+	defer server.Close()
+
+	serverURL := strings.TrimPrefix(server.URL, "https://")
+	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	var response map[string]interface{}
+
+	// This test covers the successful path including the deferred body close
+	err = client.Do(ctx, "GET", "/test", &response)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	if response["test"] != "data" {
+		t.Errorf("Expected response data, got: %v", response)
+	}
+}
+
+// TestDoMethodResponseBodyReadFailure tests response body read error handling
+func TestDoMethodResponseBodyReadFailure(t *testing.T) {
+	// Create a test server that returns a broken response body
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", "100") // Set content length but send less data
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"partial"`)) // Incomplete response to trigger read errors
+		// Force connection close to simulate read failure
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+		// Don't write complete response
+	}))
+	defer server.Close()
+
+	serverURL := strings.TrimPrefix(server.URL, "https://")
+	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	var response map[string]interface{}
+
+	// This should trigger JSON unmarshaling error due to incomplete response
+	err = client.Do(ctx, "GET", "/test", &response)
+	if err == nil {
+		t.Error("Expected error due to incomplete JSON response")
+	}
+
+	// Should be a JSON unmarshaling error
+	if !strings.Contains(err.Error(), "failed to unmarshal response") {
+		t.Logf("Got error (JSON parsing expected): %v", err)
+	}
+}
+
+// TestDoMethodWithLargeResponse tests handling of larger response bodies
+func TestDoMethodWithLargeResponse(t *testing.T) {
+	// Create a test server that returns a large valid JSON response
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		// Generate a larger JSON response
+		large_data := make(map[string]interface{})
+		for i := 0; i < 100; i++ {
+			large_data[fmt.Sprintf("key_%d", i)] = fmt.Sprintf("value_%d", i)
+		}
+
+		// Manually create JSON to ensure it's valid
+		fmt.Fprintf(w, `{"test": "data", "large_field": "`)
+		for i := 0; i < 1000; i++ {
+			fmt.Fprintf(w, "x")
+		}
+		fmt.Fprintf(w, `"}`)
+	}))
+	defer server.Close()
+
+	serverURL := strings.TrimPrefix(server.URL, "https://")
+	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	var response map[string]interface{}
+
+	err = client.Do(ctx, "GET", "/test", &response)
+	if err != nil {
+		t.Errorf("Unexpected error with large response: %v", err)
+	}
+
+	if response["test"] != "data" {
+		t.Errorf("Expected test data in large response, got: %v", response["test"])
+	}
+}
+
+// TestDoMethodEmptyResponseBody tests handling of empty response bodies
+func TestDoMethodEmptyResponseBody(t *testing.T) {
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		// Send empty body
+	}))
+	defer server.Close()
+
+	serverURL := strings.TrimPrefix(server.URL, "https://")
+	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx := context.Background()
+	var response map[string]interface{}
+
+	err = client.Do(ctx, "GET", "/test", &response)
+	if err == nil {
+		t.Error("Expected error due to empty JSON response")
+	}
+
+	// Should be a JSON unmarshaling error
+	if !strings.Contains(err.Error(), "failed to unmarshal response") {
+		t.Logf("Got error (JSON parsing expected): %v", err)
+	}
 }

@@ -10,7 +10,10 @@ import (
 // HTTP status code constants
 const (
 	// Success status codes
-	StatusOK = http.StatusOK
+	StatusOK        = http.StatusOK
+	StatusCreated   = http.StatusCreated
+	StatusAccepted  = http.StatusAccepted
+	StatusNoContent = http.StatusNoContent
 
 	// Client error status codes
 	StatusBadRequest          = http.StatusBadRequest
@@ -55,7 +58,7 @@ func (e *APIError) Error() string {
 
 // isSuccessStatusCode checks if HTTP status code indicates success
 func isSuccessStatusCode(statusCode int) bool {
-	return statusCode == StatusOK
+	return statusCode >= 200 && statusCode < 300
 }
 
 // isAuthenticationError checks if HTTP status code indicates authentication failure

@@ -46,6 +46,9 @@ func TestStatusCodeCheckers(t *testing.T) {
 	}{
 		// Success status codes
 		{"Success_200", StatusOK, isSuccessStatusCode, true},
+		{"Success_201", StatusCreated, isSuccessStatusCode, true},
+		{"Success_202", StatusAccepted, isSuccessStatusCode, true},
+		{"Success_204", StatusNoContent, isSuccessStatusCode, true},
 		{"NotSuccess_404", StatusNotFound, isSuccessStatusCode, false},
 		{"NotSuccess_401", StatusUnauthorized, isSuccessStatusCode, false},
 
