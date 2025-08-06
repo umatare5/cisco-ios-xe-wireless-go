@@ -121,9 +121,9 @@ func TestClientDo(t *testing.T) {
 
 	t.Run("NilContext", func(t *testing.T) {
 		var response interface{}
-		// Test with nil context (explicitly testing nil context handling)
-		// nolint:SA1012 // This is intentionally testing nil context behavior
-		err := client.Do(nil, "GET", "/restconf/data/test", &response)
+		// Using a nil context variable instead of nil literal to test the validation
+		var nilCtx context.Context
+		err := client.Do(nilCtx, "GET", "/restconf/data/test", &response)
 		if err == nil {
 			t.Error("Expected error for nil context")
 		}
@@ -292,6 +292,70 @@ func TestServiceAccessors(t *testing.T) {
 			name:     "Mcast",
 			accessor: func() interface{} { return client.Mcast() },
 		},
+		{
+			name:     "APF",
+			accessor: func() interface{} { return client.APF() },
+		},
+		{
+			name:     "AWIPS",
+			accessor: func() interface{} { return client.AWIPS() },
+		},
+		{
+			name:     "BLE",
+			accessor: func() interface{} { return client.BLE() },
+		},
+		{
+			name:     "CTS",
+			accessor: func() interface{} { return client.CTS() },
+		},
+		{
+			name:     "Dot11",
+			accessor: func() interface{} { return client.Dot11() },
+		},
+		{
+			name:     "Dot15",
+			accessor: func() interface{} { return client.Dot15() },
+		},
+		{
+			name:     "Fabric",
+			accessor: func() interface{} { return client.Fabric() },
+		},
+		{
+			name:     "Flex",
+			accessor: func() interface{} { return client.Flex() },
+		},
+		{
+			name:     "Location",
+			accessor: func() interface{} { return client.Location() },
+		},
+		{
+			name:     "Radio",
+			accessor: func() interface{} { return client.Radio() },
+		},
+		{
+			name:     "RF",
+			accessor: func() interface{} { return client.RF() },
+		},
+		{
+			name:     "RFID",
+			accessor: func() interface{} { return client.RFID() },
+		},
+		{
+			name:     "Mobility",
+			accessor: func() interface{} { return client.Mobility() },
+		},
+		{
+			name:     "Mesh",
+			accessor: func() interface{} { return client.Mesh() },
+		},
+		{
+			name:     "Site",
+			accessor: func() interface{} { return client.Site() },
+		},
+		{
+			name:     "LISP",
+			accessor: func() interface{} { return client.LISP() },
+		},
 	}
 
 	for _, tt := range tests {
@@ -344,9 +408,9 @@ func TestDoMethodNilParameters(t *testing.T) {
 
 	var response interface{}
 
-	// Test with nil context (explicitly testing nil context handling)
-	// nolint:SA1012 // This is intentionally testing nil context behavior
-	err = client.Do(nil, "GET", "/test", &response)
+	// Using a nil context variable instead of nil literal to test the validation
+	var nilCtx context.Context
+	err = client.Do(nilCtx, "GET", "/test", &response)
 	if err == nil {
 		t.Error("Expected error for nil context, got nil")
 	}
@@ -760,7 +824,9 @@ func TestDoMethodWithNilContext(t *testing.T) {
 	}
 
 	var response map[string]interface{}
-	err = client.Do(nil, "GET", "/test", &response)
+	// Using a nil context variable instead of nil literal to test the validation
+	var nilCtx context.Context
+	err = client.Do(nilCtx, "GET", "/test", &response)
 	if err == nil {
 		t.Error("Expected error with nil context")
 	}
