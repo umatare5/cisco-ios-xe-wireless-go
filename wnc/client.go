@@ -224,6 +224,31 @@ type RogueService interface {
 	// Methods will be added as the rogue package is refactored
 }
 
+// NMSPService defines the interface for Network Mobility Services Protocol operations
+type NMSPService interface {
+	// Methods will be added as the nmsp package is refactored
+}
+
+// HyperlocationService defines the interface for hyperlocation operations
+type HyperlocationService interface {
+	// Methods will be added as the hyperlocation package is refactored
+}
+
+// MdnsService defines the interface for multicast DNS operations
+type MdnsService interface {
+	// Methods will be added as the mdns package is refactored
+}
+
+// GeolocationService defines the interface for geolocation operations
+type GeolocationService interface {
+	// Methods will be added as the geolocation package is refactored
+}
+
+// McastService defines the interface for multicast operations
+type McastService interface {
+	// Methods will be added as the mcast package is refactored
+}
+
 // Domain service accessors - these create service instances that use the client's Do() method
 
 // AFC returns an AFC service instance
@@ -266,6 +291,36 @@ func (c *Client) WLAN() WLANService {
 // Rogue returns a rogue access point detection service instance
 func (c *Client) Rogue() RogueService {
 	// This will be implemented when rogue package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// NMSP returns a Network Mobility Services Protocol service instance
+func (c *Client) NMSP() NMSPService {
+	// This will be implemented when nmsp package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Hyperlocation returns a hyperlocation service instance
+func (c *Client) Hyperlocation() HyperlocationService {
+	// This will be implemented when hyperlocation package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Mdns returns a multicast DNS service instance
+func (c *Client) Mdns() MdnsService {
+	// This will be implemented when mdns package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Geolocation returns a geolocation service instance
+func (c *Client) Geolocation() GeolocationService {
+	// This will be implemented when geolocation package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Mcast returns a multicast service instance
+func (c *Client) Mcast() McastService {
+	// This will be implemented when mcast package is refactored to use the new client
 	return nil // Placeholder
 }
 

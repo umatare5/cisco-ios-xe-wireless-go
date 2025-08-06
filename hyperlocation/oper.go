@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
@@ -17,52 +18,28 @@ const (
 	HyperlocationProfilesEndpoint = HyperlocationOperBasePath + "/ewlc-hyperlocation-profile"
 )
 
-// HyperlocationOperResponse represents the response structure for hyperlocation operational data.
-type HyperlocationOperResponse struct {
-	CiscoIOSXEWirelessHyperlocationOperHyperlocationOperData struct {
-		EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"ewlc-hyperlocation-profile"`
-	} `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data"`
-}
+// Type aliases for backward compatibility - will be removed in v2.0.0
+type (
+	// Deprecated: Use model.HyperlocationOperResponse instead. Will be removed in v2.0.0.
+	HyperlocationOperResponse = model.HyperlocationOperResponse
+	// Deprecated: Use model.HyperlocationProfilesResponse instead. Will be removed in v2.0.0.
+	HyperlocationProfilesResponse = model.HyperlocationProfilesResponse
+	// Deprecated: Use model.EwlcHyperlocationProfile instead. Will be removed in v2.0.0.
+	EwlcHyperlocationProfile = model.EwlcHyperlocationProfile
+)
 
-// HyperlocationProfilesResponse represents the response structure for hyperlocation profiles.
-type HyperlocationProfilesResponse struct {
-	EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:ewlc-hyperlocation-profile"`
-}
-
-// EwlcHyperlocationProfile represents an EWLC hyperlocation profile configuration.
-type EwlcHyperlocationProfile struct {
-	Name              string `json:"name"`
-	HyperlocationData struct {
-		HyperlocationEnable       bool `json:"hyperlocation-enable"`
-		PakRssiThresholdDetection int  `json:"pak-rssi-threshold-detection"`
-		PakRssiThresholdTrigger   int  `json:"pak-rssi-threshold-trigger"`
-		PakRssiThresholdReset     int  `json:"pak-rssi-threshold-reset"`
-	} `json:"hyperlocation-data"`
-	NtpServer  string `json:"ntp-server"`
-	Status     bool   `json:"status"`
-	ReasonDown string `json:"reason-down"`
-}
-
-// GetHyperlocationOper retrieves hyperlocation operational data.
-func GetHyperlocationOper(client *wnc.Client, ctx context.Context) (*HyperlocationOperResponse, error) {
+// Deprecated: Use hyperlocation.NewService(client).Oper(ctx) instead. Will be removed in v2.0.0.
+func GetHyperlocationOper(client *wnc.Client, ctx context.Context) (*model.HyperlocationOperResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data HyperlocationOperResponse
-	if err := client.SendAPIRequest(ctx, HyperlocationOperEndpoint, &data); err != nil {
-		return nil, err
-	}
-	return &data, nil
+	return NewService(client).Oper(ctx)
 }
 
-// GetHyperlocationProfiles retrieves hyperlocation profiles.
-func GetHyperlocationProfiles(client *wnc.Client, ctx context.Context) (*HyperlocationProfilesResponse, error) {
+// Deprecated: Use hyperlocation.NewService(client).Profiles(ctx) instead. Will be removed in v2.0.0.
+func GetHyperlocationProfiles(client *wnc.Client, ctx context.Context) (*model.HyperlocationProfilesResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data HyperlocationProfilesResponse
-	if err := client.SendAPIRequest(ctx, HyperlocationProfilesEndpoint, &data); err != nil {
-		return nil, err
-	}
-	return &data, nil
+	return NewService(client).Profiles(ctx)
 }

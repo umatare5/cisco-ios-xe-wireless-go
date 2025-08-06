@@ -15,7 +15,6 @@ import (
 // These will be removed in v2.0.0
 
 // Deprecated: Use the method-based Service APIs returned by wnc.Client instead.
-// Deprecated: Use appropriate service methods instead.
 // WirelessControllerAPI defines the comprehensive interface for the Cisco Wireless Network Controller API client.
 // It combines all feature-specific interfaces to provide a unified API for controller operations.
 type WirelessControllerAPI interface {
