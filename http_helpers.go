@@ -116,29 +116,3 @@ func (c *Client) buildHTTPHeadersWithAcceptType(acceptType string) map[string]st
 		HTTPHeaderKeyUserAgent:     HTTPHeaderUserAgent,
 	}
 }
-
-// handleHTTPError processes HTTP response errors with early returns
-// Deprecated: HTTP error handling is now done in the core client
-func (c *Client) handleHTTPError(statusCode int, responseBody []byte, requestURL string) error {
-	if isAuthenticationError(statusCode) {
-		c.logger.Error("Authentication failed", "status", statusCode)
-		return ErrAuthenticationFailed
-	}
-
-	if isAccessForbiddenError(statusCode) {
-		c.logger.Error("Access forbidden", "status", statusCode)
-		return ErrAccessForbidden
-	}
-
-	if isNotFoundError(statusCode) {
-		c.logger.Error("Resource not found", "status", statusCode, "url", requestURL)
-		return ErrResourceNotFound
-	}
-
-	if !isSuccessStatusCode(statusCode) {
-		c.logger.Error("HTTP error", "status", statusCode, "body", string(responseBody))
-		return fmt.Errorf("HTTP error %d: %s", statusCode, string(responseBody))
-	}
-
-	return nil
-}

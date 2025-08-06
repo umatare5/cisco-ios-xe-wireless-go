@@ -78,6 +78,10 @@ type RadioOperData5GResponse struct {
 	RadioOperData5G []RadioOperData5G `json:"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-5g"`
 }
 
+type RadioOperData6GResponse struct {
+	RadioOperData6G []RadioOperData6G `json:"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-6g"`
+}
+
 type SpectrumBandConfigDataResponse struct {
 	SpectrumBandConfigData []SpectrumBandConfigData `json:"Cisco-IOS-XE-wireless-rrm-global-oper:spectrum-band-config-data"`
 }
@@ -291,11 +295,11 @@ func GetRrmGlobalRadioOperData5G(client *wnc.Client, ctx context.Context) (*Radi
 	return &data, nil
 }
 
-func GetRrmGlobalRadioOperData6G(client *wnc.Client, ctx context.Context) (*RadioOperData5GResponse, error) {
+func GetRrmGlobalRadioOperData6G(client *wnc.Client, ctx context.Context) (*RadioOperData6GResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data RadioOperData5GResponse
+	var data RadioOperData6GResponse
 	err := client.SendAPIRequest(ctx, RadioOperData6GEndpoint, &data)
 	if err != nil {
 		return nil, err
