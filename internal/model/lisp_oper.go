@@ -13,18 +13,18 @@ type LispOperData struct {
 
 // LispInstance represents LISP instance information
 type LispInstance struct {
-	InstanceId     int         `json:"instance-id"`
-	VrfName        string      `json:"vrf-name"`
-	Status         string      `json:"status"`
-	EidTables      []EidTable  `json:"eid-tables"`
-	MapServers     []MapServer `json:"map-servers"`
+	InstanceId int         `json:"instance-id"`
+	VrfName    string      `json:"vrf-name"`
+	Status     string      `json:"status"`
+	EidTables  []EidTable  `json:"eid-tables"`
+	MapServers []MapServer `json:"map-servers"`
 }
 
 // EidTable represents EID table information
 type EidTable struct {
-	EidPrefix      string `json:"eid-prefix"`
-	LocalizedSets  []string `json:"localized-sets"`
-	RemoteSets     []string `json:"remote-sets"`
+	EidPrefix     string   `json:"eid-prefix"`
+	LocalizedSets []string `json:"localized-sets"`
+	RemoteSets    []string `json:"remote-sets"`
 }
 
 // MapServer represents Map Server information
@@ -37,9 +37,9 @@ type MapServer struct {
 
 // LispStats represents LISP statistics
 type LispStats struct {
-	TotalMappings    int `json:"total-mappings"`
-	LocalMappings    int `json:"local-mappings"`
-	RemoteMappings   int `json:"remote-mappings"`
-	MapRequests      int `json:"map-requests"`
-	MapReplies       int `json:"map-replies"`
+	TotalMappings  int `json:"total-mappings"`
+	LocalMappings  int `json:"local-mappings"`
+	RemoteMappings int `json:"remote-mappings"`
+	MapRequests    int `json:"map-requests"`
+	MapReplies     int `json:"map-replies"`
 }

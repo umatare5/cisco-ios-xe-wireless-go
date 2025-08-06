@@ -237,6 +237,16 @@ The library provides a set of functions for interacting with all major Cisco Cat
 
 This library includes comprehensive unit and integration tests to ensure reliability and compatibility with Cisco Catalyst 9800 controllers. For detailed testing information, please see **[TESTING.md](./docs/TESTING.md)**.
 
+### Quick Test Coverage Check
+
+For a complete test coverage analysis with proper environment configuration:
+
+```bash
+./scripts/test-coverage.sh
+```
+
+This script automatically sets the required WNC environment variables and ensures >98% test coverage.
+
 ## 🛠️ Debugging
 
 This library includes the scripts that are useful for debugging and development. These scripts use `curl` to access WNC, so they don't depend on Go. For detailed scripts documentation, please refer to **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.

@@ -113,51 +113,95 @@ func New(host, token string, opts ...Option) (*Client, error) {
 }
 
 // Do performs a generic HTTP request to the specified path and unmarshals the response into out
+// Do executes an HTTP request and unmarshals the response
 func (c *Client) Do(ctx context.Context, method, path string, out any) error {
+	if err := c.validateDoParameters(ctx, out); err != nil {
+		return err
+	}
+
+	req, err := c.createRequest(ctx, method, path)
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.executeRequest(req)
+	if err != nil {
+		return err
+	}
+	defer c.closeResponseBody(resp)
+
+	body, err := c.readResponseBody(resp)
+	if err != nil {
+		return err
+	}
+
+	if err := c.checkHTTPErrors(resp, body); err != nil {
+		return err
+	}
+
+	return c.unmarshalResponse(body, out, path)
+}
+
+// validateDoParameters validates input parameters for the Do method
+func (c *Client) validateDoParameters(ctx context.Context, out any) error {
+	if c == nil {
+		return fmt.Errorf("client cannot be nil")
+	}
 	if ctx == nil {
 		return fmt.Errorf("context cannot be nil")
 	}
 	if out == nil {
 		return fmt.Errorf("output parameter cannot be nil")
 	}
+	return nil
+}
 
-	// Build full URL using RESTCONF builder
+// createRequest creates and configures an HTTP request
+func (c *Client) createRequest(ctx context.Context, method, path string) (*http.Request, error) {
 	url := c.rest.BuildRESTCONFURL(path)
 
-	// Create HTTP request
 	req, err := http.NewRequestWithContext(ctx, method, url, nil)
 	if err != nil {
 		c.logger.Error("Failed to create HTTP request", "error", err, "url", url)
-		return fmt.Errorf("failed to create request: %w", err)
+		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	// Set headers using httpx helper
 	req.Header = httpx.DefaultHeaders(c.token)
-
 	c.logger.Debug("Sending API request", "method", method, "url", url)
+	return req, nil
+}
 
-	// Execute request
+// executeRequest executes the HTTP request
+func (c *Client) executeRequest(req *http.Request) (*http.Response, error) {
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		c.logger.Error("HTTP request failed", "error", err, "url", url)
-		return fmt.Errorf("request failed: %w", err)
+		c.logger.Error("HTTP request failed", "error", err, "url", req.URL.String())
+		return nil, fmt.Errorf("request failed: %w", err)
 	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			c.logger.Error("Failed to close response body", "error", closeErr)
-		}
-	}()
+	return resp, nil
+}
 
-	// Read response body
+// closeResponseBody safely closes the response body with error logging
+func (c *Client) closeResponseBody(resp *http.Response) {
+	if closeErr := resp.Body.Close(); closeErr != nil {
+		c.logger.Error("Failed to close response body", "error", closeErr)
+	}
+}
+
+// readResponseBody reads the complete response body
+func (c *Client) readResponseBody(resp *http.Response) ([]byte, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		c.logger.Error("Failed to read response body", "error", err)
-		return fmt.Errorf("failed to read response: %w", err)
+		return nil, fmt.Errorf("failed to read response: %w", err)
 	}
 
 	c.logger.Debug("Received API response", "status", resp.StatusCode, "content_length", len(body))
+	return body, nil
+}
 
-	// Check for HTTP errors
+// checkHTTPErrors validates HTTP status codes and returns appropriate errors
+func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error {
 	if resp.StatusCode >= 400 {
 		c.logger.Error("HTTP error response", "status", resp.StatusCode, "body", string(body))
 		return &APIError{
@@ -166,8 +210,11 @@ func (c *Client) Do(ctx context.Context, method, path string, out any) error {
 			Body:       body,
 		}
 	}
+	return nil
+}
 
-	// Unmarshal JSON response
+// unmarshalResponse unmarshals the JSON response into the output parameter
+func (c *Client) unmarshalResponse(body []byte, out any, path string) error {
 	if err := json.Unmarshal(body, out); err != nil {
 		c.logger.Error("Failed to unmarshal JSON response", "error", err, "body_length", len(body))
 		return fmt.Errorf("failed to unmarshal response: %w", err)

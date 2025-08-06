@@ -31,3 +31,16 @@ func (s *Service) Oper(ctx context.Context) (*model.GeolocationOperResponse, err
 
 	return &result, nil
 }
+
+// ApGeoLocStats returns AP geolocation statistics.
+func (s *Service) ApGeoLocStats(ctx context.Context) (*model.GeolocationOperApGeoLocStatsResponse, error) {
+	const endpoint = "Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-stats"
+
+	var result model.GeolocationOperApGeoLocStatsResponse
+	err := s.c.Do(ctx, http.MethodGet, endpoint, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}

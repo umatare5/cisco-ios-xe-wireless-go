@@ -13,9 +13,9 @@ type FlexCfgData struct {
 // FlexGroup represents a FlexConnect group configuration
 type FlexGroup struct {
 	GroupName           string     `json:"group-name"`
-	Vlans              []FlexVlan `json:"vlans"`
-	CentralAuth        bool       `json:"central-auth"`
-	CentralDhcp        bool       `json:"central-dhcp"`
+	Vlans               []FlexVlan `json:"vlans"`
+	CentralAuth         bool       `json:"central-auth"`
+	CentralDhcp         bool       `json:"central-dhcp"`
 	BackupRadiusServers []string   `json:"backup-radius-servers"`
 	LocalSplitTunneling bool       `json:"local-split-tunneling"`
 }

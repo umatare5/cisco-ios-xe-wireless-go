@@ -4,6 +4,7 @@ package wnc
 import (
 	"context"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -873,4 +874,70 @@ func TestDoMethodWithRequestCreationError(t *testing.T) {
 	if !strings.Contains(err.Error(), "failed to create request") {
 		t.Errorf("Expected request creation error, got: %v", err)
 	}
+}
+
+// TestValidateDoParametersWithNilClient tests validation with nil client
+func TestValidateDoParametersWithNilClient(t *testing.T) {
+	var nilClient *Client
+
+	ctx := context.Background()
+	var output interface{}
+
+	// Test that validateDoParameters correctly handles nil client
+	err := nilClient.validateDoParameters(ctx, &output)
+	if err == nil {
+		t.Error("Expected error with nil client")
+	}
+
+	if !strings.Contains(err.Error(), "client cannot be nil") {
+		t.Errorf("Expected nil client error, got: %v", err)
+	}
+}
+
+// TestCloseResponseBodyErrorHandling tests error handling in closeResponseBody
+func TestCloseResponseBodyErrorHandling(t *testing.T) {
+	client, err := New("example.com", "token")
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	// Create a mock reader that will fail on Close()
+	mockReader := &errorCloser{closed: false}
+
+	// Create a simple HTTP response for testing with our mock body
+	resp := &http.Response{
+		StatusCode: 200,
+		Body:       mockReader,
+	}
+
+	// Test that closeResponseBody handles the error case correctly
+	// This should log an error but not panic
+	defer func() {
+		if r := recover(); r != nil {
+			t.Errorf("closeResponseBody should not panic: %v", r)
+		}
+	}()
+
+	client.closeResponseBody(resp)
+
+	// Verify that Close() was called
+	if !mockReader.closed {
+		t.Error("Expected Close() to be called on response body")
+	}
+
+	t.Log("closeResponseBody completed without panic, handled error correctly")
+}
+
+// errorCloser is a mock io.ReadCloser that returns an error on Close()
+type errorCloser struct {
+	closed bool
+}
+
+func (e *errorCloser) Read(p []byte) (n int, err error) {
+	return 0, io.EOF
+}
+
+func (e *errorCloser) Close() error {
+	e.closed = true
+	return fmt.Errorf("mock close error")
 }

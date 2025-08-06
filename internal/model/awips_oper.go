@@ -7,21 +7,21 @@ type AwipsOperResponse struct {
 
 // AwipsOperData contains AWIPS operational data
 type AwipsOperData struct {
-	AwipsPerApInfo   []AwipsPerApInfo   `json:"awips-per-ap-info"`
-	AwipsDwldStatus  AwipsDwldStatus    `json:"awips-dwld-status"`
+	AwipsPerApInfo  []AwipsPerApInfo `json:"awips-per-ap-info"`
+	AwipsDwldStatus AwipsDwldStatus  `json:"awips-dwld-status"`
 }
 
 // AwipsPerApInfo represents AWIPS information per AP
 type AwipsPerApInfo struct {
-	ApMac                    string `json:"ap-mac"`
-	AwipsStatus              string `json:"awips-status"`
-	AlarmCount               string `json:"alarm-count"`
-	ForensicCaptureStatus    string `json:"forensic-capture-status"`
+	ApMac                 string `json:"ap-mac"`
+	AwipsStatus           string `json:"awips-status"`
+	AlarmCount            string `json:"alarm-count"`
+	ForensicCaptureStatus string `json:"forensic-capture-status"`
 }
 
 // AwipsDwldStatus represents AWIPS download status
 type AwipsDwldStatus struct {
-	LastSuccessTimestamp     string `json:"last-success-timestamp"`
-	LastFailedTimestamp      string `json:"last-failed-timestamp"`
-	NumOfFailureAttempts     int    `json:"num-of-failure-attempts"`
+	LastSuccessTimestamp string `json:"last-success-timestamp"`
+	LastFailedTimestamp  string `json:"last-failed-timestamp"`
+	NumOfFailureAttempts int    `json:"num-of-failure-attempts"`
 }

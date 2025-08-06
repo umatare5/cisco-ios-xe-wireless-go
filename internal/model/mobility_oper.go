@@ -7,17 +7,17 @@ type MobilityOperResponse struct {
 
 // MobilitySystemOperData contains Mobility operational data
 type MobilitySystemOperData struct {
-	ApCache                   []ApCache                   `json:"ap-cache"`
-	ApPeerList               []ApPeerList                `json:"ap-peer-list"`
-	MmGlobalData             MmGlobalData                `json:"mm-global-data"`
-	MmIfGlobalMsgStats       MmIfGlobalMsgStats          `json:"mm-if-global-msg-stats"`
-	MmIfGlobalStats          MmIfGlobalStats             `json:"mm-if-global-stats"`
-	MobilityClientData       []MobilityClientData        `json:"mobility-client-data"`
-	MobilityClientStats      MobilityClientStats         `json:"mobility-client-stats"`
-	MobilityGlobalDtlsStats  MobilityGlobalDtlsStats     `json:"mobility-global-dtls-stats"`
-	MobilityGlobalMsgStats   MobilityGlobalMsgStats      `json:"mobility-global-msg-stats"`
-	MobilityGlobalStats      MobilityGlobalStats         `json:"mobility-global-stats"`
-	WlanClientLimit          []WlanClientLimit           `json:"wlan-client-limit"`
+	ApCache                 []ApCache               `json:"ap-cache"`
+	ApPeerList              []ApPeerList            `json:"ap-peer-list"`
+	MmGlobalData            MmGlobalData            `json:"mm-global-data"`
+	MmIfGlobalMsgStats      MmIfGlobalMsgStats      `json:"mm-if-global-msg-stats"`
+	MmIfGlobalStats         MmIfGlobalStats         `json:"mm-if-global-stats"`
+	MobilityClientData      []MobilityClientData    `json:"mobility-client-data"`
+	MobilityClientStats     MobilityClientStats     `json:"mobility-client-stats"`
+	MobilityGlobalDtlsStats MobilityGlobalDtlsStats `json:"mobility-global-dtls-stats"`
+	MobilityGlobalMsgStats  MobilityGlobalMsgStats  `json:"mobility-global-msg-stats"`
+	MobilityGlobalStats     MobilityGlobalStats     `json:"mobility-global-stats"`
+	WlanClientLimit         []WlanClientLimit       `json:"wlan-client-limit"`
 }
 
 // ApCache represents AP cache information
@@ -47,22 +47,22 @@ type MmIfGlobalStats struct {
 
 // MbltyStats represents mobility statistics
 type MbltyStats struct {
-	EventDataAllocs              int `json:"event-data-allocs"`
-	EventDataFrees               int `json:"event-data-frees"`
-	MmifFsmInvalidEvents         int `json:"mmif-fsm-invalid-events"`
-	MmifScheduleErrors           int `json:"mmif-schedule-errors"`
-	MmifFsmFailure               int `json:"mmif-fsm-failure"`
-	MmifIpcFailure               int `json:"mmif-ipc-failure"`
-	MmifDbFailure                int `json:"mmif-db-failure"`
-	MmifInvalidParamsFailure     int `json:"mmif-invalid-params-failure"`
-	MmifMmMsgDecodeFailure       int `json:"mmif-mm-msg-decode-failure"`
-	MmifUnknownFailure           int `json:"mmif-unknown-failure"`
-	MmifClientHandoffFailure     int `json:"mmif-client-handoff-failure"`
-	MmifClientHandoffSuccess     int `json:"mmif-client-handoff-success"`
-	MmifAnchorDeny               int `json:"mmif-anchor-deny"`
-	MmifRemoteDelete             int `json:"mmif-remote-delete"`
-	MmifTunnelDownDelete         int `json:"mmif-tunnel-down-delete"`
-	MmifMbssidDownEvent          int `json:"mmif-mbssid-down-event"`
+	EventDataAllocs          int `json:"event-data-allocs"`
+	EventDataFrees           int `json:"event-data-frees"`
+	MmifFsmInvalidEvents     int `json:"mmif-fsm-invalid-events"`
+	MmifScheduleErrors       int `json:"mmif-schedule-errors"`
+	MmifFsmFailure           int `json:"mmif-fsm-failure"`
+	MmifIpcFailure           int `json:"mmif-ipc-failure"`
+	MmifDbFailure            int `json:"mmif-db-failure"`
+	MmifInvalidParamsFailure int `json:"mmif-invalid-params-failure"`
+	MmifMmMsgDecodeFailure   int `json:"mmif-mm-msg-decode-failure"`
+	MmifUnknownFailure       int `json:"mmif-unknown-failure"`
+	MmifClientHandoffFailure int `json:"mmif-client-handoff-failure"`
+	MmifClientHandoffSuccess int `json:"mmif-client-handoff-success"`
+	MmifAnchorDeny           int `json:"mmif-anchor-deny"`
+	MmifRemoteDelete         int `json:"mmif-remote-delete"`
+	MmifTunnelDownDelete     int `json:"mmif-tunnel-down-delete"`
+	MmifMbssidDownEvent      int `json:"mmif-mbssid-down-event"`
 }
 
 // MobilityClientData represents mobility client data

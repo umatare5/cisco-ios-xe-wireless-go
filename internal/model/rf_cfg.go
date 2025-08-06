@@ -12,11 +12,11 @@ type RfCfgData struct {
 
 // RfProfile represents RF profile configuration
 type RfProfile struct {
-	ProfileName       string `json:"profile-name"`
-	MinTxPower        int    `json:"min-tx-power"`
-	MaxTxPower        int    `json:"max-tx-power"`
-	DataRates         []int  `json:"data-rates"`
-	Beamforming       bool   `json:"beamforming"`
-	BandSelectEnabled bool   `json:"band-select-enabled"`
-	CoverageHoleDetection bool `json:"coverage-hole-detection"`
+	ProfileName           string `json:"profile-name"`
+	MinTxPower            int    `json:"min-tx-power"`
+	MaxTxPower            int    `json:"max-tx-power"`
+	DataRates             []int  `json:"data-rates"`
+	Beamforming           bool   `json:"beamforming"`
+	BandSelectEnabled     bool   `json:"band-select-enabled"`
+	CoverageHoleDetection bool   `json:"coverage-hole-detection"`
 }

@@ -12,11 +12,11 @@ type LocationCfgData struct {
 
 // LocationConfig represents location services configuration
 type LocationConfig struct {
-	RfidEnabled           bool `json:"rfid-enabled"`
-	Playout              bool `json:"playout"`
-	CalibrationModel     string `json:"calibration-model"`
-	BluetoothEnabled     bool `json:"bluetooth-enabled"`
-	RogueLocation        bool `json:"rogue-location"`
-	NotificationThreshold int  `json:"notification-threshold"`
-	HyperlocationEnabled bool `json:"hyperlocation-enabled"`
+	RfidEnabled           bool   `json:"rfid-enabled"`
+	Playout               bool   `json:"playout"`
+	CalibrationModel      string `json:"calibration-model"`
+	BluetoothEnabled      bool   `json:"bluetooth-enabled"`
+	RogueLocation         bool   `json:"rogue-location"`
+	NotificationThreshold int    `json:"notification-threshold"`
+	HyperlocationEnabled  bool   `json:"hyperlocation-enabled"`
 }

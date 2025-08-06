@@ -25,7 +25,7 @@ type MeshNode struct {
 
 // MeshStats represents mesh statistics
 type MeshStats struct {
-	TotalNodes           int `json:"total-nodes"`
+	TotalNodes          int `json:"total-nodes"`
 	RootNodes           int `json:"root-nodes"`
 	MapNodes            int `json:"map-nodes"`
 	ChildNodes          int `json:"child-nodes"`
