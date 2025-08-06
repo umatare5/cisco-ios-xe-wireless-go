@@ -40,7 +40,7 @@ echo -n "admin:your-password" | base64
 
 ### 🔧 Basic Usage
 
-Start with this simple example to verify your WNC connection and credentials.
+Start with this simple example to verify your WNC connection and credentials using the new service-based API.
 
 ```go
 package main
@@ -51,6 +51,7 @@ import (
     "time"
 
     wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/general"
 )
 
 func main() {
@@ -68,17 +69,21 @@ func main() {
         return
     }
 
-    // Get AP operational data with context timeout
+    // Create service using the core client
+    generalService := general.NewService(client.CoreClient())
+
+    // Get general operational data with context timeout
     ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
     defer cancel()
 
-    apData, err := client.GetApOper(ctx)
+    operData, err := generalService.Oper(ctx)
     if err != nil {
-        fmt.Printf("Failed to get AP data: %v\n", err)
+        fmt.Printf("Failed to get operational data: %v\n", err)
         return
     }
 
-    fmt.Printf("Successfully connected! Found %d APs\n", len(apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.OperData))
+    fmt.Printf("Successfully connected to WNC!\n")
+    fmt.Printf("Controller model: %s\n", operData.CiscoIOSXEWirelessGeneralOperGeneralOperData.ControllerDetail.Model)
 }
 ```
 
@@ -148,6 +153,53 @@ All configuration options are set in the `Config` struct during client creation.
 | `Timeout`            | `time.Duration` | HTTP request timeout (default: 15s)            |
 | `InsecureSkipVerify` | `bool`          | Skips TLS certificate verification (dev only)  |
 | `Logger`             | `*slog.Logger`  | Custom structured logger instance              |
+
+## 🔄 Service-Based API
+
+This library uses a modern three-layer architecture with domain-specific services. Each functional domain (AFC, AP, Client, RRM, etc.) provides a service with typed methods.
+
+### 📋 Available Services
+
+```go
+import (
+    "github.com/umatare5/cisco-ios-xe-wireless-go/afc"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/ap"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/client"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/general"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/rogue"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/rrm"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/wlan"
+)
+
+// Create services using the core client
+afcService := afc.NewService(client.CoreClient())
+apService := ap.NewService(client.CoreClient())
+clientService := client.NewService(client.CoreClient())
+generalService := general.NewService(client.CoreClient())
+rogueService := rogue.NewService(client.CoreClient())
+rrmService := rrm.NewService(client.CoreClient())
+wlanService := wlan.NewService(client.CoreClient())
+
+// Use service methods with proper types
+afcOper, err := afcService.Oper(ctx)
+apCfg, err := apService.Cfg(ctx)
+rrmGlobal, err := rrmService.GlobalOper(ctx)
+```
+
+### ⚠️ Deprecations
+
+**Function-level helpers are deprecated** and will be removed in v2.0.0:
+
+```go
+// ❌ Deprecated - will be removed in v2.0.0
+apData, err := client.GetApOper(ctx)
+
+// ✅ Use service-based API instead  
+apService := ap.NewService(client.CoreClient())
+apData, err := apService.Oper(ctx)
+```
+
+All large API interfaces (WirelessControllerAPI, AccessPointAPI, etc.) are also deprecated in favor of the service pattern.
 
 ## 🌐 API Reference
 

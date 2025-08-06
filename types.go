@@ -8,6 +8,14 @@ import (
 	wnccore "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
+// Deprecated API Interfaces Block
+// ===============================
+// All interfaces below are deprecated in favor of the new Service-based API.
+// Use client.Domain().Method() instead of these large interfaces.
+// These will be removed in v2.0.0
+
+// Deprecated: Use the method-based Service APIs returned by wnc.Client instead.
+// Deprecated: Use appropriate service methods instead.
 // WirelessControllerAPI defines the comprehensive interface for the Cisco Wireless Network Controller API client.
 // It combines all feature-specific interfaces to provide a unified API for controller operations.
 type WirelessControllerAPI interface {
@@ -42,11 +50,15 @@ type WirelessControllerAPI interface {
 	RFIDAPI
 }
 
+// Deprecated: Use the method-based Service APIs returned by wnc.Client instead.
+// Deprecated: Use appropriate service methods instead.
 // CoreAPI defines the core interface for basic API operations.
 type CoreAPI interface {
 	SendAPIRequest(ctx context.Context, endpoint string, result any) error
 }
 
+// Deprecated: Use client.AP().* instead.
+// Deprecated: Use appropriate service methods instead.
 // AccessPointAPI defines the interface for Access Point operations.
 type AccessPointAPI interface {
 	// Access Point Operational Data
@@ -85,6 +97,8 @@ type AccessPointAPI interface {
 	GetApApTags(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use client.General().* instead.
+// Deprecated: Use appropriate service methods instead.
 // GeneralAPI defines the interface for general controller operations.
 type GeneralAPI interface {
 	// General Operational Data
@@ -108,6 +122,8 @@ type GeneralAPI interface {
 	GetGeneralGeolocationCfg(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use client.RRM().* instead.
+// Deprecated: Use appropriate service methods instead.
 // RadioResourceManagementAPI defines the interface for RRM operations.
 type RadioResourceManagementAPI interface {
 	// RRM Operational Data
@@ -128,6 +144,8 @@ type RadioResourceManagementAPI interface {
 	GetRrmMgrCfgEntries(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use client.WLAN().* instead.
+// Deprecated: Use appropriate service methods instead.
 // WirelessLANAPI defines the interface for WLAN configuration operations.
 type WirelessLANAPI interface {
 	GetWlanCfg(ctx context.Context) (any, error)
@@ -137,6 +155,8 @@ type WirelessLANAPI interface {
 	GetWirelessAaaPolicyConfigs(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use client.Client().* instead.
+// Deprecated: Use appropriate service methods instead.
 // ClientAPI defines the interface for client operations.
 type ClientAPI interface {
 	GetClientOper(ctx context.Context) (any, error)
@@ -151,6 +171,8 @@ type ClientAPI interface {
 	GetClientOperDcInfo(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
+// Deprecated: Use appropriate service methods instead.
 // MobilityAPI defines the interface for mobility management operations.
 type MobilityAPI interface {
 	GetMobilityOper(ctx context.Context) (any, error)
@@ -167,6 +189,8 @@ type MobilityAPI interface {
 	GetMobilityGlobalDTLSStats(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use client.Rogue().* instead.
+// Deprecated: Use appropriate service methods instead.
 // RogueAPI defines the interface for rogue detection operations.
 type RogueAPI interface {
 	GetRogueOper(ctx context.Context) (any, error)
@@ -176,6 +200,7 @@ type RogueAPI interface {
 	GetRldpStats(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // NetworkManagementAPI defines the interface for network management operations.
 type NetworkManagementAPI interface {
 	GetNmspOper(ctx context.Context) (any, error)
@@ -184,6 +209,7 @@ type NetworkManagementAPI interface {
 	GetNmspCmxCloudInfo(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // HyperlocationAPI defines the interface for hyperlocation operations.
 type HyperlocationAPI interface {
 	GetHyperlocationOper(ctx context.Context) (any, error)
@@ -198,6 +224,7 @@ type AWIPSApi interface {
 	GetAwipsApDwldStatus(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // GeolocationAPI defines the interface for geolocation operations.
 type GeolocationAPI interface {
 	GetGeolocationOper(ctx context.Context) (any, error)
@@ -217,6 +244,7 @@ type mDNSAPI interface {
 	GetMdnsWlanStats(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // MultcastAPI defines the interface for multicast operations.
 type MultcastAPI interface {
 	GetMcastOper(ctx context.Context) (any, error)
@@ -224,6 +252,7 @@ type MultcastAPI interface {
 	GetMcastVlanL2MgidOp(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // BluetoothAPI defines the interface for Bluetooth Low Energy operations.
 type BluetoothAPI interface {
 	GetBleLtxOper(ctx context.Context) (any, error)
@@ -239,6 +268,7 @@ type LISPApi interface {
 	GetLispApCapabilities(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // SiteAPI defines the interface for site configuration operations.
 type SiteAPI interface {
 	GetSiteCfg(ctx context.Context) (any, error)
@@ -254,12 +284,14 @@ type Dot11API interface {
 	GetDot11Entries(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // ApfAPI defines the interface for APF configuration operations.
 type ApfAPI interface {
 	GetApfCfg(ctx context.Context) (any, error)
 	GetApf(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // RfAPI defines the interface for RF configuration operations.
 type RfAPI interface {
 	GetRfCfg(ctx context.Context) (any, error)
@@ -276,24 +308,28 @@ type Dot15API interface {
 	GetDot15GlobalConfig(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // CTSAPI defines the interface for CTS configuration operations.
 type CTSAPI interface {
 	GetCtsSxpCfg(ctx context.Context) (any, error)
 	GetCtsSxpConfiguration(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // LocationAPI defines the interface for location configuration operations.
 type LocationAPI interface {
 	GetLocationCfg(ctx context.Context) (any, error)
 	GetLocationNmspConfig(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // RadioAPI defines the interface for radio configuration operations.
 type RadioAPI interface {
 	GetRadioCfg(ctx context.Context) (any, error)
 	GetRadioProfiles(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // MeshAPI defines the interface for mesh configuration operations.
 type MeshAPI interface {
 	GetMeshCfg(ctx context.Context) (any, error)
@@ -301,12 +337,14 @@ type MeshAPI interface {
 	GetMeshProfiles(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // FlexAPI defines the interface for Flex configuration operations.
 type FlexAPI interface {
 	GetFlexCfg(ctx context.Context) (any, error)
 	GetFlexCfgData(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // FabricAPI defines the interface for Fabric configuration operations.
 type FabricAPI interface {
 	GetFabricCfg(ctx context.Context) (any, error)
@@ -314,6 +352,7 @@ type FabricAPI interface {
 	GetFabric(ctx context.Context) (any, error)
 }
 
+// Deprecated: Use appropriate service methods instead.
 // RFIDAPI defines the interface for RFID configuration operations.
 type RFIDAPI interface {
 	GetRfidCfg(ctx context.Context) (any, error)
