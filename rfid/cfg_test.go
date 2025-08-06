@@ -84,7 +84,7 @@ func TestRfidConfigurationFunctions(t *testing.T) {
 		if endpoint == "" {
 			t.Error("RfidCfgEndpoint should not be empty")
 		}
-		if endpoint != "/restconf/data/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data" {
+		if endpoint != "Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data" {
 			t.Errorf("RfidCfgEndpoint unexpected value: got %s", endpoint)
 		}
 	})
@@ -94,7 +94,7 @@ func TestRfidConfigurationFunctions(t *testing.T) {
 func TestRfidConfigurationEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_RfidCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
 		if RfidCfgBasePath != expectedBasePath {
 			t.Errorf("RfidCfgBasePath mismatch: expected %s, got %s", expectedBasePath, RfidCfgBasePath)
 		}

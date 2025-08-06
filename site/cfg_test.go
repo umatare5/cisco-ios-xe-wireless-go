@@ -189,17 +189,17 @@ func TestSiteCfgEndpoints(t *testing.T) {
 	}{
 		{
 			name:        "SiteCfgEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data",
+			endpoint:    "Cisco-IOS-XE-wireless-site-cfg:site-cfg-data",
 			description: "Site configuration data endpoint",
 		},
 		{
 			name:        "ApCfgProfilesEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles",
+			endpoint:    "Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles",
 			description: "AP configuration profiles endpoint",
 		},
 		{
 			name:        "SiteTagConfigsEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs",
+			endpoint:    "Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs",
 			description: "Site tag configurations endpoint",
 		},
 	}

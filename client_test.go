@@ -100,7 +100,7 @@ func TestClientErrorHandling(t *testing.T) {
 		cancel() // Cancel immediately
 
 		var result interface{}
-		err := client.SendAPIRequest(ctx, "/restconf/data/ietf-yang-library:yang-library", &result)
+		err := client.SendAPIRequest(ctx, "ietf-yang-library:yang-library", &result)
 		if err == nil {
 			t.Error("Expected error for cancelled context, got nil")
 		}
@@ -111,7 +111,7 @@ func TestClientErrorHandling(t *testing.T) {
 		defer cancel()
 
 		var result interface{}
-		err := client.SendAPIRequest(ctx, "/restconf/data/ietf-yang-library:yang-library", &result)
+		err := client.SendAPIRequest(ctx, "ietf-yang-library:yang-library", &result)
 		if err == nil {
 			t.Error("Expected timeout error, got nil")
 		}
@@ -402,7 +402,7 @@ func TestContextCancellation(t *testing.T) {
 	var response interface{}
 
 	// This should fail due to cancelled context
-	err = client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
+	err = client.SendAPIRequest(ctx, "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 	if err == nil {
 		t.Fatal("Expected error for cancelled context, got nil")
 	}
@@ -413,7 +413,7 @@ func TestContextCancellation(t *testing.T) {
 
 	time.Sleep(2 * clientMicroTimeout) // Ensure timeout
 
-	err = client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
+	err = client.SendAPIRequest(ctx, "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 	if err == nil {
 		t.Fatal("Expected timeout error, got nil")
 	}
@@ -435,7 +435,7 @@ func TestInvalidEndpoint(t *testing.T) {
 	defer cancel()
 
 	var response interface{}
-	err = client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
+	err = client.SendAPIRequest(ctx, "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 	if err == nil {
 		t.Fatal("Expected error for invalid controller, got nil")
 	}
@@ -466,7 +466,7 @@ func TestSendAPIRequestFailures(t *testing.T) {
 		{"EmptyEndpoint", "", &map[string]interface{}{}, true},
 		{"InvalidEndpoint", "invalid", &map[string]interface{}{}, true},
 		{"NilResponse", "/restconf/data/test", nil, true},
-		{"ValidEndpoint", "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &map[string]interface{}{}, true}, // Expected to fail due to network
+		{"ValidEndpoint", "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &map[string]interface{}{}, true}, // Expected to fail due to network
 	}
 
 	for _, tt := range tests {
@@ -525,7 +525,7 @@ func TestClientFunctions(t *testing.T) {
 
 	t.Run("GET_GeneralOper", func(t *testing.T) {
 		var response interface{}
-		err := client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
+		err := client.SendAPIRequest(ctx, "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 		if err != nil {
 			t.Logf("GET request failed (may be expected): %v", err)
 		} else {
@@ -538,7 +538,7 @@ func TestClientFunctions(t *testing.T) {
 
 	t.Run("GET_APOper", func(t *testing.T) {
 		var response interface{}
-		err := client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data", &response)
+		err := client.SendAPIRequest(ctx, "Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data", &response)
 		if err != nil {
 			t.Logf("GET AP oper request failed (may be expected): %v", err)
 		} else {
@@ -570,7 +570,7 @@ func TestRealController(t *testing.T) {
 
 	// Test basic connectivity
 	var response interface{}
-	err = client.SendAPIRequest(ctx, "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
+	err = client.SendAPIRequest(ctx, "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 	if err != nil {
 		t.Logf("Controller connection test failed: %v", err)
 	} else {

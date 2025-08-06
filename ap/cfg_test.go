@@ -268,7 +268,7 @@ func TestApCfgContextHandling(t *testing.T) {
 func TestApCfgEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_ApCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"
 		if ApCfgBasePath != expectedBasePath {
 			t.Errorf("ApCfgBasePath mismatch: expected %s, got %s", expectedBasePath, ApCfgBasePath)
 		}

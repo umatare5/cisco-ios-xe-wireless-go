@@ -230,7 +230,7 @@ func TestFlexConfigurationFunctions(t *testing.T) {
 func TestFlexConfigurationEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_FlexCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"
 		if FlexCfgBasePath != expectedBasePath {
 			t.Errorf("FlexCfgBasePath mismatch: expected %s, got %s", expectedBasePath, FlexCfgBasePath)
 		}

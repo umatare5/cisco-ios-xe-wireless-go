@@ -145,9 +145,9 @@ func TestMeshConfigurationFunctions(t *testing.T) {
 	// Create a comprehensive test data collection
 	collector := testutils.NewTestDataCollector()
 	endpointMapping := map[string]string{
-		"MeshCfgEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data",
-		"MeshMeshEndpoint":     "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh",
-		"MeshProfilesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh-profiles",
+		"MeshCfgEndpoint":      "Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data",
+		"MeshMeshEndpoint":     "Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh",
+		"MeshProfilesEndpoint": "Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh-profiles",
 	}
 
 	t.Run("GetMeshCfg", func(t *testing.T) {
@@ -184,8 +184,8 @@ func TestMeshConfigurationEndpoints(t *testing.T) {
 		if MeshCfgBasePath == "" {
 			t.Error("MeshCfgBasePath is empty")
 		}
-		if !strings.HasPrefix(MeshCfgBasePath, "/restconf/data/") {
-			t.Errorf("MeshCfgBasePath should start with '/restconf/data/', got: %s", MeshCfgBasePath)
+		if strings.HasPrefix(MeshCfgBasePath, "/restconf/data/") {
+			t.Errorf("MeshCfgBasePath should not start with '/restconf/data/', got: %s", MeshCfgBasePath)
 		}
 	})
 

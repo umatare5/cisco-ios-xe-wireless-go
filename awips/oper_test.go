@@ -19,11 +19,11 @@ import (
 // TestAWIPSOperEndpoints tests that all AWIPS operation endpoint constants are correctly defined
 func TestAWIPSOperEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"AwipsOperBasePath":         "/restconf/data/Cisco-IOS-XE-wireless-awips-oper:awips-oper-data",
-		"AwipsOperEndpoint":         "/restconf/data/Cisco-IOS-XE-wireless-awips-oper:awips-oper-data",
-		"AwipsPerApInfoEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-per-ap-info",
-		"AwipsDwldStatusEndpoint":   "/restconf/data/Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-dwld-status",
-		"AwipsApDwldStatusEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-ap-dwld-status",
+		"AwipsOperBasePath":         "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data",
+		"AwipsOperEndpoint":         "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data",
+		"AwipsPerApInfoEndpoint":    "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-per-ap-info",
+		"AwipsDwldStatusEndpoint":   "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-dwld-status",
+		"AwipsApDwldStatusEndpoint": "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-ap-dwld-status",
 	}
 
 	actualEndpoints := map[string]string{

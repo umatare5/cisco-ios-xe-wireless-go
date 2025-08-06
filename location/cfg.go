@@ -10,7 +10,7 @@ import (
 
 const (
 	// LocationCfgBasePath defines the base path for location configuration endpoints
-	LocationCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"
+	LocationCfgBasePath = "Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"
 	// LocationCfgEndpoint retrieves complete location configuration data
 	LocationCfgEndpoint = LocationCfgBasePath
 	// LocationCfgNmspConfigEndpoint retrieves NMSP configuration

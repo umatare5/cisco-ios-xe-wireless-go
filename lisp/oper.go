@@ -10,7 +10,7 @@ import (
 
 const (
 	// LispAgentOperBasePath defines the base path for LISP agent operational data endpoints.
-	LispAgentOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data"
+	LispAgentOperBasePath = "Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data"
 	// LispAgentOperEndpoint defines the endpoint for LISP agent operational data.
 	LispAgentOperEndpoint = LispAgentOperBasePath
 	// LispAgentMemoryStatsEndpoint defines the endpoint for LISP agent memory statistics.

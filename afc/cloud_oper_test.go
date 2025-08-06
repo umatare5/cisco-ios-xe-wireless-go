@@ -7,6 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -52,7 +53,7 @@ func TestAfcCloudOperDataStructures(t *testing.T) {
 					}
 				}
 			}`,
-			Target:     &AfcCloudOperResponse{},
+			Target:     &model.AfcCloudOperResponse{},
 			TypeName:   "AfcCloudOperResponse",
 			ShouldFail: false,
 		},
@@ -90,7 +91,7 @@ func TestAfcCloudOperDataStructures(t *testing.T) {
 					"num-6ghz-ap": 3
 				}
 			}`,
-			Target:     &AfcCloudOperAfcCloudStatsResponse{},
+			Target:     &model.AfcCloudOperAfcCloudStatsResponse{},
 			TypeName:   "AfcCloudOperAfcCloudStatsResponse",
 			ShouldFail: false,
 		},
@@ -209,7 +210,7 @@ func TestAfcCloudOperContextHandling(t *testing.T) {
 func TestAfcCloudOperEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_AfcCloudOperBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data"
 		if AfcCloudOperBasePath != expectedBasePath {
 			t.Errorf("AfcCloudOperBasePath mismatch: expected %s, got %s", expectedBasePath, AfcCloudOperBasePath)
 		}

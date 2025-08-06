@@ -11,6 +11,7 @@ import (
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
+	wnccore "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 // =============================================================================
@@ -184,9 +185,10 @@ func TestRrmGlobalOperGetRrmGlobalRadioOperData6G(t *testing.T) {
 	result, err := GetRrmGlobalRadioOperData6G(client, ctx)
 	if err != nil {
 		// 6GHz support is not available on all controllers
-		// A 404 "resource not found" error is expected for controllers without 6GHz support
-		if errors.Is(err, wnc.ErrResourceNotFound) {
-			t.Skipf("6GHz radio operational data not supported on this controller: %v", err)
+		// A 404 error is expected for controllers without 6GHz support
+		var httpErr *wnccore.HTTPError
+		if errors.As(err, &httpErr) && httpErr.Status == 404 {
+			t.Skipf("6GHz radio operational data not supported on this controller hardware: %s", err)
 		}
 		t.Fatalf("GetRrmGlobalRadioOperData6G failed: %v", err)
 	}

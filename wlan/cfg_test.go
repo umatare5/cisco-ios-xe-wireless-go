@@ -44,11 +44,11 @@ func runWlanCfgTestAndCollectData(t *testing.T, testName string, testFunc func()
 // TestWlanConfigurationEndpoints tests that all WLAN endpoints are correctly defined
 func TestWlanConfigurationEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"WlanCfgEndpoint":                  "/restconf/data/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data",
-		"WlanCfgEntriesEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries",
-		"WlanPoliciesEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-policies",
-		"PolicyListEntriesEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries",
-		"WirelessAaaPolicyConfigsEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wireless-aaa-policy-configs",
+		"WlanCfgEndpoint":                  "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data",
+		"WlanCfgEntriesEndpoint":           "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries",
+		"WlanPoliciesEndpoint":             "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-policies",
+		"PolicyListEntriesEndpoint":        "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries",
+		"WirelessAaaPolicyConfigsEndpoint": "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wireless-aaa-policy-configs",
 	}
 
 	for name, expected := range expectedEndpoints {

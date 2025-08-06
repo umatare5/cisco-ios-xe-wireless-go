@@ -11,7 +11,7 @@ import (
 
 const (
 	// RrmOperBasePath defines the base path for RRM operational data endpoints.
-	RrmOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"
+	RrmOperBasePath = "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"
 	// RrmOperEndpoint defines the endpoint for RRM operational data.
 	RrmOperEndpoint = RrmOperBasePath
 	// RrmOperApAutoRfDot11DataEndpoint defines the endpoint for AP auto RF 802.11 data.

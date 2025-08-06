@@ -29,27 +29,27 @@ func TestLispAgentOperConstants(t *testing.T) {
 		{
 			name:     "LispAgentOperBasePath",
 			constant: LispAgentOperBasePath,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data",
+			expected: "Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data",
 		},
 		{
 			name:     "LispAgentOperEndpoint",
 			constant: LispAgentOperEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data",
+			expected: "Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data",
 		},
 		{
 			name:     "LispAgentMemoryStatsEndpoint",
 			constant: LispAgentMemoryStatsEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-agent-memory-stats",
+			expected: "Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-agent-memory-stats",
 		},
 		{
 			name:     "LispWlcCapabilitiesEndpoint",
 			constant: LispWlcCapabilitiesEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-wlc-capabilities",
+			expected: "Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-wlc-capabilities",
 		},
 		{
 			name:     "LispApCapabilitiesEndpoint",
 			constant: LispApCapabilitiesEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-ap-capabilities",
+			expected: "Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-ap-capabilities",
 		},
 	}
 

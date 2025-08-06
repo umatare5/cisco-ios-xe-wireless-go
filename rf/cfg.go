@@ -10,7 +10,7 @@ import (
 
 const (
 	// RfCfgBasePath defines the base path for RF configuration endpoints
-	RfCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"
+	RfCfgBasePath = "Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"
 	// RfCfgEndpoint retrieves complete RF configuration data
 	RfCfgEndpoint = RfCfgBasePath
 	// MultiBssidProfilesEndpoint retrieves multi-BSSID profiles configuration

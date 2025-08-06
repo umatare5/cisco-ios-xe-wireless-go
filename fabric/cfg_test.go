@@ -109,7 +109,7 @@ func TestFabricConfigurationFunctions(t *testing.T) {
 
 func TestFabricConfigurationEndpoints(t *testing.T) {
 	t.Run("Validate_FabricCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"
 		testutils.EndpointValidationTest(t, FabricCfgBasePath, expectedBasePath)
 	})
 

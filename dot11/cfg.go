@@ -10,7 +10,7 @@ import (
 
 const (
 	// Dot11CfgBasePath defines the base path for 802.11 configuration endpoints
-	Dot11CfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"
+	Dot11CfgBasePath = "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"
 	// Dot11CfgEndpoint retrieves complete 802.11 configuration data
 	Dot11CfgEndpoint = Dot11CfgBasePath
 	// ConfiguredCountriesEndpoint retrieves configured country codes

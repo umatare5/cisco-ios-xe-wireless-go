@@ -29,27 +29,27 @@ func TestNmspOperConstants(t *testing.T) {
 		{
 			name:     "NmspOperBasePath",
 			constant: NmspOperBasePath,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data",
+			expected: "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data",
 		},
 		{
 			name:     "NmspOperEndpoint",
 			constant: NmspOperEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data",
+			expected: "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data",
 		},
 		{
 			name:     "ClientRegistrationEndpoint",
 			constant: ClientRegistrationEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data/client-registration",
+			expected: "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data/client-registration",
 		},
 		{
 			name:     "CmxConnectionEndpoint",
 			constant: CmxConnectionEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data/cmx-connection",
+			expected: "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data/cmx-connection",
 		},
 		{
 			name:     "CmxCloudInfoEndpoint",
 			constant: CmxCloudInfoEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data/cmx-cloud-info",
+			expected: "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data/cmx-cloud-info",
 		},
 	}
 

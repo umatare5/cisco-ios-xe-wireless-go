@@ -214,7 +214,7 @@ func TestAfcOperContextHandling(t *testing.T) {
 func TestAfcOperEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_AfcOperBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"
 		if AfcOperBasePath != expectedBasePath {
 			t.Errorf("AfcOperBasePath mismatch: expected %s, got %s", expectedBasePath, AfcOperBasePath)
 		}

@@ -10,7 +10,7 @@ import (
 
 const (
 	// HyperlocationOperBasePath defines the base path for hyperlocation operational data endpoints.
-	HyperlocationOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data"
+	HyperlocationOperBasePath = "Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data"
 	// HyperlocationOperEndpoint defines the endpoint for hyperlocation operational data.
 	HyperlocationOperEndpoint = HyperlocationOperBasePath
 	// HyperlocationProfilesEndpoint defines the endpoint for hyperlocation profiles.

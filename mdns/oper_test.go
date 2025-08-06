@@ -29,22 +29,22 @@ func TestMdnsOperConstants(t *testing.T) {
 		{
 			name:     "MdnsOperBasePath",
 			constant: MdnsOperBasePath,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data",
+			expected: "Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data",
 		},
 		{
 			name:     "MdnsOperEndpoint",
 			constant: MdnsOperEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data",
+			expected: "Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data",
 		},
 		{
 			name:     "MdnsGlobalStatsEndpoint",
 			constant: MdnsGlobalStatsEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data/mdns-global-stats",
+			expected: "Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data/mdns-global-stats",
 		},
 		{
 			name:     "MdnsWlanStatsEndpoint",
 			constant: MdnsWlanStatsEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data/mdns-wlan-stats",
+			expected: "Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data/mdns-wlan-stats",
 		},
 	}
 

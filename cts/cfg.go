@@ -10,7 +10,7 @@ import (
 
 const (
 	// CtsSxpCfgBasePath defines the base path for CTS SXP configuration endpoints
-	CtsSxpCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"
+	CtsSxpCfgBasePath = "Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"
 	// CtsSxpCfgEndpoint retrieves complete CTS SXP configuration data
 	CtsSxpCfgEndpoint = CtsSxpCfgBasePath
 	// CtsSxpConfigurationEndpoint retrieves CTS SXP configuration

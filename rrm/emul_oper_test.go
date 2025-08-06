@@ -24,17 +24,17 @@ func TestRrmEmulOperConstants(t *testing.T) {
 		{
 			name:     "RrmEmulOperBasePath",
 			constant: RrmEmulOperBasePath,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data",
+			expected: "Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data",
 		},
 		{
 			name:     "RrmEmulOperEndpoint",
 			constant: RrmEmulOperEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data",
+			expected: "Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data",
 		},
 		{
 			name:     "RrmEmulOperRrmFraStatsEndpoint",
 			constant: RrmEmulOperRrmFraStatsEndpoint,
-			expected: "/restconf/data/Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data/rrm-fra-stats",
+			expected: "Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data/rrm-fra-stats",
 		},
 	}
 

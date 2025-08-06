@@ -10,7 +10,7 @@ import (
 
 const (
 	// WlanCfgBasePath defines the base path for WLAN configuration endpoints
-	WlanCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"
+	WlanCfgBasePath = "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"
 	// WlanCfgEndpoint retrieves complete WLAN configuration data
 	WlanCfgEndpoint = WlanCfgBasePath
 	// WlanCfgEntriesEndpoint retrieves WLAN configuration entries

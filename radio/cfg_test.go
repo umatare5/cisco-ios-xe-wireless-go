@@ -216,7 +216,7 @@ func TestRadioConfigurationFunctions(t *testing.T) {
 func TestRadioConfigurationEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_RadioCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"
 		if RadioCfgBasePath != expectedBasePath {
 			t.Errorf("RadioCfgBasePath mismatch: expected %s, got %s", expectedBasePath, RadioCfgBasePath)
 		}

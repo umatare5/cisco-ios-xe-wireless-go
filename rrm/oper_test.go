@@ -33,16 +33,16 @@ func TestRrmOperMethods(t *testing.T) {
 	// Create a comprehensive test data collection
 	testResults := make(map[string]interface{})
 	endpointMapping := map[string]string{
-		"RrmOperEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data",
-		"ApAutoRfDot11DataEndpoint":   "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data",
-		"ApDot11RadarDataEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-radar-data",
-		"ApDot11SpectrumDataEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-spectrum-data",
-		"RrmMeasurementEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/rrm-measurement",
-		"RadioSlotEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/radio-slot",
-		"MainDataEndpoint":            "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/main-data",
-		"SpectrumDeviceTableEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-device-table",
-		"SpectrumAqTableEndpoint":     "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-aq-table",
-		"RegDomainOperEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/reg-domain-oper",
+		"RrmOperEndpoint":             "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data",
+		"ApAutoRfDot11DataEndpoint":   "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data",
+		"ApDot11RadarDataEndpoint":    "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-radar-data",
+		"ApDot11SpectrumDataEndpoint": "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-spectrum-data",
+		"RrmMeasurementEndpoint":      "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/rrm-measurement",
+		"RadioSlotEndpoint":           "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/radio-slot",
+		"MainDataEndpoint":            "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/main-data",
+		"SpectrumDeviceTableEndpoint": "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-device-table",
+		"SpectrumAqTableEndpoint":     "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-aq-table",
+		"RegDomainOperEndpoint":       "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/reg-domain-oper",
 	}
 
 	t.Run("GetRrmOper", func(t *testing.T) {
@@ -161,16 +161,16 @@ func TestRrmOperEndpoints(t *testing.T) {
 	// Test endpoint validation
 	endpoints := map[string]string{
 		"RrmOperBasePath":             RrmOperBasePath,
-		"RrmOperEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data",
-		"ApAutoRfDot11DataEndpoint":   "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data",
-		"ApDot11RadarDataEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-radar-data",
-		"ApDot11SpectrumDataEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-spectrum-data",
-		"RrmMeasurementEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/rrm-measurement",
-		"RadioSlotEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/radio-slot",
-		"MainDataEndpoint":            "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/main-data",
-		"SpectrumDeviceTableEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-device-table",
-		"SpectrumAqTableEndpoint":     "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-aq-table",
-		"RegDomainOperEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/reg-domain-oper",
+		"RrmOperEndpoint":             "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data",
+		"ApAutoRfDot11DataEndpoint":   "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data",
+		"ApDot11RadarDataEndpoint":    "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-radar-data",
+		"ApDot11SpectrumDataEndpoint": "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-spectrum-data",
+		"RrmMeasurementEndpoint":      "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/rrm-measurement",
+		"RadioSlotEndpoint":           "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/radio-slot",
+		"MainDataEndpoint":            "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/main-data",
+		"SpectrumDeviceTableEndpoint": "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-device-table",
+		"SpectrumAqTableEndpoint":     "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/spectrum-aq-table",
+		"RegDomainOperEndpoint":       "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/reg-domain-oper",
 	}
 
 	for name, endpoint := range endpoints {

@@ -10,7 +10,7 @@ import (
 
 const (
 	// FlexCfgBasePath defines the base path for FlexConnect configuration endpoints
-	FlexCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"
+	FlexCfgBasePath = "Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"
 	// FlexCfgEndpoint retrieves complete FlexConnect configuration data
 	FlexCfgEndpoint = FlexCfgBasePath
 	// FlexCfgDataEndpoint retrieves FlexConnect policy entries

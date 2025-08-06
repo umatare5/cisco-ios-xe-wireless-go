@@ -10,7 +10,7 @@ import (
 
 const (
 	// BleLtxOperBasePath defines the base path for BLE LTX operational data endpoints
-	BleLtxOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data"
+	BleLtxOperBasePath = "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data"
 	// BleLtxOperEndpoint retrieves complete BLE LTX operational data
 	BleLtxOperEndpoint = BleLtxOperBasePath
 	// BleLtxApAntennaEndpoint retrieves BLE LTX AP antenna information

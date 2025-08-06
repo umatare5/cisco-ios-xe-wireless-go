@@ -11,7 +11,7 @@ import (
 
 const (
 	// RrmGlobalOperBasePath defines the base path for RRM global operational data endpoints.
-	RrmGlobalOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data"
+	RrmGlobalOperBasePath = "Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data"
 	// RrmGlobalOperEndpoint defines the endpoint for RRM global operational data.
 	RrmGlobalOperEndpoint = RrmGlobalOperBasePath
 	// RrmOneShotCountersEndpoint defines the endpoint for RRM one-shot counters.

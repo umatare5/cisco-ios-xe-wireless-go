@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	// ApfCfgBasePath defines the base path for APF configuration endpoints
-	ApfCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"
+	// ApfCfgBasePath represents the base path for APF configuration data
+	ApfCfgBasePath = "Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"
 	// ApfCfgEndpoint retrieves complete APF configuration data
 	ApfCfgEndpoint = ApfCfgBasePath
 	// ApfEndpoint retrieves APF specific configuration

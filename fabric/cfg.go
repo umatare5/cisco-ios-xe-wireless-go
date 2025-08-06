@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	// FabricCfgBasePath defines the base path for fabric configuration endpoints
-	FabricCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"
+	// FabricCfgBasePath represents the base path for Fabric configuration data
+	FabricCfgBasePath = "Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"
 	// FabricCfgEndpoint retrieves complete fabric configuration data
 	FabricCfgEndpoint = FabricCfgBasePath
 	// FabricControlplaneNamesEndpoint retrieves fabric control plane names

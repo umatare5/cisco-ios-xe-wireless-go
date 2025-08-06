@@ -10,7 +10,7 @@ import (
 
 const (
 	// RrmCfgBasePath defines the base path for RRM configuration endpoints
-	RrmCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"
+	RrmCfgBasePath = "Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"
 	// RrmCfgEndpoint retrieves complete RRM configuration data
 	RrmCfgEndpoint = RrmCfgBasePath
 	// RrmCfgRrmsEndpoint retrieves RRM configuration entries

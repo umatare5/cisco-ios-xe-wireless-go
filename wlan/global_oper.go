@@ -10,7 +10,7 @@ import (
 
 const (
 	// WlanGlobalOperBasePath defines the base path for WLAN global operational data endpoints.
-	WlanGlobalOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-wlan-global-oper:wlan-global-oper-data"
+	WlanGlobalOperBasePath = "Cisco-IOS-XE-wireless-wlan-global-oper:wlan-global-oper-data"
 	// WlanGlobalOperDataEndpoint defines the endpoint for WLAN global operational data.
 	WlanGlobalOperDataEndpoint = WlanGlobalOperBasePath
 	// WlanGlobalOperWlanInfoEndpoint defines the endpoint for WLAN information.

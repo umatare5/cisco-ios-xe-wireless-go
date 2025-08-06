@@ -5,6 +5,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
 
 	wnccore "github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
@@ -135,6 +136,37 @@ func NewClientWithConfig(config Config, options ...ClientOption) (*Client, error
 //
 // Returns an error if the request fails or if the response cannot be unmarshaled.
 func (c *Client) SendAPIRequest(ctx context.Context, endpoint string, result any) error {
+	// Remove "/restconf/data/" prefix if present to avoid duplication
+	// The core client's BuildRESTCONFURL method will add the proper prefix
+	cleanEndpoint := endpoint
+	if strings.HasPrefix(endpoint, "/restconf/data/") {
+		cleanEndpoint = strings.TrimPrefix(endpoint, "/restconf/data/")
+	}
+
 	// Delegate to the new core client's Do method
-	return c.coreClient.Do(ctx, "GET", endpoint, result)
+	return c.coreClient.Do(ctx, "GET", cleanEndpoint, result)
+}
+
+// CoreClient returns the underlying wnc.Client for use with domain services.
+// This provides access to the new three-layer architecture components.
+//
+// Example usage with domain services:
+//
+//	import (
+//	  "github.com/umatare5/cisco-ios-xe-wireless-go/afc"
+//	  "github.com/umatare5/cisco-ios-xe-wireless-go/general"
+//	)
+//
+//	// Create services using the core client
+//	afcService := afc.NewService(client.CoreClient())
+//	generalService := general.NewService(client.CoreClient())
+//	geolocationService := geolocation.NewService(client.CoreClient())
+//	apService := ap.NewService(client.CoreClient())
+//
+//	// Use the new service-based API
+//	afcOper, err := afcService.Oper(ctx)
+//	generalCfg, err := generalService.Cfg(ctx)
+//	apCfg, err := apService.Cfg(ctx)
+func (c *Client) CoreClient() *wnccore.Client {
+	return c.coreClient
 }

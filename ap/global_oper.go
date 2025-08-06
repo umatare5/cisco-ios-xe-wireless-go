@@ -12,7 +12,7 @@ import (
 
 const (
 	// ApGlobalOperBasePath defines the base path for AP global operational data endpoints.
-	ApGlobalOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data"
+	ApGlobalOperBasePath = "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data"
 	// ApGlobalOperEndpoint defines the endpoint for AP global operational data.
 	ApGlobalOperEndpoint = ApGlobalOperBasePath
 	// ApHistoryEndpoint defines the endpoint for AP history data.

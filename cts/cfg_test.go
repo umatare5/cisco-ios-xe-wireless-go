@@ -210,7 +210,7 @@ func TestCtsConfigurationFunctions(t *testing.T) {
 func TestCtsConfigurationEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_CtsSxpCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"
 		if CtsSxpCfgBasePath != expectedBasePath {
 			t.Errorf("CtsSxpCfgBasePath mismatch: expected %s, got %s", expectedBasePath, CtsSxpCfgBasePath)
 		}

@@ -228,10 +228,10 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 	// Create a comprehensive test data collection
 	collector := testutils.NewTestDataCollector()
 	endpointMapping := map[string]string{
-		"Dot11CfgEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
-		"Dot11ConfiguredCountriesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
-		"Dot11acMcsEntriesEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11ac-mcs-entries",
-		"Dot11EntriesEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
+		"Dot11CfgEndpoint":                 "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
+		"Dot11ConfiguredCountriesEndpoint": "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
+		"Dot11acMcsEntriesEndpoint":        "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11ac-mcs-entries",
+		"Dot11EntriesEndpoint":             "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
 	}
 
 	t.Run("GetDot11Cfg", func(t *testing.T) {
@@ -315,10 +315,10 @@ func TestDot11ConfigurationFunctions(t *testing.T) {
 func TestDot11ConfigurationEndpoints(t *testing.T) {
 	endpoints := map[string]string{
 		"Dot11CfgBasePath":                 Dot11CfgBasePath,
-		"Dot11CfgEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
-		"Dot11ConfiguredCountriesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
-		"Dot11acMcsEntriesEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11ac-mcs-entries",
-		"Dot11EntriesEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
+		"Dot11CfgEndpoint":                 "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
+		"Dot11ConfiguredCountriesEndpoint": "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/configured-countries",
+		"Dot11acMcsEntriesEndpoint":        "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11ac-mcs-entries",
+		"Dot11EntriesEndpoint":             "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data/dot11-entries",
 	}
 
 	testutils.ValidateEndpoints(t, endpoints)

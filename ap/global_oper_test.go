@@ -114,14 +114,14 @@ func TestAPGlobalOperationFunctions(t *testing.T) {
 // TestAPGlobalOperEndpoints tests the AP global operation endpoint constants
 func TestAPGlobalOperEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"ApGlobalOperBasePath":          "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data",
-		"ApGlobalOperEndpoint":          "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data",
-		"ApHistoryEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-history",
-		"EwlcApStatsEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ewlc-ap-stats",
-		"ApImgPredownloadStatsEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-img-predownload-stats",
-		"ApJoinStatsEndpoint":           "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-join-stats",
-		"WlanClientStatsEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/wlan-client-stats",
-		"EmltdJoinCountStatEndpoint":    "/restconf/data/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/emltd-join-count-stat",
+		"ApGlobalOperBasePath":          "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data",
+		"ApGlobalOperEndpoint":          "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data",
+		"ApHistoryEndpoint":             "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-history",
+		"EwlcApStatsEndpoint":           "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ewlc-ap-stats",
+		"ApImgPredownloadStatsEndpoint": "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-img-predownload-stats",
+		"ApJoinStatsEndpoint":           "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-join-stats",
+		"WlanClientStatsEndpoint":       "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/wlan-client-stats",
+		"EmltdJoinCountStatEndpoint":    "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/emltd-join-count-stat",
 	}
 
 	for name, expected := range expectedEndpoints {

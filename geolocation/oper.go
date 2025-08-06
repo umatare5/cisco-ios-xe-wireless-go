@@ -10,7 +10,7 @@ import (
 
 const (
 	// GeolocationOperBasePath defines the base path for geolocation operational data endpoints.
-	GeolocationOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
+	GeolocationOperBasePath = "Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
 	// GeolocationOperEndpoint defines the endpoint for geolocation operational data.
 	GeolocationOperEndpoint = GeolocationOperBasePath
 	// GeolocationApGeoLocStatsEndpoint defines the endpoint for AP geolocation statistics.

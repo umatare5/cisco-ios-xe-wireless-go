@@ -10,7 +10,7 @@ import (
 
 const (
 	// NmspOperBasePath defines the base path for NMSP operational data endpoints.
-	NmspOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"
+	NmspOperBasePath = "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"
 	// NmspOperEndpoint defines the endpoint for NMSP operational data.
 	NmspOperEndpoint = NmspOperBasePath
 	// ClientRegistrationEndpoint defines the endpoint for client registration data.

@@ -17,7 +17,7 @@ import (
 
 const (
 	// RfidCfgBasePath defines the base path for RFID configuration endpoints
-	RfidCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
+	RfidCfgBasePath = "Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
 	// RfidCfgEndpoint retrieves complete RFID configuration data
 	RfidCfgEndpoint = RfidCfgBasePath
 )

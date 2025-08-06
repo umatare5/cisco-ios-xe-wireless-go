@@ -33,9 +33,9 @@ func TestBleLtxOperMethods(t *testing.T) {
 	// Create a comprehensive test data collection
 	testResults := make(map[string]interface{})
 	endpointMapping := map[string]string{
-		"BleLtxOperEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data",
-		"BleLtxApAntennaEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap-antenna",
-		"BleLtxApEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap",
+		"BleLtxOperEndpoint":      "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data",
+		"BleLtxApAntennaEndpoint": "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap-antenna",
+		"BleLtxApEndpoint":        "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap",
 	}
 
 	t.Run("GetBleLtxOper", func(t *testing.T) {
@@ -98,9 +98,9 @@ func TestBleLtxOperEndpoints(t *testing.T) {
 	// Test endpoint validation
 	endpoints := map[string]string{
 		"BleLtxOperBasePath":      BleLtxOperBasePath,
-		"BleLtxOperEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data",
-		"BleLtxApAntennaEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap-antenna",
-		"BleLtxApEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap",
+		"BleLtxOperEndpoint":      "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data",
+		"BleLtxApAntennaEndpoint": "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap-antenna",
+		"BleLtxApEndpoint":        "Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ap",
 	}
 
 	for name, endpoint := range endpoints {

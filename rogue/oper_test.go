@@ -24,12 +24,12 @@ func getTestClient(t *testing.T) *wnc.Client {
 // TestRogueOperEndpoints tests that all Rogue operation endpoint constants are correctly defined
 func TestRogueOperEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"RogueOperBasePath":       "/restconf/data/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data",
-		"RogueOperEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data",
-		"RogueStatsEndpoint":      "/restconf/data/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-stats",
-		"RogueDataEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data",
-		"RogueClientDataEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-client-data",
-		"RldpStatsEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rldp-stats",
+		"RogueOperBasePath":       "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data",
+		"RogueOperEndpoint":       "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data",
+		"RogueStatsEndpoint":      "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-stats",
+		"RogueDataEndpoint":       "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data",
+		"RogueClientDataEndpoint": "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-client-data",
+		"RldpStatsEndpoint":       "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rldp-stats",
 	}
 
 	for name, expected := range expectedEndpoints {

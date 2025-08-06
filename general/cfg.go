@@ -6,11 +6,12 @@ import (
 	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
-	// GeneralCfgBasePath defines the base path for general configuration endpoints
-	GeneralCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data"
+	// GeneralCfgBasePath represents the base path for General configuration data
+	GeneralCfgBasePath = "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data"
 	// GeneralCfgEndpoint retrieves complete general configuration data
 	GeneralCfgEndpoint = GeneralCfgBasePath
 	// MewlcConfigEndpoint retrieves MEWLC configuration
@@ -148,15 +149,13 @@ type ApLocRangingCfg struct{}
 type GeolocationCfg struct{}
 
 // GetGeneralCfg retrieves general configuration with context support
-func GetGeneralCfg(client *wnc.Client, ctx context.Context) (*GeneralCfgResponse, error) {
+// Deprecated: Use general.NewService(client.CoreClient()).Cfg(ctx) instead.
+func GetGeneralCfg(client *wnc.Client, ctx context.Context) (*model.GeneralCfgResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data GeneralCfgResponse
-	if err := client.SendAPIRequest(ctx, GeneralCfgEndpoint, &data); err != nil {
-		return nil, err
-	}
-	return &data, nil
+	service := NewService(client.CoreClient())
+	return service.Cfg(ctx)
 }
 
 func GetGeneralMewlcConfig(client *wnc.Client, ctx context.Context) (*MewlcConfigResponse, error) {

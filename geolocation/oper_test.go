@@ -161,7 +161,7 @@ func TestGeolocationOperContextHandling(t *testing.T) {
 func TestGeolocationOperEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_GeolocationOperBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
 		if GeolocationOperBasePath != expectedBasePath {
 			t.Errorf("GeolocationOperBasePath mismatch: expected %s, got %s", expectedBasePath, GeolocationOperBasePath)
 		}

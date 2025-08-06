@@ -147,7 +147,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 		if endpoint == "" {
 			t.Error("ApfCfgEndpoint should not be empty")
 		}
-		if endpoint != "/restconf/data/Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data" {
+		if endpoint != "Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data" {
 			t.Errorf("ApfCfgEndpoint unexpected value: got %s", endpoint)
 		}
 	})
@@ -176,7 +176,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 		if endpoint == "" {
 			t.Error("ApfEndpoint should not be empty")
 		}
-		expectedEndpoint := "/restconf/data/Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data/apf"
+		expectedEndpoint := "Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data/apf"
 		if endpoint != expectedEndpoint {
 			t.Errorf("ApfEndpoint unexpected value: expected %s, got %s", expectedEndpoint, endpoint)
 		}
@@ -220,7 +220,7 @@ func TestApfConfigurationFunctions(t *testing.T) {
 func TestApfConfigurationEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_ApfCfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"
 		if ApfCfgBasePath != expectedBasePath {
 			t.Errorf("ApfCfgBasePath mismatch: expected %s, got %s", expectedBasePath, ApfCfgBasePath)
 		}

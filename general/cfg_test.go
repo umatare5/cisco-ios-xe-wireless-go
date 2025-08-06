@@ -231,20 +231,20 @@ func TestGeneralConfigurationFunctions(t *testing.T) {
 // TestGeneralConfigurationEndpoints tests that all endpoints are correctly defined
 func TestGeneralConfigurationEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"GeneralCfgEndpoint":              "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data",
-		"MewlcConfigEndpoint":             "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/mewlc-config",
-		"CacConfigEndpoint":               "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/cac-config",
-		"MfpEndpoint":                     "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/mfp",
-		"FipsCfgEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/fips-cfg",
-		"WsaApClientEventEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/wsa-ap-client-event",
-		"SimL3InterfaceCacheDataEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data",
-		"WlcManagementDataEndpoint":       "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/wlc-management-data",
-		"LaginfoEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/laginfo",
-		"MulticastConfigEndpoint":         "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/multicast-config",
-		"FeatureUsageCfgEndpoint":         "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/feature-usage-cfg",
-		"ThresholdWarnCfgEndpoint":        "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/threshold-warn-cfg",
-		"ApLocRangingCfgEndpoint":         "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/ap-loc-ranging-cfg",
-		"GeolocationCfgEndpoint":          "/restconf/data/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/geolocation-cfg",
+		"GeneralCfgEndpoint":              "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data",
+		"MewlcConfigEndpoint":             "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/mewlc-config",
+		"CacConfigEndpoint":               "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/cac-config",
+		"MfpEndpoint":                     "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/mfp",
+		"FipsCfgEndpoint":                 "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/fips-cfg",
+		"WsaApClientEventEndpoint":        "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/wsa-ap-client-event",
+		"SimL3InterfaceCacheDataEndpoint": "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data",
+		"WlcManagementDataEndpoint":       "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/wlc-management-data",
+		"LaginfoEndpoint":                 "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/laginfo",
+		"MulticastConfigEndpoint":         "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/multicast-config",
+		"FeatureUsageCfgEndpoint":         "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/feature-usage-cfg",
+		"ThresholdWarnCfgEndpoint":        "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/threshold-warn-cfg",
+		"ApLocRangingCfgEndpoint":         "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/ap-loc-ranging-cfg",
+		"GeolocationCfgEndpoint":          "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/geolocation-cfg",
 	}
 
 	for name, expected := range expectedEndpoints {

@@ -10,7 +10,7 @@ import (
 
 const (
 	// MobilityOperBasePath defines the base path for mobility operational data endpoints.
-	MobilityOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"
+	MobilityOperBasePath = "Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"
 	// MobilityOperEndpoint defines the endpoint for mobility operational data.
 	MobilityOperEndpoint = MobilityOperBasePath
 	// MmIfGlobalStatsEndpoint defines the endpoint for mobility manager interface global statistics.

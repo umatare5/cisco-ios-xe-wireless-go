@@ -10,7 +10,7 @@ import (
 
 const (
 	// SiteCfgBasePath defines the base path for site configuration endpoints
-	SiteCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data"
+	SiteCfgBasePath = "Cisco-IOS-XE-wireless-site-cfg:site-cfg-data"
 	// ApCfgProfilesEndpoint retrieves AP configuration profiles
 	ApCfgProfilesEndpoint = SiteCfgBasePath + "/ap-cfg-profiles"
 	// SiteTagConfigsEndpoint retrieves site tag configurations

@@ -11,7 +11,7 @@ import (
 
 const (
 	// GeneralOperBasePath defines the base path for general operational data endpoints
-	GeneralOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+	GeneralOperBasePath = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
 	// GeneralOperEndpoint retrieves complete general operational data
 	GeneralOperEndpoint = GeneralOperBasePath
 	// GeneralOperMgmtIntfDataEndpoint retrieves management interface data
@@ -19,25 +19,22 @@ const (
 )
 
 // GetGeneralOper retrieves general operational data.
+// Deprecated: Use general.NewService(client.CoreClient()).Oper(ctx) instead.
 func GetGeneralOper(client *wnc.Client, ctx context.Context) (*model.GeneralOperResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data model.GeneralOperResponse
-	if err := client.SendAPIRequest(ctx, GeneralOperEndpoint, &data); err != nil {
-		return nil, err
-	}
-	return &data, nil
+	service := NewService(client.CoreClient())
+	return service.Oper(ctx)
 }
 
 // GetGeneralOperMgmtIntfData retrieves management interface operational data.
+// GetGeneralOperMgmtIntfData retrieves management interface operational data.
+// Deprecated: Use general.NewService(client.CoreClient()).MgmtIntfData(ctx) instead.
 func GetGeneralOperMgmtIntfData(client *wnc.Client, ctx context.Context) (*model.GeneralOperMgmtIntfDataResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data model.GeneralOperMgmtIntfDataResponse
-	if err := client.SendAPIRequest(ctx, GeneralOperMgmtIntfDataEndpoint, &data); err != nil {
-		return nil, err
-	}
-	return &data, nil
+	service := NewService(client.CoreClient())
+	return service.MgmtIntfData(ctx)
 }

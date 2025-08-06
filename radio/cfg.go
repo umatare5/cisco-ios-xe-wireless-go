@@ -10,7 +10,7 @@ import (
 
 const (
 	// RadioCfgBasePath defines the base path for radio configuration endpoints
-	RadioCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"
+	RadioCfgBasePath = "Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"
 	// RadioCfgEndpoint retrieves complete radio configuration data
 	RadioCfgEndpoint = RadioCfgBasePath
 	// RadioProfilesEndpoint retrieves radio profiles configuration

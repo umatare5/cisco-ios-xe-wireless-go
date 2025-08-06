@@ -10,7 +10,7 @@ import (
 
 const (
 	// RrmEmulOperBasePath defines the base path for RRM emulation operational data endpoints.
-	RrmEmulOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data"
+	RrmEmulOperBasePath = "Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data"
 	// RrmEmulOperEndpoint defines the endpoint for RRM emulation operational data.
 	RrmEmulOperEndpoint = RrmEmulOperBasePath
 	// RrmEmulOperRrmFraStatsEndpoint defines the endpoint for RRM emulation FRA statistics.

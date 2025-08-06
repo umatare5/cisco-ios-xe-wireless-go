@@ -150,7 +150,7 @@ func TestDot15ConfigurationFunctions(t *testing.T) {
 func TestDot15ConfigurationEndpoints(t *testing.T) {
 	// Test base path validation
 	t.Run("Validate_Dot15CfgBasePath", func(t *testing.T) {
-		expectedBasePath := "/restconf/data/Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"
+		expectedBasePath := "Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"
 		testutils.EndpointValidationTest(t, Dot15CfgBasePath, expectedBasePath)
 	})
 

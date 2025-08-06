@@ -24,9 +24,9 @@ func getTestClient(t *testing.T) *wnc.Client {
 // TestHyperlocationOperEndpoints tests that all Hyperlocation operation endpoint constants are correctly defined
 func TestHyperlocationOperEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"HyperlocationOperBasePath":     "/restconf/data/Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data",
-		"HyperlocationOperEndpoint":     "/restconf/data/Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data",
-		"HyperlocationProfilesEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data/ewlc-hyperlocation-profile",
+		"HyperlocationOperBasePath":     "Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data",
+		"HyperlocationOperEndpoint":     "Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data",
+		"HyperlocationProfilesEndpoint": "Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data/ewlc-hyperlocation-profile",
 	}
 
 	for name, expected := range expectedEndpoints {

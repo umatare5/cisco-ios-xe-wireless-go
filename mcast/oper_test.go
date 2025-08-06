@@ -24,10 +24,10 @@ func getTestClient(t *testing.T) *wnc.Client {
 // TestMcastOperEndpoints tests that all Multicast operation endpoint constants are correctly defined
 func TestMcastOperEndpoints(t *testing.T) {
 	expectedEndpoints := map[string]string{
-		"McastOperBasePath":                    "/restconf/data/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data",
-		"McastOperEndpoint":                    "/restconf/data/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data",
-		"FlexMediastreamClientSummaryEndpoint": "/restconf/data/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/flex-mediastream-client-summary",
-		"VlanL2MgidOpEndpoint":                 "/restconf/data/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/vlan-l2-mgid-op",
+		"McastOperBasePath":                    "Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data",
+		"McastOperEndpoint":                    "Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data",
+		"FlexMediastreamClientSummaryEndpoint": "Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/flex-mediastream-client-summary",
+		"VlanL2MgidOpEndpoint":                 "Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/vlan-l2-mgid-op",
 	}
 
 	for name, expected := range expectedEndpoints {

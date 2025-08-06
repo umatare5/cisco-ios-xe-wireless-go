@@ -1,4 +1,4 @@
-// package client provides client operational data functionality for the Cisco Wireless Network Controller API.
+// Package client provides client operational data functionality for the Cisco Wireless Network Controller API.
 package client
 
 import (
@@ -12,7 +12,7 @@ import (
 // Client operational data API endpoints
 const (
 	// ClientOperBasePath is the base path for client operational data endpoints
-	ClientOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data"
+	ClientOperBasePath = "Cisco-IOS-XE-wireless-client-oper:client-oper-data"
 	// ClientOperEndpoint retrieves complete client operational data
 	ClientOperEndpoint = ClientOperBasePath
 	// CommonOperDataEndpoint retrieves common operational data for clients

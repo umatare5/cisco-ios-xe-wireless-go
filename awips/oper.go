@@ -9,7 +9,7 @@ import (
 
 const (
 	// AwipsOperBasePath defines the base path for AWIPS operational data endpoints
-	AwipsOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"
+	AwipsOperBasePath = "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"
 	// AwipsOperEndpoint retrieves complete AWIPS operational data
 	AwipsOperEndpoint = AwipsOperBasePath
 	// AwipsPerApInfoEndpoint retrieves AWIPS per-AP information

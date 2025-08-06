@@ -10,7 +10,7 @@ import (
 
 const (
 	// Dot15CfgBasePath defines the base path for 802.15 configuration endpoints
-	Dot15CfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"
+	Dot15CfgBasePath = "Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"
 	// Dot15CfgEndpoint retrieves complete 802.15 configuration data
 	Dot15CfgEndpoint = Dot15CfgBasePath
 )

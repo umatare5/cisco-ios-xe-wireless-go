@@ -10,7 +10,7 @@ import (
 
 const (
 	// MeshGlobalOperBasePath defines the base path for mesh global operational data endpoints.
-	MeshGlobalOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data"
+	MeshGlobalOperBasePath = "Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data"
 	// MeshGlobalOperEndpoint defines the endpoint for mesh global operational data.
 	MeshGlobalOperEndpoint = MeshGlobalOperBasePath
 	// MeshGlobalStatsEndpoint defines the endpoint for mesh global statistics.

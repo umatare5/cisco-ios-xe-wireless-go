@@ -281,52 +281,52 @@ func TestClientOperEndpoints(t *testing.T) {
 	}{
 		{
 			name:        "ClientOperEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data",
 			description: "Client operational data endpoint",
 		},
 		{
 			name:        "MobilityOperDataEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/mobility-oper-data",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/mobility-oper-data",
 			description: "Client mobility operational data endpoint",
 		},
 		{
 			name:        "PolicyDataEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/policy-data",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/policy-data",
 			description: "Client policy data endpoint",
 		},
 		{
 			name:        "SisfDbMacEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/sisf-db-mac",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/sisf-db-mac",
 			description: "Client SISF DB MAC endpoint",
 		},
 		{
 			name:        "DcInfoEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/dc-info",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/dc-info",
 			description: "Client DC info endpoint",
 		},
 		{
 			name:        "CommonOperDataEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/common-oper-data",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/common-oper-data",
 			description: "Client common operational data endpoint",
 		},
 		{
 			name:        "Dot11OperDataEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/dot11-oper-data",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/dot11-oper-data",
 			description: "Client 802.11 operational data endpoint",
 		},
 		{
 			name:        "MmIfClientStatsEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-stats",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-stats",
 			description: "Client MM interface statistics endpoint",
 		},
 		{
 			name:        "MmIfClientHistoryEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-history",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-history",
 			description: "Client MM interface history endpoint",
 		},
 		{
 			name:        "TrafficStatsEndpoint",
-			endpoint:    "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/traffic-stats",
+			endpoint:    "Cisco-IOS-XE-wireless-client-oper:client-oper-data/traffic-stats",
 			description: "Client traffic statistics endpoint",
 		},
 	}

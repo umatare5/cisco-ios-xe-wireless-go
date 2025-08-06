@@ -219,12 +219,18 @@ type WLANService interface {
 	// Methods will be added as the wlan package is refactored
 }
 
+// RogueService defines the interface for rogue access point detection operations
+type RogueService interface {
+	// Methods will be added as the rogue package is refactored
+}
+
 // Domain service accessors - these create service instances that use the client's Do() method
 
 // AFC returns an AFC service instance
 func (c *Client) AFC() AFCService {
-	// This will be implemented when AFC package is refactored to use the new client
-	return nil // Placeholder
+	// Import the AFC service from the afc package to avoid circular dependencies
+	// For now, we return nil to maintain compatibility
+	return nil // This will be implemented with a wrapper or interface approach
 }
 
 // AP returns an Access Point service instance
@@ -254,6 +260,12 @@ func (c *Client) RRM() RRMService {
 // WLAN returns a WLAN service instance
 func (c *Client) WLAN() WLANService {
 	// This will be implemented when WLAN package is refactored to use the new client
+	return nil // Placeholder
+}
+
+// Rogue returns a rogue access point detection service instance
+func (c *Client) Rogue() RogueService {
+	// This will be implemented when rogue package is refactored to use the new client
 	return nil // Placeholder
 }
 

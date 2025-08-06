@@ -10,7 +10,7 @@ import (
 
 const (
 	// MeshCfgBasePath defines the base path for mesh configuration endpoints
-	MeshCfgBasePath = "/restconf/data/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"
+	MeshCfgBasePath = "Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"
 	// MeshCfgEndpoint retrieves complete mesh configuration data
 	MeshCfgEndpoint = MeshCfgBasePath
 	// MeshMeshEndpoint retrieves mesh global configuration

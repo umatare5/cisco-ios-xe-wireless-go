@@ -94,7 +94,7 @@ func TestClientDo(t *testing.T) {
 
 	t.Run("GET_GeneralOper", func(t *testing.T) {
 		var response interface{}
-		err := client.Do(ctx, "GET", "/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
+		err := client.Do(ctx, "GET", "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &response)
 		if err != nil {
 			t.Logf("GET request failed (may be expected for test controller): %v", err)
 		} else {
