@@ -335,8 +335,3 @@ func isValidController(controller string) bool {
 func isValidAccessToken(accessToken string) bool {
 	return accessToken != ""
 }
-
-// isPositiveTimeout checks if timeout is greater than zero
-func isPositiveTimeout(timeout time.Duration) bool {
-	return timeout > 0
-}

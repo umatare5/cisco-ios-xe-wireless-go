@@ -9,19 +9,19 @@ import (
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/afc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/general"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/geolocation"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/ap"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/nmsp"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/hyperlocation"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/mdns"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/nmsp"
 )
 
 func main() {
 	// Get credentials from environment
 	controller := os.Getenv("WNC_CONTROLLER")
 	accessToken := os.Getenv("WNC_ACCESS_TOKEN")
-	
+
 	if controller == "" || accessToken == "" {
 		log.Fatal("WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set")
 	}
@@ -53,12 +53,12 @@ func main() {
 	if err != nil {
 		fmt.Printf("   ❌ General.Oper failed: %v\n", err)
 	} else {
-		fmt.Printf("   ✅ General.Oper success - Interface: %s (%s)\n", 
+		fmt.Printf("   ✅ General.Oper success - Interface: %s (%s)\n",
 			generalOper.CiscoIOSXEWirelessGeneralOperData.MgmtIntfData.IntfName,
 			generalOper.CiscoIOSXEWirelessGeneralOperData.MgmtIntfData.MgmtIP)
 	}
 
-	// Test AFC Service  
+	// Test AFC Service
 	fmt.Println("2. Testing AFC Service...")
 	afcService := afc.NewService(client.CoreClient())
 	afcOper, err := afcService.Oper(ctx)

@@ -51,6 +51,7 @@ import (
     "time"
 
     wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "github.com/umatare5/cisco-ios-xe-wireless-go/afc"
     "github.com/umatare5/cisco-ios-xe-wireless-go/general"
 )
 
@@ -69,20 +70,31 @@ func main() {
         return
     }
 
-    // Create service using the core client
+    // Create services using the core client
+    afcService := afc.NewService(client.CoreClient())
     generalService := general.NewService(client.CoreClient())
 
-    // Get general operational data with context timeout
+    // Use service-based API
     ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
     defer cancel()
 
+    // Get AFC 6 GHz statistics
+    stats, err := afcService.CloudStats(ctx)
+    if err != nil {
+        fmt.Printf("Failed to get AFC stats: %v\n", err)
+        return
+    }
+
+    fmt.Printf("Successfully connected to WNC!\n")
+    fmt.Printf("6 GHz APs: %d\n", stats.Num6GhzAp)
+
+    // Get general operational data
     operData, err := generalService.Oper(ctx)
     if err != nil {
         fmt.Printf("Failed to get operational data: %v\n", err)
         return
     }
 
-    fmt.Printf("Successfully connected to WNC!\n")
     fmt.Printf("Controller model: %s\n", operData.CiscoIOSXEWirelessGeneralOperGeneralOperData.ControllerDetail.Model)
 }
 ```
@@ -105,6 +117,7 @@ config := wnc.Config{
     AccessToken:        "YWRtaW46eW91ci1wYXNzd29yZA==",
     Timeout:            30 * time.Second,
     InsecureSkipVerify: true, // Only for development
+    Logger:             customLogger,
 }
 
 client, err := wnc.NewClient(config)
@@ -156,50 +169,73 @@ All configuration options are set in the `Config` struct during client creation.
 
 ## 🔄 Service-Based API
 
-This library uses a modern three-layer architecture with domain-specific services. Each functional domain (AFC, AP, Client, RRM, etc.) provides a service with typed methods.
+This library uses a modern three-layer architecture with domain-specific services. Each functional domain provides a service with typed methods accessible via `client.<Domain>().<Method>()`.
 
 ### 📋 Available Services
 
 ```go
 import (
+    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
     "github.com/umatare5/cisco-ios-xe-wireless-go/afc"
     "github.com/umatare5/cisco-ios-xe-wireless-go/ap"
-    "github.com/umatare5/cisco-ios-xe-wireless-go/client"
     "github.com/umatare5/cisco-ios-xe-wireless-go/general"
     "github.com/umatare5/cisco-ios-xe-wireless-go/rogue"
     "github.com/umatare5/cisco-ios-xe-wireless-go/rrm"
     "github.com/umatare5/cisco-ios-xe-wireless-go/wlan"
 )
 
-// Create services using the core client
+// Create client and services
+client, _ := wnc.NewClient(config)
 afcService := afc.NewService(client.CoreClient())
 apService := ap.NewService(client.CoreClient())
-clientService := client.NewService(client.CoreClient())
 generalService := general.NewService(client.CoreClient())
 rogueService := rogue.NewService(client.CoreClient())
 rrmService := rrm.NewService(client.CoreClient())
 wlanService := wlan.NewService(client.CoreClient())
 
-// Use service methods with proper types
-afcOper, err := afcService.Oper(ctx)
-apCfg, err := apService.Cfg(ctx)
-rrmGlobal, err := rrmService.GlobalOper(ctx)
+// Use domain services with typed methods
+afcOper, _ := afcService.Oper(ctx)                       // AFC operational data
+afcStats, _ := afcService.CloudStats(ctx)                // AFC 6 GHz statistics
+apCfg, _ := apService.Cfg(ctx)                           // AP configuration  
+apOper, _ := apService.Oper(ctx)                         // AP operational data
+generalOper, _ := generalService.Oper(ctx)               // General operational data
+generalCfg, _ := generalService.Cfg(ctx)                 // General configuration
+rogueOper, _ := rogueService.Oper(ctx)                   // Rogue detection data
+rrmGlobal, _ := rrmService.GlobalOper(ctx)               // RRM global operations
+wlanCfg, _ := wlanService.Cfg(ctx)                       // WLAN configuration
 ```
 
-### ⚠️ Deprecations
+### 🏗️ Service Architecture
 
-**Function-level helpers are deprecated** and will be removed in v2.0.0:
+All services follow a consistent pattern:
+
+- **Service Creation**: Automatic via `client.<Domain>()`  
+- **Typed Methods**: Each method returns strongly-typed structs from `internal/model`
+- **Context Support**: All methods accept `context.Context` for timeouts and cancellation
+- **Error Handling**: Consistent error types including HTTP status details
+
+### ⚠️ Breaking Changes and Deprecations
+
+**Legacy helper functions were deprecated in v1.5 and will be removed in v2.0.0:**
 
 ```go
 // ❌ Deprecated - will be removed in v2.0.0
-apData, err := client.GetApOper(ctx)
+apData, err := ap.GetApOper(ctx, client)
+afcData, err := afc.GetAfcOper(ctx, client)
 
 // ✅ Use service-based API instead  
 apService := ap.NewService(client.CoreClient())
+afcService := afc.NewService(client.CoreClient())
 apData, err := apService.Oper(ctx)
+afcData, err := afcService.Oper(ctx)
 ```
 
-All large API interfaces (WirelessControllerAPI, AccessPointAPI, etc.) are also deprecated in favor of the service pattern.
+**Large API interfaces are also deprecated:**
+
+- `WirelessControllerAPI` - use `client.<Domain>()` methods
+- `AccessPointAPI` - use `client.AP()` methods  
+- `AFCControllerAPI` - use `client.AFC()` methods
+- All other `*API` interfaces
 
 ## 🌐 API Reference
 

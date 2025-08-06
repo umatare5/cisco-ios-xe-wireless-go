@@ -170,3 +170,72 @@ func (c *Client) SendAPIRequest(ctx context.Context, endpoint string, result any
 func (c *Client) CoreClient() *wnccore.Client {
 	return c.coreClient
 }
+
+// Service domain methods for direct access
+// These create service instances from domain packages
+
+// AFC returns the AFC service
+func (c *Client) AFC() interface{} {
+	// Import dynamically to avoid import cycles
+	// This requires reflection but is cleaner
+	return struct {
+		Oper       func(context.Context) (interface{}, error)
+		CloudStats func(context.Context) (interface{}, error)
+	}{
+		Oper: func(ctx context.Context) (interface{}, error) {
+			var result interface{}
+			err := c.coreClient.Do(ctx, "GET", "Cisco-IOS-XE-wireless-afc-oper:afc-oper-data", &result)
+			return result, err
+		},
+		CloudStats: func(ctx context.Context) (interface{}, error) {
+			var result interface{}
+			err := c.coreClient.Do(ctx, "GET", "Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/afc-cloud-stats", &result)
+			return result, err
+		},
+	}
+}
+
+// General returns the General service
+func (c *Client) General() interface{} {
+	return struct {
+		Oper func(context.Context) (interface{}, error)
+		Cfg  func(context.Context) (interface{}, error)
+	}{
+		Oper: func(ctx context.Context) (interface{}, error) {
+			var result interface{}
+			err := c.coreClient.Do(ctx, "GET", "Cisco-IOS-XE-wireless-general-oper:general-oper-data", &result)
+			return result, err
+		},
+		Cfg: func(ctx context.Context) (interface{}, error) {
+			var result interface{}
+			err := c.coreClient.Do(ctx, "GET", "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data", &result)
+			return result, err
+		},
+	}
+}
+
+// New creates a new WNC client using functional options.
+// This is the recommended constructor for the service-based API.
+//
+// Example usage:
+//
+//	client, err := wnc.New("192.168.1.100", "token",
+//		wnc.WithTimeout(30*time.Second),
+//		wnc.WithInsecureSkipVerify(true))
+func New(host, token string, opts ...wnccore.Option) (*Client, error) {
+	// Create new core client
+	coreClient, err := wnccore.New(host, token, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create legacy wrapper
+	return &Client{
+		coreClient:         coreClient,
+		controller:         host,
+		accessToken:        token,
+		timeout:            DefaultTimeout,
+		insecureSkipVerify: false,
+		logger:             slog.Default(),
+	}, nil
+}
