@@ -13,7 +13,7 @@ import (
 // Access Point operational data API endpoints
 const (
 	// ApOperBasePath is the base path for access point operational data endpoints
-	ApOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"
+	ApOperBasePath = "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"
 	// ApOperEndpoint retrieves complete access point operational data
 	ApOperEndpoint = ApOperBasePath
 	// ApRadioNeighborEndpoint retrieves access point radio neighbor information

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -20,7 +21,7 @@ func TestClientOperDataStructures(t *testing.T) {
 			JSONData: `{
 				"Cisco-IOS-XE-wireless-client-oper:common-oper-data": []
 			}`,
-			Target:     &ClientOperCommonOperDataResponse{},
+			Target:     &model.ClientOperCommonOperDataResponse{},
 			TypeName:   "ClientOperCommonOperDataResponse",
 			ShouldFail: false,
 		},
@@ -29,7 +30,7 @@ func TestClientOperDataStructures(t *testing.T) {
 			JSONData: `{
 				"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data": []
 			}`,
-			Target:     &ClientOperDot11OperDataResponse{},
+			Target:     &model.ClientOperDot11OperDataResponse{},
 			TypeName:   "ClientOperDot11OperDataResponse",
 			ShouldFail: false,
 		},
@@ -38,7 +39,7 @@ func TestClientOperDataStructures(t *testing.T) {
 			JSONData: `{
 				"Cisco-IOS-XE-wireless-client-oper:mobility-oper-data": []
 			}`,
-			Target:     &ClientOperMobilityOperDataResponse{},
+			Target:     &model.ClientOperMobilityOperDataResponse{},
 			TypeName:   "ClientOperMobilityOperDataResponse",
 			ShouldFail: false,
 		},
@@ -47,7 +48,7 @@ func TestClientOperDataStructures(t *testing.T) {
 			JSONData: `{
 				"Cisco-IOS-XE-wireless-client-oper:traffic-stats": []
 			}`,
-			Target:     &ClientOperTrafficStatsResponse{},
+			Target:     &model.ClientOperTrafficStatsResponse{},
 			TypeName:   "ClientOperTrafficStatsResponse",
 			ShouldFail: false,
 		},

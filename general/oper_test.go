@@ -9,6 +9,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -47,7 +48,7 @@ func TestGeneralOperDataStructures(t *testing.T) {
 					}
 				}
 			}`,
-			dataType: &GeneralOperResponse{},
+			dataType: &model.GeneralOperResponse{},
 		},
 		{
 			name: "GeneralOperMgmtIntfDataResponse",
@@ -61,7 +62,7 @@ func TestGeneralOperDataStructures(t *testing.T) {
 					"mgmt-mac": "aa:bb:cc:dd:ee:ff"
 				}
 			}`,
-			dataType: &GeneralOperMgmtIntfDataResponse{},
+			dataType: &model.GeneralOperMgmtIntfDataResponse{},
 		},
 	}
 

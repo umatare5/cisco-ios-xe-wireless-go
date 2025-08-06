@@ -10,7 +10,7 @@ import (
 
 const (
 	// ClientGlobalOperBasePath defines the base path for client global operational data endpoints.
-	ClientGlobalOperBasePath = "/restconf/data/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data"
+	ClientGlobalOperBasePath = "/Cisco-IOS-XE-wireless-client-global-oper:client-global-oper-data"
 	// ClientGlobalOperEndpoint defines the endpoint for client global operational data.
 	ClientGlobalOperEndpoint = ClientGlobalOperBasePath
 	// ClientLiveStatsEndpoint defines the endpoint for client live statistics.

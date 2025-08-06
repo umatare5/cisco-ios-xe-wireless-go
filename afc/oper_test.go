@@ -7,6 +7,7 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	testutils "github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
@@ -54,7 +55,7 @@ func TestAfcOperDataStructures(t *testing.T) {
 					]
 				}
 			}`,
-			Target:     &AfcOperResponse{},
+			Target:     &model.AfcOperResponse{},
 			TypeName:   "AfcOperResponse",
 			ShouldFail: false,
 		},
@@ -94,7 +95,7 @@ func TestAfcOperDataStructures(t *testing.T) {
 					}
 				]
 			}`,
-			Target:     &AfcOperEwlcAfcApRespResponse{},
+			Target:     &model.AfcOperEwlcAfcApRespResponse{},
 			TypeName:   "AfcOperEwlcAfcApRespResponse",
 			ShouldFail: false,
 		},

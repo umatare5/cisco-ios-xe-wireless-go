@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
@@ -17,34 +18,12 @@ const (
 	GeneralOperMgmtIntfDataEndpoint = GeneralOperBasePath + "/mgmt-intf-data"
 )
 
-// GeneralOperResponse represents the complete general operational data response
-type GeneralOperResponse struct {
-	CiscoIOSXEWirelessGeneralOperData struct {
-		MgmtIntfData MgmtIntfData `json:"mgmt-intf-data"`
-	} `json:"Cisco-IOS-XE-wireless-general-oper:general-oper-data"`
-}
-
-// GeneralOperMgmtIntfDataResponse represents the management interface data response
-type GeneralOperMgmtIntfDataResponse struct {
-	MgmtIntfData MgmtIntfData `json:"Cisco-IOS-XE-wireless-general-oper:mgmt-intf-data"`
-}
-
-// MgmtIntfData contains management interface configuration and status information
-type MgmtIntfData struct {
-	IntfName string `json:"intf-name"` // Interface name
-	IntfType string `json:"intf-type"` // Interface type
-	IntfID   int    `json:"intf-id"`   // Interface ID
-	MgmtIP   string `json:"mgmt-ip"`   // Management IP address
-	NetMask  string `json:"net-mask"`  // Network mask
-	MgmtMAC  string `json:"mgmt-mac"`  // Management MAC address
-}
-
 // GetGeneralOper retrieves general operational data.
-func GetGeneralOper(client *wnc.Client, ctx context.Context) (*GeneralOperResponse, error) {
+func GetGeneralOper(client *wnc.Client, ctx context.Context) (*model.GeneralOperResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data GeneralOperResponse
+	var data model.GeneralOperResponse
 	if err := client.SendAPIRequest(ctx, GeneralOperEndpoint, &data); err != nil {
 		return nil, err
 	}
@@ -52,11 +31,11 @@ func GetGeneralOper(client *wnc.Client, ctx context.Context) (*GeneralOperRespon
 }
 
 // GetGeneralOperMgmtIntfData retrieves management interface operational data.
-func GetGeneralOperMgmtIntfData(client *wnc.Client, ctx context.Context) (*GeneralOperMgmtIntfDataResponse, error) {
+func GetGeneralOperMgmtIntfData(client *wnc.Client, ctx context.Context) (*model.GeneralOperMgmtIntfDataResponse, error) {
 	if client == nil {
 		return nil, errors.New("client is nil")
 	}
-	var data GeneralOperMgmtIntfDataResponse
+	var data model.GeneralOperMgmtIntfDataResponse
 	if err := client.SendAPIRequest(ctx, GeneralOperMgmtIntfDataEndpoint, &data); err != nil {
 		return nil, err
 	}
