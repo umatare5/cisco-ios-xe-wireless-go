@@ -2,6 +2,7 @@ package wnc
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"testing"
 	"time"
@@ -49,6 +50,7 @@ func TestClientStructure(t *testing.T) {
 	controller := ExampleTestHostname
 	token := TestAccessTokenValue
 
+	// Test basic client creation with config
 	config := Config{
 		Controller:  controller,
 		AccessToken: token,
@@ -56,6 +58,446 @@ func TestClientStructure(t *testing.T) {
 	}
 
 	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	if client == nil {
+		t.Fatal("Expected client to be created, got nil")
+	}
+}
+
+// TestCoreClient tests the CoreClient accessor method
+func TestCoreClient(t *testing.T) {
+	controller := ExampleTestHostname
+	token := TestAccessTokenValue
+
+	config := Config{
+		Controller:  controller,
+		AccessToken: token,
+		Timeout:     clientTestTimeout,
+	}
+
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	core := client.CoreClient()
+	if core == nil {
+		t.Error("Expected CoreClient to return non-nil client")
+	}
+}
+
+// TestServiceAccessors tests all service accessor methods
+func TestClientServiceAccessors(t *testing.T) {
+	controller := ExampleTestHostname
+	token := TestAccessTokenValue
+
+	config := Config{
+		Controller:  controller,
+		AccessToken: token,
+		Timeout:     clientTestTimeout,
+	}
+
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	// Test AFC accessor
+	afc := client.AFC()
+	if afc == nil {
+		t.Error("Expected AFC to return non-nil service")
+	}
+
+	// Test General accessor
+	general := client.General()
+	if general == nil {
+		t.Error("Expected General to return non-nil service")
+	}
+}
+
+// TestAFCServiceMethods tests the AFC service methods
+func TestAFCServiceMethods(t *testing.T) {
+	controller := ExampleTestHostname
+	token := TestAccessTokenValue
+
+	config := Config{
+		Controller:  controller,
+		AccessToken: token,
+		Timeout:     clientTestTimeout,
+	}
+
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	afc := client.AFC()
+	if afc == nil {
+		t.Fatal("Expected AFC to return non-nil service")
+	}
+
+	// Use type assertion to access the methods
+	afcStruct, ok := afc.(struct {
+		Oper       func(context.Context) (interface{}, error)
+		CloudStats func(context.Context) (interface{}, error)
+	})
+	if !ok {
+		t.Fatal("AFC service does not have expected structure")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	defer cancel()
+
+	// Test Oper method
+	t.Run("AFC_Oper", func(t *testing.T) {
+		_, err := afcStruct.Oper(ctx)
+		// Error is expected due to test environment, but we've covered the code path
+		t.Logf("AFC Oper method called, result: %v", err)
+	})
+
+	// Test CloudStats method
+	t.Run("AFC_CloudStats", func(t *testing.T) {
+		_, err := afcStruct.CloudStats(ctx)
+		// Error is expected due to test environment, but we've covered the code path
+		t.Logf("AFC CloudStats method called, result: %v", err)
+	})
+}
+
+// TestGeneralServiceMethods tests the General service methods
+func TestGeneralServiceMethods(t *testing.T) {
+	controller := ExampleTestHostname
+	token := TestAccessTokenValue
+
+	config := Config{
+		Controller:  controller,
+		AccessToken: token,
+		Timeout:     clientTestTimeout,
+	}
+
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	general := client.General()
+	if general == nil {
+		t.Fatal("Expected General to return non-nil service")
+	}
+
+	// Use type assertion to access the methods
+	generalStruct, ok := general.(struct {
+		Oper func(context.Context) (interface{}, error)
+		Cfg  func(context.Context) (interface{}, error)
+	})
+	if !ok {
+		t.Fatal("General service does not have expected structure")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	defer cancel()
+
+	// Test Oper method
+	t.Run("General_Oper", func(t *testing.T) {
+		_, err := generalStruct.Oper(ctx)
+		// Error is expected due to test environment, but we've covered the code path
+		t.Logf("General Oper method called, result: %v", err)
+	})
+
+	// Test Cfg method
+	t.Run("General_Cfg", func(t *testing.T) {
+		_, err := generalStruct.Cfg(ctx)
+		// Error is expected due to test environment, but we've covered the code path
+		t.Logf("General Cfg method called, result: %v", err)
+	})
+}
+
+// TestNew tests the New function
+func TestNewLegacyFunction(t *testing.T) {
+	controller := ExampleTestHostname
+	token := TestAccessTokenValue
+
+	client, err := New(controller, token)
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	if client == nil {
+		t.Error("Expected New to return non-nil client")
+	}
+
+	// Verify it creates a working client
+	afc := client.AFC()
+	if afc == nil {
+		t.Error("Expected AFC service to be accessible from legacy client")
+	}
+}
+
+// TestNewFunction tests the New function with various scenarios
+func TestNewFunction(t *testing.T) {
+	tests := []struct {
+		name        string
+		host        string
+		token       string
+		shouldError bool
+	}{
+		{
+			name:        "ValidParameters",
+			host:        ExampleTestHostname,
+			token:       TestAccessTokenValue,
+			shouldError: false,
+		},
+		{
+			name:        "EmptyHost",
+			host:        "",
+			token:       TestAccessTokenValue,
+			shouldError: true,
+		},
+		{
+			name:        "EmptyToken",
+			host:        ExampleTestHostname,
+			token:       "",
+			shouldError: true,
+		},
+		{
+			name:        "EmptyBoth",
+			host:        "",
+			token:       "",
+			shouldError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client, err := New(tt.host, tt.token)
+			if tt.shouldError {
+				if err == nil {
+					t.Error("Expected error but got none")
+				}
+				if client != nil {
+					t.Error("Expected nil client when error occurs")
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Expected no error but got: %v", err)
+				}
+				if client == nil {
+					t.Error("Expected non-nil client when no error")
+				}
+			}
+		})
+	}
+}
+
+// TestNewClientWithConfigFunction tests the NewClientWithConfig function
+func TestNewClientWithConfigFunction(t *testing.T) {
+	tests := []struct {
+		name        string
+		config      Config
+		shouldError bool
+	}{
+		{
+			name: "ValidConfig",
+			config: Config{
+				Controller:  ExampleTestHostname,
+				AccessToken: TestAccessTokenValue,
+				Timeout:     clientTestTimeout,
+			},
+			shouldError: false,
+		},
+		{
+			name: "EmptyController",
+			config: Config{
+				Controller:  "",
+				AccessToken: TestAccessTokenValue,
+				Timeout:     clientTestTimeout,
+			},
+			shouldError: true,
+		},
+		{
+			name: "EmptyToken",
+			config: Config{
+				Controller:  ExampleTestHostname,
+				AccessToken: "",
+				Timeout:     clientTestTimeout,
+			},
+			shouldError: true,
+		},
+		{
+			name: "ZeroTimeout",
+			config: Config{
+				Controller:  ExampleTestHostname,
+				AccessToken: TestAccessTokenValue,
+				Timeout:     0,
+			},
+			shouldError: false, // Zero timeout should use default
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client, err := NewClientWithConfig(tt.config)
+			if tt.shouldError {
+				if err == nil {
+					t.Error("Expected error but got none")
+				}
+				if client != nil {
+					t.Error("Expected nil client when error occurs")
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Expected no error but got: %v", err)
+				}
+				if client == nil {
+					t.Error("Expected non-nil client when no error")
+				}
+			}
+		})
+	}
+}
+
+// TestNewClientWithConfigAdvanced tests advanced NewClientWithConfig scenarios
+func TestNewClientWithConfigAdvanced(t *testing.T) {
+	t.Run("ConfigWithLogger", func(t *testing.T) {
+		customLogger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+		config := Config{
+			Controller:  ExampleTestHostname,
+			AccessToken: TestAccessTokenValue,
+			Logger:      customLogger,
+		}
+
+		client, err := NewClientWithConfig(config)
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		if client == nil {
+			t.Fatal("Expected non-nil client")
+		}
+		if client.logger != customLogger {
+			t.Error("Expected custom logger to be set")
+		}
+	})
+
+	t.Run("ConfigWithInsecureSkipVerify", func(t *testing.T) {
+		config := Config{
+			Controller:         ExampleTestHostname,
+			AccessToken:        TestAccessTokenValue,
+			InsecureSkipVerify: true,
+		}
+
+		client, err := NewClientWithConfig(config)
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		if client == nil {
+			t.Fatal("Expected non-nil client")
+		}
+		if !client.insecureSkipVerify {
+			t.Error("Expected insecureSkipVerify to be true")
+		}
+	})
+
+	t.Run("ConfigWithOptions", func(t *testing.T) {
+		config := Config{
+			Controller:  ExampleTestHostname,
+			AccessToken: TestAccessTokenValue,
+		}
+
+		customTimeout := 45 * time.Second
+		client, err := NewClientWithConfig(config, WithTimeout(customTimeout))
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		if client == nil {
+			t.Fatal("Expected non-nil client")
+		}
+		if client.timeout != customTimeout {
+			t.Errorf("Expected timeout %v, got %v", customTimeout, client.timeout)
+		}
+	})
+
+	t.Run("ConfigWithMultipleOptions", func(t *testing.T) {
+		config := Config{
+			Controller:  ExampleTestHostname,
+			AccessToken: TestAccessTokenValue,
+		}
+
+		customTimeout := 45 * time.Second
+		customLogger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+
+		client, err := NewClientWithConfig(config,
+			WithTimeout(customTimeout),
+			WithLogger(customLogger),
+			WithInsecureSkipVerify(true))
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		if client == nil {
+			t.Fatal("Expected non-nil client")
+		}
+		if client.timeout != customTimeout {
+			t.Errorf("Expected timeout %v, got %v", customTimeout, client.timeout)
+		}
+		if client.logger != customLogger {
+			t.Error("Expected custom logger to be set")
+		}
+	})
+
+	t.Run("ConfigWithZeroTimeoutAndOptionTimeout", func(t *testing.T) {
+		config := Config{
+			Controller:  ExampleTestHostname,
+			AccessToken: TestAccessTokenValue,
+			Timeout:     0, // Zero timeout in config
+		}
+
+		customTimeout := 50 * time.Second
+		client, err := NewClientWithConfig(config, WithTimeout(customTimeout))
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		if client == nil {
+			t.Fatal("Expected non-nil client")
+		}
+		// Option timeout should override zero timeout
+		if client.timeout != customTimeout {
+			t.Errorf("Expected timeout %v (from option), got %v", customTimeout, client.timeout)
+		}
+	})
+
+	t.Run("ConfigWithNilLogger", func(t *testing.T) {
+		config := Config{
+			Controller:  ExampleTestHostname,
+			AccessToken: TestAccessTokenValue,
+			Logger:      nil, // Explicitly nil logger
+		}
+
+		client, err := NewClientWithConfig(config)
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		if client == nil {
+			t.Fatal("Expected non-nil client")
+		}
+		// Should get default logger
+		if client.logger == nil {
+			t.Error("Expected default logger when config logger is nil")
+		}
+	})
+}
+
+func TestClientWithConfig(t *testing.T) {
+	controller := ExampleTestHostname
+	token := TestAccessTokenValue
+
+	config := Config{
+		Controller:  controller,
+		AccessToken: token,
+		Timeout:     clientTestTimeout,
+	}
+
+	client, err := NewClientWithConfig(config)
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}

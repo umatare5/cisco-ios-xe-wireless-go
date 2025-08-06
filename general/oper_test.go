@@ -350,3 +350,32 @@ func TestGeneralOperContextHandling(t *testing.T) {
 		return err
 	})
 }
+
+// =============================================================================
+// 6. SERVICE TESTS
+// =============================================================================
+
+func TestGeneralServiceOperational(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test operational service methods
+	t.Run("Service_Oper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Oper(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_MgmtIntfData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.MgmtIntfData(ctx)
+			return err
+		})
+	})
+}

@@ -780,3 +780,67 @@ func TestApOperSuccessPathCoverage(t *testing.T) {
 		}
 	})
 }
+
+// =============================================================================
+// 7. SERVICE TESTS
+// =============================================================================
+
+func TestAPServiceOperational(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test operational methods
+	t.Run("Service_Oper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Oper(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_RadioNeighbor", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.RadioNeighbor(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_NameMacMap", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.NameMacMap(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_CapwapData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.CapwapData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_GlobalOper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.GlobalOper(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_History", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.History(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_EwlcApStats", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.EwlcApStats(ctx)
+			return err
+		})
+	})
+}

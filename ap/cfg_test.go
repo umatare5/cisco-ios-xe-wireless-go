@@ -297,3 +297,39 @@ func TestApCfgEndpoints(t *testing.T) {
 		}
 	})
 }
+
+// =============================================================================
+// 6. SERVICE TESTS
+// =============================================================================
+
+func TestAPService(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test configuration methods
+	t.Run("Service_Cfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Cfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_TagSourcePriorityConfigs", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.TagSourcePriorityConfigs(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_ApTags", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.ApTags(ctx)
+			return err
+		})
+	})
+}

@@ -890,3 +890,254 @@ func TestAdditionalUtilityFunctions(t *testing.T) {
 		GenerateEndpointValidationTest(t, expectedEndpoints, actualEndpoints)
 	})
 }
+
+// TestServiceMethod tests the TestServiceMethod utility function
+func TestTestServiceMethod(t *testing.T) {
+	t.Run("SuccessfulServiceMethod", func(t *testing.T) {
+		TestServiceMethod(t, func() error {
+			return nil
+		})
+	})
+
+	t.Run("ServiceMethodWithAcceptableError", func(t *testing.T) {
+		TestServiceMethod(t, func() error {
+			return fmt.Errorf("connection refused")
+		})
+	})
+
+	t.Run("ServiceMethodWith404Error", func(t *testing.T) {
+		TestServiceMethod(t, func() error {
+			return fmt.Errorf("404 Not Found")
+		})
+	})
+
+	t.Run("ServiceMethodWithTimeoutError", func(t *testing.T) {
+		TestServiceMethod(t, func() error {
+			return fmt.Errorf("timeout occurred")
+		})
+	})
+
+	t.Run("ServiceMethodWith500Error", func(t *testing.T) {
+		TestServiceMethod(t, func() error {
+			return fmt.Errorf("500 Internal Server Error")
+		})
+	})
+}
+
+// TestIsAcceptableServiceError tests the isAcceptableServiceError function
+func TestIsAcceptableServiceError(t *testing.T) {
+	tests := []struct {
+		name     string
+		err      error
+		expected bool
+	}{
+		{
+			name:     "NilError",
+			err:      nil,
+			expected: true,
+		},
+		{
+			name:     "ConnectionRefused",
+			err:      fmt.Errorf("connection refused"),
+			expected: true,
+		},
+		{
+			name:     "Timeout",
+			err:      fmt.Errorf("operation timeout"),
+			expected: true,
+		},
+		{
+			name:     "NoSuchHost",
+			err:      fmt.Errorf("no such host"),
+			expected: true,
+		},
+		{
+			name:     "NetworkUnreachable",
+			err:      fmt.Errorf("network unreachable"),
+			expected: true,
+		},
+		{
+			name:     "HTTP404",
+			err:      fmt.Errorf("404 Not Found"),
+			expected: true,
+		},
+		{
+			name:     "HTTP500",
+			err:      fmt.Errorf("500 Internal Server Error"),
+			expected: true,
+		},
+		{
+			name:     "UnacceptableError",
+			err:      fmt.Errorf("authentication failed"),
+			expected: false,
+		},
+		{
+			name:     "EmptyError",
+			err:      fmt.Errorf(""),
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := isAcceptableServiceError(tt.err)
+			if result != tt.expected {
+				t.Errorf("isAcceptableServiceError(%v) = %v, expected %v", tt.err, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestContains tests the contains helper function
+func TestContains(t *testing.T) {
+	tests := []struct {
+		name     string
+		s        string
+		substr   string
+		expected bool
+	}{
+		{
+			name:     "ExactMatch",
+			s:        "hello",
+			substr:   "hello",
+			expected: true,
+		},
+		{
+			name:     "SubstringAtStart",
+			s:        "hello world",
+			substr:   "hello",
+			expected: true,
+		},
+		{
+			name:     "SubstringAtEnd",
+			s:        "hello world",
+			substr:   "world",
+			expected: true,
+		},
+		{
+			name:     "SubstringInMiddle",
+			s:        "hello world test",
+			substr:   "world",
+			expected: true,
+		},
+		{
+			name:     "NotFound",
+			s:        "hello world",
+			substr:   "xyz",
+			expected: false,
+		},
+		{
+			name:     "EmptySubstring",
+			s:        "hello",
+			substr:   "",
+			expected: true,
+		},
+		{
+			name:     "EmptyString",
+			s:        "",
+			substr:   "hello",
+			expected: false,
+		},
+		{
+			name:     "BothEmpty",
+			s:        "",
+			substr:   "",
+			expected: true,
+		},
+		{
+			name:     "SubstringLongerThanString",
+			s:        "hi",
+			substr:   "hello",
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := contains(tt.s, tt.substr)
+			if result != tt.expected {
+				t.Errorf("contains(%q, %q) = %v, expected %v", tt.s, tt.substr, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestIndexOf tests the indexOf helper function
+func TestIndexOf(t *testing.T) {
+	tests := []struct {
+		name     string
+		s        string
+		substr   string
+		expected int
+	}{
+		{
+			name:     "ExactMatch",
+			s:        "hello",
+			substr:   "hello",
+			expected: 0,
+		},
+		{
+			name:     "SubstringAtStart",
+			s:        "hello world",
+			substr:   "hello",
+			expected: 0,
+		},
+		{
+			name:     "SubstringAtEnd",
+			s:        "hello world",
+			substr:   "world",
+			expected: 6,
+		},
+		{
+			name:     "SubstringInMiddle",
+			s:        "hello beautiful world",
+			substr:   "beautiful",
+			expected: 6,
+		},
+		{
+			name:     "NotFound",
+			s:        "hello world",
+			substr:   "xyz",
+			expected: -1,
+		},
+		{
+			name:     "EmptySubstring",
+			s:        "hello",
+			substr:   "",
+			expected: 0,
+		},
+		{
+			name:     "EmptyString",
+			s:        "",
+			substr:   "hello",
+			expected: -1,
+		},
+		{
+			name:     "BothEmpty",
+			s:        "",
+			substr:   "",
+			expected: 0,
+		},
+		{
+			name:     "SubstringLongerThanString",
+			s:        "hi",
+			substr:   "hello",
+			expected: -1,
+		},
+		{
+			name:     "RepeatedSubstring",
+			s:        "hello hello hello",
+			substr:   "hello",
+			expected: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := indexOf(tt.s, tt.substr)
+			if result != tt.expected {
+				t.Errorf("indexOf(%q, %q) = %v, expected %v", tt.s, tt.substr, result, tt.expected)
+			}
+		})
+	}
+}

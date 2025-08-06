@@ -414,3 +414,88 @@ func TestClientOperContextHandling(t *testing.T) {
 		})
 	})
 }
+
+// =============================================================================
+// 6. SERVICE TESTS
+// =============================================================================
+
+func TestClientService(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test all service methods
+	t.Run("Service_Oper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Oper(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_CommonOperData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.CommonOperData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_Dot11OperData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Dot11OperData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_MobilityOperData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.MobilityOperData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_MmIfClientStats", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.MmIfClientStats(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_MmIfClientHistory", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.MmIfClientHistory(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_TrafficStats", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.TrafficStats(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_PolicyData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.PolicyData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_SisfDbMac", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.SisfDbMac(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_DcInfo", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.DcInfo(ctx)
+			return err
+		})
+	})
+}

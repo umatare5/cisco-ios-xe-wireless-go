@@ -196,7 +196,7 @@ wlanService := wlan.NewService(client.CoreClient())
 // Use domain services with typed methods
 afcOper, _ := afcService.Oper(ctx)                       // AFC operational data
 afcStats, _ := afcService.CloudStats(ctx)                // AFC 6 GHz statistics
-apCfg, _ := apService.Cfg(ctx)                           // AP configuration  
+apCfg, _ := apService.Cfg(ctx)                           // AP configuration
 apOper, _ := apService.Oper(ctx)                         // AP operational data
 generalOper, _ := generalService.Oper(ctx)               // General operational data
 generalCfg, _ := generalService.Cfg(ctx)                 // General configuration
@@ -209,7 +209,7 @@ wlanCfg, _ := wlanService.Cfg(ctx)                       // WLAN configuration
 
 All services follow a consistent pattern:
 
-- **Service Creation**: Automatic via `client.<Domain>()`  
+- **Service Creation**: Automatic via `client.<Domain>()`
 - **Typed Methods**: Each method returns strongly-typed structs from `internal/model`
 - **Context Support**: All methods accept `context.Context` for timeouts and cancellation
 - **Error Handling**: Consistent error types including HTTP status details
@@ -223,7 +223,7 @@ All services follow a consistent pattern:
 apData, err := ap.GetApOper(ctx, client)
 afcData, err := afc.GetAfcOper(ctx, client)
 
-// ✅ Use service-based API instead  
+// ✅ Use service-based API instead
 apService := ap.NewService(client.CoreClient())
 afcService := afc.NewService(client.CoreClient())
 apData, err := apService.Oper(ctx)
@@ -233,7 +233,7 @@ afcData, err := afcService.Oper(ctx)
 **Large API interfaces are also deprecated:**
 
 - `WirelessControllerAPI` - use `client.<Domain>()` methods
-- `AccessPointAPI` - use `client.AP()` methods  
+- `AccessPointAPI` - use `client.AP()` methods
 - `AFCControllerAPI` - use `client.AFC()` methods
 - All other `*API` interfaces
 

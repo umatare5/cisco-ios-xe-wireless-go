@@ -411,7 +411,64 @@ func TestWlanCfgContextHandling(t *testing.T) {
 }
 
 // =============================================================================
-// 7. OTHER TESTS
+// 7. SERVICE TESTS
+// =============================================================================
+
+func TestWLANServiceConfiguration(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test all configuration service methods
+	t.Run("Service_Cfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Cfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_CfgEntries", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.CfgEntries(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_Policies", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Policies(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_PolicyListEntries", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.PolicyListEntries(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_WirelessAaaPolicyConfigs", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.WirelessAaaPolicyConfigs(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_GlobalOper", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.GlobalOper(ctx)
+			return err
+		})
+	})
+}
+
+// =============================================================================
+// 8. OTHER TESTS
 // =============================================================================
 
 // Currently no other tests specific to WLAN configuration

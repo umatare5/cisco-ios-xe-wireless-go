@@ -497,3 +497,116 @@ func TestGeneralCfgContextHandling(t *testing.T) {
 		})
 	}
 }
+
+// =============================================================================
+// 7. SERVICE TESTS
+// =============================================================================
+
+func TestGeneralServiceConfiguration(t *testing.T) {
+	client := testutils.GetTestClient(t)
+	if client == nil {
+		t.Skip("Skipping service tests: no test client available")
+	}
+
+	ctx := context.Background()
+	service := NewService(client.CoreClient())
+
+	// Test all configuration service methods
+	t.Run("Service_Cfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Cfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_MewlcConfig", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.MewlcConfig(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_CacConfig", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.CacConfig(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_Mfp", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Mfp(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_FipsCfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.FipsCfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_WsaApClientEvent", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.WsaApClientEvent(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_SimL3InterfaceCacheData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.SimL3InterfaceCacheData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_WlcManagementData", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.WlcManagementData(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_Laginfo", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.Laginfo(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_MulticastConfig", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.MulticastConfig(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_FeatureUsageCfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.FeatureUsageCfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_ThresholdWarnCfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.ThresholdWarnCfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_ApLocRangingCfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.ApLocRangingCfg(ctx)
+			return err
+		})
+	})
+
+	t.Run("Service_GeolocationCfg", func(t *testing.T) {
+		testutils.TestServiceMethod(t, func() error {
+			_, err := service.GeolocationCfg(ctx)
+			return err
+		})
+	})
+}
