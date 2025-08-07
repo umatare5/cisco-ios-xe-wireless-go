@@ -47,7 +47,7 @@ source_output_libraries() {
 # Module-specific library loading
 source_module_libraries() {
     local module_dir="$1"
-    
+
     if [[ -d "$module_dir" ]]; then
         # Source all .sh files in the module directory
         for lib_file in "$module_dir"/*.sh; do
@@ -61,21 +61,21 @@ source_module_libraries() {
 init_wnc_libraries() {
     local script_dir="${1:-}"
     local module_dir="${2:-}"
-    
+
     # Always load core libraries first
     source_core_libraries
-    
+
     # Load utilities
     source_utils_libraries
-    
+
     # Load network libraries if needed
     if [[ "${WNC_LOAD_NETWORK:-true}" == "true" ]]; then
         source_network_libraries
     fi
-    
+
     # Load output libraries
     source_output_libraries
-    
+
     # Load module-specific libraries if provided
     if [[ -n "$module_dir" ]]; then
         source_module_libraries "$module_dir"
@@ -86,12 +86,12 @@ init_wnc_libraries() {
 init_script_libraries() {
     local script_dir="$1"
     local module_dir="${2:-}"
-    
+
     # Show deprecation warning if verbose
     if [[ "${argc_verbose:-0}" == "1" ]]; then
         echo "Warning: init_script_libraries is deprecated. Use init_wnc_libraries instead." >&2
     fi
-    
+
     init_wnc_libraries "$script_dir" "$module_dir"
 }
 

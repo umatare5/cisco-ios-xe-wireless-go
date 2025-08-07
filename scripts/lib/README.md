@@ -37,6 +37,7 @@ scripts/lib/
 ### Usage Patterns
 
 #### Full Initialization
+
 ```bash
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
@@ -46,6 +47,7 @@ init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/testing"
 ```
 
 #### Lightweight Initialization
+
 ```bash
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
@@ -55,6 +57,7 @@ init_wnc_basic
 ```
 
 #### Network-Focused Initialization
+
 ```bash
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
@@ -65,21 +68,23 @@ init_wnc_network
 
 ### Initialization Functions
 
-| Function | Libraries Loaded | Use Case |
-|----------|------------------|----------|
-| `init_wnc_libraries(script_dir, module_dir)` | All + module-specific | Full-featured scripts |
-| `init_wnc_basic()` | core + utils | Simple utility scripts |
-| `init_wnc_network()` | core + network + output | Network/API scripts |
+| Function                                     | Libraries Loaded        | Use Case               |
+| -------------------------------------------- | ----------------------- | ---------------------- |
+| `init_wnc_libraries(script_dir, module_dir)` | All + module-specific   | Full-featured scripts  |
+| `init_wnc_basic()`                           | core + utils            | Simple utility scripts |
+| `init_wnc_network()`                         | core + network + output | Network/API scripts    |
 
 ## 📚 Library Categories
 
 ### Core Libraries
+
 - **common.sh**: Basic predicate functions (`is_enabled`, `is_verbose_enabled`, etc.)
 - **constants.sh**: Project-wide constants and default values
 - **argc_common.sh**: argc-specific utility functions
 - **argument_parsing.sh**: Command-line argument processing
 
 ### Utility Libraries
+
 - **validation.sh**: Input validation and format checking
 - **file_utils.sh**: File system operations and utilities
 - **cli_validation.sh**: CLI tool presence and version checking
@@ -87,22 +92,26 @@ init_wnc_network
 - **dependencies.sh**: Package and dependency management
 
 ### Network Libraries
+
 - **http_client.sh**: HTTP/HTTPS request handling
 - **authentication.sh**: Authentication token management
 - **yang_common.sh**: YANG model and RESTCONF API operations
 
 ### Output Libraries
+
 - **output_formatter.sh**: Consistent output formatting across scripts
 
 ## 🔧 Migration Guide
 
 ### Old Pattern (Deprecated)
+
 ```bash
 source "${SCRIPT_DIR}/lib/common/common.sh"
 init_script_libraries "$SCRIPT_DIR" "$MODULE_DIR"
 ```
 
 ### New Pattern (Recommended)
+
 ```bash
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
 init_wnc_libraries "$SCRIPT_DIR" "$MODULE_DIR"
