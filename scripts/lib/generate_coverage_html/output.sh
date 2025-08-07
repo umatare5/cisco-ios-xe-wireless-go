@@ -4,9 +4,11 @@ set -euo pipefail
 # Cisco WNC Coverage HTML Generator - Output Functions
 # Handles output formatting and display for coverage HTML operations
 
-# Source common predicates
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
+# Source bootstrap library
+LIB_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1090  # Dynamic source loading
+source "${LIB_ROOT}/bootstrap.sh"
+init_wnc_basic
 
 format_coverage_error() {
     local message="$1"

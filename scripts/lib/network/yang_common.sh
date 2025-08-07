@@ -3,16 +3,15 @@
 # Cisco WNC YANG Common Library
 # Shared functions and utilities for YANG-related operations
 
-# Ensure common library is loaded first
-if ! declare -F "get_default_controller" >/dev/null 2>&1; then
-    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    source "${CURRENT_DIR}/common.sh"
-fi
+# Source constants from core
+source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"
 
-# YANG-specific constants
-readonly YANG_DEFAULT_MODEL="Cisco-IOS-XE-wireless-access-point-oper"
-readonly YANG_DEFAULT_REVISION="2023-08-01"
-readonly YANG_DEFAULT_IDENTIFIER="access-point-oper-data"
+# YANG-specific constants (only set if not already defined)
+if [[ -z "${YANG_DEFAULT_MODEL:-}" ]]; then
+    readonly YANG_DEFAULT_MODEL="Cisco-IOS-XE-wireless-access-point-oper"
+    readonly YANG_DEFAULT_REVISION="2023-08-01"
+    readonly YANG_DEFAULT_IDENTIFIER="access-point-oper-data"
+fi
 
 # YANG-specific predicate functions
 is_valid_hostname() {
@@ -331,27 +330,4 @@ setup_yang_environment() {
     # Export for caller
     echo "$auth_token"
     echo "$temp_file"
-}
-
-# Standard YANG script initialization
-init_yang_script() {
-    # Basic script setup first
-    set -euo pipefail
-
-    # Get script directory
-    local script_dir
-    script_dir="$(cd "$(dirname "${BASH_SOURCE[1]}")" && pwd)"
-    readonly script_dir
-
-    # Source common first if not already loaded
-    if ! declare -F "SOURCE_WNC_LIBRARIES" >/dev/null 2>&1; then
-        # shellcheck source=/dev/null
-        source "${script_dir}/lib/common.sh"
-    fi
-
-    # Load all libraries
-    SOURCE_WNC_LIBRARIES "$script_dir"
-
-    # Return script directory
-    echo "$script_dir"
 }

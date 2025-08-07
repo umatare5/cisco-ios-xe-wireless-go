@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Source constants and validation
-source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/validation.sh"
 
 # Check if curl is available

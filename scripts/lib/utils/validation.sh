@@ -4,8 +4,8 @@ set -euo pipefail
 # Cisco WNC Validation Library
 # Input validation and format checking functions
 
-# Source constants
-source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
+# Source constants from core
+source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"
 
 # Helper function to exit with invalid arguments error
 exit_with_invalid_args() {

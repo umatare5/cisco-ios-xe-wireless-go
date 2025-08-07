@@ -5,7 +5,7 @@ set -euo pipefail
 # HTTP communication and request handling functions
 
 # Source constants
-source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"
 
 # Execute curl request with standard WNC API headers
 execute_curl_request() {

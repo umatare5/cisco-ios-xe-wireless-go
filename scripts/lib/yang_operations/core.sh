@@ -5,9 +5,11 @@ set -euo pipefail
 # Cisco WNC YANG Operations - Core Functions
 # Core business logic for YANG operations via RESTCONF API
 
-# Source common predicates
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
+# Source bootstrap library
+LIB_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1090  # Dynamic source loading
+source "${LIB_ROOT}/bootstrap.sh"
+init_wnc_network
 
 # Global variables
 declare -a CURL_ARGS

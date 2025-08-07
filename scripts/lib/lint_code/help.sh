@@ -4,7 +4,11 @@ set -euo pipefail
 # Cisco WNC Lint Code - Help Functions
 # Provides help and documentation functionality for lint_code operations
 
-source "$(dirname "${BASH_SOURCE[0]}")/../common/argument_parsing.sh"
+# Source bootstrap library
+LIB_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1090  # Dynamic source loading
+source "${LIB_ROOT}/bootstrap.sh"
+init_wnc_basic
 
 show_lint_banner() {
     if ! is_no_color_enabled; then

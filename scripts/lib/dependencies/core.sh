@@ -2,8 +2,11 @@
 set -euo pipefail
 # Dependencies Core Functions
 
-# Source common predicates
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
+# Source bootstrap library
+LIB_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1090  # Dynamic source loading
+source "${LIB_ROOT}/bootstrap.sh"
+init_wnc_basic
 
 show_dependencies_banner() {
     format_dependencies_banner

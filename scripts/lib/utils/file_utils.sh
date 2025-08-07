@@ -5,7 +5,7 @@ set -euo pipefail
 # File handling and temporary file management functions
 
 # Source constants
-source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"
 
 # Setup temporary file with automatic cleanup
 setup_temp_file_with_cleanup() {

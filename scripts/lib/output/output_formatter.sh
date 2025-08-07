@@ -5,7 +5,7 @@ set -euo pipefail
 # Output formatting and display functions
 
 # Source validation for helper functions
-source "$(dirname "${BASH_SOURCE[0]}")/validation.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../utils/validation.sh"
 
 # Format JSON output using jq if available
 format_json_output() {

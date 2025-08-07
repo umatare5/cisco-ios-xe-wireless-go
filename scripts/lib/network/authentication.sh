@@ -5,7 +5,7 @@ set -euo pipefail
 # Authentication token handling and validation functions
 
 # Source constants
-source "$(dirname "${BASH_SOURCE[0]}")/constants.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"
 
 # Setup authentication token with fallback to environment variable
 setup_authentication() {
