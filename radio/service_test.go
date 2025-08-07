@@ -13,15 +13,15 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// TestDataCollector holds test data for RADIO service functions
+// TestDataCollector holds test data for Radio service functions
 type TestDataCollector struct {
 	mu      sync.Mutex
 	CfgResp *model.RadioCfgResponse
 	CfgErr  error
 }
 
-// TestRADIOService tests all RADIO service functions with the 4-pattern testing approach
-func TestRADIOService(t *testing.T) {
+// TestRadioService tests all Radio service functions with the 4-pattern testing approach
+func TestRadioService(t *testing.T) {
 	// Create a mock client that will be used when environment variables are not set
 	var client *core.Client
 	var ctx context.Context

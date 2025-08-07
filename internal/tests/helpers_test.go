@@ -280,9 +280,13 @@ func TestSkipIfNoConnection(t *testing.T) {
 
 		// Test that nil client is handled properly
 		var nilClient *core.Client
-		if nilClient == nil {
-			t.Log("Nil client test would be skipped in actual test environment")
-		}
+		// This would normally call SkipIfNoConnection(t, nilClient)
+		// but we can't test the skip behavior directly in unit tests
+		t.Log("Nil client test would be skipped in actual test environment")
+
+		// The actual function call would be: SkipIfNoConnection(t, nilClient)
+		// We just verify the client is nil as expected for this test case
+		t.Logf("Test client is nil as expected: %t", nilClient == nil)
 	})
 }
 
