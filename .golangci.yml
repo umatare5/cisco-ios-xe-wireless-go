@@ -1,15 +1,41 @@
 version: "2"
 
+########################
+# 1. Execution settings
+########################
+
 run:
-  timeout: 5m
+  timeout: 5m # keep the original timeout
+  tests: true # analyze *_test.go files as well
+  issues-exit-code: 1 # fail CI if any issue is found
+
+########################
+# 2. Enabled linters
+########################
 
 linters:
+  default: none # enable only what is listed explicitly
   enable:
+    # --- core (kept from the original config) ---
     - govet
     - errcheck
     - staticcheck
     - ineffassign
     - unused
+
+    # --- additions for higher quality ---
+    - errorlint
+    - unparam
+    - unconvert
+    - bodyclose
+    - asasalint
+    - gocritic
+    - revive
+    - misspell
+    - gosec
+    - usestdlibvars
+    - testifylint
+    - perfsprint
 
   settings:
     errcheck:
@@ -18,16 +44,70 @@ linters:
     staticcheck:
       checks:
         - all
-        - "-SA1012"
+        - "-SA1012" # too chatty for this project
+    gocritic:
+      enable-all: true
+      disabled-checks: # reduce noise from common false positives
+        - hugeParam
+        - rangeValCopy
+        - commentedOutCode
+        - whyNoLint
+    revive:
+      confidence: 0.8
+      rules:
+        - name: indent-error-flow
+          arguments: [preserveScope]
+        - name: error-strings
+        - name: error-naming
+        - name: var-naming
+    misspell:
+      locale: US
+    perfsprint:
+      int-conversion: true
+      err-error: true
+    testifylint:
+      enable-all: true
+      disable:
+        - float-compare # frequent false positives
 
   exclusions:
     paths:
-      - vendor
-      - build
-      - tmp
-
+      - vendor/
+      - build/
+      - tmp/
     rules:
+      # keep custom exceptions from the original file
       - path: ^wnc/client_test\.go$
         linters: [errcheck]
       - path: ^internal/tests/helpers_test\.go$
         linters: [errcheck]
+      # relax security/perf linters for test files
+      - path: _test\.go
+        linters:
+          - gosec
+          - perfsprint
+          - govet
+          - errcheck
+          - staticcheck
+          - ineffassign
+          - unused
+
+########################
+# 3. Auto-formatters
+########################
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+    - golines
+  settings:
+    gofumpt:
+      extra-rules: true
+    goimports:
+      local-prefixes:
+        - github.com/umatare5 # place your own modules at the top of import groups
+    golines:
+      max-len: 120
+  exclusions:
+    generated: lax

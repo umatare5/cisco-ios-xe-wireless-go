@@ -192,12 +192,13 @@ func TestGeolocationService(t *testing.T) {
 
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
-			_, err := service.Oper(nil)
+			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
+			_, err := service.Oper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
 			// Also test ApGeoLocStats with nil context
-			_, err = service.ApGeoLocStats(nil)
+			_, err = service.ApGeoLocStats(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context for ApGeoLocStats, but got none")
 			}

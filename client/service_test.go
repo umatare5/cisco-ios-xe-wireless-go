@@ -323,7 +323,8 @@ func TestClientService(t *testing.T) {
 
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
-			_, err := service.Oper(nil)
+			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
+			_, err := service.Oper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}

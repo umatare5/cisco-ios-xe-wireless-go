@@ -123,7 +123,7 @@ func TestClientDo(t *testing.T) {
 	t.Run("NilContext", func(t *testing.T) {
 		var response interface{}
 		// Using a nil context variable instead of nil literal to test the validation
-		var nilCtx context.Context
+		var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
 		err := client.Do(nilCtx, "GET", "/restconf/data/test", &response)
 		if err == nil {
 			t.Error("Expected error for nil context")
@@ -410,7 +410,7 @@ func TestDoMethodNilParameters(t *testing.T) {
 	var response interface{}
 
 	// Using a nil context variable instead of nil literal to test the validation
-	var nilCtx context.Context
+	var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
 	err = client.Do(nilCtx, "GET", "/test", &response)
 	if err == nil {
 		t.Error("Expected error for nil context, got nil")
@@ -826,7 +826,7 @@ func TestDoMethodWithNilContext(t *testing.T) {
 
 	var response map[string]interface{}
 	// Using a nil context variable instead of nil literal to test the validation
-	var nilCtx context.Context
+	var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
 	err = client.Do(nilCtx, "GET", "/test", &response)
 	if err == nil {
 		t.Error("Expected error with nil context")
