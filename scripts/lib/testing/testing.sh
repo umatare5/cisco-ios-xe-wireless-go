@@ -15,7 +15,8 @@ set -euo pipefail
 SCRIPT_LIB_DIR="$(dirname "${BASH_SOURCE[0]}")"
 readonly SCRIPT_LIB_DIR
 
-source "${SCRIPT_LIB_DIR}/build_tools.sh"
+# Source build tools from utils
+source "${SCRIPT_LIB_DIR}/../utils/build_tools.sh"
 
 # Default values (if not already defined)
 if [[ -z "${DEFAULT_COVERAGE_THRESHOLD:-}" ]]; then

@@ -12,13 +12,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODULE_DIR="${SCRIPT_DIR}/lib/generate_coverage_html"
 
-# Source shared libraries
-source "${SCRIPT_DIR}/lib/common/common.sh"
+# Source bootstrap library
+source "${SCRIPT_DIR}/lib/bootstrap.sh"
 
-# Initialize all libraries using unified function
-init_script_libraries "$SCRIPT_DIR" "$MODULE_DIR"
+# Initialize WNC libraries with generate_coverage_html module
+init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/generate_coverage_html"
 
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
