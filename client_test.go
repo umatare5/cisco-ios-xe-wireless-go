@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 )
 
 // TestNewClient tests the creation of a new unified client
@@ -14,7 +14,7 @@ func TestNewClient(t *testing.T) {
 		name        string
 		host        string
 		token       string
-		opts        []wnc.Option
+		opts        []core.Option
 		expectError bool
 	}{
 		{
@@ -28,7 +28,7 @@ func TestNewClient(t *testing.T) {
 			name:        "ValidClientWithOptions",
 			host:        "192.168.1.100",
 			token:       "YWRtaW46cGFzc3dvcmQ=", // base64 encoded "admin:password"
-			opts:        []wnc.Option{wnc.WithTimeout(30 * time.Second), wnc.WithInsecureSkipVerify(true)},
+			opts:        []core.Option{core.WithTimeout(30 * time.Second), core.WithInsecureSkipVerify(true)},
 			expectError: false,
 		},
 		{
@@ -122,8 +122,8 @@ func TestClientCore(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	core := client.Core()
-	if core == nil {
+	coreClient := client.Core()
+	if coreClient == nil {
 		t.Error("Core() returned nil")
 	}
 }
@@ -132,8 +132,8 @@ func TestClientCore(t *testing.T) {
 func TestUnifiedClientUsage(t *testing.T) {
 	// This test demonstrates the usage pattern without making real API calls
 	client, err := NewClient("controller.example.com", "dGVzdDp0ZXN0",
-		wnc.WithTimeout(30*time.Second),
-		wnc.WithInsecureSkipVerify(true))
+		core.WithTimeout(30*time.Second),
+		core.WithInsecureSkipVerify(true))
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}

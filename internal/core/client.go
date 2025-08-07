@@ -1,6 +1,6 @@
-// Package wnc provides the core client for the Cisco Wireless Network Controller API.
+// Package core provides the core client for the Cisco Wireless Network Controller API.
 // This package implements the three-layer architecture with Core, Domain Service, and Generated Type separation.
-package wnc
+package core
 
 import (
 	"context"

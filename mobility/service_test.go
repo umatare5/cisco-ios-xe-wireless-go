@@ -9,21 +9,21 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// MOBILITYTestDataCollector holds test data for Lumobility service functions
-type MOBILITYTestDataCollector struct {
+// MobilityTestDataCollector holds test data for Lumobility service functions
+type MobilityTestDataCollector struct {
 	Data map[string]interface{} `json:"mobility_test_data"`
 }
 
-// newMOBILITYTestDataCollector creates a new test data collector
-func newMOBILITYTestDataCollector() *MOBILITYTestDataCollector {
-	return &MOBILITYTestDataCollector{
+// newMobilityTestDataCollector creates a new test data collector
+func newMobilityTestDataCollector() *MobilityTestDataCollector {
+	return &MobilityTestDataCollector{
 		Data: make(map[string]interface{}),
 	}
 }
 
-func runMOBILITYTestAndCollectData(
+func runMobilityTestAndCollectData(
 	t *testing.T,
-	collector *MOBILITYTestDataCollector,
+	collector *MobilityTestDataCollector,
 	testName string,
 	testFunc func() (interface{}, error),
 ) {
@@ -47,8 +47,8 @@ func runMOBILITYTestAndCollectData(
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // ========================================
 
-// TestMOBILITYServiceStructures tests the basic structure of MOBILITY service and data types
-func TestMOBILITYServiceStructures(t *testing.T) {
+// TestMobilityServiceStructures tests the basic structure of Mobility service and data types
+func TestMobilityServiceStructures(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 
@@ -91,8 +91,8 @@ func TestMOBILITYServiceStructures(t *testing.T) {
 // 2. TABLE-DRIVEN TEST PATTERNS
 // ========================================
 
-// TestMOBILITYServiceMethods tests MOBILITY service methods with table-driven approach
-func TestMOBILITYServiceMethods(t *testing.T) {
+// TestMobilityServiceMethods tests Mobility service methods with table-driven approach
+func TestMobilityServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
@@ -131,8 +131,8 @@ func TestMOBILITYServiceMethods(t *testing.T) {
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
 // ========================================
 
-// TestMOBILITYServiceFailFast tests fail-fast scenarios for MOBILITY service operations
-func TestMOBILITYServiceFailFast(t *testing.T) {
+// TestMobilityServiceFailFast tests fail-fast scenarios for Mobility service operations
+func TestMobilityServiceFailFast(t *testing.T) {
 	// Test with nil client - expect error (not panic)
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
@@ -174,19 +174,19 @@ func TestMOBILITYServiceFailFast(t *testing.T) {
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
 // ========================================
 
-// TestMOBILITYServiceIntegration tests all MOBILITY service functions with real WNC data collection
-func TestMOBILITYServiceIntegration(t *testing.T) {
+// TestMobilityServiceIntegration tests all Mobility service functions with real WNC data collection
+func TestMobilityServiceIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
 
-	collector := newMOBILITYTestDataCollector()
+	collector := newMobilityTestDataCollector()
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runMOBILITYTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
+		runMobilityTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
 			return service.Oper(ctx)
 		})
 	})

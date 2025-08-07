@@ -9,21 +9,21 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// MESHTestDataCollector holds test data for MESH service functions
-type MESHTestDataCollector struct {
+// MeshTestDataCollector holds test data for Mesh service functions
+type MeshTestDataCollector struct {
 	Data map[string]interface{} `json:"mesh_test_data"`
 }
 
-// newMESHTestDataCollector creates a new test data collector
-func newMESHTestDataCollector() *MESHTestDataCollector {
-	return &MESHTestDataCollector{
+// newMeshTestDataCollector creates a new test data collector
+func newMeshTestDataCollector() *MeshTestDataCollector {
+	return &MeshTestDataCollector{
 		Data: make(map[string]interface{}),
 	}
 }
 
-func runMESHTestAndCollectData(
+func runMeshTestAndCollectData(
 	t *testing.T,
-	collector *MESHTestDataCollector,
+	collector *MeshTestDataCollector,
 	testName string,
 	testFunc func() (interface{}, error),
 ) {
@@ -47,8 +47,8 @@ func runMESHTestAndCollectData(
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // ========================================
 
-// TestMESHServiceStructures tests the basic structure of MESH service and data types
-func TestMESHServiceStructures(t *testing.T) {
+// TestMeshServiceStructures tests the basic structure of Mesh service and data types
+func TestMeshServiceStructures(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 
@@ -62,7 +62,7 @@ func TestMESHServiceStructures(t *testing.T) {
 		jsonData string
 	}{
 		{
-			name: "MESHOperResponse",
+			name: "MeshOperResponse",
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data": {
 					"mesh-enamesh": true,
@@ -89,16 +89,16 @@ func TestMESHServiceStructures(t *testing.T) {
 }
 
 // ========================================
-// 2. TAMESH-DRIVEN TEST PATTERNS
+// 2. TAMesh-DRIVEN TEST PATTERNS
 // ========================================
 
-// TestMESHServiceMethods tests MESH service methods with table-driven approach
-func TestMESHServiceMethods(t *testing.T) {
+// TestMeshServiceMethods tests Mesh service methods with table-driven approach
+func TestMeshServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 
-	// Tamesh-driven test cases for MESH endpoints
+	// Tamesh-driven test cases for Mesh endpoints
 	testCases := []struct {
 		name       string
 		testFunc   func() (interface{}, error)
@@ -137,8 +137,8 @@ func TestMESHServiceMethods(t *testing.T) {
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
 // ========================================
 
-// TestMESHServiceFailFast tests fail-fast scenarios for MESH service operations
-func TestMESHServiceFailFast(t *testing.T) {
+// TestMeshServiceFailFast tests fail-fast scenarios for Mesh service operations
+func TestMeshServiceFailFast(t *testing.T) {
 	// Test with nil client - expect error (not panic)
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
@@ -180,25 +180,25 @@ func TestMESHServiceFailFast(t *testing.T) {
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
 // ========================================
 
-// TestMESHServiceIntegration tests all MESH service functions with real WNC data collection
-func TestMESHServiceIntegration(t *testing.T) {
+// TestMeshServiceIntegration tests all Mesh service functions with real WNC data collection
+func TestMeshServiceIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
 
-	collector := newMESHTestDataCollector()
+	collector := newMeshTestDataCollector()
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runMESHTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
+		runMeshTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
 			return service.Oper(ctx)
 		})
 	})
 
 	t.Run("Cfg", func(t *testing.T) {
-		runMESHTestAndCollectData(t, collector, "Cfg", func() (interface{}, error) {
+		runMeshTestAndCollectData(t, collector, "Cfg", func() (interface{}, error) {
 			return service.Cfg(ctx)
 		})
 	})
@@ -208,7 +208,7 @@ func TestMESHServiceIntegration(t *testing.T) {
 		if err := tests.SaveTestDataToFile("mesh_test_data_collected.json", collector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("MESH test data saved to test_data/mesh_test_data_collected.json")
+			t.Logf("Mesh test data saved to test_data/mesh_test_data_collected.json")
 		}
 	}
 }

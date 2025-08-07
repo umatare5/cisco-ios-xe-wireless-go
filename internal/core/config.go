@@ -1,4 +1,4 @@
-package wnc
+package core
 
 import (
 	"log/slog"

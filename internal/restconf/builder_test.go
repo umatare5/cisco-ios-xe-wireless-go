@@ -31,8 +31,8 @@ func TestBuildBaseURL(t *testing.T) {
 		expected   string
 	}{
 		{"HTTPS with IP", "https", "192.168.1.100", "https://192.168.1.100"},
-		{"HTTP with hostname", "http", "wnc.example.com", "http://wnc.example.com"},
-		{"HTTPS with port", "https", "wnc.example.com:8443", "https://wnc.example.com:8443"},
+		{"HTTP with hostname", "http", "core.example.com", "http://core.example.com"},
+		{"HTTPS with port", "https", "core.example.com:8443", "https://core.example.com:8443"},
 	}
 
 	for _, tt := range testCases {
@@ -115,17 +115,17 @@ func TestNormalizeEndpointPath(t *testing.T) {
 }
 
 func TestBuildYANGLibraryURL(t *testing.T) {
-	builder := NewBuilder("https", "wnc.example.com")
+	builder := NewBuilder("https", "core.example.com")
 	url := builder.BuildYANGLibraryURL()
 
-	expected := "https://wnc.example.com/restconf/data?fields=ietf-yang-library:modules-state/module"
+	expected := "https://core.example.com/restconf/data?fields=ietf-yang-library:modules-state/module"
 	if url != expected {
 		t.Errorf("BuildYANGLibraryURL() = %q, want %q", url, expected)
 	}
 }
 
 func TestBuildYANGModuleURL(t *testing.T) {
-	builder := NewBuilder("https", "wnc.example.com")
+	builder := NewBuilder("https", "core.example.com")
 
 	testCases := []struct {
 		name      string
@@ -137,13 +137,13 @@ func TestBuildYANGModuleURL(t *testing.T) {
 			"standard module",
 			"Cisco-IOS-XE-wireless-afc-oper",
 			"2021-07-01",
-			"https://wnc.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-afc-oper/2021-07-01",
+			"https://core.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-afc-oper/2021-07-01",
 		},
 		{
 			"config module",
 			"Cisco-IOS-XE-wireless-ap-cfg",
 			"2022-03-15",
-			"https://wnc.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-ap-cfg/2022-03-15",
+			"https://core.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-ap-cfg/2022-03-15",
 		},
 	}
 
@@ -159,7 +159,7 @@ func TestBuildYANGModuleURL(t *testing.T) {
 }
 
 func TestBuildEndpointURL(t *testing.T) {
-	builder := NewBuilder("https", "wnc.example.com")
+	builder := NewBuilder("https", "core.example.com")
 	endpoint := "/Cisco-IOS-XE-wireless-general-oper:general-oper-data"
 
 	endpointURL := builder.BuildEndpointURL(endpoint)

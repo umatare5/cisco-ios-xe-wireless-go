@@ -8,9 +8,9 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 // TestDataCollector holds test data for FABRIC service functions
@@ -23,7 +23,7 @@ type TestDataCollector struct {
 // TestFABRICService tests all FABRIC service functions with the 4-pattern testing approach
 func TestFABRICService(t *testing.T) {
 	// Create a mock client that will be used when environment variables are not set
-	var client *wnc.Client
+	var client *core.Client
 	var ctx context.Context
 
 	// Try to get real client from environment

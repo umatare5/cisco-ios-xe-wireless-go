@@ -1,4 +1,4 @@
-package wnc
+package core
 
 import (
 	"time"
@@ -76,7 +76,7 @@ const (
 	ExampleControllerIPAddress = "192.168.1.100"
 
 	// ExampleControllerHostname is used in documentation examples
-	ExampleControllerHostname = "wnc.example.local"
+	ExampleControllerHostname = "core.example.local"
 
 	// ExampleAccessToken is used in documentation examples
 	ExampleAccessToken = "your-token"

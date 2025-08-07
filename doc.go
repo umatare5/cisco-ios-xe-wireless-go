@@ -17,9 +17,9 @@
 //
 //	import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 //
-//	client, err := wnc.NewClient("controller.example.com", "your-access-token",
-//		wnc.WithTimeout(30*time.Second),
-//		wnc.WithInsecureSkipVerify(true))
+//	client, err := core.NewClient("controller.example.com", "your-access-token",
+//		core.WithTimeout(30*time.Second),
+//		core.WithInsecureSkipVerify(true))
 //	if err != nil {
 //		log.Fatal(err)
 //	}
@@ -74,7 +74,7 @@
 // The library provides structured error handling with specific error types:
 //
 //	if err != nil {
-//		var apiErr *wnc.APIError
+//		var apiErr *core.APIError
 //		if errors.As(err, &apiErr) {
 //			fmt.Printf("API Error (HTTP %d): %s\n", apiErr.StatusCode, apiErr.Message)
 //		}

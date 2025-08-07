@@ -1,5 +1,5 @@
 // nolint:SA1012 // Testing nil context behavior
-package wnc
+package core
 
 import (
 	"context"

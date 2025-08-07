@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 )
 
 // TestTestClient tests the TestClient function
@@ -133,7 +133,7 @@ func TestTestClient(t *testing.T) {
 
 		if controller != "" && token != "" {
 			// Test the error path by trying invalid client creation
-			_, err := wnc.New(controller, token, wnc.WithTimeout(-1*time.Second))
+			_, err := core.New(controller, token, core.WithTimeout(-1*time.Second))
 			if err != nil {
 				t.Logf("Client creation correctly failed with invalid timeout: %v", err)
 			} else {
@@ -141,7 +141,7 @@ func TestTestClient(t *testing.T) {
 			}
 
 			// Now test with invalid controller format to trigger a different error
-			_, err = wnc.New("", token) // Empty controller should fail
+			_, err = core.New("", token) // Empty controller should fail
 			if err != nil {
 				t.Logf("Client creation correctly failed with empty controller: %v", err)
 			}
@@ -169,7 +169,7 @@ func TestTestClient(t *testing.T) {
 
 		if controller != "" && token != "" {
 			// This represents the condition where TestClient would proceed to client creation
-			_, err := wnc.New(controller, token, wnc.WithTimeout(30*time.Second), wnc.WithInsecureSkipVerify(true))
+			_, err := core.New(controller, token, core.WithTimeout(30*time.Second), core.WithInsecureSkipVerify(true))
 			if err != nil {
 				// This is the error that would cause TestClient to call t.Fatalf
 				t.Logf("Client creation would fail (as expected): %v", err)
@@ -257,9 +257,9 @@ func TestSkipIfNoConnection(t *testing.T) {
 			t.Skip("WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests")
 		}
 
-		client, err := wnc.New(controller, token,
-			wnc.WithTimeout(5*time.Second),
-			wnc.WithInsecureSkipVerify(true))
+		client, err := core.New(controller, token,
+			core.WithTimeout(5*time.Second),
+			core.WithInsecureSkipVerify(true))
 		if err != nil {
 			t.Fatalf("Failed to create test client: %v", err)
 		}
@@ -279,7 +279,7 @@ func TestSkipIfNoConnection(t *testing.T) {
 		}()
 
 		// Test that nil client is handled properly
-		var nilClient *wnc.Client
+		var nilClient *core.Client
 		if nilClient == nil {
 			t.Log("Nil client test would be skipped in actual test environment")
 		}

@@ -44,11 +44,11 @@ func TestIsValidController(t *testing.T) {
 		controller string
 		expected   bool
 	}{
-		{"ValidController", "wnc.example.com", true},
+		{"ValidController", "core.example.com", true},
 		{"ValidIP", "192.168.1.100", true},
 		{"ValidLocalhost", "localhost", true},
 		{"EmptyController", "", false},
-		{"ValidWithPort", "wnc.example.com:443", true},
+		{"ValidWithPort", "core.example.com:443", true},
 		{"ValidHostname", "test.local", true},
 	}
 

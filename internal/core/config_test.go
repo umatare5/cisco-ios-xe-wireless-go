@@ -1,4 +1,4 @@
-package wnc
+package core
 
 import (
 	"io"
@@ -16,15 +16,15 @@ import (
 // TestConfigStructure tests the basic structure of Config
 func TestConfigStructure(t *testing.T) {
 	config := Config{
-		Controller:         "wnc.example.com",
+		Controller:         "core.example.com",
 		AccessToken:        "test-token",
 		Timeout:            30 * time.Second,
 		InsecureSkipVerify: true,
 		Logger:             slog.New(slog.NewTextHandler(io.Discard, nil)),
 	}
 
-	if config.Controller != "wnc.example.com" {
-		t.Errorf("Expected Controller to be 'wnc.example.com', got '%s'", config.Controller)
+	if config.Controller != "core.example.com" {
+		t.Errorf("Expected Controller to be 'core.example.com', got '%s'", config.Controller)
 	}
 
 	if config.AccessToken != "test-token" {
@@ -104,7 +104,7 @@ func TestConfigValidation(t *testing.T) {
 	}{
 		{
 			name:               "ValidConfig",
-			controller:         "wnc.example.com",
+			controller:         "core.example.com",
 			accessToken:        "dGVzdDp0ZXN0",
 			timeout:            30 * time.Second,
 			insecureSkipVerify: false,
@@ -131,7 +131,7 @@ func TestConfigValidation(t *testing.T) {
 		},
 		{
 			name:               "EmptyAccessToken",
-			controller:         "wnc.example.com",
+			controller:         "core.example.com",
 			accessToken:        "",
 			timeout:            30 * time.Second,
 			insecureSkipVerify: false,
@@ -140,7 +140,7 @@ func TestConfigValidation(t *testing.T) {
 		},
 		{
 			name:               "ZeroTimeout",
-			controller:         "wnc.example.com",
+			controller:         "core.example.com",
 			accessToken:        "test-token",
 			timeout:            0,
 			insecureSkipVerify: false,

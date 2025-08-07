@@ -1,4 +1,4 @@
-package wnc
+package core
 
 import (
 	"testing"
@@ -129,7 +129,7 @@ func TestDocumentationConstants(t *testing.T) {
 		expected string
 	}{
 		{"ExampleControllerIPAddress", ExampleControllerIPAddress, "192.168.1.100"},
-		{"ExampleControllerHostname", ExampleControllerHostname, "wnc.example.local"},
+		{"ExampleControllerHostname", ExampleControllerHostname, "core.example.local"},
 		{"ExampleAccessToken", ExampleAccessToken, "your-token"},
 		{"ExampleTestHostname", ExampleTestHostname, "test.local"},
 	}

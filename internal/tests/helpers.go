@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 )
 
 // TestClient creates a test client using environment variables
-func TestClient(t *testing.T) *wnc.Client {
+func TestClient(t *testing.T) *core.Client {
 	t.Helper()
 
 	controller := os.Getenv("WNC_CONTROLLER")
@@ -23,9 +23,9 @@ func TestClient(t *testing.T) *wnc.Client {
 		t.Skip("WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests")
 	}
 
-	client, err := wnc.New(controller, token,
-		wnc.WithTimeout(30*time.Second),
-		wnc.WithInsecureSkipVerify(true))
+	client, err := core.New(controller, token,
+		core.WithTimeout(30*time.Second),
+		core.WithInsecureSkipVerify(true))
 	if err != nil {
 		t.Fatalf("Failed to create test client: %v", err)
 	}
@@ -35,7 +35,7 @@ func TestClient(t *testing.T) *wnc.Client {
 
 // CreateTestClientFromEnv creates a test client from environment variables
 // This is an alias for TestClient to match expected API
-func CreateTestClientFromEnv(t *testing.T) *wnc.Client {
+func CreateTestClientFromEnv(t *testing.T) *core.Client {
 	return TestClient(t)
 }
 
@@ -57,7 +57,7 @@ func TestContext(t *testing.T) context.Context {
 }
 
 // SkipIfNoConnection skips the test if no network connection to WNC
-func SkipIfNoConnection(t *testing.T, client *wnc.Client) {
+func SkipIfNoConnection(t *testing.T, client *core.Client) {
 	t.Helper()
 
 	// Try a simple health check - this assumes there's some basic endpoint available

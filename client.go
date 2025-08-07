@@ -16,6 +16,7 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/general"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/geolocation"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/hyperlocation"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/lisp"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/location"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/mcast"
@@ -30,7 +31,6 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/rrm"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/site"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wlan"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
 // Client represents the unified WNC API client with access to all domain services.
@@ -40,9 +40,9 @@ import (
 //
 //	import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 //
-//	client, err := wnc.NewClient("controller.example.com", "token",
-//		wnc.WithTimeout(30*time.Second),
-//		wnc.WithInsecureSkipVerify(true))
+//	client, err := core.NewClient("controller.example.com", "token",
+//		core.WithTimeout(30*time.Second),
+//		core.WithInsecureSkipVerify(true))
 //	if err != nil {
 //		log.Fatal(err)
 //	}
@@ -52,22 +52,22 @@ import (
 //	generalData, err := client.General().Oper(ctx)
 //	apData, err := client.AP().Oper(ctx)
 type Client struct {
-	core *wnc.Client // Core client that handles HTTP communication
+	core *core.Client // Core client that handles HTTP communication
 }
 
 // NewClient creates a new unified WNC client with the specified host, token, and options.
 // This is the main entry point for all wireless controller operations.
-func NewClient(host, token string, opts ...wnc.Option) (*Client, error) {
-	core, err := wnc.New(host, token, opts...)
+func NewClient(host, token string, opts ...core.Option) (*Client, error) {
+	coreClient, err := core.New(host, token, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &Client{core: core}, nil
+	return &Client{core: coreClient}, nil
 }
 
-// Core returns the underlying wnc.Client for advanced use cases.
+// Core returns the underlying core.Client for advanced use cases.
 // This should typically not be needed for normal usage.
-func (c *Client) Core() *wnc.Client {
+func (c *Client) Core() *core.Client {
 	return c.core
 }
 
