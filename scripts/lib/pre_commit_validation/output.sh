@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+# Cisco WNC Pre-commit Validation - Output Functions
+# Output formatting and display functions
+
+set -euo pipefail
+
+# Banner display
+show_pre_commit_banner() {
+    if ! is_no_color_enabled; then
+        cat << 'EOF'
+╔════════════════════════════════════════╗
+║       Pre-commit Validation            ║
+║       Branch Protection System         ║
+╚════════════════════════════════════════╝
+EOF
+    else
+        cat << 'EOF'
+Pre-commit Validation - Branch Protection System
+EOF
+    fi
+}
+
+# Show validation status
+show_validation_status() {
+    local current_branch="$1"
+
+    show_pre_commit_banner
+    echo
+    printf "\033[36mℹ Info:\033[0m Current branch: %s\n" "$current_branch"
+
+    if is_verbose_enabled; then
+        printf "\033[36mℹ Info:\033[0m Validation mode: $(is_no_color_enabled && echo "no-color" || echo "color")\n"
+        printf "\033[36mℹ Info:\033[0m Working directory: $(pwd)\n"
+    fi
+}
+
+# Show main branch error with detailed guidance
+show_main_branch_error() {
+    local branch_name="$1"
+
+    printf "\033[31m✗ Error:\033[0m Direct commits to the '%s' branch are not allowed\n" "$branch_name" >&2
+    echo
+    printf "\033[33m⚠ Warning:\033[0m To maintain code quality and enable proper review processes,
+" >&2
+    printf "\033[33m⚠ Warning:\033[0m all changes must go through feature branches.
+" >&2
+    echo
+
+    # Use help functions for guidance
+    show_workflow_guidance
+    echo
+    show_emergency_bypass
+    echo
+}
+
+# Show no staged changes warning
+show_no_staged_changes() {
+    printf "\033[33m⚠ Warning:\033[0m No staged changes found
+" >&2
+    printf "\033[36mℹ Info:\033[0m Use 'git add <files>' to stage changes before committing
+"
+
+    if is_verbose_enabled; then
+        printf "\033[36mℹ Info:\033[0m To see current status: git status
+"
+        printf "\033[36mℹ Info:\033[0m To see unstaged changes: git diff
+"
+    fi
+}
+
+# Show success message
+show_validation_success() {
+    local branch_name="$1"
+
+    printf "\033[32m✓ Success:\033[0m Pre-commit validation passed\n"
+    printf "\033[36mℹ Info:\033[0m Proceeding with commit on branch '%s'\n" "$branch_name"
+
+    if is_verbose_enabled; then
+        printf "\033[36mℹ Info:\033[0m All validation checks completed successfully\n"
+    fi
+}
+
+# Show no staged changes warning
+show_no_staged_changes() {
+    show_warning "No staged changes found"
+    show_info "Use 'git add <files>' to stage changes before committing"
+
+    if is_verbose_enabled; then
+        show_info "To see current status: git status"
+        show_info "To see unstaged changes: git diff"
+    fi
+}
