@@ -49,7 +49,7 @@ build:
 # YANG Model Development Tools
 # List all available YANG models
 yang-list:
-	@./scripts/list_yang_models.sh
+	@./scripts/get_yang_models.sh
 
 # Get YANG model details from controller
 # (usage: make yang-model MODEL=model-name)

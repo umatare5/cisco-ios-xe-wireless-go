@@ -1,5 +1,3 @@
-version: "2"
-
 run:
   timeout: 5m
 
@@ -12,19 +10,19 @@ linters:
     - ineffassign
     - unused
 
-  settings:
-    errcheck:
-      check-type-assertions: true
-      check-blank: false
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: false
 
-  exclusions:
-    paths:
-      - vendor
-      - build
-      - tmp
+issues:
+  exclude-dirs:
+    - vendor
+    - build
+    - tmp
 
-    rules:
-      - path: ^wnc/client_test\.go$
-        linters: [errcheck]
-      - path: ^internal/tests/helpers_test\.go$
-        linters: [errcheck]
+  exclude-rules:
+    - path: ^wnc/client_test\.go$
+      linters: [errcheck]
+    - path: ^internal/tests/helpers_test\.go$
+      linters: [errcheck]

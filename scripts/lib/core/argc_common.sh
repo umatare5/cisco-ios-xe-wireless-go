@@ -48,3 +48,24 @@ EXECUTE_ARGC_CURL() {
              "${curl_opts[@]}" "$url"
     fi
 }
+
+# argc predicate helper functions
+is_enabled() {
+    [[ "${1:-0}" == "1" ]]
+}
+
+is_true() {
+    [[ "${1:-false}" == "true" ]]
+}
+
+is_valid_directory() {
+    [[ -d "$1" ]]
+}
+
+is_skip_env_check_enabled() {
+    [[ "${argc_skip_env_check:-0}" == "1" ]]
+}
+
+is_short_mode_enabled() {
+    [[ "${argc_short:-0}" == "1" ]]
+}

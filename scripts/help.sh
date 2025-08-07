@@ -71,14 +71,14 @@ SCRIPT DETAILS:
 
 PROJECT STRUCTURE:
     scripts/                Script directory
-    ├── lib/               Shared libraries
-    │   ├── common/        Common utilities
-    │   ├── yang_operations/ YANG-specific functions
-    │   ├── testing/       Test utilities
-    │   ├── lint_code/     Linting functions
-    │   ├── dependencies/  Dependency management
-    │   └── artifacts/     Cleanup functions
-    └── *.sh               Entry point scripts
+    +-- lib/               Shared libraries
+    |   +-- common/        Common utilities
+    |   +-- yang_operations/ YANG-specific functions
+    |   +-- testing/       Test utilities
+    |   +-- lint_code/     Linting functions
+    |   +-- dependencies/  Dependency management
+    |   +-- artifacts/     Cleanup functions
+    +-- *.sh               Entry point scripts
 
 This project uses a modular script architecture with shared libraries
 for maintainability and consistency across all development operations.
