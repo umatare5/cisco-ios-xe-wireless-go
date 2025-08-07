@@ -2,26 +2,31 @@ package ble
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides access to BLE (Bluetooth Low Energy) operations.
+const (
+	// BleOperBasePath defines the base path for BLE operational data endpoints
+	BleOperBasePath = "Cisco-IOS-XE-wireless-ble-oper:ble-oper-data"
+	// BleOperEndpoint defines the endpoint for BLE operational data
+	BleOperEndpoint = BleOperBasePath
+)
+
+// Service provides BLE operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new BLE service instance.
-func NewService(client *wnc.Client) *Service {
-	return &Service{c: client}
+// NewService creates a new service instance.
+func NewService(client *wnc.Client) Service {
+	return Service{c: client}
 }
 
-// Oper retrieves BLE operational data.
-func (s *Service) Oper(ctx context.Context) (*model.BleOperResponse, error) {
-	const endpoint = "Cisco-IOS-XE-wireless-ble-oper:ble-oper-data"
-
+// Oper returns BLE operational data.
+func (s Service) Oper(ctx context.Context) (*model.BleOperResponse, error) {
 	var result model.BleOperResponse
-	err := s.c.Do(ctx, "GET", endpoint, &result)
-	return &result, err
+	return &result, s.c.Do(ctx, http.MethodGet, BleOperEndpoint, &result)
 }

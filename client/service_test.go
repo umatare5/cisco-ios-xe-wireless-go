@@ -31,8 +31,8 @@ type TestDataCollector struct {
 	TrafficStatsErr       error
 	PolicyDataResp        *model.ClientOperPolicyDataResponse
 	PolicyDataErr         error
-	SisfDbMacResp         *model.ClientOperSisfDbMacResponse
-	SisfDbMacErr          error
+	SisfDBMacResp         *model.ClientOperSisfDBMacResponse
+	SisfDBMacErr          error
 	DcInfoResp            *model.ClientOperDcInfoResponse
 	DcInfoErr             error
 }
@@ -161,13 +161,13 @@ func TestClientService(t *testing.T) {
 			collector.mu.Unlock()
 		}()
 
-		// Test SisfDbMac method
+		// Test SisfDBMac method
 		go func() {
 			defer wg.Done()
-			resp, err := service.SisfDbMac(ctx)
+			resp, err := service.SisfDBMac(ctx)
 			collector.mu.Lock()
-			collector.SisfDbMacResp = resp
-			collector.SisfDbMacErr = err
+			collector.SisfDBMacResp = resp
+			collector.SisfDBMacErr = err
 			collector.mu.Unlock()
 		}()
 
@@ -281,9 +281,9 @@ func TestClientService(t *testing.T) {
 				},
 			},
 			{
-				name: "SisfDbMac",
+				name: "SisfDBMac",
 				method: func() (interface{}, error) {
-					return service.SisfDbMac(ctx)
+					return service.SisfDBMac(ctx)
 				},
 			},
 			{

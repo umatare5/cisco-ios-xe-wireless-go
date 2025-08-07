@@ -2,26 +2,31 @@ package dot15
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides access to 802.15 standard operations.
+const (
+	// Dot15CfgBasePath defines the base path for 802.15 configuration endpoints
+	Dot15CfgBasePath = "Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"
+	// Dot15CfgEndpoint defines the endpoint for 802.15 configuration data
+	Dot15CfgEndpoint = Dot15CfgBasePath
+)
+
+// Service provides 802.15 operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new 802.15 service instance.
-func NewService(client *wnc.Client) *Service {
-	return &Service{c: client}
+// NewService creates a new service instance.
+func NewService(client *wnc.Client) Service {
+	return Service{c: client}
 }
 
-// Cfg retrieves 802.15 configuration data.
-func (s *Service) Cfg(ctx context.Context) (*model.Dot15CfgResponse, error) {
-	const endpoint = "Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"
-
+// Cfg returns 802.15 configuration data.
+func (s Service) Cfg(ctx context.Context) (*model.Dot15CfgResponse, error) {
 	var result model.Dot15CfgResponse
-	err := s.c.Do(ctx, "GET", endpoint, &result)
-	return &result, err
+	return &result, s.c.Do(ctx, http.MethodGet, Dot15CfgEndpoint, &result)
 }

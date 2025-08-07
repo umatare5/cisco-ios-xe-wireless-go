@@ -2,26 +2,31 @@ package location
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides access to Location services operations.
+const (
+	// LocationCfgBasePath defines the base path for location configuration endpoints
+	LocationCfgBasePath = "Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"
+	// LocationCfgEndpoint defines the endpoint for location configuration data
+	LocationCfgEndpoint = LocationCfgBasePath
+)
+
+// Service provides Location services operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new Location service instance.
-func NewService(client *wnc.Client) *Service {
-	return &Service{c: client}
+// NewService creates a new service instance.
+func NewService(client *wnc.Client) Service {
+	return Service{c: client}
 }
 
-// Cfg retrieves Location configuration data.
-func (s *Service) Cfg(ctx context.Context) (*model.LocationCfgResponse, error) {
-	const endpoint = "Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"
-
+// Cfg returns Location configuration data.
+func (s Service) Cfg(ctx context.Context) (*model.LocationCfgResponse, error) {
 	var result model.LocationCfgResponse
-	err := s.c.Do(ctx, "GET", endpoint, &result)
-	return &result, err
+	return &result, s.c.Do(ctx, http.MethodGet, LocationCfgEndpoint, &result)
 }

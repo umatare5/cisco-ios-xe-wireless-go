@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestAPIErrorStructure tests the basic structure of APIError
 func TestAPIErrorStructure(t *testing.T) {
@@ -32,9 +32,9 @@ func TestAPIErrorStructure(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestStatusCodeCheckers tests HTTP status code validation functions
 func TestStatusCodeCheckers(t *testing.T) {
@@ -101,9 +101,9 @@ func TestErrorConstants(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION TESTS
-// =============================================================================
+// ========================================
 
 // TestDeadlineExceededError tests context deadline exceeded detection
 func TestDeadlineExceededError(t *testing.T) {

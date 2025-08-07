@@ -9,9 +9,9 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestConfigStructure tests the basic structure of Config
 func TestConfigStructure(t *testing.T) {
@@ -44,9 +44,9 @@ func TestConfigStructure(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestConfigDefaults tests Config with default values
 func TestConfigDefaults(t *testing.T) {
@@ -185,9 +185,9 @@ func TestConfigValidation(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION TESTS
-// =============================================================================
+// ========================================
 
 // TestConfigFieldTypes tests that all fields have correct types
 func TestConfigFieldTypes(t *testing.T) {

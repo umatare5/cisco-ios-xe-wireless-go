@@ -8,12 +8,12 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides General domain operations for wireless controller configuration and operational data.
+// Service provides General operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new General service instance.
+// NewService creates a new service instance.
 func NewService(c *wnc.Client) Service {
 	return Service{c: c}
 }

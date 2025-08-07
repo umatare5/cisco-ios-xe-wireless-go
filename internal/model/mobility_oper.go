@@ -53,7 +53,7 @@ type MbltyStats struct {
 	MmifScheduleErrors       int `json:"mmif-schedule-errors"`
 	MmifFsmFailure           int `json:"mmif-fsm-failure"`
 	MmifIpcFailure           int `json:"mmif-ipc-failure"`
-	MmifDbFailure            int `json:"mmif-db-failure"`
+	MmifDBFailure            int `json:"mmif-db-failure"`
 	MmifInvalidParamsFailure int `json:"mmif-invalid-params-failure"`
 	MmifMmMsgDecodeFailure   int `json:"mmif-mm-msg-decode-failure"`
 	MmifUnknownFailure       int `json:"mmif-unknown-failure"`

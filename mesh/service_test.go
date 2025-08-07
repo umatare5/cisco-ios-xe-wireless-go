@@ -38,9 +38,9 @@ func runMESHTestAndCollectData(t *testing.T, collector *MESHTestDataCollector, t
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestMESHServiceStructures tests the basic structure of MESH service and data types
 func TestMESHServiceStructures(t *testing.T) {
@@ -83,11 +83,11 @@ func TestMESHServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TAMESH-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
-// TestMESHServiceMethods tests MESH service methods with tamesh-driven approach
+// TestMESHServiceMethods tests MESH service methods with table-driven approach
 func TestMESHServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
@@ -128,9 +128,9 @@ func TestMESHServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestMESHServiceFailFast tests fail-fast scenarios for MESH service operations
 func TestMESHServiceFailFast(t *testing.T) {
@@ -170,9 +170,9 @@ func TestMESHServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestMESHServiceIntegration tests all MESH service functions with real WNC data collection
 func TestMESHServiceIntegration(t *testing.T) {

@@ -1,3 +1,4 @@
+// Package tests provides common testing utilities for the Cisco WNC API client.
 package tests
 
 import (

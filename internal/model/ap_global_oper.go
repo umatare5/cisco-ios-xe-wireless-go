@@ -1,4 +1,4 @@
-// Package model contains generated types used for Cisco IOS-XE wireless RESTCONF API responses.
+// Package model contains generated response structures for the Cisco WNC API.
 package model
 
 import "time"

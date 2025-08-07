@@ -1,4 +1,4 @@
-// Package lisp provides Lulisp test functionality for the Cisco Wireless Network Controller API.
+// Package lisp provides LISP test functionality for the Cisco Wireless Network Controller API.
 package lisp
 
 import (
@@ -9,7 +9,7 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// LISPTestDataCollector holds test data for Lulisp service functions
+// LISPTestDataCollector holds test data for LISP service functions
 type LISPTestDataCollector struct {
 	Data map[string]interface{} `json:"lisp_test_data"`
 }
@@ -38,26 +38,26 @@ func runLISPTestAndCollectData(t *testing.T, collector *LISPTestDataCollector, t
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
-// TestLISPServiceStructures tests the basic structure of Lulisp service and data types
+// TestLISPServiceStructures tests the basic structure of LISP service and data types
 func TestLISPServiceStructures(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
-	
+
 	if service.c == nil {
 		t.Error("Service client should not be nil")
 	}
-	
+
 	// Test JSON serialization/deserialization with sample data
 	tests := []struct {
 		name     string
 		jsonData string
 	}{
 		{
-			name: "LulispOperResponse",
+			name: "LISPOperResponse",
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-lisp-oper:lisp-oper-data": {
 					"status": "active"
@@ -82,17 +82,17 @@ func TestLISPServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
-// TestLISPServiceMethods tests Lulisp service methods with table-driven approach
+// TestLISPServiceMethods tests LISP service methods with table-driven approach
 func TestLISPServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 
-	// Table-driven test cases for Lulisp endpoints
+	// Table-driven test cases for LISP endpoints
 	tests := []struct {
 		name       string
 		testFunc   func() (interface{}, error)
@@ -122,11 +122,11 @@ func TestLISPServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
-// TestLISPServiceFailFast tests fail-fast scenarios for Lulisp service operations
+// TestLISPServiceFailFast tests fail-fast scenarios for LISP service operations
 func TestLISPServiceFailFast(t *testing.T) {
 	// Test with nil client - expect error (not panic)
 	t.Run("NilClient", func(t *testing.T) {
@@ -164,11 +164,11 @@ func TestLISPServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
-// TestLISPServiceIntegration tests all Lulisp service functions with real WNC data collection
+// TestLISPServiceIntegration tests all LISP service functions with real WNC data collection
 func TestLISPServiceIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
@@ -190,7 +190,7 @@ func TestLISPServiceIntegration(t *testing.T) {
 		if err := tests.SaveTestDataToFile("lisp_test_data_collected.json", collector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("Lulisp test data saved to test_data/lisp_test_data_collected.json")
+			t.Logf("LISP test data saved to test_data/lisp_test_data_collected.json")
 		}
 	}
 }

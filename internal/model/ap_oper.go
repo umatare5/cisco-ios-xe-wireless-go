@@ -1,4 +1,4 @@
-// Package model contains generated types used for Cisco IOS-XE wireless RESTCONF API responses.
+// Package model contains generated response structures for the Cisco WNC API.
 package model
 
 import "time"
@@ -67,7 +67,7 @@ type RadioOperData struct {
 	// Additional fields would be included here...
 }
 
-// Continue with other essential types...
+// RadioResetStats represents radio reset statistics data
 type RadioResetStats struct {
 	ApMac       string `json:"ap-mac"`
 	RadioID     int    `json:"radio-id"`
@@ -138,7 +138,7 @@ type WtpVersion struct {
 	// Additional fields...
 }
 
-// Additional essential types would be defined here...
+// ApNameMacMap represents AP name to MAC address mapping data
 type ApNameMacMap struct {
 	WtpName string `json:"wtp-name"`
 	WtpMac  string `json:"wtp-mac"`

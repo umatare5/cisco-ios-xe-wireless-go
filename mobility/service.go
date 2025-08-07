@@ -2,26 +2,31 @@ package mobility
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides access to Mobility operations.
+const (
+	// MobilityOperBasePath defines the base path for mobility operational data endpoints
+	MobilityOperBasePath = "Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"
+	// MobilityOperEndpoint defines the endpoint for mobility operational data
+	MobilityOperEndpoint = MobilityOperBasePath
+)
+
+// Service provides Mobility operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new Mobility service instance.
-func NewService(client *wnc.Client) *Service {
-	return &Service{c: client}
+// NewService creates a new service instance.
+func NewService(client *wnc.Client) Service {
+	return Service{c: client}
 }
 
-// Oper retrieves Mobility operational data.
-func (s *Service) Oper(ctx context.Context) (*model.MobilityOperResponse, error) {
-	const endpoint = "Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"
-
+// Oper returns Mobility operational data.
+func (s Service) Oper(ctx context.Context) (*model.MobilityOperResponse, error) {
 	var result model.MobilityOperResponse
-	err := s.c.Do(ctx, "GET", endpoint, &result)
-	return &result, err
+	return &result, s.c.Do(ctx, http.MethodGet, MobilityOperEndpoint, &result)
 }

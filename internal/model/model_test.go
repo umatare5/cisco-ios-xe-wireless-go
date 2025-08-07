@@ -82,9 +82,9 @@ func TestJSONUnmarshalRoundTrip(t *testing.T) {
 func TestBasicTypeValidation(t *testing.T) {
 	// This test ensures that critical types are defined
 	var (
-		_ *AfcOperResponse      = &AfcOperResponse{}
-		_ *AfcCloudOperResponse = &AfcCloudOperResponse{}
-		_ *ApCfgResponse        = &ApCfgResponse{}
+		_ = &AfcOperResponse{}
+		_ = &AfcCloudOperResponse{}
+		_ = &ApCfgResponse{}
 	)
 
 	// If compilation succeeds, the types exist

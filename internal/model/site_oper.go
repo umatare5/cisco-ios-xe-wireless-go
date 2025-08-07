@@ -12,7 +12,7 @@ type SiteOperData struct {
 
 // SiteInfo represents site information
 type SiteInfo struct {
-	SiteId          string          `json:"site-id"`
+	SiteID          string          `json:"site-id"`
 	SiteName        string          `json:"site-name"`
 	SiteType        string          `json:"site-type"`
 	ApCount         int             `json:"ap-count"`

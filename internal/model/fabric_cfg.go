@@ -15,6 +15,6 @@ type FabricConfig struct {
 	FabricEnabled       bool   `json:"fabric-enabled"`
 	ControlPlaneAddress string `json:"control-plane-address"`
 	VirtualNetworkName  string `json:"virtual-network-name"`
-	SubnetId            string `json:"subnet-id"`
+	SubnetID            string `json:"subnet-id"`
 	BorderNode          bool   `json:"border-node"`
 }

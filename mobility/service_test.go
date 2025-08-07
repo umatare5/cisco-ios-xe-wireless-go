@@ -38,19 +38,19 @@ func runMOBILITYTestAndCollectData(t *testing.T, collector *MOBILITYTestDataColl
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
-// TestMOBILITYServiceStructures tests the basic structure of Lumobility service and data types
+// TestMOBILITYServiceStructures tests the basic structure of MOBILITY service and data types
 func TestMOBILITYServiceStructures(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
-	
+
 	if service.c == nil {
 		t.Error("Service client should not be nil")
 	}
-	
+
 	// Test JSON serialization/deserialization with sample data
 	tests := []struct {
 		name     string
@@ -82,11 +82,11 @@ func TestMOBILITYServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
-// TestMOBILITYServiceMethods tests Lumobility service methods with table-driven approach
+// TestMOBILITYServiceMethods tests MOBILITY service methods with table-driven approach
 func TestMOBILITYServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
@@ -122,11 +122,11 @@ func TestMOBILITYServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
-// TestMOBILITYServiceFailFast tests fail-fast scenarios for Lumobility service operations
+// TestMOBILITYServiceFailFast tests fail-fast scenarios for MOBILITY service operations
 func TestMOBILITYServiceFailFast(t *testing.T) {
 	// Test with nil client - expect error (not panic)
 	t.Run("NilClient", func(t *testing.T) {
@@ -164,11 +164,11 @@ func TestMOBILITYServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
-// TestMOBILITYServiceIntegration tests all Lumobility service functions with real WNC data collection
+// TestMOBILITYServiceIntegration tests all MOBILITY service functions with real WNC data collection
 func TestMOBILITYServiceIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")

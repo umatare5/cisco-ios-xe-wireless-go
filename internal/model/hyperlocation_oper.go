@@ -1,4 +1,4 @@
-// Package model contains generated type definitions for the Cisco IOS-XE Wireless Controller API.
+// Package model contains generated response structures for the Cisco WNC API.
 // This package is part of the three-layer architecture providing Generated Type separation.
 package model
 

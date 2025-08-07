@@ -38,9 +38,9 @@ func runMCASTTestAndCollectData(t *testing.T, collector *MCASTTestDataCollector,
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestMCASTServiceStructures tests the basic structure of MCAST service and data types
 func TestMCASTServiceStructures(t *testing.T) {
@@ -94,9 +94,9 @@ func TestMCASTServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestMCASTServiceMethods tests MCAST service methods with table-driven approach
 func TestMCASTServiceMethods(t *testing.T) {
@@ -144,9 +144,9 @@ func TestMCASTServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestMCASTServiceFailFast tests fail-fast scenarios for MCAST service operations
 func TestMCASTServiceFailFast(t *testing.T) {
@@ -186,9 +186,9 @@ func TestMCASTServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestMCASTServiceIntegration tests all MCAST service functions with real WNC data collection
 func TestMCASTServiceIntegration(t *testing.T) {

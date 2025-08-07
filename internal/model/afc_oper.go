@@ -1,4 +1,4 @@
-// Package model contains the response structs for the Cisco Wireless Network Controller API.
+// Package model contains generated response structures for the Cisco WNC API.
 package model
 
 // AfcOperResponse represents the response structure for AFC operational data.

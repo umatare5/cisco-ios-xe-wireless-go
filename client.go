@@ -84,17 +84,17 @@ func (c *Client) AP() ap.Service {
 }
 
 // APF returns the Application Policy Framework service.
-func (c *Client) APF() *apf.Service {
+func (c *Client) APF() apf.Service {
 	return apf.NewService(c.core)
 }
 
 // AWIPS returns the Advanced Weather Interactive Processing System service.
-func (c *Client) AWIPS() *awips.Service {
+func (c *Client) AWIPS() awips.Service {
 	return awips.NewService(c.core)
 }
 
 // BLE returns the Bluetooth Low Energy service.
-func (c *Client) BLE() *ble.Service {
+func (c *Client) BLE() ble.Service {
 	return ble.NewService(c.core)
 }
 
@@ -104,27 +104,27 @@ func (c *Client) Client() client.Service {
 }
 
 // CTS returns the Cisco TrustSec service.
-func (c *Client) CTS() *cts.Service {
+func (c *Client) CTS() cts.Service {
 	return cts.NewService(c.core)
 }
 
 // Dot11 returns the 802.11 wireless standard service.
-func (c *Client) Dot11() *dot11.Service {
+func (c *Client) Dot11() dot11.Service {
 	return dot11.NewService(c.core)
 }
 
 // Dot15 returns the 802.15 standard service.
-func (c *Client) Dot15() *dot15.Service {
+func (c *Client) Dot15() dot15.Service {
 	return dot15.NewService(c.core)
 }
 
 // Fabric returns the Fabric service.
-func (c *Client) Fabric() *fabric.Service {
+func (c *Client) Fabric() fabric.Service {
 	return fabric.NewService(c.core)
 }
 
 // Flex returns the FlexConnect service.
-func (c *Client) Flex() *flex.Service {
+func (c *Client) Flex() flex.Service {
 	return flex.NewService(c.core)
 }
 
@@ -134,22 +134,22 @@ func (c *Client) General() general.Service {
 }
 
 // Geolocation returns the geolocation service.
-func (c *Client) Geolocation() *geolocation.Service {
+func (c *Client) Geolocation() geolocation.Service {
 	return geolocation.NewService(c.core)
 }
 
 // Hyperlocation returns the hyperlocation service.
-func (c *Client) Hyperlocation() *hyperlocation.Service {
+func (c *Client) Hyperlocation() hyperlocation.Service {
 	return hyperlocation.NewService(c.core)
 }
 
 // LISP returns the LISP service.
-func (c *Client) LISP() *lisp.Service {
+func (c *Client) LISP() lisp.Service {
 	return lisp.NewService(c.core)
 }
 
 // Location returns the location services service.
-func (c *Client) Location() *location.Service {
+func (c *Client) Location() location.Service {
 	return location.NewService(c.core)
 }
 
@@ -159,37 +159,37 @@ func (c *Client) Mcast() mcast.Service {
 }
 
 // Mdns returns the multicast DNS service.
-func (c *Client) Mdns() *mdns.Service {
+func (c *Client) Mdns() mdns.Service {
 	return mdns.NewService(c.core)
 }
 
 // Mesh returns the mesh networking service.
-func (c *Client) Mesh() *mesh.Service {
+func (c *Client) Mesh() mesh.Service {
 	return mesh.NewService(c.core)
 }
 
 // Mobility returns the mobility management service.
-func (c *Client) Mobility() *mobility.Service {
+func (c *Client) Mobility() mobility.Service {
 	return mobility.NewService(c.core)
 }
 
 // NMSP returns the Network Mobility Services Protocol service.
-func (c *Client) NMSP() *nmsp.Service {
+func (c *Client) NMSP() nmsp.Service {
 	return nmsp.NewService(c.core)
 }
 
 // Radio returns the radio management service.
-func (c *Client) Radio() *radio.Service {
+func (c *Client) Radio() radio.Service {
 	return radio.NewService(c.core)
 }
 
 // RF returns the Radio Frequency management service.
-func (c *Client) RF() *rf.Service {
+func (c *Client) RF() rf.Service {
 	return rf.NewService(c.core)
 }
 
 // RFID returns the RFID service.
-func (c *Client) RFID() *rfid.Service {
+func (c *Client) RFID() rfid.Service {
 	return rfid.NewService(c.core)
 }
 
@@ -204,7 +204,7 @@ func (c *Client) RRM() rrm.Service {
 }
 
 // Site returns the site management service.
-func (c *Client) Site() *site.Service {
+func (c *Client) Site() site.Service {
 	return site.NewService(c.core)
 }
 

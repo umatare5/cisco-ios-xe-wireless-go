@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestNetworkConstants tests network and protocol constants
 func TestNetworkConstants(t *testing.T) {
@@ -55,9 +55,9 @@ func TestTimeoutConstants(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestTimeoutDurationConstants tests timeout Duration constants
 func TestTimeoutDurationConstants(t *testing.T) {
@@ -165,9 +165,9 @@ func TestTestConstants(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION TESTS
-// =============================================================================
+// ========================================
 
 // TestTimeoutConsistency tests that timeout constants are consistent
 func TestTimeoutConsistency(t *testing.T) {

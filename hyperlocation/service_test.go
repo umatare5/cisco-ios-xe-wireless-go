@@ -38,9 +38,9 @@ func runHyperlocationTestAndCollectData(t *testing.T, collector *HyperlocationTe
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestHyperlocationServiceStructures tests the basic structure of Hyperlocation service and data types
 func TestHyperlocationServiceStructures(t *testing.T) {
@@ -94,9 +94,9 @@ func TestHyperlocationServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestHyperlocationServiceMethods tests Hyperlocation service methods with table-driven approach
 func TestHyperlocationServiceMethods(t *testing.T) {
@@ -139,9 +139,9 @@ func TestHyperlocationServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestHyperlocationServiceFailFast tests fail-fast scenarios for Hyperlocation service operations
 func TestHyperlocationServiceFailFast(t *testing.T) {
@@ -181,9 +181,9 @@ func TestHyperlocationServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestHyperlocationServiceIntegration tests all Hyperlocation service functions with real WNC data collection
 func TestHyperlocationServiceIntegration(t *testing.T) {

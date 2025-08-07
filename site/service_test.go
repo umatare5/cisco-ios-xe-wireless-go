@@ -38,19 +38,19 @@ func runSITETestAndCollectData(t *testing.T, collector *SITETestDataCollector, t
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestSITEServiceStructures tests the basic structure of SITE service and data types
 func TestSITEServiceStructures(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
-	
+
 	if service.c == nil {
 		t.Error("Service client should not be nil")
 	}
-	
+
 	// Test JSON serialization/deserialization with sample data
 	tests := []struct {
 		name     string
@@ -83,17 +83,17 @@ func TestSITEServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
-// 2. TASITE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
+// 2. TABLE-DRIVEN TEST PATTERNS
+// ========================================
 
-// TestSITEServiceMethods tests SITE service methods with tasite-driven approach
+// TestSITEServiceMethods tests SITE service methods with table-driven approach
 func TestSITEServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 
-	// Tasite-driven test cases for SITE endpoints
+	// Table-driven test cases for SITE endpoints
 	tests := []struct {
 		name       string
 		testFunc   func() (interface{}, error)
@@ -123,9 +123,9 @@ func TestSITEServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestSITEServiceFailFast tests fail-fast scenarios for SITE service operations
 func TestSITEServiceFailFast(t *testing.T) {
@@ -165,9 +165,9 @@ func TestSITEServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestSITEServiceIntegration tests all SITE service functions with real WNC data collection
 func TestSITEServiceIntegration(t *testing.T) {

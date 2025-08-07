@@ -42,16 +42,17 @@ func TestAPFService(t *testing.T) {
 	// ========================================
 
 	t.Run("Service_Creation", func(t *testing.T) {
-		// Test service creation with both nil and valid clients
+		// Test service creation with nil client
 		nilService := NewService(nil)
-		if nilService == nil {
-			t.Error("NewService should not return nil even with nil client")
+		// With value receiver, we check if the internal client is properly set
+		if nilService.c != nil {
+			t.Error("NewService should set internal client to nil when nil client passed")
 		}
 
 		if client != nil {
 			validService := NewService(client)
-			if validService == nil {
-				t.Error("NewService should not return nil with valid client")
+			if validService.c != client {
+				t.Error("NewService should set internal client correctly with valid client")
 			}
 		}
 	})

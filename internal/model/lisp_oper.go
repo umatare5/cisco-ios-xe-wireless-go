@@ -13,7 +13,7 @@ type LispOperData struct {
 
 // LispInstance represents LISP instance information
 type LispInstance struct {
-	InstanceId int         `json:"instance-id"`
+	InstanceID int         `json:"instance-id"`
 	VrfName    string      `json:"vrf-name"`
 	Status     string      `json:"status"`
 	EidTables  []EidTable  `json:"eid-tables"`

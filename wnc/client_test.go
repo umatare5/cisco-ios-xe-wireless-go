@@ -151,9 +151,9 @@ func TestHTTPError(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. ADDITIONAL OPTION FUNCTION TESTS
-// =============================================================================
+// ========================================
 
 func TestClientOptionsExtra(t *testing.T) {
 	tests := []struct {
@@ -231,9 +231,9 @@ func TestWithTimeoutZeroError(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 4. SERVICE ACCESSOR TESTS
-// =============================================================================
+// ========================================
 
 func TestServiceAccessors(t *testing.T) {
 	client, err := New("example.com", "token")
@@ -372,9 +372,9 @@ func TestServiceAccessors(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 5. DO METHOD COVERAGE TESTS
-// =============================================================================
+// ========================================
 
 func TestDoMethodErrorHandling(t *testing.T) {
 	client, err := New("nonexistent.invalid", "token", WithTimeout(1*time.Second))
@@ -728,13 +728,13 @@ func TestDoMethodWithLargeResponse(t *testing.T) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		// Generate a larger JSON response
-		large_data := make(map[string]interface{})
+		largeData := make(map[string]interface{})
 		for i := 0; i < 100; i++ {
-			large_data[fmt.Sprintf("key_%d", i)] = fmt.Sprintf("value_%d", i)
+			largeData[fmt.Sprintf("key_%d", i)] = fmt.Sprintf("value_%d", i)
 		}
 
 		// Manually create JSON to ensure it's valid
-		fmt.Fprintf(w, `{"test": "data", "large_field": "`)
+		fmt.Fprintf(w, `{"test": "data", "largeField": "`)
 		for i := 0; i < 1000; i++ {
 			fmt.Fprintf(w, "x")
 		}

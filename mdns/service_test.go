@@ -38,9 +38,9 @@ func runMDNSTestAndCollectData(t *testing.T, collector *MDNSTestDataCollector, t
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestMDNSServiceStructures tests the basic structure of MDNS service and data types
 func TestMDNSServiceStructures(t *testing.T) {
@@ -83,11 +83,11 @@ func TestMDNSServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TAMDNS-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
-// TestMDNSServiceMethods tests MDNS service methods with tamdns-driven approach
+// TestMDNSServiceMethods tests MDNS service methods with table-driven approach
 func TestMDNSServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
@@ -133,9 +133,9 @@ func TestMDNSServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestMDNSServiceFailFast tests fail-fast scenarios for MDNS service operations
 func TestMDNSServiceFailFast(t *testing.T) {
@@ -175,9 +175,9 @@ func TestMDNSServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestMDNSServiceIntegration tests all MDNS service functions with real WNC data collection
 func TestMDNSServiceIntegration(t *testing.T) {

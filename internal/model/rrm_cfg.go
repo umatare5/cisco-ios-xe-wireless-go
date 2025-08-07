@@ -1,9 +1,9 @@
-// Package model contains generated types used for Cisco IOS-XE wireless RESTCONF API responses.
+// Package model contains generated response structures for the Cisco WNC API.
 package model
 
 import "time"
 
-// RRM Configuration Types
+// RrmCfgResponse represents RRM configuration response data
 type RrmCfgResponse struct {
 	CiscoIOSXEWirelessRrmCfgRrmCfgData struct {
 		RrmPolicies RrmPolicies `json:"rrm-policies"`
@@ -19,7 +19,7 @@ type RrmPolicy struct {
 	// Additional fields would be defined here
 }
 
-// RRM Operational Types
+// RrmOperResponse represents RRM operational response data
 type RrmOperResponse struct {
 	CiscoIOSXEWirelessRrmOperRrmOperData struct {
 		RrmOperData []RrmOperData `json:"rrm-oper-data"`
@@ -38,7 +38,7 @@ type RrmOperData struct {
 	// Additional operational fields would be defined here
 }
 
-// RRM Global Operational Types
+// RrmGlobalOperResponse represents RRM global operational response data
 type RrmGlobalOperResponse struct {
 	RrmGlobalOperData struct {
 		RrmStats RrmStats `json:"rrm-stats"`
@@ -52,7 +52,7 @@ type RrmStats struct {
 	// Additional global stats would be defined here
 }
 
-// RRM Emulation Operational Types
+// RrmEmulOperResponse represents RRM emulation operational response data
 type RrmEmulOperResponse struct {
 	RrmEmulOperData struct {
 		EmulationStats EmulationStats `json:"emulation-stats"`

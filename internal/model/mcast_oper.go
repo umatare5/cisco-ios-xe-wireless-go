@@ -1,4 +1,4 @@
-// Package model provides data structure definitions for Cisco Wireless Network Controller API.
+// Package model contains generated response structures for the Cisco WNC API.
 // This file contains multicast operational data structures.
 package model
 

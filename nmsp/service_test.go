@@ -38,9 +38,9 @@ func runNMSPTestAndCollectData(t *testing.T, collector *NMSPTestDataCollector, t
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestNMSPServiceStructures tests the basic structure of NMSP service and data types
 func TestNMSPServiceStructures(t *testing.T) {
@@ -83,9 +83,9 @@ func TestNMSPServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TANMSP-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestNMSPServiceMethods tests NMSP service methods with tanmsp-driven approach
 func TestNMSPServiceMethods(t *testing.T) {
@@ -138,9 +138,9 @@ func TestNMSPServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestNMSPServiceFailFast tests fail-fast scenarios for NMSP service operations
 func TestNMSPServiceFailFast(t *testing.T) {
@@ -180,9 +180,9 @@ func TestNMSPServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestNMSPServiceIntegration tests all NMSP service functions with real WNC data collection
 func TestNMSPServiceIntegration(t *testing.T) {

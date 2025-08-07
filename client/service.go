@@ -8,12 +8,12 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides Client domain operations for wireless client operational data.
+// Service provides Client operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new Client service instance.
+// NewService creates a new service instance.
 func NewService(c *wnc.Client) Service {
 	return Service{c: c}
 }
@@ -76,9 +76,9 @@ func (s Service) PolicyData(ctx context.Context) (*model.ClientOperPolicyDataRes
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/policy-data", &out)
 }
 
-// SisfDbMac returns SISF database MAC information.
-func (s Service) SisfDbMac(ctx context.Context) (*model.ClientOperSisfDbMacResponse, error) {
-	var out model.ClientOperSisfDbMacResponse
+// SisfDBMac returns SISF database MAC information.
+func (s Service) SisfDBMac(ctx context.Context) (*model.ClientOperSisfDBMacResponse, error) {
+	var out model.ClientOperSisfDBMacResponse
 	return &out, s.c.Do(ctx, http.MethodGet,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/sisf-db-mac", &out)
 }

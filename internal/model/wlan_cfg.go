@@ -1,4 +1,4 @@
-// Package model contains generated types used for Cisco IOS-XE wireless RESTCONF API responses.
+// Package model contains generated response structures for the Cisco WNC API.
 package model
 
 import "time"
@@ -33,7 +33,7 @@ type WirelessAaaPolicyConfigsResponse struct {
 	WirelessAaaPolicyConfigs WirelessAaaPolicyConfigs `json:"Cisco-IOS-XE-wireless-wlan-cfg:wireless-aaa-policy-configs"`
 }
 
-// Core WLAN configuration types
+// WlanCfgEntries represents WLAN configuration entries
 type WlanCfgEntries struct {
 	WlanCfgEntry []WlanCfgEntry `json:"wlan-cfg-entry"`
 }
@@ -72,7 +72,7 @@ type WirelessAaaPolicyConfig struct {
 	// Additional fields would be defined here
 }
 
-// WLAN Global Operational Types
+// WlanGlobalOperResponse represents WLAN global operational response data
 type WlanGlobalOperResponse struct {
 	WlanGlobalOperData struct {
 		WlanOperList []WlanOperData `json:"wlan-oper-list"`

@@ -15,6 +15,6 @@ type Dot15Config struct {
 	Enabled       bool   `json:"enabled"`
 	Channel       int    `json:"channel"`
 	TxPower       int    `json:"tx-power"`
-	NetworkId     string `json:"network-id"`
+	NetworkID     string `json:"network-id"`
 	SecurityLevel int    `json:"security-level"`
 }

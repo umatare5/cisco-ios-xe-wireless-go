@@ -1,4 +1,4 @@
-// Package model provides data structure definitions for Cisco Wireless Network Controller API.
+// Package model contains generated response structures for the Cisco WNC API.
 // This file contains rogue access point detection operational data structures.
 package model
 
@@ -141,7 +141,7 @@ type RogueStats struct {
 	ClientFinalStateChangeCount   string `json:"client-final-state-change-count"`
 	ClientContainLevelChangeCount string `json:"client-contain-level-change-count"`
 	ClientChannelChangeCount      string `json:"client-channel-change-count"`
-	ClientIpChangeCount           string `json:"client-ip-change-count"`
+	ClientIPChangeCount           string `json:"client-ip-change-count"`
 	ClientRoamCount               string `json:"client-roam-count"`
 
 	RogueApReportsDroppedScale        string `json:"rogue-ap-reports-dropped-scale"`

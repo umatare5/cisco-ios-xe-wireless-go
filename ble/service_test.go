@@ -38,9 +38,9 @@ func runBLETestAndCollectData(t *testing.T, collector *BLETestDataCollector, tes
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestBLEServiceStructures tests the basic structure of BLE service and data types
 func TestBLEServiceStructures(t *testing.T) {
@@ -83,9 +83,9 @@ func TestBLEServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestBLEServiceMethods tests BLE service methods with table-driven approach
 func TestBLEServiceMethods(t *testing.T) {
@@ -123,9 +123,9 @@ func TestBLEServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestBLEServiceFailFast tests fail-fast scenarios for BLE service operations
 func TestBLEServiceFailFast(t *testing.T) {
@@ -165,9 +165,9 @@ func TestBLEServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestBLEServiceIntegration tests all BLE service functions with real WNC data collection
 func TestBLEServiceIntegration(t *testing.T) {

@@ -14,27 +14,27 @@ import (
 
 // TestDataCollector holds test data for AP service functions
 type TestDataCollector struct {
-	mu                              sync.Mutex
-	CfgResp                         *model.ApCfgResponse
-	CfgErr                          error
-	TagSourcePriorityConfigsResp    *model.TagSourcePriorityConfigs
-	TagSourcePriorityConfigsErr     error
-	ApTagsResp                      *model.ApCfgApTagsResponse
-	ApTagsErr                       error
-	OperResp                        *model.ApOperResponse
-	OperErr                         error
-	RadioNeighborResp               *model.ApOperApRadioNeighborResponse
-	RadioNeighborErr                error
-	NameMacMapResp                  *[]model.ApNameMacMap
-	NameMacMapErr                   error
-	CapwapDataResp                  *[]model.CapwapData
-	CapwapDataErr                   error
-	GlobalOperResp                  *model.ApGlobalOperResponse
-	GlobalOperErr                   error
-	HistoryResp                     *model.ApGlobalOperApHistoryResponse
-	HistoryErr                      error
-	EwlcApStatsResp                 *model.ApGlobalOperEwlcApStatsResponse
-	EwlcApStatsErr                  error
+	mu                           sync.Mutex
+	CfgResp                      *model.ApCfgResponse
+	CfgErr                       error
+	TagSourcePriorityConfigsResp *model.TagSourcePriorityConfigs
+	TagSourcePriorityConfigsErr  error
+	ApTagsResp                   *model.ApCfgApTagsResponse
+	ApTagsErr                    error
+	OperResp                     *model.ApOperResponse
+	OperErr                      error
+	RadioNeighborResp            *model.ApOperApRadioNeighborResponse
+	RadioNeighborErr             error
+	NameMacMapResp               *[]model.ApNameMacMap
+	NameMacMapErr                error
+	CapwapDataResp               *[]model.CapwapData
+	CapwapDataErr                error
+	GlobalOperResp               *model.ApGlobalOperResponse
+	GlobalOperErr                error
+	HistoryResp                  *model.ApGlobalOperApHistoryResponse
+	HistoryErr                   error
+	EwlcApStatsResp              *model.ApGlobalOperEwlcApStatsResponse
+	EwlcApStatsErr               error
 }
 
 // TestApService tests all AP service functions with the 4-pattern testing approach

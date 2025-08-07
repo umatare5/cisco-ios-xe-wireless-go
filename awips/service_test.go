@@ -38,9 +38,9 @@ func runAWIPSTestAndCollectData(t *testing.T, collector *AWIPSTestDataCollector,
 	}
 }
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestAWIPSServiceStructures tests the basic structure of AWIPS service and data types
 func TestAWIPSServiceStructures(t *testing.T) {
@@ -83,9 +83,9 @@ func TestAWIPSServiceStructures(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestAWIPSServiceMethods tests AWIPS service methods with table-driven approach
 func TestAWIPSServiceMethods(t *testing.T) {
@@ -123,9 +123,9 @@ func TestAWIPSServiceMethods(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
-// =============================================================================
+// ========================================
 
 // TestAWIPSServiceFailFast tests fail-fast scenarios for AWIPS service operations
 func TestAWIPSServiceFailFast(t *testing.T) {
@@ -165,9 +165,9 @@ func TestAWIPSServiceFailFast(t *testing.T) {
 	})
 }
 
-// =============================================================================
+// ========================================
 // 4. INTEGRATION TESTS (API Endpoint, Real Controller)
-// =============================================================================
+// ========================================
 
 // TestAWIPSServiceIntegration tests all AWIPS service functions with real WNC data collection
 func TestAWIPSServiceIntegration(t *testing.T) {

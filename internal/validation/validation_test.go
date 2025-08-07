@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-// =============================================================================
+// ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// =============================================================================
+// ========================================
 
 // TestValidationConstants tests validation constants
 func TestValidationConstants(t *testing.T) {
@@ -33,9 +33,9 @@ func TestValidationConstants(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 2. TABLE-DRIVEN TEST PATTERNS
-// =============================================================================
+// ========================================
 
 // TestIsValidController tests controller validation
 func TestIsValidController(t *testing.T) {
@@ -113,9 +113,9 @@ func TestIsPositiveTimeout(t *testing.T) {
 	}
 }
 
-// =============================================================================
+// ========================================
 // 3. FAIL-FAST ERROR DETECTION TESTS
-// =============================================================================
+// ========================================
 
 // TestValidationErrorTemplates tests error message templates
 func TestValidationErrorTemplates(t *testing.T) {

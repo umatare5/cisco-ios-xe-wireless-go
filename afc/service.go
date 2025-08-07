@@ -8,12 +8,12 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/wnc"
 )
 
-// Service provides AFC (Automated Frequency Coordination) domain operations.
+// Service provides AFC operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new AFC service instance.
+// NewService creates a new service instance.
 func NewService(c *wnc.Client) Service {
 	return Service{c: c}
 }

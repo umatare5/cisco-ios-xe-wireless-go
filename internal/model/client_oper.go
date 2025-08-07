@@ -1,4 +1,4 @@
-// Package model contains AI-generated response structs for the cisco-ios-xe-wireless-go library.
+// Package model contains generated response structures for the Cisco WNC API.
 package model
 
 import "time"
@@ -13,7 +13,7 @@ type ClientOperResponse struct {
 		MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history"`
 		TrafficStats      []TrafficStats      `json:"traffic-stats"`
 		PolicyData        []PolicyData        `json:"policy-data"`
-		SisfDbMac         []SisfDbMac         `json:"sisf-db-mac"`
+		SisfDBMac         []SisfDBMac         `json:"sisf-db-mac"`
 		DcInfo            []DcInfo            `json:"dc-info"`
 	} `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"`
 }
@@ -53,9 +53,9 @@ type ClientOperPolicyDataResponse struct {
 	PolicyData []PolicyData `json:"Cisco-IOS-XE-wireless-client-oper:policy-data"`
 }
 
-// ClientOperSisfDbMacResponse represents the SISF database MAC response
-type ClientOperSisfDbMacResponse struct {
-	SisfDbMac []SisfDbMac `json:"Cisco-IOS-XE-wireless-client-oper:sisf-db-mac"`
+// ClientOperSisfDBMacResponse represents the SISF database MAC response
+type ClientOperSisfDBMacResponse struct {
+	SisfDBMac []SisfDBMac `json:"Cisco-IOS-XE-wireless-client-oper:sisf-db-mac"`
 }
 
 // ClientOperDcInfoResponse represents the discovery client information response
@@ -219,7 +219,7 @@ type MmIfClientStats struct {
 		MmifScheduleErrors            int `json:"mmif-schedule-errors"`
 		MmifFsmFailure                int `json:"mmif-fsm-failure"`
 		MmifIpcFailure                int `json:"mmif-ipc-failure"`
-		MmifDbFailure                 int `json:"mmif-db-failure"`
+		MmifDBFailure                 int `json:"mmif-db-failure"`
 		MmifInvalidParamsFailure      int `json:"mmif-invalid-params-failure"`
 		MmifMmMsgDecodeFailure        int `json:"mmif-mm-msg-decode-failure"`
 		MmifUnknownFailure            int `json:"mmif-unknown-failure"`
@@ -319,7 +319,7 @@ type PolicyData struct {
 	ResVlanName string `json:"res-vlan-name"`
 }
 
-type SisfDbMac struct {
+type SisfDBMac struct {
 	MacAddr     string `json:"mac-addr"`
 	Ipv4Binding struct {
 		IPKey struct {

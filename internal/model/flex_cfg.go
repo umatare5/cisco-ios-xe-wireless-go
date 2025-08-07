@@ -22,7 +22,7 @@ type FlexGroup struct {
 
 // FlexVlan represents VLAN configuration in FlexConnect
 type FlexVlan struct {
-	VlanId     int    `json:"vlan-id"`
+	VlanID     int    `json:"vlan-id"`
 	VlanName   string `json:"vlan-name"`
 	NativeVlan bool   `json:"native-vlan"`
 }

@@ -21,40 +21,36 @@ const (
 	CmxCloudInfoEndpoint = NmspOperBasePath + "/cmx-cloud-info"
 )
 
-// Service provides NMSP (Network Mobility Services Protocol) operations.
+// Service provides NMSP operations.
 type Service struct {
 	c *wnc.Client
 }
 
-// NewService creates a new NMSP service instance.
-func NewService(c *wnc.Client) *Service {
-	return &Service{c: c}
+// NewService creates a new service instance.
+func NewService(c *wnc.Client) Service {
+	return Service{c: c}
 }
 
-// Oper retrieves NMSP operational data.
-func (s *Service) Oper(ctx context.Context) (*model.NmspOperResponse, error) {
+// Oper returns NMSP operational data.
+func (s Service) Oper(ctx context.Context) (*model.NmspOperResponse, error) {
 	var out model.NmspOperResponse
-	err := s.c.Do(ctx, http.MethodGet, NmspOperEndpoint, &out)
-	return &out, err
+	return &out, s.c.Do(ctx, http.MethodGet, NmspOperEndpoint, &out)
 }
 
-// ClientRegistration retrieves NMSP client registration data.
-func (s *Service) ClientRegistration(ctx context.Context) (*model.NmspClientRegistrationResponse, error) {
+// ClientRegistration returns NMSP client registration data.
+func (s Service) ClientRegistration(ctx context.Context) (*model.NmspClientRegistrationResponse, error) {
 	var out model.NmspClientRegistrationResponse
-	err := s.c.Do(ctx, http.MethodGet, ClientRegistrationEndpoint, &out)
-	return &out, err
+	return &out, s.c.Do(ctx, http.MethodGet, ClientRegistrationEndpoint, &out)
 }
 
-// CmxConnection retrieves NMSP CMX connection data.
-func (s *Service) CmxConnection(ctx context.Context) (*model.NmspCmxConnectionResponse, error) {
+// CmxConnection returns NMSP CMX connection data.
+func (s Service) CmxConnection(ctx context.Context) (*model.NmspCmxConnectionResponse, error) {
 	var out model.NmspCmxConnectionResponse
-	err := s.c.Do(ctx, http.MethodGet, CmxConnectionEndpoint, &out)
-	return &out, err
+	return &out, s.c.Do(ctx, http.MethodGet, CmxConnectionEndpoint, &out)
 }
 
-// CmxCloudInfo retrieves NMSP CMX cloud information.
-func (s *Service) CmxCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfoResponse, error) {
+// CmxCloudInfo returns NMSP CMX cloud information.
+func (s Service) CmxCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfoResponse, error) {
 	var out model.NmspCmxCloudInfoResponse
-	err := s.c.Do(ctx, http.MethodGet, CmxCloudInfoEndpoint, &out)
-	return &out, err
+	return &out, s.c.Do(ctx, http.MethodGet, CmxCloudInfoEndpoint, &out)
 }
