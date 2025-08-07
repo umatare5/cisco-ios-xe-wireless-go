@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// CtsCfgBasePath defines the base path for CTS configuration endpoints
-	CtsCfgBasePath = "Cisco-IOS-XE-wireless-cts-cfg:cts-cfg-data"
+	CtsCfgBasePath = constants.YANGModelPrefix + "cts-cfg:cts-cfg-data"
 	// CtsCfgEndpoint defines the endpoint for CTS configuration data
 	CtsCfgEndpoint = CtsCfgBasePath
 )

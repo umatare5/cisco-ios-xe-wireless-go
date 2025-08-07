@@ -4,28 +4,29 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// RrmCfgBasePath defines the base path for RRM configuration endpoints
-	RrmCfgBasePath = "Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"
+	RrmCfgBasePath = constants.YANGModelPrefix + "rrm-cfg:rrm-cfg-data"
 	// RrmCfgEndpoint retrieves complete RRM configuration data
 	RrmCfgEndpoint = RrmCfgBasePath
 
 	// RrmOperBasePath defines the base path for RRM operational data endpoints
-	RrmOperBasePath = "Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"
+	RrmOperBasePath = constants.YANGModelPrefix + "rrm-oper:rrm-oper-data"
 	// RrmOperEndpoint retrieves RRM operational data
 	RrmOperEndpoint = RrmOperBasePath
 
 	// RrmGlobalOperBasePath defines the base path for RRM global operational data endpoints
-	RrmGlobalOperBasePath = "Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data"
+	RrmGlobalOperBasePath = constants.YANGModelPrefix + "rrm-global-oper:rrm-global-oper-data"
 	// RrmGlobalOperEndpoint retrieves RRM global operational data
 	RrmGlobalOperEndpoint = RrmGlobalOperBasePath
 
 	// RrmEmulOperBasePath defines the base path for RRM emulation operational data endpoints
-	RrmEmulOperBasePath = "Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data"
+	RrmEmulOperBasePath = constants.YANGModelPrefix + "rrm-emul-oper:rrm-emul-oper-data"
 	// RrmEmulOperEndpoint retrieves RRM emulation operational data
 	RrmEmulOperEndpoint = RrmEmulOperBasePath
 )

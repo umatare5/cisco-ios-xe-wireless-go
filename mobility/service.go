@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// MobilityOperBasePath defines the base path for mobility operational data endpoints
-	MobilityOperBasePath = "Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"
+	MobilityOperBasePath = constants.YANGModelPrefix + "mobility-oper:mobility-oper-data"
 	// MobilityOperEndpoint defines the endpoint for mobility operational data
 	MobilityOperEndpoint = MobilityOperBasePath
 )

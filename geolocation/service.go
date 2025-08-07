@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// GeolocationOperBasePath defines the base path for geolocation operational endpoints
-	GeolocationOperBasePath = "Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
+	GeolocationOperBasePath = constants.YANGModelPrefix + "geolocation-oper:geolocation-oper-data"
 	// GeolocationOperEndpoint defines the endpoint for geolocation operational data
 	GeolocationOperEndpoint = GeolocationOperBasePath
 	// GeolocationOperApGeoLocStatsEndpoint defines the endpoint for AP geolocation statistics

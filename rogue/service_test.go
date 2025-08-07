@@ -7,6 +7,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
@@ -69,7 +70,7 @@ func TestRogueService(t *testing.T) {
 		collector := &TestDataCollector{}
 
 		var wg sync.WaitGroup
-		wg.Add(5) // 5 methods to test
+		wg.Add(constants.RogueServiceMethods) // 5 methods to test
 
 		// Test Oper method
 		go func() {

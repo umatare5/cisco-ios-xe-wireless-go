@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// AwipsOperBasePath defines the base path for AWIPS operational data endpoints
-	AwipsOperBasePath = "Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"
+	AwipsOperBasePath = constants.YANGModelPrefix + "awips-oper:awips-oper-data"
 	// AwipsOperEndpoint defines the endpoint for AWIPS operational data
 	AwipsOperEndpoint = AwipsOperBasePath
 )

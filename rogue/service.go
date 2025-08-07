@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// RogueOperBasePath defines the base path for rogue operational data endpoints.
-	RogueOperBasePath = "Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data"
+	RogueOperBasePath = constants.YANGModelPrefix + "rogue-oper:rogue-oper-data"
 	// RogueOperEndpoint defines the endpoint for rogue operational data.
 	RogueOperEndpoint = RogueOperBasePath
 	// RogueStatsEndpoint defines the endpoint for rogue statistics.

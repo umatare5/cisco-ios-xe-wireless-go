@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// LispOperBasePath defines the base path for LISP operational data endpoints
-	LispOperBasePath = "Cisco-IOS-XE-wireless-lisp-oper:lisp-oper-data"
+	LispOperBasePath = constants.YANGModelPrefix + "lisp-oper:lisp-oper-data"
 	// LispOperEndpoint defines the endpoint for LISP operational data
 	LispOperEndpoint = LispOperBasePath
 )

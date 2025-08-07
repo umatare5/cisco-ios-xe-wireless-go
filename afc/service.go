@@ -4,20 +4,21 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// AfcOperBasePath defines the base path for AFC operational data endpoints
-	AfcOperBasePath = "/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"
+	AfcOperBasePath = constants.YANGModelPrefix + "afc-oper:afc-oper-data"
 	// AfcOperEndpoint retrieves overall AFC operational data
 	AfcOperEndpoint = AfcOperBasePath
 	// AfcApRespEndpoint retrieves per-AP AFC response data
 	AfcApRespEndpoint = AfcOperBasePath + "/ewlc-afc-ap-resp"
 
 	// AfcCloudOperBasePath defines the base path for AFC cloud operational data endpoints
-	AfcCloudOperBasePath = "/Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data"
+	AfcCloudOperBasePath = constants.YANGModelPrefix + "afc-cloud-oper:afc-cloud-oper-data"
 	// AfcCloudOperEndpoint retrieves AFC cloud operational data
 	AfcCloudOperEndpoint = AfcCloudOperBasePath
 	// AfcCloudStatsEndpoint retrieves AFC cloud statistics

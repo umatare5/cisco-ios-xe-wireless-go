@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// ApCfgBasePath defines the base path for access point configuration endpoints
-	ApCfgBasePath = "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"
+	ApCfgBasePath = constants.YANGModelPrefix + "ap-cfg:ap-cfg-data"
 	// ApCfgEndpoint retrieves complete access point configuration data
 	ApCfgEndpoint = ApCfgBasePath
 	// TagSourcePriorityConfigsEndpoint retrieves tag source priority configurations
@@ -18,8 +19,8 @@ const (
 	// ApTagsEndpoint retrieves access point tag configurations
 	ApTagsEndpoint = ApCfgBasePath + "/ap-tags"
 
-	// ApOperBasePath is the base path for access point operational data endpoints
-	ApOperBasePath = "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"
+	// ApOperBasePath defines the base path for access point operational endpoints
+	ApOperBasePath = constants.YANGModelPrefix + "access-point-oper:access-point-oper-data"
 	// ApOperEndpoint retrieves complete access point operational data
 	ApOperEndpoint = ApOperBasePath
 	// ApRadioNeighborEndpoint retrieves access point radio neighbor information
@@ -33,8 +34,8 @@ const (
 	// ApNameMacMapEndpoint retrieves AP name to MAC address mapping
 	ApNameMacMapEndpoint = ApOperBasePath + "/ap-name-mac-map"
 
-	// ApGlobalOperBasePath defines the base path for AP global operational data endpoints
-	ApGlobalOperBasePath = "Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data"
+	// ApGlobalOperBasePath defines the base path for global access point operational endpoints
+	ApGlobalOperBasePath = constants.YANGModelPrefix + "ap-global-oper:ap-global-oper-data"
 	// ApGlobalOperEndpoint retrieves complete AP global operational data
 	ApGlobalOperEndpoint = ApGlobalOperBasePath
 	// ApHistoryEndpoint retrieves AP history data

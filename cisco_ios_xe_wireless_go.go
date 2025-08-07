@@ -1,5 +1,5 @@
-// Package wnc provides a unified client for the Cisco Wireless Network Controller API.
-package wnc
+// Package cisco_ios_xe_wireless_go provides a unified client for the Cisco Wireless Network Controller API.
+package cisco_ios_xe_wireless_go
 
 import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/afc"

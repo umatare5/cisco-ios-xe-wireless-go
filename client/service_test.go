@@ -7,6 +7,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
@@ -79,7 +80,7 @@ func TestClientService(t *testing.T) {
 		collector := &TestDataCollector{}
 
 		var wg sync.WaitGroup
-		wg.Add(10) // 10 methods to test
+		wg.Add(constants.DefaultTestMethods) // 10 methods to test
 
 		// Test Oper method
 		go func() {
@@ -184,7 +185,7 @@ func TestClientService(t *testing.T) {
 		wg.Wait()
 
 		// Validate collected data
-		t.Logf("Collected data from %d Client service methods", 10)
+		t.Logf("Collected data from %d Client service methods", constants.DefaultTestMethods)
 	})
 
 	// Test JSON serialization/deserialization

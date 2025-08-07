@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// NmspOperBasePath defines the base path for NMSP operational data endpoints.
-	NmspOperBasePath = "Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"
+	NmspOperBasePath = constants.YANGModelPrefix + "nmsp-oper:nmsp-oper-data"
 	// NmspOperEndpoint defines the endpoint for NMSP operational data.
 	NmspOperEndpoint = NmspOperBasePath
 	// ClientRegistrationEndpoint defines the endpoint for client registration data.

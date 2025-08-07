@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// McastOperBasePath defines the base path for multicast operational data endpoints.
-	McastOperBasePath = "Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"
+	McastOperBasePath = constants.YANGModelPrefix + "mcast-oper:mcast-oper-data"
 	// McastOperEndpoint defines the endpoint for multicast operational data.
 	McastOperEndpoint = McastOperBasePath
 	// FlexMediastreamClientSummaryEndpoint defines the endpoint for FlexConnect mediastream client summary data.

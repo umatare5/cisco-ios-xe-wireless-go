@@ -4,20 +4,21 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// GeneralOperBasePath defines the base path for general operational data endpoints
-	GeneralOperBasePath = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+	GeneralOperBasePath = constants.YANGModelPrefix + "general-oper:general-oper-data"
 	// GeneralOperEndpoint retrieves general operational data
 	GeneralOperEndpoint = GeneralOperBasePath
 	// MgmtIntfDataEndpoint retrieves management interface operational data
 	MgmtIntfDataEndpoint = GeneralOperBasePath + "/mgmt-intf-data"
 
 	// GeneralCfgBasePath defines the base path for general configuration data endpoints
-	GeneralCfgBasePath = "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data"
+	GeneralCfgBasePath = constants.YANGModelPrefix + "general-cfg:general-cfg-data"
 	// GeneralCfgEndpoint retrieves general configuration data
 	GeneralCfgEndpoint = GeneralCfgBasePath
 	// MewlcConfigEndpoint retrieves MEWLC configuration data

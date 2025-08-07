@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// HyperlocationOperBasePath defines the base path for hyperlocation operational data endpoints.
-	HyperlocationOperBasePath = "Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data"
+	HyperlocationOperBasePath = constants.YANGModelPrefix + "hyperlocation-oper:hyperlocation-oper-data"
 	// HyperlocationOperEndpoint defines the endpoint for hyperlocation operational data.
 	HyperlocationOperEndpoint = HyperlocationOperBasePath
 	// HyperlocationProfilesEndpoint defines the endpoint for hyperlocation profiles.

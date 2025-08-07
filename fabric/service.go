@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// FabricCfgBasePath defines the base path for fabric configuration endpoints
-	FabricCfgBasePath = "Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"
+	FabricCfgBasePath = constants.YANGModelPrefix + "fabric-cfg:fabric-cfg-data"
 	// FabricCfgEndpoint defines the endpoint for fabric configuration data
 	FabricCfgEndpoint = FabricCfgBasePath
 )

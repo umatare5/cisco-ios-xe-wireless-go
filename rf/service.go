@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// RfCfgBasePath defines the base path for RF configuration endpoints
-	RfCfgBasePath = "Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"
+	RfCfgBasePath = constants.YANGModelPrefix + "rf-cfg:rf-cfg-data"
 	// RfCfgEndpoint defines the endpoint for RF configuration data
 	RfCfgEndpoint = RfCfgBasePath
 )

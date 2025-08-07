@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// ApfCfgBasePath defines the base path for APF configuration endpoints
-	ApfCfgBasePath = "Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"
+	ApfCfgBasePath = constants.YANGModelPrefix + "apf-cfg:apf-cfg-data"
 	// ApfCfgEndpoint defines the endpoint for APF configuration data
 	ApfCfgEndpoint = ApfCfgBasePath
 )

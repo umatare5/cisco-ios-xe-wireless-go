@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
-	// SiteOperBasePath defines the base path for site operational endpoints
-	SiteOperBasePath = "Cisco-IOS-XE-wireless-site-oper:site-oper-data"
+	// SiteOperBasePath defines the base path for site operational data endpoints
+	SiteOperBasePath = constants.YANGModelPrefix + "site-oper:site-oper-data"
 	// SiteOperEndpoint defines the endpoint for site operational data
 	SiteOperEndpoint = SiteOperBasePath
 )

@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// Dot11CfgBasePath defines the base path for 802.11 configuration endpoints
-	Dot11CfgBasePath = "Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"
+	Dot11CfgBasePath = constants.YANGModelPrefix + "dot11-cfg:dot11-cfg-data"
 	// Dot11CfgEndpoint defines the endpoint for 802.11 configuration data
 	Dot11CfgEndpoint = Dot11CfgBasePath
 )

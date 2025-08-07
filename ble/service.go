@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// BleOperBasePath defines the base path for BLE operational data endpoints
-	BleOperBasePath = "Cisco-IOS-XE-wireless-ble-oper:ble-oper-data"
+	BleOperBasePath = constants.YANGModelPrefix + "ble-oper:ble-oper-data"
 	// BleOperEndpoint defines the endpoint for BLE operational data
 	BleOperEndpoint = BleOperBasePath
 )

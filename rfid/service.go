@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// RfidCfgBasePath defines the base path for RFID configuration endpoints
-	RfidCfgBasePath = "Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
+	RfidCfgBasePath = constants.YANGModelPrefix + "rfid-cfg:rfid-cfg-data"
 	// RfidCfgEndpoint defines the endpoint for RFID configuration data
 	RfidCfgEndpoint = RfidCfgBasePath
 )

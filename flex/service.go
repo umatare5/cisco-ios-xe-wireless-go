@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// FlexCfgBasePath defines the base path for FlexConnect configuration endpoints
-	FlexCfgBasePath = "Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"
+	FlexCfgBasePath = constants.YANGModelPrefix + "flex-cfg:flex-cfg-data"
 	// FlexCfgEndpoint defines the endpoint for FlexConnect configuration data
 	FlexCfgEndpoint = FlexCfgBasePath
 )

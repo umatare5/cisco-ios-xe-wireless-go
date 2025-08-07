@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// ClientOperBasePath defines the base path for client operational data endpoints
-	ClientOperBasePath = "Cisco-IOS-XE-wireless-client-oper:client-oper-data"
+	ClientOperBasePath = constants.YANGModelPrefix + "client-oper:client-oper-data"
 	// ClientOperEndpoint retrieves complete client operational data
 	ClientOperEndpoint = ClientOperBasePath
 	// CommonOperDataEndpoint retrieves common operational data for clients

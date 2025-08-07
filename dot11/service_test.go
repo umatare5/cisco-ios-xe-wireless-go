@@ -8,6 +8,7 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
@@ -62,7 +63,7 @@ func TestDOT11Service(t *testing.T) {
 		collector := &TestDataCollector{}
 
 		var wg sync.WaitGroup
-		wg.Add(1) // Only one method to test
+		wg.Add(constants.SingleMethodServices) // Only one method to test
 
 		// Test Cfg method
 		go func() {

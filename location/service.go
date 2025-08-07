@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// LocationCfgBasePath defines the base path for location configuration endpoints
-	LocationCfgBasePath = "Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"
+	LocationCfgBasePath = constants.YANGModelPrefix + "location-cfg:location-cfg-data"
 	// LocationCfgEndpoint defines the endpoint for location configuration data
 	LocationCfgEndpoint = LocationCfgBasePath
 )

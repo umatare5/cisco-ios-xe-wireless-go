@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// MdnsOperBasePath defines the base path for mDNS operational data endpoints.
-	MdnsOperBasePath = "Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data"
+	MdnsOperBasePath = constants.YANGModelPrefix + "mdns-oper:mdns-oper-data"
 	// MdnsOperEndpoint defines the endpoint for mDNS operational data.
 	MdnsOperEndpoint = MdnsOperBasePath
 	// MdnsGlobalStatsEndpoint defines the endpoint for mDNS global statistics.

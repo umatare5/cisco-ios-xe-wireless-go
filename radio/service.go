@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// RadioCfgBasePath defines the base path for radio configuration endpoints
-	RadioCfgBasePath = "Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"
+	RadioCfgBasePath = constants.YANGModelPrefix + "radio-cfg:radio-cfg-data"
 	// RadioCfgEndpoint defines the endpoint for radio configuration data
 	RadioCfgEndpoint = RadioCfgBasePath
 )

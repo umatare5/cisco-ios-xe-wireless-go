@@ -1,4 +1,4 @@
-// Package wnc provides a unified Go client library for the Cisco Catalyst C9800 Wireless LAN Controller RESTCONF API.
+// Package cisco_ios_xe_wireless_go provides a unified Go client library for the Cisco Catalyst C9800 Wireless LAN Controller RESTCONF API.
 //
 // This library enables developers to communicate with Cisco Catalyst 9800 controllers in an idiomatic,
 // robust, simple, and maintainable way using Go.
@@ -7,7 +7,7 @@
 //
 // The library follows a three-layer architecture:
 //
-//   - Core Layer (wnc package): Handles HTTP communication, authentication, and low-level RESTCONF operations
+//   - Core Layer (internal/core): Handles HTTP communication, authentication, and low-level RESTCONF operations
 //   - Domain Service Layer (service packages): Provides domain-specific APIs for each wireless controller feature
 //   - Generated Type Layer (internal/model): Contains strongly-typed data structures for all API responses
 //
@@ -84,4 +84,4 @@
 //
 // This library is designed for Cisco IOS-XE 17.12.x running on Cisco Catalyst 9800 series controllers.
 // It uses YANG models from the cisco-xe/17121 specification.
-package wnc
+package cisco_ios_xe_wireless_go

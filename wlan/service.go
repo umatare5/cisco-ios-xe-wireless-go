@@ -5,13 +5,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
 	// WlanCfgBasePath defines the base path for WLAN configuration endpoints
-	WlanCfgBasePath = "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"
+	WlanCfgBasePath = constants.YANGModelPrefix + "wlan-cfg:wlan-cfg-data"
 	// WlanCfgEndpoint defines complete WLAN configuration data endpoint
 	WlanCfgEndpoint = WlanCfgBasePath
 	// WlanCfgEntriesEndpoint defines WLAN configuration entries endpoint
@@ -24,7 +25,7 @@ const (
 	WirelessAaaPolicyConfigsEndpoint = WlanCfgBasePath + "/wireless-aaa-policy-configs"
 
 	// WlanGlobalOperBasePath defines the base path for WLAN global operational data endpoints
-	WlanGlobalOperBasePath = "Cisco-IOS-XE-wireless-wlan-global-oper:wlan-global-oper-data"
+	WlanGlobalOperBasePath = constants.YANGModelPrefix + "wlan-global-oper:wlan-global-oper-data"
 	// WlanGlobalOperDataEndpoint defines WLAN global operational data endpoint
 	WlanGlobalOperDataEndpoint = WlanGlobalOperBasePath
 )
