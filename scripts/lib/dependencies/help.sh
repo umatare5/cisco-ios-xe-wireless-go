@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # Dependencies Help Functions
 
 show_dependencies_help() {

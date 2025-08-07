@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 # Cisco WNC YANG Operations - Core Functions
 # Core business logic for YANG operations via RESTCONF API
 

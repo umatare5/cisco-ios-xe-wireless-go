@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Coverage HTML Generator - Core Functions
 # Core business logic for coverage HTML generation operations

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Authentication Library
 # Authentication token handling and validation functions

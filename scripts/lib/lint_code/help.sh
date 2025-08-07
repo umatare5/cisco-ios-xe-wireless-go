@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Lint Code - Help Functions
 # Provides help and documentation functionality for lint_code operations
 
-source "$(dirname "${BASH_SOURCE[0]}")/../argument_parsing.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common/argument_parsing.sh"
 
 show_lint_banner() {
     if ! is_no_color_enabled; then

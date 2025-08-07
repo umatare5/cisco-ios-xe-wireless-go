@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Lint Code - Core Functions
 # Core business logic for code linting operations

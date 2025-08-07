@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Validation Library
 # Input validation and format checking functions

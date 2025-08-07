@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Output Formatter Library
 # Output formatting and display functions

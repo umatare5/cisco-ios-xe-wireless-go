@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 # Cisco WNC YANG Operations - Help Functions
 # Provides help and documentation functionality for YANG operations
 
-source "$(dirname "${BASH_SOURCE[0]}")/../argument_parsing.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../common/argument_parsing.sh"
 
 show_yang_banner() {
     if ! is_no_color_enabled; then

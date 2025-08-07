@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Coverage HTML Generator - Output Functions
 # Handles output formatting and display for coverage HTML operations

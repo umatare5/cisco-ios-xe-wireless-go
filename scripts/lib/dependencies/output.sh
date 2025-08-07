@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # Dependencies Output Functions
 
 # Color definitions (will be empty if --no-color is used)

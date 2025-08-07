@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 # Cisco WNC Testing Operations - Core Functions
 # Core business logic for testing operations
 

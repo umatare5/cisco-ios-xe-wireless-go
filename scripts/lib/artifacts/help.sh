@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # Artifacts Cleanup Help Functions
 
 show_artifacts_help() {

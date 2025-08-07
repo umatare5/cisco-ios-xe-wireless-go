@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # Artifacts Cleanup Core Functions
 
 # Source common predicates

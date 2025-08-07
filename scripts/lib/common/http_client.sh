@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC HTTP Client Library
 # HTTP communication and request handling functions

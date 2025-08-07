@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Coverage HTML Generator - Help Functions
 # Provides help and documentation functionality for coverage HTML generation

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Script Constants Library
 # Common constants and default values used across all WNC scripts

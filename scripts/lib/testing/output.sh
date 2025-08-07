@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Testing Operations - Output Functions
 # Handles output formatting and display for testing operations

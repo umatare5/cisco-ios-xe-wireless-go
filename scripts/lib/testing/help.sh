@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Cisco WNC Testing Operations - Help Functions
 # Provides help and documentation functionality for testing operations
