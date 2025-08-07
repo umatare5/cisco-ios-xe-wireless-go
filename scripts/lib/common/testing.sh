@@ -52,14 +52,14 @@ run_unit_tests() {
         "WNC_ACCESS_TOKEN="
     )
 
-    # Use gotestsum if available for better output, otherwise fallback to go test
+    # Use gotestsum for better test output
     if command_exists gotestsum; then
         echo "Using gotestsum for enhanced test output..."
         (cd "$project_root" && env "${env_vars[@]}" gotestsum --format testname -- "${test_cmd_args[@]}" ./...)
     else
         echo "gotestsum not found, using go test with verbose output..."
         test_cmd_args+=("-v")
-        (cd "$project_root" && env "${env_vars[@]}" go test "${test_cmd_args[@]}" ./...)
+        (cd "$project_root" && env "${env_vars[@]}" gotestsum --format testname -- "${test_cmd_args[@]}" ./...)
     fi
 
     echo "✓ Unit tests passed"
@@ -108,7 +108,7 @@ run_integration_tests() {
     else
         echo "gotestsum not found, using go test with verbose output..."
         test_cmd_args+=("-v")
-        (cd "$project_root" && go test "${test_cmd_args[@]}" ./...)
+        (cd "$project_root" && gotestsum --format testname -- "${test_cmd_args[@]}" ./...)
     fi
 
     echo "✓ Integration tests passed"
@@ -151,7 +151,7 @@ run_tests_with_coverage() {
         echo "gotestsum not found, using go test with verbose output..."
         test_cmd_args+=("-v")
         # shellcheck disable=SC2086
-        (cd "$project_root" && go test "${test_cmd_args[@]}" $packages)
+        (cd "$project_root" && gotestsum --format testname -- "${test_cmd_args[@]}" $packages)
     fi
 
     if [[ -f "$coverage_file" ]]; then

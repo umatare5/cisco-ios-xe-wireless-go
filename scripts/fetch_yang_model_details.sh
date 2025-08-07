@@ -25,6 +25,9 @@ source "${MODULE_DIR}/help.sh"
 source "${MODULE_DIR}/output.sh"
 source "${MODULE_DIR}/core.sh"
 
+# Validate required CLI tools before proceeding (including curl for API calls)
+validate_required_cli_tools "strict"
+
 # Predicate functions for improved readability
 is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
 is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }

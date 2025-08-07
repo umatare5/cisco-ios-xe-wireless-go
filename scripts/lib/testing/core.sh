@@ -109,11 +109,11 @@ execute_test_command() {
     local exit_code=0
     case "$test_type" in
         "unit"|"coverage")
-            go test "${test_args[@]}" ./... || exit_code=$?
+            gotestsum --format testname -- "${test_args[@]}" ./... || exit_code=$?
             ;;
         "integration")
             # Integration tests with special tags
-            go test "${test_args[@]}" -tags=integration ./... || exit_code=$?
+            gotestsum --format testname -- "${test_args[@]}" -tags=integration ./... || exit_code=$?
             ;;
     esac
 

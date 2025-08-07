@@ -36,6 +36,7 @@ SOURCE_WNC_LIBRARIES() {
     # Array of required libraries in dependency order
     local libraries=(
         "constants.sh"
+        "cli_validation.sh"
         "validation.sh"
         "argument_parsing.sh"
         "dependencies.sh"
