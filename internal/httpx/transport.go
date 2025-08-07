@@ -47,7 +47,7 @@ const (
 func NewTransport(skipVerify bool) *http.Transport {
 	return &http.Transport{
 		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: skipVerify,
+			InsecureSkipVerify: skipVerify, //nolint:gosec // Required for test environments
 		},
 		ForceAttemptHTTP2:     false,
 		DisableKeepAlives:     false,

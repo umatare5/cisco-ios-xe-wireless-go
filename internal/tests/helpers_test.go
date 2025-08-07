@@ -311,7 +311,7 @@ func TestSaveTestDataToFile(t *testing.T) {
 	filename := "test_file.json"
 
 	// We need to create the directory first since we're using a custom path
-	if err := os.MkdirAll(testDataDir, 0755); err != nil {
+	if err := os.MkdirAll(testDataDir, 0o755); err != nil {
 		t.Fatalf("Failed to create test data directory: %v", err)
 	}
 
@@ -322,7 +322,7 @@ func TestSaveTestDataToFile(t *testing.T) {
 		t.Fatalf("Failed to marshal test data: %v", err)
 	}
 
-	if err := os.WriteFile(fullPath, jsonData, 0644); err != nil {
+	if err := os.WriteFile(fullPath, jsonData, 0o644); err != nil {
 		t.Fatalf("Failed to write test file: %v", err)
 	}
 
@@ -385,7 +385,7 @@ func TestSaveTestDataToFile(t *testing.T) {
 		os.RemoveAll(testDir)
 
 		// Create directory and test
-		err := os.MkdirAll(testDir, 0755)
+		err := os.MkdirAll(testDir, 0o755)
 		if err != nil {
 			t.Errorf("Failed to create directory: %v", err)
 		}
@@ -407,7 +407,7 @@ func TestSaveTestDataToFile(t *testing.T) {
 
 		// Test with an invalid path that might cause permission issues
 		invalidPath := "/root/restricted/path"
-		err := os.MkdirAll(invalidPath, 0755)
+		err := os.MkdirAll(invalidPath, 0o755)
 		if err != nil {
 			t.Logf("MkdirAll correctly failed with restricted path: %v", err)
 		} else {
@@ -513,7 +513,7 @@ func TestFileOperations(t *testing.T) {
 	tempDir := t.TempDir()
 	testDir := filepath.Join(tempDir, "nested", "directory")
 
-	err := os.MkdirAll(testDir, 0755)
+	err := os.MkdirAll(testDir, 0o755)
 	if err != nil {
 		t.Fatalf("Failed to create nested directory: %v", err)
 	}
@@ -582,9 +582,9 @@ func TestContextOperations(t *testing.T) {
 
 	select {
 	case <-ctx.Done():
-		// Context was cancelled as expected
+		// Context was canceled as expected
 	default:
-		t.Error("Expected context to be cancelled")
+		t.Error("Expected context to be canceled")
 	}
 }
 

@@ -3,6 +3,7 @@ package wnc
 import (
 	"context"
 	"errors"
+	"net/http"
 	"testing"
 )
 
@@ -23,7 +24,7 @@ func TestAPIErrorStructure(t *testing.T) {
 		t.Errorf("Expected error message '%s', got '%s'", expectedError, apiErr.Error())
 	}
 
-	if apiErr.StatusCode != 404 {
+	if apiErr.StatusCode != http.StatusNotFound {
 		t.Errorf("Expected status code 404, got %d", apiErr.StatusCode)
 	}
 
@@ -38,7 +39,7 @@ func TestAPIErrorStructure(t *testing.T) {
 
 // TestStatusCodeCheckers tests HTTP status code validation functions
 func TestStatusCodeCheckers(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		statusCode int
 		checkFunc  func(int) bool
@@ -68,7 +69,7 @@ func TestStatusCodeCheckers(t *testing.T) {
 		{"Found_403", StatusForbidden, isNotFoundError, false},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := tt.checkFunc(tt.statusCode)
 			if result != tt.expected {
@@ -80,7 +81,7 @@ func TestStatusCodeCheckers(t *testing.T) {
 
 // TestErrorConstants tests predefined error constants
 func TestErrorConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		err      error
 		expected string
@@ -92,7 +93,7 @@ func TestErrorConstants(t *testing.T) {
 		{"RequestTimeout", ErrRequestTimeout, "request timeout"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.err.Error() != tt.expected {
 				t.Errorf("Expected error message '%s', got '%s'", tt.expected, tt.err.Error())
@@ -154,7 +155,7 @@ func TestAPIErrorEdgeCases(t *testing.T) {
 
 // TestHTTPStatusConstants tests HTTP status code constants
 func TestHTTPStatusConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		constant int
 		expected int
@@ -173,7 +174,7 @@ func TestHTTPStatusConstants(t *testing.T) {
 		{"StatusGatewayTimeout", StatusGatewayTimeout, 504},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.constant != tt.expected {
 				t.Errorf("Expected %s to be %d, got %d", tt.name, tt.expected, tt.constant)

@@ -11,7 +11,7 @@ import (
 
 // TestValidationConstants tests validation constants
 func TestValidationConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    int
 		expected int
@@ -24,7 +24,7 @@ func TestValidationConstants(t *testing.T) {
 		{"ValidationTimeoutThreshold", ValidationTimeoutThreshold, 1},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be %d, got %d", tt.name, tt.expected, tt.value)
@@ -39,7 +39,7 @@ func TestValidationConstants(t *testing.T) {
 
 // TestIsValidController tests controller validation
 func TestIsValidController(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		controller string
 		expected   bool
@@ -52,7 +52,7 @@ func TestIsValidController(t *testing.T) {
 		{"ValidHostname", "test.local", true},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidController(tt.controller)
 			if result != tt.expected {
@@ -64,7 +64,7 @@ func TestIsValidController(t *testing.T) {
 
 // TestIsValidAccessToken tests access token validation
 func TestIsValidAccessToken(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		token    string
 		expected bool
@@ -77,7 +77,7 @@ func TestIsValidAccessToken(t *testing.T) {
 		{"TabToken", "\t", true},      // Non-empty string is valid
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidAccessToken(tt.token)
 			if result != tt.expected {
@@ -89,7 +89,7 @@ func TestIsValidAccessToken(t *testing.T) {
 
 // TestIsPositiveTimeout tests timeout validation
 func TestIsPositiveTimeout(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		timeout  time.Duration
 		expected bool
@@ -103,7 +103,7 @@ func TestIsPositiveTimeout(t *testing.T) {
 		{"JustOverOneSecond", 1001 * time.Millisecond, true}, // Just over threshold
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsPositiveTimeout(tt.timeout)
 			if result != tt.expected {
@@ -119,7 +119,7 @@ func TestIsPositiveTimeout(t *testing.T) {
 
 // TestValidationErrorTemplates tests error message templates
 func TestValidationErrorTemplates(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		template string
 		expected string
@@ -130,7 +130,7 @@ func TestValidationErrorTemplates(t *testing.T) {
 		{"InvalidEndpointErrorTemplate", InvalidEndpointErrorTemplate, "%s endpoint has invalid format: %s"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.template != tt.expected {
 				t.Errorf("Expected %s to be '%s', got '%s'", tt.name, tt.expected, tt.template)

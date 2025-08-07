@@ -91,7 +91,7 @@ const (
 // Test constants
 const (
 	// TestAccessTokenValue is a base64 encoded test token for "test:test"
-	TestAccessTokenValue = "dGVzdDp0ZXN0"
+	TestAccessTokenValue = "dGVzdDp0ZXN0" //nolint:gosec // Test credential, not production
 
 	// TestTimestamp defines a standard test timestamp
 	TestTimestamp = "2024-01-01T00:00:00.000Z"

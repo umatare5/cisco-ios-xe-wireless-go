@@ -21,7 +21,12 @@ func newLISPTestDataCollector() *LISPTestDataCollector {
 	}
 }
 
-func runLISPTestAndCollectData(t *testing.T, collector *LISPTestDataCollector, testName string, testFunc func() (interface{}, error)) {
+func runLISPTestAndCollectData(
+	t *testing.T,
+	collector *LISPTestDataCollector,
+	testName string,
+	testFunc func() (interface{}, error),
+) {
 	data, err := testFunc()
 	if err != nil {
 		t.Logf("%s returned error: %v", testName, err)
@@ -52,7 +57,7 @@ func TestLISPServiceStructures(t *testing.T) {
 	}
 
 	// Test JSON serialization/deserialization with sample data
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		jsonData string
 	}{
@@ -66,7 +71,7 @@ func TestLISPServiceStructures(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			var data interface{}
 			err := json.Unmarshal([]byte(tt.jsonData), &data)
@@ -93,7 +98,7 @@ func TestLISPServiceMethods(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	// Table-driven test cases for LISP endpoints
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		testFunc   func() (interface{}, error)
 		shouldFail bool
@@ -105,7 +110,7 @@ func TestLISPServiceMethods(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			data, err := tt.testFunc()
 

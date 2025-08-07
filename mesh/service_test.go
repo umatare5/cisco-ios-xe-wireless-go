@@ -21,7 +21,12 @@ func newMESHTestDataCollector() *MESHTestDataCollector {
 	}
 }
 
-func runMESHTestAndCollectData(t *testing.T, collector *MESHTestDataCollector, testName string, testFunc func() (interface{}, error)) {
+func runMESHTestAndCollectData(
+	t *testing.T,
+	collector *MESHTestDataCollector,
+	testName string,
+	testFunc func() (interface{}, error),
+) {
 	data, err := testFunc()
 	if err != nil {
 		t.Logf("%s returned error: %v", testName, err)
@@ -52,7 +57,7 @@ func TestMESHServiceStructures(t *testing.T) {
 	}
 
 	// Test JSON serialization/deserialization with sample data
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		jsonData string
 	}{
@@ -67,7 +72,7 @@ func TestMESHServiceStructures(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			var data interface{}
 			err := json.Unmarshal([]byte(tt.jsonData), &data)
@@ -94,7 +99,7 @@ func TestMESHServiceMethods(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	// Tamesh-driven test cases for MESH endpoints
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		testFunc   func() (interface{}, error)
 		shouldFail bool
@@ -111,7 +116,7 @@ func TestMESHServiceMethods(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			data, err := tt.testFunc()
 

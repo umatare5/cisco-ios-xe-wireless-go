@@ -11,7 +11,7 @@ import (
 
 // TestNetworkConstants tests network and protocol constants
 func TestNetworkConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    interface{}
 		expected interface{}
@@ -23,7 +23,7 @@ func TestNetworkConstants(t *testing.T) {
 		{"DefaultTimeout", DefaultTimeout, 60 * time.Second},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be %v, got %v", tt.name, tt.expected, tt.value)
@@ -34,7 +34,7 @@ func TestNetworkConstants(t *testing.T) {
 
 // TestTimeoutConstants tests timeout duration constants
 func TestTimeoutConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    interface{}
 		expected interface{}
@@ -46,7 +46,7 @@ func TestTimeoutConstants(t *testing.T) {
 		{"MicroTimeoutMicroseconds", MicroTimeoutMicroseconds, 1},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be %v, got %v", tt.name, tt.expected, tt.value)
@@ -61,7 +61,7 @@ func TestTimeoutConstants(t *testing.T) {
 
 // TestTimeoutDurationConstants tests timeout Duration constants
 func TestTimeoutDurationConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    time.Duration
 		expected time.Duration
@@ -73,7 +73,7 @@ func TestTimeoutDurationConstants(t *testing.T) {
 		{"MicroTimeout", MicroTimeout, 1 * time.Microsecond},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be %v, got %v", tt.name, tt.expected, tt.value)
@@ -84,7 +84,7 @@ func TestTimeoutDurationConstants(t *testing.T) {
 
 // TestEnvironmentVariableConstants tests environment variable names
 func TestEnvironmentVariableConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    string
 		expected string
@@ -93,7 +93,7 @@ func TestEnvironmentVariableConstants(t *testing.T) {
 		{"EnvVarAccessToken", EnvVarAccessToken, "WNC_ACCESS_TOKEN"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be '%s', got '%s'", tt.name, tt.expected, tt.value)
@@ -104,7 +104,7 @@ func TestEnvironmentVariableConstants(t *testing.T) {
 
 // TestDefaultValues tests default value constants
 func TestDefaultValues(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    string
 		expected string
@@ -112,7 +112,7 @@ func TestDefaultValues(t *testing.T) {
 		{"DefaultController", DefaultController, "wnc1.example.internal"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be '%s', got '%s'", tt.name, tt.expected, tt.value)
@@ -123,7 +123,7 @@ func TestDefaultValues(t *testing.T) {
 
 // TestDocumentationConstants tests documentation and example constants
 func TestDocumentationConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    string
 		expected string
@@ -134,7 +134,7 @@ func TestDocumentationConstants(t *testing.T) {
 		{"ExampleTestHostname", ExampleTestHostname, "test.local"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be '%s', got '%s'", tt.name, tt.expected, tt.value)
@@ -145,7 +145,7 @@ func TestDocumentationConstants(t *testing.T) {
 
 // TestTestConstants tests test-related constants
 func TestTestConstants(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		value    interface{}
 		expected interface{}
@@ -156,7 +156,7 @@ func TestTestConstants(t *testing.T) {
 		{"ExampleTimeoutSeconds", ExampleTimeoutSeconds, 20},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.value != tt.expected {
 				t.Errorf("Expected %s to be %v, got %v", tt.name, tt.expected, tt.value)
@@ -186,7 +186,11 @@ func TestTimeoutConsistency(t *testing.T) {
 	}
 
 	if ExtendedTimeout >= ComprehensiveTimeout {
-		t.Errorf("Expected ExtendedTimeout (%v) to be less than ComprehensiveTimeout (%v)", ExtendedTimeout, ComprehensiveTimeout)
+		t.Errorf(
+			"Expected ExtendedTimeout (%v) to be less than ComprehensiveTimeout (%v)",
+			ExtendedTimeout,
+			ComprehensiveTimeout,
+		)
 	}
 
 	// Test MicroTimeout is very small
@@ -225,7 +229,7 @@ func TestExampleValues(t *testing.T) {
 	t.Run("HostnameFormat", func(t *testing.T) {
 		// Test that example hostname contains a dot
 		hostname := ExampleControllerHostname
-		if len(hostname) == 0 {
+		if hostname == "" {
 			t.Error("Expected non-empty hostname")
 		}
 	})
@@ -233,7 +237,7 @@ func TestExampleValues(t *testing.T) {
 	t.Run("TestAccessTokenFormat", func(t *testing.T) {
 		// Test that test token is base64-like
 		token := TestAccessTokenValue
-		if len(token) == 0 {
+		if token == "" {
 			t.Error("Expected non-empty test token")
 		}
 	})

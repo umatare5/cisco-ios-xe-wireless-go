@@ -36,7 +36,9 @@ func (s Service) Oper(ctx context.Context) (*model.McastOperResponse, error) {
 }
 
 // FlexMediastreamClientSummary returns FlexConnect mediastream client summary data.
-func (s Service) FlexMediastreamClientSummary(ctx context.Context) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
+func (s Service) FlexMediastreamClientSummary(
+	ctx context.Context,
+) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
 	var out model.McastOperFlexMediastreamClientSummaryResponse
 	return &out, s.c.Do(ctx, http.MethodGet, FlexMediastreamClientSummaryEndpoint, &out)
 }

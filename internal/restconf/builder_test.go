@@ -24,7 +24,7 @@ func TestNewBuilder(t *testing.T) {
 }
 
 func TestBuildBaseURL(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		protocol   string
 		controller string
@@ -35,7 +35,7 @@ func TestBuildBaseURL(t *testing.T) {
 		{"HTTPS with port", "https", "wnc.example.com:8443", "https://wnc.example.com:8443"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			builder := NewBuilder(tt.protocol, tt.controller)
 			baseURL := builder.BuildBaseURL()
@@ -50,18 +50,34 @@ func TestBuildBaseURL(t *testing.T) {
 func TestBuildRESTCONFURL(t *testing.T) {
 	builder := NewBuilder("https", "192.168.1.100")
 
-	tests := []struct {
+	testCases := []struct {
 		name         string
 		endpointPath string
 		expected     string
 	}{
-		{"endpoint with leading slash", "/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data", "https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"},
-		{"endpoint without leading slash", "Cisco-IOS-XE-wireless-ap-oper:ap-oper-data", "https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data"},
-		{"empty endpoint", "", "https://192.168.1.100/restconf/data/"},
-		{"complex endpoint", "/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces", "https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces"},
+		{
+			"endpoint with leading slash",
+			"/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data",
+			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data",
+		},
+		{
+			"endpoint without leading slash",
+			"Cisco-IOS-XE-wireless-ap-oper:ap-oper-data",
+			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data",
+		},
+		{
+			"empty endpoint",
+			"",
+			"https://192.168.1.100/restconf/data/",
+		},
+		{
+			"complex endpoint",
+			"/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces",
+			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces",
+		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			url := builder.BuildRESTCONFURL(tt.endpointPath)
 
@@ -75,7 +91,7 @@ func TestBuildRESTCONFURL(t *testing.T) {
 func TestNormalizeEndpointPath(t *testing.T) {
 	builder := NewBuilder("https", "192.168.1.100")
 
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		path     string
 		expected string
@@ -87,7 +103,7 @@ func TestNormalizeEndpointPath(t *testing.T) {
 		{"complex path", "path/to/endpoint", "/path/to/endpoint"},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			normalized := builder.normalizeEndpointPath(tt.path)
 
@@ -111,7 +127,7 @@ func TestBuildYANGLibraryURL(t *testing.T) {
 func TestBuildYANGModuleURL(t *testing.T) {
 	builder := NewBuilder("https", "wnc.example.com")
 
-	tests := []struct {
+	testCases := []struct {
 		name      string
 		yangModel string
 		revision  string
@@ -131,7 +147,7 @@ func TestBuildYANGModuleURL(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			url := builder.BuildYANGModuleURL(tt.yangModel, tt.revision)
 
@@ -155,7 +171,7 @@ func TestBuildEndpointURL(t *testing.T) {
 }
 
 func TestIsValidProtocol(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		protocol string
 		expected bool
 	}{
@@ -168,7 +184,7 @@ func TestIsValidProtocol(t *testing.T) {
 		{"tcp", false},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.protocol, func(t *testing.T) {
 			result := IsValidProtocol(tt.protocol)
 
@@ -180,7 +196,7 @@ func TestIsValidProtocol(t *testing.T) {
 }
 
 func TestIsValidYANGModel(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name      string
 		yangModel string
 		expected  bool
@@ -195,7 +211,7 @@ func TestIsValidYANGModel(t *testing.T) {
 		{"wrong prefix case", "cisco-ios-xe-wireless-afc-oper", false},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidYANGModel(tt.yangModel)
 
@@ -207,7 +223,7 @@ func TestIsValidYANGModel(t *testing.T) {
 }
 
 func TestHasValidYANGPrefix(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		model    string
 		expected bool
@@ -218,7 +234,7 @@ func TestHasValidYANGPrefix(t *testing.T) {
 		{"just prefix", "Cisco-IOS-XE-wireless-", true},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := hasValidYANGPrefix(tt.model)
 
@@ -230,7 +246,7 @@ func TestHasValidYANGPrefix(t *testing.T) {
 }
 
 func TestHasValidYANGSuffix(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		model    string
 		expected bool
@@ -243,7 +259,7 @@ func TestHasValidYANGSuffix(t *testing.T) {
 		{"just cfg suffix", "-cfg", true},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := hasValidYANGSuffix(tt.model)
 
@@ -255,7 +271,7 @@ func TestHasValidYANGSuffix(t *testing.T) {
 }
 
 func TestIsValidRevision(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		revision string
 		expected bool
@@ -273,7 +289,7 @@ func TestIsValidRevision(t *testing.T) {
 		{"empty string", "", false},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidRevision(tt.revision)
 
@@ -285,7 +301,7 @@ func TestIsValidRevision(t *testing.T) {
 }
 
 func TestHasValidDateFormat(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		revision string
 		expected bool
@@ -296,7 +312,7 @@ func TestHasValidDateFormat(t *testing.T) {
 		{"wrong separator positions", "21-07-011", false},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := hasValidDateFormat(tt.revision)
 
@@ -308,7 +324,7 @@ func TestHasValidDateFormat(t *testing.T) {
 }
 
 func TestHasValidDateComponents(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		revision string
 		expected bool
@@ -319,7 +335,7 @@ func TestHasValidDateComponents(t *testing.T) {
 		{"non-numeric day", "2021-07-ab", false},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := hasValidDateComponents(tt.revision)
 
@@ -331,7 +347,7 @@ func TestHasValidDateComponents(t *testing.T) {
 }
 
 func TestIsDigits(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		input    string
 		expected bool
@@ -345,7 +361,7 @@ func TestIsDigits(t *testing.T) {
 		{"leading zero", "0123", true},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := isDigits(tt.input)
 

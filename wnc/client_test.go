@@ -22,7 +22,7 @@ const (
 // TestNewClient tests the new core client creation
 func TestNewClient(t *testing.T) {
 	controller := "test.example.com"
-	token := "dGVzdDp0ZXN0" // base64 encoded "test:test"
+	token := "dGVzdDp0ZXN0" // base64 enc			t.Error("Expected error for canceled context, got nil")		t.Error("Expected error for canceled context, got nil")ded "test:test"
 
 	t.Run("ValidClient", func(t *testing.T) {
 		client, err := New(controller, token)
@@ -156,7 +156,7 @@ func TestHTTPError(t *testing.T) {
 // ========================================
 
 func TestClientOptionsExtra(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name   string
 		option Option
 		test   func(*Client) error
@@ -197,7 +197,7 @@ func TestClientOptionsExtra(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			client, err := New("example.com", "token", tt.option)
 			if err != nil {
@@ -241,7 +241,7 @@ func TestServiceAccessors(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		accessor func() interface{}
 	}{
@@ -359,7 +359,7 @@ func TestServiceAccessors(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run("ServiceAccessor_"+tt.name, func(t *testing.T) {
 			// Service accessors currently return nil as placeholders
 			// This test ensures they can be called without panicking
@@ -391,13 +391,13 @@ func TestDoMethodErrorHandling(t *testing.T) {
 		t.Error("Expected error for invalid host, got nil")
 	}
 
-	// Test with cancelled context
-	cancelledCtx, cancel := context.WithCancel(context.Background())
+	// Test with canceled context
+	canceledCtx, cancel := context.WithCancel(context.Background())
 	cancel()
 
-	err = client.Do(cancelledCtx, "GET", "/test", &response)
+	err = client.Do(canceledCtx, "GET", "/test", &response)
 	if err == nil {
-		t.Error("Expected error for cancelled context, got nil")
+		t.Error("Expected error for canceled context, got nil")
 	}
 }
 
@@ -906,7 +906,7 @@ func TestCloseResponseBodyErrorHandling(t *testing.T) {
 
 	// Create a simple HTTP response for testing with our mock body
 	resp := &http.Response{
-		StatusCode: 200,
+		StatusCode: http.StatusOK,
 		Body:       mockReader,
 	}
 

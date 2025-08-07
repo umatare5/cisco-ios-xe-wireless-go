@@ -104,7 +104,7 @@ func TestGeolocationService(t *testing.T) {
 
 	// Test JSON serialization/deserialization
 	t.Run("JSON_Serialization", func(t *testing.T) {
-		tests := []struct {
+		testCases := []struct {
 			name     string
 			jsonData string
 		}{
@@ -119,7 +119,7 @@ func TestGeolocationService(t *testing.T) {
 			},
 		}
 
-		for _, tt := range tests {
+		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				var data interface{}
 				err := json.Unmarshal([]byte(tt.jsonData), &data)
@@ -140,7 +140,7 @@ func TestGeolocationService(t *testing.T) {
 	// ========================================
 
 	t.Run("Method_Tests", func(t *testing.T) {
-		tests := []struct {
+		methodTests := []struct {
 			name   string
 			method func() (interface{}, error)
 		}{
@@ -158,7 +158,7 @@ func TestGeolocationService(t *testing.T) {
 			},
 		}
 
-		for _, tt := range tests {
+		for _, tt := range methodTests {
 			t.Run(tt.name, func(t *testing.T) {
 				result, err := tt.method()
 				if err != nil {

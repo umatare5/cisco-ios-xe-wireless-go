@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewTransport(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		skipVerify bool
 	}{
@@ -15,7 +15,7 @@ func TestNewTransport(t *testing.T) {
 		{"with TLS verification disabled", true},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			transport := NewTransport(tt.skipVerify)
 
@@ -36,7 +36,11 @@ func TestNewTransport(t *testing.T) {
 			}
 
 			if transport.ResponseHeaderTimeout != DefaultResponseHeaderTimeout {
-				t.Errorf("ResponseHeaderTimeout = %v, want %v", transport.ResponseHeaderTimeout, DefaultResponseHeaderTimeout)
+				t.Errorf(
+					"ResponseHeaderTimeout = %v, want %v",
+					transport.ResponseHeaderTimeout,
+					DefaultResponseHeaderTimeout,
+				)
 			}
 
 			if transport.IdleConnTimeout != DefaultIdleConnTimeout {

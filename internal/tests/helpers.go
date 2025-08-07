@@ -75,7 +75,7 @@ func SkipIfNoConnection(t *testing.T, client *wnc.Client) {
 // SaveTestDataToFile saves test data to a JSON file
 func SaveTestDataToFile(filename string, data interface{}) error {
 	// Create test_data directory if it doesn't exist
-	if err := os.MkdirAll(TestDataDir, 0755); err != nil {
+	if err := os.MkdirAll(TestDataDir, 0o755); err != nil { //nolint:gosec // Test directory permissions
 		return err
 	}
 
@@ -89,5 +89,5 @@ func SaveTestDataToFile(filename string, data interface{}) error {
 	}
 
 	// Write to file
-	return os.WriteFile(fullPath, jsonData, 0644)
+	return os.WriteFile(fullPath, jsonData, 0o644) //nolint:gosec // Test file permissions
 }

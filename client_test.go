@@ -10,7 +10,7 @@ import (
 
 // TestNewClient tests the creation of a new unified client
 func TestNewClient(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name        string
 		host        string
 		token       string
@@ -47,7 +47,7 @@ func TestNewClient(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			client, err := NewClient(tt.host, tt.token, tt.opts...)
 

@@ -21,7 +21,12 @@ func newNMSPTestDataCollector() *NMSPTestDataCollector {
 	}
 }
 
-func runNMSPTestAndCollectData(t *testing.T, collector *NMSPTestDataCollector, testName string, testFunc func() (interface{}, error)) {
+func runNMSPTestAndCollectData(
+	t *testing.T,
+	collector *NMSPTestDataCollector,
+	testName string,
+	testFunc func() (interface{}, error),
+) {
 	data, err := testFunc()
 	if err != nil {
 		t.Logf("%s returned error: %v", testName, err)
@@ -52,7 +57,7 @@ func TestNMSPServiceStructures(t *testing.T) {
 	}
 
 	// Test JSON serialization/deserialization with sample data
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		jsonData string
 	}{
@@ -67,7 +72,7 @@ func TestNMSPServiceStructures(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			var data interface{}
 			err := json.Unmarshal([]byte(tt.jsonData), &data)
@@ -94,7 +99,7 @@ func TestNMSPServiceMethods(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	// Tanmsp-driven test cases for NMSP endpoints
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		testFunc   func() (interface{}, error)
 		shouldFail bool
@@ -121,7 +126,7 @@ func TestNMSPServiceMethods(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			data, err := tt.testFunc()
 

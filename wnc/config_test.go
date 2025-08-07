@@ -50,7 +50,7 @@ func TestConfigStructure(t *testing.T) {
 
 // TestConfigDefaults tests Config with default values
 func TestConfigDefaults(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name   string
 		config Config
 	}{
@@ -59,7 +59,7 @@ func TestConfigDefaults(t *testing.T) {
 		{"MinimalConfig", Config{Controller: "test.com", AccessToken: "token"}},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			// Test that config can be created with various combinations
 			config := tt.config
@@ -93,7 +93,7 @@ func TestConfigDefaults(t *testing.T) {
 
 // TestConfigValidation tests various configuration scenarios
 func TestConfigValidation(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name               string
 		controller         string
 		accessToken        string
@@ -149,7 +149,7 @@ func TestConfigValidation(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			config := Config{
 				Controller:         tt.controller,
@@ -175,7 +175,11 @@ func TestConfigValidation(t *testing.T) {
 			}
 
 			if config.InsecureSkipVerify != tt.insecureSkipVerify {
-				t.Errorf("Expected InsecureSkipVerify to be %v, got %v", tt.insecureSkipVerify, config.InsecureSkipVerify)
+				t.Errorf(
+					"Expected InsecureSkipVerify to be %v, got %v",
+					tt.insecureSkipVerify,
+					config.InsecureSkipVerify,
+				)
 			}
 
 			if config.Logger != tt.logger {
@@ -268,31 +272,35 @@ func TestConfigCopy(t *testing.T) {
 	}
 
 	// Test struct copy
-	copy := original
+	cloned := original
 
 	// Verify copy has same values
-	if copy.Controller != original.Controller {
-		t.Errorf("Expected Controller to be copied, got '%s' vs '%s'", copy.Controller, original.Controller)
+	if cloned.Controller != original.Controller {
+		t.Errorf("Expected Controller to be copied, got '%s' vs '%s'", cloned.Controller, original.Controller)
 	}
 
-	if copy.AccessToken != original.AccessToken {
-		t.Errorf("Expected AccessToken to be copied, got '%s' vs '%s'", copy.AccessToken, original.AccessToken)
+	if cloned.AccessToken != original.AccessToken {
+		t.Errorf("Expected AccessToken to be copied, got '%s' vs '%s'", cloned.AccessToken, original.AccessToken)
 	}
 
-	if copy.Timeout != original.Timeout {
-		t.Errorf("Expected Timeout to be copied, got %v vs %v", copy.Timeout, original.Timeout)
+	if cloned.Timeout != original.Timeout {
+		t.Errorf("Expected Timeout to be copied, got %v vs %v", cloned.Timeout, original.Timeout)
 	}
 
-	if copy.InsecureSkipVerify != original.InsecureSkipVerify {
-		t.Errorf("Expected InsecureSkipVerify to be copied, got %v vs %v", copy.InsecureSkipVerify, original.InsecureSkipVerify)
+	if cloned.InsecureSkipVerify != original.InsecureSkipVerify {
+		t.Errorf(
+			"Expected InsecureSkipVerify to be copied, got %v vs %v",
+			cloned.InsecureSkipVerify,
+			original.InsecureSkipVerify,
+		)
 	}
 
-	if copy.Logger != original.Logger {
+	if cloned.Logger != original.Logger {
 		t.Error("Expected Logger to be copied (same reference)")
 	}
 
 	// Test that modifying copy doesn't affect original
-	copy.Controller = "modified.com"
+	cloned.Controller = "modified.com"
 	if original.Controller == "modified.com" {
 		t.Error("Expected original Controller to remain unchanged")
 	}

@@ -39,7 +39,7 @@ func TestEmptyStructsJSONMarshal(t *testing.T) {
 
 // TestJSONUnmarshalRoundTrip tests that marshaled JSON can be unmarshaled back
 func TestJSONUnmarshalRoundTrip(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name string
 		data interface{}
 	}{
@@ -48,7 +48,7 @@ func TestJSONUnmarshalRoundTrip(t *testing.T) {
 		{"ApCfgResponse", &ApCfgResponse{}},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			// Marshal to JSON
 			jsonData, err := json.Marshal(tt.data)

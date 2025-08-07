@@ -5,6 +5,7 @@ package wnc
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -58,7 +59,7 @@ func WithInsecureSkipVerify(skip bool) Option {
 func WithLogger(logger *slog.Logger) Option {
 	return func(c *Client) error {
 		if logger == nil {
-			return fmt.Errorf("logger cannot be nil")
+			return errors.New("logger cannot be nil")
 		}
 		c.logger = logger
 		return nil
@@ -81,7 +82,7 @@ func New(host, token string, opts ...Option) (*Client, error) {
 		return nil, fmt.Errorf("invalid controller address: %s", host)
 	}
 	if !validation.IsValidAccessToken(token) {
-		return nil, fmt.Errorf("invalid access token")
+		return nil, errors.New("invalid access token")
 	} // Create HTTP transport with default settings
 	transport := httpx.NewTransport(false) // Default to secure
 
@@ -145,13 +146,13 @@ func (c *Client) Do(ctx context.Context, method, path string, out any) error {
 // validateDoParameters validates input parameters for the Do method
 func (c *Client) validateDoParameters(ctx context.Context, out any) error {
 	if c == nil {
-		return fmt.Errorf("client cannot be nil")
+		return errors.New("client cannot be nil")
 	}
 	if ctx == nil {
-		return fmt.Errorf("context cannot be nil")
+		return errors.New("context cannot be nil")
 	}
 	if out == nil {
-		return fmt.Errorf("output parameter cannot be nil")
+		return errors.New("output parameter cannot be nil")
 	}
 	return nil
 }
@@ -160,7 +161,7 @@ func (c *Client) validateDoParameters(ctx context.Context, out any) error {
 func (c *Client) createRequest(ctx context.Context, method, path string) (*http.Request, error) {
 	url := c.rest.BuildRESTCONFURL(path)
 
-	req, err := http.NewRequestWithContext(ctx, method, url, nil)
+	req, err := http.NewRequestWithContext(ctx, method, url, http.NoBody)
 	if err != nil {
 		c.logger.Error("Failed to create HTTP request", "error", err, "url", url)
 		return nil, fmt.Errorf("failed to create request: %w", err)
