@@ -9,7 +9,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODULE_DIR="${SCRIPT_DIR}/lib/pre_commit_validation"
+MODULE_DIR="${SCRIPT_DIR}/lib/pre_commit_validation_test"
 
 # Source shared libraries
 source "${SCRIPT_DIR}/lib/common/common.sh"
@@ -20,9 +20,9 @@ init_script_libraries "$SCRIPT_DIR" "$MODULE_DIR"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "minimal"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_enabled "${argc_verbose:-0}"; }
-is_no_color_enabled() { is_enabled "${argc_no_color:-0}"; }
+# Predicate functions for improved readability
+is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
+is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }
 
 main() {
     run_pre_commit_validation

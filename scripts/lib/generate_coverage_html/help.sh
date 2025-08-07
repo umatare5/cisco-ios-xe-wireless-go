@@ -55,7 +55,7 @@ REQUIREMENTS:
     - Coverage data file must exist (run coverage tests first)
 
 WORKFLOW:
-    1. Run coverage tests: ./scripts/run_coverage_tests.sh
+    1. Run coverage tests: ./scripts/test_coverage.sh
     2. Generate HTML report: ./scripts/generate_coverage_html.sh
     3. Open report in browser: open ./tmp/coverage.html
 

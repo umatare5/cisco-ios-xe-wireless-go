@@ -37,8 +37,8 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 ./scripts/lint_code.sh
 
 # Execute test suites
-./scripts/run_unit_tests.sh --short
-./scripts/run_coverage_tests.sh --short
+./scripts/test_unit.sh --short
+./scripts/test_coverage.sh --short
 
 # List available YANG models
 ./scripts/list_yang_models.sh --insecure
@@ -61,9 +61,9 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 
 | Script | Purpose | Key Options |
 |--------|---------|-------------|
-| `run_unit_tests.sh` | Execute unit tests | `--short`, `--coverage`, `--verbose` |
-| `run_integration_tests.sh` | Execute integration tests | `--check-env-only`, `--timeout <duration>` |
-| `run_coverage_tests.sh` | Generate coverage reports | `--short`, `--html` |
+| `test_unit.sh` | Execute unit tests | `--short`, `--coverage`, `--verbose` |
+| `test_integration.sh` | Execute integration tests | `--check-env-only`, `--timeout <duration>` |
+| `test_coverage.sh` | Generate coverage reports | `--short`, `--html` |
 | `generate_coverage_html.sh` | Generate HTML coverage | `--input <file>`, `--output <file>` |
 
 ### YANG Operations Scripts
@@ -73,8 +73,6 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 | `list_yang_models.sh` | List available YANG models | `--insecure`, `--format <json\|xml>` |
 | `get_yang_model_details.sh` | Get specific model details | `--insecure`, `--verbose` |
 | `get_yang_statement_details.sh` | Get statement details | `--insecure`, `--verbose` |
-| `fetch_yang_model_details.sh` | Fetch model from controller | `--output <file>`, `--raw` |
-| `fetch_yang_statement_details.sh` | Fetch statement from controller | `--statement <name>`, `--output <file>` |
 
 ### Utility Scripts
 
@@ -90,8 +88,8 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 # Complete development cycle
 ./scripts/install_dependencies.sh --clean    # Fresh dependency install
 ./scripts/lint_code.sh --fix                 # Auto-fix code issues
-./scripts/run_unit_tests.sh --coverage       # Test with coverage
-./scripts/run_integration_tests.sh           # Full integration tests
+./scripts/test_unit.sh --coverage       # Test with coverage
+./scripts/test_integration.sh           # Full integration tests
 ./scripts/clean_artifacts.sh                 # Clean up
 ```
 
@@ -104,8 +102,8 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 # Get detailed model information
 ./scripts/get_yang_model_details.sh --insecure wireless-access-point
 
-# Fetch model data from controller
-./scripts/fetch_yang_model_details.sh --output model.json wireless-client
+# Get model data from controller
+./scripts/get_yang_model_details.sh --format json wireless-client
 
 # Get statement details
 ./scripts/get_yang_statement_details.sh --insecure ieee802-dot11 module
@@ -115,10 +113,10 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 
 ```bash
 # Test environment validation
-./scripts/run_integration_tests.sh --check-env-only
+./scripts/test_integration.sh --check-env-only
 
 # Coverage analysis with HTML output
-./scripts/run_coverage_tests.sh --short
+./scripts/test_coverage.sh --short
 ./scripts/generate_coverage_html.sh --input ./tmp/coverage.out
 
 # Dependency management

@@ -7,12 +7,11 @@
 # For specific script options, use: ./scripts/<script_name>.sh --help
 
 .PHONY: help clean deps lint test-unit test-integration test-coverage \
-        test-coverage-html build yang-list yang-model yang-statement \
-        fetch-yang-model fetch-yang-statement
+        test-coverage-html build yang-list yang-model yang-statement
 
 # Default target
 help:
-	@./scripts/show_help.sh
+	@./scripts/help.sh
 
 # Clean build artifacts
 clean:
@@ -28,15 +27,15 @@ lint:
 
 # Run unit tests only
 test-unit:
-	@./scripts/run_unit_tests.sh
+	@./scripts/test_unit.sh
 
 # Run integration tests (requires environment variables)
 test-integration:
-	@./scripts/run_integration_tests.sh
+	@./scripts/test_integration.sh
 
 # Run tests with coverage analysis
 test-coverage:
-	@./scripts/run_coverage_tests.sh
+	@./scripts/test_coverage.sh
 
 # Generate HTML coverage report
 test-coverage-html:
@@ -51,27 +50,12 @@ build:
 yang-list:
 	@./scripts/list_yang_models.sh
 
-# Get YANG model details (usage: make yang-model MODEL=model-name)
+# Get YANG model details from controller
+# (usage: make yang-model MODEL=model-name)
 yang-model:
-	@./scripts/get_yang_model_details.sh \
-		$(if $(MODEL),--model $(MODEL),)
+	@./scripts/get_yang_model_details.sh $(MODEL)
 
-# Get YANG statement details (usage: make yang-statement MODEL=model-name
-# STATEMENT=statement-name)
+# Get YANG statement details from controller
+# (usage: make yang-statement MODEL=model-name STATEMENT=statement-name)
 yang-statement:
-	@./scripts/get_yang_statement_details.sh \
-		$(if $(MODEL),--model $(MODEL),) \
-		$(if $(STATEMENT),--statement $(STATEMENT),)
-
-# Fetch YANG model details from controller
-# (usage: make fetch-yang-model MODEL=model-name)
-fetch-yang-model:
-	@./scripts/fetch_yang_model_details.sh \
-		$(if $(MODEL),--model $(MODEL),)
-
-# Fetch YANG statement details from controller
-# (usage: make fetch-yang-statement MODEL=model-name STATEMENT=statement-name)
-fetch-yang-statement:
-	@./scripts/fetch_yang_statement_details.sh \
-		$(if $(MODEL),--model $(MODEL),) \
-		$(if $(STATEMENT),--statement $(STATEMENT),)
+	@./scripts/get_yang_statement_details.sh $(MODEL) $(STATEMENT)

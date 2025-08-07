@@ -28,7 +28,7 @@ show_unit_test_help() {
     show_test_banner "Unit"
     cat << 'EOF'
 USAGE:
-    run_unit_tests.sh [OPTIONS]
+    test_unit.sh [OPTIONS]
 
 DESCRIPTION:
     Runs Go unit tests for the Cisco IOS-XE wireless library.
@@ -44,16 +44,16 @@ OPTIONS:
 
 EXAMPLES:
     # Run basic unit tests
-    run_unit_tests.sh
+    test_unit.sh
 
     # Run with coverage
-    run_unit_tests.sh --coverage
+    test_unit.sh --coverage
 
     # Run in short mode
-    run_unit_tests.sh --short
+    test_unit.sh --short
 
     # Verbose output with custom timeout
-    run_unit_tests.sh --verbose --timeout 60s
+    test_unit.sh --verbose --timeout 60s
 
 EOF
 }
@@ -62,7 +62,7 @@ show_coverage_test_help() {
     show_test_banner "Coverage"
     cat << 'EOF'
 USAGE:
-    run_coverage_tests.sh [OPTIONS]
+    test_coverage.sh [OPTIONS]
 
 DESCRIPTION:
     Runs Go tests with coverage analysis and generates coverage reports.
@@ -80,13 +80,13 @@ OPTIONS:
 
 EXAMPLES:
     # Basic coverage test
-    run_coverage_tests.sh
+    test_coverage.sh
 
     # Generate HTML report
-    run_coverage_tests.sh --html
+    test_coverage.sh --html
 
     # Generate and open HTML report
-    run_coverage_tests.sh --html --open
+    test_coverage.sh --html --open
 
 EOF
 }
@@ -95,7 +95,7 @@ show_integration_test_help() {
     show_test_banner "Integration"
     cat << 'EOF'
 USAGE:
-    run_integration_tests.sh [OPTIONS]
+    test_integration.sh [OPTIONS]
 
 DESCRIPTION:
     Runs integration tests against live WNC controllers.
@@ -114,10 +114,10 @@ ENVIRONMENT:
 
 EXAMPLES:
     # Run integration tests
-    run_integration_tests.sh
+    test_integration.sh
 
     # Run with extended timeout
-    run_integration_tests.sh --timeout 300s
+    test_integration.sh --timeout 300s
 
 EOF
 }

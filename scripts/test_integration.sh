@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 # @meta version 1.0.0
 # @meta author "@umatare5"
-# @describe Generate HTML coverage report from coverage data
+# @describe Integration Tests - Run Go integration tests against WNC controllers
 
 # @option -p --project <DIR>           Project root directory [default: .]
-# @option -i --input <FILE>            Coverage input file [default: ./tmp/coverage.out]
-# @option -o --output <FILE>           HTML output file [default: ./tmp/coverage.html]
-# @flag   -v --verbose                 Enable verbose output
+# @flag   -v --verbose                 Enable verbose test output
+# @flag      --race                    Enable race detection [default: true]
+# @option -t --timeout <DURATION>      Test timeout [default: 10m]
+# @option    --package <PATTERN>       Package pattern to test [default: ./...]
+# @flag      --check-env-only          Only check environment without running tests
 # @flag      --no-color                Disable colored output
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODULE_DIR="${SCRIPT_DIR}/lib/generate_coverage_html"
+MODULE_DIR="${SCRIPT_DIR}/lib/testing"
 
 # Source shared libraries
 source "${SCRIPT_DIR}/lib/common/common.sh"
@@ -26,12 +28,11 @@ validate_required_cli_tools "standard"
 # Predicate functions for improved readability using argc validation helpers
 is_verbose_enabled() { is_enabled "${argc_verbose:-0}"; }
 is_no_color_enabled() { is_enabled "${argc_no_color:-0}"; }
-is_file_exists() { [[ -f "${1:-}" ]]; }
-is_directory_exists() { [[ -d "${1:-}" ]]; }
+is_check_env_only() { is_true "${argc_check_env_only:-false}"; }
 is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
 
 main() {
-    run_coverage_html_operation
+    run_integration_test_operation
 }
 
 eval "$(argc --argc-eval "$0" "$@")"

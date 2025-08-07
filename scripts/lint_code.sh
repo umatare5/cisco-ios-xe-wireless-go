@@ -16,20 +16,17 @@ MODULE_DIR="${SCRIPT_DIR}/lib/lint_code"
 
 # Source shared libraries
 source "${SCRIPT_DIR}/lib/common/common.sh"
-SOURCE_WNC_LIBRARIES "$SCRIPT_DIR"
 
-# Source module-specific libraries
-source "${MODULE_DIR}/help.sh"
-source "${MODULE_DIR}/output.sh"
-source "${MODULE_DIR}/core.sh"
+# Initialize all libraries using unified function
+init_script_libraries "$SCRIPT_DIR" "$MODULE_DIR"
 
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
 
-# Predicate functions for improved readability
-is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
-is_auto_fix_enabled() { [[ "${argc_fix:-false}" == "true" ]]; }
-is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }
+# Predicate functions for improved readability using argc validation helpers
+is_verbose_enabled() { is_enabled "${argc_verbose:-0}"; }
+is_auto_fix_enabled() { is_true "${argc_fix:-false}"; }
+is_no_color_enabled() { is_enabled "${argc_no_color:-0}"; }
 is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
 has_golangci_lint() { is_command_available golangci-lint; }
 

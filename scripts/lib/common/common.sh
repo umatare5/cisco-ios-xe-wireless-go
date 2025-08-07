@@ -9,15 +9,15 @@ is_valid_directory() {
 }
 
 is_verbose_enabled() {
-    [[ "${argc_verbose:-0}" == "1" ]]
+    is_enabled "${argc_verbose:-0}"
 }
 
 is_no_color_enabled() {
-    [[ "${argc_no_color:-0}" == "1" ]]
+    is_enabled "${argc_no_color:-0}"
 }
 
 is_insecure_enabled() {
-    [[ "${argc_insecure:-0}" == "1" ]]
+    is_enabled "${argc_insecure:-0}"
 }
 
 validate_project_directory() {
@@ -30,7 +30,7 @@ has_golangci_lint() {
 }
 
 # Function to source all required WNC libraries
-SOURCE_WNC_LIBRARIES() {
+source_wnc_libraries() {
     local script_dir="$1"
 
     # Array of required libraries in dependency order
@@ -76,7 +76,7 @@ INIT_SCRIPT_ENVIRONMENT() {
     readonly script_dir
 
     # Load all WNC libraries
-    SOURCE_WNC_LIBRARIES "$script_dir"
+    source_wnc_libraries "$script_dir"
 
     # Set global variables for caller
     export WNC_SCRIPT_DIR="$script_dir"
@@ -99,3 +99,44 @@ INIT_SIMPLE_SCRIPT() {
 
     echo "$script_dir"
 }
+
+# Function to source module-specific libraries
+source_module_libraries() {
+    local module_dir="$1"
+
+    # Standard module libraries in dependency order
+    local libraries=(
+        "help.sh"
+        "output.sh"
+        "core.sh"
+    )
+
+    # Source each library if it exists
+    for lib in "${libraries[@]}"; do
+        local lib_path="${module_dir}/${lib}"
+        if [[ -f "$lib_path" ]]; then
+            # shellcheck source=/dev/null
+            source "$lib_path"
+        fi
+    done
+}
+
+# Unified script initialization function
+init_script_libraries() {
+    local script_dir="$1"
+    local module_dir="$2"
+
+    # Load all WNC common libraries
+    source_wnc_libraries "$script_dir"
+
+    # Load module-specific libraries
+    source_module_libraries "$module_dir"
+}
+
+# argc predicate functions for clean conditional logic
+is_true() { [[ "${1:-false}" == "true" ]]; }
+is_false() { [[ "${1:-false}" == "false" ]]; }
+is_one() { [[ "${1:-0}" == "1" ]]; }
+is_zero() { [[ "${1:-0}" == "0" ]]; }
+is_enabled() { is_one "$1"; }
+is_disabled() { is_zero "$1"; }

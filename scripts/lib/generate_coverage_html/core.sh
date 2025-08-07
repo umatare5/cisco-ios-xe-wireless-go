@@ -21,7 +21,7 @@ validate_coverage_environment() {
     # Check if input coverage file exists
     if ! is_file_exists "$input_file"; then
         format_coverage_error "Coverage file not found: $input_file"
-        format_coverage_info "Run coverage tests first: ./scripts/run_coverage_tests.sh"
+        format_coverage_info "Run coverage tests first: ./scripts/test_coverage.sh"
         return 1
     fi
 

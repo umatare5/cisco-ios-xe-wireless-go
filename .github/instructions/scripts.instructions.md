@@ -51,7 +51,7 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common/common.sh
 source "${SCRIPT_DIR}/lib/common/common.sh"
 
-SOURCE_WNC_LIBRARIES "${SCRIPT_DIR}"
+source_wnc_libraries "${SCRIPT_DIR}"
 
 # shellcheck source=lib/script_name/help.sh
 source "${SCRIPT_DIR}/lib/script_name/help.sh"
@@ -80,7 +80,7 @@ scripts/lib/script_name/
 ```
 
 ### Function Design and Naming Conventions
-- **Global functions**: Use UPPERCASE names (e.g., `VALIDATE_ARGC_YANG_ENVIRONMENT()`, `SOURCE_WNC_LIBRARIES()`)
+- **Global functions**: Use UPPERCASE names (e.g., `VALIDATE_ARGC_YANG_ENVIRONMENT()`, `source_wnc_libraries()`)
 - **Local/private functions**: Use lowercase names (e.g., `execute_script_logic()`, `process_response()`)
 - Keep functions between 10-20 lines ideally
 - Include error handling within functions
@@ -111,7 +111,7 @@ fi
 - argc-specific utilities go in `scripts/lib/common/argc_common.sh`
 - Testing utilities go in `scripts/lib/common/testing.sh`
 - Use consistent source patterns with shellcheck directives
-- Load libraries using `SOURCE_WNC_LIBRARIES()` function
+- Load libraries using `source_wnc_libraries()` function
 
 ---
 
@@ -230,7 +230,7 @@ export WNC_CONTROLLER=wnc1.example.internal
 export WNC_ACCESS_TOKEN=YWRtaW46Y3l0WU43WVh4M2swc3piUnVhb1V1ZUx6
 
 # Run integration tests
-./scripts/run_integration_tests.sh --insecure --no-color
+./scripts/test_integration.sh --insecure --no-color
 ```
 
 ---
@@ -380,7 +380,7 @@ Scripts should be designed to work both:
 Example Makefile integration:
 ```makefile
 test-integration:
-	./scripts/run_integration_tests.sh --no-color
+	./scripts/test_integration.sh --no-color
 
 lint:
 	./scripts/lint_code.sh --no-color
@@ -401,8 +401,8 @@ deps:
 # Get specific model details
 ./scripts/get_yang_model_details.sh --insecure "Cisco-IOS-XE-wireless-ap-cfg"
 
-# Fetch model with output
-./scripts/fetch_yang_model_details.sh --insecure --output "ap_cfg.json" "Cisco-IOS-XE-wireless-ap-cfg"
+# Get model with JSON output
+./scripts/get_yang_model_details.sh --insecure --format json "Cisco-IOS-XE-wireless-ap-cfg"
 ```
 
 ### Development Workflow
@@ -411,11 +411,11 @@ deps:
 ./scripts/install_dependencies.sh --verbose
 
 # Run tests
-./scripts/run_unit_tests.sh --no-color
-./scripts/run_integration_tests.sh --insecure --no-color
+./scripts/test_unit.sh --no-color
+./scripts/test_integration.sh --insecure --no-color
 
 # Generate coverage
-./scripts/run_coverage_tests.sh --html --no-color
+./scripts/test_coverage.sh --html --no-color
 
 # Lint code
 ./scripts/lint_code.sh --no-color
@@ -474,7 +474,7 @@ deps:
 - **Common Libraries:** Shared functionality in `scripts/lib/common/`
 
 ### Function Naming Conventions
-- **Global Functions:** UPPERCASE (e.g., `SOURCE_WNC_LIBRARIES`, `INIT_SCRIPT_ENVIRONMENT`)
+- **Global Functions:** UPPERCASE (e.g., `source_wnc_libraries`, `INIT_SCRIPT_ENVIRONMENT`)
 - **Local Functions:** lowercase (e.g., `validate_input`, `format_output`)
 - **Predicate Functions:** `is_*` pattern for boolean checks (e.g., `is_verbose_enabled`)
 

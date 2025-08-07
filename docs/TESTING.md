@@ -95,10 +95,10 @@ export WNC_ACCESS_TOKEN="$(echo -n 'username:password' | base64)"
 make test-unit
 
 # Verbose output
-./scripts/run_unit_tests.sh --verbose
+./scripts/test_unit.sh --verbose
 
 # Short mode (skip slow tests)
-./scripts/run_unit_tests.sh --short
+./scripts/test_unit.sh --short
 ```
 
 #### Integration Tests
@@ -108,10 +108,10 @@ make test-unit
 make test-integration
 
 # Check environment only
-./scripts/run_integration_tests.sh --check-env-only
+./scripts/test_integration.sh --check-env-only
 
 # Verbose integration testing
-./scripts/run_integration_tests.sh --verbose
+./scripts/test_integration.sh --verbose
 ```
 
 #### Coverage Analysis
@@ -244,7 +244,7 @@ go tool cover -html=./tmp/package.out
 go test -v ./service/... -run TestServiceIntegration
 
 # Check environment setup
-./scripts/run_integration_tests.sh --check-env-only
+./scripts/test_integration.sh --check-env-only
 
 # Verbose output for troubleshooting
 go test -v ./... -tags=integration

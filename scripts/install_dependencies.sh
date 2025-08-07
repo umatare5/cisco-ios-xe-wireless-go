@@ -21,27 +21,24 @@ MODULE_DIR="${SCRIPT_DIR}/lib/dependencies"
 
 # Source shared libraries
 source "${SCRIPT_DIR}/lib/common/common.sh"
-SOURCE_WNC_LIBRARIES "$SCRIPT_DIR"
 
-# Source module-specific libraries
-source "${MODULE_DIR}/help.sh"
-source "${MODULE_DIR}/output.sh"
-source "${MODULE_DIR}/core.sh"
+# Initialize all libraries using unified function
+init_script_libraries "$SCRIPT_DIR" "$MODULE_DIR"
 
-# Validate required CLI tools before proceeding
-validate_required_cli_tools "standard"
-
-# Predicate functions for improved readability
-is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
-is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }
-is_clean_enabled() { [[ "${argc_clean:-false}" == "true" ]]; }
-is_update_enabled() { [[ "${argc_update:-false}" == "true" ]]; }
-is_force_enabled() { [[ "${argc_force:-false}" == "true" ]]; }
-is_download_only_enabled() { [[ "${argc_download_only:-false}" == "true" ]]; }
-is_verify_enabled() { [[ "${argc_verify:-false}" == "true" ]]; }
+# Predicate functions for improved readability using argc validation helpers
+is_verbose_enabled() { is_enabled "${argc_verbose:-0}"; }
+is_no_color_enabled() { is_enabled "${argc_no_color:-0}"; }
+is_clean_enabled() { is_true "${argc_clean:-false}"; }
+is_update_enabled() { is_true "${argc_update:-false}"; }
+is_force_enabled() { is_true "${argc_force:-false}"; }
+is_download_only_enabled() { is_true "${argc_download_only:-false}"; }
+is_verify_enabled() { is_true "${argc_verify:-false}"; }
 is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
 
 main() {
+    # Validate required CLI tools before proceeding
+    validate_required_cli_tools "standard"
+
     run_dependencies_operation
 }
 
