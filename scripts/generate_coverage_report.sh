@@ -6,25 +6,26 @@
 # @option -p --project <DIR>           Project root directory [default: .]
 # @option -i --input <FILE>            Coverage input file [default: ./tmp/coverage.out]
 # @option -o --output <FILE>           HTML output file [default: ./tmp/coverage.html]
-# @flag   -v --verbose                 Enable verbose output
-# @flag      --no-color                Disable colored output
+# @flag   -v --verbose                Enable verbose output
+# @flag      --no-color               Disable colored output
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
 
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
 
-# Initialize WNC libraries with generate_coverage_report module
-init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/generate_coverage_report"
+# Initialize WNC libraries with coverage module
+init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/coverage"
 
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
 
 # Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_enabled "${argc_verbose:-0}"; }
-is_no_color_enabled() { is_enabled "${argc_no_color:-0}"; }
+is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
+is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
 is_file_exists() { [[ -f "${1:-}" ]]; }
 is_directory_exists() { [[ -d "${1:-}" ]]; }
 is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }

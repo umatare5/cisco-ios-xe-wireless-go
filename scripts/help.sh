@@ -28,8 +28,6 @@ YANG MODEL DEVELOPMENT:
     yang-list           List all available YANG models
     yang-model          Get YANG model details (MODEL=model-name)
     yang-statement      Get YANG statement details (MODEL=model-name STATEMENT=statement-name)
-    fetch-yang-model    Fetch YANG model from controller (MODEL=model-name)
-    fetch-yang-statement Fetch YANG statement from controller (MODEL=model-name STATEMENT=statement-name)
 
 ENVIRONMENT VARIABLES:
     WNC_CONTROLLER      Controller hostname/IP for integration tests
@@ -46,7 +44,7 @@ EXAMPLES:
     # YANG development
     make yang-list                                    # List models
     make yang-model MODEL=wireless-access-point      # Get model details
-    make fetch-yang-model MODEL=wireless-client      # Fetch from controller
+    make yang-statement MODEL=wireless-client STATEMENT=active # Get statement details
 
     # Integration testing (requires environment setup)
     export WNC_CONTROLLER="wnc1.example.internal"
@@ -65,19 +63,21 @@ SCRIPT DETAILS:
     - test_integration.sh    Run integration tests
     - test_coverage.sh       Run coverage tests
     - generate_coverage_report.sh Generate HTML coverage
-    - list_yang_models.sh    List YANG models
+    - get_yang_models.sh     List YANG models
     - get_yang_model_details.sh Get model details
     - get_yang_statement_details.sh Get statement details
 
 PROJECT STRUCTURE:
     scripts/                Script directory
     +-- lib/               Shared libraries
-    |   +-- common/        Common utilities
-    |   +-- yang_operations/ YANG-specific functions
-    |   +-- testing/       Test utilities
-    |   +-- lint_code/     Linting functions
+    |   +-- bootstrap.sh   Bootstrap library loader
+    |   +-- coverage/      Coverage report functions
     |   +-- dependencies/  Dependency management
-    |   +-- artifacts/     Cleanup functions
+    |   +-- output/        Output formatting utilities
+    |   +-- testing/       Test utilities
+    |   +-- utils/         Utility functions
+    |   +-- validation/    Git commit validation
+    |   +-- yang/          YANG-specific functions
     +-- *.sh               Entry point scripts
 
 This project uses a modular script architecture with shared libraries

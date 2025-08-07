@@ -26,9 +26,11 @@ scripts/lib/
 │   └── output_formatter.sh # Output formatting utilities
 └── modules/              # Feature-specific modules
     ├── testing/          # Test operations
-    ├── lint_code/        # Code linting
+    ├── lint/            # Code linting
     ├── dependencies/     # Dependency management
-    ├── yang_operations/  # YANG model operations
+    ├── yang/            # YANG model operations
+    ├── coverage/        # Coverage report generation
+    ├── validation/      # Git commit validation
     └── artifacts/        # Build artifact management
 ```
 

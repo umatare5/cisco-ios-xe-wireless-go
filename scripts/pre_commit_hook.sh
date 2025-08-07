@@ -1,28 +1,29 @@
 #!/usr/bin/env bash
 # @meta version 1.0.0
 # @meta author "@umatare5"
-# @meta description Cisco WNC Pre-commit Validation - Validate commits before they are made
+# @describe Cisco WNC Pre-commit Validation - Validate commits before they are made
 
-# @flag   -v --verbose                 Enable verbose output
-# @flag      --no-color                Disable colored output
+# @flag   -v --verbose                Enable verbose output
+# @flag      --no-color               Disable colored output
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly MODULE_DIR="${SCRIPT_DIR}/lib/pre_commit_validation"
+readonly SCRIPT_DIR
+readonly MODULE_DIR="${SCRIPT_DIR}/lib/validation"
 
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
 
-# Initialize WNC libraries with pre_commit_validation module
-init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/pre_commit_validation"
+# Initialize WNC libraries with validation module
+init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/validation"
 
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "minimal"
 
 # Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
-is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }
+is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
+is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
 
 main() {
     run_pre_commit_validation
