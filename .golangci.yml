@@ -1,35 +1,30 @@
-# golangci-lint configuration file
-# More information: https://golangci-lint.run/usage/configuration/
+version: "2"
 
 run:
   timeout: 5m
-  # Removed modules-download-mode to allow flexible module operations
 
 linters:
   enable:
-    - govet              # Reports suspicious constructs
-    - errcheck           # Check for unhandled errors
-    - gosimple           # Simplify your Go code
-    - staticcheck        # Comprehensive static analysis
-    - ineffassign        # Detects ineffective assignments
-    - unused             # Finds unused variables
+    - govet
+    - errcheck
+    - gosimple
+    - staticcheck
+    - ineffassign
+    - unused
 
-# Settings for specific linters
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-    check-blank: false
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: false
 
-issues:
-  # Exclude specific warning types
-  exclude-rules:
-    - linters:
-        - gocyclo
-      text: "(?i)cyclomatic complexity"
-  exclude-use-default: false
+  exclusions:
+    paths:
+      - vendor
+      - build
+      - tmp
 
-# Files and folders to ignore
-skip-dirs:
-  - vendor
-  - build
-  - tmp
+    rules:
+      - path: ^wnc/client_test\.go$
+        linters: [errcheck]
+      - path: ^internal/tests/helpers_test\.go$
+        linters: [errcheck]

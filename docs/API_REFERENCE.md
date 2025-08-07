@@ -1,449 +1,814 @@
-# 🌐 API Reference
+# � API Reference
 
-This document provides an overview of the API functions available in the WNC Go client library.
+This document provides a comprehensive reference for all services and methods available in the Cisco IOS-XE Wireless Go SDK.
 
-- **Functional Organization**: The API is organized by functional areas such as Access Points, Clients and others.
-- **Context-Aware Requests**: All API functions require a `context.Context` as the first parameter for proper request lifecycle management.
-- **Structured Responses and Errors**: Each API returns structured data with comprehensive error handling based on original responses.
-- **Service-Based Architecture**: The library uses a modern three-layer architecture with domain-specific services.
+## 🏗️ Architecture Overview
 
-To know the meaning of the response from APIs, please refer to the [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme).
-
-## 🏗️ Service-Based API Architecture
-
-The library uses a three-layer service-based architecture for better organization and maintainability:
+The library follows a **unified client architecture** where all domain services are accessed through a single client instance. This approach provides a clean, consistent interface for all wireless controller operations.
 
 ```go
-// Create client using constructor pattern
-client, _ := wnc.New("192.168.1.100", "YWRtaW46eW91ci1wYXNzd29yZA==")
+import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 
-// Create domain services
-afcService := afc.NewService(client)
-apService := ap.NewService(client)
-generalService := general.NewService(client)
+// Create unified client
+client, err := wnc.NewClient(host, token, options...)
 
-// Use typed service methods
-afcData, _ := afcService.Oper(ctx)
-apData, _ := apService.Oper(ctx)
-generalData, _ := generalService.Oper(ctx)
+// Access domain services directly
+afcData, err := client.AFC().Oper(ctx)
+apData, err := client.AP().Oper(ctx)
+generalData, err := client.General().Oper(ctx)
 ```
 
-### 🏗️ Three-Layer Architecture
+## 🌟 Unified Client
 
-- **Core Layer**: `wnc/` package containing HTTP client and infrastructure
-- **Domain Service Layer**: Service packages (`afc/`, `ap/`, `general/`, etc.) with business logic
-- **Generated Type Layer**: `internal/model/` package with auto-generated YANG model structs
-
-### 🛡️ Error Handling Standards
-
-All functions in this SDK follow standardized error handling patterns:
-
-#### Client Validation Errors
-
-Functions validate the client parameter consistently:
+### Creating a Client
 
 ```go
-if c == nil {
-    return nil, fmt.Errorf("%w: client cannot be nil", wnc.ErrInvalidConfiguration)
+package main
+
+import (
+    "context"
+    "log"
+    "time"
+
+    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+)
+
+func main() {
+    client, err := wnc.NewClient(
+        "your-controller-host",
+        "your-api-token",
+        wnc.WithTimeout(30*time.Second),
+        wnc.WithInsecureSkipVerify(true),
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Use client for API operations
+    ctx := context.Background()
+    data, err := client.General().Oper(ctx)
+    if err != nil {
+        log.Printf("Error: %v", err)
+        return
+    }
+
+    log.Printf("Device: %s", *data.GeneralOperData.EwlcGeneralOper.DeviceName)
 }
 ```
 
-#### HTTP Error Responses
+### 🔧 Client Options
 
-HTTP errors are handled uniformly across all packages:
+<details>
+<summary>View all available configuration options</summary>
+
+| Option | Description |
+|--------|-------------|
+| `WithTimeout(duration)` | Set request timeout |
+| `WithInsecureSkipVerify(bool)` | Skip TLS certificate verification |
+| `WithDebug(bool)` | Enable debug logging |
+| `WithRetry(count, delay)` | Configure retry behavior |
+
+</details>
+
+## 📡 Domain Services
+
+### AFC - Automated Frequency Coordination
+
+Access AFC operations for 6 GHz band coordination.
 
 ```go
-if resp.StatusCode != http.StatusOK {
-    return nil, fmt.Errorf("HTTP request failed with status %d: %s", resp.StatusCode, resp.Status)
-}
+afc := client.AFC()
 ```
 
-#### JSON Unmarshaling Errors
+#### Methods
 
-JSON parsing errors include context:
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.AfcOperResponse` | AFC operational data |
+| `APResp(ctx)` | `*model.AfcOperEwlcAfcApRespResponse` | Per-AP AFC responses |
+
+### AP - Access Point Management
+
+Comprehensive access point configuration and operational data.
 
 ```go
-if err := json.Unmarshal(body, &result); err != nil {
-    return nil, fmt.Errorf("failed to unmarshal response: %w", err)
-}
+ap := client.AP()
 ```
 
-### 📊 Testing Coverage Information
+#### Configuration Methods
 
-This SDK maintains high test coverage standards:
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.ApCfgResponse` | Complete AP configuration |
+| `TagSourcePriorityConfigs(ctx)` | `*model.TagSourcePriorityConfigs` | Tag priority configurations |
+| `ApTags(ctx)` | `*model.ApCfgApTagsResponse` | AP tag configurations |
 
-- **Main Codebase Coverage**: ≥98% for all business logic functions (wnc package: 98.9%)
-- **Total Project Coverage**: ≥92% including test utilities and service layers
-- **SA1012 Compliance**: All nil context tests use `var nilCtx context.Context` pattern
-- **Mock Server Testing**: Uses full RESTCONF paths for accurate HTTP simulation
-- **Service Architecture Testing**: Validates `NewService(client)` patterns and typed method signatures
-- **Error Path Coverage**: 100% coverage of error scenarios and edge cases
+#### Operational Methods
 
-## Core Functions
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.ApOperResponse` | Complete AP operational data |
+| `GlobalOper(ctx)` | `*model.ApGlobalOperResponse` | Global AP operational data |
+| `ApJoinStats(ctx)` | `*model.ApJoinStatsResponse` | AP join statistics |
+| `ApHistory(ctx)` | `*model.ApHistoryResponse` | AP history data |
+| `EwlcApStats(ctx)` | `*model.EwlcApStatsResponse` | EWLC AP statistics |
 
-| Function    | Parameters                                             | Return Type        | Description                           |
-| ----------- | ------------------------------------------------------ | ------------------ | ------------------------------------- |
-| `New`       | `controller, accessToken string, options ...Option`   | `(*Client, error)` | Creates a new WNC client with options |
-| `Do`        | `ctx context.Context, method, endpoint string, result interface{}` | `error`     | Sends HTTP request to specified endpoint |
+### APF - Application Policy Framework
 
-> [!Note]
-> Currently, this library supports only `GET` requests. To send other type of requests, please use `SendAPIRequest()`.
-
-## 📡 Access Point Operations
-
-| Function                       | Return Type                                       | Description                                         |
-| ------------------------------ | ------------------------------------------------- | --------------------------------------------------- |
-| `GetApOper`                    | `(*ApOperResponse, error)`                        | Retrieves operational data for all access points    |
-| `GetApRadioNeighbor`           | `(*ApOperApRadioNeighborResponse, error)`         | Gets radio neighbor information                     |
-| `GetApRadioOperData`           | `(*ApOperRadioOperDataResponse, error)`           | Gets radio operational statistics and configuration |
-| `GetApRadioResetStats`         | `(*ApOperRadioResetStatsResponse, error)`         | Gets radio reset statistics                         |
-| `GetApQosClientData`           | `(*ApOperQosClientDataResponse, error)`           | Gets QoS client data information                    |
-| `GetApCapwapData`              | `(*ApOperCapwapDataResponse, error)`              | Fetches CAPWAP tunnel information                   |
-| `GetApNameMacMap`              | `(*ApOperApNameMacMapResponse, error)`            | Gets AP name to MAC address mapping                 |
-| `GetApWtpSlotWlanStats`        | `(*ApOperWtpSlotWlanStatsResponse, error)`        | Gets WTP slot WLAN statistics                       |
-| `GetApEthernetMacWtpMacMap`    | `(*ApOperEthernetMacWtpMacMapResponse, error)`    | Gets Ethernet MAC to WTP MAC mapping                |
-| `GetApRadioOperStats`          | `(*ApOperRadioOperStatsResponse, error)`          | Gets radio operational statistics                   |
-| `GetApEthernetIfStats`         | `(*ApOperEthernetIfStatsResponse, error)`         | Gets Ethernet interface statistics                  |
-| `GetApEwlcWncdStats`           | `(*ApOperEwlcWncdStatsResponse, error)`           | Gets EWLC WNCD statistics                           |
-| `GetApIoxOperData`             | `(*ApOperApIoxOperDataResponse, error)`           | Gets IOX operational data                           |
-| `GetApQosGlobalStats`          | `(*ApOperQosGlobalStatsResponse, error)`          | Gets global QoS statistics                          |
-| `GetApOperData`                | `(*ApOperOperDataResponse, error)`                | Gets AP operational data                            |
-| `GetApRlanOper`                | `(*ApOperRlanOperResponse, error)`                | Gets RLAN operational data                          |
-| `GetApEwlcMewlcPredownloadRec` | `(*ApOperEwlcMewlcPredownloadRecResponse, error)` | Gets EWLC MEWLC predownload records                 |
-| `GetApCdpCacheData`            | `(*ApOperCdpCacheDataResponse, error)`            | Gets CDP cache data                                 |
-| `GetApLldpNeigh`               | `(*ApOperLldpNeighResponse, error)`               | Retrieves LLDP neighbor discovery data              |
-| `GetApTpCertInfo`              | `(*ApOperTpCertInfoResponse, error)`              | Gets TP certificate information                     |
-| `GetApDiscData`                | `(*ApOperDiscDataResponse, error)`                | Gets discovery data                                 |
-| `GetApCapwapPkts`              | `(*ApOperCapwapPktsResponse, error)`              | Gets CAPWAP packet statistics                       |
-| `GetApCountryOper`             | `(*ApOperCountryOperResponse, error)`             | Gets country operational data                       |
-| `GetApSuppCountryOper`         | `(*ApOperSuppCountryOperResponse, error)`         | Gets supported country operational data             |
-| `GetApNhGlobalData`            | `(*ApOperApNhGlobalDataResponse, error)`          | Gets AP NH global data                              |
-| `GetApImagePrepareLocation`    | `(*ApOperApImagePrepareLocationResponse, error)`  | Gets AP image prepare location                      |
-| `GetApImageActiveLocation`     | `(*ApOperApImageActiveLocationResponse, error)`   | Gets AP image active location                       |
-
-## 🌐 Access Point Global Operations
-
-| Function                   | Return Type                                           | Description                          |
-| -------------------------- | ----------------------------------------------------- | ------------------------------------ |
-| `GetApGlobalOper`          | `(*ApGlobalOperResponse, error)`                      | Gets global AP operational data      |
-| `GetApHistory`             | `(*ApGlobalOperApHistoryResponse, error)`             | Gets AP history data                 |
-| `GetApEwlcApStats`         | `(*ApGlobalOperEwlcApStatsResponse, error)`           | Gets EWLC AP statistics              |
-| `GetApImgPredownloadStats` | `(*ApGlobalOperApImgPredownloadStatsResponse, error)` | Gets AP image predownload statistics |
-| `GetApJoinStats`           | `(*ApGlobalOperApJoinStatsResponse, error)`           | Gets AP join statistics              |
-| `GetApWlanClientStats`     | `(*ApGlobalOperWlanClientStatsResponse, error)`       | Gets WLAN client statistics          |
-| `GetApEmltdJoinCountStat`  | `(*ApGlobalOperEmltdJoinCountStatResponse, error)`    | Gets EMLATED join count statistics   |
-
-## ⚙️ Access Point Configuration
-
-| Function                        | Return Type                                       | Description                                |
-| ------------------------------- | ------------------------------------------------- | ------------------------------------------ |
-| `GetApCfg`                      | `(*ApCfgResponse, error)`                         | Gets AP configuration                      |
-| `GetTagSourcePriorityConfigs`   | `(*TagSourcePriorityConfigs, error)`              | Gets tag source priority configurations    |
-| `GetApTagSourcePriorityConfigs` | `(*ApCfgTagSourcePriorityConfigsResponse, error)` | Gets AP tag source priority configurations |
-| `GetApApTags`                   | `(*ApCfgApTagsResponse, error)`                   | Gets AP tags                               |
-
-## 👥 Client Operations
-
-| Function                         | Return Type                                     | Description                                 |
-| -------------------------------- | ----------------------------------------------- | ------------------------------------------- |
-| `GetClientOper`                  | `(*ClientOperResponse, error)`                  | Gets operational data for connected clients |
-| `GetClientOperCommonOperData`    | `(*ClientOperCommonOperDataResponse, error)`    | Gets common client operational data         |
-| `GetClientOperDot11OperData`     | `(*ClientOperDot11OperDataResponse, error)`     | Gets 802.11 client operational data         |
-| `GetClientOperMobilityOperData`  | `(*ClientOperMobilityOperDataResponse, error)`  | Gets mobility operational data              |
-| `GetClientOperMmIfClientStats`   | `(*ClientOperMmIfClientStatsResponse, error)`   | Gets MM interface client statistics         |
-| `GetClientOperMmIfClientHistory` | `(*ClientOperMmIfClientHistoryResponse, error)` | Gets MM interface client history            |
-| `GetClientOperTrafficStats`      | `(*ClientOperTrafficStatsResponse, error)`      | Gets client traffic statistics              |
-| `GetClientOperPolicyData`        | `(*ClientOperPolicyDataResponse, error)`        | Gets client policy data                     |
-| `GetClientOperSisfDbMac`         | `(*ClientOperSisfDbMacResponse, error)`         | Gets SISF database MAC data                 |
-| `GetClientOperDcInfo`            | `(*ClientOperDcInfoResponse, error)`            | Gets DC information                         |
-
-## 👥 Client Global Operations
-
-| Function                    | Return Type                               | Description                                     |
-| --------------------------- | ----------------------------------------- | ----------------------------------------------- |
-| `GetClientGlobalOper`       | `(*ClientGlobalOperResponse, error)`      | Retrieves global client statistics and counters |
-| `GetClientLiveStats`        | `(*ClientLiveStatsResponse, error)`       | Gets real-time client statistics                |
-| `GetClientGlobalStatsData`  | `(*ClientGlobalStatsDataResponse, error)` | Retrieves global client statistics data         |
-| `GetClientStats`            | `(*ClientStatsResponse, error)`           | Gets client statistics                          |
-| `GetClientDot11Stats`       | `(*ClientDot11StatsResponse, error)`      | Gets 802.11 client statistics                   |
-| `GetClientLatencyStats`     | `(*ClientLatencyStatsResponse, error)`    | Gets client latency statistics                  |
-| `GetClientSmWebauthStats`   | `(*SmWebauthStatsResponse, error)`        | Gets SM web authentication statistics           |
-| `GetClientDot1XGlobalStats` | `(*Dot1XGlobalStatsResponse, error)`      | Gets 802.1X global statistics                   |
-| `GetClientExclusionStats`   | `(*ClientExclusionStatsResponse, error)`  | Gets client exclusion statistics                |
-| `GetClientSmDeviceCount`    | `(*SmDeviceCountResponse, error)`         | Gets SM device count                            |
-| `GetClientTofStats`         | `(*TofStatsResponse, error)`              | Gets time-of-flight statistics                  |
-
-## 🌐 WLAN Configuration & Operations
-
-| Function                      | Return Type                                  | Description                             |
-| ----------------------------- | -------------------------------------------- | --------------------------------------- |
-| `GetWlanCfg`                  | `(*WlanCfgResponse, error)`                  | Fetches WLAN configuration settings     |
-| `GetWlanCfgEntries`           | `(*WlanCfgEntriesResponse, error)`           | Gets WLAN configuration entries         |
-| `GetWlanPolicies`             | `(*WlanPoliciesResponse, error)`             | Gets WLAN policies                      |
-| `GetPolicyListEntries`        | `(*PolicyListEntriesResponse, error)`        | Gets policy list entries                |
-| `GetWirelessAaaPolicyConfigs` | `(*WirelessAaaPolicyConfigsResponse, error)` | Gets wireless AAA policy configurations |
-| `GetWlanGlobalOper`           | `(*WlanGlobalOperResponse, error)`           | Gets global WLAN operational statistics |
-| `GetWlanGlobalOperWlanInfo`   | `(*WlanGlobalOperWlanInfoResponse, error)`   | Gets global WLAN information            |
-
-## 📡 Radio Resource Management (RRM)
-
-| Function                 | Return Type                             | Description                              |
-| ------------------------ | --------------------------------------- | ---------------------------------------- |
-| `GetRrmOper`             | `(*RrmOperResponse, error)`             | Retrieves RRM operational data per radio |
-| `GetApAutoRfDot11Data`   | `(*ApAutoRfDot11DataResponse, error)`   | Gets auto RF 802.11 data                 |
-| `GetApDot11RadarData`    | `(*ApDot11RadarDataResponse, error)`    | Gets 802.11 radar data                   |
-| `GetApDot11SpectrumData` | `(*ApDot11SpectrumDataResponse, error)` | Gets 802.11 spectrum data                |
-| `GetRrmMeasurement`      | `(*RrmMeasurementResponse, error)`      | Gets RRM measurement data                |
-| `GetRadioSlot`           | `(*RadioSlotResponse, error)`           | Gets radio slot data                     |
-| `GetMainData`            | `(*MainDataResponse, error)`            | Gets main data                           |
-| `GetSpectrumDeviceTable` | `(*SpectrumDeviceTableResponse, error)` | Gets spectrum device table               |
-| `GetSpectrumAqTable`     | `(*SpectrumAqTableResponse, error)`     | Gets spectrum AQ table                   |
-| `GetRegDomainOper`       | `(*RegDomainOperResponse, error)`       | Gets regulatory domain operational data  |
-
-## 📡 RRM Global Operations
-
-| Function                             | Return Type                                | Description                                  |
-| ------------------------------------ | ------------------------------------------ | -------------------------------------------- |
-| `GetRrmGlobalOper`                   | `(*RrmGlobalOperResponse, error)`          | Gets global RRM statistics and configuration |
-| `GetRrmGlobalOneShotCounters`        | `(*RrmOneShotCountersResponse, error)`     | Gets RRM one-shot counters                   |
-| `GetRrmGlobalChannelParams`          | `(*RrmChannelParamsResponse, error)`       | Gets RRM channel parameters                  |
-| `GetRrmGlobalSpectrumAqWorstTable`   | `(*SpectrumAqWorstTableResponse, error)`   | Gets spectrum AQ worst table                 |
-| `GetRrmGlobalRadioOperData24G`       | `(*RadioOperData24GResponse, error)`       | Gets 2.4GHz radio operational data           |
-| `GetRrmGlobalRadioOperData5G`        | `(*RadioOperData5GResponse, error)`        | Gets 5GHz radio operational data             |
-| `GetRrmGlobalRadioOperData6G`        | `(*RadioOperData5GResponse, error)`        | Gets 6GHz radio operational data             |
-| `GetRrmGlobalSpectrumBandConfigData` | `(*SpectrumBandConfigDataResponse, error)` | Gets spectrum band configuration data        |
-| `GetRrmGlobalRadioOperDataDualband`  | `(*RadioOperDataDualbandResponse, error)`  | Gets dual-band radio operational data        |
-| `GetRrmGlobalClientData`             | `(*RrmClientDataResponse, error)`          | Gets RRM client data                         |
-| `GetRrmGlobalFraStats`               | `(*RrmFraStatsResponse, error)`            | Gets RRM FRA statistics                      |
-| `GetRrmGlobalCoverage`               | `(*RrmCoverageResponse, error)`            | Gets RRM coverage data                       |
-
-## ⚙️ RRM Configuration
-
-| Function              | Return Type                          | Description                            |
-| --------------------- | ------------------------------------ | -------------------------------------- |
-| `GetRrmCfg`           | `(*RrmCfgResponse, error)`           | Gets RRM configuration                 |
-| `GetRrmRrms`          | `(*RrmRrmsResponse, error)`          | Gets RRM entries                       |
-| `GetRrmMgrCfgEntries` | `(*RrmMgrCfgEntriesResponse, error)` | Gets RRM manager configuration entries |
-
-## 🔧 RRM Emulation Operations
-
-| Function                | Return Type                                | Description                         |
-| ----------------------- | ------------------------------------------ | ----------------------------------- |
-| `GetRrmEmulOper`        | `(*RrmEmulOperResponse, error)`            | Gets RRM emulation operational data |
-| `GetRrmEmulRrmFraStats` | `(*RrmEmulOperRrmFraStatsResponse, error)` | Gets RRM emulation FRA statistics   |
-
-## 📻 Radio & RF Configuration
-
-| Function                     | Return Type                                 | Description                     |
-| ---------------------------- | ------------------------------------------- | ------------------------------- |
-| `GetRadioCfg`                | `(*RadioCfgResponse, error)`                | Gets radio configuration        |
-| `GetRadioProfiles`           | `(*RadioProfilesResponse, error)`           | Gets radio profiles             |
-| `GetRfCfg`                   | `(*RfCfgResponse, error)`                   | Gets RF configuration           |
-| `GetRfMultiBssidProfiles`    | `(*MultiBssidProfilesResponse, error)`      | Gets multi-BSSID profiles       |
-| `GetRfAtfPolicies`           | `(*AtfPoliciesResponse, error)`             | Gets ATF policies               |
-| `GetRfTags`                  | `(*RfTagsResponse, error)`                  | Gets RF tags                    |
-| `GetRfProfiles`              | `(*RfProfilesResponse, error)`              | Gets RF profiles                |
-| `GetRfProfileDefaultEntries` | `(*RfProfileDefaultEntriesResponse, error)` | Gets RF profile default entries |
-
-## 🔧 General Configuration & Management
-
-| Function                            | Return Type                                 | Description                              |
-| ----------------------------------- | ------------------------------------------- | ---------------------------------------- |
-| `GetGeneralCfg`                     | `(*GeneralCfgResponse, error)`              | Fetches general controller configuration |
-| `GetGeneralOper`                    | `(*GeneralOperResponse, error)`             | Gets general operational data            |
-| `GetGeneralOperMgmtIntfData`        | `(*GeneralOperMgmtIntfDataResponse, error)` | Gets WLC management interface data       |
-| `GetGeneralMewlcConfig`             | `(*MewlcConfigResponse, error)`             | Gets MEWLC configuration                 |
-| `GetGeneralCacConfig`               | `(*CacConfigResponse, error)`               | Gets CAC configuration                   |
-| `GetGeneralMfp`                     | `(*MfpResponse, error)`                     | Gets MFP configuration                   |
-| `GetGeneralFipsCfg`                 | `(*FipsCfgResponse, error)`                 | Gets FIPS configuration                  |
-| `GetGeneralWsaApClientEvent`        | `(*WsaApClientEventResponse, error)`        | Gets WSA AP client event data            |
-| `GetGeneralSimL3InterfaceCacheData` | `(*SimL3InterfaceCacheDataResponse, error)` | Gets SIM L3 interface cache data         |
-| `GetGeneralWlcManagementData`       | `(*WlcManagementDataResponse, error)`       | Gets WLC management data                 |
-| `GetGeneralLaginfo`                 | `(*LaginfoResponse, error)`                 | Gets LAG information                     |
-| `GetGeneralMulticastConfig`         | `(*MulticastConfigResponse, error)`         | Gets multicast configuration             |
-| `GetGeneralFeatureUsageCfg`         | `(*FeatureUsageCfgResponse, error)`         | Gets feature usage configuration         |
-| `GetGeneralThresholdWarnCfg`        | `(*ThresholdWarnCfgResponse, error)`        | Gets threshold warning configuration     |
-| `GetGeneralApLocRangingCfg`         | `(*ApLocRangingCfgResponse, error)`         | Gets AP location ranging configuration   |
-| `GetGeneralGeolocationCfg`          | `(*GeolocationCfgResponse, error)`          | Gets geolocation configuration           |
-
-## 🏢 Site Configuration
-
-| Function               | Return Type                           | Description                         |
-| ---------------------- | ------------------------------------- | ----------------------------------- |
-| `GetSiteCfg`           | `(*SiteCfgResponse, error)`           | Gets site configuration             |
-| `GetSiteApCfgProfiles` | `(*SiteApCfgProfilesResponse, error)` | Gets site AP configuration profiles |
-| `GetSiteTagConfigs`    | `(*SiteTagConfigsResponse, error)`    | Gets site tag configurations        |
-
-## 🌍 Mobility Operations
-
-| Function                        | Return Type                                 | Description                             |
-| ------------------------------- | ------------------------------------------- | --------------------------------------- |
-| `GetMobilityOper`               | `(*MobilityOperResponse, error)`            | Gets mobility operational data          |
-| `GetMobilityMmIfGlobalStats`    | `(*MmIfGlobalStatsResponse, error)`         | Gets MM interface global statistics     |
-| `GetMobilityMmIfGlobalMsgStats` | `(*MmIfGlobalMsgStatsResponse, error)`      | Gets MM interface global message stats  |
-| `GetMobilityGlobalStats`        | `(*MobilityGlobalStatsResponse, error)`     | Gets mobility global statistics         |
-| `GetMobilityMmGlobalData`       | `(*MmGlobalDataResponse, error)`            | Gets MM global data                     |
-| `GetMobilityGlobalMsgStats`     | `(*MobilityGlobalMsgStatsResponse, error)`  | Gets mobility global message statistics |
-| `GetMobilityClientData`         | `(*MobilityClientDataResponse, error)`      | Gets mobility client data               |
-| `GetMobilityApCache`            | `(*ApCacheResponse, error)`                 | Gets mobility AP cache                  |
-| `GetMobilityApPeerList`         | `(*ApPeerListResponse, error)`              | Gets mobility AP peer list              |
-| `GetMobilityClientStats`        | `(*MobilityClientStatsResponse, error)`     | Gets mobility client statistics         |
-| `GetMobilityWlanClientLimit`    | `(*WlanClientLimitResponse, error)`         | Gets WLAN client limit data             |
-| `GetMobilityGlobalDTLSStats`    | `(*MobilityGlobalDTLSStatsResponse, error)` | Gets mobility global DTLS statistics    |
-
-## 🗺️ Location & Geolocation
-
-| Function                          | Return Type                                      | Description                         |
-| --------------------------------- | ------------------------------------------------ | ----------------------------------- |
-| `GetLocationCfg`                  | `(*LocationCfgResponse, error)`                  | Gets location configuration         |
-| `GetLocationNmspConfig`           | `(*LocationNmspConfigResponse, error)`           | Gets location NMSP configuration    |
-| `GetGeolocationOper`              | `(*GeolocationOperResponse, error)`              | Gets geolocation operational data   |
-| `GetGeolocationOperApGeoLocStats` | `(*GeolocationOperApGeoLocStatsResponse, error)` | Gets AP geolocation statistics      |
-| `GetHyperlocationOper`            | `(*HyperlocationOperResponse, error)`            | Gets hyperlocation operational data |
-| `GetHyperlocationProfiles`        | `(*HyperlocationProfilesResponse, error)`        | Gets hyperlocation profiles         |
-
-## 🕸️ Mesh Operations & Configuration
-
-| Function             | Return Type                         | Description                       |
-| -------------------- | ----------------------------------- | --------------------------------- |
-| `GetMeshCfg`         | `(*MeshCfgResponse, error)`         | Gets mesh configuration           |
-| `GetMesh`            | `(*MeshResponse, error)`            | Gets mesh data                    |
-| `GetMeshProfiles`    | `(*MeshProfilesResponse, error)`    | Gets mesh profiles                |
-| `GetMeshGlobalOper`  | `(*MeshGlobalOperResponse, error)`  | Gets mesh global operational data |
-| `GetMeshGlobalStats` | `(*MeshGlobalStatsResponse, error)` | Gets mesh global statistics       |
-| `GetMeshApTreeData`  | `(*MeshApTreeDataResponse, error)`  | Gets mesh AP tree data            |
-
-## 🔍 Network Management & Monitoring
-
-| Function                    | Return Type                                | Description                        |
-| --------------------------- | ------------------------------------------ | ---------------------------------- |
-| `GetNmspOper`               | `(*NmspOperResponse, error)`               | Gets NMSP operational data         |
-| `GetNmspClientRegistration` | `(*NmspClientRegistrationResponse, error)` | Gets NMSP client registration data |
-| `GetNmspCmxConnection`      | `(*NmspCmxConnectionResponse, error)`      | Gets NMSP CMX connection data      |
-| `GetNmspCmxCloudInfo`       | `(*NmspCmxCloudInfoResponse, error)`       | Gets NMSP CMX cloud information    |
-| `GetMdnsOper`               | `(*MdnsOperResponse, error)`               | Gets mDNS operational data         |
-| `GetMdnsGlobalStats`        | `(*MdnsGlobalStatsResponse, error)`        | Gets mDNS global statistics        |
-| `GetMdnsWlanStats`          | `(*MdnsWlanStatsResponse, error)`          | Gets mDNS WLAN statistics          |
-
-## 🚨 Rogue Detection & Security
-
-| Function             | Return Type                         | Description                 |
-| -------------------- | ----------------------------------- | --------------------------- |
-| `GetRogueOper`       | `(*RogueOperResponse, error)`       | Gets rogue operational data |
-| `GetRogueStats`      | `(*RogueStatsResponse, error)`      | Gets rogue statistics       |
-| `GetRogueData`       | `(*RogueDataResponse, error)`       | Gets rogue data             |
-| `GetRogueClientData` | `(*RogueClientDataResponse, error)` | Gets rogue client data      |
-| `GetRldpStats`       | `(*RldpStatsResponse, error)`       | Gets RLDP statistics        |
-
-## 🌐 Multicast Operations
-
-| Function                               | Return Type                                               | Description                          |
-| -------------------------------------- | --------------------------------------------------------- | ------------------------------------ |
-| `GetMcastOper`                         | `(*McastOperResponse, error)`                             | Gets multicast operational data      |
-| `GetMcastFlexMediastreamClientSummary` | `(*McastOperFlexMediastreamClientSummaryResponse, error)` | Gets flex mediastream client summary |
-| `GetMcastVlanL2MgidOp`                 | `(*McastOperVlanL2MgidOpResponse, error)`                 | Gets VLAN L2 MGID operational data   |
-
-## 🔗 LISP Agent Operations
-
-| Function                  | Return Type                              | Description                       |
-| ------------------------- | ---------------------------------------- | --------------------------------- |
-| `GetLispAgentOper`        | `(*LispAgentOperResponse, error)`        | Gets LISP agent operational data  |
-| `GetLispAgentMemoryStats` | `(*LispAgentMemoryStatsResponse, error)` | Gets LISP agent memory statistics |
-| `GetLispWlcCapabilities`  | `(*LispWlcCapabilitiesResponse, error)`  | Gets LISP WLC capabilities        |
-| `GetLispApCapabilities`   | `(*LispApCapabilitiesResponse, error)`   | Gets LISP AP capabilities         |
-
-## 🔐 Security & Policy
-
-| Function                 | Return Type                             | Description                        |
-| ------------------------ | --------------------------------------- | ---------------------------------- |
-| `GetCtsSxpCfg`           | `(*CtsSxpCfgResponse, error)`           | Gets CTS SXP configuration         |
-| `GetCtsSxpConfiguration` | `(*CtsSxpConfigurationResponse, error)` | Gets CTS SXP configuration details |
-
-## 📊 AFC (Automated Frequency Coordination)
-
-| Function              | Return Type                                   | Description                     |
-| --------------------- | --------------------------------------------- | ------------------------------- |
-| `GetAfcOper`          | `(*AfcOperResponse, error)`                   | Gets AFC operational data       |
-| `GetAfcEwlcAfcApResp` | `(*AfcOperEwlcAfcApRespResponse, error)`      | Gets AFC EWLC AP response data  |
-| `GetAfcCloudOper`     | `(*AfcCloudOperResponse, error)`              | Gets AFC cloud operational data |
-| `GetAfcCloudStats`    | `(*AfcCloudOperAfcCloudStatsResponse, error)` | Gets AFC cloud statistics       |
-
-## 📡 Wireless Intrusion Prevention (AWIPS)
-
-| Function               | Return Type                               | Description                   |
-| ---------------------- | ----------------------------------------- | ----------------------------- |
-| `GetAwipsOper`         | `(*AwipsOperResponse, error)`             | Gets AWIPS operational data   |
-| `GetAwipsPerApInfo`    | `(*AwipsOperPerApInfoResponse, error)`    | Gets AWIPS per-AP information |
-| `GetAwipsDwldStatus`   | `(*AwipsOperDwldStatusResponse, error)`   | Gets AWIPS download status    |
-| `GetAwipsApDwldStatus` | `(*AwipsOperApDwldStatusResponse, error)` | Gets AWIPS AP download status |
-
-## 📶 Bluetooth Low Energy & Location
-
-| Function             | Return Type                         | Description                   |
-| -------------------- | ----------------------------------- | ----------------------------- |
-| `GetBleLtxOper`      | `(*BleLtxOperResponse, error)`      | Gets BLE LTX operational data |
-| `GetBleLtxApAntenna` | `(*BleLtxApAntennaResponse, error)` | Gets BLE LTX AP antenna data  |
-| `GetBleLtxAp`        | `(*BleLtxApResponse, error)`        | Gets BLE LTX AP data          |
-
-## 🏷️ Advanced Configuration
-
-| Function                      | Return Type                                  | Description                         |
-| ----------------------------- | -------------------------------------------- | ----------------------------------- |
-| `GetApfCfg`                   | `(*ApfCfgResponse, error)`                   | Gets APF configuration              |
-| `GetApf`                      | `(*ApfCfgApfResponse, error)`                | Gets APF data                       |
-| `GetDot11Cfg`                 | `(*Dot11CfgResponse, error)`                 | Gets 802.11 configuration           |
-| `GetDot11ConfiguredCountries` | `(*Dot11ConfiguredCountriesResponse, error)` | Gets 802.11 configured countries    |
-| `GetDot11acMcsEntries`        | `(*Dot11acMcsEntriesResponse, error)`        | Gets 802.11ac MCS entries           |
-| `GetDot11Entries`             | `(*Dot11EntriesResponse, error)`             | Gets 802.11 entries                 |
-| `GetDot15Cfg`                 | `(*Dot15CfgResponse, error)`                 | Gets 802.15 configuration           |
-| `GetDot15GlobalConfig`        | `(*Dot15GlobalConfigResponse, error)`        | Gets 802.15 global configuration    |
-| `GetFlexCfg`                  | `(*FlexCfgResponse, error)`                  | Gets FlexConnect configuration      |
-| `GetFlexCfgData`              | `(*FlexCfgDataResponse, error)`              | Gets FlexConnect configuration data |
-| `GetFabricCfg`                | `(*FabricCfgResponse, error)`                | Gets fabric configuration           |
-| `GetFabricControlplaneNames`  | `(*FabricControlplaneNamesResponse, error)`  | Gets fabric control plane names     |
-| `GetFabric`                   | `(*FabricResponse, error)`                   | Gets fabric data                    |
-| `GetRfidCfg`                  | `(*RfidCfgResponse, error)`                  | Gets RFID configuration             |
-
-## 🚨 Error Types
-
-Understanding error types helps you implement proper error handling and debugging in your applications.
-
-| Error Type            | Constant                  | Description                           | HTTP Status |
-| --------------------- | ------------------------- | ------------------------------------- | ----------- |
-| `APIError`            | -                         | API-specific errors with status codes | Various     |
-| `AuthenticationError` | `ErrAuthenticationFailed` | Invalid credentials or token          | 401         |
-| `AccessError`         | `ErrAccessForbidden`      | Insufficient permissions              | 403         |
-| `NotFoundError`       | `ErrResourceNotFound`     | Requested resource not found          | 404         |
-| `ConfigError`         | `ErrInvalidConfiguration` | Invalid client configuration          | -           |
-| `TimeoutError`        | `ErrRequestTimeout`       | Request timeout exceeded              | -           |
-
-### Error Handling Best Practices
-
-When implementing error handling in your applications:
+Application policy configuration and enforcement.
 
 ```go
-// Check for specific error types
-if errors.Is(err, wnc.ErrInvalidConfiguration) {
-    // Handle configuration errors
-    log.Printf("Configuration error: %v", err)
+apf := client.APF()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.ApfCfgResponse` | APF configuration |
+
+### AWIPS - Advanced Weather Interactive Processing System
+
+Weather-related processing system operations.
+
+```go
+awips := client.AWIPS()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.AwipsOperResponse` | AWIPS operational data |
+
+### BLE - Bluetooth Low Energy
+
+BLE beacon and asset tracking operations.
+
+```go
+ble := client.BLE()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.BleOperResponse` | BLE operational data |
+
+### Client - Wireless Client Management
+
+Comprehensive wireless client tracking and statistics.
+
+```go
+clientSvc := client.Client()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.ClientOperResponse` | Complete client operational data |
+| `CommonOperData(ctx)` | `*model.ClientOperCommonOperDataResponse` | Common client operational data |
+| `Dot11OperData(ctx)` | `*model.ClientOperDot11OperDataResponse` | 802.11 operational data |
+| `MobilityOperData(ctx)` | `*model.ClientOperMobilityOperDataResponse` | Mobility operational data |
+| `SiOperData(ctx)` | `*model.ClientOperSiOperDataResponse` | SI operational data |
+| `Dot11Stats(ctx)` | `*model.ClientOperDot11StatsResponse` | 802.11 statistics |
+| `TrafficStats(ctx)` | `*model.ClientOperTrafficStatsResponse` | Traffic statistics |
+
+### CTS - Cisco TrustSec
+
+Security group tagging and policy enforcement.
+
+```go
+cts := client.CTS()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.CtsCfgResponse` | CTS configuration |
+
+### Dot11 - 802.11 Wireless Standards
+
+802.11 wireless standard configuration.
+
+```go
+dot11 := client.Dot11()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.Dot11CfgResponse` | 802.11 configuration |
+
+### Dot15 - 802.15 Standards
+
+802.15 standard configuration for IoT and sensor networks.
+
+```go
+dot15 := client.Dot15()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.Dot15CfgResponse` | 802.15 configuration |
+
+### Fabric - SD-Access Fabric
+
+Software-Defined Access fabric operations.
+
+```go
+fabric := client.Fabric()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.FabricCfgResponse` | Fabric configuration |
+
+### Flex - FlexConnect
+
+FlexConnect local switching and CAPWAP operations.
+
+```go
+flex := client.Flex()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.FlexCfgResponse` | FlexConnect configuration |
+
+### General - General Controller Operations
+
+Core controller configuration and operational data.
+
+```go
+general := client.General()
+```
+
+#### Operational Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.GeneralOperResponse` | General operational data |
+| `MgmtIntfData(ctx)` | `*model.GeneralOperMgmtIntfDataResponse` | Management interface data |
+
+#### Configuration Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.GeneralCfgResponse` | General configuration |
+| `MewlcConfig(ctx)` | `*model.GeneralCfgMewlcConfigResponse` | MEWLC configuration |
+| `CountryConfigs(ctx)` | `*model.GeneralCfgCountryConfigsResponse` | Country configurations |
+
+### Geolocation - Location Services
+
+Geographic positioning and location mapping.
+
+```go
+geolocation := client.Geolocation()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.GeolocationOperResponse` | Geolocation operational data |
+
+### Hyperlocation - High-Precision Location
+
+Enhanced location services with sub-meter accuracy.
+
+```go
+hyperlocation := client.Hyperlocation()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.HyperlocationOperResponse` | Hyperlocation operational data |
+| `Profiles(ctx)` | `*model.HyperlocationProfilesResponse` | Hyperlocation profiles |
+
+### LISP - Locator/Identifier Separation Protocol
+
+LISP protocol operations for mobility and routing.
+
+```go
+lisp := client.LISP()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.LispOperResponse` | LISP operational data |
+
+### Location - Location Services Configuration
+
+Location services configuration and management.
+
+```go
+location := client.Location()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.LocationCfgResponse` | Location configuration |
+
+### Mcast - Multicast Services
+
+Multicast traffic management and IGMP operations.
+
+```go
+mcast := client.Mcast()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.McastOperResponse` | Multicast operational data |
+| `FlexMediastreamClientSummary(ctx)` | `*model.McastOperFlexMediastreamClientSummaryResponse` | FlexConnect mediastream summary |
+| `VlanL2MgidOp(ctx)` | `*model.McastOperVlanL2MgidOpResponse` | VLAN L2 multicast group operations |
+
+### mDNS - Multicast DNS
+
+Multicast DNS service discovery and statistics.
+
+```go
+mdns := client.Mdns()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.MdnsOperResponse` | mDNS operational data |
+| `GlobalStats(ctx)` | `*model.MdnsGlobalStatsResponse` | Global mDNS statistics |
+| `WlanStats(ctx)` | `*model.MdnsWlanStatsResponse` | Per-WLAN mDNS statistics |
+
+### Mesh - Mesh Networking
+
+Wireless mesh networking configuration and operations.
+
+```go
+mesh := client.Mesh()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.MeshOperResponse` | Mesh operational data |
+| `Cfg(ctx)` | `*model.MeshCfgResponse` | Mesh configuration |
+
+### Mobility - Client Mobility
+
+Inter-controller client mobility and roaming.
+
+```go
+mobility := client.Mobility()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.MobilityOperResponse` | Mobility operational data |
+
+### NMSP - Network Mobility Services Protocol
+
+Location services protocol for third-party integration.
+
+```go
+nmsp := client.NMSP()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.NmspOperResponse` | NMSP operational data |
+| `ClientRegistration(ctx)` | `*model.NmspClientRegistrationResponse` | Client registration data |
+| `CmxConnection(ctx)` | `*model.NmspCmxConnectionResponse` | CMX connection data |
+| `CmxCloudInfo(ctx)` | `*model.NmspCmxCloudInfoResponse` | CMX cloud information |
+
+### Radio - Radio Management
+
+Radio hardware configuration and control.
+
+```go
+radio := client.Radio()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.RadioCfgResponse` | Radio configuration |
+
+### RF - Radio Frequency Management
+
+RF profile and parameter management.
+
+```go
+rf := client.RF()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.RfCfgResponse` | RF configuration |
+
+### RFID - Radio Frequency Identification
+
+RFID tag tracking and asset management.
+
+```go
+rfid := client.RFID()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.RfidCfgResponse` | RFID configuration |
+
+### Rogue - Rogue AP Detection
+
+Rogue access point and client detection system.
+
+```go
+rogue := client.Rogue()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.RogueOperResponse` | Rogue operational data |
+| `Stats(ctx)` | `*model.RogueStatsResponse` | Rogue statistics |
+| `Data(ctx)` | `*model.RogueDataResponse` | Rogue detection data |
+| `ApSummary(ctx)` | `*model.RogueApSummaryResponse` | Rogue AP summary |
+| `ClientSummary(ctx)` | `*model.RogueClientSummaryResponse` | Rogue client summary |
+
+### RRM - Radio Resource Management
+
+Automated RF optimization and interference mitigation.
+
+```go
+rrm := client.RRM()
+```
+
+#### Configuration Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.RrmCfgResponse` | RRM configuration |
+
+#### Operational Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.RrmOperResponse` | RRM operational data |
+| `GlobalOper(ctx)` | `*model.RrmGlobalOperResponse` | Global RRM operational data |
+
+### Site - Site Management
+
+Site configuration and hierarchical management.
+
+```go
+site := client.Site()
+```
+
+#### Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Oper(ctx)` | `*model.SiteOperResponse` | Site operational data |
+
+### WLAN - Wireless LAN Configuration
+
+WLAN service set configuration and policy management.
+
+```go
+wlan := client.WLAN()
+```
+
+#### Configuration Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `Cfg(ctx)` | `*model.WlanCfgResponse` | Complete WLAN configuration |
+| `CfgEntries(ctx)` | `*model.WlanCfgEntriesResponse` | WLAN configuration entries |
+| `Policies(ctx)` | `*model.WlanPoliciesResponse` | WLAN policies |
+| `PolicyListEntries(ctx)` | `*model.PolicyListEntriesResponse` | Policy list entries |
+| `WirelessAaaPolicyConfigs(ctx)` | `*model.WirelessAaaPolicyConfigsResponse` | AAA policy configurations |
+
+#### Operational Methods
+
+| Method | Return Type | Description |
+|--------|-------------|-------------|
+| `GlobalOper(ctx)` | `*model.WlanGlobalOperResponse` | Global WLAN operational data |
+
+## 🎯 Usage Patterns
+
+### Basic Operations
+
+```go
+ctx := context.Background()
+
+// Get general controller information
+general, err := client.General().Oper(ctx)
+if err != nil {
+    log.Printf("Error: %v", err)
     return
 }
 
-// Handle HTTP errors
-var apiErr *wnc.APIError
-if errors.As(err, &apiErr) {
-    log.Printf("API error: status %d, message: %s", apiErr.StatusCode, apiErr.Message)
+fmt.Printf("Controller: %s\n", *general.GeneralOperData.EwlcGeneralOper.DeviceName)
+fmt.Printf("Version: %s\n", *general.GeneralOperData.EwlcGeneralOper.SoftwareVersion)
+```
+
+### Error Handling
+
+```go
+data, err := client.AP().Oper(ctx)
+if err != nil {
+    switch {
+    case strings.Contains(err.Error(), "timeout"):
+        log.Printf("Request timed out: %v", err)
+    case strings.Contains(err.Error(), "404"):
+        log.Printf("Endpoint not found: %v", err)
+    case strings.Contains(err.Error(), "401"):
+        log.Printf("Authentication failed: %v", err)
+    default:
+        log.Printf("API error: %v", err)
+    }
     return
 }
 ```
 
-### Standardized Error Messages
+### Context with Timeout
 
-The library uses consistent error message patterns:
+```go
+ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+defer cancel()
 
-- **Client validation**: `"invalid client configuration: client cannot be nil"`
-- **Authentication**: `"authentication failed: invalid credentials"`
-- **Network errors**: `"request failed: <underlying error>"`
+data, err := client.Client().Oper(ctx)
+if err != nil {
+    if ctx.Err() == context.DeadlineExceeded {
+        log.Printf("Request timed out")
+    } else {
+        log.Printf("Request failed: %v", err)
+    }
+    return
+}
+```
 
-> [!TIP]
-> Use type assertions or `errors.As()` to handle specific error types and provide appropriate user feedback or retry logic.
+### Concurrent Requests
+
+```go
+var wg sync.WaitGroup
+var mu sync.Mutex
+results := make(map[string]interface{})
+
+// Fetch multiple service data concurrently
+services := []string{"general", "ap", "wlan", "client"}
+wg.Add(len(services))
+
+for _, service := range services {
+    go func(svc string) {
+        defer wg.Done()
+        var data interface{}
+        var err error
+
+        switch svc {
+        case "general":
+            data, err = client.General().Oper(ctx)
+        case "ap":
+            data, err = client.AP().Oper(ctx)
+        case "wlan":
+            data, err = client.WLAN().Cfg(ctx)
+        case "client":
+            data, err = client.Client().Oper(ctx)
+        }
+
+        if err == nil {
+            mu.Lock()
+            results[svc] = data
+            mu.Unlock()
+        } else {
+            log.Printf("Failed to fetch %s data: %v", svc, err)
+        }
+    }(service)
+}
+
+wg.Wait()
+
+// Process results
+for service, data := range results {
+    log.Printf("Successfully fetched %s data", service)
+    // Process specific data types as needed
+}
+```
+
+## 📚 Response Models
+
+All API responses are **strongly typed** using Go structs that exactly match the Cisco IOS-XE RESTCONF API structure.
+
+### Key Characteristics
+
+- **YANG Model Compliance**: Structures follow Cisco YANG models exactly
+- **JSON Marshaling**: All fields have proper JSON tags for automatic parsing
+- **Null Safety**: Optional fields use pointers to handle nil values safely
+- **Type Safety**: Compile-time type checking prevents runtime errors
+
+### Example Response Structure
+
+```go
+type GeneralOperResponse struct {
+    GeneralOperData *GeneralOperData `json:"Cisco-IOS-XE-wireless-general-oper:general-oper-data,omitempty"`
+}
+
+type GeneralOperData struct {
+    EwlcGeneralOper *EwlcGeneralOper `json:"ewlc-general-oper,omitempty"`
+}
+
+type EwlcGeneralOper struct {
+    DeviceName       *string `json:"device-name,omitempty"`
+    SoftwareVersion  *string `json:"software-version,omitempty"`
+    UptimeSeconds    *uint64 `json:"uptime-seconds,omitempty"`
+    MaxApSupported   *uint32 `json:"max-ap-supported,omitempty"`
+    // ... additional fields
+}
+```
+
+### Working with Response Data
+
+```go
+// Safe field access with nil checking
+data, err := client.General().Oper(ctx)
+if err != nil {
+    return err
+}
+
+if data.GeneralOperData != nil &&
+   data.GeneralOperData.EwlcGeneralOper != nil {
+
+    if name := data.GeneralOperData.EwlcGeneralOper.DeviceName; name != nil {
+        fmt.Printf("Device Name: %s\n", *name)
+    }
+
+    if version := data.GeneralOperData.EwlcGeneralOper.SoftwareVersion; version != nil {
+        fmt.Printf("Software Version: %s\n", *version)
+    }
+}
+```
+
+## 🔒 Authentication & Security
+
+### Bearer Token Authentication
+
+The library uses **bearer token authentication** for secure API access:
+
+```go
+client, err := wnc.NewClient(
+    "https://controller.example.com",
+    "your-bearer-token-here",
+    wnc.WithTimeout(30*time.Second),
+)
+```
+
+### TLS Configuration
+
+#### Production Environment
+
+```go
+client, err := wnc.NewClient(
+    "https://controller.example.com",
+    "your-bearer-token",
+    wnc.WithInsecureSkipVerify(false), // Verify certificates
+    wnc.WithTimeout(30*time.Second),
+)
+```
+
+#### Development/Testing Environment
+
+```go
+client, err := wnc.NewClient(
+    "https://controller.example.com",
+    "your-bearer-token",
+    wnc.WithInsecureSkipVerify(true), // Skip certificate verification
+    wnc.WithTimeout(30*time.Second),
+)
+```
+
+## 🚀 Best Practices
+
+### 1. Context Management
+
+Always use `context.Context` for timeout and cancellation control:
+
+```go
+ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+defer cancel()
+
+data, err := client.General().Oper(ctx)
+```
+
+### 2. Error Handling
+
+Check and handle all returned errors appropriately:
+
+```go
+data, err := client.AP().Oper(ctx)
+if err != nil {
+    log.Printf("API call failed: %v", err)
+    return fmt.Errorf("failed to get AP data: %w", err)
+}
+```
+
+### 3. Client Reuse
+
+Create one client instance and reuse it across your application:
+
+```go
+// Good: Single client instance
+var client *wnc.Client
+
+func init() {
+    var err error
+    client, err = wnc.NewClient(host, token, options...)
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+
+func getAPData(ctx context.Context) (*model.ApOperResponse, error) {
+    return client.AP().Oper(ctx)
+}
+```
+
+### 4. Graceful Degradation
+
+Handle partial failures gracefully in concurrent operations:
+
+```go
+func fetchAllData(ctx context.Context) error {
+    var errors []error
+
+    if _, err := client.General().Oper(ctx); err != nil {
+        errors = append(errors, fmt.Errorf("general data: %w", err))
+    }
+
+    if _, err := client.AP().Oper(ctx); err != nil {
+        errors = append(errors, fmt.Errorf("AP data: %w", err))
+    }
+
+    if len(errors) > 0 {
+        // Log errors but continue with available data
+        for _, err := range errors {
+            log.Printf("Warning: %v", err)
+        }
+    }
+
+    return nil
+}
+```
+
+### 5. Resource Management
+
+Use defer statements for proper cleanup:
+
+```go
+func processData(ctx context.Context) error {
+    ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+    defer cancel() // Ensure context is cancelled
+
+    data, err := client.Client().Oper(ctx)
+    if err != nil {
+        return err
+    }
+
+    // Process data...
+    return nil
+}
+```
+
+## 📖 Additional Resources
+
+- **YANG Models**: [Cisco XE 17121 YANG Models](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121)
+- **RESTCONF Guide**: [Cisco IOS-XE RESTCONF Documentation](https://developer.cisco.com/docs/ios-xe/)
+- **Go Context**: [Go Context Package Documentation](https://pkg.go.dev/context)
+- **Cisco Catalyst 9800**: [Official Product Documentation](https://www.cisco.com/c/en/us/support/wireless/catalyst-9800-series-wireless-controllers/tsd-products-support-series-home.html)
