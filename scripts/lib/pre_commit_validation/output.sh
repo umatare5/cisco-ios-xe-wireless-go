@@ -9,10 +9,10 @@ set -euo pipefail
 show_pre_commit_banner() {
     if ! is_no_color_enabled; then
         cat << 'EOF'
-╔════════════════════════════════════════╗
-║       Pre-commit Validation            ║
-║       Branch Protection System         ║
-╚════════════════════════════════════════╝
+----------------------------------------
+       Pre-commit Validation
+       Branch Protection System
+----------------------------------------
 EOF
     else
         cat << 'EOF'

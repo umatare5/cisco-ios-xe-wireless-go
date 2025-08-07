@@ -7,7 +7,7 @@ set -euo pipefail
 
 cat << 'EOF'
 🔧 Cisco WNC Development Scripts
-===============================
+-------------------------------
 
 USAGE:
     make <target>                   # Use Makefile targets (recommended)

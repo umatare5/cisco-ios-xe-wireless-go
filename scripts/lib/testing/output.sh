@@ -57,7 +57,7 @@ display_test_summary() {
     local test_count="${4:-}"
 
     echo
-    echo "========================================="
+    echo "-----------------------------------------"
     if [[ "$exit_code" -eq 0 ]]; then
         format_test_success "$test_type tests completed successfully"
         [[ -n "$test_count" ]] && format_test_info "Tests executed: $test_count"
@@ -67,7 +67,7 @@ display_test_summary() {
     fi
 
     [[ "$duration" != "unknown" ]] && format_test_info "Duration: $duration"
-    echo "========================================="
+    echo "-----------------------------------------"
 }
 
 display_coverage_summary() {

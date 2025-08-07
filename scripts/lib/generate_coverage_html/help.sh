@@ -10,15 +10,15 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing
 
 show_coverage_html_banner() {
     if ! is_no_color_enabled; then
-        echo -e "\033[32m╔════════════════════════════════════════╗\033[0m"
-        echo -e "\033[32m║      Coverage HTML Generator          ║\033[0m"
-        echo -e "\033[32m║      Go Tool Cover Integration        ║\033[0m"
-        echo -e "\033[32m╚════════════════════════════════════════╝\033[0m"
+        echo -e "\033[32m----------------------------------------\033[0m"
+        echo -e "\033[32m      Coverage HTML Generator          \033[0m"
+        echo -e "\033[32m      Go Tool Cover Integration        \033[0m"
+        echo -e "\033[32m----------------------------------------\033[0m"
     else
-        echo "========================================"
+        echo "----------------------------------------"
         echo "      Coverage HTML Generator"
         echo "      Go Tool Cover Integration"
-        echo "========================================"
+        echo "----------------------------------------"
     fi
     echo
 }

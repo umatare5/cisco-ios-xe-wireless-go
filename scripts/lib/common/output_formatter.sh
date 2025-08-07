@@ -25,7 +25,7 @@ format_json_output() {
 format_yang_models_pretty() {
     local temp_file="$1"
     echo "Available YANG Models (Cisco Wireless):"
-    echo "======================================"
+    echo "--------------------------------------"
 
     # Early return with jq processing if available
     if is_jq_available; then
@@ -45,7 +45,7 @@ format_yang_models_pretty() {
 format_yang_model_details_pretty() {
     local temp_file="$1"
     echo "YANG Model Details:"
-    echo "=================="
+    echo "------------------"
 
     # Check if the file contains YANG module definition
     if grep -q "^module\|^submodule" "$temp_file" 2>/dev/null; then
@@ -77,7 +77,7 @@ display_configuration() {
 
     if [[ "$output_format" != "raw" ]]; then
         echo "Configuration:"
-        echo "============="
+        echo "-------------"
         echo "Protocol: $protocol"
         echo "Controller: $controller"
         echo "Output Format: $output_format"
@@ -273,11 +273,11 @@ show_raw_response() {
     fi
 
     echo "Raw Response:"
-    echo "============="
+    echo "-------------"
     cat "$temp_file"
     echo ""
     echo "Formatted Output:"
-    echo "================="
+    echo "-----------------"
 }
 
 # Show completion message

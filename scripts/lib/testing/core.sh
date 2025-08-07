@@ -217,7 +217,7 @@ run_integration_test_operation() {
     # Display environment info
     if is_verbose_enabled; then
         echo "Environment Configuration:"
-        echo "========================="
+        echo "-------------------------"
         if [[ -n "${WNC_CONTROLLER:-}" ]]; then
             format_test_success "WNC_CONTROLLER: ${WNC_CONTROLLER}"
         fi
