@@ -60,11 +60,11 @@ SCRIPT DETAILS:
     Available scripts:
     - clean_artifacts.sh      Clean build artifacts
     - install_dependencies.sh Install Go dependencies
-    - lint_code.sh           Run golangci-lint
+    - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests
     - test_integration.sh    Run integration tests
     - test_coverage.sh       Run coverage tests
-    - generate_coverage_html.sh Generate HTML coverage
+    - generate_coverage_report.sh Generate HTML coverage
     - list_yang_models.sh    List YANG models
     - get_yang_model_details.sh Get model details
     - get_yang_statement_details.sh Get statement details

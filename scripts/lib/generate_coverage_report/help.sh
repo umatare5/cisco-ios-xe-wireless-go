@@ -29,7 +29,7 @@ show_coverage_html_help() {
     show_coverage_html_banner
     cat << 'EOF'
 USAGE:
-    generate_coverage_html.sh [OPTIONS]
+    generate_coverage_report.sh [OPTIONS]
 
 DESCRIPTION:
     Generates an HTML coverage report from Go coverage data files.
@@ -44,13 +44,13 @@ OPTIONS:
 
 EXAMPLES:
     # Generate basic HTML report
-    generate_coverage_html.sh
+    generate_coverage_report.sh
 
     # Specify custom input and output
-    generate_coverage_html.sh -i coverage.out -o report.html
+    generate_coverage_report.sh -i coverage.out -o report.html
 
     # Generate for specific project
-    generate_coverage_html.sh --project /path/to/project
+    generate_coverage_report.sh --project /path/to/project
 
 REQUIREMENTS:
     - Go toolchain must be installed
@@ -58,7 +58,7 @@ REQUIREMENTS:
 
 WORKFLOW:
     1. Run coverage tests: ./scripts/test_coverage.sh
-    2. Generate HTML report: ./scripts/generate_coverage_html.sh
+    2. Generate HTML report: ./scripts/generate_coverage_report.sh
     3. Open report in browser: open ./tmp/coverage.html
 
 EOF

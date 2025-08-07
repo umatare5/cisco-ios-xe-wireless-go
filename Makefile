@@ -7,7 +7,8 @@
 # For specific script options, use: ./scripts/<script_name>.sh --help
 
 .PHONY: help clean deps lint test-unit test-integration test-coverage \
-        test-coverage-html build yang-list yang-model yang-statement
+        test-coverage-html build yang-list yang-model yang-statement \
+        pre-commit-install pre-commit-test pre-commit-uninstall
 
 # Default target
 help:
@@ -23,7 +24,7 @@ deps:
 
 # Run linting tools
 lint:
-	@./scripts/lint_code.sh
+	@./scripts/lint.sh
 
 # Run unit tests only
 test-unit:
@@ -39,7 +40,7 @@ test-coverage:
 
 # Generate HTML coverage report
 test-coverage-html:
-	@./scripts/generate_coverage_html.sh
+	@./scripts/generate_coverage_report.sh
 
 # Verify build compilation
 build:
@@ -59,3 +60,18 @@ yang-model:
 # (usage: make yang-statement MODEL=model-name STATEMENT=statement-name)
 yang-statement:
 	@./scripts/get_yang_statement_details.sh $(MODEL) $(STATEMENT)
+
+# Pre-commit Hook Management
+# Install pre-commit hook to prevent direct commits to main branch
+pre-commit-install:
+	@ln -sf ../../scripts/pre_commit_hook.sh .git/hooks/pre-commit
+	@echo "✓ Pre-commit hook installed"
+
+# Test pre-commit hook without installing
+pre-commit-test:
+	@./scripts/pre_commit_hook.sh
+
+# Uninstall pre-commit hook
+pre-commit-uninstall:
+	@rm -f .git/hooks/pre-commit
+	@echo "✓ Pre-commit hook uninstalled"

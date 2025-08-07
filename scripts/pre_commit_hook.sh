@@ -9,6 +9,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly MODULE_DIR="${SCRIPT_DIR}/lib/pre_commit_validation"
 
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
@@ -20,8 +21,8 @@ init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/pre_commit_validation"
 validate_required_cli_tools "minimal"
 
 # Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_enabled "${argc_verbose:-0}"; }
-is_no_color_enabled() { is_enabled "${argc_no_color:-0}"; }
+is_verbose_enabled() { [[ "${argc_verbose:-0}" == "1" ]]; }
+is_no_color_enabled() { [[ "${argc_no_color:-0}" == "1" ]]; }
 
 main() {
     run_pre_commit_validation

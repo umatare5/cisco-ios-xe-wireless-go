@@ -32,20 +32,20 @@ BEHAVIOR:
 
 USAGE:
     # Direct execution
-    ./scripts/validate_pre_commit.sh [--verbose] [--no-color]
+    ./scripts/pre_commit_hook.sh [--verbose] [--no-color]
 
     # As Git hook (install)
-    ln -sf ../../scripts/validate_pre_commit.sh .git/hooks/pre-commit
+    ln -sf ../../scripts/pre_commit_hook.sh .git/hooks/pre-commit
 
 EXAMPLES:
     # Basic validation
-    ./scripts/validate_pre_commit.sh
+    ./scripts/pre_commit_hook.sh
 
     # Verbose output
-    ./scripts/validate_pre_commit.sh --verbose
+    ./scripts/pre_commit_hook.sh --verbose
 
     # No color output
-    ./scripts/validate_pre_commit.sh --no-color
+    ./scripts/pre_commit_hook.sh --no-color
 
 EMERGENCY BYPASS:
     If you need to make an emergency commit to main:
@@ -98,8 +98,8 @@ show_emergency_bypass() {
 # Show installation instructions
 show_installation_help() {
     help_info "To install as Git pre-commit hook:"
-    help_info "   ln -sf ../../scripts/validate_pre_commit.sh .git/hooks/pre-commit"
+    help_info "   ln -sf ../../scripts/pre_commit_hook.sh .git/hooks/pre-commit"
     echo
     help_info "To test without installing:"
-    help_info "   ./scripts/validate_pre_commit.sh"
+    help_info "   ./scripts/pre_commit_hook.sh"
 }

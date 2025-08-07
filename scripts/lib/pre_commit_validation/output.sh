@@ -5,6 +5,23 @@
 
 set -euo pipefail
 
+# Helper functions for colored output
+show_info() {
+    if ! is_no_color_enabled; then
+        printf "\033[36mℹ Info:\033[0m %s\n" "$*"
+    else
+        printf "Info: %s\n" "$*"
+    fi
+}
+
+show_warning() {
+    if ! is_no_color_enabled; then
+        printf "\033[33m⚠ Warning:\033[0m %s\n" "$*" >&2
+    else
+        printf "Warning: %s\n" "$*" >&2
+    fi
+}
+
 # Banner display
 show_pre_commit_banner() {
     if ! is_no_color_enabled; then

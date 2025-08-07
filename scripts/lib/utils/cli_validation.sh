@@ -60,12 +60,12 @@ get_cli_description() {
 get_cli_tools_for_category() {
     local category="${1:-}"
     case "$category" in
-        "essential") echo "bash date echo printf pwd cd mkdir rm dirname basename command" ;;
+        "essential") echo "go" ;;  # Only Go for essential tools
         "go_tools") echo "go gotestsum golangci-lint" ;;
         "http_client") echo "curl" ;;
-        "text_processing") echo "grep awk sed head tail cat cut tr sort uniq wc" ;;
-        "system_tools") echo "find xargs stat env export set source eval" ;;
-        "optional") echo "open bc type which" ;;
+        "text_processing") echo "" ;;  # Remove standard text tools
+        "system_tools") echo "" ;;     # Remove standard system tools
+        "optional") echo "open bc" ;;  # Keep macOS-specific and optional tools
         *) echo "" ;;
     esac
 }
@@ -77,16 +77,16 @@ get_cli_tools_for_level() {
 
     case "$level" in
         "strict")
-            categories="essential go_tools http_client text_processing system_tools"
+            categories="essential go_tools http_client optional"
             ;;
         "standard")
-            categories="essential go_tools http_client text_processing"
+            categories="essential go_tools http_client"
             ;;
         "minimal")
-            categories="essential go_tools"
+            categories="essential"
             ;;
         *)
-            categories="essential go_tools"
+            categories="essential"
             ;;
     esac
 

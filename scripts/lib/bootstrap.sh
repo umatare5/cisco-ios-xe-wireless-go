@@ -17,7 +17,6 @@ fi
 
 # Core library loading
 source_core_libraries() {
-    source "${WNC_CORE_LIB}/common.sh"
     source "${WNC_CORE_LIB}/constants.sh"
     source "${WNC_CORE_LIB}/argc_common.sh"
     source "${WNC_CORE_LIB}/argument_parsing.sh"

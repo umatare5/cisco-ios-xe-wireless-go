@@ -4,10 +4,6 @@ set -euo pipefail
 # Cisco WNC Lint Code - Core Functions
 # Core business logic for code linting operations
 
-# Source common predicates
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/common.sh"
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../common/argument_parsing.sh"
-
 validate_lint_environment() {
     local project_root="$1"
 

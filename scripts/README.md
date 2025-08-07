@@ -51,33 +51,33 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 
 ### Development Scripts
 
-| Script | Purpose | Key Options |
-|--------|---------|-------------|
+| Script                    | Purpose                | Key Options                       |
+| ------------------------- | ---------------------- | --------------------------------- |
 | `install_dependencies.sh` | Manage Go dependencies | `--clean`, `--update`, `--verify` |
-| `lint_code.sh` | Code quality analysis | `--fix`, `--config <file>` |
-| `clean_artifacts.sh` | Clean build artifacts | `--dry-run`, `--force`, `--all` |
+| `lint.sh`                 | Code quality analysis  | `--fix`, `--config <file>`        |
+| `clean_artifacts.sh`      | Clean build artifacts  | `--dry-run`, `--force`, `--all`   |
 
 ### Testing Scripts
 
-| Script | Purpose | Key Options |
-|--------|---------|-------------|
-| `test_unit.sh` | Execute unit tests | `--short`, `--coverage`, `--verbose` |
-| `test_integration.sh` | Execute integration tests | `--check-env-only`, `--timeout <duration>` |
-| `test_coverage.sh` | Generate coverage reports | `--short`, `--html` |
-| `generate_coverage_html.sh` | Generate HTML coverage | `--input <file>`, `--output <file>` |
+| Script                        | Purpose                   | Key Options                                |
+| ----------------------------- | ------------------------- | ------------------------------------------ |
+| `test_unit.sh`                | Execute unit tests        | `--short`, `--coverage`, `--verbose`       |
+| `test_integration.sh`         | Execute integration tests | `--check-env-only`, `--timeout <duration>` |
+| `test_coverage.sh`            | Generate coverage reports | `--short`, `--html`                        |
+| `generate_coverage_report.sh` | Generate HTML coverage    | `--input <file>`, `--output <file>`        |
 
 ### YANG Operations Scripts
 
-| Script | Purpose | Key Options |
-|--------|---------|-------------|
-| `list_yang_models.sh` | List available YANG models | `--insecure`, `--format <json\|xml>` |
-| `get_yang_model_details.sh` | Get specific model details | `--insecure`, `--verbose` |
-| `get_yang_statement_details.sh` | Get statement details | `--insecure`, `--verbose` |
+| Script                          | Purpose                    | Key Options                          |
+| ------------------------------- | -------------------------- | ------------------------------------ |
+| `list_yang_models.sh`           | List available YANG models | `--insecure`, `--format <json\|xml>` |
+| `get_yang_model_details.sh`     | Get specific model details | `--insecure`, `--verbose`            |
+| `get_yang_statement_details.sh` | Get statement details      | `--insecure`, `--verbose`            |
 
 ### Utility Scripts
 
-| Script | Purpose | Key Options |
-|--------|---------|-------------|
+| Script         | Purpose                    | Key Options  |
+| -------------- | -------------------------- | ------------ |
 | `show_help.sh` | Display comprehensive help | `--no-color` |
 
 ## 🛠 Advanced Usage
@@ -87,7 +87,7 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 ```bash
 # Complete development cycle
 ./scripts/install_dependencies.sh --clean    # Fresh dependency install
-./scripts/lint_code.sh --fix                 # Auto-fix code issues
+./scripts/lint.sh --fix                      # Auto-fix code issues
 ./scripts/test_unit.sh --coverage       # Test with coverage
 ./scripts/test_integration.sh           # Full integration tests
 ./scripts/clean_artifacts.sh                 # Clean up
@@ -117,7 +117,7 @@ export WNC_CONTROLLER="wnc1.example.internal"                          # Control
 
 # Coverage analysis with HTML output
 ./scripts/test_coverage.sh --short
-./scripts/generate_coverage_html.sh --input ./tmp/coverage.out
+./scripts/generate_coverage_report.sh --input ./tmp/coverage.out
 
 # Dependency management
 ./scripts/install_dependencies.sh --update --verify
@@ -159,10 +159,10 @@ scripts/
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable           | Description                        | Default               |
+| ------------------ | ---------------------------------- | --------------------- |
 | `WNC_ACCESS_TOKEN` | Base64 encoded credentials for WNC | Required for YANG ops |
-| `WNC_CONTROLLER` | WNC controller hostname/IP | Required for YANG ops |
+| `WNC_CONTROLLER`   | WNC controller hostname/IP         | Required for YANG ops |
 
 ### Script Options
 
@@ -183,11 +183,11 @@ YANG scripts additionally support:
 
 ### Expected Test Results
 
-| Test Type | Expected Outcome | Notes |
-|-----------|------------------|-------|
-| Unit Tests | ✅ All Pass | ~10s execution time |
-| Integration Tests | ✅ All Pass | 6GHz tests may skip (expected) |
-| Coverage Tests | ✅ 70%+ Coverage | Target: 75%+ overall |
+| Test Type         | Expected Outcome | Notes                          |
+| ----------------- | ---------------- | ------------------------------ |
+| Unit Tests        | ✅ All Pass      | ~10s execution time            |
+| Integration Tests | ✅ All Pass      | 6GHz tests may skip (expected) |
+| Coverage Tests    | ✅ 70%+ Coverage | Target: 75%+ overall           |
 
 ### Known Limitations
 
@@ -253,4 +253,4 @@ For detailed script-specific options and examples, run any script with `--help`:
 ./scripts/<script_name>.sh --help
 ```
 
-*This project uses a modular script architecture designed for maintainability, consistency, and ease of use across all development operations.*
+_This project uses a modular script architecture designed for maintainability, consistency, and ease of use across all development operations._

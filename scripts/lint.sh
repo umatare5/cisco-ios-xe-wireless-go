@@ -16,8 +16,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
 
-# Initialize WNC libraries with lint_code module
-init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/lint_code"
+# Initialize WNC libraries with lint module
+init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/lint"
 
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"

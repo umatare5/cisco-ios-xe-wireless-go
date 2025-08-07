@@ -4,8 +4,6 @@ set -euo pipefail
 # Cisco WNC Lint Code - Output Functions
 # Handles output formatting and display for lint operations
 
-source "$(dirname "${BASH_SOURCE[0]}")/../common/argument_parsing.sh"
-
 format_lint_error() {
     local message="$1"
     if ! is_no_color_enabled; then

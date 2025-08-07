@@ -29,7 +29,7 @@ show_lint_help() {
     show_lint_banner
     cat << 'EOF'
 USAGE:
-    lint_code.sh [OPTIONS]
+    lint.sh [OPTIONS]
 
 DESCRIPTION:
     Runs golangci-lint to analyze Go code for potential issues, style violations,
@@ -44,16 +44,16 @@ OPTIONS:
 
 EXAMPLES:
     # Basic linting
-    lint_code.sh
+    lint.sh
 
     # Lint with auto-fix
-    lint_code.sh --fix
+    lint.sh --fix
 
     # Lint specific project directory
-    lint_code.sh --project /path/to/project
+    lint.sh --project /path/to/project
 
     # Use custom config
-    lint_code.sh --config .golangci.custom.yml
+    lint.sh --config .golangci.custom.yml
 
 REQUIREMENTS:
     - golangci-lint must be installed
