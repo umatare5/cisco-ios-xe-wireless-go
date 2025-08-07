@@ -43,7 +43,7 @@ const (
 	EwlcApStatsEndpoint = ApGlobalOperBasePath + "/ewlc-ap-stats"
 )
 
-// Service provides all access point operations.
+// Service provides access point operations.
 type Service struct {
 	c *core.Client
 }

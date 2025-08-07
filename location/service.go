@@ -15,7 +15,7 @@ const (
 	LocationCfgEndpoint = LocationCfgBasePath
 )
 
-// Service provides Location services operations.
+// Service provides Location operations.
 type Service struct {
 	c *core.Client
 }

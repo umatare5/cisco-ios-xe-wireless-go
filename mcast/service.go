@@ -19,7 +19,7 @@ const (
 	VlanL2MgidOpEndpoint = McastOperBasePath + "/vlan-l2-mgid-op"
 )
 
-// Service provides multicast operations.
+// Service provides Multicast operations.
 type Service struct {
 	c *core.Client
 }
