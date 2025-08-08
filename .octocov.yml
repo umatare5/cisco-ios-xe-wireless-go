@@ -3,6 +3,9 @@ coverage:
   if: true
   paths:
     - coverage/report.out
+  exclude:               # Exclude non-library or helper-only code from coverage denominator
+    - ^examples/         # Example programs (not part of shipped library API)
+    - ^internal/tests/   # Test helper utilities not requiring production coverage
   acceptable: 95%
   badge:
     path: docs/coverage.svg
