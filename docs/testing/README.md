@@ -4,29 +4,29 @@ Deterministic tests enforce ≥99% coverage.
 
 ## Types
 
-| Kind | Scope | Live Controller |
-|------|-------|-----------------|
-| Unit | Pure logic | No |
-| Integration | RESTCONF GET | Yes |
-| Coverage | Aggregated | Mixed |
+| Kind        | Scope        | Live Controller |
+| ----------- | ------------ | --------------- |
+| Unit        | Pure logic   | No              |
+| Integration | RESTCONF GET | Yes             |
+| Coverage    | Aggregated   | Mixed           |
 
 ## Env
 
-| Var | Meaning |
-|-----|---------|
-| `WNC_CONTROLLER` | Host/IP |
+| Var                | Meaning      |
+| ------------------ | ------------ |
+| `WNC_CONTROLLER`   | Host/IP      |
 | `WNC_ACCESS_TOKEN` | Base64 creds |
 
 Missing vars = hard fail.
 
 ## Commands
 
-| Make | Purpose |
-|------|---------|
-| `test-unit` | Unit tests + lint |
-| `test-integration` | Live tests (lint) |
-| `test-coverage` | Merged coverage -> `coverage/report.out` |
-| `test-coverage-report` | HTML view |
+| Make                   | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| `test-unit`            | Unit tests + lint                        |
+| `test-integration`     | Live tests (lint)                        |
+| `test-coverage`        | Merged coverage -> `coverage/report.out` |
+| `test-coverage-report` | HTML view                                |
 
 ## Patterns
 

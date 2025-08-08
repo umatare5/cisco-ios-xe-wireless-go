@@ -92,7 +92,7 @@ github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:404:		WLAN	
 github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:410:		Rogue				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:416:		NMSP				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:422:		Hyperlocation			100.0%
-github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:428:		Mdns				100.0%
+github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:428:		MDNS				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:434:		Geolocation			100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:440:		Mcast				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go:446:		APF				100.0%
@@ -223,7 +223,7 @@ github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:142:				Hyperlocation			100.
 github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:147:				LISP				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:152:				Location			100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:157:				Mcast				100.0%
-github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:162:				Mdns				100.0%
+github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:162:				MDNS				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:167:				Mesh				100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:172:				Mobility			100.0%
 github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go:177:				NMSP				100.0%
