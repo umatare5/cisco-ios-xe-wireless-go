@@ -26,12 +26,12 @@ deps:
 lint:
 	@./scripts/lint.sh
 
-# Run unit tests only
-test-unit:
+# Run unit tests only (lint runs first for code quality)
+test-unit: lint
 	@./scripts/test_unit.sh
 
-# Run integration tests (requires environment variables)
-test-integration:
+# Run integration tests (requires environment variables; lint runs first)
+test-integration: lint
 	@./scripts/test_integration.sh
 
 # Run tests with coverage analysis
