@@ -2,10 +2,9 @@ package lisp
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Oper returns LISP operational data.
 func (s Service) Oper(ctx context.Context) (*model.LispOperResponse, error) {
-	var result model.LispOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, LispOperEndpoint, &result)
+	return core.Get[model.LispOperResponse](ctx, s.c, LispOperEndpoint)
 }

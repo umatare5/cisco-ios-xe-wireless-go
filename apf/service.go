@@ -2,10 +2,9 @@ package apf
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns APF configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.ApfCfgResponse, error) {
-	var result model.ApfCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, ApfCfgEndpoint, &result)
+	return core.Get[model.ApfCfgResponse](ctx, s.c, ApfCfgEndpoint)
 }

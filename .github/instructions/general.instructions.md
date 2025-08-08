@@ -27,9 +27,9 @@ Copilot **MUST** comply with all instructions described in this document when ed
 
 ---
 
-## 💡 Special Instructions for Claude Sonnet 4
+## 💡 Special Instructions for GPT-5
 
-When you using Claude Sonnet 4:
+When you using GPT-5:
 
 - **MUST** execute at the start of the prompt:
 

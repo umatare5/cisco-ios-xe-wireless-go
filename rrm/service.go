@@ -9,25 +9,25 @@ import (
 )
 
 const (
-	// RrmCfgBasePath defines the base path for RRM configuration endpoints
-	RrmCfgBasePath = constants.YANGModelPrefix + "rrm-cfg:rrm-cfg-data"
-	// RrmCfgEndpoint retrieves complete RRM configuration data
-	RrmCfgEndpoint = RrmCfgBasePath
+	// RRMCfgBasePath defines the base path for RRM configuration endpoints
+	RRMCfgBasePath = constants.YANGModelPrefix + "rrm-cfg:rrm-cfg-data"
+	// RRMCfgEndpoint retrieves complete RRM configuration data
+	RRMCfgEndpoint = RRMCfgBasePath
 
-	// RrmOperBasePath defines the base path for RRM operational data endpoints
-	RrmOperBasePath = constants.YANGModelPrefix + "rrm-oper:rrm-oper-data"
-	// RrmOperEndpoint retrieves RRM operational data
-	RrmOperEndpoint = RrmOperBasePath
+	// RRMOperBasePath defines the base path for RRM operational data endpoints
+	RRMOperBasePath = constants.YANGModelPrefix + "rrm-oper:rrm-oper-data"
+	// RRMOperEndpoint retrieves RRM operational data
+	RRMOperEndpoint = RRMOperBasePath
 
-	// RrmGlobalOperBasePath defines the base path for RRM global operational data endpoints
-	RrmGlobalOperBasePath = constants.YANGModelPrefix + "rrm-global-oper:rrm-global-oper-data"
-	// RrmGlobalOperEndpoint retrieves RRM global operational data
-	RrmGlobalOperEndpoint = RrmGlobalOperBasePath
+	// RRMGlobalOperBasePath defines the base path for RRM global operational data endpoints
+	RRMGlobalOperBasePath = constants.YANGModelPrefix + "rrm-global-oper:rrm-global-oper-data"
+	// RRMGlobalOperEndpoint retrieves RRM global operational data
+	RRMGlobalOperEndpoint = RRMGlobalOperBasePath
 
-	// RrmEmulOperBasePath defines the base path for RRM emulation operational data endpoints
-	RrmEmulOperBasePath = constants.YANGModelPrefix + "rrm-emul-oper:rrm-emul-oper-data"
-	// RrmEmulOperEndpoint retrieves RRM emulation operational data
-	RrmEmulOperEndpoint = RrmEmulOperBasePath
+	// RRMEmulOperBasePath defines the base path for RRM emulation operational data endpoints
+	RRMEmulOperBasePath = constants.YANGModelPrefix + "rrm-emul-oper:rrm-emul-oper-data"
+	// RRMEmulOperEndpoint retrieves RRM emulation operational data
+	RRMEmulOperEndpoint = RRMEmulOperBasePath
 )
 
 // Service provides RRM operations.
@@ -43,19 +43,23 @@ func NewService(c *core.Client) Service {
 // Configuration Methods
 
 // Cfg returns complete RRM configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.RrmCfgResponse, error) { return core.Get[model.RrmCfgResponse](ctx, s.c, RrmCfgEndpoint) }
+func (s Service) Cfg(ctx context.Context) (*model.RrmCfgResponse, error) {
+	return core.Get[model.RrmCfgResponse](ctx, s.c, RRMCfgEndpoint)
+}
 
 // Operational Methods
 
 // Oper returns RRM operational data.
-func (s Service) Oper(ctx context.Context) (*model.RrmOperResponse, error) { return core.Get[model.RrmOperResponse](ctx, s.c, RrmOperEndpoint) }
+func (s Service) Oper(ctx context.Context) (*model.RrmOperResponse, error) {
+	return core.Get[model.RrmOperResponse](ctx, s.c, RRMOperEndpoint)
+}
 
 // GlobalOper returns RRM global operational data.
 func (s Service) GlobalOper(ctx context.Context) (*model.RrmGlobalOperResponse, error) {
-	return core.Get[model.RrmGlobalOperResponse](ctx, s.c, RrmGlobalOperEndpoint)
+	return core.Get[model.RrmGlobalOperResponse](ctx, s.c, RRMGlobalOperEndpoint)
 }
 
 // EmulOper returns RRM emulation operational data.
 func (s Service) EmulOper(ctx context.Context) (*model.RrmEmulOperResponse, error) {
-	return core.Get[model.RrmEmulOperResponse](ctx, s.c, RrmEmulOperEndpoint)
+	return core.Get[model.RrmEmulOperResponse](ctx, s.c, RRMEmulOperEndpoint)
 }

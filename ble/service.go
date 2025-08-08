@@ -2,10 +2,9 @@ package ble
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Oper returns BLE operational data.
 func (s Service) Oper(ctx context.Context) (*model.BleOperResponse, error) {
-	var result model.BleOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, BleOperEndpoint, &result)
+	return core.Get[model.BleOperResponse](ctx, s.c, BleOperEndpoint)
 }

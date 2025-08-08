@@ -2,10 +2,9 @@ package mdns
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -32,18 +31,15 @@ func NewService(c *core.Client) Service {
 
 // Oper returns mDNS operational data.
 func (s Service) Oper(ctx context.Context) (*model.MdnsOperResponse, error) {
-	var out model.MdnsOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MdnsOperEndpoint, &out)
+	return core.Get[model.MdnsOperResponse](ctx, s.c, MdnsOperEndpoint)
 }
 
 // GlobalStats returns mDNS global statistics.
 func (s Service) GlobalStats(ctx context.Context) (*model.MdnsGlobalStatsResponse, error) {
-	var out model.MdnsGlobalStatsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MdnsGlobalStatsEndpoint, &out)
+	return core.Get[model.MdnsGlobalStatsResponse](ctx, s.c, MdnsGlobalStatsEndpoint)
 }
 
 // WlanStats returns mDNS WLAN statistics.
 func (s Service) WlanStats(ctx context.Context) (*model.MdnsWlanStatsResponse, error) {
-	var out model.MdnsWlanStatsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MdnsWlanStatsEndpoint, &out)
+	return core.Get[model.MdnsWlanStatsResponse](ctx, s.c, MdnsWlanStatsEndpoint)
 }

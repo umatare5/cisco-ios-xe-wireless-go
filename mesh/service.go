@@ -2,10 +2,9 @@ package mesh
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -33,12 +32,10 @@ func NewService(client *core.Client) Service {
 
 // Oper returns Mesh operational data.
 func (s Service) Oper(ctx context.Context) (*model.MeshOperResponse, error) {
-	var result model.MeshOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, MeshOperEndpoint, &result)
+	return core.Get[model.MeshOperResponse](ctx, s.c, MeshOperEndpoint)
 }
 
 // Cfg returns Mesh configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.MeshCfgResponse, error) {
-	var result model.MeshCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, MeshCfgEndpoint, &result)
+	return core.Get[model.MeshCfgResponse](ctx, s.c, MeshCfgEndpoint)
 }

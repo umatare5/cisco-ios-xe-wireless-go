@@ -2,10 +2,9 @@ package rf
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns RF configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.RfCfgResponse, error) {
-	var result model.RfCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, RfCfgEndpoint, &result)
+	return core.Get[model.RfCfgResponse](ctx, s.c, RfCfgEndpoint)
 }

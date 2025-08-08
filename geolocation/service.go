@@ -2,10 +2,9 @@ package geolocation
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -31,12 +30,10 @@ func NewService(c *core.Client) Service {
 // Oper returns geolocation operational data.
 // This endpoint provides geographic positioning and location mapping information.
 func (s Service) Oper(ctx context.Context) (*model.GeolocationOperResponse, error) {
-	var result model.GeolocationOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, GeolocationOperEndpoint, &result)
+	return core.Get[model.GeolocationOperResponse](ctx, s.c, GeolocationOperEndpoint)
 }
 
 // ApGeoLocStats returns AP geolocation statistics.
 func (s Service) ApGeoLocStats(ctx context.Context) (*model.GeolocationOperApGeoLocStatsResponse, error) {
-	var result model.GeolocationOperApGeoLocStatsResponse
-	return &result, s.c.Do(ctx, http.MethodGet, GeolocationOperApGeoLocStatsEndpoint, &result)
+	return core.Get[model.GeolocationOperApGeoLocStatsResponse](ctx, s.c, GeolocationOperApGeoLocStatsEndpoint)
 }

@@ -2,10 +2,9 @@ package cts
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns CTS configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.CtsCfgResponse, error) {
-	var result model.CtsCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, CtsCfgEndpoint, &result)
+	return core.Get[model.CtsCfgResponse](ctx, s.c, CtsCfgEndpoint)
 }

@@ -2,10 +2,9 @@ package mobility
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Oper returns Mobility operational data.
 func (s Service) Oper(ctx context.Context) (*model.MobilityOperResponse, error) {
-	var result model.MobilityOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, MobilityOperEndpoint, &result)
+	return core.Get[model.MobilityOperResponse](ctx, s.c, MobilityOperEndpoint)
 }

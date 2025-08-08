@@ -2,7 +2,6 @@ package site
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Oper returns Site operational data.
 func (s Service) Oper(ctx context.Context) (*model.SiteOperResponse, error) {
-	var result model.SiteOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, SiteOperEndpoint, &result)
+	return core.Get[model.SiteOperResponse](ctx, s.c, SiteOperEndpoint)
 }

@@ -2,10 +2,9 @@ package mcast
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -32,20 +31,15 @@ func NewService(c *core.Client) Service {
 
 // Oper returns multicast operational data.
 func (s Service) Oper(ctx context.Context) (*model.McastOperResponse, error) {
-	var out model.McastOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, McastOperEndpoint, &out)
+	return core.Get[model.McastOperResponse](ctx, s.c, McastOperEndpoint)
 }
 
 // FlexMediastreamClientSummary returns FlexConnect mediastream client summary data.
-func (s Service) FlexMediastreamClientSummary(
-	ctx context.Context,
-) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
-	var out model.McastOperFlexMediastreamClientSummaryResponse
-	return &out, s.c.Do(ctx, http.MethodGet, FlexMediastreamClientSummaryEndpoint, &out)
+func (s Service) FlexMediastreamClientSummary(ctx context.Context) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
+	return core.Get[model.McastOperFlexMediastreamClientSummaryResponse](ctx, s.c, FlexMediastreamClientSummaryEndpoint)
 }
 
 // VlanL2MgidOp returns VLAN Layer 2 multicast group ID operational data.
 func (s Service) VlanL2MgidOp(ctx context.Context) (*model.McastOperVlanL2MgidOpResponse, error) {
-	var out model.McastOperVlanL2MgidOpResponse
-	return &out, s.c.Do(ctx, http.MethodGet, VlanL2MgidOpEndpoint, &out)
+	return core.Get[model.McastOperVlanL2MgidOpResponse](ctx, s.c, VlanL2MgidOpEndpoint)
 }

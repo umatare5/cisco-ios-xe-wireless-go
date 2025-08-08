@@ -2,10 +2,9 @@ package location
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns Location configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.LocationCfgResponse, error) {
-	var result model.LocationCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, LocationCfgEndpoint, &result)
+	return core.Get[model.LocationCfgResponse](ctx, s.c, LocationCfgEndpoint)
 }

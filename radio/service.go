@@ -2,10 +2,9 @@ package radio
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns Radio configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.RadioCfgResponse, error) {
-	var result model.RadioCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, RadioCfgEndpoint, &result)
+	return core.Get[model.RadioCfgResponse](ctx, s.c, RadioCfgEndpoint)
 }

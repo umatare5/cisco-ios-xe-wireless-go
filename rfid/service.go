@@ -3,16 +3,16 @@ package rfid
 import (
 	"context"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 )
 
 const (
-	// RfidCfgBasePath defines the base path for RFID configuration endpoints
-	RfidCfgBasePath = constants.YANGModelPrefix + "rfid-cfg:rfid-cfg-data"
-	// RfidCfgEndpoint defines the endpoint for RFID configuration data
-	RfidCfgEndpoint = RfidCfgBasePath
+	// RFIDCfgBasePath defines the base path for RFID configuration endpoints
+	RFIDCfgBasePath = constants.YANGModelPrefix + "rfid-cfg:rfid-cfg-data"
+	// RFIDCfgEndpoint defines the endpoint for RFID configuration data
+	RFIDCfgEndpoint = RFIDCfgBasePath
 )
 
 // Service provides RFID operations.
@@ -27,5 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns RFID configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.RfidCfgResponse, error) {
-	return core.Get[model.RfidCfgResponse](ctx, s.c, RfidCfgEndpoint)
+	return core.Get[model.RfidCfgResponse](ctx, s.c, RFIDCfgEndpoint)
 }
