@@ -23,7 +23,7 @@ applyTo: "**/*.sh"
 | Style       | 2-space indent, ≤120 char logical lines                            |
 | Globals     | Minimize; prefer local. Constants: `readonly NAME="value"`         |
 | Predicate   | Use `is_*` functions for flag checks (`argc_flag==1`)              |
-| Naming      | All functions lowercase snake_case                                |
+| Naming      | All functions lowercase snake_case                                 |
 | Temp Files  | Under `./tmp`; cleanup via trap                                    |
 | Exit Codes  | 0 success; non-zero + message on stderr for failures               |
 

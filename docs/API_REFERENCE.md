@@ -198,10 +198,6 @@ Low-priority exhaustive lists are collapsed below. Expand only what you need.
 
 </details>
 
-## 🧪 Stability & Versioning
-
-Current library version: `v0.2.0` (see `VERSION`). Breaking doc changes may occur until `v1.0.0`.
-
 ## ❓ FAQ
 
 | Question                      | Answer                                                                          |
