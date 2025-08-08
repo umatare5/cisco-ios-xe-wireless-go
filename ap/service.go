@@ -10,38 +10,38 @@ import (
 )
 
 const (
-	// ApCfgBasePath defines the base path for access point configuration endpoints
-	ApCfgBasePath = constants.YANGModelPrefix + "ap-cfg:ap-cfg-data"
-	// ApCfgEndpoint retrieves complete access point configuration data
-	ApCfgEndpoint = ApCfgBasePath
+	// APCfgBasePath defines the base path for access point configuration endpoints
+	APCfgBasePath = constants.YANGModelPrefix + "ap-cfg:ap-cfg-data"
+	// APCfgEndpoint retrieves complete access point configuration data
+	APCfgEndpoint = APCfgBasePath
 	// TagSourcePriorityConfigsEndpoint retrieves tag source priority configurations
-	TagSourcePriorityConfigsEndpoint = ApCfgBasePath + "/tag-source-priority-configs"
-	// ApTagsEndpoint retrieves access point tag configurations
-	ApTagsEndpoint = ApCfgBasePath + "/ap-tags"
+	TagSourcePriorityConfigsEndpoint = APCfgBasePath + "/tag-source-priority-configs"
+	// APTagsEndpoint retrieves access point tag configurations
+	APTagsEndpoint = APCfgBasePath + "/ap-tags"
 
-	// ApOperBasePath defines the base path for access point operational endpoints
-	ApOperBasePath = constants.YANGModelPrefix + "access-point-oper:access-point-oper-data"
-	// ApOperEndpoint retrieves complete access point operational data
-	ApOperEndpoint = ApOperBasePath
-	// ApRadioNeighborEndpoint retrieves access point radio neighbor information
-	ApRadioNeighborEndpoint = ApOperBasePath + "/ap-radio-neighbor"
+	// APOperBasePath defines the base path for access point operational endpoints
+	APOperBasePath = constants.YANGModelPrefix + "access-point-oper:access-point-oper-data"
+	// APOperEndpoint retrieves complete access point operational data
+	APOperEndpoint = APOperBasePath
+	// APRadioNeighborEndpoint retrieves access point radio neighbor information
+	APRadioNeighborEndpoint = APOperBasePath + "/ap-radio-neighbor"
 	// RadioOperDataEndpoint retrieves radio operational data for access points
-	RadioOperDataEndpoint = ApOperBasePath + "/radio-oper-data"
+	RadioOperDataEndpoint = APOperBasePath + "/radio-oper-data"
 	// QosClientDataEndpoint retrieves QoS client data information
-	QosClientDataEndpoint = ApOperBasePath + "/qos-client-data"
+	QosClientDataEndpoint = APOperBasePath + "/qos-client-data"
 	// CapwapDataEndpoint retrieves CAPWAP data for access points
-	CapwapDataEndpoint = ApOperBasePath + "/capwap-data"
-	// ApNameMacMapEndpoint retrieves AP name to MAC address mapping
-	ApNameMacMapEndpoint = ApOperBasePath + "/ap-name-mac-map"
+	CapwapDataEndpoint = APOperBasePath + "/capwap-data"
+	// APNameMacMapEndpoint retrieves AP name to MAC address mapping
+	APNameMacMapEndpoint = APOperBasePath + "/ap-name-mac-map"
 
-	// ApGlobalOperBasePath defines the base path for global access point operational endpoints
-	ApGlobalOperBasePath = constants.YANGModelPrefix + "ap-global-oper:ap-global-oper-data"
-	// ApGlobalOperEndpoint retrieves complete AP global operational data
-	ApGlobalOperEndpoint = ApGlobalOperBasePath
-	// ApHistoryEndpoint retrieves AP history data
-	ApHistoryEndpoint = ApGlobalOperBasePath + "/ap-history"
-	// EwlcApStatsEndpoint retrieves EWLC AP statistics
-	EwlcApStatsEndpoint = ApGlobalOperBasePath + "/ewlc-ap-stats"
+	// APGlobalOperBasePath defines the base path for global access point operational endpoints
+	APGlobalOperBasePath = constants.YANGModelPrefix + "ap-global-oper:ap-global-oper-data"
+	// APGlobalOperEndpoint retrieves complete AP global operational data
+	APGlobalOperEndpoint = APGlobalOperBasePath
+	// APHistoryEndpoint retrieves AP history data
+	APHistoryEndpoint = APGlobalOperBasePath + "/ap-history"
+	// EwlcAPStatsEndpoint retrieves EWLC AP statistics
+	EwlcAPStatsEndpoint = APGlobalOperBasePath + "/ewlc-ap-stats"
 )
 
 // Service provides access point operations.
@@ -58,7 +58,7 @@ func NewService(c *core.Client) Service {
 
 // Cfg returns complete access point configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.ApCfgResponse, error) {
-	return core.Get[model.ApCfgResponse](ctx, s.c, ApCfgEndpoint)
+	return core.Get[model.ApCfgResponse](ctx, s.c, APCfgEndpoint)
 }
 
 // TagSourcePriorityConfigs returns tag source priority configurations.
@@ -68,19 +68,19 @@ func (s Service) TagSourcePriorityConfigs(ctx context.Context) (*model.TagSource
 
 // ApTags returns access point tag configurations.
 func (s Service) ApTags(ctx context.Context) (*model.ApCfgApTagsResponse, error) {
-	return core.Get[model.ApCfgApTagsResponse](ctx, s.c, ApTagsEndpoint)
+	return core.Get[model.ApCfgApTagsResponse](ctx, s.c, APTagsEndpoint)
 }
 
 // Operational Methods
 
 // Oper returns complete access point operational data.
 func (s Service) Oper(ctx context.Context) (*model.ApOperResponse, error) {
-	return core.Get[model.ApOperResponse](ctx, s.c, ApOperEndpoint)
+	return core.Get[model.ApOperResponse](ctx, s.c, APOperEndpoint)
 }
 
 // RadioNeighbor returns access point radio neighbor information.
 func (s Service) RadioNeighbor(ctx context.Context) (*model.ApOperApRadioNeighborResponse, error) {
-	return core.Get[model.ApOperApRadioNeighborResponse](ctx, s.c, ApRadioNeighborEndpoint)
+	return core.Get[model.ApOperApRadioNeighborResponse](ctx, s.c, APRadioNeighborEndpoint)
 }
 
 // NameMacMap returns the mapping between AP names and MAC addresses.
@@ -88,7 +88,7 @@ func (s Service) NameMacMap(ctx context.Context) (*[]model.ApNameMacMap, error) 
 	var resp struct {
 		Data []model.ApNameMacMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map"`
 	}
-	err := s.c.Do(ctx, http.MethodGet, ApNameMacMapEndpoint, &resp)
+	err := s.c.Do(ctx, http.MethodGet, APNameMacMapEndpoint, &resp)
 	return &resp.Data, err
 }
 
@@ -105,15 +105,15 @@ func (s Service) CapwapData(ctx context.Context) (*[]model.CapwapData, error) {
 
 // GlobalOper returns complete AP global operational data.
 func (s Service) GlobalOper(ctx context.Context) (*model.ApGlobalOperResponse, error) {
-	return core.Get[model.ApGlobalOperResponse](ctx, s.c, ApGlobalOperEndpoint)
+	return core.Get[model.ApGlobalOperResponse](ctx, s.c, APGlobalOperEndpoint)
 }
 
 // History returns AP history data.
 func (s Service) History(ctx context.Context) (*model.ApGlobalOperApHistoryResponse, error) {
-	return core.Get[model.ApGlobalOperApHistoryResponse](ctx, s.c, ApHistoryEndpoint)
+	return core.Get[model.ApGlobalOperApHistoryResponse](ctx, s.c, APHistoryEndpoint)
 }
 
 // EwlcApStats returns EWLC AP statistics.
 func (s Service) EwlcApStats(ctx context.Context) (*model.ApGlobalOperEwlcApStatsResponse, error) {
-	return core.Get[model.ApGlobalOperEwlcApStatsResponse](ctx, s.c, EwlcApStatsEndpoint)
+	return core.Get[model.ApGlobalOperEwlcApStatsResponse](ctx, s.c, EwlcAPStatsEndpoint)
 }
