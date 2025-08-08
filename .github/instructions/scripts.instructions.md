@@ -23,6 +23,7 @@ applyTo: "**/*.sh"
 | Style       | 2-space indent, ≤120 char logical lines                            |
 | Globals     | Minimize; prefer local. Constants: `readonly NAME="value"`         |
 | Predicate   | Use `is_*` functions for flag checks (`argc_flag==1`)              |
+| Naming      | All functions lowercase snake_case                                |
 | Temp Files  | Under `./tmp`; cleanup via trap                                    |
 | Exit Codes  | 0 success; non-zero + message on stderr for failures               |
 
@@ -39,29 +40,29 @@ scripts/
 
 Entry script responsibilities only: parse (argc), source libs, call `main`.
 
-Minimal entry template:
+Minimal entry template (bootstrap + argc):
 
 ```bash
 #!/usr/bin/env bash
-# @meta author @umatare5
 # @meta version 1.0.0
-# @meta description Short actionable summary
-# @flag --verbose  Enable verbose logging
-# @flag --no-color Disable color output
-# @flag --insecure Skip TLS verification (dev only)
+# @meta author "@umatare5"
+# @describe Short actionable summary
+# @flag   -v --verbose        Enable verbose logging
+# @flag      --no-color       Disable color output
+# @flag      --insecure       Skip TLS verification (dev only)
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=lib/common/common.sh
-source "${SCRIPT_DIR}/lib/common/common.sh"
-source_wnc_libraries "${SCRIPT_DIR}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; readonly SCRIPT_DIR
+source "${SCRIPT_DIR}/lib/bootstrap.sh"
+init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/<module>" # e.g. testing, validation
 
 main() {
-    if is_verbose_enabled; then echo_info "Starting"; fi
-    run_logic "$@"
+    is_verbose_enabled && show_info "starting"
+    run_<feature>_operation "$@"
 }
-main "$@"
+
+eval "$(argc --argc-eval "$0" "$@")"
 ```
 
 ---
@@ -72,7 +73,7 @@ main "$@"
 | --------------- | ----------------------- | --------------------------- |
 | Predicate       | `is_<feature>_enabled`  | `is_verbose_enabled`        |
 | Internal        | lowercase verbs         | `run_logic`, `prepare_curl` |
-| Shared (common) | lowercase, clear domain | `source_wnc_libraries`      |
+| Shared (common) | lowercase, clear domain | `init_wnc_libraries`        |
 | Constants       | UPPER_SNAKE             | `readonly CURL_TIMEOUT=15`  |
 
 Keep functions ≤25 lines (exception: structured case statements). Factor repeated CURL preparation.
@@ -93,8 +94,8 @@ Validation snippet:
 
 ```bash
 validate_env() {
-    [[ -z "${WNC_CONTROLLER:-}" ]] && echo_error "WNC_CONTROLLER required" && exit 1
-    [[ -z "${WNC_ACCESS_TOKEN:-}" ]] && echo_error "WNC_ACCESS_TOKEN required" && exit 1
+    [[ -z "${WNC_CONTROLLER:-}" ]] && show_error "WNC_CONTROLLER required" && exit 1
+    [[ -z "${WNC_ACCESS_TOKEN:-}" ]] && show_error "WNC_ACCESS_TOKEN required" && exit 1
 }
 ```
 
@@ -102,8 +103,8 @@ validate_env() {
 
 ## 🌈 Output Utilities
 
-Standard colored forms (disable when `--no-color` or CI): implemented once in `output.sh`.
-Use: `echo_info`, `echo_success`, `echo_warning`, `echo_error`. Never duplicate per script.
+Standard colored forms (disable when `--no-color` or CI): provided by validation/output helpers.
+Use only: `show_info`, `show_success`, `show_warning`, `show_error`. Never reimplement.
 
 Verbose-only messages must guard with predicate.
 
@@ -141,17 +142,16 @@ trap cleanup EXIT
 ## 🧵 Curl Pattern
 
 ```bash
-declare -a CURL_ARGS
 build_curl_args() {
-    CURL_ARGS=(--silent --show-error --fail
-        --header "Authorization: Bearer ${WNC_ACCESS_TOKEN}" \
-        --header "Accept: application/yang-data+json")
-    if is_insecure_enabled; then CURL_ARGS+=(--insecure); fi
+        CURL_ARGS=(--silent --show-error --fail
+            --header "Authorization: Bearer ${WNC_ACCESS_TOKEN}" \
+            --header "Accept: application/yang-data+json")
+        is_insecure_enabled && CURL_ARGS+=(--insecure)
 }
 perform_get() {
-    local -r url="$1" out="$2"
-    build_curl_args
-    curl "${CURL_ARGS[@]}" "$url" >"$out"
+        local url="$1" out="$2"
+        build_curl_args
+        curl "${CURL_ARGS[@]}" "$url" >"$out"
 }
 ```
 
@@ -187,7 +187,7 @@ Do not inline flag comparisons elsewhere.
 # export WNC_CONTROLLER=<controller-hostname>
 export WNC_ACCESS_TOKEN="<base64token>"
 ./scripts/get_yang_models.sh --verbose
-./scripts/get_yang_model_details.sh --model Cisco-IOS-XE-wireless-access-point-oper
+./scripts/get_yang_model_details.sh Cisco-IOS-XE-wireless-access-point-oper
 ```
 
 Wrap long sample outputs:
@@ -214,6 +214,7 @@ Wrap long sample outputs:
 | Direct `argc_verbose` checks  | Scattered style | Use predicate          |
 | `local -n`                    | Not portable    | Use global arrays      |
 | Inline color codes everywhere | Duplication     | Central output helpers |
+| CamelCase function names      | Inconsistent    | Use snake_case         |
 
 ---
 

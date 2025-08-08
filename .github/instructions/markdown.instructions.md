@@ -9,6 +9,8 @@ applyTo: "**/*.md"
 
 Goal: Produce **clear, concise, lint‑clean** documentation that accelerates developer comprehension with minimal cognitive load.
 
+Favor collapsible `<details>` for secondary / verbose samples (logs, long coverage tables). Primary task flows remain visible without expansion.
+
 ---
 
 ## ✨ Core Rules

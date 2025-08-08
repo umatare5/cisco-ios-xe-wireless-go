@@ -9,6 +9,8 @@ applyTo: "**/*.go"
 
 Primary Objective: Maintain and evolve a **pure Go SDK (library only)** for Cisco 9800 RESTCONF. No embedded CLI, no external deps.
 
+Service method naming is standardized: every exported data retrieval function MUST begin with `Get` (e.g. `GetOper`, `GetCfg`, `GetHistory`). Do not introduce alternative verbs without explicit approval.
+
 ---
 
 ## 🧭 Architecture (3 Layers)
