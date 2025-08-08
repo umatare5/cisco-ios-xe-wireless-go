@@ -26,15 +26,7 @@ format_dependencies_info() {
 }
 
 format_dependencies_banner() {
-    if is_no_color_enabled; then
-        echo "----------------------------------------------------"
-        echo " Cisco WNC Dependencies Management"
-        echo "----------------------------------------------------"
-    else
-        echo "${DEP_COLOR_BLUE}----------------------------------------------------${DEP_COLOR_RESET}"
-        echo "${DEP_COLOR_BLUE} Cisco WNC Dependencies Management${DEP_COLOR_RESET}"
-        echo "${DEP_COLOR_BLUE}----------------------------------------------------${DEP_COLOR_RESET}"
-    fi
+    wnc_banner_dependencies
 }
 
 format_step_message() {

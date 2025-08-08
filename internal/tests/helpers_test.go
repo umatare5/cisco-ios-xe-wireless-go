@@ -941,7 +941,16 @@ func TestRunServiceTestsIntegrationBranch(t *testing.T) {
 		}
 	}()
 
-	cfg := ServiceTestConfig{ServiceName: "IntegrationService", SkipShortTests: true, TestMethods: []TestMethod{{Name: "Dummy", Method: func() (interface{}, error) { return struct{ X int }{X: 1}, nil }}}}
+	cfg := ServiceTestConfig{
+		ServiceName:    "IntegrationService",
+		SkipShortTests: true,
+		TestMethods: []TestMethod{{
+			Name: "Dummy",
+			Method: func() (interface{}, error) {
+				return struct{ X int }{X: 1}, nil
+			},
+		}},
+	}
 	RunServiceTests(t, cfg)
 }
 
@@ -1004,7 +1013,8 @@ func TestCollect(t *testing.T) {
 		t.Errorf("Expected nil response, got %v", errorResult.Response)
 	}
 
-	if errorResult.Error != testError {
+	if !errors.Is(errorResult.Error, testError) {
+		// error comparison uses errors.Is per lint
 		t.Errorf("Expected error %v, got %v", testError, errorResult.Error)
 	}
 
@@ -1758,7 +1768,7 @@ func TestAdditionalCoverageHelpers(t *testing.T) {
 		originalTestDataDir := TestDataDir
 
 		// Create a temporary directory with restrictive permissions
-		if err := os.MkdirAll(tempDir, 0000); err == nil {
+		if err := os.MkdirAll(tempDir, 0o000); err == nil {
 			defer os.RemoveAll(tempDir)
 			defer func() {
 				// Restore original test data dir constant (can't change const, so this is for documentation)
@@ -1772,7 +1782,7 @@ func TestAdditionalCoverageHelpers(t *testing.T) {
 			}
 
 			// Restore permissions for cleanup
-			os.Chmod(tempDir, 0755)
+			os.Chmod(tempDir, 0o755)
 		}
 	})
 
@@ -1988,10 +1998,16 @@ func TestRunServiceTestsNoClient(t *testing.T) {
 // TestRunServiceTestsWithMethods ensures method invocation.
 func TestRunServiceTestsWithMethods(t *testing.T) {
 	called := false
-	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "Method1", Method: func() (interface{}, error) {
-		called = true
-		return struct{ X int }{1}, nil
-	}}}})
+	RunServiceTests(t, ServiceTestConfig{
+		ServiceName: "dummy",
+		TestMethods: []TestMethod{{
+			Name: "Method1",
+			Method: func() (interface{}, error) {
+				called = true
+				return struct{ X int }{1}, nil
+			},
+		}},
+	})
 	if !called {
 		t.Error("expected method to be called")
 	}
@@ -1999,7 +2015,10 @@ func TestRunServiceTestsWithMethods(t *testing.T) {
 
 // TestRunServiceTestsJSONCases adds JSON case execution.
 func TestRunServiceTestsJSONCases(t *testing.T) {
-	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", JSONTestCases: []JSONTestCase{{Name: "Simple", JSONData: `{"a":1}`}}})
+	RunServiceTests(t, ServiceTestConfig{
+		ServiceName:   "dummy",
+		JSONTestCases: []JSONTestCase{{Name: "Simple", JSONData: `{"a":1}`}},
+	})
 }
 
 // TestRunServiceTestsIntegrationShortMode forces short-mode integration skip.
@@ -2007,7 +2026,11 @@ func TestRunServiceTestsIntegrationShortMode(t *testing.T) {
 	orig := shortModeCheck
 	shortModeCheck = func() bool { return true }
 	defer func() { shortModeCheck = orig }()
-	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return nil, nil }}}, SkipShortTests: true})
+	RunServiceTests(t, ServiceTestConfig{
+		ServiceName:    "dummy",
+		TestMethods:    []TestMethod{{Name: "M", Method: func() (interface{}, error) { return nil, nil }}},
+		SkipShortTests: true,
+	})
 }
 
 // TestRunServiceTestsIntegrationNoClient path with no client (short mode false).
@@ -2015,7 +2038,10 @@ func TestRunServiceTestsIntegrationNoClient(t *testing.T) {
 	orig := shortModeCheck
 	shortModeCheck = func() bool { return false }
 	defer func() { shortModeCheck = orig }()
-	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return nil, nil }}}})
+	RunServiceTests(t, ServiceTestConfig{
+		ServiceName: "dummy",
+		TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return nil, nil }}},
+	})
 }
 
 // TestRunServiceTestsIntegrationExec executes integration method path (client creation attempted if env present).
@@ -2023,7 +2049,15 @@ func TestRunServiceTestsIntegrationExec(t *testing.T) {
 	orig := shortModeCheck
 	shortModeCheck = func() bool { return false }
 	defer func() { shortModeCheck = orig }()
-	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return struct{ Y string }{"val"}, nil }}}})
+	RunServiceTests(t, ServiceTestConfig{
+		ServiceName: "dummy",
+		TestMethods: []TestMethod{{
+			Name: "M",
+			Method: func() (interface{}, error) {
+				return struct{ Y string }{"val"}, nil
+			},
+		}},
+	})
 }
 
 // TestContextTimeoutSeparate ensures timeout context path executed separately.

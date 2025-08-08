@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Unified Banner Helper
+# Provides a single function to render consistent banners across scripts.
+# Usage: wnc_banner "Primary Title" "Secondary Subtitle"
+# Respects --no-color (COLOR_* empty) and aligns width automatically.
+
+set -euo pipefail
+
+# Compute banner width based on longest line (capped to 60 for consistency)
+_wnc_banner_width() {
+    local max=0
+    for line in "$@"; do
+        local len=${#line}
+        (( len > max )) && max=$len
+    done
+    # Add padding spaces (2 on each side inside border)
+    (( max < 38 )) && max=38  # minimum width for aesthetic baseline
+    (( max > 56 )) && max=56  # cap to avoid overly wide boxes
+    echo "$max"
+}
+
+# Pad a single line centered within target width
+_wnc_banner_center_line() {
+    local text="$1" width="$2"
+    local len=${#text}
+    local space=$(( width - len ))
+    local left=$(( space / 2 ))
+    local right=$(( space - left ))
+    printf '%*s%s%*s' "$left" '' "$text" "$right" ''
+}
+
+# Public banner function
+wnc_banner() {
+    local primary="$1"
+    local secondary="${2:-}" # optional second line
+
+    local lines=("$primary")
+    [[ -n "$secondary" ]] && lines+=("$secondary")
+
+    local width
+    width=$(_wnc_banner_width "${lines[@]}")
+
+    local border
+    border=$(printf '%*s' "$width" '' | tr ' ' '=')
+
+    if is_no_color_enabled; then
+        echo "$border"
+        for l in "${lines[@]}"; do
+            _wnc_banner_center_line "$l" "$width"
+            echo
+        done
+        echo "$border"
+    else
+        local color="${COLOR_BLUE:-\033[34m}" # unified primary color
+        local reset="${COLOR_RESET:-\033[0m}"
+        echo -e "${color}${border}${reset}"
+        for l in "${lines[@]}"; do
+            echo -ne "${color}"
+            _wnc_banner_center_line "$l" "$width"
+            echo -e "${reset}"
+        done
+        echo -e "${color}${border}${reset}"
+    fi
+    echo
+}
+
+# Convenience specialized wrappers (can be extended later without changing callers)
+wnc_banner_lint() { wnc_banner "Cisco WNC Code Linter" "golangci-lint Integration"; }
+wnc_banner_tests() { local kind="$1"; wnc_banner "Cisco WNC ${kind} Tests" "Go Testing Framework"; }
+wnc_banner_coverage() { wnc_banner "Coverage HTML Generator" "Go Tool Cover Integration"; }
+wnc_banner_yang() { wnc_banner "Cisco WNC YANG Operations" "RESTCONF API Integration"; }
+wnc_banner_dependencies() { wnc_banner "Cisco WNC Dependencies" "Module Management"; }
+wnc_banner_artifacts() { wnc_banner "Cisco WNC Artifacts" "Cleanup Utility"; }
+wnc_banner_pre_commit() { wnc_banner "Pre-commit Validation" "Branch Protection"; }
+
+export -f wnc_banner \
+  wnc_banner_lint \
+  wnc_banner_tests \
+  wnc_banner_coverage \
+  wnc_banner_yang \
+  wnc_banner_dependencies \
+  wnc_banner_artifacts \
+  wnc_banner_pre_commit

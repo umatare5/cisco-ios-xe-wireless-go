@@ -44,7 +44,12 @@ source_network_libraries() {
 
 # Output library loading
 source_output_libraries() {
+    # Load standard output formatter
     source "${WNC_OUTPUT_LIB}/output_formatter.sh"
+    # Load unified banner helpers if present
+    if [[ -f "${WNC_OUTPUT_LIB}/banner.sh" ]]; then
+        source "${WNC_OUTPUT_LIB}/banner.sh"
+    fi
 }
 
 # Module-specific library loading
@@ -102,6 +107,8 @@ init_script_libraries() {
 init_wnc_basic() {
     source_core_libraries
     source_utils_libraries
+    # Also load output libraries so shared formatting helpers (e.g. banners) are always available
+    source_output_libraries
 }
 
 # Network-only initialization

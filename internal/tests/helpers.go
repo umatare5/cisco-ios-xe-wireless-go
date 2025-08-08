@@ -4,6 +4,7 @@ package tests
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -17,19 +18,19 @@ import (
 )
 
 // ---- Client Creation Helpers -------------------------------------------------
-// Internal indirection to allow tests to exercise error paths without forcing a fatal.
-var createCoreClient = core.New // test injection hook
-// shortModeCheck allows tests to simulate -short for coverage of skip branch.
-var shortModeCheck = testing.Short
-
-// failOnClientError controls whether TestClient fatals or skips on client creation error (tests can override).
-var failOnClientError = true
-
-// simulateFatalAsLog allows tests to exercise the fatal branch without failing the suite.
-var simulateFatalAsLog = false
-
-// testFatalf is a hook for fatal logging to enable coverage without aborting tests.
-var testFatalf = func(t *testing.T, format string, args ...any) { t.Fatalf(format, args...) }
+// Internal indirection & behavioral flags (grouped for clarity / formatting).
+var (
+	// createCoreClient allows tests to exercise error paths without forcing a fatal.
+	createCoreClient = core.New // test injection hook
+	// shortModeCheck allows tests to simulate -short for coverage of skip branch.
+	shortModeCheck = testing.Short
+	// failOnClientError controls whether TestClient fatals or skips on client creation error (tests can override).
+	failOnClientError = true
+	// simulateFatalAsLog allows tests to exercise the fatal branch without failing the suite.
+	simulateFatalAsLog = false
+	// testFatalf is a hook for fatal logging to enable coverage without aborting tests.
+	testFatalf = func(t *testing.T, format string, args ...any) { t.Fatalf(format, args...) }
+)
 
 // createTestClient attempts to construct a core client (internal use / test hook).
 func createTestClient(controller, token string) (*core.Client, error) {
@@ -38,7 +39,7 @@ func createTestClient(controller, token string) (*core.Client, error) {
 		core.WithInsecureSkipVerify(true))
 }
 
-// TestClient creates a test client using environment variables (original behaviour retained).
+// TestClient creates a test client using environment variables (original behavior retained).
 func TestClient(t *testing.T) *core.Client { //nolint:revive // public test helper
 	t.Helper()
 
@@ -56,7 +57,7 @@ func TestClient(t *testing.T) *core.Client { //nolint:revive // public test help
 				//nolint:revive // intentional log in place of fatal for coverage
 				t.Logf("(simulated fatal) Failed to create test client: %v", err)
 			} else {
-				// Original strict behaviour via hook for coverage
+				// Original strict behavior via hook for coverage
 				testFatalf(t, "Failed to create test client: %v", err)
 			}
 			return nil
@@ -74,7 +75,7 @@ func TestClientAttempt() (*core.Client, error) {
 	controller := os.Getenv("WNC_CONTROLLER")
 	token := os.Getenv("WNC_ACCESS_TOKEN")
 	if controller == "" || token == "" {
-		return nil, fmt.Errorf("missing WNC env vars")
+		return nil, errors.New("missing WNC env vars")
 	}
 	return createTestClient(controller, token)
 }
@@ -408,7 +409,7 @@ func LogMethodResult(t *testing.T, methodName string, result interface{}, err er
 func StandardJSONTestCases(yangModule string) []JSONTestCase {
 	return []JSONTestCase{
 		{
-			Name: fmt.Sprintf("%sCfgResponse", PascalCase(yangModule)),
+			Name: PascalCase(yangModule) + "CfgResponse",
 			JSONData: fmt.Sprintf(`{
 				"%s%s-cfg:%s-cfg-data": {
 					"test-data": "value"
@@ -416,7 +417,7 @@ func StandardJSONTestCases(yangModule string) []JSONTestCase {
 			}`, constants.YANGModelPrefix, yangModule, yangModule),
 		},
 		{
-			Name: fmt.Sprintf("%sOperResponse", PascalCase(yangModule)),
+			Name: PascalCase(yangModule) + "OperResponse",
 			JSONData: fmt.Sprintf(`{
 				"%s%s-oper:%s-oper-data": {
 					"test-data": "value"

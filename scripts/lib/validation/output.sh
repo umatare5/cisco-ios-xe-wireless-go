@@ -24,18 +24,12 @@ show_warning() {
 
 # Banner display
 show_pre_commit_banner() {
-    if ! is_no_color_enabled; then
-        cat << 'EOF'
-----------------------------------------
        Pre-commit Validation
        Branch Protection System
-----------------------------------------
 EOF
-    else
-        cat << 'EOF'
 Pre-commit Validation - Branch Protection System
 EOF
-    fi
+    wnc_banner_pre_commit
 }
 
 # Show validation status

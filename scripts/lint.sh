@@ -26,7 +26,12 @@ validate_required_cli_tools "standard"
 # Predicate functions centralized in lib/core/predicates.sh
 
 main() {
+    # Temporarily disable immediate exit to capture status reliably
+    set +e
     run_lint_operation
+    local status=$?
+    set -e
+    return $status
 }
 
-eval "$(argc --argc-eval "$0" "$@")"
+main "$@" || exit $?

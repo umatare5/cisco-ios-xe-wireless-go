@@ -11,18 +11,8 @@ source "${LIB_ROOT}/bootstrap.sh"
 init_wnc_basic
 
 show_lint_banner() {
-    if ! is_no_color_enabled; then
-        echo -e "\033[34m----------------------------------------\033[0m"
-        echo -e "\033[34m       Cisco WNC Code Linter           \033[0m"
-        echo -e "\033[34m       golangci-lint Integration       \033[0m"
-        echo -e "\033[34m----------------------------------------\033[0m"
-    else
-        echo "----------------------------------------"
-        echo "       Cisco WNC Code Linter"
-        echo "       golangci-lint Integration"
-        echo "----------------------------------------"
-    fi
-    echo
+    # Use unified banner helper for consistency
+    wnc_banner_lint
 }
 
 show_lint_help() {

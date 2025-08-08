@@ -26,15 +26,7 @@ format_artifacts_info() {
 }
 
 format_artifacts_banner() {
-    if is_no_color_enabled; then
-        echo "===================================================="
-        echo " Cisco WNC Artifacts Cleanup"
-        echo "===================================================="
-    else
-        echo "${ARTIFACTS_COLOR_BLUE}====================================================${ARTIFACTS_COLOR_RESET}"
-        echo "${ARTIFACTS_COLOR_BLUE} Cisco WNC Artifacts Cleanup${ARTIFACTS_COLOR_RESET}"
-        echo "${ARTIFACTS_COLOR_BLUE}====================================================${ARTIFACTS_COLOR_RESET}"
-    fi
+    wnc_banner_artifacts
 }
 
 format_step_message() {

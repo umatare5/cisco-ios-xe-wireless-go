@@ -12,18 +12,7 @@ init_wnc_basic
 
 show_test_banner() {
     local test_type="$1"
-    if ! is_no_color_enabled; then
-        echo -e "\033[33m----------------------------------------\033[0m"
-        echo -e "\033[33m       Cisco WNC $test_type Tests       \033[0m"
-        echo -e "\033[33m       Go Testing Framework            \033[0m"
-        echo -e "\033[33m----------------------------------------\033[0m"
-    else
-        echo "----------------------------------------"
-        echo "       Cisco WNC $test_type Tests"
-        echo "       Go Testing Framework"
-        echo "----------------------------------------"
-    fi
-    echo
+    wnc_banner_tests "$test_type"
 }
 
 show_unit_test_help() {

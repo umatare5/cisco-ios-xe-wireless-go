@@ -11,7 +11,7 @@ validate_lint_environment() {
     local project_root="$1"
 
     # Check if golangci-lint is available
-    if ! has_golangci_lint; then
+    if ! is_command_available golangci-lint; then
         format_lint_error "golangci-lint is not installed"
         format_lint_info "Install it with: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
         return 1
@@ -37,7 +37,8 @@ prepare_lint_arguments() {
     LINT_ARGS=()
 
     # Add auto-fix if enabled
-    if is_auto_fix_enabled; then
+    # Auto-fix predicate (defined in predicates.sh in future; fallback to argc_fix flag)
+    if [[ "${argc_fix:-0}" == "1" ]]; then
         LINT_ARGS+=("--fix")
         is_verbose_enabled && format_lint_info "Auto-fix enabled"
     fi

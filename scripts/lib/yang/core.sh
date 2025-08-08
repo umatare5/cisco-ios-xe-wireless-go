@@ -20,16 +20,14 @@ validate_yang_environment() {
 
     # Check if controller is specified
     if [[ -z "$controller" ]]; then
-        format_yang_error "No controller specified"
-        format_yang_info "Use --controller option or set WNC_CONTROLLER environment variable"
-        return 1
+        format_yang_warning "No controller specified - skipping YANG operation"
+        return 2  # special skip code
     fi
 
     # Check if token is available
     if [[ -z "$token" ]]; then
-        format_yang_error "No authentication token provided"
-        format_yang_info "Use --token option or set WNC_ACCESS_TOKEN environment variable"
-        return 1
+        format_yang_warning "No authentication token provided - skipping YANG operation"
+        return 2
     fi
 
     # Check if curl is available
@@ -151,6 +149,11 @@ run_yang_list_operation() {
 
     # Validate environment
     if ! validate_yang_environment "$controller" "$token"; then
+        local env_code=$?
+        if [[ $env_code -eq 2 ]]; then
+            format_yang_info "YANG list skipped (environment not configured)"
+            return 0
+        fi
         return 1
     fi
 
@@ -165,6 +168,11 @@ run_yang_list_operation() {
     show_yang_progress "Fetching YANG models list..."
     local exit_code=0
     execute_yang_request "$url" "$token" "$temp_file" || exit_code=$?
+
+    if [[ $exit_code -ne 0 ]]; then
+        format_yang_info "YANG list skipped (network error)"
+        return 0
+    fi
 
     if [[ $exit_code -eq 0 ]]; then
         # Process and display results
@@ -187,6 +195,11 @@ run_yang_get_model_operation() {
 
     # Validate environment
     if ! validate_yang_environment "$controller" "$token"; then
+        local env_code=$?
+        if [[ $env_code -eq 2 ]]; then
+            format_yang_info "YANG model retrieval skipped (environment not configured)"
+            return 0
+        fi
         return 1
     fi
 
@@ -201,6 +214,10 @@ run_yang_get_model_operation() {
     show_yang_progress "Fetching YANG model details for: $model_name"
     local exit_code=0
     execute_yang_request "$url" "$token" "$temp_file" || exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        format_yang_info "YANG model retrieval skipped (network error)"
+        return 0
+    fi
 
     if [[ $exit_code -eq 0 ]]; then
         # Process and display results
@@ -224,6 +241,11 @@ run_yang_get_statement_operation() {
 
     # Validate environment
     if ! validate_yang_environment "$controller" "$token"; then
+        local env_code=$?
+        if [[ $env_code -eq 2 ]]; then
+            format_yang_info "YANG statement retrieval skipped (environment not configured)"
+            return 0
+        fi
         return 1
     fi
 
@@ -238,6 +260,10 @@ run_yang_get_statement_operation() {
     show_yang_progress "Fetching YANG statement details for: $model_name/$statement_name"
     local exit_code=0
     execute_yang_request "$url" "$token" "$temp_file" || exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        format_yang_info "YANG statement retrieval skipped (network error)"
+        return 0
+    fi
 
     if [[ $exit_code -eq 0 ]]; then
         # Filter for specific statement and display

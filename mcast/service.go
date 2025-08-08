@@ -35,8 +35,12 @@ func (s Service) Oper(ctx context.Context) (*model.McastOperResponse, error) {
 }
 
 // FlexMediastreamClientSummary returns FlexConnect mediastream client summary data.
-func (s Service) FlexMediastreamClientSummary(ctx context.Context) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
-	return core.Get[model.McastOperFlexMediastreamClientSummaryResponse](ctx, s.c, FlexMediastreamClientSummaryEndpoint)
+func (s Service) FlexMediastreamClientSummary(
+	ctx context.Context,
+) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
+	return core.Get[model.McastOperFlexMediastreamClientSummaryResponse](
+		ctx, s.c, FlexMediastreamClientSummaryEndpoint,
+	)
 }
 
 // VlanL2MgidOp returns VLAN Layer 2 multicast group ID operational data.

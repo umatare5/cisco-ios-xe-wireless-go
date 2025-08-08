@@ -12,18 +12,7 @@ source "${LIB_ROOT}/bootstrap.sh"
 init_wnc_basic
 
 show_yang_banner() {
-    if ! is_no_color_enabled; then
-        echo -e "\033[35m+========================================+\033[0m"
-        echo -e "\033[35m|       Cisco WNC YANG Operations       |\033[0m"
-        echo -e "\033[35m|       RESTCONF API Integration        |\033[0m"
-        echo -e "\033[35m+========================================+\033[0m"
-    else
-        echo "========================================"
-        echo "       Cisco WNC YANG Operations"
-        echo "       RESTCONF API Integration"
-        echo "========================================"
-    fi
-    echo
+    wnc_banner_yang
 }
 
 show_yang_list_help() {
