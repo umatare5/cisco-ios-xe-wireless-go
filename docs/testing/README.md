@@ -26,7 +26,7 @@ Missing vars = hard fail.
 | `test-unit` | Unit tests + lint |
 | `test-integration` | Live tests (lint) |
 | `test-coverage` | Merged coverage -> `coverage/report.out` |
-| `test-coverage-html` | HTML view |
+| `test-coverage-report` | HTML view |
 
 ## Patterns
 

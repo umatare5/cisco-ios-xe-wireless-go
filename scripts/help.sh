@@ -22,7 +22,7 @@ COMMON DEVELOPMENT TARGETS:
     test-unit           Run unit tests only
     test-integration    Run integration tests (requires environment)
     test-coverage       Run tests with coverage analysis
-    test-coverage-html  Generate HTML coverage report
+    test-coverage-report Generate HTML coverage report
 
 YANG MODEL DEVELOPMENT:
     yang-list           List all available YANG models

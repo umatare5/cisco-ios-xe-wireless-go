@@ -7,7 +7,7 @@
 # For specific script options, use: ./scripts/<script_name>.sh --help
 
 .PHONY: help clean deps lint test-unit test-integration test-coverage \
-        test-coverage-html build yang-list yang-model yang-statement \
+	test-coverage-report build yang-list yang-model yang-statement \
         pre-commit-install pre-commit-test pre-commit-uninstall
 
 # Default target
@@ -39,7 +39,7 @@ test-coverage:
 	@./scripts/test_coverage.sh
 
 # Generate HTML coverage report
-test-coverage-html:
+test-coverage-report:
 	@./scripts/generate_coverage_report.sh
 
 # Verify build compilation
