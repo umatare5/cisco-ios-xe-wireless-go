@@ -2,22 +2,15 @@
 package ap
 
 import (
-	"os"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // TestApService tests the AP service using the standardized testing framework
 func TestApService(t *testing.T) {
-	// Get test client and create service
-	var client *core.Client
-
-	// Try to get real client from environment
-	if os.Getenv("WNC_CONTROLLER") != "" && os.Getenv("WNC_ACCESS_TOKEN") != "" {
-		client = tests.TestClient(t)
-	}
+	// Obtain an integration client opportunistically (nil if env not set).
+	client := tests.OptionalTestClient(t)
 
 	service := NewService(client)
 

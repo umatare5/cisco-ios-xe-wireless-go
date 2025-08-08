@@ -79,6 +79,24 @@ func TestClientAttempt() (*core.Client, error) {
 	return createTestClient(controller, token)
 }
 
+// OptionalTestClient returns a *core.Client if required env vars are set, otherwise nil without skipping.
+// This enables tests to obtain a client opportunistically without triggering a Skip or Fatal path,
+// reducing duplicated env checks across service tests while preserving existing coverage behavior.
+func OptionalTestClient(t *testing.T) *core.Client { //nolint:revive // test helper convenience
+	t.Helper()
+	controller := os.Getenv("WNC_CONTROLLER")
+	token := os.Getenv("WNC_ACCESS_TOKEN")
+	if controller == "" || token == "" { // fast path: no integration env
+		return nil
+	}
+	client, err := createTestClient(controller, token)
+	if err != nil { // non-fatal: preserve other test execution
+		t.Logf("OptionalTestClient: failed to create client: %v", err)
+		return nil
+	}
+	return client
+}
+
 // CreateTestClientFromEnv creates a test client from environment variables
 // This is an alias for TestClient to match expected API
 func CreateTestClientFromEnv(t *testing.T) *core.Client {

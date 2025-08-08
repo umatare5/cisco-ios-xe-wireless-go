@@ -184,6 +184,46 @@ func TestTestClient(t *testing.T) {
 	})
 }
 
+// TestOptionalTestClient verifies OptionalTestClient behaviors.
+func TestOptionalTestClient(t *testing.T) {
+	originalController := os.Getenv("WNC_CONTROLLER")
+	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
+	t.Cleanup(func() {
+		if originalController == "" { os.Unsetenv("WNC_CONTROLLER") } else { os.Setenv("WNC_CONTROLLER", originalController) }
+		if originalToken == "" { os.Unsetenv("WNC_ACCESS_TOKEN") } else { os.Setenv("WNC_ACCESS_TOKEN", originalToken) }
+		// restore default hook
+		createCoreClient = core.New
+	})
+
+	t.Run("MissingEnvReturnsNil", func(t *testing.T) {
+		os.Unsetenv("WNC_CONTROLLER")
+		os.Unsetenv("WNC_ACCESS_TOKEN")
+		if c := OptionalTestClient(t); c != nil {
+			t.Errorf("expected nil client when env missing")
+		}
+	})
+
+	t.Run("ValidEnvReturnsClient", func(t *testing.T) {
+		os.Setenv("WNC_CONTROLLER", "test.example.com")
+		os.Setenv("WNC_ACCESS_TOKEN", "token")
+		if c := OptionalTestClient(t); c == nil {
+			t.Errorf("expected non-nil client with env present")
+		}
+	})
+
+	t.Run("CreationErrorReturnsNil", func(t *testing.T) {
+		os.Setenv("WNC_CONTROLLER", "test.example.com")
+		os.Setenv("WNC_ACCESS_TOKEN", "token")
+		// Inject error path
+		createCoreClient = func(controller, token string, opts ...core.Option) (*core.Client, error) {
+			return nil, fmt.Errorf("injected error")
+		}
+		if c := OptionalTestClient(t); c != nil {
+			t.Errorf("expected nil client on injected creation error")
+		}
+	})
+}
+
 // TestCreateTestClientFromEnv tests the CreateTestClientFromEnv alias
 func TestCreateTestClientFromEnv(t *testing.T) {
 	// Save original environment variables
