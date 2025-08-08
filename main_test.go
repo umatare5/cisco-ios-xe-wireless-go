@@ -1,4 +1,4 @@
-package cisco_ios_xe_wireless_go
+package wnc
 
 import (
 	"context"
