@@ -1,4 +1,4 @@
-# 📗 cisco-ios-xe-wireless-go — Go Library for Cisco Catalyst 9800 WNC
+# 📗 cisco-ios-xe-wireless-go - Go Library for C9800
 
 ![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
 [![Test and Build](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main)](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml)
@@ -8,21 +8,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go)
 
-A **Go library** for interacting with **Cisco Catalyst 9800 Wireless Network Controllers (WNC)**
-providing type-safe API access, simple configuration, and comprehensive coverage of WNC data.
+A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
-## ✨ Features
-
-- **🔧 Developer Friendly** — Transparent YANG model handling with JSON responses
-- **📊 Comprehensive Coverage** — Access most status and metric endpoints from the WNC
-- **🚀 Quick Integration** — Ready to use in minutes with minimal setup
-- **🎯 Type-Safe Operations** — Strongly typed Go structs for requests and responses
-- **📖 Well Documented** — API reference, testing guide, and usage examples
+- **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
+- **📊 Comprehensive Coverage**: Access most status information and metrics available from the WNC
+- **🚀 Quick Integration**: Get started in minutes with simple configuration and clear examples
+- **🎯 Type-Safe Operations**: Strongly-typed Go structs for all API interactions and responses
+- **📖 Comprehensive Documentation**: Detailed API reference, testing guides, and best practices
 
 ## 📡 Supported Environment
 
-- **Controller:** Cisco Catalyst 9800 Wireless Network Controller
-- **Firmware:** Cisco IOS-XE `17.12.x`
+Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
 
 ## 📦 Installation
 
