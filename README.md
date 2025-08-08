@@ -97,9 +97,9 @@ func main() {
 
 Please read the **[Contributing Guide](./CONTRIBUTING.md)** before submitting PRs or issues. I welcome contributions from the community. 👍️
 
-## 🧪 Agreements
+## 🙇‍♂️ Agreement
 
-Current library is in development. Breaking doc changes may occur until `v1.0.0`.
+Current library is in development. Breaking changes may occur until `v1.0.0`.
 
 The remaining tasks to reach to `v1.0.0` are available in the **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 

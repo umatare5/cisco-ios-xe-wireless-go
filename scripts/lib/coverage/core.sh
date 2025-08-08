@@ -118,8 +118,8 @@ write_coverprofile_artifact() {
 run_coverage_html_operation() {
     local project_root="${argc_project:-.}"
     local input_file="${argc_input:-./tmp/coverage.out}"
-    local output_file="${argc_output:-./tmp/coverage.html}"
-    local report_file="${argc_report:-coverage/report.out}" # new plain-text summary output
+    local output_file="${argc_output:-./coverage/coverage.html}"
+    local report_file="${argc_report:-coverage/report.out}"
 
     # Convert relative paths to absolute paths
     [[ "$input_file" != /* ]] && input_file="$project_root/$input_file"
