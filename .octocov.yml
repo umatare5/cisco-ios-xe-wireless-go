@@ -4,8 +4,9 @@ coverage:
   paths:
     - coverage/report.out
   exclude:               # Exclude non-library or helper-only code from coverage denominator
-    - ^examples/         # Example programs (not part of shipped library API)
-    - ^internal/tests/   # Test helper utilities not requiring production coverage
+    - "^examples/"         # Example programs (not part of shipped library API)
+    - "^internal/tests/"   # Test helper utilities not requiring production coverage
+    - "^internal/model/"   # Generated or passive model types excluded from coverage metrics
   acceptable: 95%
   badge:
     path: docs/coverage.svg
