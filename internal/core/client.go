@@ -272,8 +272,8 @@ type HyperlocationService interface {
 	// Methods will be added as the hyperlocation package is refactored
 }
 
-// MdnsService defines the interface for multicast DNS operations
-type MdnsService interface {
+// MDNSService defines the interface for multicast DNS operations
+type MDNSService interface {
 	// Methods will be added as the mdns package is refactored
 }
 
@@ -424,8 +424,8 @@ func (c *Client) Hyperlocation() HyperlocationService {
 	return nil // Placeholder
 }
 
-// Mdns returns a multicast DNS service instance
-func (c *Client) Mdns() MdnsService {
+// MDNS returns a multicast DNS service instance
+func (c *Client) MDNS() MDNSService {
 	// This will be implemented when mdns package is refactored to use the new client
 	return nil // Placeholder
 }

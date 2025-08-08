@@ -158,8 +158,8 @@ func (c *Client) Mcast() mcast.Service {
 	return mcast.NewService(c.core)
 }
 
-// Mdns returns the multicast DNS service.
-func (c *Client) Mdns() mdns.Service {
+// MDNS returns the multicast DNS service.
+func (c *Client) MDNS() mdns.Service {
 	return mdns.NewService(c.core)
 }
 

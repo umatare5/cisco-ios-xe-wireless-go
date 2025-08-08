@@ -283,7 +283,7 @@ func TestServiceAccessors(t *testing.T) {
 		},
 		{
 			name:     "Mdns",
-			accessor: func() interface{} { return client.Mdns() },
+			accessor: func() interface{} { return client.MDNS() },
 		},
 		{
 			name:     "Geolocation",

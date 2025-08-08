@@ -102,7 +102,7 @@ func TestClientServiceAccessors(t *testing.T) {
 	_ = client.LISP()          // Should not panic
 	_ = client.Location()      // Should not panic
 	_ = client.Mcast()         // Should not panic
-	_ = client.Mdns()          // Should not panic
+	_ = client.MDNS()          // Should not panic
 	_ = client.Mesh()          // Should not panic
 	_ = client.Mobility()      // Should not panic
 	_ = client.NMSP()          // Should not panic

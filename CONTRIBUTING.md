@@ -8,23 +8,23 @@ Read‑only wireless RESTCONF (IOS‑XE 17.12). Stdlib only. No write operations
 
 ## 🔑 Core Rules
 
-| Area | Rule |
-|------|------|
-| Public API | Add sparingly; include tests + docs |
-| Dependencies | Stdlib only |
-| Coverage | ≥99% total (no regressions) |
-| Errors | Wrap (`fmt.Errorf("ctx: %w", err)`) |
-| Panics | None in library code |
-| Globals | Avoid mutable state |
-| TLS | Verify ON by default |
+| Area         | Rule                                |
+| ------------ | ----------------------------------- |
+| Public API   | Add sparingly; include tests + docs |
+| Dependencies | Stdlib only                         |
+| Coverage     | ≥99% total (no regressions)         |
+| Errors       | Wrap (`fmt.Errorf("ctx: %w", err)`) |
+| Panics       | None in library code                |
+| Globals      | Avoid mutable state                 |
+| TLS          | Verify ON by default                |
 
 ## 🧪 Testing
 
-| Kind | Purpose | Notes |
-|------|---------|-------|
-| Unit | Logic, validation | No env |
-| Integration | Live controller | Needs env |
-| Coverage | Gate ≥99% | Fails CI < gate |
+| Kind        | Purpose           | Notes           |
+| ----------- | ----------------- | --------------- |
+| Unit        | Logic, validation | No env          |
+| Integration | Live controller   | Needs env       |
+| Coverage    | Gate ≥99%         | Fails CI < gate |
 
 Helpers: `internal/tests`. New export ⇒ new tests.
 
@@ -43,18 +43,18 @@ make test-coverage
 
 ## 🚨 Error Messages
 
-| Case | Message Sketch |
-|------|----------------|
-| Nil client | `invalid client configuration` |
+| Case        | Message Sketch                 |
+| ----------- | ------------------------------ |
+| Nil client  | `invalid client configuration` |
 | Decode fail | `decode <domain> response: %w` |
 
 No internal logging unless via user logger.
 
 ## 📦 Env Vars
 
-| Var | Meaning |
-|-----|---------|
-| `WNC_CONTROLLER` | Host/IP |
+| Var                | Meaning      |
+| ------------------ | ------------ |
+| `WNC_CONTROLLER`   | Host/IP      |
 | `WNC_ACCESS_TOKEN` | Base64 creds |
 
 Missing ⇒ fail fast.
