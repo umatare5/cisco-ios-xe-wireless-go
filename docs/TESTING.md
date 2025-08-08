@@ -1,34 +1,36 @@
-# 🧪 Testing (Stub)
+# 🧪 Testing
 
-Full guide moved to modular docs under `docs/testing/`.
+Extended docs: `docs/testing/`.
 
-| Topic | File |
+| Topic | Path |
 |-------|------|
 | Overview | `docs/testing/README.md` |
 | Unit details | `docs/testing/details_unit.md` |
 | Integration details | `docs/testing/details_integration.md` |
 
-## Coverage Gate
+## 🎯 Gate
 
-Total ≥99% enforced (`make test-coverage`).
+Coverage ≥99% (`make test-coverage`).
 
-## Quick Run
+## ▶️ Commands
 
 ```bash
 make test-unit
 make test-integration  # needs env
 ```
 
-## Env Vars (Integration)
+## 🔐 Env (Integration)
 
-`WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` (base64 `user:pass`). Missing → fail.
+`WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` (base64 `user:pass`). Missing ⇒ fail.
 
-## Notes
+## 🔍 Notes (Collapsed)
 
-- Lint runs before test targets.
-- Integration: live RESTCONF GET only.
-- Shared helpers in `internal/tests`.
+<details><summary>Execution behavior</summary>
 
-## See Also
+Lint precedes tests. Integration uses live GET only. Helpers in `internal/tests`.
+
+</details>
+
+## 🔗 Related
 
 `docs/api/` · `docs/security/` · `docs/scripts/`

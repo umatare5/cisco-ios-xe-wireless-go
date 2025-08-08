@@ -1,14 +1,14 @@
-# 📚 API Reference (Stub)
+# 📚 API Reference
 
-Full content moved to modular docs under `docs/api/`.
+Primary detail lives in `docs/api/`. This page is a fast map.
 
-| Area | File |
-|------|------|
+| Topic | Path |
+|-------|------|
 | Overview | `docs/api/README.md` |
 | Core services | `docs/api/services_core.md` |
 | Extended services | `docs/api/services_extended.md` |
 
-## Sample
+## 🔧 Minimal Use
 
 ```go
 client, _ := wnc.NewClient(host, token)
@@ -17,12 +17,14 @@ resp, _ := client.General().Oper(ctx)
 _ = resp
 ```
 
-## Notes
+## 🔍 Notes (Collapsed)
 
-- Simple GET → internal `core.Get[T]`
-- Strongly typed YANG models
-- Reuse a single client instance
+<details><summary>Design details</summary>
 
-## See Also
+All simple GETs route through `core.Get[T]` for HTTP + JSON decode. Models mirror YANG; optional leaves are pointers. Reuse a single client instance for connection reuse.
+
+</details>
+
+## 🔗 Related
 
 `docs/testing/` · `docs/security/` · `docs/scripts/`

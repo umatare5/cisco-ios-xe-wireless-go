@@ -1,38 +1,38 @@
-# 🔐 Security (Stub)
+# 🔐 Security
 
-Full content moved to modular docs under `docs/security/`.
+Full detail in `docs/security/`.
 
-| Topic | File |
+| Topic | Path |
 |-------|------|
 | Overview & checklist | `docs/security/README.md` |
-| Hardening practices | `docs/security/hardening.md` |
+| Hardening | `docs/security/hardening.md` |
 | Incident response | `docs/security/incident.md` |
 
-## Defaults
+## ✅ Defaults
 
-- TLS verification ON (strict)
-- Read‑only GET operations
-- Context timeouts recommended
+TLS verify ON • Read‑only GET • Use context timeouts.
 
-## Quick Auth Setup
+## 🔑 Auth
 
 ```bash
 export WNC_CONTROLLER=<host>
 export WNC_ACCESS_TOKEN=$(echo -n 'user:pass' | base64)
 ```
 
-## Dev Only
+Dev only insecure:
 
 ```go
-wnc.NewClient(host, token, wnc.WithInsecureSkipVerify(true)) // avoid in prod
+wnc.NewClient(host, token, wnc.WithInsecureSkipVerify(true))
 ```
 
-## Notes
+## 🚫 Risks (Collapsed)
 
-- Never commit tokens
-- Rotate credentials regularly
-- Disable insecure skip in production
+<details><summary>Avoid these</summary>
 
-## See Also
+Committing tokens, stale creds, disabling TLS verify in prod, sharing tokens across envs.
+
+</details>
+
+## 🔗 Related
 
 `docs/api/` · `docs/testing/` · `docs/scripts/`

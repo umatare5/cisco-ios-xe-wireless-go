@@ -1,75 +1,83 @@
 # 📗 Cisco IOS-XE Wireless Go SDK
 
-Strongly typed, dependency‑free Go SDK for Cisco Catalyst 9800 (IOS‑XE 17.12) RESTCONF (read‑only GET).
+Dependency‑free (stdlib), strongly typed Go SDK for Cisco Catalyst 9800 (IOS‑XE 17.12) wireless RESTCONF (GET only).
 
 | Aspect | Value |
 |--------|-------|
-| Scope | 25+ wireless domains (oper + cfg) |
+| Domains | 25+ (oper + cfg) |
 | Deps | Stdlib only |
-| Coverage | ≥99% enforced |
-| Security | TLS verify on (opt‑out dev only) |
-| Pattern | Unified client → thin services → YANG models |
+| Coverage | ≥99% gate |
+| Security | TLS verify ON (dev opt‑out) |
+| Design | Client → Services → Models |
 
-Badges: version, tests, report card, Go ref, license.
-
-## 🚀 Quick Start
+## 🚀 Quick Start (60s)
 
 ```bash
 go get github.com/umatare5/cisco-ios-xe-wireless-go
-echo -n "admin:password" | base64   # make token
+export WNC_CONTROLLER=192.168.1.10
+export WNC_ACCESS_TOKEN=$(echo -n 'admin:password' | base64)
 ```
 
 ```go
-client, _ := wnc.NewClient("192.168.1.10", "<base64>")
+client, err := wnc.NewClient(os.Getenv("WNC_CONTROLLER"), os.Getenv("WNC_ACCESS_TOKEN"), wnc.WithTimeout(30*time.Second))
+if err != nil { log.Fatal(err) }
 ctx := context.Background()
-gen, _ := client.General().Oper(ctx)
-_ = gen // use data
+gen, err := client.General().Oper(ctx)
+if err != nil { log.Fatal(err) }
+_ = gen
 ```
 
-Options: `WithTimeout(d)`, `WithInsecureSkipVerify(true)` (dev), `WithLogger(l)`.
+Options: `WithTimeout(d)`, `WithInsecureSkipVerify(true)` (dev only), `WithLogger(l)`.
 
-## 📚 Documentation Index
+## 📚 Index
 
-| Topic | Location |
-|-------|----------|
-| API (client, models, core services) | `docs/api/` |
-| Extended services list | `docs/api/services_extended.md` |
-| Testing (patterns, coverage) | `docs/testing/` |
-| Scripts (YANG utilities) | `docs/scripts/` |
-| Security (TLS, creds, network) | `docs/security/` |
+| Topic | Path |
+|-------|------|
+| API overview | `docs/api/README.md` |
+| Core services | `docs/api/services_core.md` |
+| Extended services | `docs/api/services_extended.md` |
+| Testing & coverage | `docs/testing/` |
+| Security | `docs/security/` |
+| Scripts (YANG tooling) | `docs/scripts/` |
 | Contributing | `CONTRIBUTING.md` |
 
-## 🛠 Commands
+## 🛠 Make Targets
 
 ```bash
 make lint            # static analysis
 make test-unit       # unit (runs lint)
-make test-integration# integration (env required)
+make test-integration # live (needs env)
 make test-coverage   # merged + report.out
 ```
 
-Env (integration): `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` (base64 user:pass).
+Required env (integration): `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` (base64 `user:pass`).
 
-## 🔧 Services (Sample)
+## 🔧 Service Pattern
 
-`General()`, `AP()`, `WLAN()`, `Client()`, `RRM()`, `Rogue()`, `AFC()`, more: see extended services doc.
+All services expose simple `Oper(ctx)` (or domain specific) returning typed YANG‑aligned structs; internal `core.Get[T]` centralizes HTTP + decode.
 
-Generic GET helper removes boilerplate (internal `core.Get[T]`).
+## ✅ Core Policies
 
-## ✅ Policies
-
-| Policy | Rule |
-|--------|------|
-| Coverage | ≥99% total, no drop |
-| Errors | Wrap: `fmt.Errorf("context: %w", err)` |
-| Logging | Only via optional user logger |
+| Area | Rule |
+|------|------|
+| Errors | Wrap with context (`fmt.Errorf("x: %w", err)`) |
 | Panics | None in library code |
-| Deps | No third‑party additions |
+| Logging | Only via user‑supplied logger |
+| Deps | No third‑party libs |
+| Coverage | ≥99% enforced before merge |
 
-## 📊 Coverage Artifact
+## 📊 Coverage
 
-Committed summary: `coverage/report.out` (regen: `make test-coverage`).
+Artifact: `coverage/report.out` (regenerate: `make test-coverage`).
+
+## 🔍 More (Collapsed)
+
+<details><summary>Advanced notes</summary>
+
+YANG models: optional leaves are pointers; always nil‑check. Use per‑call contexts for cancellation. Reuse a single client instance. For deeper service list or testing patterns see referenced docs.
+
+</details>
 
 ## 📄 License
 
-MIT. See `LICENSE`.
+MIT (see `LICENSE`).

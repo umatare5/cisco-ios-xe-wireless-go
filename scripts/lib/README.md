@@ -1,140 +1,73 @@
-# WNC Scripts Library Architecture
+# 🧱 Scripts Library
 
-This document describes the new modular library architecture for Cisco WNC scripts.
+Modular shell library powering all `scripts/*.sh` entry points.
 
-## 🏗️ Directory Structure
+## 📂 Layout
 
-```
+```text
 scripts/lib/
-├── bootstrap.sh           # Unified library loader
-├── core/                  # Core functionality
-│   ├── common.sh         # Basic predicates and validation
-│   ├── constants.sh      # Project constants and defaults
-│   ├── argc_common.sh    # argc utility functions
-│   └── argument_parsing.sh # Command-line argument utilities
-├── utils/                # General utilities
-│   ├── validation.sh     # Input validation functions
-│   ├── file_utils.sh     # File manipulation utilities
-│   ├── cli_validation.sh # CLI tool validation
-│   ├── build_tools.sh    # Build and compilation tools
-│   └── dependencies.sh   # Dependency management
-├── network/              # Network and HTTP operations
-│   ├── http_client.sh    # HTTP client functionality
-│   ├── authentication.sh # Authentication handling
-│   └── yang_common.sh    # YANG/RESTCONF operations
-├── output/               # Output formatting
-│   └── output_formatter.sh # Output formatting utilities
-└── modules/              # Feature-specific modules
-    ├── testing/          # Test operations
-    ├── lint/            # Code linting
-    ├── dependencies/     # Dependency management
-    ├── yang/            # YANG model operations
-    ├── coverage/        # Coverage report generation
-    ├── validation/      # Git commit validation
-    └── artifacts/        # Build artifact management
+    bootstrap.sh
+    core/ (predicates, constants, argc helpers, args)
+    utils/ (validation, files, cli, build, deps)
+    network/ (http_client, auth, yang_common)
+    output/ (output_formatter)
+    modules/ (testing, lint, deps, yang, coverage, validation, artifacts)
 ```
 
-## 🚀 Bootstrap System
+## 🚀 Init Patterns
 
-### Usage Patterns
+| Use Case | Code |
+|----------|------|
+| Full | `init_wnc_libraries "$SCRIPT_DIR" "$SCRIPT_DIR/lib/testing"` |
+| Basic | `init_wnc_basic` |
+| Network | `init_wnc_network` |
 
-#### Full Initialization
+Always: `source "$SCRIPT_DIR/lib/bootstrap.sh"` first.
 
-```bash
-# Source bootstrap library
-source "${SCRIPT_DIR}/lib/bootstrap.sh"
+## 🔌 Key Functions
 
-# Initialize with module-specific libraries
-init_wnc_libraries "$SCRIPT_DIR" "${SCRIPT_DIR}/lib/testing"
-```
+| Func | Purpose |
+|------|---------|
+| `init_wnc_libraries` | Load all + module path |
+| `init_wnc_basic` | Core + utils only |
+| `init_wnc_network` | Core + network + output |
 
-#### Lightweight Initialization
+## 🔍 Categories (Collapsed)
 
-```bash
-# Source bootstrap library
-source "${SCRIPT_DIR}/lib/bootstrap.sh"
+<details><summary>Library roles</summary>
 
-# Basic initialization (core + utils only)
-init_wnc_basic
-```
+Core: predicates, constants, argc, arg parsing.
+Utils: validation, fs, tool checks, build, deps.
+Network: HTTP, auth, YANG helpers.
+Output: formatting.
+Modules: feature focused (testing, lint, coverage, etc.).
 
-#### Network-Focused Initialization
+</details>
 
-```bash
-# Source bootstrap library
-source "${SCRIPT_DIR}/lib/bootstrap.sh"
+## 🔄 Migration
 
-# Network initialization (core + network + output)
-init_wnc_network
-```
+Old (deprecated): `init_script_libraries` + manual sourcing.
 
-### Initialization Functions
-
-| Function                                     | Libraries Loaded        | Use Case               |
-| -------------------------------------------- | ----------------------- | ---------------------- |
-| `init_wnc_libraries(script_dir, module_dir)` | All + module-specific   | Full-featured scripts  |
-| `init_wnc_basic()`                           | core + utils            | Simple utility scripts |
-| `init_wnc_network()`                         | core + network + output | Network/API scripts    |
-
-## 📚 Library Categories
-
-### Core Libraries
-
-- **common.sh**: Basic predicate functions (`is_enabled`, `is_verbose_enabled`, etc.)
-- **constants.sh**: Project-wide constants and default values
-- **argc_common.sh**: argc-specific utility functions
-- **argument_parsing.sh**: Command-line argument processing
-
-### Utility Libraries
-
-- **validation.sh**: Input validation and format checking
-- **file_utils.sh**: File system operations and utilities
-- **cli_validation.sh**: CLI tool presence and version checking
-- **build_tools.sh**: Build system integration
-- **dependencies.sh**: Package and dependency management
-
-### Network Libraries
-
-- **http_client.sh**: HTTP/HTTPS request handling
-- **authentication.sh**: Authentication token management
-- **yang_common.sh**: YANG model and RESTCONF API operations
-
-### Output Libraries
-
-- **output_formatter.sh**: Consistent output formatting across scripts
-
-## 🔧 Migration Guide
-
-### Old Pattern (Deprecated)
+New:
 
 ```bash
-source "${SCRIPT_DIR}/lib/common/common.sh"
-init_script_libraries "$SCRIPT_DIR" "$MODULE_DIR"
-```
-
-### New Pattern (Recommended)
-
-```bash
-source "${SCRIPT_DIR}/lib/bootstrap.sh"
-init_wnc_libraries "$SCRIPT_DIR" "$MODULE_DIR"
+source "$SCRIPT_DIR/lib/bootstrap.sh"
+init_wnc_libraries "$SCRIPT_DIR" "$SCRIPT_DIR/lib/testing"
 ```
 
 ## 💡 Benefits
 
-1. **Clear Separation of Concerns**: Each namespace has a specific purpose
-2. **Reduced Coupling**: Libraries only load what they need
-3. **Improved Maintainability**: Easier to locate and update functionality
-4. **Better Performance**: Selective loading reduces startup time
-5. **Enhanced Readability**: Clear dependency relationships
+Separation, lower coupling, selective load (faster), clearer maintenance.
 
-## 🧪 Testing
+## 🚨 Deprecated (Collapsed)
 
-All scripts using the new bootstrap system are backward compatible and maintain existing functionality while benefiting from the improved architecture.
+<details><summary>Legacy APIs</summary>
 
-## 🚨 Deprecated Features
+`init_script_libraries`, `source_wnc_libraries` → remove in future; verbose mode warns.
 
-- `init_script_libraries()`: Use `init_wnc_libraries()` instead
-- `source_wnc_libraries()`: Use bootstrap functions instead
-- Direct library sourcing: Use bootstrap initialization instead
+</details>
 
-Deprecated functions will show warnings in verbose mode and will be removed in future versions.
+## 🧪 Notes
+
+Deterministic: strict `set -euo pipefail`. Call init early; avoid ad‑hoc sourcing.
+

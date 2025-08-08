@@ -1,86 +1,92 @@
 # 🤝 Contributing
 
-Concise rules to keep the SDK stable and high quality.
+Keep the SDK minimal, deterministic, secure.
 
-## Scope
+## 🎯 Scope
 
-Read‑only wireless RESTCONF (IOS‑XE 17.12). Stdlib only.
+Read‑only wireless RESTCONF (IOS‑XE 17.12). Stdlib only. No write ops.
 
-## Principles
+## 🔑 Core Rules
 
-| Aspect | Rule |
-|--------|------|
-| Public API | Add only with strong justification |
-| Deps | Std lib only |
+| Area | Rule |
+|------|------|
+| Public API | Add sparingly; require tests & docs |
+| Dependencies | Stdlib only |
 | Coverage | ≥99% total (no regressions) |
-| Errors | `fmt.Errorf("context: %w", err)` |
+| Errors | Wrap: `fmt.Errorf("ctx: %w", err)` |
 | Panics | None in library code |
 | Globals | Avoid mutable state |
-| Security | TLS verify ON by default |
+| TLS | Verify ON by default |
 
-## Testing
+## 🧪 Testing
 
-1. Unit (logic/validation)
-2. Integration (live controller)
-3. Gate: ≥99% coverage
-4. Add tests for any new export
-5. Helpers live in `internal/tests`
+| Kind | Purpose | Notes |
+|------|---------|-------|
+| Unit | Logic, validation | No env |
+| Integration | Live controller | Needs env |
+| Coverage | Gate ≥99% | Fails CI < gate |
 
-## Services
+Helpers: `internal/tests`. New export ⇒ new tests.
 
-Signature: `Func(ctx) (*model.XResponse, error)`; simple GET → `core.Get[T]`.
-
-## Errors
-
-| Case | Pattern |
-|------|---------|
-| Nil client | `invalid client configuration` |
-| JSON decode | `decode <domain> response: %w` |
-
-Never log internally unless via provided logger.
-
-## Docs
-
-Update affected markdown on API/env/test changes (single H1 rule).
-
-## Workflow
+## 🔁 Workflow
 
 ```bash
 make lint
 make test-unit
-make test-integration  # with env
+make test-integration   # needs WNC_* env
 make test-coverage
 ```
 
-## Commits
+## 🧩 Services Pattern
 
-Conventional Commits (`feat:`, `fix:`, etc.) ≤72 char subject.
+`Func(ctx) (*model.XResponse, error)`; basic GET uses `core.Get[T]`.
 
-## Env Vars
+## 🚨 Errors
 
-| Var | Purpose |
+| Case | Message Sketch |
+|------|----------------|
+| Nil client | `invalid client configuration` |
+| Decode fail | `decode <domain> response: %w` |
+
+No internal logging unless via user logger.
+
+## 📦 Env Vars
+
+| Var | Meaning |
 |-----|---------|
 | `WNC_CONTROLLER` | Host/IP |
 | `WNC_ACCESS_TOKEN` | Base64 creds |
 
-Missing → fail fast.
+Missing ⇒ fail fast.
 
-## PR Checklist
+## ✅ PR Checklist
 
-Build, lint, tests, ≥99% coverage, docs updated, no stray debug.
+Build passes • Lint clean • Tests (unit+integration) green • ≥99% coverage • Docs updated • No stray debug.
 
-## Avoid
+## ✍️ Commits
 
-Third‑party deps, hardcoded creds, panics, untested exports, coverage drops.
+Conventional Commits; subject ≤72 chars (imperative).
 
-## Ideas (Discuss First)
+## ❌ Avoid
 
-Retry tuning, pagination helpers, streaming endpoints.
+Third‑party deps, hardcoded creds, panics, untested exports, coverage drops, silent skips.
 
-## Support
+## 💡 Discuss First
 
-Include repro, Go version, controller version, minimal snippet.
+Pagination helpers, retries, streaming endpoints, new service groups.
 
-## Thanks
+## 🔍 Support Requests
 
-Prefer small focused PRs.
+Provide Go version, controller version, repro snippet.
+
+## 🔽 Extra (Collapsed)
+
+<details><summary>Extended guidance</summary>
+
+Documentation: single H1 per file. Update impacted docs with API or env changes. Prefer focused PRs. Table tests keep naming consistent. Fail early on configuration errors.
+
+</details>
+
+## 🙏 Thanks
+
+Small focused contributions are appreciated.

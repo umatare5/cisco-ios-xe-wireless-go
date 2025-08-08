@@ -1,14 +1,14 @@
-# �️ Script Reference (Stub)
+# 🧾 Script Reference
 
-Full content moved to modular docs under `docs/scripts/`.
+See `docs/scripts/` for full detail.
 
-| Topic | File |
+| Topic | Path |
 |-------|------|
 | Overview & flags | `docs/scripts/README.md` |
 | Common models | `docs/scripts/models.md` |
 | Troubleshooting | `docs/scripts/troubleshooting.md` |
 
-## Quick Examples
+## ▶️ Examples
 
 ```bash
 ./scripts/list_yang_models.sh -k
@@ -16,16 +16,18 @@ Full content moved to modular docs under `docs/scripts/`.
 ./scripts/get_yang_statement_details.sh -m Cisco-IOS-XE-wireless-general-oper -i general-oper-data -k
 ```
 
-## Environment
+## ⚙️ Env
 
-`WNC_CONTROLLER` and `WNC_ACCESS_TOKEN` must be set (or provided via flags). Missing → exit 1.
+`WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` required (or flags). Missing ⇒ exit 1.
 
-## Notes
+## ℹ️ Notes (Collapsed)
 
-- Scripts hard‑fail on missing required env vars.
-- Standard banners: `scripts/lib/output/banner.sh`.
-- Reusable helpers live only in `scripts/lib/`.
+<details><summary>Runtime behavior</summary>
 
-## See Also
+Hard fail on missing env. Standard banners via library. Shared helpers isolated under `scripts/lib` only.
+
+</details>
+
+## 🔗 Related
 
 `docs/api/` · `docs/testing/` · `docs/security/`
