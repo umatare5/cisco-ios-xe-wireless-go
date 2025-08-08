@@ -28,17 +28,7 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/artifacts"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "minimal"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
-is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
-is_force_enabled() { is_true "${argc_force:-false}"; }
-is_go_cache_enabled() { is_true "${argc_go_cache:-false}"; }
-is_go_modules_enabled() { is_true "${argc_go_modules:-false}"; }
-is_temp_files_enabled() { is_true "${argc_temp_files:-false}"; }
-is_test_files_enabled() { is_true "${argc_test_files:-false}"; }
-is_all_enabled() { is_true "${argc_all:-false}"; }
-is_dry_run_enabled() { is_true "${argc_dry_run:-false}"; }
-is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
+# Predicate functions centralized in lib/core/predicates.sh
 
 main() {
     run_artifacts_operation

@@ -20,6 +20,10 @@ source_core_libraries() {
     source "${WNC_CORE_LIB}/constants.sh"
     source "${WNC_CORE_LIB}/argc_common.sh"
     source "${WNC_CORE_LIB}/argument_parsing.sh"
+    # Centralized predicate helpers
+    if [[ -f "${WNC_CORE_LIB}/predicates.sh" ]]; then
+        source "${WNC_CORE_LIB}/predicates.sh"
+    fi
 }
 
 # Utility library loading

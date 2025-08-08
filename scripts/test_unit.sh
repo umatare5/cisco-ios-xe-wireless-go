@@ -24,12 +24,7 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/testing"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
-is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
-is_short_mode_enabled() { is_true "${argc_short:-false}"; }
-is_coverage_enabled() { is_true "${argc_coverage:-false}"; }
-is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
+# Predicate functions centralized in lib/core/predicates.sh
 
 main() {
     if is_coverage_enabled; then

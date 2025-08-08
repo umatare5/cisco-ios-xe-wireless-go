@@ -24,11 +24,7 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/yang"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "strict"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
-is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
-is_insecure_enabled() { is_true "${argc_insecure:-false}"; }
-is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
+# Predicate functions centralized in lib/core/predicates.sh
 
 main() {
     run_yang_list_operation

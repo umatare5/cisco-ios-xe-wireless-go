@@ -21,9 +21,7 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/validation"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "minimal"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
-is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
+# Predicate functions centralized in lib/core/predicates.sh
 
 main() {
     run_pre_commit_validation

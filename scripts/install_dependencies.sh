@@ -28,15 +28,7 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/dependencies"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
-is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
-is_clean_enabled() { is_true "${argc_clean:-false}"; }
-is_update_enabled() { is_true "${argc_update:-false}"; }
-is_force_enabled() { is_true "${argc_force:-false}"; }
-is_download_only_enabled() { is_true "${argc_download_only:-false}"; }
-is_verify_enabled() { is_true "${argc_verify:-false}"; }
-is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
+# Predicate functions centralized in lib/core/predicates.sh
 
 main() {
     run_dependencies_operation

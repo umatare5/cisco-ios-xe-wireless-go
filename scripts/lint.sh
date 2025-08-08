@@ -23,12 +23,7 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/lint"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
 
-# Predicate functions for improved readability using argc validation helpers
-is_verbose_enabled() { is_true "${argc_verbose:-false}"; }
-is_fix_enabled() { is_true "${argc_fix:-false}"; }
-is_no_color_enabled() { is_true "${argc_no_color:-false}"; }
-is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }
-has_golangci_lint() { is_command_available golangci-lint; }
+# Predicate functions centralized in lib/core/predicates.sh
 
 main() {
     run_lint_operation
