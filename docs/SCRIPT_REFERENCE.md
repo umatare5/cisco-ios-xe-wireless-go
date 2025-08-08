@@ -85,7 +85,7 @@ $ ./scripts/list_yang_models.sh -k
 Configuration:
 =============
 Protocol: https
-Controller: wnc1.example.internal
+Controller: <controller-hostname>
 Output Format: pretty
 
 Available YANG Models (Cisco Wireless):
@@ -166,11 +166,11 @@ Retrieves complete YANG model definitions including structure, types, and docume
 <summary>Example of the result</summary>
 
 ```bash
-$ ./scripts/get_yang_model_details.sh -c wnc1.example.internal -f pretty -k
+$ ./scripts/get_yang_model_details.sh -c <controller-hostname> -f pretty -k
 
-Fetching YANG model details from: https://wnc1.example.internal/restconf/tailf/modules/Cisco-IOS-XE-wireless-access-point-oper/2023-08-01
+Fetching YANG model details from: https://<controller-hostname>/restconf/tailf/modules/Cisco-IOS-XE-wireless-access-point-oper/2023-08-01
 Protocol: https
-Controller: wnc1.example.internal
+Controller: <controller-hostname>
 YANG Model: Cisco-IOS-XE-wireless-access-point-oper
 Revision: 2023-08-01
 Output Format: pretty

@@ -257,13 +257,7 @@ func TestEnvironmentVariableConstants(t *testing.T) {
 }
 
 // TestDefaultValues tests default value constants
-func TestDefaultValues(t *testing.T) {
-	t.Run("DefaultController", func(t *testing.T) {
-		if DefaultController != "wnc1.example.internal" {
-			t.Errorf("DefaultController = %q, want %q", DefaultController, "wnc1.example.internal")
-		}
-	})
-}
+// No implicit default controller is provided; controller must be specified explicitly via configuration.
 
 // TestDocumentationConstants tests documentation example constants
 func TestDocumentationConstants(t *testing.T) {

@@ -37,7 +37,7 @@ DESCRIPTION:
     Retrieves model information via RESTCONF API and displays in various formats.
 
 OPTIONS:
-    -c, --controller <HOST>  WNC controller hostname or IP [default: wnc1.example.internal]
+    -c, --controller <HOST>  WNC controller hostname or IP (required unless WNC_CONTROLLER set)
     -t, --token <TOKEN>      Basic auth token (or use WNC_ACCESS_TOKEN env var)
     -p, --protocol <PROTOCOL> Protocol: http or https [default: https]
     -k, --insecure           Skip TLS certificate verification
@@ -82,7 +82,7 @@ ARGUMENTS:
     <MODEL>                  YANG model name to retrieve
 
 OPTIONS:
-    -c, --controller <HOST>  WNC controller hostname [default: wnc1.example.internal]
+    -c, --controller <HOST>  WNC controller hostname (required unless WNC_CONTROLLER set)
     -t, --token <TOKEN>      Access token for authentication
     -f, --format <FORMAT>    Output format: json or xml [default: json]
     -v, --verbose            Enable verbose output
@@ -118,7 +118,7 @@ ARGUMENTS:
     <STATEMENT>              YANG statement/container name
 
 OPTIONS:
-    -c, --controller <HOST>  WNC controller hostname [default: wnc1.example.internal]
+    -c, --controller <HOST>  WNC controller hostname (required unless WNC_CONTROLLER set)
     -t, --token <TOKEN>      Access token for authentication
     -f, --format <FORMAT>    Output format: json or xml [default: json]
     -v, --verbose            Enable verbose output
@@ -139,7 +139,7 @@ show_yang_verbose_info() {
     is_verbose_enabled || return 0
 
     echo "YANG Operation Configuration:"
-    echo "  Controller: ${argc_controller:-${WNC_CONTROLLER:-wnc1.example.internal}}"
+    echo "  Controller: ${argc_controller:-${WNC_CONTROLLER:-<unset>}}"
     echo "  Protocol: ${argc_protocol:-https}"
     echo "  Format: ${argc_format:-json}"
     echo "  Insecure: $(is_insecure_enabled && echo "enabled" || echo "disabled")"

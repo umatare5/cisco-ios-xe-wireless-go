@@ -162,10 +162,7 @@ const (
 )
 
 // Default values
-const (
-	// DefaultController is the default controller hostname
-	DefaultController = "wnc1.example.internal"
-)
+// (Intentionally no implicit default controller; users must supply one explicitly.)
 
 // Documentation and example constants
 const (

@@ -22,7 +22,8 @@ VALIDATE_ARGC_YANG_ENVIRONMENT() {
 BUILD_ARGC_YANG_URL() {
     local endpoint="$1"
     # shellcheck disable=SC2154
-    local controller="${argc_controller:-wnc1.example.internal}"
+    local controller="${argc_controller:-}" # require explicit controller
+    [[ -n "$controller" ]] || { show_error "No controller specified. Use --controller or set WNC_CONTROLLER"; exit 1; }
     # shellcheck disable=SC2154
     local protocol="${argc_protocol:-https}"
 

@@ -47,7 +47,7 @@ EXAMPLES:
     make yang-statement MODEL=wireless-client STATEMENT=active # Get statement details
 
     # Integration testing (requires environment setup)
-    export WNC_CONTROLLER="wnc1.example.internal"
+    export WNC_CONTROLLER="<controller-hostname>"
     export WNC_ACCESS_TOKEN="YWRtaW46Y3l0WU43WVh4M2swc3piUnVhb1V1ZUx6"
     make test-integration
 

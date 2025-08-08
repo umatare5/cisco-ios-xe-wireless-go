@@ -9,9 +9,9 @@ get_default_protocol() {
     echo "https"
 }
 
-# Function to get default controller
+# Function to get default controller (intentionally empty; must be provided via --controller or WNC_CONTROLLER)
 get_default_controller() {
-    echo "wnc1.example.internal"
+    echo ""
 }
 
 # Function to get default output format

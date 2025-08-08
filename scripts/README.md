@@ -21,7 +21,7 @@ Comprehensive development and operation scripts for the Cisco IOS-XE Wireless Go
 ```bash
 # Required for YANG operations
 export WNC_ACCESS_TOKEN="YWRtaW46Y3l0WU43WVh4M2swc3piUnVhb1V1ZUx6"  # Base64 encoded credentials
-export WNC_CONTROLLER="wnc1.example.internal"                          # Controller hostname/IP
+export WNC_CONTROLLER="<controller-hostname>"                          # Controller hostname/IP (no implicit default)
 
 # Verify environment
 ./scripts/show_help.sh

@@ -3,7 +3,7 @@
 # @meta author "@umatare5"
 # @describe List Cisco wireless YANG models from a Wireless Network Controller
 
-# @option -c --controller <HOST>       WNC controller hostname or IP [default: wnc1.example.internal]
+# @option -c --controller <HOST>       WNC controller hostname or IP (required unless WNC_CONTROLLER set)
 # @option -t --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
 # @option -p --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
 # @flag   -k --insecure               Skip TLS certificate verification

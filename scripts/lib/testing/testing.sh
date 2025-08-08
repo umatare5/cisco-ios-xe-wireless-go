@@ -78,9 +78,9 @@ validate_integration_environment() {
     else
         echo "✗ Integration test environment not configured" >&2
         echo "  Set both WNC_CONTROLLER and WNC_ACCESS_TOKEN" >&2
-        echo "  Example: export WNC_CONTROLLER=wnc1.example.internal" >&2
+    echo "  Example: export WNC_CONTROLLER=<controller-hostname>" >&2
         echo "  Example: export WNC_ACCESS_TOKEN=YWRtaW46Y3l0WU43WVh4M2swc3piUnVhb1V1ZUx6" >&2
-        echo "  Or:      export WNC_CONTROLLER=wnc1.example.internal" >&2
+    echo "  Or:      export WNC_CONTROLLER=<controller-hostname>" >&2
         echo "          export WNC_ACCESS_TOKEN=YWRtaW46Y3l0WU43WVh4M2swc3piUnVhb1V1ZUx6" >&2
         return 1
     fi

@@ -142,7 +142,7 @@ execute_yang_request() {
 }
 
 run_yang_list_operation() {
-    local controller="${argc_controller:-${WNC_CONTROLLER:-wnc1.example.internal}}"
+    local controller="${argc_controller:-${WNC_CONTROLLER:-}}"
     local token="${argc_token:-${WNC_ACCESS_TOKEN:-}}"
 
     # Show banner and info
@@ -178,7 +178,7 @@ run_yang_list_operation() {
 
 run_yang_get_model_operation() {
     local model_name="$1"
-    local controller="${argc_controller:-${WNC_CONTROLLER:-wnc1.example.internal}}"
+    local controller="${argc_controller:-${WNC_CONTROLLER:-}}"
     local token="${argc_token:-${WNC_ACCESS_TOKEN:-}}"
 
     # Show banner and info
@@ -215,7 +215,7 @@ run_yang_get_model_operation() {
 run_yang_get_statement_operation() {
     local model_name="$1"
     local statement_name="$2"
-    local controller="${argc_controller:-${WNC_CONTROLLER:-wnc1.example.internal}}"
+    local controller="${argc_controller:-${WNC_CONTROLLER:-}}"
     local token="${argc_token:-${WNC_ACCESS_TOKEN:-}}"
 
     # Show banner and info
