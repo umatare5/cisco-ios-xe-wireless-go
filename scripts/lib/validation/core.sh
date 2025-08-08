@@ -115,5 +115,8 @@ run_pre_commit_validation() {
 
     # Show success
     show_validation_success "$current_branch"
+
+    # Insert a newline for better readability
+    echo
     return 0
 }
