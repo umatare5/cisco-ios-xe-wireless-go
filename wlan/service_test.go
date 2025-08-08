@@ -2,22 +2,14 @@
 package wlan
 
 import (
-	"os"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // TestWLANService tests the WLAN service using the standardized testing framework
 func TestWLANService(t *testing.T) {
-	// Get test client and create service
-	var client *core.Client
-
-	// Try to get real client from environment
-	if os.Getenv("WNC_CONTROLLER") != "" && os.Getenv("WNC_ACCESS_TOKEN") != "" {
-		client = tests.TestClient(t)
-	}
+	client := tests.OptionalTestClient(t)
 
 	service := NewService(client)
 
@@ -83,7 +75,10 @@ func TestWLANService(t *testing.T) {
 
 // TestWLANServiceSpecific contains WLAN-specific tests that don't fit the standard pattern
 func TestWLANServiceSpecific(t *testing.T) {
-	client := tests.TestClient(t)
+	client := tests.OptionalTestClient(t)
+	if client == nil { // if no integration env, skip these specifics gracefully
+		return
+	}
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 

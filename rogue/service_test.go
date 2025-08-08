@@ -3,12 +3,10 @@ package rogue
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"sync"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/model"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
@@ -30,18 +28,10 @@ type TestDataCollector struct {
 
 // TestRogueService tests all Rogue service functions with the 4-pattern testing approach
 func TestRogueService(t *testing.T) {
-	// Create a mock client that will be used when environment variables are not set
-	var client *core.Client
-	var ctx context.Context
-
-	// Try to get real client from environment
-	if os.Getenv("WNC_CONTROLLER") != "" && os.Getenv("WNC_ACCESS_TOKEN") != "" {
-		client = tests.TestClient(t)
+	client := tests.OptionalTestClient(t)
+	ctx := context.Background()
+	if client != nil {
 		ctx = tests.TestContext(t)
-	} else {
-		// Use nil client for unit testing
-		client = nil
-		ctx = context.Background()
 	}
 
 	service := NewService(client)

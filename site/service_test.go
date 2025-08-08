@@ -2,22 +2,14 @@
 package site
 
 import (
-	"os"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
 // TestSiteService tests the Site service using the standardized testing framework
 func TestSiteService(t *testing.T) {
-	// Get test client and create service
-	var client *core.Client
-
-	// Try to get real client from environment
-	if os.Getenv("WNC_CONTROLLER") != "" && os.Getenv("WNC_ACCESS_TOKEN") != "" {
-		client = tests.TestClient(t)
-	}
+	client := tests.OptionalTestClient(t)
 
 	service := NewService(client)
 
@@ -48,7 +40,10 @@ func TestSiteService(t *testing.T) {
 
 // TestSiteServiceSpecific contains site-specific tests that don't fit the standard pattern
 func TestSiteServiceSpecific(t *testing.T) {
-	client := tests.TestClient(t)
+	client := tests.OptionalTestClient(t)
+	if client == nil { // no integration env
+		return
+	}
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 

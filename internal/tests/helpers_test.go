@@ -189,8 +189,16 @@ func TestOptionalTestClient(t *testing.T) {
 	originalController := os.Getenv("WNC_CONTROLLER")
 	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
 	t.Cleanup(func() {
-		if originalController == "" { os.Unsetenv("WNC_CONTROLLER") } else { os.Setenv("WNC_CONTROLLER", originalController) }
-		if originalToken == "" { os.Unsetenv("WNC_ACCESS_TOKEN") } else { os.Setenv("WNC_ACCESS_TOKEN", originalToken) }
+		if originalController == "" {
+			os.Unsetenv("WNC_CONTROLLER")
+		} else {
+			os.Setenv("WNC_CONTROLLER", originalController)
+		}
+		if originalToken == "" {
+			os.Unsetenv("WNC_ACCESS_TOKEN")
+		} else {
+			os.Setenv("WNC_ACCESS_TOKEN", originalToken)
+		}
 		// restore default hook
 		createCoreClient = core.New
 	})
