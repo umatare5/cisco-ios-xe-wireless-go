@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # Common argc-based validation and setup
-VALIDATE_ARGC_YANG_ENVIRONMENT() {
+validate_argc_yang_environment() {
     # shellcheck disable=SC2154
     local token="${argc_token:-${WNC_ACCESS_TOKEN:-}}"
 
@@ -21,7 +21,7 @@ VALIDATE_ARGC_YANG_ENVIRONMENT() {
 }
 
 # Build YANG API URL from argc variables
-BUILD_ARGC_YANG_URL() {
+build_argc_yang_url() {
     local endpoint="$1"
     # shellcheck disable=SC2154
     local controller="${argc_controller:-}" # require explicit controller
@@ -33,7 +33,7 @@ BUILD_ARGC_YANG_URL() {
 }
 
 # Execute curl with argc-based options
-EXECUTE_ARGC_CURL() {
+execute_argc_curl() {
     local url="$1"
     local output_format="${2:-pretty}"  # pretty, raw, file
     local output_file="${3:-}"
