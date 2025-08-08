@@ -55,20 +55,20 @@ func TestGeolocationService(t *testing.T) {
 		var wg sync.WaitGroup
 		wg.Add(2) // Two methods to test
 
-		// Test Oper method
+		// Test GetOper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Oper(ctx)
+			resp, err := service.GetOper(ctx)
 			collector.mu.Lock()
 			collector.OperResp = resp
 			collector.OperErr = err
 			collector.mu.Unlock()
 		}()
 
-		// Test ApGeoLocStats method
+		// Test GetApGeoLocStats method
 		go func() {
 			defer wg.Done()
-			resp, err := service.ApGeoLocStats(ctx)
+			resp, err := service.GetApGeoLocStats(ctx)
 			collector.mu.Lock()
 			collector.ApGeoLocStatsResp = resp
 			collector.ApGeoLocStatsErr = err
@@ -135,15 +135,15 @@ func TestGeolocationService(t *testing.T) {
 			method func() (interface{}, error)
 		}{
 			{
-				name: "Oper",
+				name: "GetOper",
 				method: func() (interface{}, error) {
-					return service.Oper(ctx)
+					return service.GetOper(ctx)
 				},
 			},
 			{
-				name: "ApGeoLocStats",
+				name: "GetApGeoLocStats",
 				method: func() (interface{}, error) {
-					return service.ApGeoLocStats(ctx)
+					return service.GetApGeoLocStats(ctx)
 				},
 			},
 		}
@@ -169,12 +169,12 @@ func TestGeolocationService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
 			// Also test ApGeoLocStats with nil client
-			_, err = service.ApGeoLocStats(ctx)
+			_, err = service.GetApGeoLocStats(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client for ApGeoLocStats, got none")
 			}
@@ -183,12 +183,12 @@ func TestGeolocationService(t *testing.T) {
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Oper(nilCtx)
+			_, err := service.GetOper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
 			// Also test ApGeoLocStats with nil context
-			_, err = service.ApGeoLocStats(nilCtx)
+			_, err = service.GetApGeoLocStats(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context for ApGeoLocStats, but got none")
 			}
@@ -198,12 +198,12 @@ func TestGeolocationService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
 			// Also test ApGeoLocStats with canceled context
-			_, err = service.ApGeoLocStats(ctx)
+			_, err = service.GetApGeoLocStats(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context for ApGeoLocStats, got none")
 			}
@@ -222,7 +222,7 @@ func TestGeolocationService(t *testing.T) {
 		}
 
 		// Test with real service
-		resp, err := service.Oper(ctx)
+		resp, err := service.GetOper(ctx)
 		if err != nil {
 			t.Logf("Integration test - Oper error: %v", err)
 		} else {
@@ -230,7 +230,7 @@ func TestGeolocationService(t *testing.T) {
 		}
 
 		// Test ApGeoLocStats
-		apStatsResp, err := service.ApGeoLocStats(ctx)
+		apStatsResp, err := service.GetApGeoLocStats(ctx)
 		if err != nil {
 			t.Logf("Integration test - ApGeoLocStats error: %v", err)
 		} else {

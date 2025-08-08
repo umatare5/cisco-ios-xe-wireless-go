@@ -116,18 +116,18 @@ func TestMcastServiceMethods(t *testing.T) {
 		shouldFail bool
 	}{
 		{
-			name:       "Oper",
-			testFunc:   func() (interface{}, error) { return service.Oper(ctx) },
+			name:       "GetOper",
+			testFunc:   func() (interface{}, error) { return service.GetOper(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "FlexMediastreamClientSummary",
-			testFunc:   func() (interface{}, error) { return service.FlexMediastreamClientSummary(ctx) },
+			name:       "GetFlexMediastreamClientSummary",
+			testFunc:   func() (interface{}, error) { return service.GetFlexMediastreamClientSummary(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "VlanL2MgidOp",
-			testFunc:   func() (interface{}, error) { return service.VlanL2MgidOp(ctx) },
+			name:       "GetVlanL2MgidOp",
+			testFunc:   func() (interface{}, error) { return service.GetVlanL2MgidOp(ctx) },
 			shouldFail: false,
 		},
 	}
@@ -159,7 +159,7 @@ func TestMcastServiceFailFast(t *testing.T) {
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
 		ctx := context.Background()
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with nil client, got none")
 		}
@@ -171,7 +171,7 @@ func TestMcastServiceFailFast(t *testing.T) {
 		client := tests.TestClient(t)
 		service := NewService(client)
 		var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-		_, err := service.Oper(nilCtx)
+		_, err := service.GetOper(nilCtx)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
 		}
@@ -185,7 +185,7 @@ func TestMcastServiceFailFast(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with canceled context, got none")
 		}
@@ -208,20 +208,20 @@ func TestMcastServiceIntegration(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runMcastTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
-			return service.Oper(ctx)
+		runMcastTestAndCollectData(t, collector, "GetOper", func() (interface{}, error) {
+			return service.GetOper(ctx)
 		})
 	})
 
 	t.Run("FlexMediastreamClientSummary", func(t *testing.T) {
-		runMcastTestAndCollectData(t, collector, "FlexMediastreamClientSummary", func() (interface{}, error) {
-			return service.FlexMediastreamClientSummary(ctx)
+		runMcastTestAndCollectData(t, collector, "GetFlexMediastreamClientSummary", func() (interface{}, error) {
+			return service.GetFlexMediastreamClientSummary(ctx)
 		})
 	})
 
 	t.Run("VlanL2MgidOp", func(t *testing.T) {
-		runMcastTestAndCollectData(t, collector, "VlanL2MgidOp", func() (interface{}, error) {
-			return service.VlanL2MgidOp(ctx)
+		runMcastTestAndCollectData(t, collector, "GetVlanL2MgidOp", func() (interface{}, error) {
+			return service.GetVlanL2MgidOp(ctx)
 		})
 	})
 

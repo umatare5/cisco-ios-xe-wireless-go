@@ -56,9 +56,9 @@ var (
 	buildClient  = newClient
 	workflowFunc = runWorkflow
 	// Individual service operation fetchers to allow targeted error simulation.
-	fetchAPOper     = func(ctx context.Context, c *wnc.Client) (any, error) { return c.AP().Oper(ctx) }
-	fetchClientOper = func(ctx context.Context, c *wnc.Client) (any, error) { return c.Client().Oper(ctx) }
-	fetchRogueOper  = func(ctx context.Context, c *wnc.Client) (any, error) { return c.Rogue().Oper(ctx) }
+	fetchAPOper     = func(ctx context.Context, c *wnc.Client) (any, error) { return c.AP().GetOper(ctx) }
+	fetchClientOper = func(ctx context.Context, c *wnc.Client) (any, error) { return c.Client().GetOper(ctx) }
+	fetchRogueOper  = func(ctx context.Context, c *wnc.Client) (any, error) { return c.Rogue().GetOper(ctx) }
 )
 
 func main() {

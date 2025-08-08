@@ -16,45 +16,45 @@ func TestWLANService(t *testing.T) {
 	// Configure test methods
 	testMethods := []tests.TestMethod{
 		{
-			Name: "Cfg",
+			Name: "GetCfg",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.Cfg(ctx)
+				return service.GetCfg(ctx)
 			},
 		},
 		{
-			Name: "CfgEntries",
+			Name: "GetCfgEntries",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.CfgEntries(ctx)
+				return service.GetCfgEntries(ctx)
 			},
 		},
 		{
-			Name: "Policies",
+			Name: "GetPolicies",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.Policies(ctx)
+				return service.GetPolicies(ctx)
 			},
 		},
 		{
-			Name: "PolicyListEntries",
+			Name: "GetPolicyListEntries",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.PolicyListEntries(ctx)
+				return service.GetPolicyListEntries(ctx)
 			},
 		},
 		{
-			Name: "WirelessAaaPolicyConfigs",
+			Name: "GetWirelessAaaPolicyConfigs",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.WirelessAaaPolicyConfigs(ctx)
+				return service.GetWirelessAaaPolicyConfigs(ctx)
 			},
 		},
 		{
-			Name: "GlobalOper",
+			Name: "GetGlobalOper",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.GlobalOper(ctx)
+				return service.GetGlobalOper(ctx)
 			},
 		},
 	}
@@ -83,7 +83,7 @@ func TestWLANServiceSpecific(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("CfgResponseType", func(t *testing.T) {
-		result, err := service.Cfg(ctx)
+		result, err := service.GetCfg(ctx)
 		if err != nil {
 			t.Logf("Cfg returned error (expected in test env): %v", err)
 			return
@@ -94,7 +94,7 @@ func TestWLANServiceSpecific(t *testing.T) {
 	})
 
 	t.Run("GlobalOperResponseType", func(t *testing.T) {
-		result, err := service.GlobalOper(ctx)
+		result, err := service.GetGlobalOper(ctx)
 		if err != nil {
 			t.Logf("GlobalOper returned error (expected in test env): %v", err)
 			return
@@ -122,13 +122,13 @@ func TestWLANServiceSpecific(t *testing.T) {
 		// Test different response types with ValidateStructType
 		if client != nil {
 			// Test Cfg response structure
-			cfgResult, cfgErr := service.Cfg(ctx)
+			cfgResult, cfgErr := service.GetCfg(ctx)
 			if cfgErr == nil && cfgResult != nil {
 				tests.ValidateStructType(t, cfgResult)
 			}
 
 			// Test GlobalOper response structure
-			operResult, operErr := service.GlobalOper(ctx)
+			operResult, operErr := service.GetGlobalOper(ctx)
 			if operErr == nil && operResult != nil {
 				tests.ValidateStructType(t, operResult)
 			}

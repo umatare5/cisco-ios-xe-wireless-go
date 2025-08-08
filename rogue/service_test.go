@@ -65,7 +65,7 @@ func TestRogueService(t *testing.T) {
 		// Test Oper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Oper(ctx)
+			resp, err := service.GetOper(ctx)
 			collector.mu.Lock()
 			collector.OperResp = resp
 			collector.OperErr = err
@@ -75,7 +75,7 @@ func TestRogueService(t *testing.T) {
 		// Test Stats method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Stats(ctx)
+			resp, err := service.GetStats(ctx)
 			collector.mu.Lock()
 			collector.StatsResp = resp
 			collector.StatsErr = err
@@ -85,7 +85,7 @@ func TestRogueService(t *testing.T) {
 		// Test Data method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Data(ctx)
+			resp, err := service.GetData(ctx)
 			collector.mu.Lock()
 			collector.DataResp = resp
 			collector.DataErr = err
@@ -95,7 +95,7 @@ func TestRogueService(t *testing.T) {
 		// Test ClientData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.ClientData(ctx)
+			resp, err := service.GetClientData(ctx)
 			collector.mu.Lock()
 			collector.ClientDataResp = resp
 			collector.ClientDataErr = err
@@ -105,7 +105,7 @@ func TestRogueService(t *testing.T) {
 		// Test RldpStats method
 		go func() {
 			defer wg.Done()
-			resp, err := service.RldpStats(ctx)
+			resp, err := service.GetRldpStats(ctx)
 			collector.mu.Lock()
 			collector.RldpStatsResp = resp
 			collector.RldpStatsErr = err
@@ -162,33 +162,33 @@ func TestRogueService(t *testing.T) {
 			method func() (interface{}, error)
 		}{
 			{
-				name: "Oper",
+				name: "GetOper",
 				method: func() (interface{}, error) {
-					return service.Oper(ctx)
+					return service.GetOper(ctx)
 				},
 			},
 			{
-				name: "Stats",
+				name: "GetStats",
 				method: func() (interface{}, error) {
-					return service.Stats(ctx)
+					return service.GetStats(ctx)
 				},
 			},
 			{
-				name: "Data",
+				name: "GetData",
 				method: func() (interface{}, error) {
-					return service.Data(ctx)
+					return service.GetData(ctx)
 				},
 			},
 			{
-				name: "ClientData",
+				name: "GetClientData",
 				method: func() (interface{}, error) {
-					return service.ClientData(ctx)
+					return service.GetClientData(ctx)
 				},
 			},
 			{
-				name: "RldpStats",
+				name: "GetRldpStats",
 				method: func() (interface{}, error) {
-					return service.RldpStats(ctx)
+					return service.GetRldpStats(ctx)
 				},
 			},
 		}
@@ -214,7 +214,7 @@ func TestRogueService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
@@ -223,7 +223,7 @@ func TestRogueService(t *testing.T) {
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Oper(nilCtx)
+			_, err := service.GetOper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
@@ -233,7 +233,7 @@ func TestRogueService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
@@ -252,7 +252,7 @@ func TestRogueService(t *testing.T) {
 		}
 
 		// Test operational data
-		operResp, operErr := service.Oper(ctx)
+		operResp, operErr := service.GetOper(ctx)
 		if operErr != nil {
 			t.Logf("Integration test - Oper error: %v", operErr)
 		} else {
@@ -260,7 +260,7 @@ func TestRogueService(t *testing.T) {
 		}
 
 		// Test statistics
-		statsResp, statsErr := service.Stats(ctx)
+		statsResp, statsErr := service.GetStats(ctx)
 		if statsErr != nil {
 			t.Logf("Integration test - Stats error: %v", statsErr)
 		} else {

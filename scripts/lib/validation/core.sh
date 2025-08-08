@@ -30,10 +30,10 @@ has_staged_changes() {
 validate_git_environment() {
     # Verify we're in a git repository
     if ! is_git_repository; then
-        printf "\033[31m✗ Error:\033[0m Not in a Git repository\n" >&2
+    show_error "Not in a Git repository"
         if is_verbose_enabled; then
-            printf "\033[36mℹ Info:\033[0m Current directory: $(pwd)\n"
-            printf "\033[36mℹ Info:\033[0m Try running this command from within a Git repository\n"
+            show_info "Current directory: $(pwd)"
+            show_info "Try running this command from within a Git repository"
         fi
         return 1
     fi
@@ -43,10 +43,10 @@ validate_git_environment() {
     current_branch=$(get_current_branch)
 
     if [[ -z "$current_branch" ]]; then
-        printf "\033[31m✗ Error:\033[0m Unable to determine current branch\n" >&2
+    show_error "Unable to determine current branch"
         if is_verbose_enabled; then
-            printf "\033[36mℹ Info:\033[0m This might indicate a detached HEAD state\n"
-            printf "\033[36mℹ Info:\033[0m Try: git checkout main && git checkout -b feature/your-branch\n"
+            show_info "This might indicate a detached HEAD state"
+            show_info "Try: git checkout main && git checkout -b feature/your-branch"
         fi
         return 1
     fi
@@ -83,7 +83,7 @@ validate_staged_changes() {
     if is_verbose_enabled; then
         local staged_files
         staged_files=$(git diff --cached --name-only | wc -l | tr -d ' ')
-        printf "\033[36mℹ Info:\033[0m Found %s staged file(s)\n" "$staged_files"
+    show_info "Found $staged_files staged file(s)"
     fi
 
     return 0

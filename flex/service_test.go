@@ -15,10 +15,10 @@ func TestFlexService(t *testing.T) {
 	// Configure test methods
 	testMethods := []tests.TestMethod{
 		{
-			Name: "Cfg",
+			Name: "GetCfg",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.Cfg(ctx)
+				return service.GetCfg(ctx)
 			},
 		},
 	}

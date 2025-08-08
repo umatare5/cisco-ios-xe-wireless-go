@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+
 # Centralized predicate helper functions for WNC scripts
 # Loaded by bootstrap.sh if present. Avoid duplication across entry scripts.
+
 set -euo pipefail
 
 # argc flag predicates (flags become 1/0)

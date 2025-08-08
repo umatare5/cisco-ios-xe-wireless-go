@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Oper returns Mobility operational data.
-func (s Service) Oper(ctx context.Context) (*model.MobilityOperResponse, error) {
+// GetOper returns Mobility operational data.
+func (s Service) GetOper(ctx context.Context) (*model.MobilityOperResponse, error) {
 	return core.Get[model.MobilityOperResponse](ctx, s.c, MobilityOperEndpoint)
 }

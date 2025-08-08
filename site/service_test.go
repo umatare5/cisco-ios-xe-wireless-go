@@ -16,10 +16,10 @@ func TestSiteService(t *testing.T) {
 	// Configure test methods
 	testMethods := []tests.TestMethod{
 		{
-			Name: "Oper",
+			Name: "GetOper",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.Oper(ctx)
+				return service.GetOper(ctx)
 			},
 		},
 	}
@@ -48,7 +48,7 @@ func TestSiteServiceSpecific(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("OperResponseType", func(t *testing.T) {
-		result, err := service.Oper(ctx)
+		result, err := service.GetOper(ctx)
 		if err != nil {
 			t.Logf("Oper returned error (expected in test env): %v", err)
 			return

@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns CTS configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.CtsCfgResponse, error) {
+// GetCfg returns CTS configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.CtsCfgResponse, error) {
 	return core.Get[model.CtsCfgResponse](ctx, s.c, CtsCfgEndpoint)
 }

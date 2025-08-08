@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC Testing Operations - Output Functions
 # Handles output formatting and display for testing operations
+
+set -euo pipefail
 
 format_test_error() {
     local message="$1"

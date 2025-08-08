@@ -29,17 +29,17 @@ func NewService(c *core.Client) Service {
 	return Service{c: c}
 }
 
-// Oper returns mDNS operational data.
-func (s Service) Oper(ctx context.Context) (*model.MdnsOperResponse, error) {
+// GetOper returns mDNS operational data.
+func (s Service) GetOper(ctx context.Context) (*model.MdnsOperResponse, error) {
 	return core.Get[model.MdnsOperResponse](ctx, s.c, MdnsOperEndpoint)
 }
 
-// GlobalStats returns mDNS global statistics.
-func (s Service) GlobalStats(ctx context.Context) (*model.MdnsGlobalStatsResponse, error) {
+// GetGlobalStats returns mDNS global statistics.
+func (s Service) GetGlobalStats(ctx context.Context) (*model.MdnsGlobalStatsResponse, error) {
 	return core.Get[model.MdnsGlobalStatsResponse](ctx, s.c, MdnsGlobalStatsEndpoint)
 }
 
-// WlanStats returns mDNS WLAN statistics.
-func (s Service) WlanStats(ctx context.Context) (*model.MdnsWlanStatsResponse, error) {
+// GetWlanStats returns mDNS WLAN statistics.
+func (s Service) GetWlanStats(ctx context.Context) (*model.MdnsWlanStatsResponse, error) {
 	return core.Get[model.MdnsWlanStatsResponse](ctx, s.c, MdnsWlanStatsEndpoint)
 }

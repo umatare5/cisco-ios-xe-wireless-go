@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns Radio configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.RadioCfgResponse, error) {
+// GetCfg returns Radio configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.RadioCfgResponse, error) {
 	return core.Get[model.RadioCfgResponse](ctx, s.c, RadioCfgEndpoint)
 }

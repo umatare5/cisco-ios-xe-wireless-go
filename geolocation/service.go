@@ -27,13 +27,13 @@ func NewService(c *core.Client) Service {
 	return Service{c: c}
 }
 
-// Oper returns geolocation operational data.
+// GetOper returns geolocation operational data.
 // This endpoint provides geographic positioning and location mapping information.
-func (s Service) Oper(ctx context.Context) (*model.GeolocationOperResponse, error) {
+func (s Service) GetOper(ctx context.Context) (*model.GeolocationOperResponse, error) {
 	return core.Get[model.GeolocationOperResponse](ctx, s.c, GeolocationOperEndpoint)
 }
 
-// ApGeoLocStats returns AP geolocation statistics.
-func (s Service) ApGeoLocStats(ctx context.Context) (*model.GeolocationOperApGeoLocStatsResponse, error) {
+// GetApGeoLocStats returns AP geolocation statistics.
+func (s Service) GetApGeoLocStats(ctx context.Context) (*model.GeolocationOperApGeoLocStatsResponse, error) {
 	return core.Get[model.GeolocationOperApGeoLocStatsResponse](ctx, s.c, GeolocationOperApGeoLocStatsEndpoint)
 }

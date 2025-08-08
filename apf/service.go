@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns APF configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.ApfCfgResponse, error) {
+// GetCfg returns APF configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.ApfCfgResponse, error) {
 	return core.Get[model.ApfCfgResponse](ctx, s.c, ApfCfgEndpoint)
 }

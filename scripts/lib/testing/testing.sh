@@ -146,13 +146,11 @@ run_tests_with_coverage() {
 
     if command_exists gotestsum; then
         echo "Using gotestsum for enhanced test output..."
-        # shellcheck disable=SC2086
-        (cd "$project_root" && gotestsum --format testname -- "${test_cmd_args[@]}" $packages)
+        (cd "$project_root" && gotestsum --format testname -- "${test_cmd_args[@]}" "$packages")
     else
         echo "gotestsum not found, using go test with verbose output..."
         test_cmd_args+=("-v")
-        # shellcheck disable=SC2086
-        (cd "$project_root" && gotestsum --format testname -- "${test_cmd_args[@]}" $packages)
+        (cd "$project_root" && gotestsum --format testname -- "${test_cmd_args[@]}" "$packages")
     fi
 
     if [[ -f "$coverage_file" ]]; then

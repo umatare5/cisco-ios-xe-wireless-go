@@ -15,9 +15,12 @@ import (
 
 // fetchAPOper is an injectable function (overridden in tests) that returns the AP count.
 var fetchAPOper = func(ctx context.Context, c *wnc.Client) (int, error) {
-	apData, err := c.AP().Oper(ctx)
+	apData, err := c.AP().GetOper(ctx)
 	if err != nil {
 		return 0, err
+	}
+	if apData == nil {
+		return 0, fmt.Errorf("nil AP oper data")
 	}
 	return len(apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.OperData), nil
 }

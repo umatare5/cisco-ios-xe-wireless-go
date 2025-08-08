@@ -41,34 +41,34 @@ func NewService(c *core.Client) Service {
 
 // Configuration Methods
 
-// Cfg returns complete WLAN configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.WlanCfgResponse, error) {
+// GetCfg returns complete WLAN configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.WlanCfgResponse, error) {
 	return core.Get[model.WlanCfgResponse](ctx, s.c, WlanCfgEndpoint)
 }
 
-// CfgEntries returns WLAN configuration entries.
-func (s Service) CfgEntries(ctx context.Context) (*model.WlanCfgEntriesResponse, error) {
+// GetCfgEntries returns WLAN configuration entries.
+func (s Service) GetCfgEntries(ctx context.Context) (*model.WlanCfgEntriesResponse, error) {
 	return core.Get[model.WlanCfgEntriesResponse](ctx, s.c, WlanCfgEntriesEndpoint)
 }
 
-// Policies returns WLAN policies.
-func (s Service) Policies(ctx context.Context) (*model.WlanPoliciesResponse, error) {
+// GetPolicies returns WLAN policies.
+func (s Service) GetPolicies(ctx context.Context) (*model.WlanPoliciesResponse, error) {
 	return core.Get[model.WlanPoliciesResponse](ctx, s.c, WlanPoliciesEndpoint)
 }
 
-// PolicyListEntries returns policy list entries.
-func (s Service) PolicyListEntries(ctx context.Context) (*model.PolicyListEntriesResponse, error) {
+// GetPolicyListEntries returns policy list entries.
+func (s Service) GetPolicyListEntries(ctx context.Context) (*model.PolicyListEntriesResponse, error) {
 	return core.Get[model.PolicyListEntriesResponse](ctx, s.c, PolicyListEntriesEndpoint)
 }
 
-// WirelessAaaPolicyConfigs returns wireless AAA policy configurations.
-func (s Service) WirelessAaaPolicyConfigs(ctx context.Context) (*model.WirelessAaaPolicyConfigsResponse, error) {
+// GetWirelessAaaPolicyConfigs returns wireless AAA policy configurations.
+func (s Service) GetWirelessAaaPolicyConfigs(ctx context.Context) (*model.WirelessAaaPolicyConfigsResponse, error) {
 	return core.Get[model.WirelessAaaPolicyConfigsResponse](ctx, s.c, WirelessAaaPolicyConfigsEndpoint)
 }
 
 // Operational Methods
 
-// GlobalOper returns WLAN global operational data.
-func (s Service) GlobalOper(ctx context.Context) (*model.WlanGlobalOperResponse, error) {
+// GetGlobalOper returns WLAN global operational data.
+func (s Service) GetGlobalOper(ctx context.Context) (*model.WlanGlobalOperResponse, error) {
 	return core.Get[model.WlanGlobalOperResponse](ctx, s.c, WlanGlobalOperDataEndpoint)
 }

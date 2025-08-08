@@ -34,22 +34,22 @@ func NewService(c *core.Client) Service {
 	return Service{c: c}
 }
 
-// Oper returns overall AFC operational data.
-func (s Service) Oper(ctx context.Context) (*model.AfcOperResponse, error) {
+// GetOper returns overall AFC operational data.
+func (s Service) GetOper(ctx context.Context) (*model.AfcOperResponse, error) {
 	return core.Get[model.AfcOperResponse](ctx, s.c, AFCOperEndpoint)
 }
 
-// APResp returns per-AP AFC response data.
-func (s Service) APResp(ctx context.Context) (*model.AfcOperEwlcAfcApRespResponse, error) {
+// GetAPResp returns per-AP AFC response data.
+func (s Service) GetAPResp(ctx context.Context) (*model.AfcOperEwlcAfcApRespResponse, error) {
 	return core.Get[model.AfcOperEwlcAfcApRespResponse](ctx, s.c, AFCApRespEndpoint)
 }
 
-// CloudOper returns AFC cloud operational data.
-func (s Service) CloudOper(ctx context.Context) (*model.AfcCloudOperResponse, error) {
+// GetCloudOper returns AFC cloud operational data.
+func (s Service) GetCloudOper(ctx context.Context) (*model.AfcCloudOperResponse, error) {
 	return core.Get[model.AfcCloudOperResponse](ctx, s.c, AFCCloudOperEndpoint)
 }
 
-// CloudStats returns AFC cloud statistics.
-func (s Service) CloudStats(ctx context.Context) (*model.AfcCloudOperAfcCloudStatsResponse, error) {
+// GetCloudStats returns AFC cloud statistics.
+func (s Service) GetCloudStats(ctx context.Context) (*model.AfcCloudOperAfcCloudStatsResponse, error) {
 	return core.Get[model.AfcCloudOperAfcCloudStatsResponse](ctx, s.c, AFCCloudStatsEndpoint)
 }

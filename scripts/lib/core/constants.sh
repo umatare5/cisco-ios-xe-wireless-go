@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC Script Constants Library
 # Common constants and default values used across all WNC scripts
+
+set -euo pipefail
 
 # Function to get default protocol
 get_default_protocol() {

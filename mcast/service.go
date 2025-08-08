@@ -29,13 +29,13 @@ func NewService(c *core.Client) Service {
 	return Service{c: c}
 }
 
-// Oper returns multicast operational data.
-func (s Service) Oper(ctx context.Context) (*model.McastOperResponse, error) {
+// GetOper returns multicast operational data.
+func (s Service) GetOper(ctx context.Context) (*model.McastOperResponse, error) {
 	return core.Get[model.McastOperResponse](ctx, s.c, McastOperEndpoint)
 }
 
-// FlexMediastreamClientSummary returns FlexConnect mediastream client summary data.
-func (s Service) FlexMediastreamClientSummary(
+// GetFlexMediastreamClientSummary returns FlexConnect mediastream client summary data.
+func (s Service) GetFlexMediastreamClientSummary(
 	ctx context.Context,
 ) (*model.McastOperFlexMediastreamClientSummaryResponse, error) {
 	return core.Get[model.McastOperFlexMediastreamClientSummaryResponse](
@@ -43,7 +43,7 @@ func (s Service) FlexMediastreamClientSummary(
 	)
 }
 
-// VlanL2MgidOp returns VLAN Layer 2 multicast group ID operational data.
-func (s Service) VlanL2MgidOp(ctx context.Context) (*model.McastOperVlanL2MgidOpResponse, error) {
+// GetVlanL2MgidOp returns VLAN Layer 2 multicast group ID operational data.
+func (s Service) GetVlanL2MgidOp(ctx context.Context) (*model.McastOperVlanL2MgidOpResponse, error) {
 	return core.Get[model.McastOperVlanL2MgidOpResponse](ctx, s.c, VlanL2MgidOpEndpoint)
 }

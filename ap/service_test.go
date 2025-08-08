@@ -17,38 +17,38 @@ func TestApService(t *testing.T) {
 	// Configure test methods
 	testMethods := []tests.TestMethod{
 		{
-			Name: "Cfg",
+			Name: "GetCfg",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.Cfg(ctx)
+				return service.GetCfg(ctx)
 			},
 		},
 		{
-			Name: "TagSourcePriorityConfigs",
+			Name: "GetTagSourcePriorityConfigs",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.TagSourcePriorityConfigs(ctx)
+				return service.GetTagSourcePriorityConfigs(ctx)
 			},
 		},
 		{
-			Name: "ApTags",
+			Name: "GetApTags",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.ApTags(ctx)
+				return service.GetApTags(ctx)
 			},
 		},
 		{
-			Name: "Oper",
+			Name: "GetOper",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.Oper(ctx)
+				return service.GetOper(ctx)
 			},
 		},
 		{
-			Name: "RadioNeighbor",
+			Name: "GetRadioNeighbor",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.RadioNeighbor(ctx)
+				return service.GetRadioNeighbor(ctx)
 			},
 		},
 		{
@@ -66,24 +66,24 @@ func TestApService(t *testing.T) {
 			},
 		},
 		{
-			Name: "GlobalOper",
+			Name: "GetGlobalOper",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.GlobalOper(ctx)
+				return service.GetGlobalOper(ctx)
 			},
 		},
 		{
-			Name: "History",
+			Name: "GetHistory",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.History(ctx)
+				return service.GetHistory(ctx)
 			},
 		},
 		{
-			Name: "EwlcApStats",
+			Name: "GetEwlcApStats",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.EwlcApStats(ctx)
+				return service.GetEwlcApStats(ctx)
 			},
 		},
 	}
@@ -109,7 +109,7 @@ func TestApServiceSpecific(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("CfgResponseType", func(t *testing.T) {
-		result, err := service.Cfg(ctx)
+		result, err := service.GetCfg(ctx)
 		if err != nil {
 			t.Logf("Cfg returned error (expected in test env): %v", err)
 			return
@@ -120,7 +120,7 @@ func TestApServiceSpecific(t *testing.T) {
 	})
 
 	t.Run("OperResponseType", func(t *testing.T) {
-		result, err := service.Oper(ctx)
+		result, err := service.GetOper(ctx)
 		if err != nil {
 			t.Logf("Oper returned error (expected in test env): %v", err)
 			return
@@ -148,13 +148,13 @@ func TestApServiceSpecific(t *testing.T) {
 		// Test different response types with ValidateStructType
 		if client != nil {
 			// Test Cfg response structure
-			cfgResult, cfgErr := service.Cfg(ctx)
+			cfgResult, cfgErr := service.GetCfg(ctx)
 			if cfgErr == nil && cfgResult != nil {
 				tests.ValidateStructType(t, cfgResult)
 			}
 
 			// Test Oper response structure
-			operResult, operErr := service.Oper(ctx)
+			operResult, operErr := service.GetOper(ctx)
 			if operErr == nil && operResult != nil {
 				tests.ValidateStructType(t, operResult)
 			}

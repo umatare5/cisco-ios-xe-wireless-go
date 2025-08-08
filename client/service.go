@@ -45,52 +45,52 @@ func NewService(c *core.Client) Service {
 
 // Operational Data Methods
 
-// Oper returns complete client operational data.
-func (s Service) Oper(ctx context.Context) (*model.ClientOperResponse, error) {
+// GetOper returns complete client operational data.
+func (s Service) GetOper(ctx context.Context) (*model.ClientOperResponse, error) {
 	return core.Get[model.ClientOperResponse](ctx, s.c, ClientOperEndpoint)
 }
 
-// CommonOperData returns common operational data for clients.
-func (s Service) CommonOperData(ctx context.Context) (*model.ClientOperCommonOperDataResponse, error) {
+// GetCommonOperData returns common operational data for clients.
+func (s Service) GetCommonOperData(ctx context.Context) (*model.ClientOperCommonOperDataResponse, error) {
 	return core.Get[model.ClientOperCommonOperDataResponse](ctx, s.c, CommonOperDataEndpoint)
 }
 
-// Dot11OperData returns 802.11 operational data for clients.
-func (s Service) Dot11OperData(ctx context.Context) (*model.ClientOperDot11OperDataResponse, error) {
+// GetDot11OperData returns 802.11 operational data for clients.
+func (s Service) GetDot11OperData(ctx context.Context) (*model.ClientOperDot11OperDataResponse, error) {
 	return core.Get[model.ClientOperDot11OperDataResponse](ctx, s.c, Dot11OperDataEndpoint)
 }
 
-// MobilityOperData returns mobility operational data for clients.
-func (s Service) MobilityOperData(ctx context.Context) (*model.ClientOperMobilityOperDataResponse, error) {
+// GetMobilityOperData returns mobility operational data for clients.
+func (s Service) GetMobilityOperData(ctx context.Context) (*model.ClientOperMobilityOperDataResponse, error) {
 	return core.Get[model.ClientOperMobilityOperDataResponse](ctx, s.c, MobilityOperDataEndpoint)
 }
 
-// MmIfClientStats returns mobility manager interface client statistics.
-func (s Service) MmIfClientStats(ctx context.Context) (*model.ClientOperMmIfClientStatsResponse, error) {
+// GetMmIfClientStats returns mobility manager interface client statistics.
+func (s Service) GetMmIfClientStats(ctx context.Context) (*model.ClientOperMmIfClientStatsResponse, error) {
 	return core.Get[model.ClientOperMmIfClientStatsResponse](ctx, s.c, MmIfClientStatsEndpoint)
 }
 
-// MmIfClientHistory returns mobility manager interface client history.
-func (s Service) MmIfClientHistory(ctx context.Context) (*model.ClientOperMmIfClientHistoryResponse, error) {
+// GetMmIfClientHistory returns mobility manager interface client history.
+func (s Service) GetMmIfClientHistory(ctx context.Context) (*model.ClientOperMmIfClientHistoryResponse, error) {
 	return core.Get[model.ClientOperMmIfClientHistoryResponse](ctx, s.c, MmIfClientHistoryEndpoint)
 }
 
-// TrafficStats returns client traffic statistics.
-func (s Service) TrafficStats(ctx context.Context) (*model.ClientOperTrafficStatsResponse, error) {
+// GetTrafficStats returns client traffic statistics.
+func (s Service) GetTrafficStats(ctx context.Context) (*model.ClientOperTrafficStatsResponse, error) {
 	return core.Get[model.ClientOperTrafficStatsResponse](ctx, s.c, TrafficStatsEndpoint)
 }
 
-// PolicyData returns client policy data.
-func (s Service) PolicyData(ctx context.Context) (*model.ClientOperPolicyDataResponse, error) {
+// GetPolicyData returns client policy data.
+func (s Service) GetPolicyData(ctx context.Context) (*model.ClientOperPolicyDataResponse, error) {
 	return core.Get[model.ClientOperPolicyDataResponse](ctx, s.c, PolicyDataEndpoint)
 }
 
-// SisfDBMac returns SISF database MAC information.
-func (s Service) SisfDBMac(ctx context.Context) (*model.ClientOperSisfDBMacResponse, error) {
+// GetSisfDBMac returns SISF database MAC information.
+func (s Service) GetSisfDBMac(ctx context.Context) (*model.ClientOperSisfDBMacResponse, error) {
 	return core.Get[model.ClientOperSisfDBMacResponse](ctx, s.c, SisfDBMacEndpoint)
 }
 
-// DcInfo returns discovery client information.
-func (s Service) DcInfo(ctx context.Context) (*model.ClientOperDcInfoResponse, error) {
+// GetDcInfo returns discovery client information.
+func (s Service) GetDcInfo(ctx context.Context) (*model.ClientOperDcInfoResponse, error) {
 	return core.Get[model.ClientOperDcInfoResponse](ctx, s.c, DcInfoEndpoint)
 }

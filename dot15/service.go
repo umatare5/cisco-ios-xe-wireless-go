@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns 802.15 configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.Dot15CfgResponse, error) {
+// GetCfg returns 802.15 configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.Dot15CfgResponse, error) {
 	return core.Get[model.Dot15CfgResponse](ctx, s.c, Dot15CfgEndpoint)
 }

@@ -55,30 +55,30 @@ func NewService(c *core.Client) Service {
 
 // Configuration Methods
 
-// Cfg returns complete access point configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.ApCfgResponse, error) {
+// GetCfg returns complete access point configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.ApCfgResponse, error) {
 	return core.Get[model.ApCfgResponse](ctx, s.c, APCfgEndpoint)
 }
 
-// TagSourcePriorityConfigs returns tag source priority configurations.
-func (s Service) TagSourcePriorityConfigs(ctx context.Context) (*model.TagSourcePriorityConfigs, error) {
+// GetTagSourcePriorityConfigs returns tag source priority configurations.
+func (s Service) GetTagSourcePriorityConfigs(ctx context.Context) (*model.TagSourcePriorityConfigs, error) {
 	return core.Get[model.TagSourcePriorityConfigs](ctx, s.c, TagSourcePriorityConfigsEndpoint)
 }
 
-// ApTags returns access point tag configurations.
-func (s Service) ApTags(ctx context.Context) (*model.ApCfgApTagsResponse, error) {
+// GetApTags returns access point tag configurations.
+func (s Service) GetApTags(ctx context.Context) (*model.ApCfgApTagsResponse, error) {
 	return core.Get[model.ApCfgApTagsResponse](ctx, s.c, APTagsEndpoint)
 }
 
 // Operational Methods
 
-// Oper returns complete access point operational data.
-func (s Service) Oper(ctx context.Context) (*model.ApOperResponse, error) {
+// GetOper returns complete access point operational data.
+func (s Service) GetOper(ctx context.Context) (*model.ApOperResponse, error) {
 	return core.Get[model.ApOperResponse](ctx, s.c, APOperEndpoint)
 }
 
-// RadioNeighbor returns access point radio neighbor information.
-func (s Service) RadioNeighbor(ctx context.Context) (*model.ApOperApRadioNeighborResponse, error) {
+// GetRadioNeighbor returns access point radio neighbor information.
+func (s Service) GetRadioNeighbor(ctx context.Context) (*model.ApOperApRadioNeighborResponse, error) {
 	return core.Get[model.ApOperApRadioNeighborResponse](ctx, s.c, APRadioNeighborEndpoint)
 }
 
@@ -110,17 +110,17 @@ func (s Service) GetCapwapData(ctx context.Context) (*[]model.CapwapData, error)
 
 // Global Operational Methods
 
-// GlobalOper returns complete AP global operational data.
-func (s Service) GlobalOper(ctx context.Context) (*model.ApGlobalOperResponse, error) {
+// GetGlobalOper returns complete AP global operational data.
+func (s Service) GetGlobalOper(ctx context.Context) (*model.ApGlobalOperResponse, error) {
 	return core.Get[model.ApGlobalOperResponse](ctx, s.c, APGlobalOperEndpoint)
 }
 
-// History returns AP history data.
-func (s Service) History(ctx context.Context) (*model.ApGlobalOperApHistoryResponse, error) {
+// GetHistory returns AP history data.
+func (s Service) GetHistory(ctx context.Context) (*model.ApGlobalOperApHistoryResponse, error) {
 	return core.Get[model.ApGlobalOperApHistoryResponse](ctx, s.c, APHistoryEndpoint)
 }
 
-// EwlcApStats returns EWLC AP statistics.
-func (s Service) EwlcApStats(ctx context.Context) (*model.ApGlobalOperEwlcApStatsResponse, error) {
+// GetEwlcApStats returns EWLC AP statistics.
+func (s Service) GetEwlcApStats(ctx context.Context) (*model.ApGlobalOperEwlcApStatsResponse, error) {
 	return core.Get[model.ApGlobalOperEwlcApStatsResponse](ctx, s.c, EwlcAPStatsEndpoint)
 }

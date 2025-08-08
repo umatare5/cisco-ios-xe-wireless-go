@@ -59,40 +59,40 @@ func TestRrmService(t *testing.T) {
 		var wg sync.WaitGroup
 		wg.Add(4) // 4 methods to test
 
-		// Test Cfg method
+		// Test GetCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Cfg(ctx)
+			resp, err := service.GetCfg(ctx)
 			collector.mu.Lock()
 			collector.CfgResp = resp
 			collector.CfgErr = err
 			collector.mu.Unlock()
 		}()
 
-		// Test Oper method
+		// Test GetOper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Oper(ctx)
+			resp, err := service.GetOper(ctx)
 			collector.mu.Lock()
 			collector.OperResp = resp
 			collector.OperErr = err
 			collector.mu.Unlock()
 		}()
 
-		// Test GlobalOper method
+		// Test GetGlobalOper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.GlobalOper(ctx)
+			resp, err := service.GetGlobalOper(ctx)
 			collector.mu.Lock()
 			collector.GlobalOperResp = resp
 			collector.GlobalOperErr = err
 			collector.mu.Unlock()
 		}()
 
-		// Test EmulOper method
+		// Test GetEmulOper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.EmulOper(ctx)
+			resp, err := service.GetEmulOper(ctx)
 			collector.mu.Lock()
 			collector.EmulOperResp = resp
 			collector.EmulOperErr = err
@@ -159,27 +159,27 @@ func TestRrmService(t *testing.T) {
 			method func() (interface{}, error)
 		}{
 			{
-				name: "Cfg",
+				name: "GetCfg",
 				method: func() (interface{}, error) {
-					return service.Cfg(ctx)
+					return service.GetCfg(ctx)
 				},
 			},
 			{
-				name: "Oper",
+				name: "GetOper",
 				method: func() (interface{}, error) {
-					return service.Oper(ctx)
+					return service.GetOper(ctx)
 				},
 			},
 			{
-				name: "GlobalOper",
+				name: "GetGlobalOper",
 				method: func() (interface{}, error) {
-					return service.GlobalOper(ctx)
+					return service.GetGlobalOper(ctx)
 				},
 			},
 			{
-				name: "EmulOper",
+				name: "GetEmulOper",
 				method: func() (interface{}, error) {
-					return service.EmulOper(ctx)
+					return service.GetEmulOper(ctx)
 				},
 			},
 		}
@@ -205,7 +205,7 @@ func TestRrmService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Cfg(ctx)
+			_, err := service.GetCfg(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
@@ -214,7 +214,7 @@ func TestRrmService(t *testing.T) {
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Cfg(nilCtx)
+			_, err := service.GetCfg(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
@@ -224,7 +224,7 @@ func TestRrmService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Cfg(ctx)
+			_, err := service.GetCfg(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
@@ -243,7 +243,7 @@ func TestRrmService(t *testing.T) {
 		}
 
 		// Test configuration data
-		cfgResp, cfgErr := service.Cfg(ctx)
+		cfgResp, cfgErr := service.GetCfg(ctx)
 		if cfgErr != nil {
 			t.Logf("Integration test - Cfg error: %v", cfgErr)
 		} else {
@@ -251,7 +251,7 @@ func TestRrmService(t *testing.T) {
 		}
 
 		// Test operational data
-		operResp, operErr := service.Oper(ctx)
+		operResp, operErr := service.GetOper(ctx)
 		if operErr != nil {
 			t.Logf("Integration test - Oper error: %v", operErr)
 		} else {

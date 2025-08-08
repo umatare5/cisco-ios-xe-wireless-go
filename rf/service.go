@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns RF configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.RfCfgResponse, error) {
+// GetCfg returns RF configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.RfCfgResponse, error) {
 	return core.Get[model.RfCfgResponse](ctx, s.c, RfCfgEndpoint)
 }

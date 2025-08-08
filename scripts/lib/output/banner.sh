@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+
 # Unified Banner Helper
 # Provides a single function to render consistent banners across scripts.
-# Usage: wnc_banner "Primary Title" "Secondary Subtitle"
-# Respects --no-color (COLOR_* empty) and aligns width automatically.
 
 set -euo pipefail
 

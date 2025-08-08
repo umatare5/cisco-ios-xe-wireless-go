@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC Output Formatter Library
 # Output formatting and display functions
+
+set -euo pipefail
 
 # Source validation for helper functions
 source "$(dirname "${BASH_SOURCE[0]}")/../utils/validation.sh"

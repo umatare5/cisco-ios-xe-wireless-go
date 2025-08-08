@@ -30,12 +30,12 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Oper returns Mesh operational data.
-func (s Service) Oper(ctx context.Context) (*model.MeshOperResponse, error) {
+// GetOper returns Mesh operational data.
+func (s Service) GetOper(ctx context.Context) (*model.MeshOperResponse, error) {
 	return core.Get[model.MeshOperResponse](ctx, s.c, MeshOperEndpoint)
 }
 
-// Cfg returns Mesh configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.MeshCfgResponse, error) {
+// GetCfg returns Mesh configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.MeshCfgResponse, error) {
 	return core.Get[model.MeshCfgResponse](ctx, s.c, MeshCfgEndpoint)
 }

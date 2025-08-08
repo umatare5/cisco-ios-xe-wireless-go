@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns Location configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.LocationCfgResponse, error) {
+// GetCfg returns Location configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.LocationCfgResponse, error) {
 	return core.Get[model.LocationCfgResponse](ctx, s.c, LocationCfgEndpoint)
 }

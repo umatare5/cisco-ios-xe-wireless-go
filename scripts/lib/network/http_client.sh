@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC HTTP Client Library
 # HTTP communication and request handling functions
+
+set -euo pipefail
 
 # Source constants
 source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"

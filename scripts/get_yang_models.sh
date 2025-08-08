@@ -24,8 +24,6 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/yang"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "strict"
 
-# Predicate functions centralized in lib/core/predicates.sh
-
 main() {
     run_yang_list_operation
 }

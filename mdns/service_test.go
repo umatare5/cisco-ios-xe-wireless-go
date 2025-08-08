@@ -105,18 +105,18 @@ func TestMDNSServiceMethods(t *testing.T) {
 		shouldFail bool
 	}{
 		{
-			name:       "Oper",
-			testFunc:   func() (interface{}, error) { return service.Oper(ctx) },
+			name:       "GetOper",
+			testFunc:   func() (interface{}, error) { return service.GetOper(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "GlobalStats",
-			testFunc:   func() (interface{}, error) { return service.GlobalStats(ctx) },
+			name:       "GetGlobalStats",
+			testFunc:   func() (interface{}, error) { return service.GetGlobalStats(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "WlanStats",
-			testFunc:   func() (interface{}, error) { return service.WlanStats(ctx) },
+			name:       "GetWlanStats",
+			testFunc:   func() (interface{}, error) { return service.GetWlanStats(ctx) },
 			shouldFail: false,
 		},
 	}
@@ -148,7 +148,7 @@ func TestMDNSServiceFailFast(t *testing.T) {
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
 		ctx := context.Background()
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with nil client, got none")
 		}
@@ -160,7 +160,7 @@ func TestMDNSServiceFailFast(t *testing.T) {
 		client := tests.TestClient(t)
 		service := NewService(client)
 		var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-		_, err := service.Oper(nilCtx)
+		_, err := service.GetOper(nilCtx)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
 		}
@@ -174,7 +174,7 @@ func TestMDNSServiceFailFast(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with canceled context, got none")
 		}
@@ -197,20 +197,20 @@ func TestMDNSServiceIntegration(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runMDNSTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
-			return service.Oper(ctx)
+		runMDNSTestAndCollectData(t, collector, "GetOper", func() (interface{}, error) {
+			return service.GetOper(ctx)
 		})
 	})
 
 	t.Run("GlobalStats", func(t *testing.T) {
-		runMDNSTestAndCollectData(t, collector, "GlobalStats", func() (interface{}, error) {
-			return service.GlobalStats(ctx)
+		runMDNSTestAndCollectData(t, collector, "GetGlobalStats", func() (interface{}, error) {
+			return service.GetGlobalStats(ctx)
 		})
 	})
 
 	t.Run("WlanStats", func(t *testing.T) {
-		runMDNSTestAndCollectData(t, collector, "WlanStats", func() (interface{}, error) {
-			return service.WlanStats(ctx)
+		runMDNSTestAndCollectData(t, collector, "GetWlanStats", func() (interface{}, error) {
+			return service.GetWlanStats(ctx)
 		})
 	})
 

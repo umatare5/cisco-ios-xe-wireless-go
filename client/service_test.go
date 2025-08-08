@@ -75,7 +75,7 @@ func TestClientService(t *testing.T) {
 		// Test Oper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Oper(ctx)
+			resp, err := service.GetOper(ctx)
 			collector.mu.Lock()
 			collector.OperResp = resp
 			collector.OperErr = err
@@ -85,7 +85,7 @@ func TestClientService(t *testing.T) {
 		// Test CommonOperData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.CommonOperData(ctx)
+			resp, err := service.GetCommonOperData(ctx)
 			collector.mu.Lock()
 			collector.CommonOperDataResp = resp
 			collector.CommonOperDataErr = err
@@ -95,7 +95,7 @@ func TestClientService(t *testing.T) {
 		// Test Dot11OperData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Dot11OperData(ctx)
+			resp, err := service.GetDot11OperData(ctx)
 			collector.mu.Lock()
 			collector.Dot11OperDataResp = resp
 			collector.Dot11OperDataErr = err
@@ -105,7 +105,7 @@ func TestClientService(t *testing.T) {
 		// Test MobilityOperData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.MobilityOperData(ctx)
+			resp, err := service.GetMobilityOperData(ctx)
 			collector.mu.Lock()
 			collector.MobilityOperDataResp = resp
 			collector.MobilityOperDataErr = err
@@ -115,7 +115,7 @@ func TestClientService(t *testing.T) {
 		// Test MmIfClientStats method
 		go func() {
 			defer wg.Done()
-			resp, err := service.MmIfClientStats(ctx)
+			resp, err := service.GetMmIfClientStats(ctx)
 			collector.mu.Lock()
 			collector.MmIfClientStatsResp = resp
 			collector.MmIfClientStatsErr = err
@@ -125,7 +125,7 @@ func TestClientService(t *testing.T) {
 		// Test MmIfClientHistory method
 		go func() {
 			defer wg.Done()
-			resp, err := service.MmIfClientHistory(ctx)
+			resp, err := service.GetMmIfClientHistory(ctx)
 			collector.mu.Lock()
 			collector.MmIfClientHistoryResp = resp
 			collector.MmIfClientHistoryErr = err
@@ -135,7 +135,7 @@ func TestClientService(t *testing.T) {
 		// Test TrafficStats method
 		go func() {
 			defer wg.Done()
-			resp, err := service.TrafficStats(ctx)
+			resp, err := service.GetTrafficStats(ctx)
 			collector.mu.Lock()
 			collector.TrafficStatsResp = resp
 			collector.TrafficStatsErr = err
@@ -145,7 +145,7 @@ func TestClientService(t *testing.T) {
 		// Test PolicyData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.PolicyData(ctx)
+			resp, err := service.GetPolicyData(ctx)
 			collector.mu.Lock()
 			collector.PolicyDataResp = resp
 			collector.PolicyDataErr = err
@@ -155,7 +155,7 @@ func TestClientService(t *testing.T) {
 		// Test SisfDBMac method
 		go func() {
 			defer wg.Done()
-			resp, err := service.SisfDBMac(ctx)
+			resp, err := service.GetSisfDBMac(ctx)
 			collector.mu.Lock()
 			collector.SisfDBMacResp = resp
 			collector.SisfDBMacErr = err
@@ -165,7 +165,7 @@ func TestClientService(t *testing.T) {
 		// Test DcInfo method
 		go func() {
 			defer wg.Done()
-			resp, err := service.DcInfo(ctx)
+			resp, err := service.GetDcInfo(ctx)
 			collector.mu.Lock()
 			collector.DcInfoResp = resp
 			collector.DcInfoErr = err
@@ -224,63 +224,63 @@ func TestClientService(t *testing.T) {
 			method func() (interface{}, error)
 		}{
 			{
-				name: "Oper",
+				name: "GetOper",
 				method: func() (interface{}, error) {
-					return service.Oper(ctx)
+					return service.GetOper(ctx)
 				},
 			},
 			{
-				name: "CommonOperData",
+				name: "GetCommonOperData",
 				method: func() (interface{}, error) {
-					return service.CommonOperData(ctx)
+					return service.GetCommonOperData(ctx)
 				},
 			},
 			{
-				name: "Dot11OperData",
+				name: "GetDot11OperData",
 				method: func() (interface{}, error) {
-					return service.Dot11OperData(ctx)
+					return service.GetDot11OperData(ctx)
 				},
 			},
 			{
-				name: "MobilityOperData",
+				name: "GetMobilityOperData",
 				method: func() (interface{}, error) {
-					return service.MobilityOperData(ctx)
+					return service.GetMobilityOperData(ctx)
 				},
 			},
 			{
-				name: "MmIfClientStats",
+				name: "GetMmIfClientStats",
 				method: func() (interface{}, error) {
-					return service.MmIfClientStats(ctx)
+					return service.GetMmIfClientStats(ctx)
 				},
 			},
 			{
-				name: "MmIfClientHistory",
+				name: "GetMmIfClientHistory",
 				method: func() (interface{}, error) {
-					return service.MmIfClientHistory(ctx)
+					return service.GetMmIfClientHistory(ctx)
 				},
 			},
 			{
-				name: "TrafficStats",
+				name: "GetTrafficStats",
 				method: func() (interface{}, error) {
-					return service.TrafficStats(ctx)
+					return service.GetTrafficStats(ctx)
 				},
 			},
 			{
-				name: "PolicyData",
+				name: "GetPolicyData",
 				method: func() (interface{}, error) {
-					return service.PolicyData(ctx)
+					return service.GetPolicyData(ctx)
 				},
 			},
 			{
-				name: "SisfDBMac",
+				name: "GetSisfDBMac",
 				method: func() (interface{}, error) {
-					return service.SisfDBMac(ctx)
+					return service.GetSisfDBMac(ctx)
 				},
 			},
 			{
-				name: "DcInfo",
+				name: "GetDcInfo",
 				method: func() (interface{}, error) {
-					return service.DcInfo(ctx)
+					return service.GetDcInfo(ctx)
 				},
 			},
 		}
@@ -306,7 +306,7 @@ func TestClientService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
@@ -315,7 +315,7 @@ func TestClientService(t *testing.T) {
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Oper(nilCtx)
+			_, err := service.GetOper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
@@ -325,7 +325,7 @@ func TestClientService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
@@ -344,7 +344,7 @@ func TestClientService(t *testing.T) {
 		}
 
 		// Test operational data
-		operResp, operErr := service.Oper(ctx)
+		operResp, operErr := service.GetOper(ctx)
 		if operErr != nil {
 			t.Logf("Integration test - Oper error: %v", operErr)
 		} else {
@@ -352,7 +352,7 @@ func TestClientService(t *testing.T) {
 		}
 
 		// Test common operational data
-		commonResp, commonErr := service.CommonOperData(ctx)
+		commonResp, commonErr := service.GetCommonOperData(ctx)
 		if commonErr != nil {
 			t.Logf("Integration test - CommonOperData error: %v", commonErr)
 		} else {

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+
 # Dependencies Help Functions
+
+set -euo pipefail
 
 show_dependencies_help() {
     cat << 'EOF'

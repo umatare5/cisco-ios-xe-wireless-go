@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+
 # Cisco WNC argc Common Library - argc-specific shared functions
+
+set -euo pipefail
 
 # Common argc-based validation and setup
 VALIDATE_ARGC_YANG_ENVIRONMENT() {

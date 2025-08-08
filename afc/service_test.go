@@ -62,7 +62,7 @@ func TestAfcService(t *testing.T) {
 		// Test Oper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Oper(ctx)
+			resp, err := service.GetOper(ctx)
 			collector.mu.Lock()
 			collector.OperResp = resp
 			collector.OperErr = err
@@ -72,7 +72,7 @@ func TestAfcService(t *testing.T) {
 		// Test APResp method
 		go func() {
 			defer wg.Done()
-			resp, err := service.APResp(ctx)
+			resp, err := service.GetAPResp(ctx)
 			collector.mu.Lock()
 			collector.APRespResp = resp
 			collector.APRespErr = err
@@ -82,7 +82,7 @@ func TestAfcService(t *testing.T) {
 		// Test CloudOper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.CloudOper(ctx)
+			resp, err := service.GetCloudOper(ctx)
 			collector.mu.Lock()
 			collector.CloudOperResp = resp
 			collector.CloudOperErr = err
@@ -92,7 +92,7 @@ func TestAfcService(t *testing.T) {
 		// Test CloudStats method
 		go func() {
 			defer wg.Done()
-			resp, err := service.CloudStats(ctx)
+			resp, err := service.GetCloudStats(ctx)
 			collector.mu.Lock()
 			collector.CloudStatsResp = resp
 			collector.CloudStatsErr = err
@@ -159,25 +159,25 @@ func TestAfcService(t *testing.T) {
 			{
 				name: "Oper",
 				method: func() (interface{}, error) {
-					return service.Oper(ctx)
+					return service.GetOper(ctx)
 				},
 			},
 			{
 				name: "APResp",
 				method: func() (interface{}, error) {
-					return service.APResp(ctx)
+					return service.GetAPResp(ctx)
 				},
 			},
 			{
 				name: "CloudOper",
 				method: func() (interface{}, error) {
-					return service.CloudOper(ctx)
+					return service.GetCloudOper(ctx)
 				},
 			},
 			{
 				name: "CloudStats",
 				method: func() (interface{}, error) {
-					return service.CloudStats(ctx)
+					return service.GetCloudStats(ctx)
 				},
 			},
 		}
@@ -203,7 +203,7 @@ func TestAfcService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
@@ -212,7 +212,7 @@ func TestAfcService(t *testing.T) {
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Oper(nilCtx)
+			_, err := service.GetOper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
@@ -222,7 +222,7 @@ func TestAfcService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
@@ -241,7 +241,7 @@ func TestAfcService(t *testing.T) {
 		}
 
 		// Test operational data
-		operResp, operErr := service.Oper(ctx)
+		operResp, operErr := service.GetOper(ctx)
 		if operErr != nil {
 			t.Logf("Integration test - Oper error: %v", operErr)
 		} else {
@@ -249,7 +249,7 @@ func TestAfcService(t *testing.T) {
 		}
 
 		// Test cloud operational data
-		cloudResp, cloudErr := service.CloudOper(ctx)
+		cloudResp, cloudErr := service.GetCloudOper(ctx)
 		if cloudErr != nil {
 			t.Logf("Integration test - CloudOper error: %v", cloudErr)
 		} else {

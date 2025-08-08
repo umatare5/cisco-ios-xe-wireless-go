@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+
 # Artifacts Cleanup Help Functions
+
+set -euo pipefail
 
 show_artifacts_help() {
     cat << 'EOF'

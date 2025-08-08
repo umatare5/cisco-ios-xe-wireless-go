@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Oper returns Site operational data.
-func (s Service) Oper(ctx context.Context) (*model.SiteOperResponse, error) {
+// GetOper returns Site operational data.
+func (s Service) GetOper(ctx context.Context) (*model.SiteOperResponse, error) {
 	return core.Get[model.SiteOperResponse](ctx, s.c, SiteOperEndpoint)
 }

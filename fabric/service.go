@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns Fabric configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.FabricCfgResponse, error) {
+// GetCfg returns Fabric configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.FabricCfgResponse, error) {
 	return core.Get[model.FabricCfgResponse](ctx, s.c, FabricCfgEndpoint)
 }

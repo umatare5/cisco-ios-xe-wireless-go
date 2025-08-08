@@ -54,10 +54,10 @@ func TestLocationService(t *testing.T) {
 		var wg sync.WaitGroup
 		wg.Add(1) // Only one method to test
 
-		// Test Cfg method
+		// Test GetCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Cfg(ctx)
+			resp, err := service.GetCfg(ctx)
 			collector.mu.Lock()
 			collector.CfgResp = resp
 			collector.CfgErr = err
@@ -119,9 +119,9 @@ func TestLocationService(t *testing.T) {
 			method func() (interface{}, error)
 		}{
 			{
-				name: "Cfg",
+				name: "GetCfg",
 				method: func() (interface{}, error) {
-					return service.Cfg(ctx)
+					return service.GetCfg(ctx)
 				},
 			},
 		}
@@ -147,7 +147,7 @@ func TestLocationService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Cfg(ctx)
+			_, err := service.GetCfg(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
@@ -156,7 +156,7 @@ func TestLocationService(t *testing.T) {
 		// Test with nil context (should handle gracefully or fail fast)
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Cfg(nilCtx)
+			_, err := service.GetCfg(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
@@ -166,7 +166,7 @@ func TestLocationService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Cfg(ctx)
+			_, err := service.GetCfg(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
@@ -185,7 +185,7 @@ func TestLocationService(t *testing.T) {
 		}
 
 		// Test with real service
-		resp, err := service.Cfg(ctx)
+		resp, err := service.GetCfg(ctx)
 		if err != nil {
 			t.Logf("Integration test - Cfg error: %v", err)
 		} else {

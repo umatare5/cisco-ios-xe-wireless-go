@@ -59,7 +59,6 @@ source_module_libraries() {
     if [[ -d "$module_dir" ]]; then
         # Source all .sh files in the module directory
         for lib_file in "$module_dir"/*.sh; do
-            # shellcheck disable=SC1090  # Dynamic source loading
             [[ -f "$lib_file" ]] && source "$lib_file"
         done
     fi

@@ -104,8 +104,8 @@ func TestLISPServiceMethods(t *testing.T) {
 		shouldFail bool
 	}{
 		{
-			name:       "Oper",
-			testFunc:   func() (interface{}, error) { return service.Oper(ctx) },
+			name:       "GetOper",
+			testFunc:   func() (interface{}, error) { return service.GetOper(ctx) },
 			shouldFail: false,
 		},
 	}
@@ -137,7 +137,7 @@ func TestLISPServiceFailFast(t *testing.T) {
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
 		ctx := context.Background()
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with nil client, got none")
 		}
@@ -149,7 +149,7 @@ func TestLISPServiceFailFast(t *testing.T) {
 		client := tests.TestClient(t)
 		service := NewService(client)
 		var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-		_, err := service.Oper(nilCtx)
+		_, err := service.GetOper(nilCtx)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
 		}
@@ -163,7 +163,7 @@ func TestLISPServiceFailFast(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with canceled context, got none")
 		}
@@ -186,8 +186,8 @@ func TestLISPServiceIntegration(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runLISPTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
-			return service.Oper(ctx)
+		runLISPTestAndCollectData(t, collector, "GetOper", func() (interface{}, error) {
+			return service.GetOper(ctx)
 		})
 	})
 

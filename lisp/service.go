@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Oper returns LISP operational data.
-func (s Service) Oper(ctx context.Context) (*model.LispOperResponse, error) {
+// GetOper returns LISP operational data.
+func (s Service) GetOper(ctx context.Context) (*model.LispOperResponse, error) {
 	return core.Get[model.LispOperResponse](ctx, s.c, LispOperEndpoint)
 }

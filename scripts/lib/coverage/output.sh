@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC Coverage HTML Generator - Output Functions
 # Handles output formatting and display for coverage HTML operations
 
+set -euo pipefail
+
 # Source bootstrap library
 LIB_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-# shellcheck disable=SC1090  # Dynamic source loading
 source "${LIB_ROOT}/bootstrap.sh"
 init_wnc_basic
 

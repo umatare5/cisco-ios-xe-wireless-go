@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC Lint Code - Output Functions
 # Handles output formatting and display for lint operations
+
+set -euo pipefail
 
 format_lint_error() {
     local message="$1"

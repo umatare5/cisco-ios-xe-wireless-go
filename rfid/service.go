@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns RFID configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.RfidCfgResponse, error) {
+// GetCfg returns RFID configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.RfidCfgResponse, error) {
 	return core.Get[model.RfidCfgResponse](ctx, s.c, RFIDCfgEndpoint)
 }

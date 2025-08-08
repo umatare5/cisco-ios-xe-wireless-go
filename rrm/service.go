@@ -42,24 +42,24 @@ func NewService(c *core.Client) Service {
 
 // Configuration Methods
 
-// Cfg returns complete RRM configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.RrmCfgResponse, error) {
+// GetCfg returns complete RRM configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.RrmCfgResponse, error) {
 	return core.Get[model.RrmCfgResponse](ctx, s.c, RRMCfgEndpoint)
 }
 
 // Operational Methods
 
-// Oper returns RRM operational data.
-func (s Service) Oper(ctx context.Context) (*model.RrmOperResponse, error) {
+// GetOper returns RRM operational data.
+func (s Service) GetOper(ctx context.Context) (*model.RrmOperResponse, error) {
 	return core.Get[model.RrmOperResponse](ctx, s.c, RRMOperEndpoint)
 }
 
-// GlobalOper returns RRM global operational data.
-func (s Service) GlobalOper(ctx context.Context) (*model.RrmGlobalOperResponse, error) {
+// GetGlobalOper returns RRM global operational data.
+func (s Service) GetGlobalOper(ctx context.Context) (*model.RrmGlobalOperResponse, error) {
 	return core.Get[model.RrmGlobalOperResponse](ctx, s.c, RRMGlobalOperEndpoint)
 }
 
-// EmulOper returns RRM emulation operational data.
-func (s Service) EmulOper(ctx context.Context) (*model.RrmEmulOperResponse, error) {
+// GetEmulOper returns RRM emulation operational data.
+func (s Service) GetEmulOper(ctx context.Context) (*model.RrmEmulOperResponse, error) {
 	return core.Get[model.RrmEmulOperResponse](ctx, s.c, RRMEmulOperEndpoint)
 }

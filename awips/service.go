@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Oper returns AWIPS operational data.
-func (s Service) Oper(ctx context.Context) (*model.AwipsOperResponse, error) {
+// GetOper returns AWIPS operational data.
+func (s Service) GetOper(ctx context.Context) (*model.AwipsOperResponse, error) {
 	return core.Get[model.AwipsOperResponse](ctx, s.c, AwipsOperEndpoint)
 }

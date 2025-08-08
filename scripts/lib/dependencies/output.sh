@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+
 # Dependencies Output Functions
+
+set -euo pipefail
 
 # Color definitions (will be empty if --no-color is used)
 readonly DEP_COLOR_RED="${COLOR_RED:-}"

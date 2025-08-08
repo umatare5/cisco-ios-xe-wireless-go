@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns 802.11 configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.Dot11CfgResponse, error) {
+// GetCfg returns 802.11 configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.Dot11CfgResponse, error) {
 	return core.Get[model.Dot11CfgResponse](ctx, s.c, Dot11CfgEndpoint)
 }

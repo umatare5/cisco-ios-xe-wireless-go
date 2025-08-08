@@ -105,23 +105,23 @@ func TestNMSPServiceMethods(t *testing.T) {
 		shouldFail bool
 	}{
 		{
-			name:       "Oper",
-			testFunc:   func() (interface{}, error) { return service.Oper(ctx) },
+			name:       "GetOper",
+			testFunc:   func() (interface{}, error) { return service.GetOper(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "ClientRegistration",
-			testFunc:   func() (interface{}, error) { return service.ClientRegistration(ctx) },
+			name:       "GetClientRegistration",
+			testFunc:   func() (interface{}, error) { return service.GetClientRegistration(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "CmxConnection",
-			testFunc:   func() (interface{}, error) { return service.CmxConnection(ctx) },
+			name:       "GetCmxConnection",
+			testFunc:   func() (interface{}, error) { return service.GetCmxConnection(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "CmxCloudInfo",
-			testFunc:   func() (interface{}, error) { return service.CmxCloudInfo(ctx) },
+			name:       "GetCmxCloudInfo",
+			testFunc:   func() (interface{}, error) { return service.GetCmxCloudInfo(ctx) },
 			shouldFail: false,
 		},
 	}
@@ -153,7 +153,7 @@ func TestNMSPServiceFailFast(t *testing.T) {
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
 		ctx := context.Background()
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with nil client, got none")
 		}
@@ -165,7 +165,7 @@ func TestNMSPServiceFailFast(t *testing.T) {
 		client := tests.TestClient(t)
 		service := NewService(client)
 		var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-		_, err := service.Oper(nilCtx)
+		_, err := service.GetOper(nilCtx)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
 		}
@@ -179,7 +179,7 @@ func TestNMSPServiceFailFast(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with canceled context, got none")
 		}
@@ -202,26 +202,26 @@ func TestNMSPServiceIntegration(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runNMSPTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
-			return service.Oper(ctx)
+		runNMSPTestAndCollectData(t, collector, "GetOper", func() (interface{}, error) {
+			return service.GetOper(ctx)
 		})
 	})
 
 	t.Run("ClientRegistration", func(t *testing.T) {
-		runNMSPTestAndCollectData(t, collector, "ClientRegistration", func() (interface{}, error) {
-			return service.ClientRegistration(ctx)
+		runNMSPTestAndCollectData(t, collector, "GetClientRegistration", func() (interface{}, error) {
+			return service.GetClientRegistration(ctx)
 		})
 	})
 
 	t.Run("CmxConnection", func(t *testing.T) {
-		runNMSPTestAndCollectData(t, collector, "CmxConnection", func() (interface{}, error) {
-			return service.CmxConnection(ctx)
+		runNMSPTestAndCollectData(t, collector, "GetCmxConnection", func() (interface{}, error) {
+			return service.GetCmxConnection(ctx)
 		})
 	})
 
 	t.Run("CmxCloudInfo", func(t *testing.T) {
-		runNMSPTestAndCollectData(t, collector, "CmxCloudInfo", func() (interface{}, error) {
-			return service.CmxCloudInfo(ctx)
+		runNMSPTestAndCollectData(t, collector, "GetCmxCloudInfo", func() (interface{}, error) {
+			return service.GetCmxCloudInfo(ctx)
 		})
 	})
 

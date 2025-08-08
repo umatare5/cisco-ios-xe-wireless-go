@@ -3,6 +3,8 @@
 # Cisco WNC Argument Parsing Library
 # Common predicate functions and utilities for argument parsing
 
+set -euo pipefail
+
 # Prevent double sourcing
 if [[ -n "${WNC_ARGUMENT_PARSING_LOADED:-}" ]]; then
     return 0

@@ -27,12 +27,12 @@ func NewService(c *core.Client) Service {
 	return Service{c: c}
 }
 
-// Oper returns hyperlocation operational data.
-func (s Service) Oper(ctx context.Context) (*model.HyperlocationOperResponse, error) {
+// GetOper returns hyperlocation operational data.
+func (s Service) GetOper(ctx context.Context) (*model.HyperlocationOperResponse, error) {
 	return core.Get[model.HyperlocationOperResponse](ctx, s.c, HyperlocationOperEndpoint)
 }
 
-// Profiles returns hyperlocation profiles.
-func (s Service) Profiles(ctx context.Context) (*model.HyperlocationProfilesResponse, error) {
+// GetProfiles returns hyperlocation profiles.
+func (s Service) GetProfiles(ctx context.Context) (*model.HyperlocationProfilesResponse, error) {
 	return core.Get[model.HyperlocationProfilesResponse](ctx, s.c, HyperlocationProfilesEndpoint)
 }

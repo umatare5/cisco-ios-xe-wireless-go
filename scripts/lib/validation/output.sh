@@ -22,6 +22,24 @@ show_warning() {
     fi
 }
 
+# Error output
+show_error() {
+    if ! is_no_color_enabled; then
+        printf "\033[31m✗ Error:\033[0m %s\n" "$*" >&2
+    else
+        printf "Error: %s\n" "$*" >&2
+    fi
+}
+
+# Success output
+show_success() {
+    if ! is_no_color_enabled; then
+        printf "\033[32m✓ Success:\033[0m %s\n" "$*"
+    else
+        printf "Success: %s\n" "$*"
+    fi
+}
+
 # Banner display
 show_pre_commit_banner() {
     # If unified banner helper exists, use it; otherwise fallback.
@@ -43,11 +61,17 @@ show_validation_status() {
 
     show_pre_commit_banner
     echo
-    printf "\033[36mℹ Info:\033[0m Current branch: %s\n" "$current_branch"
+    show_info "Current branch: $current_branch"
 
     if is_verbose_enabled; then
-        printf "\033[36mℹ Info:\033[0m Validation mode: $(is_no_color_enabled && echo "no-color" || echo "color")\n"
-        printf "\033[36mℹ Info:\033[0m Working directory: $(pwd)\n"
+        local mode
+        if is_no_color_enabled; then
+            mode="no-color"
+        else
+            mode="color"
+        fi
+        show_info "Validation mode: $mode"
+        show_info "Working directory: $(pwd)"
     fi
 }
 
@@ -55,10 +79,10 @@ show_validation_status() {
 show_main_branch_error() {
     local branch_name="$1"
 
-    printf "\033[31m✗ Error:\033[0m Direct commits to the '%s' branch are not allowed\n" "$branch_name" >&2
+    show_error "Direct commits to the '$branch_name' branch are not allowed"
     echo
-    printf "\033[33m⚠ Warning:\033[0m To maintain code quality and enable proper review processes,\n" >&2
-    printf "\033[33m⚠ Warning:\033[0m all changes must go through feature branches.\n" >&2
+    show_warning "To maintain code quality and enable proper review processes,"
+    show_warning "all changes must go through feature branches."
     echo
 
     # Use help functions for guidance
@@ -68,17 +92,15 @@ show_main_branch_error() {
     echo
 }
 
-# NOTE: Duplicate show_no_staged_changes removed; using the concise version defined later.
-
 # Show success message
 show_validation_success() {
     local branch_name="$1"
 
-    printf "\033[32m✓ Success:\033[0m Pre-commit validation passed\n"
-    printf "\033[36mℹ Info:\033[0m Proceeding with commit on branch '%s'\n" "$branch_name"
+    show_success "Pre-commit validation passed"
+    show_info "Proceeding with commit on branch '$branch_name'"
 
     if is_verbose_enabled; then
-        printf "\033[36mℹ Info:\033[0m All validation checks completed successfully\n"
+        show_info "All validation checks completed successfully"
     fi
 }
 

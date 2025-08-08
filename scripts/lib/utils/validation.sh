@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Cisco WNC Validation Library
 # Input validation and format checking functions
+
+set -euo pipefail
 
 # Source constants from core
 source "$(dirname "${BASH_SOURCE[0]}")/../core/constants.sh"

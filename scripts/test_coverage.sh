@@ -24,8 +24,6 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/testing"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "standard"
 
-# Predicate functions centralized in lib/core/predicates.sh
-
 main() {
     run_coverage_test_operation
 }

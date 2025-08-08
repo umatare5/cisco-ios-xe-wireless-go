@@ -1,42 +1,33 @@
 # 🧪 Testing
 
-This library includes following tests that validate API functionality and client behavior:
+Test suite focuses on correctness of serialization, basic domain wiring, and live integration against a real controller (when env vars set). Only deterministic, read‑only operations are executed.
 
-- **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
-- **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
-- **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
-- **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
-
-> [!Note]
-> Currently, the test coverage is insufficient. All tests will be covered in the future release `v0.3.0`.
+| Layer        | Purpose                                | Trigger                 |
+| ------------ | -------------------------------------- | ----------------------- |
+| Unit         | JSON ↔ Go struct fidelity              | `make test-unit`        |
+| Table-driven | Multiple scenario assertions           | `make test-unit`        |
+| Fail-fast    | Immediate surface of unexpected errors | `make test-unit`        |
+| Integration  | Live controller data shape sanity      | `make test-integration` |
 
 ## 🎯 Prerequisites
 
-### For Unit, Table-driven and Fail-fast Tests
+### Unit / Table / Fail-fast
 
-Unit tests require no special configuration and can be run in any Go development environment.
+| Requirement | Version | Notes                    |
+| ----------- | ------- | ------------------------ |
+| Go          | 1.24+   | Uses only stdlib testing |
+| make        | Latest  | Convenience targets      |
 
-| Requirement   | Version/Details  | Description                                          |
-| ------------- | ---------------- | ---------------------------------------------------- |
-| Go            | 1.24 or later    | Required for running tests and building the project. |
-| Testing Tools | Standard library | Built-in Go testing framework.                       |
+### Integration
 
-### For Integration Tests
+Requires reachable Catalyst 9800 controller + credentials:
 
-#### 1. Cisco Catalyst 9800 Wireless Network Controller
+| Variable           | Description        | Example                 |
+| ------------------ | ------------------ | ----------------------- |
+| `WNC_CONTROLLER`   | Controller host/IP | `wnc1.example.internal` |
+| `WNC_ACCESS_TOKEN` | Base64 `user:pass` | `YWRtaW46cGFzc3dvcmQ=`  |
 
-Integration tests require a real Cisco Catalyst 9800 WNC. For instructions on setting up WNC, please refer to [References Section](#references).
-
-#### 2. Environment Variables
-
-Integration tests also require the following environment variables:
-
-| Variable           | Description                | Example                |
-| ------------------ | -------------------------- | ---------------------- |
-| `WNC_CONTROLLER`   | WNC IP address or hostname | `192.168.1.100`        |
-| `WNC_ACCESS_TOKEN` | Base64 encoded credentials | `YWRtaW46cGFzc3dvcmQ=` |
-
-<details><summary>Environment Variable Configuration</summary>
+<details><summary>Env Example</summary>
 
 ```bash
 export WNC_CONTROLLER="192.168.1.100"          # Your WNC IP address
@@ -47,14 +38,15 @@ export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:passwor
 
 ## 🚀 Running Tests
 
-The project includes convenient Makefile targets for testing:
+Use provided Make targets (lint runs automatically where defined):
 
-| Command                 | Description                                        |
-| ----------------------- | -------------------------------------------------- |
-| `make test-unit`        | Run unit tests. WNC access is not required.        |
-| `make test-integration` | Run integration tests. **WNC access is required.** |
+| Command                 | Description                          |
+| ----------------------- | ------------------------------------ |
+| `make test-unit`        | Run unit + table + fail-fast suites  |
+| `make test-integration` | Run integration (skips if env unset) |
+| `make test-coverage`    | Combined coverage generation         |
 
-<details><summary>Example of command result</summary>
+<details><summary>Sample Output (Truncated)</summary>
 
 ```text
 📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
@@ -77,15 +69,17 @@ The project includes convenient Makefile targets for testing:
 
 </details>
 
-## 📊 Test Data Collection
+## 📊 Test Data Artifacts
 
-Integration tests automatically collect and save real WNC data to JSON files for validation and debugging purposes.
+Integration tests persist sample controller responses for regression & offline parsing.
 
-- **Location**: `test_data/` directory in each module
-- **Format**: JSON files with descriptive names (e.g., `ap_oper_response.json`)
-- **Purpose**: Verify API response structure and enable offline debugging
+| Aspect   | Detail                                     |
+| -------- | ------------------------------------------ |
+| Location | `*/test_data/*.json`                       |
+| Format   | Raw controller JSON (pretty if stable)     |
+| Use      | Schema drift detection, offline inspection |
 
-<details><summary>Example of test data tree structure</summary>
+<details><summary>Example Layout</summary>
 
 ```text
 test_data/
@@ -97,18 +91,16 @@ test_data/
 
 </details>
 
-## 📈 Coverage Analysis
+## 📈 Coverage
 
-The project supports comprehensive test coverage analysis:
+### Reports
 
-### Coverage Reports
+| Target  | Command                     | Notes                                 |
+| ------- | --------------------------- | ------------------------------------- |
+| Summary | `make test-coverage`        | Outputs aggregate %                   |
+| HTML    | `make test-coverage-report` | Generates browsable HTML under `tmp/` |
 
-| Output Type     | Command                   | Description                                  |
-| --------------- | ------------------------- | -------------------------------------------- |
-| Terminal Output | `make test-coverage`      | Run tests with coverage analysis.            |
-| HTML Report     | `make test-coverage-html` | Run tests and generate HTML coverage report. |
-
-<details><summary>Example of Coverage Output</summary>
+<details><summary>Sample Coverage Output</summary>
 
 ```text
 Coverage report generated at ./tmp/coverage.out
@@ -121,46 +113,37 @@ total: (statements) 6.1%
 
 </details>
 
-## 📚️ Appendix
+## � Tips
 
-### Testing Tips
-
-For efficient testing workflow, start with unit tests and gradually move to integration tests.
-
-1. **Install Dependencies**: `make deps` - Install gotestsum and other development tools.
-2. **Unit Tests First**: `make test-unit` - Ensure basic functionality with enhanced output.
-3. **Environment Setup**: Configure environment variables for integration tests.
-4. **Environment Verification**: Check controller access to verify connectivity and credentials.
-5. **Coverage Analysis**: `make test-coverage` - Run tests with coverage analysis.
-6. **HTML Coverage Report**: `make test-coverage-html` - Generate detailed HTML coverage report.
-7. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
-8. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
-9. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
+1. Run unit first (`make test-unit`)
+2. Export env vars only when needed for integration
+3. Use `grep` over `test_data/` to compare schema drift
+4. Keep JSON fixtures minimal—avoid giant blobs
+5. Fail fast: add explicit error checks in new tests
 
 > [!TIP]
-> For comprehensive testing, run both `make test-unit` and `make test-integration` sequentially to validate all functionality.
+> CI can run unit tests without controller; integration can be opt‑in nightly.
 
-### 🔧 Development Dependencies
+### 🔧 Tooling
 
 The project uses several tools to enhance the testing experience:
 
-- **gotestsum**: Provides enhanced, human-readable test output with various formats
-- **golangci-lint**: Code linting and static analysis
-- **goreleaser**: Release automation
+| Tool            | Purpose                            |
+| --------------- | ---------------------------------- |
+| `golangci-lint` | Static analysis                    |
+| `gotestsum`     | (Optional) nicer local test output |
+| `markdownlint`  | Doc lint (indirect via scripts)    |
 
-> [!Note]
-> Install all dependencies with: `make deps`
+> [!NOTE]
+> Install dev helpers: `make deps`
 
 ### References
 
-These references provide additional information on Cisco Catalyst 9800 WNC and related technologies:
+| Resource                            | Focus                 |
+| ----------------------------------- | --------------------- |
+| Catalyst 9800 Programmability Guide | RESTCONF & automation |
+| YANG Models (17.12.1)               | Data model reference  |
 
-- 📖 [Cisco Catalyst 9800-CL Wireless Controller for Cloud Deployment Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/c9800-cl-dg.html)
-  - A comprehensive guide for deploying Cisco Catalyst 9800-CL WNC in cloud environments.
-  - This includes setup instructions, configuration examples, and best practices.
-- 📖 [Cisco Catalyst 9800 Series Wireless Controller Programmability Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/programmability-guide/b_c9800_programmability_cg/cisco-catalyst-9800-series-wireless-controller-programmability-guide.html)
-  - A guide for programming and automating Cisco Catalyst 9800 WNC.
-  - This includes information on RESTCONF APIs, YANG models, and more.
-- 📖 [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme)
-  - A repository containing YANG models and platform capabilities for Cisco IOS XE 17.12.1.
-  - This is useful for understanding the data structures used in the API.
+---
+
+**Back to:** [API Reference](API_REFERENCE.md) | [Security](SECURITY.md)

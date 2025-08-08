@@ -105,13 +105,13 @@ func TestMeshServiceMethods(t *testing.T) {
 		shouldFail bool
 	}{
 		{
-			name:       "Oper",
-			testFunc:   func() (interface{}, error) { return service.Oper(ctx) },
+			name:       "GetOper",
+			testFunc:   func() (interface{}, error) { return service.GetOper(ctx) },
 			shouldFail: false,
 		},
 		{
-			name:       "Cfg",
-			testFunc:   func() (interface{}, error) { return service.Cfg(ctx) },
+			name:       "GetCfg",
+			testFunc:   func() (interface{}, error) { return service.GetCfg(ctx) },
 			shouldFail: false,
 		},
 	}
@@ -143,7 +143,7 @@ func TestMeshServiceFailFast(t *testing.T) {
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
 		ctx := context.Background()
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with nil client, got none")
 		}
@@ -155,7 +155,7 @@ func TestMeshServiceFailFast(t *testing.T) {
 		client := tests.TestClient(t)
 		service := NewService(client)
 		var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-		_, err := service.Oper(nilCtx)
+		_, err := service.GetOper(nilCtx)
 		if err == nil {
 			t.Fatal("Expected error with nil context, got none")
 		}
@@ -169,7 +169,7 @@ func TestMeshServiceFailFast(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
-		_, err := service.Oper(ctx)
+		_, err := service.GetOper(ctx)
 		if err == nil {
 			t.Fatal("Expected error with canceled context, got none")
 		}
@@ -192,14 +192,14 @@ func TestMeshServiceIntegration(t *testing.T) {
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runMeshTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
-			return service.Oper(ctx)
+		runMeshTestAndCollectData(t, collector, "GetOper", func() (interface{}, error) {
+			return service.GetOper(ctx)
 		})
 	})
 
 	t.Run("Cfg", func(t *testing.T) {
-		runMeshTestAndCollectData(t, collector, "Cfg", func() (interface{}, error) {
-			return service.Cfg(ctx)
+		runMeshTestAndCollectData(t, collector, "GetCfg", func() (interface{}, error) {
+			return service.GetCfg(ctx)
 		})
 	})
 

@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Oper returns BLE operational data.
-func (s Service) Oper(ctx context.Context) (*model.BleOperResponse, error) {
+// GetOper returns BLE operational data.
+func (s Service) GetOper(ctx context.Context) (*model.BleOperResponse, error) {
 	return core.Get[model.BleOperResponse](ctx, s.c, BleOperEndpoint)
 }

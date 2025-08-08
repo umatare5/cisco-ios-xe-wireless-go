@@ -1,86 +1,92 @@
 # 📋 Scripts Reference
 
-Scripts for collecting and analyzing YANG models from Cisco Wireless Network Controller.
+Unified reference for helper scripts under `scripts/` that assist YANG model discovery and operational data inspection. Each script is idempotent and read‑only.
 
-- **Comprehensive YANG Model Operations**: Interact with the Cisco WNC RESTCONF API to discover available YANG models, retrieve their full definitions, and query real-time operational data using simple shell scripts.
-- **Flexible Command-Line Interface**: Supports configuration via both command-line flags and environment variables, with options for various output formats to suit different workflows.
-- **Modular and Robust Scripts**: Built upon a shared library for common functions like authentication, HTTP requests, and validation, ensuring the scripts are reliable and easy to maintain.
+| Script                          | Purpose                                           | Core Operation            |
+| ------------------------------- | ------------------------------------------------- | ------------------------- |
+| `get_yang_models.sh`            | List available YANG modules on controller         | RESTCONF modules listing  |
+| `get_yang_model_details.sh`     | Fetch a single model definition                   | RESTCONF module retrieval |
+| `get_yang_statement_details.sh` | Fetch live data for specific model root/statement | RESTCONF data path query  |
+
+> [!NOTE]
+> All scripts honor environment variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`. CLI flags override env values when both supplied.
 
 ## 🗂️ Directory Structure
 
-The `./scripts/` directory contains utility scripts for interacting with Cisco WNC RESTCONF APIs:
+High‑level layout (supporting libraries collapsed for brevity).
 
 ```text
 scripts/
-├── list_yang_models.sh           # Discover available YANG models
-├── get_yang_model_details.sh     # Retrieve YANG model definitions
-├── get_yang_statement_details.sh # Query operational data via YANG
-└── lib/                          # Shared library functions
-    ├── authentication.sh         # Authentication handling
-    ├── common.sh                 # Common utilities and constants
-    ├── dependencies.sh           # System dependency checking
-    ├── file_utils.sh             # File management utilities
-    ├── http_client.sh            # HTTP/HTTPS request handling
-    ├── output_formatter.sh       # Output formatting functions
-    └── validation.sh             # Input validation functions
+├── get_yang_models.sh
+├── get_yang_model_details.sh
+├── get_yang_statement_details.sh
+└── lib/
+  ├── bootstrap.sh
+  ├── core/
+  ├── network/
+  ├── yang/
+  └── ... (utilities)
 ```
 
 ## 🚀 Scripts Overview
 
-| Name                            | Desciription                         |
-| ------------------------------- | ------------------------------------ |
-| `list_yang_models.sh`           | Discover available YANG models.      |
-| `get_yang_model_details.sh`     | Retrieve complete model definitions. |
-| `get_yang_statement_details.sh` | Query operational data via YANG.     |
+| Script                          | Description                       | Output Formats                                |
+| ------------------------------- | --------------------------------- | --------------------------------------------- |
+| `get_yang_models.sh`            | List module names + revisions     | Pretty text                                   |
+| `get_yang_model_details.sh`     | Retrieve single module definition | JSON (default), XML (`-f xml`), raw (`--raw`) |
+| `get_yang_statement_details.sh` | Retrieve live data subtree        | JSON (default), XML (`-f xml`)                |
 
-## 📋 `list_yang_models.sh` - YANG Model Discovery
+## 📋 `get_yang_models.sh` – Module Discovery
 
-Discovers and lists all available Cisco wireless YANG models from the WNC controller.
+Lists all available Cisco wireless YANG models (module + revision) exposed by the controller RESTCONF modules endpoint.
 
-### Features
+### Key Features
 
-- Lists all Cisco wireless YANG models with their revisions
-- Supports both HTTP and HTTPS protocols
-- Pretty-formatted output with clear categorization
-- Environment variable support for credentials
-- TLS certificate verification bypass option
+| Capability          | Notes                                     |
+| ------------------- | ----------------------------------------- |
+| Protocol selection  | `--protocol http\|https` (default: https) |
+| TLS skip            | `--insecure` for lab/self‑signed only     |
+| Verbose diagnostics | `--verbose` verbose logging               |
+| Color control       | `--no-color` disable ANSI                 |
 
 ### Usage
 
 ```bash
-./scripts/list_yang_models.sh [OPTIONS]
+./scripts/get_yang_models.sh [OPTIONS]
 ```
 
 ### Flags
 
-| Flag               | Description                | Example                     |
-| ------------------ | -------------------------- | --------------------------- |
-| `-c, --controller` | WNC controller hostname/IP | `-c wnc1.example.com`       |
-| `-t, --token`      | Basic auth token           | `-t "dXNlcjpwYXNzd29yZA=="` |
-| `-p, --protocol`   | Protocol (http/https)      | `-p https`                  |
-| `-k, --insecure`   | Skip TLS verification      | `-k`                        |
-| `-h, --help`       | Show help                  | `-h`                        |
+| Flag               | Description        | Default | Example               |
+| ------------------ | ------------------ | ------- | --------------------- |
+| `-c, --controller` | Controller host/IP | (env)   | `-c wnc1.example.com` |
+| `-t, --token`      | Base64 auth token  | (env)   | `-t "dXNlcjpwYXNz"`   |
+| `-p, --protocol`   | `http` or `https`  | `https` | `-p http`             |
+| `-k, --insecure`   | Skip TLS verify    | `false` | `-k`                  |
+| `-v, --verbose`    | Verbose logs       | `false` | `-v`                  |
+| `--no-color`       | Disable color      | `false` | `--no-color`          |
+| `-h, --help`       | Help text          | -       | `-h`                  |
 
-### Common Usage Patterns
+### Examples
 
 ```bash
 # Basic usage with environment variables
 export WNC_CONTROLLER="wnc1.example.com"
 export WNC_ACCESS_TOKEN="your-token-here"
-./scripts/list_yang_models.sh -k
+./scripts/get_yang_models.sh -k
 
 # Explicit controller and token
-./scripts/list_yang_models.sh -c wnc1.example.com -t "dXNlcjpwYXNzd29yZA==" -k
+./scripts/get_yang_models.sh -c wnc1.example.com -t "dXNlcjpwYXNzd29yZA==" -k
 
 # Using HTTP instead of HTTPS
-./scripts/list_yang_models.sh -p http -c 192.168.1.100
+./scripts/get_yang_models.sh -p http -c 192.168.1.100
 ```
 
 <details>
-<summary>Example of the result</summary>
+<summary>Sample Output</summary>
 
 ```bash
-$ ./scripts/list_yang_models.sh -k
+$ ./scripts/get_yang_models.sh -k
 
 Configuration:
 =============
@@ -112,58 +118,57 @@ Operation completed successfully.
 
 </details>
 
-## 📖 `get_yang_model_details.sh` - YANG Model Definition Retrieval
+## 📖 `get_yang_model_details.sh` – Model Definition
 
-Retrieves complete YANG model definitions including structure, types, and documentation.
+Fetch full module definition (metadata + body) for a specific YANG module.
 
-### Features
+### Key Features
 
-- Fetches complete YANG module definitions
-- Multiple output formats (pretty, json, raw)
-- Support for specific model revisions
-- Verbose debugging mode
-- Input validation for model names and revisions
+| Capability         | Notes                                          |
+| ------------------ | ---------------------------------------------- |
+| Format control     | `-f json\|xml` or `--raw` passthrough          |
+| Revision selection | Provide specific revision or default to newest |
+| Verbosity          | `-v` shows request metadata                    |
+| TLS handling       | `-k` to skip verification (lab)                |
 
 ### Usage
 
 ```bash
-./scripts/get_yang_model_details.sh [OPTIONS]
+./scripts/get_yang_model_details.sh [OPTIONS] <MODEL>
 ```
 
 ### Flags
 
-| Flag               | Description                 | Default                                   | Example               |
-| ------------------ | --------------------------- | ----------------------------------------- | --------------------- |
-| `-c, --controller` | WNC controller hostname/IP  | -                                         | `-c wnc1.example.com` |
-| `-t, --token`      | Basic auth token            | -                                         | `-t "token..."`       |
-| `-p, --protocol`   | Protocol (http/https)       | `https`                                   | `-p https`            |
-| `-m, --model`      | YANG model name             | `Cisco-IOS-XE-wireless-access-point-oper` | `-m "model-name"`     |
-| `-r, --revision`   | Model revision (YYYY-MM-DD) | `2023-08-01`                              | `-r "2023-03-01"`     |
-| `-k, --insecure`   | Skip TLS verification       | -                                         | `-k`                  |
-| `-v, --verbose`    | Verbose output              | -                                         | `-v`                  |
-| `-f, --format`     | Output format               | `pretty`                                  | `-f json`             |
-| `-h, --help`       | Show help                   | -                                         | `-h`                  |
+| Flag               | Description        | Default | Example      |
+| ------------------ | ------------------ | ------- | ------------ |
+| `-c, --controller` | Controller host/IP | (env)   | `-c wnc1`    |
+| `-t, --token`      | Base64 token       | (env)   | `-t YWRt...` |
+| `-p, --protocol`   | Protocol           | `https` | `-p http`    |
+| `-f, --format`     | Output format      | `json`  | `-f xml`     |
+| `-r, --raw`        | Raw passthrough    | off     | `-r`         |
+| `-k, --insecure`   | Skip TLS verify    | false   | `-k`         |
+| `-v, --verbose`    | Verbose logs       | false   | `-v`         |
+| `--no-color`       | Disable color      | false   | `--no-color` |
+| `-h, --help`       | Help               | -       | `-h`         |
 
-### Common Usage Patterns
+### Examples
 
 ```bash
 # Get default access point operational model
-./scripts/get_yang_model_details.sh -c wnc1.example.com -k
+./scripts/get_yang_model_details.sh -c wnc1.example.com Cisco-IOS-XE-wireless-access-point-oper -k
 
 # Get specific model with custom revision
-./scripts/get_yang_model_details.sh -c wnc1.example.com \
-  -m "Cisco-IOS-XE-wireless-wlan-cfg" -r "2023-03-01" -k
+./scripts/get_yang_model_details.sh -c wnc1.example.com Cisco-IOS-XE-wireless-wlan-cfg -k
 
 # Get raw YANG output for processing
-./scripts/get_yang_model_details.sh -c wnc1.example.com \
-  -f raw -k > model.yang
+./scripts/get_yang_model_details.sh -c wnc1.example.com -r -k > model.yang
 
 # Verbose debugging mode
-./scripts/get_yang_model_details.sh -c wnc1.example.com -v -k
+./scripts/get_yang_model_details.sh -c wnc1.example.com -v Cisco-IOS-XE-wireless-general-oper -k
 ```
 
 <details>
-<summary>Example of the result</summary>
+<summary>Sample Output</summary>
 
 ```bash
 $ ./scripts/get_yang_model_details.sh -c wnc1.example.internal -f pretty -k
@@ -202,59 +207,56 @@ Operation completed successfully.
 
 </details>
 
-## 🔍 `get_yang_statement_details.sh` - Operational Data Querying
+## 🔍 `get_yang_statement_details.sh` – Data Query
 
-Queries real-time operational data from the WNC controller using YANG model paths.
+Fetches a live data subtree for a given model + statement (root node) via RESTCONF `data` path.
 
-### Features
+### Key Features
 
-- Retrieves live operational data from WNC
-- JSON and pretty-formatted output
-- Configurable YANG model and identifier
-- Real-time wireless network status
-- Support for all operational YANG models
+| Capability          | Notes                                         |
+| ------------------- | --------------------------------------------- |
+| Statement targeting | Provide `<MODEL> <STATEMENT>` positional args |
+| Formats             | JSON(default) or XML (`-f xml`)               |
+| Verbose             | `-v` for HTTP metadata                        |
+| TLS                 | `-k` for lab/self-signed                      |
 
 ### Usage
 
 ```bash
-./scripts/get_yang_statement_details.sh [OPTIONS]
+./scripts/get_yang_statement_details.sh [OPTIONS] <MODEL> <STATEMENT>
 ```
 
 ### Flags
 
-| Flag               | Description                | Default                                   | Example                 |
-| ------------------ | -------------------------- | ----------------------------------------- | ----------------------- |
-| `-c, --controller` | WNC controller hostname/IP | -                                         | `-c wnc1.example.com`   |
-| `-t, --token`      | Basic auth token           | -                                         | `-t "token..."`         |
-| `-p, --protocol`   | Protocol (http/https)      | `https`                                   | `-p https`              |
-| `-m, --model`      | YANG model name            | `Cisco-IOS-XE-wireless-access-point-oper` | `-m "model-name"`       |
-| `-i, --id`         | YANG model identifier      | `access-point-oper-data`                  | `-i "client-oper-data"` |
-| `-k, --insecure`   | Skip TLS verification      | -                                         | `-k`                    |
-| `-v, --verbose`    | Verbose output             | -                                         | `-v`                    |
-| `-f, --format`     | Output format              | `pretty`                                  | `-f json`               |
-| `-h, --help`       | Show help                  | -                                         | `-h`                    |
+| Flag               | Description         | Default |
+| ------------------ | ------------------- | ------- |
+| `-c, --controller` | Controller host/IP  | (env)   |
+| `-t, --token`      | Base64 token        | (env)   |
+| `-p, --protocol`   | Protocol http/https | https   |
+| `-f, --format`     | json or xml         | json    |
+| `-k, --insecure`   | Skip TLS verify     | false   |
+| `-v, --verbose`    | Verbose logs        | false   |
+| `--no-color`       | Disable color       | false   |
+| `-h, --help`       | Help                | -       |
 
-### Common Usage Patterns
+### Examples
 
 ```bash
 # Get access point operational data (default)
-./scripts/get_yang_statement_details.sh -c wnc1.example.com -k
+./scripts/get_yang_statement_details.sh -c wnc1.example.com Cisco-IOS-XE-wireless-access-point-oper access-point-oper-data -k
 
 # Get client operational data
-./scripts/get_yang_statement_details.sh -c wnc1.example.com \
-  -m "Cisco-IOS-XE-wireless-client-oper" -i "client-oper-data" -k
+./scripts/get_yang_statement_details.sh -c wnc1.example.com Cisco-IOS-XE-wireless-client-oper client-oper-data -k
 
 # Get JSON output for processing
-./scripts/get_yang_statement_details.sh -c wnc1.example.com \
-  -f json -k > ap_data.json
+./scripts/get_yang_statement_details.sh -c wnc1.example.com -f json Cisco-IOS-XE-wireless-general-oper general-oper-data -k > general.json
 
 # Get general wireless operational status
-./scripts/get_yang_statement_details.sh -c wnc1.example.com \
-  -m "Cisco-IOS-XE-wireless-general-oper" -i "general-oper-data" -v -k
+./scripts/get_yang_statement_details.sh -c wnc1.example.com -v Cisco-IOS-XE-wireless-general-oper general-oper-data -k
 ```
 
 <details>
-<summary>Example of the result</summary>
+<summary>Sample Output</summary>
 
 ```bash
 $ ./scripts/get_yang_statement_details.sh -c wnc1.example.internal -f json -k
@@ -297,45 +299,31 @@ Operation completed successfully.
 
 </details>
 
-## 📚️ Appendix
+## 📚 Appendix
 
-### 📚 Common YANG Models
+<details>
+<summary>Common Wireless YANG Modules</summary>
 
-#### Operational Data (`-oper`)
+| Category               | Examples                                                              |
+| ---------------------- | --------------------------------------------------------------------- |
+| Operational (`-oper`)  | access-point-oper, client-oper, general-oper, rrm-oper, mobility-oper |
+| Configuration (`-cfg`) | ap-cfg, wlan-cfg, rf-cfg, site-cfg, general-cfg                       |
 
-| Model                                     | Description                       |
-| ----------------------------------------- | --------------------------------- |
-| `Cisco-IOS-XE-wireless-access-point-oper` | Access point operational data     |
-| `Cisco-IOS-XE-wireless-client-oper`       | Client operational data           |
-| `Cisco-IOS-XE-wireless-general-oper`      | General wireless operational data |
-| `Cisco-IOS-XE-wireless-mobility-oper`     | Mobility operational data         |
-| `Cisco-IOS-XE-wireless-rrm-oper`          | Radio Resource Management data    |
+</details>
 
-#### Configuration Data (`-cfg`)
+<details>
+<summary>Troubleshooting</summary>
 
-| Model                               | Description                    |
-| ----------------------------------- | ------------------------------ |
-| `Cisco-IOS-XE-wireless-wlan-cfg`    | WLAN configuration             |
-| `Cisco-IOS-XE-wireless-ap-cfg`      | Access point configuration     |
-| `Cisco-IOS-XE-wireless-site-cfg`    | Site configuration             |
-| `Cisco-IOS-XE-wireless-rf-cfg`      | RF profile configuration       |
-| `Cisco-IOS-XE-wireless-general-cfg` | General wireless configuration |
+| Problem                   | Resolution                                     |
+| ------------------------- | ---------------------------------------------- |
+| `curl: command not found` | Install: `brew install curl`                   |
+| `jq: command not found`   | Install: `brew install jq`                     |
+| Empty list                | Verify token & role privileges                 |
+| TLS errors                | Use `-k` only in lab; fix cert chain otherwise |
+| 404 model                 | Confirm spelling & revision availability       |
 
-#### Model Revisions
+</details>
 
-| Revision     | Description             |
-| ------------ | ----------------------- |
-| `2022-11-01` | Earlier stable release  |
-| `2023-03-01` | Spring 2023 features    |
-| `2023-07-01` | Summer 2023 features    |
-| `2023-08-01` | Latest stable (default) |
+---
 
-## 🔥 Troubleshooting
-
-| Problem                   | Solution                                             |
-| ------------------------- | ---------------------------------------------------- |
-| `curl: command not found` | Install curl: `brew install curl`                    |
-| `jq: command not found`   | Install jq: `brew install jq`                        |
-| "Failed to fetch data"    | Check controller hostname, network, auth token       |
-| TLS certificate errors    | Use `-k` flag to skip verification                   |
-| "Invalid YANG model"      | Ensure format: `Cisco-IOS-XE-wireless-*-(oper\|cfg)` |
+**Back to:** [API Reference](API_REFERENCE.md) | [Security](SECURITY.md)

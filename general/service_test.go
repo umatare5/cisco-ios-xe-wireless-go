@@ -86,7 +86,7 @@ func TestGeneralService(t *testing.T) {
 		// Test Oper method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Oper(ctx)
+			resp, err := service.GetOper(ctx)
 			collector.mu.Lock()
 			collector.OperResp = resp
 			collector.OperErr = err
@@ -96,7 +96,7 @@ func TestGeneralService(t *testing.T) {
 		// Test MgmtIntfData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.MgmtIntfData(ctx)
+			resp, err := service.GetMgmtIntfData(ctx)
 			collector.mu.Lock()
 			collector.MgmtIntfDataResp = resp
 			collector.MgmtIntfDataErr = err
@@ -106,7 +106,7 @@ func TestGeneralService(t *testing.T) {
 		// Test Cfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Cfg(ctx)
+			resp, err := service.GetCfg(ctx)
 			collector.mu.Lock()
 			collector.CfgResp = resp
 			collector.CfgErr = err
@@ -116,7 +116,7 @@ func TestGeneralService(t *testing.T) {
 		// Test MewlcConfig method
 		go func() {
 			defer wg.Done()
-			resp, err := service.MewlcConfig(ctx)
+			resp, err := service.GetMewlcConfig(ctx)
 			collector.mu.Lock()
 			collector.MewlcConfigResp = resp
 			collector.MewlcConfigErr = err
@@ -126,7 +126,7 @@ func TestGeneralService(t *testing.T) {
 		// Test CacConfig method
 		go func() {
 			defer wg.Done()
-			resp, err := service.CacConfig(ctx)
+			resp, err := service.GetCacConfig(ctx)
 			collector.mu.Lock()
 			collector.CacConfigResp = resp
 			collector.CacConfigErr = err
@@ -136,7 +136,7 @@ func TestGeneralService(t *testing.T) {
 		// Test Mfp method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Mfp(ctx)
+			resp, err := service.GetMfp(ctx)
 			collector.mu.Lock()
 			collector.MfpResp = resp
 			collector.MfpErr = err
@@ -146,7 +146,7 @@ func TestGeneralService(t *testing.T) {
 		// Test FipsCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.FipsCfg(ctx)
+			resp, err := service.GetFipsCfg(ctx)
 			collector.mu.Lock()
 			collector.FipsCfgResp = resp
 			collector.FipsCfgErr = err
@@ -156,7 +156,7 @@ func TestGeneralService(t *testing.T) {
 		// Test WsaApClientEvent method
 		go func() {
 			defer wg.Done()
-			resp, err := service.WsaApClientEvent(ctx)
+			resp, err := service.GetWsaApClientEvent(ctx)
 			collector.mu.Lock()
 			collector.WsaApClientEventResp = resp
 			collector.WsaApClientEventErr = err
@@ -166,7 +166,7 @@ func TestGeneralService(t *testing.T) {
 		// Test SimL3InterfaceCacheData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.SimL3InterfaceCacheData(ctx)
+			resp, err := service.GetSimL3InterfaceCacheData(ctx)
 			collector.mu.Lock()
 			collector.SimL3InterfaceCacheDataResp = resp
 			collector.SimL3InterfaceCacheDataErr = err
@@ -176,7 +176,7 @@ func TestGeneralService(t *testing.T) {
 		// Test WlcManagementData method
 		go func() {
 			defer wg.Done()
-			resp, err := service.WlcManagementData(ctx)
+			resp, err := service.GetWlcManagementData(ctx)
 			collector.mu.Lock()
 			collector.WlcManagementDataResp = resp
 			collector.WlcManagementDataErr = err
@@ -186,7 +186,7 @@ func TestGeneralService(t *testing.T) {
 		// Test Laginfo method
 		go func() {
 			defer wg.Done()
-			resp, err := service.Laginfo(ctx)
+			resp, err := service.GetLaginfo(ctx)
 			collector.mu.Lock()
 			collector.LaginfoResp = resp
 			collector.LaginfoErr = err
@@ -196,7 +196,7 @@ func TestGeneralService(t *testing.T) {
 		// Test MulticastConfig method
 		go func() {
 			defer wg.Done()
-			resp, err := service.MulticastConfig(ctx)
+			resp, err := service.GetMulticastConfig(ctx)
 			collector.mu.Lock()
 			collector.MulticastConfigResp = resp
 			collector.MulticastConfigErr = err
@@ -206,7 +206,7 @@ func TestGeneralService(t *testing.T) {
 		// Test FeatureUsageCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.FeatureUsageCfg(ctx)
+			resp, err := service.GetFeatureUsageCfg(ctx)
 			collector.mu.Lock()
 			collector.FeatureUsageCfgResp = resp
 			collector.FeatureUsageCfgErr = err
@@ -216,7 +216,7 @@ func TestGeneralService(t *testing.T) {
 		// Test ThresholdWarnCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.ThresholdWarnCfg(ctx)
+			resp, err := service.GetThresholdWarnCfg(ctx)
 			collector.mu.Lock()
 			collector.ThresholdWarnCfgResp = resp
 			collector.ThresholdWarnCfgErr = err
@@ -226,7 +226,7 @@ func TestGeneralService(t *testing.T) {
 		// Test ApLocRangingCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.ApLocRangingCfg(ctx)
+			resp, err := service.GetApLocRangingCfg(ctx)
 			collector.mu.Lock()
 			collector.ApLocRangingCfgResp = resp
 			collector.ApLocRangingCfgErr = err
@@ -236,7 +236,7 @@ func TestGeneralService(t *testing.T) {
 		// Test GeolocationCfg method
 		go func() {
 			defer wg.Done()
-			resp, err := service.GeolocationCfg(ctx)
+			resp, err := service.GetGeolocationCfg(ctx)
 			collector.mu.Lock()
 			collector.GeolocationCfgResp = resp
 			collector.GeolocationCfgErr = err
@@ -303,99 +303,99 @@ func TestGeneralService(t *testing.T) {
 			method func() (interface{}, error)
 		}{
 			{
-				name: "Oper",
+				name: "GetOper",
 				method: func() (interface{}, error) {
-					return service.Oper(ctx)
+					return service.GetOper(ctx)
 				},
 			},
 			{
-				name: "MgmtIntfData",
+				name: "GetMgmtIntfData",
 				method: func() (interface{}, error) {
-					return service.MgmtIntfData(ctx)
+					return service.GetMgmtIntfData(ctx)
 				},
 			},
 			{
-				name: "Cfg",
+				name: "GetCfg",
 				method: func() (interface{}, error) {
-					return service.Cfg(ctx)
+					return service.GetCfg(ctx)
 				},
 			},
 			{
-				name: "MewlcConfig",
+				name: "GetMewlcConfig",
 				method: func() (interface{}, error) {
-					return service.MewlcConfig(ctx)
+					return service.GetMewlcConfig(ctx)
 				},
 			},
 			{
-				name: "CacConfig",
+				name: "GetCacConfig",
 				method: func() (interface{}, error) {
-					return service.CacConfig(ctx)
+					return service.GetCacConfig(ctx)
 				},
 			},
 			{
-				name: "Mfp",
+				name: "GetMfp",
 				method: func() (interface{}, error) {
-					return service.Mfp(ctx)
+					return service.GetMfp(ctx)
 				},
 			},
 			{
-				name: "FipsCfg",
+				name: "GetFipsCfg",
 				method: func() (interface{}, error) {
-					return service.FipsCfg(ctx)
+					return service.GetFipsCfg(ctx)
 				},
 			},
 			{
-				name: "WsaApClientEvent",
+				name: "GetWsaApClientEvent",
 				method: func() (interface{}, error) {
-					return service.WsaApClientEvent(ctx)
+					return service.GetWsaApClientEvent(ctx)
 				},
 			},
 			{
-				name: "SimL3InterfaceCacheData",
+				name: "GetSimL3InterfaceCacheData",
 				method: func() (interface{}, error) {
-					return service.SimL3InterfaceCacheData(ctx)
+					return service.GetSimL3InterfaceCacheData(ctx)
 				},
 			},
 			{
-				name: "WlcManagementData",
+				name: "GetWlcManagementData",
 				method: func() (interface{}, error) {
-					return service.WlcManagementData(ctx)
+					return service.GetWlcManagementData(ctx)
 				},
 			},
 			{
-				name: "Laginfo",
+				name: "GetLaginfo",
 				method: func() (interface{}, error) {
-					return service.Laginfo(ctx)
+					return service.GetLaginfo(ctx)
 				},
 			},
 			{
-				name: "MulticastConfig",
+				name: "GetMulticastConfig",
 				method: func() (interface{}, error) {
-					return service.MulticastConfig(ctx)
+					return service.GetMulticastConfig(ctx)
 				},
 			},
 			{
-				name: "FeatureUsageCfg",
+				name: "GetFeatureUsageCfg",
 				method: func() (interface{}, error) {
-					return service.FeatureUsageCfg(ctx)
+					return service.GetFeatureUsageCfg(ctx)
 				},
 			},
 			{
-				name: "ThresholdWarnCfg",
+				name: "GetThresholdWarnCfg",
 				method: func() (interface{}, error) {
-					return service.ThresholdWarnCfg(ctx)
+					return service.GetThresholdWarnCfg(ctx)
 				},
 			},
 			{
-				name: "ApLocRangingCfg",
+				name: "GetApLocRangingCfg",
 				method: func() (interface{}, error) {
-					return service.ApLocRangingCfg(ctx)
+					return service.GetApLocRangingCfg(ctx)
 				},
 			},
 			{
-				name: "GeolocationCfg",
+				name: "GetGeolocationCfg",
 				method: func() (interface{}, error) {
-					return service.GeolocationCfg(ctx)
+					return service.GetGeolocationCfg(ctx)
 				},
 			},
 		}
@@ -421,7 +421,7 @@ func TestGeneralService(t *testing.T) {
 		// Test with nil client
 		t.Run("NilClient", func(t *testing.T) {
 			service := NewService(nil)
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with nil client, got none")
 			}
@@ -430,7 +430,7 @@ func TestGeneralService(t *testing.T) {
 		// Test with nil context
 		t.Run("NilContext", func(t *testing.T) {
 			var nilCtx context.Context //nolint:SA1012 // Testing nil context behavior
-			_, err := service.Oper(nilCtx)
+			_, err := service.GetOper(nilCtx)
 			if err == nil {
 				t.Fatal("Expected error when using nil context, but got none")
 			}
@@ -440,7 +440,7 @@ func TestGeneralService(t *testing.T) {
 		t.Run("CanceledContext", func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			cancel()
-			_, err := service.Oper(ctx)
+			_, err := service.GetOper(ctx)
 			if err == nil {
 				t.Fatal("Expected error with canceled context, got none")
 			}
@@ -459,7 +459,7 @@ func TestGeneralService(t *testing.T) {
 		}
 
 		// Test operational data
-		operResp, operErr := service.Oper(ctx)
+		operResp, operErr := service.GetOper(ctx)
 		if operErr != nil {
 			t.Logf("Integration test - Oper error: %v", operErr)
 		} else {
@@ -467,7 +467,7 @@ func TestGeneralService(t *testing.T) {
 		}
 
 		// Test configuration data
-		cfgResp, cfgErr := service.Cfg(ctx)
+		cfgResp, cfgErr := service.GetCfg(ctx)
 		if cfgErr != nil {
 			t.Logf("Integration test - Cfg error: %v", cfgErr)
 		} else {

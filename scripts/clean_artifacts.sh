@@ -28,8 +28,6 @@ init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/artifacts"
 # Validate required CLI tools before proceeding
 validate_required_cli_tools "minimal"
 
-# Predicate functions centralized in lib/core/predicates.sh
-
 main() {
     run_artifacts_operation
 }

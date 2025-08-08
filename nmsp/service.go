@@ -31,22 +31,22 @@ func NewService(c *core.Client) Service {
 	return Service{c: c}
 }
 
-// Oper returns NMSP operational data.
-func (s Service) Oper(ctx context.Context) (*model.NmspOperResponse, error) {
+// GetOper returns NMSP operational data.
+func (s Service) GetOper(ctx context.Context) (*model.NmspOperResponse, error) {
 	return core.Get[model.NmspOperResponse](ctx, s.c, NmspOperEndpoint)
 }
 
-// ClientRegistration returns NMSP client registration data.
-func (s Service) ClientRegistration(ctx context.Context) (*model.NmspClientRegistrationResponse, error) {
+// GetClientRegistration returns NMSP client registration data.
+func (s Service) GetClientRegistration(ctx context.Context) (*model.NmspClientRegistrationResponse, error) {
 	return core.Get[model.NmspClientRegistrationResponse](ctx, s.c, ClientRegistrationEndpoint)
 }
 
-// CmxConnection returns NMSP CMX connection data.
-func (s Service) CmxConnection(ctx context.Context) (*model.NmspCmxConnectionResponse, error) {
+// GetCmxConnection returns NMSP CMX connection data.
+func (s Service) GetCmxConnection(ctx context.Context) (*model.NmspCmxConnectionResponse, error) {
 	return core.Get[model.NmspCmxConnectionResponse](ctx, s.c, CmxConnectionEndpoint)
 }
 
-// CmxCloudInfo returns NMSP CMX cloud information.
-func (s Service) CmxCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfoResponse, error) {
+// GetCmxCloudInfo returns NMSP CMX cloud information.
+func (s Service) GetCmxCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfoResponse, error) {
 	return core.Get[model.NmspCmxCloudInfoResponse](ctx, s.c, CmxCloudInfoEndpoint)
 }

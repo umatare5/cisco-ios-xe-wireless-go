@@ -25,7 +25,7 @@ func NewService(client *core.Client) Service {
 	return Service{c: client}
 }
 
-// Cfg returns FlexConnect configuration data.
-func (s Service) Cfg(ctx context.Context) (*model.FlexCfgResponse, error) {
+// GetCfg returns FlexConnect configuration data.
+func (s Service) GetCfg(ctx context.Context) (*model.FlexCfgResponse, error) {
 	return core.Get[model.FlexCfgResponse](ctx, s.c, FlexCfgEndpoint)
 }
