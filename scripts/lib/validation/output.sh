@@ -14,6 +14,7 @@ show_info() {
     fi
 }
 
+# Warning output
 show_warning() {
     if ! is_no_color_enabled; then
         printf "\033[33m⚠ Warning:\033[0m %s\n" "$*" >&2

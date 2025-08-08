@@ -27,7 +27,7 @@ Requires reachable Catalyst 9800 controller + credentials:
 | `WNC_CONTROLLER`   | Controller host/IP | `wnc1.example.internal` |
 | `WNC_ACCESS_TOKEN` | Base64 `user:pass` | `YWRtaW46cGFzc3dvcmQ=`  |
 
-<details><summary>Env Example</summary>
+<details><summary>Environment Variable Example</summary>
 
 ```bash
 export WNC_CONTROLLER="192.168.1.100"          # Your WNC IP address
@@ -38,33 +38,153 @@ export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:passwor
 
 ## 🚀 Running Tests
 
-Use provided Make targets (lint runs automatically where defined):
+Use provided Make targets:
 
 | Command                 | Description                          |
 | ----------------------- | ------------------------------------ |
 | `make test-unit`        | Run unit + table + fail-fast suites  |
 | `make test-integration` | Run integration (skips if env unset) |
-| `make test-coverage`    | Combined coverage generation         |
 
-<details><summary>Sample Output (Truncated)</summary>
+> [!NOTE]
+> lint runs automatically where defined.
 
-```text
-📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
-  ✅ TestClientConfig (0s)
-  ✅ TestClientFunctions (10.67s)
-  ✅ TestClientFunctions/GET_APOper (5.63s)
-    client_test.go:399: GET AP oper request successful
-  🚧 TestClientFunctions (0s)
-    client_test.go:364: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests
+<details><summary>Sample Output: `test-integration`</summary>
 
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (1.1% coverage)
-  ✅ TestApOperationFailFast/NilClient (0s)
-    oper_test.go:210: Correctly returned error with nil client: invalid client configuration: client cannot be nil
-  🚧 TestAPConfigurationFunctions (0s)
-    cfg_test.go:48: Required environment variables not set - skipping test
+```bash
+❯ make test-unit
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
 
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil
-    coverage: 0.0% of statements
+✓ All 4 required CLI tools are available
+======================================
+        Cisco WNC Code Linter
+      golangci-lint Integration
+======================================
+
+ℹ Info: Starting code linting...
+0 issues.
+
+✓ Code linting completed successfully
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
+
+✓ All 4 required CLI tools are available
+======================================
+         Cisco WNC Unit Tests
+         Go Testing Framework
+======================================
+
+→ Starting unit tests...
+PASS TestNewClient/ValidClient (0.00s)
+PASS TestNewClient/ValidClientWithOptions (0.00s)
+PASS TestNewClient/InvalidHost (0.00s)
+<snip>
+DONE 1048 tests, 36 skipped in 4.194s
+
+-----------------------------------------
+✓ Unit tests completed successfully
+ℹ Info: Duration: 4s
+-----------------------------------------
+```
+
+</details>
+
+<details><summary>Sample Output: `test-unit`</summary>
+
+```bash
+❯ make test-integration
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
+
+✓ All 4 required CLI tools are available
+======================================
+        Cisco WNC Code Linter
+      golangci-lint Integration
+======================================
+
+ℹ Info: Starting code linting...
+0 issues.
+
+✓ Code linting completed successfully
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
+
+✓ All 4 required CLI tools are available
+======================================
+     Cisco WNC Integration Tests
+         Go Testing Framework
+======================================
+
+→ Starting integration tests...
+PASS TestNewClient/ValidClient (0.00s)
+PASS TestNewClient/ValidClientWithOptions (0.00s)
+PASS TestNewClient/InvalidHost (0.00s)
+<snip>
+DONE 1048 tests, 36 skipped in 9.386s
+
+-----------------------------------------
+✓ Integration tests completed successfully
+ℹ Info: Duration: 10s
+-----------------------------------------
+```
+
+</details>
+
+<details><summary>Sample Output: `test-integration`</summary>
+
+```bash
+❯ make test-integration
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
+
+✓ All 4 required CLI tools are available
+======================================
+        Cisco WNC Code Linter
+      golangci-lint Integration
+======================================
+
+ℹ Info: Starting code linting...
+0 issues.
+
+✓ Code linting completed successfully
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
+
+✓ All 4 required CLI tools are available
+======================================
+     Cisco WNC Integration Tests
+         Go Testing Framework
+======================================
+
+→ Starting integration tests...
+PASS TestNewClient/ValidClient (0.00s)
+PASS TestNewClient/ValidClientWithOptions (0.00s)
+PASS TestNewClient/InvalidHost (0.00s)
+<snip>
+DONE 1048 tests, 36 skipped in 9.386s
+
+-----------------------------------------
+✓ Integration tests completed successfully
+ℹ Info: Duration: 10s
+-----------------------------------------
 ```
 
 </details>
@@ -100,15 +220,64 @@ test_data/
 | Summary | `make test-coverage`        | Outputs aggregate %                   |
 | HTML    | `make test-coverage-report` | Generates browsable HTML under `tmp/` |
 
-<details><summary>Sample Coverage Output</summary>
+<details><summary>Sample Output: test-coverage</summary>
 
-```text
-Coverage report generated at ./tmp/coverage.out
-total: (statements) 6.1%
+```bash
+❯ make test-coverage
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
 
-📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/awips (75% coverage)
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (1.1% coverage)
+✓ All 4 required CLI tools are available
+======================================
+       Cisco WNC Coverage Tests
+         Go Testing Framework
+======================================
+
+→ Starting coverage tests...
+PASS TestNewClient/ValidClient (0.00s)
+PASS TestNewClient/ValidClientWithOptions (0.00s)
+PASS TestNewClient/InvalidHost (0.00s)
+<snip>
+DONE 1048 tests, 36 skipped in 10.136s
+
+-----------------------------------------
+✓ Coverage tests completed successfully
+ℹ Info: Duration: 11s
+-----------------------------------------
+
+ℹ Info: Coverage report generated: ././tmp/coverage.out
+ℹ Info: Total coverage: 99.1%
+```
+
+</details>
+
+<details><summary>Sample Output: test-coverage-report</summary>
+
+```bash
+❯ make test-coverage-report
+Validating CLI tools (level: standard)...
+✓ curl
+✓ go
+✓ golangci-lint
+✓ gotestsum
+
+✓ All 4 required CLI tools are available
+======================================
+       Coverage HTML Generator
+      Go Tool Cover Integration
+======================================
+
+→ Generating HTML coverage report...
+
+✓ HTML coverage report generated successfully
+ℹ Info: Report location: ././tmp/coverage.html
+ℹ Info: Report size: 159374 bytes
+
+ℹ Info: To view the report:
+  open ././tmp/coverage.html
 ```
 
 </details>
@@ -136,14 +305,3 @@ The project uses several tools to enhance the testing experience:
 
 > [!NOTE]
 > Install dev helpers: `make deps`
-
-### References
-
-| Resource                            | Focus                 |
-| ----------------------------------- | --------------------- |
-| Catalyst 9800 Programmability Guide | RESTCONF & automation |
-| YANG Models (17.12.1)               | Data model reference  |
-
----
-
-**Back to:** [API Reference](API_REFERENCE.md) | [Security](SECURITY.md)

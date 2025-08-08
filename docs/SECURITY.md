@@ -195,10 +195,5 @@ if err != nil {
 
 ## 📖 References
 
-- [Cisco Catalyst 9800 Security Configuration Guide](https://www.cisco.com/c/en/us/support/wireless/catalyst-9800-series-wireless-controllers/products-installation-and-configuration-guides-list.html)
-- [RESTCONF Security Best Practices](https://tools.ietf.org/html/rfc8040#section-2.5)
 - [Go Security Best Practices](https://go.dev/security/)
-
----
-
-**Back to:** [API Reference](API_REFERENCE.md) | [README](../README.md)
+- [RESTCONF Security Best Practices](https://tools.ietf.org/html/rfc8040#section-2.5)

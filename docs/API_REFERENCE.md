@@ -2,6 +2,8 @@
 
 High-level reference for the exported, user‑facing API of this Go library. Domain data access uses a consistent pattern: construct a unified client, pick a domain service accessor, call a `Get*` method with a `context.Context`.
 
+## ⏰️ Quick Reference
+
 | Aspect       | Rule                                                                                      |
 | ------------ | ----------------------------------------------------------------------------------------- |
 | Import       | `import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"`                               |
@@ -171,7 +173,7 @@ Low-priority exhaustive lists are collapsed below. Expand only what you need.
 | Package         | Key Methods                                                               |
 | --------------- | ------------------------------------------------------------------------- |
 | `radio`         | `GetCfg`                                                                  |
-| `rf`            | `GetCfg`, `GetProfiles`, tag/profile related (see source)                 |
+| `rf`            | `GetCfg`, `GetProfiles`                                                   |
 | `afc`           | `GetOper`, `GetAPResp`, `GetCloudOper`, `GetCloudStats`                   |
 | `rogue`         | `GetOper`, `GetStats`, `GetData`, `GetClientData`, `GetRldpStats`         |
 | `mcast`         | `GetOper`, `GetFlexMediastreamClientSummary`, `GetVlanL2MgidOp`           |
