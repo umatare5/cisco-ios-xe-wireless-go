@@ -15,6 +15,7 @@ test_data/
 
 # Coverage files
 *.out
+!coverage/report.out
 
 # IDE files
 .idea/

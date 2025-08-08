@@ -21,7 +21,7 @@ validate_coverage_environment() {
     fi
 
     # Check if input coverage file exists
-    if ! is_file_exists "$input_file"; then
+    if ! file_exists "$input_file"; then
         format_coverage_error "Coverage file not found: $input_file"
         format_coverage_info "Run coverage tests first: ./scripts/test_coverage.sh"
         return 1
@@ -49,7 +49,7 @@ prepare_output_directory() {
     output_dir="$(dirname "$output_file")"
 
     # Create output directory if it doesn't exist
-    if ! is_directory_exists "$output_dir"; then
+    if ! dir_exists "$output_dir"; then
         if ! mkdir -p "$output_dir"; then
             format_coverage_error "Failed to create output directory: $output_dir"
             return 1
@@ -96,10 +96,12 @@ run_coverage_html_operation() {
     local project_root="${argc_project:-.}"
     local input_file="${argc_input:-./tmp/coverage.out}"
     local output_file="${argc_output:-./tmp/coverage.html}"
+    local report_file="${argc_report:-coverage/report.out}" # new plain-text summary output
 
     # Convert relative paths to absolute paths
     [[ "$input_file" != /* ]] && input_file="$project_root/$input_file"
     [[ "$output_file" != /* ]] && output_file="$project_root/$output_file"
+    [[ "$report_file" != /* ]] && report_file="$project_root/$report_file"
 
     # Show banner and info
     show_coverage_html_banner
@@ -113,8 +115,11 @@ run_coverage_html_operation() {
         return 1
     fi
 
-    # Prepare output directory
+    # Prepare output directories
     if ! prepare_output_directory "$output_file"; then
+        return 1
+    fi
+    if ! prepare_output_directory "$report_file"; then
         return 1
     fi
 
@@ -123,7 +128,17 @@ run_coverage_html_operation() {
     local exit_code=0
     execute_coverage_html_generation "$project_root" "$input_file" "$output_file" || exit_code=$?
 
-    # Display results
+    # Additionally generate plain-text summary for CI (octocov consumption)
+    if [[ $exit_code -eq 0 ]]; then
+        # Derive function coverage summary
+        if go tool cover -func="$input_file" > "$report_file" 2>/dev/null; then
+            is_verbose_enabled && format_coverage_info "Wrote text summary: $report_file"
+        else
+            format_coverage_warning "Failed to write text summary to $report_file"
+        fi
+    fi
+
+    # Display results (HTML primary output)
     display_coverage_html_results "$exit_code" "$output_file"
 
     return "$exit_code"
