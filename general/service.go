@@ -2,7 +2,6 @@ package general
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -63,98 +62,82 @@ func NewService(c *core.Client) Service {
 
 // Oper returns general operational data.
 func (s Service) Oper(ctx context.Context) (*model.GeneralOperResponse, error) {
-	var out model.GeneralOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, GeneralOperEndpoint, &out)
+	return core.Get[model.GeneralOperResponse](ctx, s.c, GeneralOperEndpoint)
 }
 
 // MgmtIntfData returns management interface operational data.
 func (s Service) MgmtIntfData(ctx context.Context) (*model.GeneralOperMgmtIntfDataResponse, error) {
-	var out model.GeneralOperMgmtIntfDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MgmtIntfDataEndpoint, &out)
+	return core.Get[model.GeneralOperMgmtIntfDataResponse](ctx, s.c, MgmtIntfDataEndpoint)
 }
 
 // Configuration Data Methods
 
 // Cfg returns general configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.GeneralCfgResponse, error) {
-	var out model.GeneralCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, GeneralCfgEndpoint, &out)
+	return core.Get[model.GeneralCfgResponse](ctx, s.c, GeneralCfgEndpoint)
 }
 
 // MewlcConfig returns MEWLC configuration data.
 func (s Service) MewlcConfig(ctx context.Context) (*model.MewlcConfigResponse, error) {
-	var out model.MewlcConfigResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MewlcConfigEndpoint, &out)
+	return core.Get[model.MewlcConfigResponse](ctx, s.c, MewlcConfigEndpoint)
 }
 
 // CacConfig returns CAC configuration data.
 func (s Service) CacConfig(ctx context.Context) (*model.CacConfigResponse, error) {
-	var out model.CacConfigResponse
-	return &out, s.c.Do(ctx, http.MethodGet, CacConfigEndpoint, &out)
+	return core.Get[model.CacConfigResponse](ctx, s.c, CacConfigEndpoint)
 }
 
 // Mfp returns MFP (Management Frame Protection) configuration data.
 func (s Service) Mfp(ctx context.Context) (*model.MfpResponse, error) {
-	var out model.MfpResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MfpEndpoint, &out)
+	return core.Get[model.MfpResponse](ctx, s.c, MfpEndpoint)
 }
 
 // FipsCfg returns FIPS configuration data.
 func (s Service) FipsCfg(ctx context.Context) (*model.FipsCfgResponse, error) {
-	var out model.FipsCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, FipsCfgEndpoint, &out)
+	return core.Get[model.FipsCfgResponse](ctx, s.c, FipsCfgEndpoint)
 }
 
 // WsaApClientEvent returns WSA AP client event configuration data.
 func (s Service) WsaApClientEvent(ctx context.Context) (*model.WsaApClientEventResponse, error) {
-	var out model.WsaApClientEventResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WsaApClientEventEndpoint, &out)
+	return core.Get[model.WsaApClientEventResponse](ctx, s.c, WsaApClientEventEndpoint)
 }
 
 // SimL3InterfaceCacheData returns SIM L3 interface cache data.
 func (s Service) SimL3InterfaceCacheData(ctx context.Context) (*model.SimL3InterfaceCacheDataResponse, error) {
-	var out model.SimL3InterfaceCacheDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, SimL3InterfaceCacheDataEndpoint, &out)
+	return core.Get[model.SimL3InterfaceCacheDataResponse](ctx, s.c, SimL3InterfaceCacheDataEndpoint)
 }
 
 // WlcManagementData returns WLC management data.
 func (s Service) WlcManagementData(ctx context.Context) (*model.WlcManagementDataResponse, error) {
-	var out model.WlcManagementDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WlcManagementDataEndpoint, &out)
+	return core.Get[model.WlcManagementDataResponse](ctx, s.c, WlcManagementDataEndpoint)
 }
 
 // Laginfo returns LAG (Link Aggregation) information.
 func (s Service) Laginfo(ctx context.Context) (*model.LaginfoResponse, error) {
-	var out model.LaginfoResponse
-	return &out, s.c.Do(ctx, http.MethodGet, LaginfoEndpoint, &out)
+	return core.Get[model.LaginfoResponse](ctx, s.c, LaginfoEndpoint)
 }
 
 // MulticastConfig returns multicast configuration data.
 func (s Service) MulticastConfig(ctx context.Context) (*model.MulticastConfigResponse, error) {
-	var out model.MulticastConfigResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MulticastConfigEndpoint, &out)
+	return core.Get[model.MulticastConfigResponse](ctx, s.c, MulticastConfigEndpoint)
 }
 
 // FeatureUsageCfg returns feature usage configuration data.
 func (s Service) FeatureUsageCfg(ctx context.Context) (*model.FeatureUsageCfgResponse, error) {
-	var out model.FeatureUsageCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, FeatureUsageCfgEndpoint, &out)
+	return core.Get[model.FeatureUsageCfgResponse](ctx, s.c, FeatureUsageCfgEndpoint)
 }
 
 // ThresholdWarnCfg returns threshold warning configuration data.
 func (s Service) ThresholdWarnCfg(ctx context.Context) (*model.ThresholdWarnCfgResponse, error) {
-	var out model.ThresholdWarnCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, ThresholdWarnCfgEndpoint, &out)
+	return core.Get[model.ThresholdWarnCfgResponse](ctx, s.c, ThresholdWarnCfgEndpoint)
 }
 
 // ApLocRangingCfg returns AP location ranging configuration data.
 func (s Service) ApLocRangingCfg(ctx context.Context) (*model.ApLocRangingCfgResponse, error) {
-	var out model.ApLocRangingCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, ApLocRangingCfgEndpoint, &out)
+	return core.Get[model.ApLocRangingCfgResponse](ctx, s.c, ApLocRangingCfgEndpoint)
 }
 
 // GeolocationCfg returns geolocation configuration data.
 func (s Service) GeolocationCfg(ctx context.Context) (*model.GeolocationCfgResponse, error) {
-	var out model.GeolocationCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, GeolocationCfgEndpoint, &out)
+	return core.Get[model.GeolocationCfgResponse](ctx, s.c, GeolocationCfgEndpoint)
 }

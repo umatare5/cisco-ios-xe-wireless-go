@@ -2,7 +2,6 @@ package hyperlocation
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -30,12 +29,10 @@ func NewService(c *core.Client) Service {
 
 // Oper returns hyperlocation operational data.
 func (s Service) Oper(ctx context.Context) (*model.HyperlocationOperResponse, error) {
-	var out model.HyperlocationOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, HyperlocationOperEndpoint, &out)
+	return core.Get[model.HyperlocationOperResponse](ctx, s.c, HyperlocationOperEndpoint)
 }
 
 // Profiles returns hyperlocation profiles.
 func (s Service) Profiles(ctx context.Context) (*model.HyperlocationProfilesResponse, error) {
-	var out model.HyperlocationProfilesResponse
-	return &out, s.c.Do(ctx, http.MethodGet, HyperlocationProfilesEndpoint, &out)
+	return core.Get[model.HyperlocationProfilesResponse](ctx, s.c, HyperlocationProfilesEndpoint)
 }

@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -48,60 +47,50 @@ func NewService(c *core.Client) Service {
 
 // Oper returns complete client operational data.
 func (s Service) Oper(ctx context.Context) (*model.ClientOperResponse, error) {
-	var out model.ClientOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, ClientOperEndpoint, &out)
+	return core.Get[model.ClientOperResponse](ctx, s.c, ClientOperEndpoint)
 }
 
 // CommonOperData returns common operational data for clients.
 func (s Service) CommonOperData(ctx context.Context) (*model.ClientOperCommonOperDataResponse, error) {
-	var out model.ClientOperCommonOperDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, CommonOperDataEndpoint, &out)
+	return core.Get[model.ClientOperCommonOperDataResponse](ctx, s.c, CommonOperDataEndpoint)
 }
 
 // Dot11OperData returns 802.11 operational data for clients.
 func (s Service) Dot11OperData(ctx context.Context) (*model.ClientOperDot11OperDataResponse, error) {
-	var out model.ClientOperDot11OperDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, Dot11OperDataEndpoint, &out)
+	return core.Get[model.ClientOperDot11OperDataResponse](ctx, s.c, Dot11OperDataEndpoint)
 }
 
 // MobilityOperData returns mobility operational data for clients.
 func (s Service) MobilityOperData(ctx context.Context) (*model.ClientOperMobilityOperDataResponse, error) {
-	var out model.ClientOperMobilityOperDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MobilityOperDataEndpoint, &out)
+	return core.Get[model.ClientOperMobilityOperDataResponse](ctx, s.c, MobilityOperDataEndpoint)
 }
 
 // MmIfClientStats returns mobility manager interface client statistics.
 func (s Service) MmIfClientStats(ctx context.Context) (*model.ClientOperMmIfClientStatsResponse, error) {
-	var out model.ClientOperMmIfClientStatsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MmIfClientStatsEndpoint, &out)
+	return core.Get[model.ClientOperMmIfClientStatsResponse](ctx, s.c, MmIfClientStatsEndpoint)
 }
 
 // MmIfClientHistory returns mobility manager interface client history.
 func (s Service) MmIfClientHistory(ctx context.Context) (*model.ClientOperMmIfClientHistoryResponse, error) {
-	var out model.ClientOperMmIfClientHistoryResponse
-	return &out, s.c.Do(ctx, http.MethodGet, MmIfClientHistoryEndpoint, &out)
+	return core.Get[model.ClientOperMmIfClientHistoryResponse](ctx, s.c, MmIfClientHistoryEndpoint)
 }
 
 // TrafficStats returns client traffic statistics.
 func (s Service) TrafficStats(ctx context.Context) (*model.ClientOperTrafficStatsResponse, error) {
-	var out model.ClientOperTrafficStatsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, TrafficStatsEndpoint, &out)
+	return core.Get[model.ClientOperTrafficStatsResponse](ctx, s.c, TrafficStatsEndpoint)
 }
 
 // PolicyData returns client policy data.
 func (s Service) PolicyData(ctx context.Context) (*model.ClientOperPolicyDataResponse, error) {
-	var out model.ClientOperPolicyDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, PolicyDataEndpoint, &out)
+	return core.Get[model.ClientOperPolicyDataResponse](ctx, s.c, PolicyDataEndpoint)
 }
 
 // SisfDBMac returns SISF database MAC information.
 func (s Service) SisfDBMac(ctx context.Context) (*model.ClientOperSisfDBMacResponse, error) {
-	var out model.ClientOperSisfDBMacResponse
-	return &out, s.c.Do(ctx, http.MethodGet, SisfDBMacEndpoint, &out)
+	return core.Get[model.ClientOperSisfDBMacResponse](ctx, s.c, SisfDBMacEndpoint)
 }
 
 // DcInfo returns discovery client information.
 func (s Service) DcInfo(ctx context.Context) (*model.ClientOperDcInfoResponse, error) {
-	var out model.ClientOperDcInfoResponse
-	return &out, s.c.Do(ctx, http.MethodGet, DcInfoEndpoint, &out)
+	return core.Get[model.ClientOperDcInfoResponse](ctx, s.c, DcInfoEndpoint)
 }

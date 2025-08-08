@@ -2,7 +2,6 @@ package dot11
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns 802.11 configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.Dot11CfgResponse, error) {
-	var result model.Dot11CfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, Dot11CfgEndpoint, &result)
+	return core.Get[model.Dot11CfgResponse](ctx, s.c, Dot11CfgEndpoint)
 }

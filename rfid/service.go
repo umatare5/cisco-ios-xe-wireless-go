@@ -2,7 +2,6 @@ package rfid
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns RFID configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.RfidCfgResponse, error) {
-	var result model.RfidCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, RfidCfgEndpoint, &result)
+	return core.Get[model.RfidCfgResponse](ctx, s.c, RfidCfgEndpoint)
 }

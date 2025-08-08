@@ -2,7 +2,6 @@ package nmsp
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -34,24 +33,20 @@ func NewService(c *core.Client) Service {
 
 // Oper returns NMSP operational data.
 func (s Service) Oper(ctx context.Context) (*model.NmspOperResponse, error) {
-	var out model.NmspOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, NmspOperEndpoint, &out)
+	return core.Get[model.NmspOperResponse](ctx, s.c, NmspOperEndpoint)
 }
 
 // ClientRegistration returns NMSP client registration data.
 func (s Service) ClientRegistration(ctx context.Context) (*model.NmspClientRegistrationResponse, error) {
-	var out model.NmspClientRegistrationResponse
-	return &out, s.c.Do(ctx, http.MethodGet, ClientRegistrationEndpoint, &out)
+	return core.Get[model.NmspClientRegistrationResponse](ctx, s.c, ClientRegistrationEndpoint)
 }
 
 // CmxConnection returns NMSP CMX connection data.
 func (s Service) CmxConnection(ctx context.Context) (*model.NmspCmxConnectionResponse, error) {
-	var out model.NmspCmxConnectionResponse
-	return &out, s.c.Do(ctx, http.MethodGet, CmxConnectionEndpoint, &out)
+	return core.Get[model.NmspCmxConnectionResponse](ctx, s.c, CmxConnectionEndpoint)
 }
 
 // CmxCloudInfo returns NMSP CMX cloud information.
 func (s Service) CmxCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfoResponse, error) {
-	var out model.NmspCmxCloudInfoResponse
-	return &out, s.c.Do(ctx, http.MethodGet, CmxCloudInfoEndpoint, &out)
+	return core.Get[model.NmspCmxCloudInfoResponse](ctx, s.c, CmxCloudInfoEndpoint)
 }

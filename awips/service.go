@@ -2,7 +2,6 @@ package awips
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Oper returns AWIPS operational data.
 func (s Service) Oper(ctx context.Context) (*model.AwipsOperResponse, error) {
-	var result model.AwipsOperResponse
-	return &result, s.c.Do(ctx, http.MethodGet, AwipsOperEndpoint, &result)
+	return core.Get[model.AwipsOperResponse](ctx, s.c, AwipsOperEndpoint)
 }

@@ -2,7 +2,6 @@ package fabric
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns Fabric configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.FabricCfgResponse, error) {
-	var result model.FabricCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, FabricCfgEndpoint, &result)
+	return core.Get[model.FabricCfgResponse](ctx, s.c, FabricCfgEndpoint)
 }

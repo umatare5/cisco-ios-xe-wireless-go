@@ -2,7 +2,6 @@ package dot15
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns 802.15 configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.Dot15CfgResponse, error) {
-	var result model.Dot15CfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, Dot15CfgEndpoint, &result)
+	return core.Get[model.Dot15CfgResponse](ctx, s.c, Dot15CfgEndpoint)
 }

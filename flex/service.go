@@ -2,7 +2,6 @@ package flex
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -28,6 +27,5 @@ func NewService(client *core.Client) Service {
 
 // Cfg returns FlexConnect configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.FlexCfgResponse, error) {
-	var result model.FlexCfgResponse
-	return &result, s.c.Do(ctx, http.MethodGet, FlexCfgEndpoint, &result)
+	return core.Get[model.FlexCfgResponse](ctx, s.c, FlexCfgEndpoint)
 }
