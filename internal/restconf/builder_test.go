@@ -402,15 +402,15 @@ func TestConstants(t *testing.T) {
 
 	// Test YANG model constants
 	expectedPrefix := "Cisco-IOS-XE-wireless-"
-	if YANGModelPrefix != expectedPrefix {
-		t.Errorf("YANGModelPrefix = %q, want %q", YANGModelPrefix, expectedPrefix)
+	if RestconfYANGModelPrefix != expectedPrefix {
+		t.Errorf("RestconfYANGModelPrefix = %q, want %q", RestconfYANGModelPrefix, expectedPrefix)
 	}
 
-	if YANGModelOperSuffix != "-oper" {
-		t.Errorf("YANGModelOperSuffix = %q, want %q", YANGModelOperSuffix, "-oper")
+	if RestconfYANGModelOperSuffix != "-oper" {
+		t.Errorf("RestconfYANGModelOperSuffix = %q, want %q", RestconfYANGModelOperSuffix, "-oper")
 	}
 
-	if YANGModelCfgSuffix != "-cfg" {
-		t.Errorf("YANGModelCfgSuffix = %q, want %q", YANGModelCfgSuffix, "-cfg")
+	if RestconfYANGModelCfgSuffix != "-cfg" {
+		t.Errorf("RestconfYANGModelCfgSuffix = %q, want %q", RestconfYANGModelCfgSuffix, "-cfg")
 	}
 }

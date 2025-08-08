@@ -34,22 +34,22 @@ const (
 
 // YANG model validation constants
 const (
-	// YANGModelPrefix is the expected prefix for Cisco wireless YANG models
-	YANGModelPrefix = "Cisco-IOS-XE-wireless-"
-	// YANGModelOperSuffix is the suffix for operational YANG models
-	YANGModelOperSuffix = "-oper"
-	// YANGModelCfgSuffix is the suffix for configuration YANG models
-	YANGModelCfgSuffix = "-cfg"
+	// RestconfYANGModelPrefix is the expected prefix for Cisco wireless YANG models
+	RestconfYANGModelPrefix = "Cisco-IOS-XE-wireless-"
+	// RestconfYANGModelOperSuffix is the suffix for operational YANG models
+	RestconfYANGModelOperSuffix = "-oper"
+	// RestconfYANGModelCfgSuffix is the suffix for configuration YANG models
+	RestconfYANGModelCfgSuffix = "-cfg"
 )
 
 // Common YANG model patterns
 const (
 	// CiscoIOSXEWirelessPrefix is the common prefix for all wireless YANG models
-	CiscoIOSXEWirelessPrefix = YANGModelPrefix
+	CiscoIOSXEWirelessPrefix = RestconfYANGModelPrefix
 	// OperDataSuffix is the common suffix for operational data endpoints
-	OperDataSuffix = YANGModelOperSuffix + "-data"
+	OperDataSuffix = RestconfYANGModelOperSuffix + "-data"
 	// CfgDataSuffix is the common suffix for configuration data endpoints
-	CfgDataSuffix = YANGModelCfgSuffix + "-data"
+	CfgDataSuffix = RestconfYANGModelCfgSuffix + "-data"
 )
 
 // Builder provides utility functions for building WNC RESTCONF API URLs
@@ -114,13 +114,13 @@ func IsValidYANGModel(yangModelName string) bool {
 
 // hasValidYANGPrefix checks if model name has required Cisco prefix
 func hasValidYANGPrefix(yangModelName string) bool {
-	return strings.HasPrefix(yangModelName, YANGModelPrefix)
+	return strings.HasPrefix(yangModelName, RestconfYANGModelPrefix)
 }
 
 // hasValidYANGSuffix checks if model name has valid operational or configuration suffix
 func hasValidYANGSuffix(yangModelName string) bool {
-	return strings.HasSuffix(yangModelName, YANGModelOperSuffix) ||
-		strings.HasSuffix(yangModelName, YANGModelCfgSuffix)
+	return strings.HasSuffix(yangModelName, RestconfYANGModelOperSuffix) ||
+		strings.HasSuffix(yangModelName, RestconfYANGModelCfgSuffix)
 }
 
 // IsValidRevision checks if the revision follows YYYY-MM-DD format

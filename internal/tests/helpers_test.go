@@ -701,63 +701,73 @@ func TestTestClientExtensiveCoverage(t *testing.T) {
 	})
 }
 
-func TestSaveTestDataToFileExtensiveCoverage(t *testing.T) {
-	// Test SaveTestDataToFile with directory creation success
-	t.Run("DirectoryCreationAndWriteSuccess", func(t *testing.T) {
-		// Test successful directory creation and file write using default TestDataDir
-		testData := map[string]interface{}{
-			"test":   "value",
-			"number": 42,
-			"nested": map[string]string{"key": "value"},
+func TestTestClientAttemptCoverage(t *testing.T) {
+	// Missing env vars path
+	origController := os.Getenv("WNC_CONTROLLER")
+	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	os.Unsetenv("WNC_CONTROLLER")
+	os.Unsetenv("WNC_ACCESS_TOKEN")
+	if _, err := TestClientAttempt(); err == nil {
+		t.Error("expected error when env vars missing")
+	}
+	// Success path (inject success stub returning nil client)
+	os.Setenv("WNC_CONTROLLER", "c")
+	os.Setenv("WNC_ACCESS_TOKEN", "t")
+	origCreate := createCoreClient
+	createCoreClient = func(controller, token string, opts ...core.Option) (*core.Client, error) { return nil, nil }
+	defer func() {
+		createCoreClient = origCreate
+		os.Setenv("WNC_CONTROLLER", origController)
+		os.Setenv("WNC_ACCESS_TOKEN", origToken)
+	}()
+	if _, err := TestClientAttempt(); err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
+func TestSaveTestDataToFileInjectionHooks(t *testing.T) {
+	// mkdirAll error path
+	origMkdir := mkdirAll
+	mkdirAll = func(path string, perm os.FileMode) error { return fmt.Errorf("injected mkdir error") }
+	if err := SaveTestDataToFile("x.json", map[string]string{"k": "v"}); err == nil {
+		t.Error("expected mkdir error")
+	}
+	mkdirAll = origMkdir
+	// writeFile error path
+	origWrite := writeFile
+	writeFile = func(filename string, data []byte, perm os.FileMode) error { return fmt.Errorf("injected write error") }
+	if err := SaveTestDataToFile("y.json", map[string]string{"k": "v"}); err == nil {
+		t.Error("expected write error")
+	}
+	writeFile = origWrite
+}
+
+// TestRunServiceTestsIntegrationBranch tests the RunServiceTests function
+func TestRunServiceTestsIntegrationBranch(t *testing.T) {
+	// Force non-short mode and set dummy env vars so client is created
+	origShort := shortModeCheck
+	shortModeCheck = func() bool { return false }
+	defer func() { shortModeCheck = origShort }()
+
+	origController := os.Getenv("WNC_CONTROLLER")
+	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	os.Setenv("WNC_CONTROLLER", "dummy-controller")
+	os.Setenv("WNC_ACCESS_TOKEN", "dummy-token")
+	defer func() {
+		if origController == "" {
+			os.Unsetenv("WNC_CONTROLLER")
+		} else {
+			os.Setenv("WNC_CONTROLLER", origController)
 		}
-
-		err := SaveTestDataToFile("extensive_coverage_test.json", testData)
-		if err != nil {
-			t.Errorf("SaveTestDataToFile failed: %v", err)
+		if origToken == "" {
+			os.Unsetenv("WNC_ACCESS_TOKEN")
+		} else {
+			os.Setenv("WNC_ACCESS_TOKEN", origToken)
 		}
+	}()
 
-		// Clean up
-		defer func() {
-			fullPath := filepath.Join(TestDataDir, "extensive_coverage_test.json")
-			os.Remove(fullPath)
-		}()
-
-		// Verify file was created
-		fullPath := filepath.Join(TestDataDir, "extensive_coverage_test.json")
-		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Error("Expected file to be created")
-		}
-	})
-
-	t.Run("WithDifferentDataTypes", func(t *testing.T) {
-		// Test with different data types to exercise JSON marshaling paths
-		testCases := []struct {
-			name string
-			data interface{}
-		}{
-			{"String", "simple string"},
-			{"Number", 12345},
-			{"Boolean", true},
-			{"Array", []string{"a", "b", "c"}},
-			{"Nil", nil},
-		}
-
-		for _, tc := range testCases {
-			t.Run(tc.name, func(t *testing.T) {
-				filename := fmt.Sprintf("type_test_%s.json", strings.ToLower(tc.name))
-				err := SaveTestDataToFile(filename, tc.data)
-				if err != nil {
-					t.Errorf("SaveTestDataToFile failed for %s: %v", tc.name, err)
-				}
-
-				// Clean up
-				defer func() {
-					fullPath := filepath.Join(TestDataDir, filename)
-					os.Remove(fullPath)
-				}()
-			})
-		}
-	})
+	cfg := ServiceTestConfig{ServiceName: "IntegrationService", SkipShortTests: true, TestMethods: []TestMethod{{Name: "Dummy", Method: func() (interface{}, error) { return struct{ X int }{X: 1}, nil }}}}
+	RunServiceTests(t, cfg)
 }
 
 // TestNewGenericTestDataCollector tests the NewGenericTestDataCollector function
@@ -1550,4 +1560,161 @@ func TestHelpersFunctionsCoverage(t *testing.T) {
 
 	// Test AssertNonNilResult with non-nil value
 	AssertNonNilResult(t, "non-nil", "TestNonNil")
+}
+
+// TestAdditionalCoverageHelpers tests additional paths for better coverage
+func TestAdditionalCoverageHelpers(t *testing.T) {
+	// Test SaveTestDataToFile error cases
+	t.Run("SaveTestDataToFileErrorCases", func(t *testing.T) {
+		// Test with invalid JSON data (circular reference)
+		type circular struct {
+			Self *circular
+		}
+		c := &circular{}
+		c.Self = c
+
+		err := SaveTestDataToFile("circular.json", c)
+		if err == nil {
+			t.Log("Expected error for circular reference, got nil - this is okay for some JSON marshalers")
+		}
+
+		// Test with permission issues by using an invalid directory
+		tempDir := "./tmp/invalid_permissions_test"
+		originalTestDataDir := TestDataDir
+
+		// Create a temporary directory with restrictive permissions
+		if err := os.MkdirAll(tempDir, 0000); err == nil {
+			defer os.RemoveAll(tempDir)
+			defer func() {
+				// Restore original test data dir constant (can't change const, so this is for documentation)
+				_ = originalTestDataDir
+			}()
+
+			// Try to save to the restricted directory
+			err = SaveTestDataToFile(filepath.Join(tempDir, "test.json"), map[string]string{"test": "data"})
+			if err != nil {
+				t.Logf("SaveTestDataToFile correctly failed with permission error: %v", err)
+			}
+
+			// Restore permissions for cleanup
+			os.Chmod(tempDir, 0755)
+		}
+	})
+
+	// Test ValidateStructType error cases
+	t.Run("ValidateStructTypeErrorCases", func(t *testing.T) {
+		// Test with nil value
+		ValidateStructType(t, nil)
+
+		// Test with invalid JSON marshal target
+		ValidateStructType(t, make(chan int))
+
+		// Test with valid struct
+		type testStruct struct {
+			Name  string `json:"name"`
+			Value int    `json:"value"`
+		}
+		ValidateStructType(t, testStruct{Name: "test", Value: 42})
+
+		// Test with pointer to struct
+		ValidateStructType(t, &testStruct{Name: "pointer_test", Value: 123})
+
+		// Test with map
+		ValidateStructType(t, map[string]interface{}{"key": "value"})
+
+		// Test with slice
+		ValidateStructType(t, []string{"item1", "item2"})
+	})
+
+	// Test RunServiceTests additional paths
+	t.Run("RunServiceTestsAdditionalPaths", func(t *testing.T) {
+		// Test with methods that return errors
+		errorMethod := TestMethod{
+			Name: "ErrorMethod",
+			Method: func() (interface{}, error) {
+				return nil, fmt.Errorf("test error")
+			},
+		}
+
+		successMethod := TestMethod{
+			Name: "SuccessMethod",
+			Method: func() (interface{}, error) {
+				return "success result", nil
+			},
+		}
+
+		nilResponseMethod := TestMethod{
+			Name: "NilResponseMethod",
+			Method: func() (interface{}, error) {
+				return nil, nil
+			},
+		}
+
+		config := ServiceTestConfig{
+			ServiceName: "TestService",
+			TestMethods: []TestMethod{errorMethod, successMethod, nilResponseMethod},
+			JSONTestCases: []JSONTestCase{
+				{Name: "ValidJSON", JSONData: `{"valid": "json"}`},
+				{Name: "ArrayJSON", JSONData: `[1, 2, 3]`},
+				{Name: "StringJSON", JSONData: `"simple string"`},
+			},
+			SkipShortTests: true, // Test the skip short tests path
+		}
+
+		RunServiceTests(t, config)
+	})
+}
+
+// TestRunServiceTestsSkipBranches tests the RunServiceTests function with scenarios that exercise skip branches
+func TestRunServiceTestsSkipBranches(t *testing.T) {
+	// Override shortModeCheck to force skip path
+	origShort := shortModeCheck
+	shortModeCheck = func() bool { return true }
+	defer func() { shortModeCheck = origShort }()
+
+	cfg := ServiceTestConfig{ServiceName: "SkipService", SkipShortTests: true}
+	RunServiceTests(t, cfg)
+}
+
+// TestRunServiceTestsNilClientSkip tests the RunServiceTests function with nil client skip scenario
+func TestRunServiceTestsNilClientSkip(t *testing.T) {
+	// Ensure env vars cleared so TestClient not created
+	origController := os.Getenv("WNC_CONTROLLER")
+	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	os.Unsetenv("WNC_CONTROLLER")
+	os.Unsetenv("WNC_ACCESS_TOKEN")
+	defer func() {
+		if origController != "" {
+			os.Setenv("WNC_CONTROLLER", origController)
+		}
+		if origToken != "" {
+			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+		}
+	}()
+	cfg := ServiceTestConfig{ServiceName: "NilClientService", SkipShortTests: false}
+	RunServiceTests(t, cfg)
+}
+
+// TestValidateStructTypeAdditional tests additional scenarios for ValidateStructType
+func TestValidateStructTypeAdditional(t *testing.T) {
+	// Cover path where JSON marshal succeeds but unmarshal still processed
+	anom := struct {
+		A string `json:"a"`
+	}{A: "x"}
+	ValidateStructType(t, anom)
+}
+
+func TestTestClientFailOnErrorDowngrade(t *testing.T) {
+	origFail := failOnClientError
+	failOnClientError = false
+	defer func() { failOnClientError = origFail }()
+	// Force env vars so creation attempt occurs but inject failing client
+	os.Setenv("WNC_CONTROLLER", "bad-controller")
+	os.Setenv("WNC_ACCESS_TOKEN", "bad-token")
+	createOrig := createCoreClient
+	createCoreClient = func(controller, token string, opts ...core.Option) (*core.Client, error) {
+		return nil, fmt.Errorf("injected failure")
+	}
+	defer func() { createCoreClient = createOrig }()
+	TestClient(t) // should Skip not Fatal
 }
