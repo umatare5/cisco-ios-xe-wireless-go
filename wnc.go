@@ -2,6 +2,9 @@
 package wnc
 
 import (
+	"log/slog"
+	"time"
+
 	"github.com/umatare5/cisco-ios-xe-wireless-go/afc"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/apf"
@@ -57,13 +60,44 @@ type Client struct {
 
 // NewClient creates a new unified WNC client with the specified host, token, and options.
 // This is the main entry point for all wireless controller operations.
-func NewClient(host, token string, opts ...core.Option) (*Client, error) {
+func NewClient(host, token string, opts ...Option) (*Client, error) {
 	coreClient, err := core.New(host, token, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &Client{core: coreClient}, nil
 }
+
+// Option is a functional option for configuring the unified client (re-export of internal core.Option).
+// This allows end users to supply options without importing the internal/core package.
+type Option = core.Option
+
+// WithTimeout sets the request timeout (re-export wrapper).
+func WithTimeout(d time.Duration) Option { return core.WithTimeout(d) }
+
+// WithInsecureSkipVerify controls TLS certificate verification (lab/testing only).
+func WithInsecureSkipVerify(skip bool) Option { return core.WithInsecureSkipVerify(skip) }
+
+// WithLogger sets a custom slog.Logger.
+func WithLogger(l *slog.Logger) Option { return core.WithLogger(l) }
+
+// WithUserAgent sets a custom User-Agent header value.
+func WithUserAgent(ua string) Option { return core.WithUserAgent(ua) }
+
+// DefaultTimeout is the default request timeout (re-export of core.DefaultTimeout).
+const DefaultTimeout = core.DefaultTimeout
+
+// Error sentinels re-exported for consumer side error handling with errors.Is.
+var (
+	ErrAuthenticationFailed = core.ErrAuthenticationFailed
+	ErrAccessForbidden      = core.ErrAccessForbidden
+	ErrResourceNotFound     = core.ErrResourceNotFound
+	ErrInvalidConfiguration = core.ErrInvalidConfiguration
+	ErrRequestTimeout       = core.ErrRequestTimeout
+)
+
+// APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
+type APIError = core.APIError
 
 // Core returns the underlying core.Client for advanced use cases.
 // This should typically not be needed for normal usage.

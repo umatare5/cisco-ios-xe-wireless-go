@@ -2,10 +2,10 @@ package wnc
 
 import (
 	"context"
+	"io"
+	"log/slog"
 	"testing"
 	"time"
-
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 )
 
 // TestNewClient tests the creation of a new unified client
@@ -14,7 +14,7 @@ func TestNewClient(t *testing.T) {
 		name        string
 		host        string
 		token       string
-		opts        []core.Option
+		opts        []Option
 		expectError bool
 	}{
 		{
@@ -28,7 +28,7 @@ func TestNewClient(t *testing.T) {
 			name:        "ValidClientWithOptions",
 			host:        "192.168.1.100",
 			token:       "YWRtaW46cGFzc3dvcmQ=", // base64 encoded "admin:password"
-			opts:        []core.Option{core.WithTimeout(30 * time.Second), core.WithInsecureSkipVerify(true)},
+			opts:        []Option{WithTimeout(30 * time.Second), WithInsecureSkipVerify(true)},
 			expectError: false,
 		},
 		{
@@ -132,8 +132,8 @@ func TestClientCore(t *testing.T) {
 func TestUnifiedClientUsage(t *testing.T) {
 	// This test demonstrates the usage pattern without making real API calls
 	client, err := NewClient("controller.example.com", "dGVzdDp0ZXN0",
-		core.WithTimeout(30*time.Second),
-		core.WithInsecureSkipVerify(true))
+		WithTimeout(30*time.Second),
+		WithInsecureSkipVerify(true))
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
@@ -158,4 +158,20 @@ func TestUnifiedClientUsage(t *testing.T) {
 	// apData, err := apService.Oper(ctx)
 
 	_ = ctx // Use ctx to avoid unused variable warning
+}
+
+// TestOptionWrappers ensures wrapper options (WithLogger, WithUserAgent) apply without error.
+func TestOptionWrappers(t *testing.T) {
+	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
+	c, err := NewClient("controller.example.com", "dGVzdDp0ZXN0",
+		WithLogger(logger),
+		WithUserAgent("custom-agent/1.0"),
+	)
+	if err != nil {
+		// If underlying validation changes, this should still expose root cause.
+		t.Fatalf("unexpected error applying wrapper options: %v", err)
+	}
+	if c == nil {
+		t.Fatal("expected non-nil client")
+	}
 }

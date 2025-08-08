@@ -1,87 +1,93 @@
-# 📗 Cisco IOS-XE Wireless Go SDK
+# 📗 cisco-ios-xe-wireless-go - Go Library for C9800
 
-Dependency‑free (stdlib only), strongly typed Go SDK for Cisco Catalyst 9800 (IOS‑XE 17.12) wireless RESTCONF (GET only).
+![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
+[![Test and Build](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main)](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go)](https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/10969/badge)](https://www.bestpractices.dev/projects/10969)
+[![Go Reference](https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg)](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/main/LICENSE)
+[![Published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go)
 
-| Aspect           | Value                      |
-| ---------------- | -------------------------- |
-| Domains          | 25+ (oper + cfg)           |
-| Dependencies     | Stdlib only                |
-| Coverage Gate    | ≥99%                       |
-| Security Default | TLS verify ON              |
-| Layering         | Client → Services → Models |
+A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
-## 🚀 Quick Start
+- **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
+- **📊 Comprehensive Coverage**: Access most status information and metrics available from the WNC
+- **🚀 Quick Integration**: Get started in minutes with simple configuration and clear examples
+- **🎯 Type-Safe Operations**: Strongly-typed Go structs for all API interactions and responses
+- **📖 Comprehensive Documentation**: Detailed API reference, testing guides, and best practices
+
+## 📡 Supported Environment
+
+Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
+
+## 📦 Installation
 
 ```bash
 go get github.com/umatare5/cisco-ios-xe-wireless-go
-export WNC_CONTROLLER=<controller-host-or-ip>
-export WNC_ACCESS_TOKEN=$(echo -n 'admin:password' | base64)
 ```
 
-```go
-client, err := wnc.NewClient(
- os.Getenv("WNC_CONTROLLER"),
- os.Getenv("WNC_ACCESS_TOKEN"),
- wnc.WithTimeout(30*time.Second),
-)
-if err != nil { log.Fatal(err) }
-ctx := context.Background()
-gen, err := client.General().Oper(ctx)
-if err != nil { log.Fatal(err) }
-_ = gen
-```
+## 🚀 Quick Start
 
-Options: `WithTimeout(d)`, `WithInsecureSkipVerify(true)` (dev only), `WithLogger(l)`.
+### 🔑 Creating Basic Auth Token
 
-## 📚 Navigation
-
-| Topic                  | Location                        |
-| ---------------------- | ------------------------------- |
-| API overview           | `docs/api/README.md`            |
-| Core services          | `docs/api/services_core.md`     |
-| Extended services      | `docs/api/services_extended.md` |
-| Testing & coverage     | `docs/testing/`                 |
-| Security               | `docs/security/`                |
-| Scripts / YANG tooling | `docs/scripts/`                 |
-| Contributing           | `CONTRIBUTING.md`               |
-
-## 🛠 Build & Test
+You must create a Basic Auth token using your Cisco WNC credentials before using the client.
 
 ```bash
-make lint             # static analysis
-make test-unit        # unit (runs lint)
-make test-integration # live (needs env)
-make test-coverage    # merged coverage -> coverage/report.out
+# Create token for username:password
+echo -n "admin:your-password" | base64
+# Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-Integration requires: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` (base64 `user:pass`).
+### Basic Usage
 
-## 🔧 Service Call Pattern
+Start with this simple example to verify your WNC connection and credentials.
 
-Each service exposes `Oper(ctx)` (plus domain specific variants) returning typed YANG‑aligned structs. Shared HTTP + decode lives in internal `core.Get[T]`.
+```go
+package main
 
-## ✅ Policies
+import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 
-| Area        | Rule                                      |
-| ----------- | ----------------------------------------- |
-| Errors      | Wrap context (`fmt.Errorf("x: %w", err)`) |
-| Panics      | None in library code                      |
-| Logging     | Only via user supplied logger             |
-| Third‑Party | Forbidden (stdlib only)                   |
-| Coverage    | ≥99% before merge                         |
+func main() {
+    // Load environment variables
+    controller := os.Getenv("WNC_CONTROLLER")
+    token := os.Getenv("WNC_ACCESS_TOKEN")
 
-## 📊 Coverage
+    // Create client
+    client, err := wnc.NewClient(controller, token,
+        wnc.WithTimeout(30*time.Second),
+        wnc.WithInsecureSkipVerify(true), // remove for production
+    )
 
-Artifact: `coverage/report.out` (`make test-coverage`).
+    // Create simple context with timeout
+    ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+    defer cancel()
 
-## 🔍 Additional (Collapsed)
+    // Request AP operational data
+    apData, err := client.AP().Oper(ctx)
+    if err != nil {
+        fmt.Fprintln(os.Stderr, "AP oper request:", err)
+        os.Exit(1)
+    }
 
-<details><summary>Design & tips</summary>
+    // Print AP operational data
+    fmt.Printf("Successfully connected! Found %d APs\n",
+        len(apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.OperData)
+    )
+}
+```
 
-YANG optional leaves → pointer fields: always nil‑check. Prefer one long‑lived client (connection reuse). Use context deadlines for every call. Avoid disabling TLS verify outside development.
+## 🌐 API Reference
 
-</details>
+The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see **[API_REFERENCE.md](./docs/API_REFERENCE.md)**.
+
+## 🤝 Contributing
+
+We welcome contributions to this project! Please see our **[CONTRIBUTING.md](./docs/CONTRIBUTING.md)** for guidelines on how to contribute.
+
+## 🙏 Acknowledgments
+
+This code was developed with the assistance of **GitHub Copilot Agent Mode**. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
 
 ## 📄 License
 
-MIT (see `LICENSE`).
+Please see the [LICENSE](./LICENSE) file for details.

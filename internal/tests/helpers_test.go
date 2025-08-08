@@ -184,6 +184,61 @@ func TestTestClient(t *testing.T) {
 	})
 }
 
+// Additional coverage-focused tests for TestClient helper edge branches.
+func TestTestClient_AdditionalBranches(t *testing.T) {
+	// Preserve globals & env.
+	origController, origToken := os.Getenv("WNC_CONTROLLER"), os.Getenv("WNC_ACCESS_TOKEN")
+	origCreate := createCoreClient
+	origFail := failOnClientError
+	origSim := simulateFatalAsLog
+	t.Cleanup(func() {
+		if origController == "" {
+			os.Unsetenv("WNC_CONTROLLER")
+		} else {
+			os.Setenv("WNC_CONTROLLER", origController)
+		}
+		if origToken == "" {
+			os.Unsetenv("WNC_ACCESS_TOKEN")
+		} else {
+			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+		}
+		createCoreClient = origCreate
+		failOnClientError = origFail
+		simulateFatalAsLog = origSim
+	})
+
+	t.Run("SkipPathMissingEnv", func(t *testing.T) {
+		os.Unsetenv("WNC_CONTROLLER")
+		os.Unsetenv("WNC_ACCESS_TOKEN")
+		// This directly exercises the early skip branch inside TestClient.
+		_ = TestClient(t) // coverage of skip path; result ignored
+	})
+
+	t.Run("SimulatedFatalErrorPath", func(t *testing.T) {
+		os.Setenv("WNC_CONTROLLER", "ctrl.example.test")
+		os.Setenv("WNC_ACCESS_TOKEN", "tok")
+		// Force client creation error.
+		createCoreClient = func(controller, token string, opts ...core.Option) (*core.Client, error) {
+			return nil, errors.New("injected failure")
+		}
+		failOnClientError = true
+		simulateFatalAsLog = true // avoid real fatal, take logging branch
+		if c := TestClient(t); c != nil {
+			t.Fatalf("expected nil client on injected failure, got %v", c)
+		}
+	})
+
+	t.Run("SkipOnFailureWhenFailDisabled", func(t *testing.T) {
+		os.Setenv("WNC_CONTROLLER", "ctrl.example.test")
+		os.Setenv("WNC_ACCESS_TOKEN", "tok")
+		createCoreClient = func(controller, token string, opts ...core.Option) (*core.Client, error) {
+			return nil, errors.New("injected failure 2")
+		}
+		failOnClientError = false // triggers skip downgrade path
+		_ = TestClient(t)         // exercise branch; skip expected
+	})
+}
+
 // TestOptionalTestClient verifies OptionalTestClient behaviors.
 func TestOptionalTestClient(t *testing.T) {
 	originalController := os.Getenv("WNC_CONTROLLER")

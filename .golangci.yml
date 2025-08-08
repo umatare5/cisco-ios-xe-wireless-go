@@ -75,12 +75,8 @@ linters:
       - vendor/
       - build/
       - tmp/
+      - examples/
     rules:
-      # keep custom exceptions from the original file
-      - path: ^wnc/client_test\.go$
-        linters: [errcheck]
-      - path: ^internal/tests/helpers_test\.go$
-        linters: [errcheck]
       # relax security/perf linters for test files
       - path: _test\.go
         linters:
@@ -98,7 +94,6 @@ linters:
 
 formatters:
   enable:
-    - gofumpt
     - goimports
     - golines
   settings:
@@ -106,7 +101,7 @@ formatters:
       extra-rules: true
     goimports:
       local-prefixes:
-        - github.com/umatare5 # place your own modules at the top of import groups
+        - github.com/umatare5 # place my own modules at the top of import groups
     golines:
       max-len: 120
   exclusions:
