@@ -18,25 +18,25 @@ validate_yang_environment() {
     local controller="$1"
     local token="$2"
 
-    # Check if controller is specified
+    # Missing controller -> hard error
     if [[ -z "$controller" ]]; then
-        format_yang_warning "No controller specified - skipping YANG operation"
-        return 2  # special skip code
+        format_yang_error "Missing controller: set WNC_CONTROLLER or use --controller"
+        return 1
     fi
 
-    # Check if token is available
+    # Missing token -> hard error
     if [[ -z "$token" ]]; then
-        format_yang_warning "No authentication token provided - skipping YANG operation"
-        return 2
+        format_yang_error "Missing authentication token: set WNC_ACCESS_TOKEN or use --token"
+        return 1
     fi
 
-    # Check if curl is available
+    # curl required
     if ! is_command_available curl; then
         format_yang_error "curl is not installed or not in PATH"
         return 1
     fi
 
-    # Check if jq is available for JSON processing
+    # jq optional (warn only for formatting)
     if [[ "${argc_format:-json}" == "json" ]] && ! is_command_available jq; then
         format_yang_warning "jq is not installed - JSON output will not be formatted"
     fi
@@ -147,15 +147,8 @@ run_yang_list_operation() {
     show_yang_banner
     show_yang_verbose_info
 
-    # Validate environment
-    if ! validate_yang_environment "$controller" "$token"; then
-        local env_code=$?
-        if [[ $env_code -eq 2 ]]; then
-            format_yang_info "YANG list skipped (environment not configured)"
-            return 0
-        fi
-        return 1
-    fi
+    # Validate environment (hard error on missing env vars)
+    validate_yang_environment "$controller" "$token" || return 1
 
     # Build URL for model listing
     local url
@@ -193,15 +186,8 @@ run_yang_get_model_operation() {
     show_yang_banner
     show_yang_verbose_info
 
-    # Validate environment
-    if ! validate_yang_environment "$controller" "$token"; then
-        local env_code=$?
-        if [[ $env_code -eq 2 ]]; then
-            format_yang_info "YANG model retrieval skipped (environment not configured)"
-            return 0
-        fi
-        return 1
-    fi
+    # Validate environment (hard error on missing env vars)
+    validate_yang_environment "$controller" "$token" || return 1
 
     # Build URL for specific model
     local url
@@ -239,15 +225,8 @@ run_yang_get_statement_operation() {
     show_yang_banner
     show_yang_verbose_info
 
-    # Validate environment
-    if ! validate_yang_environment "$controller" "$token"; then
-        local env_code=$?
-        if [[ $env_code -eq 2 ]]; then
-            format_yang_info "YANG statement retrieval skipped (environment not configured)"
-            return 0
-        fi
-        return 1
-    fi
+    # Validate environment (hard error on missing env vars)
+    validate_yang_environment "$controller" "$token" || return 1
 
     # Build URL for specific statement
     local url
