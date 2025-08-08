@@ -35,3 +35,11 @@ Unexpected unmarshal errors may indicate model changes → investigate before wo
 ## Validation
 
 Fail fast on missing env; surface config errors early.
+
+## 🔽 Additional (Collapsed)
+
+<details><summary>Other considerations</summary>
+
+Monitor Go CVEs quarterly. Keep fixture data minimal to reduce exposure. Audit for accidental token prints in CI logs.
+
+</details>

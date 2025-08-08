@@ -1,6 +1,6 @@
 # 📚 API Reference
 
-Primary detail lives in `docs/api/`. This page is a fast map.
+Fast map. Full detail under `docs/api/`.
 
 | Topic | Path |
 |-------|------|
@@ -17,11 +17,11 @@ resp, _ := client.General().Oper(ctx)
 _ = resp
 ```
 
-## 🔍 Notes (Collapsed)
+## � Additional (Collapsed)
 
-<details><summary>Design details</summary>
+<details><summary>Design notes</summary>
 
-All simple GETs route through `core.Get[T]` for HTTP + JSON decode. Models mirror YANG; optional leaves are pointers. Reuse a single client instance for connection reuse.
+`core.Get[T]` centralizes HTTP + JSON decode. Models mirror YANG; optional leaves are pointers (nil‑check). Reuse a single client instance.
 
 </details>
 

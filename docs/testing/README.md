@@ -42,37 +42,12 @@ var nilCtx context.Context
 _, err := client.AP().Oper(nilCtx)
 ```
 
-## Data Capture
+## 🔽 Additional (Collapsed)
 
-Integration saves JSON under each service `test_data/`.
+<details><summary>Data & sequence</summary>
 
-## Coverage
-
-Gate: reject <99% total. Inspect:
-
-```bash
-go tool cover -func=./tmp/coverage.out | grep -v 100.0%
-```
-
-## Sequence
-
-1. Lint & unit
-2. Export env
-3. Integration
-4. Coverage HTML
-
-## Errors
-
-Always wrap: `fmt.Errorf("context: %w", err)`.
-
-## Context
-
-Use per test deadline contexts; avoid global timeouts.
-
-## Storage
-
-Only commit deterministic fixtures; exclude volatile data.
-
-## Next
+Fixtures: integration saves JSON under each service `test_data/`. Coverage gate: reject <99%. Inspect with `go tool cover -func=./tmp/coverage.out | grep -v 100.0%`. Sequence: lint/unit → export env → integration → coverage HTML. Wrap errors: `fmt.Errorf("context: %w", err)`. Use per test deadline contexts; avoid global timeouts. Only commit deterministic fixtures.
 
 See `details_unit.md`, `details_integration.md` for deeper patterns.
+
+</details>

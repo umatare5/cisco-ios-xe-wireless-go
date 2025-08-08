@@ -7,7 +7,6 @@ Less frequent operational domains.
 | AFC | `Oper` | CleanAir / RF analytics |
 | APF | `Oper` | AP filter groups |
 | APF (Flex) | `Oper` | (If model present) |
-| APF? | - | Placeholder removal if absent |
 | AWIPS | `Oper` | IPS wireless |
 | BLE | `Oper` | BLE beacons |
 | CTS | `Oper` | TrustSec |
@@ -27,8 +26,8 @@ Less frequent operational domains.
 | RF | `Oper` | RF summary |
 | RFID | `Oper` | RFID tags |
 | ROGUE | `Oper` | Expanded rogue data |
-| RRM | `Oper` | (Also core) advanced detail |
-| SITE | `Oper` | (Also core) extended tree |
+| RRM | `Oper` | Advanced detail (also core) |
+| SITE | `Oper` | Extended tree (also core) |
 
 ## 🔍 Usage
 
@@ -36,6 +35,10 @@ Less frequent operational domains.
 mesh, err := client.Mesh().Oper(ctx)
 ```
 
-## 🧪 Testing
+## 🔽 Additional (Collapsed)
 
-Prefer focused unit tests using canned JSON under `*/test_data/`.
+<details><summary>Testing & notes</summary>
+
+Prefer focused unit tests using canned JSON under each service `test_data/` directory. Keep large fixtures trimmed to stable fields to reduce churn.
+
+</details>

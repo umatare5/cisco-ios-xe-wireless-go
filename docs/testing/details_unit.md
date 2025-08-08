@@ -21,48 +21,39 @@
 
 ```go
 func TestRadioOper(t *testing.T) {
-    c := tests.TestClient(t)
-    ctx := context.Background()
-    got, err := c.Radio().Oper(ctx)
-    if err != nil { t.Fatalf("oper: %v", err) }
-    if got == nil { t.Fatal("nil resp") }
+  c := tests.TestClient(t)
+  ctx := context.Background()
+  got, err := c.Radio().Oper(ctx)
+  if err != nil { t.Fatalf("oper: %v", err) }
+  if got == nil { t.Fatal("nil resp") }
 }
 ```
 
-## Nil Context
+## 🔽 Additional (Collapsed)
+
+<details><summary>Nil, tables, marshalling</summary>
+
+Nil context:
 
 ```go
 var nilCtx context.Context
 _, err := c.Radio().Oper(nilCtx)
-if err == nil { t.Fatal("expected err") }
 ```
 
-## Table Tests
-
-Prefer consistent naming:
+Table tests:
 
 ```go
-cases := []struct{ name string; fn func(context.Context) error }{
-  {"oper", func(ctx context.Context) error { _, e := s.Oper(ctx); return e }},
-}
-for _, tc := range cases {
-  t.Run(tc.name, func(t *testing.T){ if err := tc.fn(ctx); err!=nil { t.Fatal(err) } })
-}
+cases := []struct{ name string; fn func(context.Context) error }{{"oper", func(ctx context.Context) error { _, e := s.Oper(ctx); return e }}}
+for _, tc := range cases { t.Run(tc.name, func(t *testing.T){ if err := tc.fn(ctx); err!=nil { t.Fatal(err) } }) }
 ```
 
-## Fail Fast
-
-Use `t.Fatalf` for setup errors, `t.Errorf` for per‑assert issues.
-
-## Marshalling
-
-Round‑trip where useful:
+Marshalling sanity:
 
 ```go
 b, _ := json.Marshal(got)
 if !bytes.Contains(b, []byte("radio")) { t.Log("sanity") }
 ```
 
-## Skips
+Fail fast: `t.Fatalf` for setup; `t.Errorf` for assertions. No silent skips; unit tests ignore env.
 
-Integration‑only logic MUST NOT silently skip; unit tests never depend on env.
+</details>

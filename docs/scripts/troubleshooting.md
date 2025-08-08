@@ -17,6 +17,10 @@ Add `-v` to show request targets.
 
 0 success, 1 validation/auth, 2 network, 3 parse.
 
-## Redaction
+## 🔽 Additional (Collapsed)
 
-Scripts never echo token; sanitize logs.
+<details><summary>Security</summary>
+
+Scripts never echo the token; sanitize any copied logs. Avoid pasting tokens into terminals with history collection.
+
+</details>

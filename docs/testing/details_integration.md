@@ -17,36 +17,12 @@ resp, err := c.General().Oper(ctx)
 if err != nil { t.Fatalf("general oper: %v", err) }
 ```
 
-## Data Files
+## 🔽 Additional (Collapsed)
 
-Saved under `<service>/test_data/` for: regression, offline dev, drift detection.
+<details><summary>Fixtures & practices</summary>
 
-## Timeouts
-
-Short deadlines (≤30s). Avoid global cancellations.
-
-## Failure Handling
-
-Log context, do not panic. Continue other services.
-
-## Selective Runs
-
-```bash
-go test -run TestGeneralIntegration ./general
-```
-
-## Updating Fixtures
-
-Manually inspect before commit; remove volatile fields if needed.
-
-## Drift Detection
-
-Schema change causes unmarshal errors → investigate YANG diff.
-
-## Security
-
-Never print token; redact on failure logs.
-
-## Next
+Data files: `<service>/test_data/` (regression, drift detection). Timeouts: short (≤30s); avoid globals. Failures: log context, continue. Selective runs: `go test -run TestGeneralIntegration ./general`. Update fixtures: inspect, strip volatile fields. Drift: unmarshal errors may signal YANG revision changes. Security: never print token.
 
 See `../security/` for auth/TLS guidance.
+
+</details>

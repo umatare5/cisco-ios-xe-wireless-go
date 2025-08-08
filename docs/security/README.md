@@ -38,24 +38,12 @@ Always set client or per‑call context deadlines.
 - Reused prod creds in dev
 - Global skip TLS
 
-## Incident (Auth)
+## 🔽 Additional (Collapsed)
 
-1. Revoke token
-2. Issue new
-3. Rotate env
-4. Audit logs
+<details><summary>Incident & checklist</summary>
 
-## Network
+Auth incident: revoke token → issue new → rotate env → audit logs. Network: restrict egress to controller:443. Checklist: TLS verify ON, token not in VCS, context deadlines used, minimum privileges.
 
-Restrict egress to controller:443.
+See also: `hardening.md`, `incident.md` for depth.
 
-## Checklist
-
-- TLS verify ON
-- Token not in VCS
-- Context deadlines used
-- Min privileges
-
-## More
-
-See `hardening.md`, `incident.md` for depth.
+</details>

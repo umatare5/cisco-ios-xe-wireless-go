@@ -20,7 +20,10 @@
 | `Cisco-IOS-XE-wireless-rf-cfg` | RF profiles |
 | `Cisco-IOS-XE-wireless-general-cfg` | Global wireless |
 
-## Revisions
+## 🔽 Additional (Collapsed)
 
-Latest default: `2023-08-01`.
-Older: `2023-07-01`, `2023-03-01`, `2022-11-01`.
+<details><summary>Revision history</summary>
+
+Latest default: `2023-08-01`. Previous: `2023-07-01`, `2023-03-01`, `2022-11-01`.
+
+</details>

@@ -25,11 +25,11 @@ Dev only insecure:
 wnc.NewClient(host, token, wnc.WithInsecureSkipVerify(true))
 ```
 
-## 🚫 Risks (Collapsed)
+## � Additional (Collapsed)
 
-<details><summary>Avoid these</summary>
+<details><summary>Risks</summary>
 
-Committing tokens, stale creds, disabling TLS verify in prod, sharing tokens across envs.
+Avoid committing tokens, stale creds, disabling TLS verify in prod, sharing tokens across environments.
 
 </details>
 

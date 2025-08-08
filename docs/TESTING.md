@@ -23,11 +23,11 @@ make test-integration  # needs env
 
 `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` (base64 `user:pass`). Missing ⇒ fail.
 
-## 🔍 Notes (Collapsed)
+## � Additional (Collapsed)
 
-<details><summary>Execution behavior</summary>
+<details><summary>Execution notes</summary>
 
-Lint precedes tests. Integration uses live GET only. Helpers in `internal/tests`.
+Lint precedes tests. Integration uses live GET only. Helpers in `internal/tests` provide context and client builders.
 
 </details>
 

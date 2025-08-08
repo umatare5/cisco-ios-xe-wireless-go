@@ -1,19 +1,19 @@
 # 🤝 Contributing
 
-Keep the SDK minimal, deterministic, secure.
+Goal: keep the SDK minimal, deterministic, secure.
 
 ## 🎯 Scope
 
-Read‑only wireless RESTCONF (IOS‑XE 17.12). Stdlib only. No write ops.
+Read‑only wireless RESTCONF (IOS‑XE 17.12). Stdlib only. No write operations.
 
 ## 🔑 Core Rules
 
 | Area | Rule |
 |------|------|
-| Public API | Add sparingly; require tests & docs |
+| Public API | Add sparingly; include tests + docs |
 | Dependencies | Stdlib only |
 | Coverage | ≥99% total (no regressions) |
-| Errors | Wrap: `fmt.Errorf("ctx: %w", err)` |
+| Errors | Wrap (`fmt.Errorf("ctx: %w", err)`) |
 | Panics | None in library code |
 | Globals | Avoid mutable state |
 | TLS | Verify ON by default |
@@ -37,11 +37,11 @@ make test-integration   # needs WNC_* env
 make test-coverage
 ```
 
-## 🧩 Services Pattern
+## 🧩 Service Pattern
 
 `Func(ctx) (*model.XResponse, error)`; basic GET uses `core.Get[T]`.
 
-## 🚨 Errors
+## 🚨 Error Messages
 
 | Case | Message Sketch |
 |------|----------------|
@@ -61,7 +61,7 @@ Missing ⇒ fail fast.
 
 ## ✅ PR Checklist
 
-Build passes • Lint clean • Tests (unit+integration) green • ≥99% coverage • Docs updated • No stray debug.
+Build passes • Lint clean • Tests green • ≥99% coverage • Docs updated • No debug leftovers.
 
 ## ✍️ Commits
 
@@ -79,14 +79,14 @@ Pagination helpers, retries, streaming endpoints, new service groups.
 
 Provide Go version, controller version, repro snippet.
 
-## 🔽 Extra (Collapsed)
+## 🔽 Additional (Collapsed)
 
 <details><summary>Extended guidance</summary>
 
-Documentation: single H1 per file. Update impacted docs with API or env changes. Prefer focused PRs. Table tests keep naming consistent. Fail early on configuration errors.
+Docs: single H1 per file. Update impacted docs with API or env changes. Prefer focused PRs. Table tests keep naming consistent. Fail early on configuration errors. Use per‑call contexts. Keep examples minimal.
 
 </details>
 
 ## 🙏 Thanks
 
-Small focused contributions are appreciated.
+Focused contributions are appreciated.

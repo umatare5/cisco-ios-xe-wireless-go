@@ -24,8 +24,8 @@ Options: timeout, insecure (dev), logger.
 
 ## 📦 Groups
 
-Core services: see `services_core.md`.
-Extended: `services_extended.md`.
+Core services: `services_core.md`
+Extended: `services_extended.md`
 
 ## 📑 Models
 
@@ -39,8 +39,14 @@ Base64 `user:pass` token. TLS verify ON by default.
 
 Use per‑call deadline contexts for cancellation.
 
-## 🔗 Related
+## � Additional (Collapsed)
 
-Testing: `../testing/`
-Security: `../security/`
-Scripts: `../scripts/`
+<details><summary>Notes</summary>
+
+Reuse a single client (connection reuse). Avoid disabling TLS outside dev. Check nil pointers for optional YANG leaves. Keep service methods thin.
+
+</details>
+
+## �🔗 Related
+
+Testing: `../testing/` · Security: `../security/` · Scripts: `../scripts/`

@@ -31,3 +31,11 @@ Document root cause, containment, follow‑ups (rotation cadence, monitoring gap
 ## Communication
 
 Limit sensitive detail; share indicators not credentials.
+
+## 🔽 Additional (Collapsed)
+
+<details><summary>Preparation tips</summary>
+
+Pre-create rotation procedure doc. Maintain minimal log retention consistent with policy. Conduct token rotation drills quarterly.
+
+</details>

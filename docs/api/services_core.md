@@ -21,10 +21,14 @@ radios, err := client.Radio().Oper(ctx)
 
 Returned slices are zero when no data (never nil).
 
-## ⚠️ Errors
-
-Wrapped with context. Test `errors.Is` on sentinel values you define (none yet exported).
-
 ## 🚫 Mutations
 
 Write (POST/PUT/PATCH/DELETE) intentionally omitted.
+
+## 🔽 Additional (Collapsed)
+
+<details><summary>Error & design notes</summary>
+
+Errors wrapped with context. If future sentinel errors are added prefer `errors.Is`. Keep methods thin; heavy logic belongs outside service wrappers.
+
+</details>

@@ -20,11 +20,11 @@ See `docs/scripts/` for full detail.
 
 `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` required (or flags). Missing ⇒ exit 1.
 
-## ℹ️ Notes (Collapsed)
+## 🔽 Additional (Collapsed)
 
 <details><summary>Runtime behavior</summary>
 
-Hard fail on missing env. Standard banners via library. Shared helpers isolated under `scripts/lib` only.
+Hard fail on missing env. Standard banners via library. Shared helpers isolated under `scripts/lib`.
 
 </details>
 

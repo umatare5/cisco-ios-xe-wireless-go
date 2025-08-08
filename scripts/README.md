@@ -53,26 +53,13 @@ Missing required env/flags ⇒ exit 1.
 | `WNC_CONTROLLER` | Host/IP |
 | `WNC_ACCESS_TOKEN` | Base64 creds |
 
-## 🧱 Architecture (Collapsed)
+## 🔽 Additional (Collapsed)
 
-<details><summary>Structure & features</summary>
+<details><summary>Architecture & troubleshooting</summary>
 
-Modular loader in `scripts/lib/` (bootstrap + core + network + output). Predicate helpers (`is_verbose_enabled`) keep conditions readable. Strict `set -euo pipefail` and explicit validation guard misuse.
+Architecture: modular loader in `scripts/lib/` (bootstrap, core, network, output, modules). Strict `set -euo pipefail`. Predicates (e.g. `is_verbose_enabled`) keep conditions readable.
 
-Structure (simplified):
-
-- `scripts/*.sh` entry points (thin)
-- `scripts/lib/bootstrap.sh` loader
-- `scripts/lib/core` predicates / constants / argc
-- `scripts/lib/network` http_client, auth, yang helpers
-- `scripts/lib/output` formatting
-- `scripts/lib/modules` (testing, lint, coverage, yang, deps, artifacts)
-
-</details>
-
-## 🐞 Troubleshooting (Collapsed)
-
-<details><summary>Common issues</summary>
+Troubleshooting:
 
 | Symptom | Fix |
 |---------|-----|
