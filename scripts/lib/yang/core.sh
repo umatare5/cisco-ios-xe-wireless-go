@@ -70,7 +70,7 @@ prepare_curl_arguments() {
     CURL_ARGS+=("-w" "%{http_code}")  # Write response code
 
     # Authentication
-    CURL_ARGS+=("-H" "Authorization: Basic $token")
+    CURL_ARGS+=("-H" "Authorization: Bearer $token")
 
     # Content type based on format
     if [[ "$format" == "json" ]]; then

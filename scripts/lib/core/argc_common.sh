@@ -41,10 +41,10 @@ EXECUTE_ARGC_CURL() {
     [[ "$insecure" == "true" ]] && curl_opts+=("-k")
 
     if [[ "$output_format" == "file" && -n "$output_file" ]]; then
-        curl -s -H "Authorization: Basic $VALIDATED_TOKEN" \
+    curl -s -H "Authorization: Bearer $VALIDATED_TOKEN" \
              "${curl_opts[@]}" "$url" -o "$output_file"
     else
-        curl -s -H "Authorization: Basic $VALIDATED_TOKEN" \
+    curl -s -H "Authorization: Bearer $VALIDATED_TOKEN" \
              "${curl_opts[@]}" "$url"
     fi
 }

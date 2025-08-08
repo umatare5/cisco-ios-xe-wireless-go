@@ -27,7 +27,7 @@ execute_curl_request() {
     # Early return for successful curl request
     if curl "${curl_args[@]}" \
         -H "accept: $accept_type_yang" \
-        -H "Authorization: Basic $token" \
+        -H "Authorization: Bearer $token" \
         "$url" \
         -o "$output_file" 2>/dev/null; then
         return 0
@@ -110,7 +110,7 @@ test_connection() {
     # Early return for successful connection test
     if curl -sS -X 'GET' "${insecure_flag}" \
         -H "accept: $accept_type_yang" \
-        -H "Authorization: Basic $token" \
+        -H "Authorization: Bearer $token" \
         "$test_url" \
         -o /dev/null 2>/dev/null; then
         return 0

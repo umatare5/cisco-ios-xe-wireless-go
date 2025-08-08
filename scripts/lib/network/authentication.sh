@@ -30,8 +30,7 @@ setup_authentication() {
         echo "  2. Set environment variable: export \\" >&2
         echo "     $env_var_access_token='your-token'" >&2
         echo "" >&2
-        echo "Generate a token using: wnc generate token \\" >&2
-        echo "  -u <username> -p <password>" >&2
+        echo "Generate a token and export WNC_ACCESS_TOKEN (Bearer token)" >&2
         exit "$exit_auth_error"
     fi
 
@@ -55,7 +54,6 @@ verify_authentication_token() {
 
     show_error "Authentication token appears to be invalid"
     echo "Please verify your token format (should be base64 encoded)" >&2
-    echo "Generate a new token using: wnc generate token \\" >&2
-    echo "  -u <username> -p <password>" >&2
+    echo "Generate a new Bearer token and export WNC_ACCESS_TOKEN" >&2
     exit "$exit_auth_error"
 }
