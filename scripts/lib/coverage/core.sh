@@ -92,6 +92,29 @@ execute_coverage_html_generation() {
     return "$exit_code"
 }
 
+# write_coverprofile_artifact copies the original Go coverprofile to the report file.
+# It purposefully avoids deep nesting for readability and emits warnings rather than failing the run.
+write_coverprofile_artifact() {
+    local exit_code="$1" input_file="$2" report_file="$3"
+
+    # Only proceed if HTML generation succeeded
+    [[ "$exit_code" -ne 0 ]] && return 0
+
+    # Copy raw coverprofile (atomic|set|count) for octocov consumption
+    if ! cp "$input_file" "$report_file" 2>/dev/null; then
+        format_coverage_warning "Failed to write coverprofile to $report_file"
+        return 0
+    fi
+
+    # Validate header for downstream tools
+    if ! head -1 "$report_file" | grep -q '^mode:'; then
+        format_coverage_warning "report.out missing mode header; octocov may fail"
+    fi
+
+    is_verbose_enabled && format_coverage_info "Wrote coverprofile: $report_file"
+    return 0
+}
+
 run_coverage_html_operation() {
     local project_root="${argc_project:-.}"
     local input_file="${argc_input:-./tmp/coverage.out}"
@@ -129,18 +152,7 @@ run_coverage_html_operation() {
     execute_coverage_html_generation "$project_root" "$input_file" "$output_file" || exit_code=$?
 
     # Produce coverprofile artifact (octocov expects raw coverprofile format, not func summary)
-    if [[ $exit_code -eq 0 ]]; then
-        # Copy the original coverage profile (already in coverprofile format) to report_file
-        if cp "$input_file" "$report_file" 2>/dev/null; then
-            # Sanity check first line has mode header
-            if ! head -1 "$report_file" | grep -q '^mode:'; then
-                format_coverage_warning "report.out missing mode header; octocov may fail"
-            fi
-            is_verbose_enabled && format_coverage_info "Wrote coverprofile: $report_file"
-        else
-            format_coverage_warning "Failed to write coverprofile to $report_file"
-        fi
-    fi
+    write_coverprofile_artifact "$exit_code" "$input_file" "$report_file"
 
     # Display results (HTML primary output)
     display_coverage_html_results "$exit_code" "$output_file"
