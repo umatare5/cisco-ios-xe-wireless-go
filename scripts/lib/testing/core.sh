@@ -79,6 +79,8 @@ prepare_test_arguments() {
         local coverage_file="${argc_output:-./tmp/coverage.out}"
         TEST_ARGS+=("-coverprofile=$coverage_file")
         TEST_ARGS+=("-covermode=atomic")
+    # Include all module packages in coverage denominator to align with octocov
+    TEST_ARGS+=("-coverpkg=./...")
         is_verbose_enabled && format_test_info "Coverage output: $coverage_file"
     fi
 
