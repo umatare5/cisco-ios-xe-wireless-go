@@ -13,27 +13,27 @@ export WNC_ACCESS_TOKEN=$(echo -n 'user:pass' | base64)
 
 ## 📂 Key Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `list_yang_models.sh` | List modules |
-| `get_yang_model_details.sh` | Fetch module text |
-| `get_yang_statement_details.sh` | Query subtree |
-| `test_unit.sh` | Unit tests + lint |
-| `test_integration.sh` | Live tests |
-| `test_coverage.sh` | Coverage aggregate |
-| `clean_artifacts.sh` | Remove temp outputs |
-| `install_dependencies.sh` | Go mod hygiene |
+| Script                          | Purpose             |
+| ------------------------------- | ------------------- |
+| `list_yang_models.sh`           | List modules        |
+| `get_yang_model_details.sh`     | Fetch module text   |
+| `get_yang_statement_details.sh` | Query subtree       |
+| `test_unit.sh`                  | Unit tests + lint   |
+| `test_integration.sh`           | Live tests          |
+| `test_coverage.sh`              | Coverage aggregate  |
+| `clean_artifacts.sh`            | Remove temp outputs |
+| `install_dependencies.sh`       | Go mod hygiene      |
 
 ## ⚙️ Common Flags
 
-| Flag | Meaning |
-|------|---------|
-| `-c` / `--controller` | Controller host/IP |
-| `-t` / `--token` | Base64 creds |
-| `-k` / `--insecure` | Skip TLS verify (dev) |
-| `-f` / `--format` | Output fmt (pretty/json/raw) |
-| `-v` / `--verbose` | Verbose output |
-| `--no-color` | Disable color |
+| Flag                  | Meaning                      |
+| --------------------- | ---------------------------- |
+| `-c` / `--controller` | Controller host/IP           |
+| `-t` / `--token`      | Base64 creds                 |
+| `-k` / `--insecure`   | Skip TLS verify (dev)        |
+| `-f` / `--format`     | Output fmt (pretty/json/raw) |
+| `-v` / `--verbose`    | Verbose output               |
+| `--no-color`          | Disable color                |
 
 Missing required env/flags ⇒ exit 1.
 
@@ -48,9 +48,9 @@ Missing required env/flags ⇒ exit 1.
 
 ## 🔐 Env Vars
 
-| Var | Purpose |
-|-----|---------|
-| `WNC_CONTROLLER` | Host/IP |
+| Var                | Purpose      |
+| ------------------ | ------------ |
+| `WNC_CONTROLLER`   | Host/IP      |
 | `WNC_ACCESS_TOKEN` | Base64 creds |
 
 ## 🔽 Additional (Collapsed)
@@ -61,12 +61,12 @@ Architecture: modular loader in `scripts/lib/` (bootstrap, core, network, output
 
 Troubleshooting:
 
-| Symptom | Fix |
-|---------|-----|
-| 401 | Recreate token |
-| TLS fail | Provide CA or use `-k` (dev) |
-| Empty list | Check controller version |
-| Permission | `chmod +x scripts/*.sh` |
+| Symptom    | Fix                          |
+| ---------- | ---------------------------- |
+| 401        | Recreate token               |
+| TLS fail   | Provide CA or use `-k` (dev) |
+| Empty list | Check controller version     |
+| Permission | `chmod +x scripts/*.sh`      |
 
 </details>
 
