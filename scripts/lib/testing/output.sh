@@ -74,18 +74,24 @@ display_test_summary() {
 display_coverage_summary() {
     local coverage_file="$1"
     local exit_code="$2"
+    # Early returns to avoid deep nesting
+    if [[ "$exit_code" -ne 0 ]]; then
+        return 0
+    fi
+    if [[ ! -f "$coverage_file" ]]; then
+        return 0
+    fi
 
-    if [[ "$exit_code" -eq 0 && -f "$coverage_file" ]]; then
-        echo
-        format_test_info "Coverage report generated: $coverage_file"
+    echo
+    format_test_info "Coverage report generated: $coverage_file"
 
-        # Extract coverage percentage if available
-        if command -v go >/dev/null 2>&1; then
-            local coverage_percent
-            coverage_percent=$(go tool cover -func="$coverage_file" 2>/dev/null | tail -1 | awk '{print $3}' || echo "unknown")
-            if [[ "$coverage_percent" != "unknown" ]]; then
-                format_test_info "Total coverage: $coverage_percent"
-            fi
+    # Extract coverage percentage if available
+    if command -v go >/dev/null 2>&1; then
+        local coverage_percent
+        # Use END block instead of tail -1 for robustness
+        coverage_percent=$(go tool cover -func="$coverage_file" 2>/dev/null | awk 'END {print $3}' || echo "unknown")
+        if [[ "$coverage_percent" != "unknown" ]]; then
+            format_test_info "Total coverage: $coverage_percent"
         fi
     fi
 }
