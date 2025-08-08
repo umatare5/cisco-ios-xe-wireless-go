@@ -13,16 +13,16 @@ Goal: Produce **clear, concise, lint‑clean** documentation that accelerates de
 
 ## ✨ Core Rules
 
-| Aspect | Rule |
-|--------|------|
-| Single Title | Exactly one H1 at top; all other sections start H2. |
-| Emojis | Prefix H1/H2 (optional for H3) with a fitting emoji for scannability. |
-| Lint | Must pass `markdownlint-cli2` (no inline disable unless justified). |
-| Whitespace | Blank line before/after headings, lists, tables, code fences. |
-| Line Length | Prefer ≤120 chars; wrap naturally (no forced hard breaks). |
-| Tone | Direct, active voice, minimal filler. |
-| Audience | Go + network engineers; avoid marketing language. |
-| File Names / Commands | Always in backticks. |
+| Aspect                | Rule                                                                  |
+| --------------------- | --------------------------------------------------------------------- |
+| Single Title          | Exactly one H1 at top; all other sections start H2.                   |
+| Emojis                | Prefix H1/H2 (optional for H3) with a fitting emoji for scannability. |
+| Lint                  | Must pass `markdownlint-cli2` (no inline disable unless justified).   |
+| Whitespace            | Blank line before/after headings, lists, tables, code fences.         |
+| Line Length           | Prefer ≤120 chars; wrap naturally (no forced hard breaks).            |
+| Tone                  | Direct, active voice, minimal filler.                                 |
+| Audience              | Go + network engineers; avoid marketing language.                     |
+| File Names / Commands | Always in backticks.                                                  |
 
 ---
 
@@ -38,12 +38,12 @@ Goal: Produce **clear, concise, lint‑clean** documentation that accelerates de
 
 ## 📦 Code & Examples
 
-| Element | Requirement |
-|---------|-------------|
-| Fenced Blocks | Always specify language: `go`, `bash`, `json`, `text`, `yaml`. |
-| One Concept | Each block demonstrates exactly one focused idea. |
-| Placeholders | Use `<value>` or `<MODULE>`; document once if reused. |
-| Long Output | Wrap inside `<details><summary>Show output</summary>...</details>`. |
+| Element       | Requirement                                                         |
+| ------------- | ------------------------------------------------------------------- |
+| Fenced Blocks | Always specify language: `go`, `bash`, `json`, `text`, `yaml`.      |
+| One Concept   | Each block demonstrates exactly one focused idea.                   |
+| Placeholders  | Use `<value>` or `<MODULE>`; document once if reused.               |
+| Long Output   | Wrap inside `<details><summary>Show output</summary>...</details>`. |
 
 Example:
 
@@ -106,11 +106,11 @@ Recommended outline (adapt as needed, keep lean):
 
 When referencing YANG:
 
-| Element | Style |
-|---------|-------|
-| Module | `Cisco-IOS-XE-wireless-<domain>-<type>` |
-| Path | Backticks, no trailing slash |
-| Data Tree | Provide minimal path snippet only |
+| Element   | Style                                   |
+| --------- | --------------------------------------- |
+| Module    | `Cisco-IOS-XE-wireless-<domain>-<type>` |
+| Path      | Backticks, no trailing slash            |
+| Data Tree | Provide minimal path snippet only       |
 
 Avoid speculative modules—only list what exists.
 
@@ -134,11 +134,11 @@ Avoid speculative modules—only list what exists.
 
 ## ♻️ Maintenance Guidelines
 
-| Action | Frequency | Notes |
-|--------|-----------|-------|
-| Verify links | Quarterly | Broken links removed/updated |
-| Refresh examples | When API/service semantics change | Keep minimal |
-| Remove outdated sections | Immediately | Avoid historical clutter |
+| Action                   | Frequency                         | Notes                        |
+| ------------------------ | --------------------------------- | ---------------------------- |
+| Verify links             | Quarterly                         | Broken links removed/updated |
+| Refresh examples         | When API/service semantics change | Keep minimal                 |
+| Remove outdated sections | Immediately                       | Avoid historical clutter     |
 
 ---
 
@@ -150,13 +150,13 @@ Use Q/A bullets. Each answer ≤6 lines. Link to source or spec when helpful.
 
 ## ✅ DO / ❌ AVOID
 
-| ✅ DO | ❌ AVOID |
-|------|---------|
-| Concise actionable steps | Narrative storytelling |
-| Tables for dense config | Inline comma-separated lists |
-| Collapsible long examples | Flooding page with raw logs |
-| Relative links | Hard-coded absolute GitHub URLs |
-| Explicit environment vars | Implicit assumptions |
+| ✅ DO                     | ❌ AVOID                        |
+| ------------------------- | ------------------------------- |
+| Concise actionable steps  | Narrative storytelling          |
+| Tables for dense config   | Inline comma-separated lists    |
+| Collapsible long examples | Flooding page with raw logs     |
+| Relative links            | Hard-coded absolute GitHub URLs |
+| Explicit environment vars | Implicit assumptions            |
 
 ---
 

@@ -38,12 +38,12 @@ Use concise, direct steps. Batch read operations. Avoid redundant rebuilds. No e
 
 ### 🏁 Before Completing (Per Change Type)
 
-| Change Type | Mandatory Actions Before Reply |
-|-------------|--------------------------------|
+| Change Type       | Mandatory Actions Before Reply                                                                 |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
 | Go code (library) | `go build ./...` until success; then `make test-unit` & `make test-integration` until all pass |
-| Shell scripts | Execute all scripts in `./scripts/` (non-destructive) ensure no errors |
-| Markdown docs | Ensure formatting, one H1, headings structured, passes markdown lint (implicit) |
-| Mixed edits | Perform superset of required checks |
+| Shell scripts     | Execute all scripts in `./scripts/` (non-destructive) ensure no errors                         |
+| Markdown docs     | Ensure formatting, one H1, headings structured, passes markdown lint (implicit)                |
+| Mixed edits       | Perform superset of required checks                                                            |
 
 Additional mandatory finalization:
 
@@ -104,12 +104,12 @@ Examples:
 
 ## 📌 Decision Heuristics (When in Doubt)
 
-| Scenario | Action |
-|----------|--------|
-| Minor readability win vs churn | Prefer smallest safe improvement |
-| Ambiguous spec path | Leave TODO comment; do not guess endpoint |
-| Large file edit needed | Isolate to minimal logical blocks |
-| Performance vs clarity | Prefer clarity unless user flags perf issue |
+| Scenario                       | Action                                      |
+| ------------------------------ | ------------------------------------------- |
+| Minor readability win vs churn | Prefer smallest safe improvement            |
+| Ambiguous spec path            | Leave TODO comment; do not guess endpoint   |
+| Large file edit needed         | Isolate to minimal logical blocks           |
+| Performance vs clarity         | Prefer clarity unless user flags perf issue |
 
 ---
 

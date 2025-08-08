@@ -13,11 +13,11 @@ Primary Objective: Maintain and evolve a **pure Go SDK (library only)** for Cisc
 
 ## 🧭 Architecture (3 Layers)
 
-| Layer | Location | Responsibility |
-|-------|----------|----------------|
-| Core | `wnc/` | Client construction, HTTP execution (`Do`), config, errors |
-| Domain Services | `ap/`, `radio/`, `general/`, etc. | Thin typed methods calling core client |
-| Generated Models | `internal/model/` | YANG-derived structs (do not hand-edit) |
+| Layer            | Location                          | Responsibility                                             |
+| ---------------- | --------------------------------- | ---------------------------------------------------------- |
+| Core             | `wnc/`                            | Client construction, HTTP execution (`Do`), config, errors |
+| Domain Services  | `ap/`, `radio/`, `general/`, etc. | Thin typed methods calling core client                     |
+| Generated Models | `internal/model/`                 | YANG-derived structs (do not hand-edit)                    |
 
 Support packages under `internal/` (e.g. `httpx`, `restconf`, `validation`) are private helpers—keep boundaries clean.
 
@@ -67,10 +67,10 @@ Accessor placeholders on `*wnc.Client` may temporarily return `nil` until implem
 
 Use simplest construct that fits:
 
-| Case Count | Approach |
-|------------|----------|
-| 1 | Single `const` |
-| 2–5 | `switch` / `if` chain |
+| Case Count    | Approach                   |
+| ------------- | -------------------------- |
+| 1             | Single `const`             |
+| 2–5           | `switch` / `if` chain      |
 | 6+ or growing | `iota` enum + map dispatch |
 
 Avoid over-abstraction; add enum map only when scaling complexity.
@@ -88,13 +88,13 @@ Avoid over-abstraction; add enum map only when scaling complexity.
 
 ## 🧪 Testing
 
-| Aspect | Requirement |
-|--------|-------------|
-| Style | Table-driven subtests (`t.Run`) |
+| Aspect            | Requirement                                                     |
+| ----------------- | --------------------------------------------------------------- |
+| Style             | Table-driven subtests (`t.Run`)                                 |
 | Context NIL tests | `var nilCtx context.Context` + `//nolint:SA1012` if intentional |
-| Coverage | Keep / improve existing; target ≥98% core pkgs, ≥92% overall |
-| Paths | Success + error (HTTP errors, decode failures, nil client) |
-| Marshal | Round-trip JSON where decoding logic branches |
+| Coverage          | Keep / improve existing; target ≥98% core pkgs, ≥92% overall    |
+| Paths             | Success + error (HTTP errors, decode failures, nil client)      |
+| Marshal           | Round-trip JSON where decoding logic branches                   |
 
 Other rules:
 
