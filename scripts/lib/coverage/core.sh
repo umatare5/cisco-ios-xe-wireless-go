@@ -128,13 +128,17 @@ run_coverage_html_operation() {
     local exit_code=0
     execute_coverage_html_generation "$project_root" "$input_file" "$output_file" || exit_code=$?
 
-    # Additionally generate plain-text summary for CI (octocov consumption)
+    # Produce coverprofile artifact (octocov expects raw coverprofile format, not func summary)
     if [[ $exit_code -eq 0 ]]; then
-        # Derive function coverage summary
-        if go tool cover -func="$input_file" > "$report_file" 2>/dev/null; then
-            is_verbose_enabled && format_coverage_info "Wrote text summary: $report_file"
+        # Copy the original coverage profile (already in coverprofile format) to report_file
+        if cp "$input_file" "$report_file" 2>/dev/null; then
+            # Sanity check first line has mode header
+            if ! head -1 "$report_file" | grep -q '^mode:'; then
+                format_coverage_warning "report.out missing mode header; octocov may fail"
+            fi
+            is_verbose_enabled && format_coverage_info "Wrote coverprofile: $report_file"
         else
-            format_coverage_warning "Failed to write text summary to $report_file"
+            format_coverage_warning "Failed to write coverprofile to $report_file"
         fi
     fi
 
