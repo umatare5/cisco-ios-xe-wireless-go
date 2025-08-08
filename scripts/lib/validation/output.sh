@@ -24,12 +24,17 @@ show_warning() {
 
 # Banner display
 show_pre_commit_banner() {
-       Pre-commit Validation
-       Branch Protection System
+    # If unified banner helper exists, use it; otherwise fallback.
+    if command -v wnc_banner_pre_commit >/dev/null 2>&1; then
+        wnc_banner_pre_commit
+        return
+    fi
+    cat <<'EOF'
+====================================
+ Pre-commit Validation
+ Branch Protection System
+====================================
 EOF
-Pre-commit Validation - Branch Protection System
-EOF
-    wnc_banner_pre_commit
 }
 
 # Show validation status
@@ -52,10 +57,8 @@ show_main_branch_error() {
 
     printf "\033[31m✗ Error:\033[0m Direct commits to the '%s' branch are not allowed\n" "$branch_name" >&2
     echo
-    printf "\033[33m⚠ Warning:\033[0m To maintain code quality and enable proper review processes,
-" >&2
-    printf "\033[33m⚠ Warning:\033[0m all changes must go through feature branches.
-" >&2
+    printf "\033[33m⚠ Warning:\033[0m To maintain code quality and enable proper review processes,\n" >&2
+    printf "\033[33m⚠ Warning:\033[0m all changes must go through feature branches.\n" >&2
     echo
 
     # Use help functions for guidance
@@ -65,20 +68,7 @@ show_main_branch_error() {
     echo
 }
 
-# Show no staged changes warning
-show_no_staged_changes() {
-    printf "\033[33m⚠ Warning:\033[0m No staged changes found
-" >&2
-    printf "\033[36mℹ Info:\033[0m Use 'git add <files>' to stage changes before committing
-"
-
-    if is_verbose_enabled; then
-        printf "\033[36mℹ Info:\033[0m To see current status: git status
-"
-        printf "\033[36mℹ Info:\033[0m To see unstaged changes: git diff
-"
-    fi
-}
+# NOTE: Duplicate show_no_staged_changes removed; using the concise version defined later.
 
 # Show success message
 show_validation_success() {
