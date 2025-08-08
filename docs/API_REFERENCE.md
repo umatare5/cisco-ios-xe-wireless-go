@@ -1,12 +1,10 @@
 # 📚 API Reference
 
-This document provides a comprehensive reference for all services and methods available in the Cisco IOS-XE Wireless Go SDK.
+Typed service methods for accessing Cisco Catalyst 9800 (IOS‑XE 17.12) RESTCONF wireless domains.
 
-## 🏗️ Architecture Overview
+## 🏗️ Architecture
 
-The library follows a **unified client architecture** where all domain services are accessed through a single client instance. This approach provides a clean, consistent interface for all wireless controller operations.
-
-> Boilerplate for simple GET endpoints is minimized internally using a generic helper `core.Get[T]`, keeping service methods concise and uniform without sacrificing clarity.
+Unified client → service wrappers → YANG‑aligned models. Simple GET calls use internal generic `core.Get[T]`.
 
 ```go
 import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
@@ -20,9 +18,9 @@ apData, err := client.AP().Oper(ctx)
 generalData, err := client.General().Oper(ctx)
 ```
 
-## 🌟 Unified Client
+## 🌟 Client
 
-### Creating a Client
+### Create
 
 ```go
 package main
@@ -58,7 +56,7 @@ func main() {
 }
 ```
 
-### 🔧 Client Options
+### 🔧 Options
 
 <details>
 <summary>View all available configuration options</summary>
@@ -72,9 +70,9 @@ func main() {
 
 </details>
 
-## 📡 Domain Services
+## 📡 Services
 
-### AFC - Automated Frequency Coordination
+### AFC – Automated Frequency Coordination
 
 Access AFC operations for 6 GHz band coordination.
 
@@ -89,7 +87,7 @@ afc := client.AFC()
 | `Oper(ctx)` | `*model.AfcOperResponse` | AFC operational data |
 | `APResp(ctx)` | `*model.AfcOperEwlcAfcApRespResponse` | Per-AP AFC responses |
 
-### AP - Access Point Management
+### AP – Access Point Management
 
 Comprehensive access point configuration and operational data.
 
@@ -97,7 +95,7 @@ Comprehensive access point configuration and operational data.
 ap := client.AP()
 ```
 
-#### Configuration Methods
+#### Configuration
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
@@ -105,7 +103,7 @@ ap := client.AP()
 | `TagSourcePriorityConfigs(ctx)` | `*model.TagSourcePriorityConfigs` | Tag priority configurations |
 | `ApTags(ctx)` | `*model.ApCfgApTagsResponse` | AP tag configurations |
 
-#### Operational Methods
+#### Operational
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
@@ -115,7 +113,7 @@ ap := client.AP()
 | `ApHistory(ctx)` | `*model.ApHistoryResponse` | AP history data |
 | `EwlcApStats(ctx)` | `*model.EwlcApStatsResponse` | EWLC AP statistics |
 
-### APF - Application Policy Framework
+### APF – Application Policy Framework
 
 Application policy configuration and enforcement.
 
@@ -129,7 +127,7 @@ apf := client.APF()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.ApfCfgResponse` | APF configuration |
 
-### AWIPS - Advanced Weather Interactive Processing System
+### AWIPS – Advanced Weather Interactive Processing System
 
 Weather-related processing system operations.
 
@@ -143,7 +141,7 @@ awips := client.AWIPS()
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.AwipsOperResponse` | AWIPS operational data |
 
-### BLE - Bluetooth Low Energy
+### BLE – Bluetooth Low Energy
 
 BLE beacon and asset tracking operations.
 
@@ -157,7 +155,7 @@ ble := client.BLE()
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.BleOperResponse` | BLE operational data |
 
-### Client - Wireless Client Management
+### Client – Wireless Client Management
 
 Comprehensive wireless client tracking and statistics.
 
@@ -177,7 +175,7 @@ clientSvc := client.Client()
 | `Dot11Stats(ctx)` | `*model.ClientOperDot11StatsResponse` | 802.11 statistics |
 | `TrafficStats(ctx)` | `*model.ClientOperTrafficStatsResponse` | Traffic statistics |
 
-### CTS - Cisco TrustSec
+### CTS – Cisco TrustSec
 
 Security group tagging and policy enforcement.
 
@@ -191,7 +189,7 @@ cts := client.CTS()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.CtsCfgResponse` | CTS configuration |
 
-### Dot11 - 802.11 Wireless Standards
+### Dot11 – 802.11 Wireless Standards
 
 802.11 wireless standard configuration.
 
@@ -205,7 +203,7 @@ dot11 := client.Dot11()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.Dot11CfgResponse` | 802.11 configuration |
 
-### Dot15 - 802.15 Standards
+### Dot15 – 802.15 Standards
 
 802.15 standard configuration for IoT and sensor networks.
 
@@ -219,7 +217,7 @@ dot15 := client.Dot15()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.Dot15CfgResponse` | 802.15 configuration |
 
-### Fabric - SD-Access Fabric
+### Fabric – SD‑Access Fabric
 
 Software-Defined Access fabric operations.
 
@@ -233,7 +231,7 @@ fabric := client.Fabric()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.FabricCfgResponse` | Fabric configuration |
 
-### Flex - FlexConnect
+### Flex – FlexConnect
 
 FlexConnect local switching and CAPWAP operations.
 
@@ -247,7 +245,7 @@ flex := client.Flex()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.FlexCfgResponse` | FlexConnect configuration |
 
-### General - General Controller Operations
+### General – Controller Operations
 
 Core controller configuration and operational data.
 
@@ -255,14 +253,14 @@ Core controller configuration and operational data.
 general := client.General()
 ```
 
-#### Operational Methods
+#### Operational
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.GeneralOperResponse` | General operational data |
 | `MgmtIntfData(ctx)` | `*model.GeneralOperMgmtIntfDataResponse` | Management interface data |
 
-#### Configuration Methods
+#### Configuration
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
@@ -270,7 +268,7 @@ general := client.General()
 | `MewlcConfig(ctx)` | `*model.GeneralCfgMewlcConfigResponse` | MEWLC configuration |
 | `CountryConfigs(ctx)` | `*model.GeneralCfgCountryConfigsResponse` | Country configurations |
 
-### Geolocation - Location Services
+### Geolocation – Location Services
 
 Geographic positioning and location mapping.
 
@@ -284,7 +282,7 @@ geolocation := client.Geolocation()
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.GeolocationOperResponse` | Geolocation operational data |
 
-### Hyperlocation - High-Precision Location
+### Hyperlocation – High‑Precision Location
 
 Enhanced location services with sub-meter accuracy.
 
@@ -299,7 +297,7 @@ hyperlocation := client.Hyperlocation()
 | `Oper(ctx)` | `*model.HyperlocationOperResponse` | Hyperlocation operational data |
 | `Profiles(ctx)` | `*model.HyperlocationProfilesResponse` | Hyperlocation profiles |
 
-### LISP - Locator/Identifier Separation Protocol
+### LISP – Locator/Identifier Separation Protocol
 
 LISP protocol operations for mobility and routing.
 
@@ -313,7 +311,7 @@ lisp := client.LISP()
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.LispOperResponse` | LISP operational data |
 
-### Location - Location Services Configuration
+### Location – Location Services Configuration
 
 Location services configuration and management.
 
@@ -327,7 +325,7 @@ location := client.Location()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.LocationCfgResponse` | Location configuration |
 
-### Mcast - Multicast Services
+### Mcast – Multicast Services
 
 Multicast traffic management and IGMP operations.
 
@@ -343,7 +341,7 @@ mcast := client.Mcast()
 | `FlexMediastreamClientSummary(ctx)` | `*model.McastOperFlexMediastreamClientSummaryResponse` | FlexConnect mediastream summary |
 | `VlanL2MgidOp(ctx)` | `*model.McastOperVlanL2MgidOpResponse` | VLAN L2 multicast group operations |
 
-### mDNS - Multicast DNS
+### mDNS – Multicast DNS
 
 Multicast DNS service discovery and statistics.
 
@@ -359,7 +357,7 @@ mdns := client.Mdns()
 | `GlobalStats(ctx)` | `*model.MdnsGlobalStatsResponse` | Global mDNS statistics |
 | `WlanStats(ctx)` | `*model.MdnsWlanStatsResponse` | Per-WLAN mDNS statistics |
 
-### Mesh - Mesh Networking
+### Mesh – Mesh Networking
 
 Wireless mesh networking configuration and operations.
 
@@ -374,7 +372,7 @@ mesh := client.Mesh()
 | `Oper(ctx)` | `*model.MeshOperResponse` | Mesh operational data |
 | `Cfg(ctx)` | `*model.MeshCfgResponse` | Mesh configuration |
 
-### Mobility - Client Mobility
+### Mobility – Client Mobility
 
 Inter-controller client mobility and roaming.
 
@@ -388,7 +386,7 @@ mobility := client.Mobility()
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.MobilityOperResponse` | Mobility operational data |
 
-### NMSP - Network Mobility Services Protocol
+### NMSP – Network Mobility Services Protocol
 
 Location services protocol for third-party integration.
 
@@ -405,7 +403,7 @@ nmsp := client.NMSP()
 | `CmxConnection(ctx)` | `*model.NmspCmxConnectionResponse` | CMX connection data |
 | `CmxCloudInfo(ctx)` | `*model.NmspCmxCloudInfoResponse` | CMX cloud information |
 
-### Radio - Radio Management
+### Radio – Radio Management
 
 Radio hardware configuration and control.
 
@@ -419,7 +417,7 @@ radio := client.Radio()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.RadioCfgResponse` | Radio configuration |
 
-### RF - Radio Frequency Management
+### RF – Radio Frequency Management
 
 RF profile and parameter management.
 
@@ -433,7 +431,7 @@ rf := client.RF()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.RfCfgResponse` | RF configuration |
 
-### RFID - Radio Frequency Identification
+### RFID – Radio Frequency Identification
 
 RFID tag tracking and asset management.
 
@@ -447,7 +445,7 @@ rfid := client.RFID()
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.RfidCfgResponse` | RFID configuration |
 
-### Rogue - Rogue AP Detection
+### Rogue – Rogue AP Detection
 
 Rogue access point and client detection system.
 
@@ -465,7 +463,7 @@ rogue := client.Rogue()
 | `ApSummary(ctx)` | `*model.RogueApSummaryResponse` | Rogue AP summary |
 | `ClientSummary(ctx)` | `*model.RogueClientSummaryResponse` | Rogue client summary |
 
-### RRM - Radio Resource Management
+### RRM – Radio Resource Management
 
 Automated RF optimization and interference mitigation.
 
@@ -473,20 +471,20 @@ Automated RF optimization and interference mitigation.
 rrm := client.RRM()
 ```
 
-#### Configuration Methods
+#### Configuration
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
 | `Cfg(ctx)` | `*model.RrmCfgResponse` | RRM configuration |
 
-#### Operational Methods
+#### Operational
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.RrmOperResponse` | RRM operational data |
 | `GlobalOper(ctx)` | `*model.RrmGlobalOperResponse` | Global RRM operational data |
 
-### Site - Site Management
+### Site – Site Management
 
 Site configuration and hierarchical management.
 
@@ -500,7 +498,7 @@ site := client.Site()
 |--------|-------------|-------------|
 | `Oper(ctx)` | `*model.SiteOperResponse` | Site operational data |
 
-### WLAN - Wireless LAN Configuration
+### WLAN – Wireless LAN Configuration
 
 WLAN service set configuration and policy management.
 
@@ -508,7 +506,7 @@ WLAN service set configuration and policy management.
 wlan := client.WLAN()
 ```
 
-#### Configuration Methods
+#### Configuration
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
@@ -518,7 +516,7 @@ wlan := client.WLAN()
 | `PolicyListEntries(ctx)` | `*model.PolicyListEntriesResponse` | Policy list entries |
 | `WirelessAaaPolicyConfigs(ctx)` | `*model.WirelessAaaPolicyConfigsResponse` | AAA policy configurations |
 
-#### Operational Methods
+#### Operational
 
 | Method | Return Type | Description |
 |--------|-------------|-------------|
@@ -625,18 +623,18 @@ for service, data := range results {
 }
 ```
 
-## 📚 Response Models
+## 📚 Models
 
 All API responses are **strongly typed** using Go structs that exactly match the Cisco IOS-XE RESTCONF API structure.
 
-### Key Characteristics
+### Characteristics
 
 - **YANG Model Compliance**: Structures follow Cisco YANG models exactly
 - **JSON Marshaling**: All fields have proper JSON tags for automatic parsing
 - **Null Safety**: Optional fields use pointers to handle nil values safely
 - **Type Safety**: Compile-time type checking prevents runtime errors
 
-### Example Response Structure
+### Example
 
 ```go
 type GeneralOperResponse struct {
@@ -656,7 +654,7 @@ type EwlcGeneralOper struct {
 }
 ```
 
-### Working with Response Data
+### Nil‑Safe Access
 
 ```go
 // Safe field access with nil checking
@@ -678,9 +676,9 @@ if data.GeneralOperData != nil &&
 }
 ```
 
-## 🔒 Authentication & Security
+## 🔒 Authentication & TLS
 
-### Bearer Token Authentication
+### Basic Auth (Base64 Token)
 
 The library uses **bearer token authentication** for secure API access:
 
@@ -692,9 +690,9 @@ client, err := wnc.NewClient(
 )
 ```
 
-### TLS Configuration
+### TLS
 
-#### Production Environment
+#### Production
 
 ```go
 client, err := wnc.NewClient(
@@ -705,7 +703,7 @@ client, err := wnc.NewClient(
 )
 ```
 
-#### Development/Testing Environment
+#### Development / Testing
 
 ```go
 client, err := wnc.NewClient(
@@ -718,7 +716,7 @@ client, err := wnc.NewClient(
 
 ## 🚀 Best Practices
 
-### 1. Context Management
+### Context Management
 
 Always use `context.Context` for timeout and cancellation control:
 
@@ -729,7 +727,7 @@ defer cancel()
 data, err := client.General().Oper(ctx)
 ```
 
-### 2. Error Handling
+### Error Handling
 
 Check and handle all returned errors appropriately:
 
@@ -741,7 +739,7 @@ if err != nil {
 }
 ```
 
-### 3. Client Reuse
+### Client Reuse
 
 Create one client instance and reuse it across your application:
 
@@ -762,7 +760,7 @@ func getAPData(ctx context.Context) (*model.ApOperResponse, error) {
 }
 ```
 
-### 4. Graceful Degradation
+### Graceful Degradation
 
 Handle partial failures gracefully in concurrent operations:
 
@@ -789,7 +787,7 @@ func fetchAllData(ctx context.Context) error {
 }
 ```
 
-### 5. Resource Management
+### Resource Management
 
 Use defer statements for proper cleanup:
 
@@ -808,7 +806,7 @@ func processData(ctx context.Context) error {
 }
 ```
 
-## 📖 Additional Resources
+## 📖 References
 
 - **YANG Models**: [Cisco XE 17121 YANG Models](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121)
 - **RESTCONF Guide**: [Cisco IOS-XE RESTCONF Documentation](https://developer.cisco.com/docs/ios-xe/)

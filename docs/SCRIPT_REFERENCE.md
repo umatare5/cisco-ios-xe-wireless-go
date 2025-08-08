@@ -1,10 +1,15 @@
 # 📋 Scripts Reference
 
-Scripts for collecting and analyzing YANG models from Cisco Wireless Network Controller.
+Helper scripts for YANG model discovery and inspection against a Catalyst 9800 controller.
 
-- **Comprehensive YANG Model Operations**: Interact with the Cisco WNC RESTCONF API to discover available YANG models, retrieve their full definitions, and query real-time operational data using simple shell scripts.
-- **Flexible Command-Line Interface**: Supports configuration via both command-line flags and environment variables, with options for various output formats to suit different workflows.
-- **Modular and Robust Scripts**: Built upon a shared library for common functions like authentication, HTTP requests, and validation, ensuring the scripts are reliable and easy to maintain.
+| Feature | Summary |
+|---------|---------|
+| Model Discovery | List wireless YANG modules + revisions |
+| Model Detail | Fetch raw module text |
+| Statement Data | Retrieve operational subtree data |
+| Output Styles | `pretty`, `json`, `raw` (where applicable) |
+| Banners | Unified colored headers (auto disabled with `--no-color`) |
+| Env Handling | Missing required vars → hard error (no silent skip) |
 
 ## 🗂️ Directory Structure
 
@@ -27,11 +32,11 @@ scripts/
 
 ## 🚀 Scripts Overview
 
-| Name                            | Desciription                         |
-| ------------------------------- | ------------------------------------ |
-| `list_yang_models.sh`           | Discover available YANG models.      |
-| `get_yang_model_details.sh`     | Retrieve complete model definitions. |
-| `get_yang_statement_details.sh` | Query operational data via YANG.     |
+| Script | Description |
+|--------|-------------|
+| `list_yang_models.sh` | Enumerate available YANG modules |
+| `get_yang_model_details.sh` | Download module definition |
+| `get_yang_statement_details.sh` | Fetch operational data subtree |
 
 ## 📋 `list_yang_models.sh` - YANG Model Discovery
 
@@ -39,11 +44,10 @@ Discovers and lists all available Cisco wireless YANG models from the WNC contro
 
 ### Features
 
-- Lists all Cisco wireless YANG models with their revisions
-- Supports both HTTP and HTTPS protocols
-- Pretty-formatted output with clear categorization
-- Environment variable support for credentials
-- TLS certificate verification bypass option
+* Lists wireless YANG models + revisions (filtered to wireless namespaces)
+* HTTPS default; optional `-k` to skip TLS verification (dev only)
+* Hard fails if `WNC_CONTROLLER` or `WNC_ACCESS_TOKEN` missing (or flags not provided)
+* Pretty or minimal output
 
 ### Usage
 
@@ -118,11 +122,9 @@ Retrieves complete YANG model definitions including structure, types, and docume
 
 ### Features
 
-- Fetches complete YANG module definitions
-- Multiple output formats (pretty, json, raw)
-- Support for specific model revisions
-- Verbose debugging mode
-- Input validation for model names and revisions
+* Fetch full module text at specific revision
+* Output: `pretty` (annotated), `raw` (verbatim), `json` (wrapped)
+* Validates model and revision format
 
 ### Usage
 
@@ -208,11 +210,9 @@ Queries real-time operational data from the WNC controller using YANG model path
 
 ### Features
 
-- Retrieves live operational data from WNC
-- JSON and pretty-formatted output
-- Configurable YANG model and identifier
-- Real-time wireless network status
-- Support for all operational YANG models
+* Calls RESTCONF data path for chosen model root identifier
+* Output: `pretty` (with formatting) or `json`
+* Useful for validating live controller state
 
 ### Usage
 
@@ -297,6 +297,15 @@ Operation completed successfully.
 
 </details>
 
+## ⚙️ Environment Variables
+
+| Variable | Purpose | Required |
+|----------|---------|----------|
+| `WNC_CONTROLLER` | Controller host/IP | Yes |
+| `WNC_ACCESS_TOKEN` | Base64 `user:pass` | Yes |
+
+Missing any required variable (and no equivalent flag) → exit status 1.
+
 ## 📚️ Appendix
 
 ### 📚 Common YANG Models
@@ -332,10 +341,10 @@ Operation completed successfully.
 
 ## 🔥 Troubleshooting
 
-| Problem                   | Solution                                             |
-| ------------------------- | ---------------------------------------------------- |
-| `curl: command not found` | Install curl: `brew install curl`                    |
-| `jq: command not found`   | Install jq: `brew install jq`                        |
-| "Failed to fetch data"    | Check controller hostname, network, auth token       |
-| TLS certificate errors    | Use `-k` flag to skip verification                   |
-| "Invalid YANG model"      | Ensure format: `Cisco-IOS-XE-wireless-*-(oper\|cfg)` |
+| Issue | Action |
+|-------|--------|
+| Missing env vars | Export `WNC_CONTROLLER` / `WNC_ACCESS_TOKEN` or pass flags |
+| TLS errors | Confirm CA trust; dev only: add `-k` |
+| Empty list | Verify controller version (must be IOS‑XE 17.12) |
+| Invalid model | Use exact module name from discovery output |
+| JSON parse issues | Use `-f raw` then post‑process |

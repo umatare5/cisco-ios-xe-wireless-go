@@ -1,12 +1,16 @@
-# 📗 Cisco IOS-XE Wireless Go SDK (Cisco Catalyst 9800 RESTCONF)
+# 📗 Cisco IOS-XE Wireless Go SDK (Catalyst 9800 RESTCONF)
 
-**High-quality, strongly-typed Go client for the Cisco Catalyst 9800 (IOS-XE 17.12) RESTCONF API.**
+Strongly‑typed, dependency‑free Go library for the Cisco Catalyst 9800 (IOS‑XE 17.12) RESTCONF API.
 
-- **🎯 Type-Safe Operations**: Strongly-typed data structures from YANG models
-- **🏗️ Clean Architecture**: Three-layer architecture with domain-specific services
-- **🔧 Developer-Friendly**: Unified client access with intuitive service patterns
-- **🧩 Low Boilerplate**: Internal generic helper eliminates repetitive GET code
-- **📊 Comprehensive Coverage**: 25+ functional domains
+| Key Property | Summary |
+|--------------|---------|
+| Scope | Read‑only (GET) access to 25+ wireless domains |
+| Stability | No external deps, stdlib only |
+| Accuracy | Structs mirror Cisco YANG (17.12) |
+| Coverage Policy | ≥99% total (hard gate) |
+| Architecture | Unified client → thin services → typed models |
+| Boilerplate Reduction | Internal generic `core.Get[T]` |
+| Security | TLS on by default; explicit opt‑out for dev only |
 
 ![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
 [![Test and Build](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main)](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml)
@@ -20,11 +24,9 @@
 
 ## ✨ Overview
 
-This library provides a production-grade, idiomatic Go interface to the Cisco Catalyst 9800 RESTCONF API. It focuses on **clarity**, **maintainability**, and **consistency**—removing boilerplate while preserving explicit, readable intent.
+Purpose: Provide an idiomatic, testable Go interface to Catalyst 9800 wireless controller RESTCONF resources with minimal ceremony and maximum type safety.
 
-## 🎯 Compatibility
-
-Cisco Catalyst 9800 running Cisco IOS-XE **17.12.x**
+Compatibility: Cisco Catalyst 9800 on IOS‑XE **17.12.x** (YANG set `vendor/cisco/xe/17121`).
 
 ## 📦 Installation
 
@@ -34,9 +36,9 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ## 🚀 Quick Start
 
-### 🔑 Authentication
+### 🔑 Credentials
 
-Create a Base64 token from your WNC credentials:
+Generate Base64 token (`username:password`):
 
 ```bash
 echo -n "admin:password" | base64
@@ -97,20 +99,20 @@ client, err := wnc.NewClient("192.168.1.100", "YWRtaW46cGFzc3dvcmQ=",
 )
 ```
 
-> [!CAUTION]
-> `WithInsecureSkipVerify(true)` disables TLS verification. Use only in development environments with self-signed certificates.
+> [!WARNING]
+> `WithInsecureSkipVerify(true)` disables TLS certificate verification. Use **only** for local dev with self‑signed certs.
 
 ## 🏗️ Architecture
 
-Three clean layers:
+Layers:
 
-1. **Unified Client Layer** – single entrypoint exposing each service.
-2. **Domain Service Layer** – lightweight service methods (thin wrappers) calling shared helpers.
-3. **Generated Type Layer** – YANG-derived struct definitions ensuring type fidelity.
+1. Unified client: handles transport, TLS, retry (if configured).
+2. Service layer: thin, typed methods mapping to RESTCONF endpoints.
+3. Model layer: YANG‑aligned structs (pointer fields for optional nodes).
 
-### ♻️ Boilerplate Reduction with `core.Get`
+### ♻️ Generic GET Helper
 
-Most simple GET endpoints now use an internal generic helper:
+Simple read operations use a generic helper to remove repetition:
 
 ```go
 // internal/core/get.go
@@ -120,7 +122,7 @@ func Get[T any](ctx context.Context, c *Client, endpoint string) (*T, error) {
 }
 ```
 
-Service methods become concise and consistent:
+Service method (example):
 
 ```go
 func (s Service) Oper(ctx context.Context) (*model.RrmOperResponse, error) {
@@ -128,9 +130,9 @@ func (s Service) Oper(ctx context.Context) (*model.RrmOperResponse, error) {
 }
 ```
 
-This improves readability and reduces maintenance surface without hiding logic.
+This keeps public methods predictable while preserving clarity.
 
-## 📋 Available Services
+## 📋 Services
 
 | Service | Description | Key Methods |
 | ------- | ----------- | ----------- |
@@ -145,31 +147,13 @@ This improves readability and reduces maintenance surface without hiding logic.
 | `Fabric()` | SD-Access Fabric | `GlobalCfg()` |
 | `Mobility()` | Client Mobility | `Data()`, `GlobalCfg()` |
 
-<details>
-<summary>View all 25+ services</summary>
+<details><summary>Full list (expand)</summary>
 
-- **APF**: Application Policy Framework
-- **AWIPS**: Advanced Weather Interactive Processing System
-- **CTS**: Cisco TrustSec
-- **Dot11**: 802.11 Wireless Standards
-- **Dot15**: 802.15 Standards
-- **Flex**: FlexConnect
-- **Geolocation**: Location Services
-- **Hyperlocation**: High-Precision Location
-- **LISP**: Locator/Identifier Separation Protocol
-- **Location**: Location Services
-- **Mcast**: Multicast
-- **Mdns**: Multicast DNS
-- **Mesh**: Wireless Mesh
-- **NMSP**: Network Mobility Services Protocol
-- **Radio**: Radio Management
-- **RF**: Radio Frequency Management
-- **RFID**: RFID Tracking
-- **Site**: Site-based Configuration
+APF · AWIPS · CTS · Dot11 · Dot15 · Flex · Geolocation · Hyperlocation · LISP · Location · Mcast · Mdns · Mesh · NMSP · Radio · RF · RFID · Site plus the tabled domains above.
 
 </details>
 
-### 🎯 Service Usage Patterns
+### 🎯 Usage Patterns
 
 ```go
 // Configuration data
@@ -189,7 +173,7 @@ rrmGlobal, _ := client.RRM().GlobalOper(ctx)
 mobilityGlobal, _ := client.Mobility().GlobalCfg(ctx)
 ```
 
-## 🔧 Configuration Options
+## 🔧 Client Options
 
 | Option | Type | Description |
 | ------ | ---- | ----------- |
@@ -199,9 +183,13 @@ mobilityGlobal, _ := client.Mobility().GlobalCfg(ctx)
 
 ## 📖 Documentation
 
-- **[API Reference](./docs/API_REFERENCE.md)**: Complete API documentation
-- **[Testing Guide](./docs/TESTING.md)**: Testing strategies and coverage
-- **[Script Reference](./docs/SCRIPT_REFERENCE.md)**: Development and debugging scripts
+| Doc | Purpose |
+|-----|---------|
+| [`API_REFERENCE.md`](./docs/API_REFERENCE.md) | Service & model usage |
+| [`TESTING.md`](./docs/TESTING.md) | Unit / integration / coverage policy |
+| [`SCRIPT_REFERENCE.md`](./docs/SCRIPT_REFERENCE.md) | YANG helper scripts |
+| [`SECURITY.md`](./docs/SECURITY.md) | TLS, credential hygiene |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Workflow & quality rules |
 
 ## 🧪 Testing
 
@@ -216,7 +204,10 @@ make test-unit
 make test-integration
 ```
 
-## 🛠️ Development
+> [!NOTE]
+> `make test-unit` and `make test-integration` automatically run `lint` first.
+
+## 🛠️ Development Tasks
 
 ```bash
 # Install dependencies
@@ -234,19 +225,24 @@ make yang-model MODEL=Cisco-IOS-XE-wireless-general-oper
 
 ## 🤝 Contributing
 
-1. Fork and create feature branch
-2. Follow existing patterns and conventions
-3. Add comprehensive tests (≥98% coverage required)
-4. Update documentation
-5. Submit pull request
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md). Key points:
 
-## 🚀 Release Process
+* Maintain ≥99% total coverage (no regressions).
+* No new external dependencies.
+* Follow existing error wrapping style and service method shape.
+* Update docs + tests together.
+
+## 🚀 Release (Outline)
 
 1. Update `VERSION` file
 2. Submit pull request
 3. Automated tag creation on merge
 4. Manual release via GitHub Actions
 
+## 📊 Coverage Artifact
+
+Human‑readable combined coverage snapshot: `coverage/report.out` (committed). Regenerate via `make test-coverage`.
+
 ## 📄 License
 
-[MIT License](./LICENSE)
+MIT – see [`LICENSE`](./LICENSE).

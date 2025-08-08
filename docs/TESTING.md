@@ -1,6 +1,6 @@
 # 🧪 Testing Guide
 
-Comprehensive testing framework for the Cisco IOS-XE Wireless Go SDK, featuring automated test execution, coverage analysis, and integration with live controllers.
+Deterministic test & coverage workflow enforcing ≥99% total statement coverage.
 
 > [!TIP]
 > This guide covers unit testing, integration testing, and code coverage analysis for both developers and contributors.
@@ -9,30 +9,32 @@ Comprehensive testing framework for the Cisco IOS-XE Wireless Go SDK, featuring 
 
 ### Test Types
 
-- **Unit Tests**: Validate core functionality, serialization, and error handling
-- **Integration Tests**: Interact with real Cisco Catalyst 9800 controllers
-- **Coverage Tests**: Analyze code coverage with detailed reporting
-- **Service Tests**: Validate all 25+ service implementations with unified patterns
+| Type | Scope | External Dependency |
+|------|-------|---------------------|
+| Unit | Pure logic, client validation, model marshalling | No |
+| Integration | Live RESTCONF requests | Controller + creds |
+| Coverage | Aggregated unit + integration | Matches invoked set |
+| Service Pattern | Consistency across domain services | Mixed |
 
 ### Service Testing Pattern
 
 All services follow a consistent 4-stage testing approach. Simple read-only (GET) service methods share an internal generic helper (`core.Get[T]`) to minimize boilerplate while tests continue to validate type integrity and response semantics.
 
-1. **Service Creation**: Constructor and configuration validation
-2. **Data Collection**: Method execution and response handling
-3. **JSON Serialization**: Type validation and data marshaling
-4. **Integration Testing**: Live controller interaction
+1. Constructor validation
+2. Method execution (typed response)
+3. JSON marshal sanity
+4. Optional integration data capture
 
 ## 📊 Coverage Analysis
 
-> [!NOTE]
-> This project enforces a **hard 99%+ total coverage policy**. Any change set dropping below 99% must add or adjust tests before merge.
+> [!WARNING]
+> Hard gate: total coverage must remain ≥99%. PRs lowering coverage are rejected.
 
-| Coverage Type  | Target (Policy) | Current Example |
-|---------------|------------------|-----------------|
-| Core Client   | ≥99%             | 100%            |
-| Services      | ≥99%             | 100%            |
-| Total Project | ≥99% (hard gate) | 99.0%           |
+| Segment | Target |
+|---------|--------|
+| Core client | ≥99% |
+| Services | ≥99% |
+| Total | ≥99% |
 
 <details>
 <summary>View coverage commands</summary>
@@ -61,7 +63,7 @@ go tool cover -func=./tmp/coverage.out | grep -v 100.0%
 
 ### Integration Testing
 
-Integration tests require a live Cisco Catalyst 9800 controller:
+Integration tests require a live controller. Missing variables now cause immediate failure (no skip):
 
 | Variable           | Description                | Example               |
 |-------------------|---------------------------|-----------------------|
@@ -79,16 +81,15 @@ export WNC_ACCESS_TOKEN="$(echo -n 'username:password' | base64)"
 
 ### Quick Commands
 
-| Command | Description | Requirements |
-|---------|-------------|--------------|
-| `make test-unit` | Unit tests only | None |
-| `make test-integration` | Integration tests | WNC access |
-| `make test-coverage` | Coverage analysis | None |
-| `make build` | Compilation check | None |
+| Command | Description | Notes |
+|---------|-------------|-------|
+| `make test-unit` | Run unit tests | Runs lint first |
+| `make test-integration` | Run integration tests | Lint + env required |
+| `make test-coverage` | Coverage (merged) | Generates `coverage/report.out` |
+| `make test-coverage-html` | HTML report | Opens browser (local) |
+| `make lint` | Static analysis | Must be clean |
 
-### Detailed Test Execution
-
-#### Unit Tests
+### Unit Tests
 
 ```bash
 # Basic unit tests
@@ -101,7 +102,7 @@ make test-unit
 ./scripts/test_unit.sh --short
 ```
 
-#### Integration Tests
+### Integration Tests
 
 ```bash
 # Full integration test suite
@@ -114,7 +115,7 @@ make test-integration
 ./scripts/test_integration.sh --verbose
 ```
 
-#### Coverage Analysis
+### Coverage
 
 ```bash
 # Generate coverage data
@@ -173,7 +174,7 @@ func TestServiceMethod(t *testing.T) {
 }
 ```
 
-### Error Handling Validation
+### Nil Context Validation
 
 ```go
 // ✅ SA1012 compliant nil context testing
@@ -190,7 +191,7 @@ func TestMethodWithNilContext(t *testing.T) {
 }
 ```
 
-### Integration Test Patterns
+### Integration Pattern
 
 ```go
 func TestServiceIntegration(t *testing.T) {
@@ -213,7 +214,7 @@ func TestServiceIntegration(t *testing.T) {
 
 ## 🔧 Development Workflow
 
-### Recommended Testing Sequence
+### Recommended Sequence
 
 1. **Setup**: `make deps` - Install development tools
 2. **Unit Testing**: `make test-unit` - Validate core functionality
@@ -222,9 +223,9 @@ func TestServiceIntegration(t *testing.T) {
 5. **Coverage**: `make test-coverage-html` - Analyze coverage
 6. **Build**: `make build` - Verify compilation
 
-### Debugging Tips
+### Debugging
 
-#### Coverage Investigation
+#### Coverage Gaps
 
 When coverage targets aren't met:
 
@@ -237,7 +238,7 @@ go test -coverprofile=./tmp/package.out ./package/...
 go tool cover -html=./tmp/package.out
 ```
 
-#### Integration Test Debugging
+#### Live Calls
 
 ```bash
 # Test specific service
@@ -259,7 +260,7 @@ go test -v ./... -tags=integration
 - **Type Safety**: Strict typing for all API responses
 - **Context Usage**: Proper context handling in all operations
 
-### Performance Benchmarks
+### Performance (Typical)
 
 | Test Type | Target Duration | Actual |
 |-----------|----------------|--------|
@@ -281,9 +282,7 @@ go test -v ./... -tags=integration
 - [YANG Models for IOS-XE 17.12](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121)
 - [RESTCONF API Reference](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/c9800-cl-dg.html)
 
-## 🚀 Running Tests
-
-The project includes convenient Makefile targets for testing:
+## 🚀 Make Targets Summary
 
 | Command                 | Description                                        |
 | ----------------------- | -------------------------------------------------- |
@@ -363,7 +362,7 @@ total: (statements) 6.1%
 
 The project enforces strict code quality standards:
 
-#### SA1012 Compliance Testing
+#### SA1012 Compliance
 
 All nil context tests must follow static analysis requirements:
 
@@ -384,7 +383,7 @@ func TestFunctionWithNilContext(t *testing.T) {
 }
 ```
 
-#### Service Architecture Testing
+#### Service Architecture
 
 All services must be tested with consistent patterns:
 
@@ -441,7 +440,7 @@ func TestFunction(t *testing.T) {
 }
 ```
 
-### Testing Tips
+### Tips
 
 For efficient testing workflow, start with unit tests and gradually move to integration tests.
 
@@ -458,7 +457,7 @@ For efficient testing workflow, start with unit tests and gradually move to inte
 > [!TIP]
 > For comprehensive testing, run both `make test-unit` and `make test-integration` sequentially to validate all functionality.
 
-### 🔧 Development Dependencies
+### 🔧 Dev Tooling
 
 The project uses several tools to enhance the testing experience:
 
@@ -469,7 +468,7 @@ The project uses several tools to enhance the testing experience:
 > [!Note]
 > Install all dependencies with: `make deps`
 
-### References
+### Additional Reading
 
 These references provide additional information on Cisco Catalyst 9800 WNC and related technologies:
 

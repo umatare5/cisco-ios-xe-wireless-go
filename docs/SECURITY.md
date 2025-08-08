@@ -1,6 +1,6 @@
 # 🔐 Security Guide
 
-This document outlines security best practices for the `cisco-ios-xe-wireless-go` Go library when connecting to Cisco Catalyst 9800 Wireless Network Controllers.
+Operational and credential security practices for using this library with Cisco Catalyst 9800 controllers.
 
 > [!WARNING]
 > This guide covers security-critical configurations. Always follow your organization's security policies and compliance requirements.
@@ -28,7 +28,7 @@ client, err := wnc.NewClient("wnc-dev.local", "dGVzdDp0ZXN0",
 
 ### 🔑 Basic Authentication
 
-The library uses HTTP Basic Authentication with Base64-encoded credentials:
+The library uses HTTP Basic Authentication with Base64‑encoded credentials:
 
 ```go
 // Generate authentication token
@@ -42,7 +42,7 @@ client, err := wnc.NewClient("wnc.example.com", token)
 
 ### 🌍 Environment Variables
 
-Store credentials in environment variables, never in source code:
+Store credentials in environment variables (never commit secrets):
 
 ```go
 import (
@@ -56,7 +56,7 @@ client, err := wnc.NewClient(
 )
 ```
 
-Set environment variables securely:
+Set environment variables:
 
 ```bash
 # Recommended environment variable names
@@ -66,7 +66,7 @@ export WNC_ACCESS_TOKEN="$(echo -n 'admin:secure-password' | base64)"
 
 ### ⏱️ Request Timeouts
 
-Always use context with timeouts to prevent hanging requests:
+Always use timeouts to avoid hanging I/O:
 
 ```go
 import (
@@ -87,7 +87,7 @@ apData, err := client.AP().Oper(ctx)
 
 ### 📊 Structured Logging
 
-Configure secure logging with proper log levels:
+Structured logging example:
 
 ```go
 import (
@@ -107,7 +107,7 @@ client, err := wnc.NewClient("wnc.example.com", token,
 
 ## 🔐 Credential Management
 
-### ✅ Best Practices
+### ✅ Practices
 
 1. **Secure Credential Stores**:
 
@@ -156,7 +156,7 @@ client, err := wnc.NewClient("wnc.example.com", token,
    export WNC_ACCESS_TOKEN="$NEW_TOKEN"
    ```
 
-### ❌ Security Anti-Patterns
+### ❌ Anti‑Patterns
 
 - ❌ Never hardcode tokens in source code
 - ❌ Don't store tokens in version control
@@ -168,7 +168,7 @@ client, err := wnc.NewClient("wnc.example.com", token,
 
 ### 🔥 Firewall Configuration
 
-Configure network access controls:
+Restrict network egress to controller management interface only:
 
 ```bash
 # Required ports and protocols
@@ -197,7 +197,7 @@ transport := &http.Transport{
 
 ### 🚨 Error Handling
 
-Implement secure error handling that doesn't leak sensitive information:
+Return generic errors upward, log detail internally:
 
 ```go
 import (
@@ -231,7 +231,7 @@ if err != nil {
 - [ ] Context timeouts configured for all API operations
 - [ ] Error handling prevents information leakage
 
-### 🔍 Regular Security Maintenance
+### 🔍 Maintenance
 
 - [ ] Rotate authentication tokens quarterly
 - [ ] Review API access logs monthly
@@ -243,7 +243,7 @@ if err != nil {
 
 ## 🚨 Incident Response
 
-### 🔑 Authentication Compromise
+### Authentication Compromise
 
 1. **Immediate Actions**:
    - Revoke compromised tokens on WNC
@@ -256,7 +256,7 @@ if err != nil {
    - Check for unauthorized configuration changes
    - Validate API access patterns and usage
 
-### 🌐 Network Security Incident
+### Network Security Incident
 
 1. **Containment**:
    - Isolate affected controllers from network if necessary
