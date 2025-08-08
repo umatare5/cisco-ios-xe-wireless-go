@@ -257,11 +257,11 @@ Queries real-time operational data from the WNC controller using YANG model path
 <summary>Example of the result</summary>
 
 ```bash
-$ ./scripts/get_yang_statement_details.sh -c wnc1.example.internal -f json -k
+$ ./scripts/get_yang_statement_details.sh -c <controller-hostname> -f json -k
 
-Fetching YANG statement details from: https://wnc1.example.internal/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data
+Fetching YANG statement details from: https://<controller-hostname>/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data
 Protocol: https
-Controller: wnc1.example.internal
+Controller: <controller-hostname>
 YANG Model: Cisco-IOS-XE-wireless-access-point-oper
 Identifier: access-point-oper-data
 Output Format: json

@@ -183,7 +183,7 @@ Do not inline flag comparisons elsewhere.
 ## 🛠 Example Usage Snippets
 
 ```bash
-export WNC_CONTROLLER=wnc1.example.internal
+# export WNC_CONTROLLER=<controller-hostname>
 export WNC_ACCESS_TOKEN="<base64token>"
 ./scripts/get_yang_models.sh --verbose
 ./scripts/get_yang_model_details.sh --model Cisco-IOS-XE-wireless-access-point-oper

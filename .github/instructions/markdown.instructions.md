@@ -48,7 +48,8 @@ Goal: Produce **clear, concise, lint‑clean** documentation that accelerates de
 Example:
 
 ```bash
-export WNC_CONTROLLER=wnc1.example.internal
+# Explicit controller must be provided by user
+# export WNC_CONTROLLER=<controller-hostname>
 export WNC_ACCESS_TOKEN="<base64token>"
 ```
 

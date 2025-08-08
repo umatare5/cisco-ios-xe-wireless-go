@@ -132,7 +132,7 @@ EXAMPLES:
     $script_name
 
     # Using command line options
-    $script_name -c wnc1.example.internal -t "dXNlcjpwYXNzd29yZA=="
+    $script_name -c <controller-hostname> -t "dXNlcjpwYXNzd29yZA=="
 
     # Using HTTP instead of HTTPS
     $script_name -p http -c 192.168.1.100
