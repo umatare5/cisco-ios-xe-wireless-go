@@ -7,8 +7,8 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// TestFLEXService tests the FLEX service using standardized test patterns
-func TestFLEXService(t *testing.T) {
+// TestFlexService tests the Flex service using standardized test patterns
+func TestFlexService(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 
@@ -28,7 +28,7 @@ func TestFLEXService(t *testing.T) {
 
 	// Configure and run tests
 	config := tests.ServiceTestConfig{
-		ServiceName:    "FLEX",
+		ServiceName:    "Flex",
 		TestMethods:    testMethods,
 		JSONTestCases:  jsonTestCases,
 		SkipShortTests: true,

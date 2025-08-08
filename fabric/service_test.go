@@ -11,15 +11,15 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// TestDataCollector holds test data for FABRIC service functions
+// TestDataCollector holds test data for Fabric service functions
 type TestDataCollector struct {
 	mu      sync.Mutex
 	CfgResp *model.FabricCfgResponse
 	CfgErr  error
 }
 
-// TestFABRICService tests all FABRIC service functions with the 4-pattern testing approach
-func TestFABRICService(t *testing.T) {
+// TestFabricService tests all Fabric service functions with the 4-pattern testing approach
+func TestFabricService(t *testing.T) {
 	client := tests.OptionalTestClient(t)
 	ctx := context.Background()
 	if client != nil {

@@ -11,15 +11,15 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// TestDataCollector holds test data for LOCATION service functions
+// TestDataCollector holds test data for Location service functions
 type TestDataCollector struct {
 	mu      sync.Mutex
 	CfgResp *model.LocationCfgResponse
 	CfgErr  error
 }
 
-// TestLOCATIONService tests all LOCATION service functions with the 4-pattern testing approach
-func TestLOCATIONService(t *testing.T) {
+// TestLocationService tests all Location service functions with the 4-pattern testing approach
+func TestLocationService(t *testing.T) {
 	client := tests.OptionalTestClient(t)
 	ctx := context.Background()
 	if client != nil {

@@ -11,15 +11,15 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// TestDataCollector holds test data for DOT15 service functions
+// TestDataCollector holds test data for Dot15 service functions
 type TestDataCollector struct {
 	mu      sync.Mutex
 	CfgResp *model.Dot15CfgResponse
 	CfgErr  error
 }
 
-// TestDOT15Service tests all DOT15 service functions with the 4-pattern testing approach
-func TestDOT15Service(t *testing.T) {
+// TestDot15Service tests all Dot15 service functions with the 4-pattern testing approach
+func TestDot15Service(t *testing.T) {
 	client := tests.OptionalTestClient(t)
 	ctx := context.Background()
 	if client != nil {

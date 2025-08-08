@@ -20,9 +20,9 @@ export WNC_ACCESS_TOKEN=$(echo -n 'admin:password' | base64)
 
 ```go
 client, err := wnc.NewClient(
-	os.Getenv("WNC_CONTROLLER"),
-	os.Getenv("WNC_ACCESS_TOKEN"),
-	wnc.WithTimeout(30*time.Second),
+ os.Getenv("WNC_CONTROLLER"),
+ os.Getenv("WNC_ACCESS_TOKEN"),
+ wnc.WithTimeout(30*time.Second),
 )
 if err != nil { log.Fatal(err) }
 ctx := context.Background()

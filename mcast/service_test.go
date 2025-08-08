@@ -9,21 +9,21 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/tests"
 )
 
-// MCASTTestDataCollector holds test data for MCAST service functions
-type MCASTTestDataCollector struct {
+// McastTestDataCollector holds test data for Mcast service functions
+type McastTestDataCollector struct {
 	Data map[string]interface{} `json:"mcast_test_data"`
 }
 
-// newMCASTTestDataCollector creates a new test data collector
-func newMCASTTestDataCollector() *MCASTTestDataCollector {
-	return &MCASTTestDataCollector{
+// newMcastTestDataCollector creates a new test data collector
+func newMcastTestDataCollector() *McastTestDataCollector {
+	return &McastTestDataCollector{
 		Data: make(map[string]interface{}),
 	}
 }
 
-func runMCASTTestAndCollectData(
+func runMcastTestAndCollectData(
 	t *testing.T,
-	collector *MCASTTestDataCollector,
+	collector *McastTestDataCollector,
 	testName string,
 	testFunc func() (interface{}, error),
 ) {
@@ -47,8 +47,8 @@ func runMCASTTestAndCollectData(
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // ========================================
 
-// TestMCASTServiceStructures tests the basic structure of MCAST service and data types
-func TestMCASTServiceStructures(t *testing.T) {
+// TestMcastServiceStructures tests the basic structure of Mcast service and data types
+func TestMcastServiceStructures(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 
@@ -104,7 +104,7 @@ func TestMCASTServiceStructures(t *testing.T) {
 // ========================================
 
 // TestMCASTServiceMethods tests MCAST service methods with table-driven approach
-func TestMCASTServiceMethods(t *testing.T) {
+func TestMcastServiceMethods(t *testing.T) {
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
@@ -153,8 +153,8 @@ func TestMCASTServiceMethods(t *testing.T) {
 // 3. FAIL-FAST ERROR DETECTION (t.Fatalf/t.Fatal)
 // ========================================
 
-// TestMCASTServiceFailFast tests fail-fast scenarios for MCAST service operations
-func TestMCASTServiceFailFast(t *testing.T) {
+// TestMcastServiceFailFast tests fail-fast scenarios for Mcast service operations
+func TestMcastServiceFailFast(t *testing.T) {
 	// Test with nil client - expect error (not panic)
 	t.Run("NilClient", func(t *testing.T) {
 		service := NewService(nil)
@@ -197,30 +197,30 @@ func TestMCASTServiceFailFast(t *testing.T) {
 // ========================================
 
 // TestMCASTServiceIntegration tests all MCAST service functions with real WNC data collection
-func TestMCASTServiceIntegration(t *testing.T) {
+func TestMcastServiceIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
 
-	collector := newMCASTTestDataCollector()
+	collector := newMcastTestDataCollector()
 	client := tests.TestClient(t)
 	service := NewService(client)
 	ctx := tests.TestContext(t)
 
 	t.Run("Oper", func(t *testing.T) {
-		runMCASTTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
+		runMcastTestAndCollectData(t, collector, "Oper", func() (interface{}, error) {
 			return service.Oper(ctx)
 		})
 	})
 
 	t.Run("FlexMediastreamClientSummary", func(t *testing.T) {
-		runMCASTTestAndCollectData(t, collector, "FlexMediastreamClientSummary", func() (interface{}, error) {
+		runMcastTestAndCollectData(t, collector, "FlexMediastreamClientSummary", func() (interface{}, error) {
 			return service.FlexMediastreamClientSummary(ctx)
 		})
 	})
 
 	t.Run("VlanL2MgidOp", func(t *testing.T) {
-		runMCASTTestAndCollectData(t, collector, "VlanL2MgidOp", func() (interface{}, error) {
+		runMcastTestAndCollectData(t, collector, "VlanL2MgidOp", func() (interface{}, error) {
 			return service.VlanL2MgidOp(ctx)
 		})
 	})
@@ -230,7 +230,8 @@ func TestMCASTServiceIntegration(t *testing.T) {
 		if err := tests.SaveTestDataToFile("mcast_test_data_collected.json", collector.Data); err != nil {
 			t.Logf("Warning: Could not save test data: %v", err)
 		} else {
-			t.Logf("MCAST test data saved to test_data/mcast_test_data_collected.json")
+			// Log successful save of test data
+			t.Logf("Mcast test data saved to test_data/mcast_test_data_collected.json")
 		}
 	}
 }
