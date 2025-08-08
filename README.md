@@ -28,7 +28,7 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ## 🚀 Quick Start
 
-### 1. Create a Basic Auth Token
+### 1. Create your basic auth token
 
 ```bash
 # username:password → Base64
@@ -36,7 +36,7 @@ echo -n "admin:your-password" | base64
 # Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-### 2. Write a sample code
+### 2. Write and run a sample code
 
 ```go
 package main
