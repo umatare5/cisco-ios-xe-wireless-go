@@ -52,17 +52,17 @@ func TestApService(t *testing.T) {
 			},
 		},
 		{
-			Name: "NameMacMap",
+			Name: "GetNameMacMap",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.NameMacMap(ctx)
+				return service.GetNameMacMap(ctx)
 			},
 		},
 		{
-			Name: "CapwapData",
+			Name: "GetCapwapData",
 			Method: func() (interface{}, error) {
 				ctx := tests.TestContext(t)
-				return service.CapwapData(ctx)
+				return service.GetCapwapData(ctx)
 			},
 		},
 		{

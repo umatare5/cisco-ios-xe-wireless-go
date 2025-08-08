@@ -2,7 +2,6 @@ package ap
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -83,22 +82,30 @@ func (s Service) RadioNeighbor(ctx context.Context) (*model.ApOperApRadioNeighbo
 	return core.Get[model.ApOperApRadioNeighborResponse](ctx, s.c, APRadioNeighborEndpoint)
 }
 
-// NameMacMap returns the mapping between AP names and MAC addresses.
-func (s Service) NameMacMap(ctx context.Context) (*[]model.ApNameMacMap, error) {
-	var resp struct {
+// GetNameMacMap returns the mapping between AP names and MAC addresses.
+func (s Service) GetNameMacMap(ctx context.Context) (*[]model.ApNameMacMap, error) {
+	// local response wrapper to align with core.Get usage pattern
+	type apNameMacMapResponse struct {
 		Data []model.ApNameMacMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map"`
 	}
-	err := s.c.Do(ctx, http.MethodGet, APNameMacMapEndpoint, &resp)
-	return &resp.Data, err
+	resp, err := core.Get[apNameMacMapResponse](ctx, s.c, APNameMacMapEndpoint)
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
 }
 
-// CapwapData returns CAPWAP protocol data.
-func (s Service) CapwapData(ctx context.Context) (*[]model.CapwapData, error) {
-	var resp struct {
+// GetCapwapData returns CAPWAP protocol data.
+func (s Service) GetCapwapData(ctx context.Context) (*[]model.CapwapData, error) {
+	// local response wrapper to align with core.Get usage pattern
+	type capwapDataResponse struct {
 		Data []model.CapwapData `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-data"`
 	}
-	err := s.c.Do(ctx, http.MethodGet, CapwapDataEndpoint, &resp)
-	return &resp.Data, err
+	resp, err := core.Get[capwapDataResponse](ctx, s.c, CapwapDataEndpoint)
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
 }
 
 // Global Operational Methods
