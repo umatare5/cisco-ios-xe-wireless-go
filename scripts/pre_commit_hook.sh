@@ -27,8 +27,8 @@ main() {
 
 # Check for help request before argc evaluation
 if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
-    # Load only essential libraries for help
-    source "${MODULE_DIR}/help.sh"
+    # Initialize validation module (loads help functions) then show help
+    init_wnc_libraries "${SCRIPT_DIR}" "${MODULE_DIR}"
     show_pre_commit_help
     exit 0
 fi
