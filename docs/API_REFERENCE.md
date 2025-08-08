@@ -1,10 +1,12 @@
-# � API Reference
+# 📚 API Reference
 
 This document provides a comprehensive reference for all services and methods available in the Cisco IOS-XE Wireless Go SDK.
 
 ## 🏗️ Architecture Overview
 
 The library follows a **unified client architecture** where all domain services are accessed through a single client instance. This approach provides a clean, consistent interface for all wireless controller operations.
+
+> Boilerplate for simple GET endpoints is minimized internally using a generic helper `core.Get[T]`, keeping service methods concise and uniform without sacrificing clarity.
 
 ```go
 import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"

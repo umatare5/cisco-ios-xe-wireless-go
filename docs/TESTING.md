@@ -16,7 +16,7 @@ Comprehensive testing framework for the Cisco IOS-XE Wireless Go SDK, featuring 
 
 ### Service Testing Pattern
 
-All services follow a consistent 4-stage testing approach:
+All services follow a consistent 4-stage testing approach. Simple read-only (GET) service methods share an internal generic helper (`core.Get[T]`) to minimize boilerplate while tests continue to validate type integrity and response semantics.
 
 1. **Service Creation**: Constructor and configuration validation
 2. **Data Collection**: Method execution and response handling
@@ -26,13 +26,13 @@ All services follow a consistent 4-stage testing approach:
 ## 📊 Coverage Analysis
 
 > [!NOTE]
-> The project maintains high code coverage standards with automated reporting.
+> This project enforces a **hard 99%+ total coverage policy**. Any change set dropping below 99% must add or adjust tests before merge.
 
-| Coverage Type  | Target | Current |
-|---------------|--------|---------|
-| Core Client   | ≥98%   | 98.9%   |
-| Services      | ≥95%   | 99.2%   |
-| Total Project | ≥92%   | 96.8%   |
+| Coverage Type  | Target (Policy) | Current Example |
+|---------------|------------------|-----------------|
+| Core Client   | ≥99%             | 100%            |
+| Services      | ≥99%             | 100%            |
+| Total Project | ≥99% (hard gate) | 99.0%           |
 
 <details>
 <summary>View coverage commands</summary>

@@ -1,9 +1,12 @@
-# 📗 ciscoA Go client library for Cisco Catalyst 9800 Wireless LAN Controller RESTCONF API.
+# 📗 Cisco IOS-XE Wireless Go SDK (Cisco Catalyst 9800 RESTCONF)
+
+**High-quality, strongly-typed Go client for the Cisco Catalyst 9800 (IOS-XE 17.12) RESTCONF API.**
 
 - **🎯 Type-Safe Operations**: Strongly-typed data structures from YANG models
 - **🏗️ Clean Architecture**: Three-layer architecture with domain-specific services
 - **🔧 Developer-Friendly**: Unified client access with intuitive service patterns
-- **📊 Comprehensive Coverage**: 25+ functional domains covering all WNC operationse-wireless-go
+- **🧩 Low Boilerplate**: Internal generic helper eliminates repetitive GET code
+- **📊 Comprehensive Coverage**: 25+ functional domains
 
 ![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
 [![Test and Build](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main)](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml)
@@ -13,12 +16,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/main/LICENSE)
 [![Published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go)
 
-A Go client library for Cisco Catalyst 9800 Wireless LAN Controller RESTCONF API.
+---
 
-- **🎯 Type-Safe Operations**: Strongly-typed data structures from YANG models
-- **🏗️ Clean Architecture**: Three-layer architecture with domain-specific services
-- **🔧 Developer-Friendly**: Unified client access with intuitive service patterns
-- **� Comprehensive Coverage**: 25+ functional domains covering all WNC operations
+## ✨ Overview
+
+This library provides a production-grade, idiomatic Go interface to the Cisco Catalyst 9800 RESTCONF API. It focuses on **clarity**, **maintainability**, and **consistency**—removing boilerplate while preserving explicit, readable intent.
 
 ## 🎯 Compatibility
 
@@ -100,11 +102,33 @@ client, err := wnc.NewClient("192.168.1.100", "YWRtaW46cGFzc3dvcmQ=",
 
 ## 🏗️ Architecture
 
-The library follows a clean three-layer architecture:
+Three clean layers:
 
-- **Unified Client Layer**: Single-import access to all functionality
-- **Domain Service Layer**: 25+ domain-specific services (AFC, AP, WLAN, etc.)
-- **Generated Type Layer**: Strongly-typed structs from YANG models
+1. **Unified Client Layer** – single entrypoint exposing each service.
+2. **Domain Service Layer** – lightweight service methods (thin wrappers) calling shared helpers.
+3. **Generated Type Layer** – YANG-derived struct definitions ensuring type fidelity.
+
+### ♻️ Boilerplate Reduction with `core.Get`
+
+Most simple GET endpoints now use an internal generic helper:
+
+```go
+// internal/core/get.go
+func Get[T any](ctx context.Context, c *Client, endpoint string) (*T, error) {
+    var out T
+    return &out, c.Do(ctx, http.MethodGet, endpoint, &out)
+}
+```
+
+Service methods become concise and consistent:
+
+```go
+func (s Service) Oper(ctx context.Context) (*model.RrmOperResponse, error) {
+    return core.Get[model.RrmOperResponse](ctx, s.c, RrmOperEndpoint)
+}
+```
+
+This improves readability and reduces maintenance surface without hiding logic.
 
 ## 📋 Available Services
 
@@ -223,6 +247,6 @@ make yang-model MODEL=Cisco-IOS-XE-wireless-general-oper
 3. Automated tag creation on merge
 4. Manual release via GitHub Actions
 
-## � License
+## 📄 License
 
 [MIT License](./LICENSE)
