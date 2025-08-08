@@ -3,7 +3,6 @@ package wlan
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -44,38 +43,32 @@ func NewService(c *core.Client) Service {
 
 // Cfg returns complete WLAN configuration data.
 func (s Service) Cfg(ctx context.Context) (*model.WlanCfgResponse, error) {
-	var out model.WlanCfgResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WlanCfgEndpoint, &out)
+	return core.Get[model.WlanCfgResponse](ctx, s.c, WlanCfgEndpoint)
 }
 
 // CfgEntries returns WLAN configuration entries.
 func (s Service) CfgEntries(ctx context.Context) (*model.WlanCfgEntriesResponse, error) {
-	var out model.WlanCfgEntriesResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WlanCfgEntriesEndpoint, &out)
+	return core.Get[model.WlanCfgEntriesResponse](ctx, s.c, WlanCfgEntriesEndpoint)
 }
 
 // Policies returns WLAN policies.
 func (s Service) Policies(ctx context.Context) (*model.WlanPoliciesResponse, error) {
-	var out model.WlanPoliciesResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WlanPoliciesEndpoint, &out)
+	return core.Get[model.WlanPoliciesResponse](ctx, s.c, WlanPoliciesEndpoint)
 }
 
 // PolicyListEntries returns policy list entries.
 func (s Service) PolicyListEntries(ctx context.Context) (*model.PolicyListEntriesResponse, error) {
-	var out model.PolicyListEntriesResponse
-	return &out, s.c.Do(ctx, http.MethodGet, PolicyListEntriesEndpoint, &out)
+	return core.Get[model.PolicyListEntriesResponse](ctx, s.c, PolicyListEntriesEndpoint)
 }
 
 // WirelessAaaPolicyConfigs returns wireless AAA policy configurations.
 func (s Service) WirelessAaaPolicyConfigs(ctx context.Context) (*model.WirelessAaaPolicyConfigsResponse, error) {
-	var out model.WirelessAaaPolicyConfigsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WirelessAaaPolicyConfigsEndpoint, &out)
+	return core.Get[model.WirelessAaaPolicyConfigsResponse](ctx, s.c, WirelessAaaPolicyConfigsEndpoint)
 }
 
 // Operational Methods
 
 // GlobalOper returns WLAN global operational data.
 func (s Service) GlobalOper(ctx context.Context) (*model.WlanGlobalOperResponse, error) {
-	var out model.WlanGlobalOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, WlanGlobalOperDataEndpoint, &out)
+	return core.Get[model.WlanGlobalOperResponse](ctx, s.c, WlanGlobalOperDataEndpoint)
 }

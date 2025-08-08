@@ -1412,7 +1412,7 @@ func TestStandardJSONTestCases(t *testing.T) {
 
 		// Check that module name is included in the test case names
 		for _, testCase := range moduleTestCases {
-			if !strings.Contains(testCase.Name, pascalCase(module)) {
+			if !strings.Contains(testCase.Name, PascalCase(module)) {
 				t.Errorf("Test case name %s should contain module name %s", testCase.Name, module)
 			}
 		}
@@ -1437,7 +1437,7 @@ func TestStandardJSONTestCases(t *testing.T) {
 	}
 }
 
-// TestPascalCase tests the pascalCase function
+// TestPascalCase tests the PascalCase function
 func TestPascalCase(t *testing.T) {
 	testCases := []struct {
 		input    string
@@ -1464,9 +1464,9 @@ func TestPascalCase(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		result := pascalCase(tc.input)
+		result := PascalCase(tc.input)
 		if result != tc.expected {
-			t.Errorf("pascalCase(%q) = %q; expected %q", tc.input, result, tc.expected)
+			t.Errorf("PascalCase(%q) = %q; expected %q", tc.input, result, tc.expected)
 		}
 	}
 
@@ -1482,9 +1482,9 @@ func TestPascalCase(t *testing.T) {
 	}
 
 	for _, tc := range asciiTestCases {
-		result := pascalCase(tc.input)
+		result := PascalCase(tc.input)
 		if result != tc.expected {
-			t.Errorf("pascalCase ASCII test: %q -> %q; expected %q", tc.input, result, tc.expected)
+			t.Errorf("PascalCase ASCII test: %q -> %q; expected %q", tc.input, result, tc.expected)
 		}
 	}
 }
@@ -1518,10 +1518,10 @@ func TestHelpersFunctionsCoverage(t *testing.T) {
 		t.Error("StandardJSONTestCases coverage test failed")
 	}
 
-	// Test pascalCase is covered
-	result := pascalCase("coverage")
+	// Test PascalCase is covered
+	result := PascalCase("coverage")
 	if result != "Coverage" {
-		t.Errorf("pascalCase coverage test failed: got %s", result)
+		t.Errorf("PascalCase coverage test failed: got %s", result)
 	}
 
 	// Test RunServiceTests is covered with minimal config
@@ -1552,8 +1552,8 @@ func TestHelpersFunctionsCoverage(t *testing.T) {
 		t.Error("Expected JSON test cases, got none")
 	}
 
-	// Test pascalCase function
-	pascalResult := pascalCase("test-string")
+	// Test PascalCase function
+	pascalResult := PascalCase("test-string")
 	if pascalResult != "Test-string" {
 		t.Errorf("Expected 'Test-string', got '%s'", pascalResult)
 	}
@@ -1718,3 +1718,143 @@ func TestTestClientFailOnErrorDowngrade(t *testing.T) {
 	defer func() { createCoreClient = createOrig }()
 	TestClient(t) // should Skip not Fatal
 }
+
+// --- Merged auxiliary helper tests (previously in helpers_additional_test.go, helpers_context_test.go, helpers_pascal_skip_test.go) ---
+
+// TestAdditionalHelperBranches covers nil client path, PascalCase edge cases, and context timeout helper.
+func TestAdditionalHelperBranches(t *testing.T) {
+	// SkipIfNoConnection with nil client path (should no-op)
+	SkipIfNoConnection(t, nil)
+
+	cases := map[string]string{
+		"":   "",
+		"a":  "A",
+		"A":  "A",
+		"1":  "1",
+		"ab": "Ab",
+		"Ab": "Ab",
+		"_a": "_a",
+	}
+	for in, expect := range cases {
+		if got := PascalCase(in); got != expect {
+			t.Errorf("PascalCase(%q)=%q want %q", in, got, expect)
+		}
+	}
+
+	// Exercise default TestContext
+	if ctx := TestContext(t); ctx == nil {
+		t.Fatalf("TestContext returned nil context")
+	}
+
+	// Exercise explicit timeout path
+	ctx := TestContextWithTimeout(t, 5*time.Millisecond)
+	<-ctx.Done()
+	if ctx.Err() == nil {
+		t.Errorf("expected context to be done")
+	}
+}
+
+// TestTestContextDirect ensures TestContext body executes for coverage (merged).
+func TestTestContextDirect(t *testing.T) {
+	if ctx := TestContext(t); ctx == nil {
+		t.Fatal("expected non-nil context")
+	}
+}
+
+// TestPascalCaseFullCoverage exercises first-rune branching and non-letter paths.
+func TestPascalCaseFullCoverage(t *testing.T) {
+	cases := map[string]string{
+		"":   "",
+		"a":  "A",
+		"Z":  "Z",
+		"ab": "Ab",
+		"Ab": "Ab",
+		"1a": "1a",
+		"_x": "_x",
+	}
+	for in, exp := range cases {
+		if got := PascalCase(in); got != exp {
+			t.Errorf("PascalCase(%q)=%q want %q", in, got, exp)
+		}
+	}
+	_ = executedPascalCase
+}
+
+// TestSkipIfNoConnectionSuccess forces non-skip branch.
+func TestSkipIfNoConnectionSuccess(t *testing.T) {
+	orig := connectivityCheck
+	defer func() { connectivityCheck = orig }()
+	connectivityCheck = func(ctx context.Context, c *core.Client) error { return nil }
+	c, err := core.New("controller", "token")
+	if err != nil {
+		t.Fatalf("unexpected error creating client: %v", err)
+	}
+	SkipIfNoConnection(t, c)
+	_ = executedSkipIfNoConnection
+}
+
+// TestSkipIfNoConnectionError exercises skip path (cannot assert skip directly, but path executed).
+func TestSkipIfNoConnectionError(t *testing.T) {
+	orig := connectivityCheck
+	defer func() { connectivityCheck = orig }()
+	connectivityCheck = func(ctx context.Context, c *core.Client) error { return context.DeadlineExceeded }
+	c, err := core.New("controller", "token")
+	if err != nil {
+		t.Fatalf("unexpected error creating client: %v", err)
+	}
+	SkipIfNoConnection(t, c)
+}
+
+// TestRunServiceTestsNoClient hits early no-methods skip logic.
+func TestRunServiceTestsNoClient(t *testing.T) {
+	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", SkipShortTests: true})
+}
+
+// TestRunServiceTestsWithMethods ensures method invocation.
+func TestRunServiceTestsWithMethods(t *testing.T) {
+	called := false
+	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "Method1", Method: func() (interface{}, error) {
+		called = true
+		return struct{ X int }{1}, nil
+	}}}})
+	if !called {
+		t.Error("expected method to be called")
+	}
+}
+
+// TestRunServiceTestsJSONCases adds JSON case execution.
+func TestRunServiceTestsJSONCases(t *testing.T) {
+	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", JSONTestCases: []JSONTestCase{{Name: "Simple", JSONData: `{"a":1}`}}})
+}
+
+// TestRunServiceTestsIntegrationShortMode forces short-mode integration skip.
+func TestRunServiceTestsIntegrationShortMode(t *testing.T) {
+	orig := shortModeCheck
+	shortModeCheck = func() bool { return true }
+	defer func() { shortModeCheck = orig }()
+	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return nil, nil }}}, SkipShortTests: true})
+}
+
+// TestRunServiceTestsIntegrationNoClient path with no client (short mode false).
+func TestRunServiceTestsIntegrationNoClient(t *testing.T) {
+	orig := shortModeCheck
+	shortModeCheck = func() bool { return false }
+	defer func() { shortModeCheck = orig }()
+	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return nil, nil }}}})
+}
+
+// TestRunServiceTestsIntegrationExec executes integration method path (client creation attempted if env present).
+func TestRunServiceTestsIntegrationExec(t *testing.T) {
+	orig := shortModeCheck
+	shortModeCheck = func() bool { return false }
+	defer func() { shortModeCheck = orig }()
+	RunServiceTests(t, ServiceTestConfig{ServiceName: "dummy", TestMethods: []TestMethod{{Name: "M", Method: func() (interface{}, error) { return struct{ Y string }{"val"}, nil }}}})
+}
+
+// TestContextTimeoutSeparate ensures timeout context path executed separately.
+func TestContextTimeoutSeparate(t *testing.T) {
+	ctx := TestContextWithTimeout(t, 1*time.Millisecond)
+	<-ctx.Done()
+}
+
+// --- End merged auxiliary helper tests ---
