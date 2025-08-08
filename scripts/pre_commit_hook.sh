@@ -14,6 +14,7 @@ readonly MODULE_DIR="${SCRIPT_DIR}/lib/validation"
 
 # Source bootstrap library
 source "${SCRIPT_DIR}/lib/bootstrap.sh"
+source "${MODULE_DIR}/help.sh"
 
 # Initialize WNC libraries with validation module
 init_wnc_libraries "${SCRIPT_DIR}" "${SCRIPT_DIR}/lib/validation"
@@ -27,8 +28,6 @@ main() {
 
 # Check for help request before argc evaluation
 if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
-    # Initialize validation module (loads help functions) then show help
-    init_wnc_libraries "${SCRIPT_DIR}" "${MODULE_DIR}"
     show_pre_commit_help
     exit 0
 fi
