@@ -2,7 +2,6 @@ package rogue
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/constants"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -36,30 +35,25 @@ func NewService(c *core.Client) Service {
 
 // Oper returns rogue operational data.
 func (s Service) Oper(ctx context.Context) (*model.RogueOperResponse, error) {
-	var out model.RogueOperResponse
-	return &out, s.c.Do(ctx, http.MethodGet, RogueOperEndpoint, &out)
+	return core.Get[model.RogueOperResponse](ctx, s.c, RogueOperEndpoint)
 }
 
 // Stats returns rogue statistics.
 func (s Service) Stats(ctx context.Context) (*model.RogueStatsResponse, error) {
-	var out model.RogueStatsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, RogueStatsEndpoint, &out)
+	return core.Get[model.RogueStatsResponse](ctx, s.c, RogueStatsEndpoint)
 }
 
 // Data returns rogue data.
 func (s Service) Data(ctx context.Context) (*model.RogueDataResponse, error) {
-	var out model.RogueDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, RogueDataEndpoint, &out)
+	return core.Get[model.RogueDataResponse](ctx, s.c, RogueDataEndpoint)
 }
 
 // ClientData returns rogue client data.
 func (s Service) ClientData(ctx context.Context) (*model.RogueClientDataResponse, error) {
-	var out model.RogueClientDataResponse
-	return &out, s.c.Do(ctx, http.MethodGet, RogueClientDataEndpoint, &out)
+	return core.Get[model.RogueClientDataResponse](ctx, s.c, RogueClientDataEndpoint)
 }
 
 // RldpStats returns RLDP statistics.
 func (s Service) RldpStats(ctx context.Context) (*model.RldpStatsResponse, error) {
-	var out model.RldpStatsResponse
-	return &out, s.c.Do(ctx, http.MethodGet, RldpStatsEndpoint, &out)
+	return core.Get[model.RldpStatsResponse](ctx, s.c, RldpStatsEndpoint)
 }
