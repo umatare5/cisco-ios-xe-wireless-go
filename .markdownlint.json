@@ -6,5 +6,6 @@
   "no-duplicate-heading": false,
   "no-bare-urls": false,
   "header-increment": false,
-  "no-alt-text": false
+  "no-alt-text": false,
+  "no-blanks-blockquote": false
 }

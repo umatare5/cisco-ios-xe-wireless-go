@@ -1,24 +1,28 @@
-# 📗 cisco-ios-xe-wireless-go - Go Library for C9800
+# 📗 cisco-ios-xe-wireless-go — Go Library for Cisco Catalyst 9800 WNC
 
 ![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
 [![Test and Build](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main)](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go)](https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/10969/badge)](https://www.bestpractices.dev/projects/10969)
 [![Go Reference](https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg)](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go)
 
-A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
+A **Go library** for interacting with **Cisco Catalyst 9800 Wireless Network Controllers (WNC)**
+providing type-safe API access, simple configuration, and comprehensive coverage of WNC data.
 
-- **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
-- **📊 Comprehensive Coverage**: Access most status information and metrics available from the WNC
-- **🚀 Quick Integration**: Get started in minutes with simple configuration and clear examples
-- **🎯 Type-Safe Operations**: Strongly-typed Go structs for all API interactions and responses
-- **📖 Comprehensive Documentation**: Detailed API reference, testing guides, and best practices
+## ✨ Features
+
+- **🔧 Developer Friendly** — Transparent YANG model handling with JSON responses
+- **📊 Comprehensive Coverage** — Access most status and metric endpoints from the WNC
+- **🚀 Quick Integration** — Ready to use in minutes with minimal setup
+- **🎯 Type-Safe Operations** — Strongly typed Go structs for requests and responses
+- **📖 Well Documented** — API reference, testing guide, and usage examples
 
 ## 📡 Supported Environment
 
-Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
+- **Controller:** Cisco Catalyst 9800 Wireless Network Controller
+- **Firmware:** Cisco IOS-XE `17.12.x`
 
 ## 📦 Installation
 
@@ -28,19 +32,15 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ## 🚀 Quick Start
 
-### 🔑 Creating Basic Auth Token
-
-You must create a Basic Auth token using your Cisco WNC credentials before using the client.
+### 1. Create a Basic Auth Token
 
 ```bash
-# Create token for username:password
+# username:password → Base64
 echo -n "admin:your-password" | base64
 # Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-### Basic Usage
-
-Start with this simple example to verify your WNC connection and credentials.
+### 2. Write a sample code
 
 ```go
 package main
@@ -76,18 +76,36 @@ func main() {
 }
 ```
 
-## 🌐 API Reference
+> [!CAUTION]
+> The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
-The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see **[API_REFERENCE.md](./docs/API_REFERENCE.md)**.
+> [!NOTE]
+> Runnable examples are available:
+>
+> - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
+> - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
+
+## 📚 Documentation
+
+- 🌐 **[API Reference](./docs/API_REFERENCE.md)** — All available functions and supported endpoints
+- 💉 **[Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
+- 📜 **[Script Reference](./docs/SCRIPT_REFERENCE.md)** — Standalone `curl` scripts for debugging
+
+> [!NOTE]
+> Runnable examples are available:
+>
+> - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
+> - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
 
 ## 🤝 Contributing
 
-We welcome contributions to this project! Please see our **[CONTRIBUTING.md](./docs/CONTRIBUTING.md)** for guidelines on how to contribute.
+We welcome contributions from the community!
+Please read our **[Contributing Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
 ## 🙏 Acknowledgments
 
-This code was developed with the assistance of **GitHub Copilot Agent Mode**. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
+This project was developed with the assistance of **GitHub Copilot Agent Mode**. Thanks to the global open-source community for knowledge, tools, and inspiration.
 
 ## 📄 License
 
-Please see the [LICENSE](./LICENSE) file for details.
+[MIT License](./LICENSE)
