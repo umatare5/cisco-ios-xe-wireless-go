@@ -49,17 +49,17 @@ build:
 # YANG Model Development Tools
 # List all available YANG models
 yang-list:
-	@./scripts/get_yang_models.sh
+	@./scripts/get_yang_models.sh $(ARGS)
 
 # Get YANG model details from controller
 # (usage: make yang-model MODEL=model-name)
 yang-model:
-	@./scripts/get_yang_model_details.sh $(MODEL)
+	@./scripts/get_yang_model_details.sh $(ARGS) $(MODEL)
 
 # Get YANG statement details from controller
 # (usage: make yang-statement MODEL=model-name STATEMENT=statement-name)
 yang-statement:
-	@./scripts/get_yang_statement_details.sh $(MODEL) $(STATEMENT)
+	@./scripts/get_yang_statement_details.sh $(ARGS) $(MODEL) $(STATEMENT)
 
 # Pre-commit Hook Management
 # Install pre-commit hook to prevent direct commits to main branch

@@ -99,7 +99,7 @@ Generate coverage summaries and an HTML report to assess tested code paths.
 | Command                     | Notes                                                         |
 | --------------------------- | ------------------------------------------------------------- |
 | `make test-coverage`        | Writes `./tmp/coverage.out`.                                  |
-| `make test-coverage-report` | Generates `report.out` and `report.html` under `./coverage/`. |
+| `make test-coverage-report` | Generates `report.out` and `report.html` under `./coverage/.` |
 
 > [!NOTE]
 > CI publish a coverage badge from `coverage/report.out` when present.

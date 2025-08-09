@@ -18,6 +18,7 @@ is_force_enabled() { [[ "${argc_force:-0}" == "1" ]]; }
 is_download_only_enabled() { [[ "${argc_download_only:-0}" == "1" ]]; }
 is_verify_enabled() { [[ "${argc_verify:-0}" == "1" ]]; }
 is_insecure_enabled() { [[ "${argc_insecure:-0}" == "1" ]]; }
+get_cacert_file() { echo "${argc_cacert:-}"; }
 
 # Generic helpers
 is_command_available() { command -v "${1:-}" >/dev/null 2>&1; }

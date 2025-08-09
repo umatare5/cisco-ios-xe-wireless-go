@@ -30,11 +30,10 @@ Following is a summary of available Make targets:
 | `pre-commit-test`      | Test pre-commit hook without installing | `scripts/pre_commit_hook.sh`            |
 | `pre-commit-uninstall` | Remove a symlink to pre-commit hook     | (inline)                                |
 
-> [!NOTE]
-> For detailed script usage and examples, see the Scripts Reference: `docs/SCRIPT_REFERENCE.md`.
-
 > [!TIP]
 > YANG targets accept variables: `make yang-model MODEL=<name>` and `make yang-statement MODEL=<name> STATEMENT=<stmt>`.
+>
+> You can pass extra flags via `ARGS`, for example: `make yang-list ARGS="--insecure"` for lab certs.
 
 ## 🔍 Examples
 
@@ -57,7 +56,7 @@ make test-coverage         # unified coverage (unit+integration)
 make test-coverage-report  # HTML coverage export
 ```
 
-### YANG exploration
+### YANG Exploration
 
 List available YANG models and inspect a model or a specific statement.
 
@@ -66,3 +65,7 @@ make yang-list
 make yang-model MODEL=Cisco-IOS-XE-wireless-access-point-oper
 make yang-statement MODEL=Cisco-IOS-XE-wireless-access-point-oper STATEMENT=access-point-oper-data
 ```
+
+## 📜 About Underlying Scripts
+
+For detailed script usage and examples, please see the [SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md).
