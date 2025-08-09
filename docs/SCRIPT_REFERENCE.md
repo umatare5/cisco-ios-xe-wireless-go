@@ -2,9 +2,9 @@
 
 Central reference for all development scripts under `scripts/`. Each entry point focuses on a single concern and delegates shared logic to modular libraries in `scripts/lib/`. All scripts are: idempotent, side‑effect constrained, and exit non‑zero on failure.
 
-- There are five main domains of scripts:
+- There are five main domains of entry point scripts:
 
-  | Domain         | Scripts (entry points)                                                                                                                                                         |
+  | Domain         | Entry Point Scripts                                                                                                                                                            |
   | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
   | Development    | [install_dependencies.sh](#install_dependencies.sh), [clean_artifacts.sh](#clean_artifacts.sh)                                                                                 |
   | Testing        | [test_unit.sh](#test_unit.sh), [test_integration.sh](#test_integration.sh), [test_coverage.sh](#test_coverage.sh), [generate_coverage_report.sh](#generate_coverage_report.sh) |
