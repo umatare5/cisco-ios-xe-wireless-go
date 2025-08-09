@@ -114,6 +114,12 @@ func main() {
 
 The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see [API Reference](./docs/API_REFERENCE.md).
 
+## 📚️ Documentation
+
+- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
+- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
+- **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
+
 ## 🤝 Contributing
 
 I welcome all kinds of contributions from the community! Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
@@ -122,12 +128,6 @@ I welcome all kinds of contributions from the community! Please read the **[Cont
 > This library is under **active development**; breaking changes may occur until `v1.0.0`.
 >
 > - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
-
-## 📚️ Documentation
-
-- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
-- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
-- **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 
 ## 🙏 Acknowledgments
 
