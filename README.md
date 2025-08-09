@@ -118,7 +118,7 @@ The library provides a set of functions for interacting with all major Cisco Cat
 
 I welcome all kinds of contributions from the community! Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
-There is a several useful documentation resources for supporting the contribution available:
+For additional guidance, please also see the following documents:
 
 - **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
 - **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
