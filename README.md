@@ -48,7 +48,7 @@ echo -n "admin:your-password" | base64
 # Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-### 2. Run the sample program
+### 2. Run the sample application
 
 Use your controller host and token to fetch AP operational data.
 
@@ -110,23 +110,24 @@ func main() {
 >   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="workflow completed successfully"
 >   ```
 
-## 📚 Documentation
+## 🌐 API Reference
 
-- **🌐 [API Reference](./docs/API_REFERENCE.md)** — All available functions and supported endpoints
-- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
-- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
-- **💉 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
+The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see [API Reference](./docs/API_REFERENCE.md).
 
 ## 🤝 Contributing
 
-I welcome all kinds of contributions from the community!
-
-Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
+I welcome all kinds of contributions from the community! Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
 > [!NOTE]
 > This library is under **active development**; breaking changes may occur until `v1.0.0`.
 >
 > - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
+
+### Related Documentation
+
+- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
+- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
+- **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 
 ## 🙏 Acknowledgments
 

@@ -5,6 +5,45 @@ This document provides an overview of the API functions available in the WNC Go 
 > [!NOTE]
 > All data shapes map directly to Cisco YANG models for IOS-XE 17.12.1. See official [YANG Models](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme) for field semantics.
 
+## 🏗️ Client Construction
+
+Following is an example of how to create a WNC client in Go. The client is stateless and can be reused for multiple requests.
+
+```go
+import (
+  "context"
+  "time"
+
+  wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+)
+
+func example() error {
+  client, err := wnc.NewClient("wnc1.example.internal", "<base64token>",
+    wnc.WithTimeout(30*time.Second),
+    // wnc.WithInsecureSkipVerify(true), // lab only
+  )
+  if err != nil { return err }
+
+  ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+  defer cancel()
+  _, _ = client.General().GetOper(ctx)
+  return nil
+}
+```
+
+### Options
+
+| Option                      | Type            | Default                    | Description                              |
+| --------------------------- | --------------- | -------------------------- | ---------------------------------------- |
+| `WithTimeout(d)`            | `time.Duration` | `wnc.DefaultTimeout` (60s) | Sets HTTP request timeout; must be > 0.  |
+| `WithInsecureSkipVerify(b)` | `bool`          | `false`                    | Skips TLS verify; use only in labs.      |
+| `WithLogger(l)`             | `*slog.Logger`  | `slog.Default()`           | Sets structured logger; cannot be nil.   |
+| `WithUserAgent(ua)`         | `string`        | `"wnc-go-client/1.0"`      | Custom User-Agent; may be ignored today. |
+
+> [!TIP]
+>
+> Defaults: TLS verification is `on` and headers include `Accept: application/yang-data+json` and a default User-Agent.
+
 ## 🧭 Domain Services
 
 Each `*wnc.Client` accessor returns a lightweight, stateless value‑receiver service.

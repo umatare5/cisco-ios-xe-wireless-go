@@ -1,6 +1,13 @@
 # 🧪 Testing
 
-Test suite focuses on correctness of serialization, basic domain wiring, and live integration against a real controller (when env vars set). Only deterministic, read‑only operations are executed.
+This guide explains how to run unit and integration tests, manage test data, and generate coverage reports.
+
+> [!NOTE]
+> Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`.
+
+## 🎯 Scope & layers
+
+The suite is deterministic and read‑only. It validates serialization, service wiring, and live data shapes.
 
 | Layer        | Purpose                                | Trigger                 |
 | ------------ | -------------------------------------- | ----------------------- |
@@ -9,9 +16,13 @@ Test suite focuses on correctness of serialization, basic domain wiring, and liv
 | Fail-fast    | Immediate surface of unexpected errors | `make test-unit`        |
 | Integration  | Live controller data shape sanity      | `make test-integration` |
 
-## 🎯 Prerequisites
+## 🧰 Prerequisites
+
+Tools and environment required to run unit and integration tests.
 
 ### Unit / Table / Fail-fast
+
+Run locally without a controller to validate structs, scenarios, and early failures.
 
 | Requirement | Version | Notes                    |
 | ----------- | ------- | ------------------------ |
@@ -20,186 +31,52 @@ Test suite focuses on correctness of serialization, basic domain wiring, and liv
 
 ### Integration
 
-Requires reachable Catalyst 9800 controller + credentials:
+Requires a reachable controller and credentials:
 
 | Variable           | Description        | Example                 |
 | ------------------ | ------------------ | ----------------------- |
 | `WNC_CONTROLLER`   | Controller host/IP | `wnc1.example.internal` |
 | `WNC_ACCESS_TOKEN` | Base64 `user:pass` | `YWRtaW46cGFzc3dvcmQ=`  |
 
-<details><summary>Environment Variable Example</summary>
+<details><summary>Environment setup</summary>
 
 ```bash
-export WNC_CONTROLLER="192.168.1.100"          # Your WNC IP address
-export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:password
+export WNC_CONTROLLER="wnc1.example.internal"
+export WNC_ACCESS_TOKEN="<base64 user:pass>"
 ```
 
 </details>
 
-## 🚀 Running Tests
+> [!CAUTION]
+> Never commit real tokens or `.env` files; see Security → Token Handling.
 
-Use provided Make targets:
+## 🚀 Running tests
 
-| Command                 | Description                          |
-| ----------------------- | ------------------------------------ |
-| `make test-unit`        | Run unit + table + fail-fast suites  |
-| `make test-integration` | Run integration (skips if env unset) |
+Run unit and integration suites via Make targets for consistent, reproducible results.
+
+Primary Make targets:
+
+| Command                     | Description                          |
+| --------------------------- | ------------------------------------ |
+| `make test-unit`            | Run unit + table + fail-fast suites  |
+| `make test-integration`     | Run integration (skips if env unset) |
+| `make test-coverage`        | Run all tests and write coverage     |
+| `make test-coverage-report` | Generate HTML coverage report        |
 
 > [!NOTE]
-> lint runs automatically where defined.
+> Lint runs automatically where configured; see Make and Scripts references.
 
-<details><summary>Sample Output: `test-integration`</summary>
+## �️ Test data artifacts
 
-```bash
-❯ make test-unit
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+Integration tests persist controller responses to support regression and offline inspection.
 
-✓ All 4 required CLI tools are available
-======================================
-        Cisco WNC Code Linter
-      golangci-lint Integration
-======================================
+| Aspect   | Detail                                 |
+| -------- | -------------------------------------- |
+| Location | `*/test_data/*.json`                   |
+| Format   | Raw controller JSON (pretty if stable) |
+| Use      | Schema drift and offline analysis      |
 
-ℹ Info: Starting code linting...
-0 issues.
-
-✓ Code linting completed successfully
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-         Cisco WNC Unit Tests
-         Go Testing Framework
-======================================
-
-→ Starting unit tests...
-PASS TestNewClient/ValidClient (0.00s)
-PASS TestNewClient/ValidClientWithOptions (0.00s)
-PASS TestNewClient/InvalidHost (0.00s)
-<snip>
-DONE 1048 tests, 36 skipped in 4.194s
-
------------------------------------------
-✓ Unit tests completed successfully
-ℹ Info: Duration: 4s
------------------------------------------
-```
-
-</details>
-
-<details><summary>Sample Output: `test-unit`</summary>
-
-```bash
-❯ make test-integration
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-        Cisco WNC Code Linter
-      golangci-lint Integration
-======================================
-
-ℹ Info: Starting code linting...
-0 issues.
-
-✓ Code linting completed successfully
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-     Cisco WNC Integration Tests
-         Go Testing Framework
-======================================
-
-→ Starting integration tests...
-PASS TestNewClient/ValidClient (0.00s)
-PASS TestNewClient/ValidClientWithOptions (0.00s)
-PASS TestNewClient/InvalidHost (0.00s)
-<snip>
-DONE 1048 tests, 36 skipped in 9.386s
-
------------------------------------------
-✓ Integration tests completed successfully
-ℹ Info: Duration: 10s
------------------------------------------
-```
-
-</details>
-
-<details><summary>Sample Output: `test-integration`</summary>
-
-```bash
-❯ make test-integration
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-        Cisco WNC Code Linter
-      golangci-lint Integration
-======================================
-
-ℹ Info: Starting code linting...
-0 issues.
-
-✓ Code linting completed successfully
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-     Cisco WNC Integration Tests
-         Go Testing Framework
-======================================
-
-→ Starting integration tests...
-PASS TestNewClient/ValidClient (0.00s)
-PASS TestNewClient/ValidClientWithOptions (0.00s)
-PASS TestNewClient/InvalidHost (0.00s)
-<snip>
-DONE 1048 tests, 36 skipped in 9.386s
-
------------------------------------------
-✓ Integration tests completed successfully
-ℹ Info: Duration: 10s
------------------------------------------
-```
-
-</details>
-
-## 📊 Test Data Artifacts
-
-Integration tests persist sample controller responses for regression & offline parsing.
-
-| Aspect   | Detail                                     |
-| -------- | ------------------------------------------ |
-| Location | `*/test_data/*.json`                       |
-| Format   | Raw controller JSON (pretty if stable)     |
-| Use      | Schema drift detection, offline inspection |
-
-<details><summary>Example Layout</summary>
+<details><summary>Example layout</summary>
 
 ```text
 test_data/
@@ -213,98 +90,37 @@ test_data/
 
 ## 📈 Coverage
 
+Generate coverage summaries and an HTML report to assess tested code paths.
+
 ### Reports
 
-| Target  | Command                     | Notes                                 |
-| ------- | --------------------------- | ------------------------------------- |
-| Summary | `make test-coverage`        | Outputs aggregate %                   |
-| HTML    | `make test-coverage-report` | Generates browsable HTML under `tmp/` |
-
-<details><summary>Sample Output: test-coverage</summary>
-
-```bash
-❯ make test-coverage
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-       Cisco WNC Coverage Tests
-         Go Testing Framework
-======================================
-
-→ Starting coverage tests...
-PASS TestNewClient/ValidClient (0.00s)
-PASS TestNewClient/ValidClientWithOptions (0.00s)
-PASS TestNewClient/InvalidHost (0.00s)
-<snip>
-DONE 1048 tests, 36 skipped in 10.136s
-
------------------------------------------
-✓ Coverage tests completed successfully
-ℹ Info: Duration: 11s
------------------------------------------
-
-ℹ Info: Coverage report generated: ././tmp/coverage.out
-ℹ Info: Total coverage: 99.1%
-```
-
-</details>
-
-<details><summary>Sample Output: test-coverage-report</summary>
-
-```bash
-❯ make test-coverage-report
-Validating CLI tools (level: standard)...
-✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
-
-✓ All 4 required CLI tools are available
-======================================
-       Coverage HTML Generator
-      Go Tool Cover Integration
-======================================
-
-→ Generating HTML coverage report...
-
-✓ HTML coverage report generated successfully
-ℹ Info: Report location: ././tmp/coverage.html
-ℹ Info: Report size: 159374 bytes
-
-ℹ Info: To view the report:
-  open ././tmp/coverage.html
-```
-
-</details>
+| Target  | Command                     | Notes                           |
+| ------- | --------------------------- | ------------------------------- |
+| Summary | `make test-coverage`        | Writes `./tmp/coverage.out`     |
+| HTML    | `make test-coverage-report` | Generates `./tmp/coverage.html` |
 
 > [!NOTE]
-> CI generates the coverage badge (`docs/assets/coverage.svg`) from `coverage/report.out`. Commit `coverage/report.out` so the badge updates.
+> CI may publish a coverage badge from `coverage/report.out` when present.
 
-## � Tips
+## 💡 Tips
 
-1. Run unit first (`make test-unit`)
-2. Export env vars only when needed for integration
-3. Use `grep` over `test_data/` to compare schema drift
-4. Keep JSON fixtures minimal—avoid giant blobs
-5. Fail fast: add explicit error checks in new tests
+Practical guidance to keep test runs fast, reliable, and easy to debug.
+
+1. Run unit first (`make test-unit`).
+2. Export env vars only when needed for integration.
+3. Use `grep` over `test_data/` to spot schema drift.
+4. Keep JSON fixtures minimal to aid diffs.
+5. Fail fast: add explicit error checks in new tests.
 
 > [!TIP]
-> CI can run unit tests without controller; integration can be opt‑in nightly.
+> Unit tests can run on CI without a controller; integration can be opt‑in.
 
-### 🔧 Tooling
+## 🧩 Troubleshooting
 
-The project uses several tools to enhance the testing experience:
+Common issues and concise fixes for failed or flaky test runs.
 
-| Tool            | Purpose                            |
-| --------------- | ---------------------------------- |
-| `golangci-lint` | Static analysis                    |
-| `gotestsum`     | (Optional) nicer local test output |
-| `markdownlint`  | Doc lint (indirect via scripts)    |
-
-> [!NOTE]
-> Install dev helpers: `make deps`
+- Missing env vars: set `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN` for integration.
+- Unreachable controller: verify DNS or use `wnc1.example.internal` or an IP.
+- TLS errors: see Security → TLS Verification and avoid disabling checks in prod.
+- Auth failures: ensure the token is Base64 of `user:pass` and not expired.
+- Flaky tests: re-run with verbose logs; isolate by package using `go test ./pkg`.

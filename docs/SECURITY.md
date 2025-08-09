@@ -131,6 +131,26 @@ This section defines network controls and access policies to protect the control
 
 Prefer structured logs, exclude secrets, and log only necessary context for operations and audits.
 
+```go
+import (
+   "log/slog"
+   "os"
+   "time"
+   wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+)
+
+logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+   Level: slog.LevelInfo,
+}))
+
+client, err := wnc.NewClient(
+   "wnc1.example.internal",
+   os.Getenv("WNC_ACCESS_TOKEN"),
+   wnc.WithLogger(logger),
+   wnc.WithTimeout(30*time.Second),
+)
+```
+
 ## 🏭 Environment Isolation <a id="environment-isolation"></a>
 
 Use separate clients and credentials for dev, staging, and prod to limit blast radius and enforce tailored timeouts.
