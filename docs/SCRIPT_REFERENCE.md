@@ -96,11 +96,7 @@ Validating CLI tools (level: standard)...
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="clean_artifacts.sh"></a>
-
-### clean_artifacts.sh
+### clean_artifacts.sh <a id="clean_artifacts.sh"></a> <!-- anchor for internal links -->
 
 clean_artifacts.sh removes build artifacts, temporary files, and caches to restore a clean working tree. It supports granular flags or a single --all sweep.
 
@@ -156,11 +152,7 @@ Validating CLI tools (level: minimal)...
 
 ## 🧪 Testing Scripts
 
-<!-- anchor for internal links -->
-
-<a id="test_unit.sh"></a>
-
-### test_unit.sh
+### test_unit.sh <a id="test_unit.sh"></a> <!-- anchor for internal links -->
 
 Runs unit tests with optional short mode and coverage generation.
 
@@ -216,11 +208,7 @@ DONE 1048 tests, 36 skipped in 12.783s
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="test_integration.sh"></a>
-
-### test_integration.sh
+### test_integration.sh <a id="test_integration.sh"></a> <!-- anchor for internal links -->
 
 Runs integration tests against a live Cisco C9800 controller. Requires `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN`.
 
@@ -277,11 +265,7 @@ DONE 1048 tests, 36 skipped in 12.783s
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="test_coverage.sh"></a>
-
-### test_coverage.sh
+### test_coverage.sh <a id="test_coverage.sh"></a> <!-- anchor for internal links -->
 
 Runs all tests and writes a unified coverage profile to `./tmp/coverage.out` (overridable).
 
@@ -340,11 +324,7 @@ DONE 1048 tests, 36 skipped in 11.167s
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="generate_coverage_report.sh"></a>
-
-### generate_coverage_report.sh
+### generate_coverage_report.sh <a id="generate_coverage_report.sh"></a> <!-- anchor for internal links -->
 
 Generates an HTML coverage report from `coverage.out`.
 
@@ -397,11 +377,7 @@ Validating CLI tools (level: standard)...
 
 ## ✅ Quality Scripts
 
-<!-- anchor for internal links -->
-
-<a id="lint.sh"></a>
-
-### lint.sh
+### lint.sh <a id="lint.sh"></a> <!-- anchor for internal links -->
 
 Runs golangci-lint using the repo configuration. Supports optional auto-fix.
 
@@ -437,11 +413,7 @@ Validating CLI tools (level: standard)...
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="pre_commit_hook.sh"></a>
-
-### pre_commit_hook.sh
+### pre_commit_hook.sh <a id="pre_commit_hook.sh"></a> <!-- anchor for internal links -->
 
 Runs repository pre-commit validations (formatting, build, tests, coverage presence). Intended to be wired to git hooks or run ad-hoc.
 
@@ -476,11 +448,7 @@ Validating CLI tools (level: minimal)...
 
 ## 📡 YANG Operation Scripts
 
-<!-- anchor for internal links -->
-
-<a id="get_yang_models.sh"></a>
-
-### get_yang_models.sh
+### get_yang_models.sh <a id="get_yang_models.sh"></a> <!-- anchor for internal links -->
 
 Lists available Cisco wireless YANG models from the controller.
 
@@ -512,11 +480,7 @@ N/A
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="get_yang_model_details.sh"></a>
-
-### get_yang_model_details.sh
+### get_yang_model_details.sh <a id="get_yang_model_details.sh"></a> <!-- anchor for internal links -->
 
 Fetches and prints details for a specific YANG model.
 
@@ -554,11 +518,7 @@ OPTIONS:
 
 </details>
 
-<!-- anchor for internal links -->
-
-<a id="get_yang_statement_details.sh"></a>
-
-### get_yang_statement_details.sh
+### get_yang_statement_details.sh <a id="get_yang_statement_details.sh"></a> <!-- anchor for internal links -->
 
 Retrieves details for a specific statement under a given YANG model.
 
@@ -593,11 +553,7 @@ N/A
 
 ## 🆘 Help Script
 
-<!-- anchor for internal links -->
-
-<a id="help.sh"></a>
-
-### help.sh
+### help.sh <a id="help.sh"></a> <!-- anchor for internal links -->
 
 Prints a consolidated help guide covering common Make targets, environment variables, and examples.
 
