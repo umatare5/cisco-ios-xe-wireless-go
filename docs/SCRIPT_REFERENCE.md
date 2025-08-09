@@ -8,9 +8,7 @@ This document provides an overview of the development scripts available in this 
 > - `WNC_CONTROLLER`
 > - `WNC_ACCESS_TOKEN`
 
-## 🧭 Scripts
-
-## 🧰 Commands
+## 🧰 Scripts
 
 Following is a summary of available scripts:
 
