@@ -90,20 +90,30 @@ format_yang_output() {
 
     # If raw output is requested, just output as-is
     if [[ "$raw_output" == "true" ]]; then
-        echo "$content"
+        # Guard against broken pipe when consumer (e.g., tail) exits early
+        printf '%s' "$content" || true
         return 0
     fi
 
     # Format JSON output
     if [[ "$format" == "json" ]]; then
-        if command -v jq >/dev/null 2>&1; then
-            echo "$content" | jq '.'
-        else
-            echo "$content"
-        fi
+            # Detect if content appears to be JSON; otherwise fall back to raw
+            local first_char
+            first_char=$(printf '%s' "$content" | sed -e 's/^[[:space:]]*//' | head -c 1 || true)
+            if [[ "$first_char" == "{" || "$first_char" == "[" ]]; then
+                if command -v jq >/dev/null 2>&1; then
+                    # If downstream closes early (SIGPIPE), do not fail the script
+                    printf '%s' "$content" | jq '.' || true
+                else
+                    printf '%s' "$content" || true
+                fi
+            else
+                # Non-JSON (e.g., raw YANG module text) -> output as-is
+                printf '%s' "$content" || true
+            fi
     else
         # XML or other formats - output as-is for now
-        echo "$content"
+        printf '%s' "$content" || true
     fi
 }
 
@@ -114,8 +124,9 @@ display_yang_operation_results() {
 
     echo
     if [[ "$exit_code" -eq 0 ]]; then
-        format_yang_success "$operation completed successfully"
-        [[ -n "$target" ]] && format_yang_info "Target: $target"
+        # If output is piped and the consumer exits early, do not turn this into a failure
+        format_yang_success "$operation completed successfully" || true
+        [[ -n "$target" ]] && { format_yang_info "Target: $target" || true; }
     else
         format_yang_error "$operation failed"
         format_yang_info "Check the output above for details"

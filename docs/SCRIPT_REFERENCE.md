@@ -89,9 +89,7 @@ OPTIONS:
 ❯ scripts/install_dependencies.sh
 Validating CLI tools (level: standard)...
 ✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+<snip>
 
 ✓ All 4 required CLI tools are available
 ======================================
@@ -195,9 +193,7 @@ OPTIONS:
 ❯ scripts/test_unit.sh
 Validating CLI tools (level: standard)...
 ✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+<snip>
 
 ✓ All 4 required CLI tools are available
 ======================================
@@ -252,9 +248,7 @@ OPTIONS:
 ❯ scripts/test_integration.sh
 Validating CLI tools (level: standard)...
 ✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+<snip>
 
 ✓ All 4 required CLI tools are available
 ======================================
@@ -308,9 +302,7 @@ OPTIONS:
 ❯ scripts/test_coverage.sh
 Validating CLI tools (level: standard)...
 ✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+<snip>
 
 ✓ All 4 required CLI tools are available
 ======================================
@@ -366,9 +358,7 @@ OPTIONS:
 ❯ scripts/generate_coverage_report.sh
 Validating CLI tools (level: standard)...
 ✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+<snip>
 
 ✓ All 4 required CLI tools are available
 ======================================
@@ -408,9 +398,7 @@ Runs golangci-lint using the repo configuration. Supports optional auto-fix.
 ❯ scripts/lint.sh
 Validating CLI tools (level: standard)...
 ✓ curl
-✓ go
-✓ golangci-lint
-✓ gotestsum
+<snip>
 
 ✓ All 4 required CLI tools are available
 ======================================
@@ -488,7 +476,41 @@ OPTIONS:
 <details><summary>Click to expand sample output</summary>
 
 ```bash
-N/A
+❯ scripts/get_yang_models.sh --insecure
+Validating CLI tools (level: strict)...
+✓ bc
+<snip>
+
+======================================
+      Cisco WNC YANG Operations
+       RESTCONF API Integration
+======================================
+
+→ Fetching YANG models list...
+{
+  "ietf-yang-library:modules-state": {
+    "module-set-id": "e3bbc332e0aa187acc8c9d9862f42c30",
+    "module": [
+      {
+        "name": "ATM-FORUM-TC-MIB",
+        "revision": "",
+        "schema": "https://192.168.122.48:443/restconf/tailf/modules/ATM-FORUM-TC-MIB",
+        "namespace": "urn:ietf:params:xml:ns:yang:smiv2:ATM-FORUM-TC-MIB",
+        "conformance-type": "import"
+      },
+      <snip>
+      {
+        "name": "tailf-yang-patch",
+        "revision": "2023-01-24",
+        "schema": "https://192.168.122.48:443/restconf/tailf/modules/tailf-yang-patch/2023-01-24",
+        "namespace": "http://tail-f.com/ns/tailf-yang-patch",
+        "conformance-type": "implement"
+      }
+    ]
+  }
+}
+
+✓ YANG models listing completed successfully
 ```
 
 </details>
@@ -499,35 +521,58 @@ Fetches and prints details for a specific YANG model.
 
 #### Usage
 
-```bash
+````bash
 ❯ scripts/get_yang_model_details.sh --help
 
 USAGE: get_yang_model_details [OPTIONS] <MODEL>
+
+ARGS:
+  <MODEL>  YANG model name to retrieve details for
 
 OPTIONS:
   -c, --controller <HOST>    WNC controller hostname or IP (required unless WNC_CONTROLLER set)
   -t, --token <TOKEN>        Basic auth token (or use WNC_ACCESS_TOKEN env var)
   -p, --protocol <PROTOCOL>  Protocol: http or https [default: https] [choices: http,https]
   -f, --format <FORMAT>      Output format: json or xml [default: json] [choices: json,xml]
+  -r, --revision <REVISION>  YANG model revision (YYYY-MM-DD) [default: 2023-08-01]
   -k, --insecure             Skip TLS certificate verification
   -v, --verbose              Enable verbose output
-  -r, --raw                  Output raw response without formatting
+  -R, --raw                  Output raw response without formatting
       --no-color             Disable colored output
   -h, --help                 Print help
   -V, --version              Print version
-```
 
 #### Sample Output
 
 <details><summary>Click to expand sample output</summary>
 
-```json
-{
-  "model": "Cisco-IOS-XE-wireless-ap-oper",
-  "namespace": "http://cisco.com/ns/yang/Cisco-IOS-XE-wireless-ap-oper",
-  "revision": "2023-10-01"
+```bash
+❯ ./scripts/get_yang_model_details.sh Cisco-IOS-XE-wireless-access-point-oper --insecure
+Validating CLI tools (level: strict)...
+✓ bc
+<snip>
+
+✓ All 6 required CLI tools are available
+======================================
+      Cisco WNC YANG Operations
+       RESTCONF API Integration
+======================================
+
+→ Fetching YANG model details for: Cisco-IOS-XE-wireless-access-point-oper (rev: 2023-08-01)
+module Cisco-IOS-XE-wireless-access-point-oper {
+  yang-version 1.1;
+  namespace "http://cisco.com/ns/yang/Cisco-IOS-XE-wireless-access-point-oper";
+  prefix wireless-access-point-oper;
+
+  import Cisco-IOS-XE-event-history-types {
+    prefix event-history-types;
+  }
+  <snip>
+  }
 }
-```
+✓ YANG model retrieval completed successfully
+ℹ Info: Target: Cisco-IOS-XE-wireless-access-point-oper
+````
 
 </details>
 
@@ -540,26 +585,52 @@ Retrieves details for a specific statement under a given YANG model.
 ```bash
 ❯ scripts/get_yang_statement_details.sh --help
 
-USAGE: get_yang_statement_details [OPTIONS] <model> <statement>
+USAGE: get_yang_statement_details [OPTIONS] <MODEL> <STATEMENT>
+
+ARGS:
+  <MODEL>      YANG model name
+  <STATEMENT>  YANG statement name
 
 OPTIONS:
-  -c, --controller <HOST>  Controller hostname or IP (or WNC_CONTROLLER)
-  -t, --token <TOKEN>      Basic auth token (or WNC_ACCESS_TOKEN)
-  -p, --protocol <PROTO>   http or https [default: https]
-  -f, --format <FORMAT>    json or xml [default: json]
-  -k, --insecure           Skip TLS certificate verification
-  -v, --verbose            Enable verbose output
-      --no-color           Disable colored output
-  model                    YANG model name (required)
-  statement                YANG statement name (required)
+  -c, --controller <HOST>    WNC controller hostname or IP (required unless WNC_CONTROLLER set)
+  -t, --token <TOKEN>        Basic auth token (or use WNC_ACCESS_TOKEN env var)
+  -p, --protocol <PROTOCOL>  Protocol: http or https [default: https] [choices: http,https]
+  -f, --format <FORMAT>      Output format: json or xml [default: json] [choices: json,xml]
+  -k, --insecure             Skip TLS certificate verification
+  -v, --verbose              Enable verbose output
+      --no-color             Disable colored output
+  -h, --help                 Print help
+  -V, --version              Print version
 ```
 
 #### Sample Output
 
 <details><summary>Click to expand sample output</summary>
 
-```json
-N/A
+```bash
+❯ ./scripts/get_yang_statement_details.sh Cisco-IOS-XE-wireless-access-point-oper access-point-oper-data --insecure
+Validating CLI tools (level: strict)...
+✓ bc
+<snip>
+
+✓ All 6 required CLI tools are available
+======================================
+      Cisco WNC YANG Operations
+       RESTCONF API Integration
+======================================
+
+→ Fetching YANG statement details for: Cisco-IOS-XE-wireless-access-point-oper/access-point-oper-data
+{
+  "Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": {
+    "ap-radio-neighbor": [
+      <snip>
+    ]
+  }
+}
+
+✓ YANG statement retrieval completed successfully
+ℹ Info: Target: Cisco-IOS-XE-wireless-access-point-oper/access-point-oper-data
+
 ```
 
 </details>

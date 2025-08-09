@@ -111,7 +111,7 @@ execute_yang_request() {
 
     # Check curl execution
     if [[ $curl_exit_code -ne 0 ]]; then
-        format_yang_error "Network request failed (curl exit code: $curl_exit_code)"
+        format_yang_error "Network request failed"
         rm -f "$temp_file"
         return 1
     fi
@@ -180,6 +180,7 @@ run_yang_get_model_operation() {
     local model_name="$1"
     local controller="${argc_controller:-${WNC_CONTROLLER:-}}"
     local token="${argc_token:-${WNC_ACCESS_TOKEN:-}}"
+    local revision="${argc_revision:-2023-08-01}"
 
     # Show banner and info
     show_yang_banner
@@ -188,15 +189,18 @@ run_yang_get_model_operation() {
     # Validate environment (hard error on missing env vars)
     validate_yang_environment "$controller" "$token" || return 1
 
-    # Build URL for specific model
+    # Build URL for specific model using tailf modules endpoint: /restconf/tailf/modules/<model>/<revision>
     local url
-    url=$(build_yang_url "$controller" "ietf-yang-library:modules-state/module=$model_name")
+    local protocol="${argc_protocol:-https}"
+    local modules_path
+    modules_path="$(get_restconf_modules_path)"
+    url="${protocol}://${controller}${modules_path}/${model_name}/${revision}"
 
     # Execute request
     local temp_file
     temp_file="$(mktemp)"
 
-    show_yang_progress "Fetching YANG model details for: $model_name"
+    show_yang_progress "Fetching YANG model details for: $model_name (rev: $revision)"
     local exit_code=0
     execute_yang_request "$url" "$token" "$temp_file" || exit_code=$?
     if [[ $exit_code -ne 0 ]]; then
@@ -227,9 +231,9 @@ run_yang_get_statement_operation() {
     # Validate environment (hard error on missing env vars)
     validate_yang_environment "$controller" "$token" || return 1
 
-    # Build URL for specific statement
+    # Build URL for specific statement (model:identifier)
     local url
-    url=$(build_yang_url "$controller" "$model_name")
+    url=$(build_yang_url "$controller" "${model_name}:${statement_name}")
 
     # Execute request
     local temp_file
@@ -246,20 +250,29 @@ run_yang_get_statement_operation() {
     if [[ $exit_code -eq 0 ]]; then
         # Filter for specific statement and display
         if [[ "${argc_format:-json}" == "json" ]] && command -v jq >/dev/null 2>&1; then
-            jq --arg statement "$statement_name" '
+            local filtered_file
+            filtered_file="$(mktemp)"
+            if jq --arg statement "$statement_name" '
                 .. | objects | to_entries[] |
                 select(.key == $statement) |
                 {($statement): .value}
-            ' "$temp_file" 2>/dev/null || {
-                format_yang_error "Statement '$statement_name' not found in model '$model_name'"
+            ' "$temp_file" >"$filtered_file" 2>/dev/null; then
+                if [[ -s "$filtered_file" ]]; then
+                    cat "$filtered_file"
+                else
+                    # If no specific key match, show raw JSON so the user still sees data
+                    cat "$temp_file"
+                fi
+            else
+                format_yang_error "Failed to process response for statement '$statement_name'"
                 exit_code=1
-            }
+            fi
+            rm -f "$filtered_file"
         else
-            # For XML or when jq is not available, use grep
-            grep -A 20 -B 5 "$statement_name" "$temp_file" || {
-                format_yang_error "Statement '$statement_name' not found in model '$model_name'"
-                exit_code=1
-            }
+            # For XML or when jq is not available, use grep; fall back to raw on no match
+            if ! grep -A 20 -B 5 "$statement_name" "$temp_file"; then
+                cat "$temp_file"
+            fi
         fi
         rm -f "$temp_file"
     fi

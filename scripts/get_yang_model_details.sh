@@ -7,9 +7,10 @@
 # @option -t --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
 # @option -p --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
 # @option -f --format <FORMAT>        Output format: json or xml [default: json] [choices: json,xml]
+# @option -r --revision <REVISION>    YANG model revision (YYYY-MM-DD) [default: 2023-08-01]
 # @flag   -k --insecure               Skip TLS certificate verification
 # @flag   -v --verbose                Enable verbose output
-# @flag   -r --raw                    Output raw response without formatting
+# @flag   -R --raw                    Output raw response without formatting
 # @flag      --no-color               Disable colored output
 # @arg    model!                      YANG model name to retrieve details for
 

@@ -74,7 +74,7 @@ OPTIONS:
     -t, --token <TOKEN>      Access token for authentication
     -f, --format <FORMAT>    Output format: json or xml [default: json]
     -v, --verbose            Enable verbose output
-    -r, --raw                Output raw response without formatting
+    -R, --raw                Output raw response without formatting
     -k, --insecure           Skip SSL certificate verification
     -h, --help               Show this help message
 
