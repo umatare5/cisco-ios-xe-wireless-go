@@ -68,4 +68,4 @@ make yang-statement MODEL=Cisco-IOS-XE-wireless-access-point-oper STATEMENT=acce
 
 ## 📜 About Underlying Scripts
 
-For detailed script usage and examples, please see the [SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md).
+For detailed script usage and examples, please see the [SCRIPT_REFERENCE.md](./SCRIPT_REFERENCE.md).
