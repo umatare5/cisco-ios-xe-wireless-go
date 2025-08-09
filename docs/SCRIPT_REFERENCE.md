@@ -12,7 +12,7 @@ This document provides an overview of the development scripts available in this 
 
 Following is a summary of available scripts:
 
-| Script                                                          | Purpose                               | Make target            |
+| Script                                                          | Purpose                               | Make Target            |
 | --------------------------------------------------------------- | ------------------------------------- | ---------------------- |
 | [help.sh](#help.sh)                                             | Show command help overview            | `help`                 |
 | [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`                 |

@@ -12,7 +12,7 @@ This document provides an overview of Make targets used in this repository.
 
 Following is a summary of available Make targets:
 
-| Target                 | Purpose                                 | Underlying script                       |
+| Make Target            | Purpose                                 | Underlying Script                       |
 | ---------------------- | --------------------------------------- | --------------------------------------- |
 | `help`                 | Show command help overview              | `scripts/help.sh`                       |
 | `deps`                 | Install / update dev tools              | `scripts/install_dependencies.sh`       |

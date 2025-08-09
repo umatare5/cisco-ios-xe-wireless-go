@@ -5,11 +5,11 @@ This guide explains how to run unit and integration tests, manage test data, and
 > [!NOTE]
 > Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`.
 
-## 🎯 Scope & layers
+## 🎯 Scopes
 
-The suite is deterministic and read‑only. It validates serialization, service wiring, and live data shapes.
+There are four main layers of tests:
 
-| Layer        | Purpose                                | Trigger                 |
+| Layer        | Purpose                                | Make Target             |
 | ------------ | -------------------------------------- | ----------------------- |
 | Unit         | JSON ↔ Go struct fidelity              | `make test-unit`        |
 | Table-driven | Multiple scenario assertions           | `make test-unit`        |
