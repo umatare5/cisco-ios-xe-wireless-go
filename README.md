@@ -119,7 +119,10 @@ Please read the **[🤝 Contribution Guide](./CONTRIBUTING.md)** before submitti
 
 ## 🙇‍♂️ Agreement
 
-Current library is in development. Breaking changes may occur until `v1.0.0`. The remaining tasks to reach to `v1.0.0` are available in the **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
+Current library is in **development**. Breaking changes may occur until `v1.0.0`.
+
+> [!Note]
+> The remaining tasks to reach to `v1.0.0` are available in the **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 🙏 Acknowledgments
 
