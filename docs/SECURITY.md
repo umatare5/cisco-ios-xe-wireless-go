@@ -2,7 +2,32 @@
 
 This document provides an overview of security practices for using this library.
 
-## 🔒 TLS Verification
+## 🛡️ Checklist
+
+This section lists essential security checks for pre‑deployment and ongoing review.
+
+### ✅ Pre‑Deployment
+
+- [ ] Enable TLS certificate verification and set `InsecureSkipVerify` to false. → See [TLS Verification](#tls-verification)
+- [ ] Store authentication tokens in a secure credential manager. → See [Secure Storage](#token-storage)
+- [ ] Ensure no credentials are hardcoded in source code. → See [Environment Variables](#token-env)
+- [ ] Separate configurations for dev, staging, and production. → See [Environment Isolation](#environment-isolation)
+- [ ] Configure logging to exclude secrets and use appropriate levels. → See [Logging](#logging)
+- [ ] Restrict network access to only required endpoints. → See [Network & Access](#network-access)
+- [ ] Use service accounts with minimal permissions. → See [Network & Access](#network-access)
+- [ ] Apply timeouts to all API requests using contexts. → See [Context & Timeouts](#context-timeouts)
+
+### 🔍 Periodic Review
+
+- [ ] Rotate authentication tokens on a regular schedule. → See [Token Rotation](#token-rotation)
+- [ ] Review API access logs monthly for anomalies. → See [Logging](#logging)
+- [ ] Audit user permissions to maintain least‑privilege. → See [Network & Access](#network-access)
+- [ ] Update dependencies and toolchain to current versions. → See [Token Handling](#token-handling)
+- [ ] Monitor for upstream security advisories and CVEs. → See [References](#references)
+- [ ] Test backup or fallback authentication mechanisms. → See [Token Handling](#token-handling)
+- [ ] Validate firewall rules, ACLs, and rate limits are enforced. → See [Network & Access](#network-access)
+
+## 🔒 TLS Verification <a id="tls-verification"></a>
 
 Strict certificate validation is enforced unless you explicitly opt out via option.
 
@@ -18,11 +43,13 @@ insecureClient, err := wnc.NewClient(
 > [!CAUTION]
 > The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
-## 🔑 Token Handling
+## 🔑 Token Handling <a id="token-handling"></a>
+
+Handle authentication tokens securely with isolated storage, periodic rotation, and no exposure in logs.
 
 ### ✅ Recommended
 
-1. **Environment Variables**: Store tokens in environment variables, never in source code:
+1. **Environment Variables**: Store tokens in environment variables, never in source code: <a id="token-env"></a>
 
    ```go
    import (
@@ -37,7 +64,7 @@ insecureClient, err := wnc.NewClient(
    )
    ```
 
-2. **Token Generation**: Use Base64 encoding for username:password combinations:
+2. **Token Generation**: Use Base64 encoding for username:password combinations: <a id="token-generation"></a>
 
    ```bash
     # Generate token manually (ad-hoc only)
@@ -47,7 +74,7 @@ insecureClient, err := wnc.NewClient(
     # Prefer central secret store, not ad-hoc scripts
    ```
 
-3. **Token Rotation**: Regenerate tokens regularly and update environment variables:
+3. **Token Rotation**: Regenerate tokens regularly and update environment variables: <a id="token-rotation"></a>
 
    ```bash
    # Automated token refresh script
@@ -55,7 +82,7 @@ insecureClient, err := wnc.NewClient(
    export WNC_ACCESS_TOKEN="$NEW_TOKEN"
    ```
 
-4. **Secure Storage**: Use OS / Vault stores
+4. **Secure Storage**: Use OS / Vault stores <a id="token-storage"></a>
 
    ```bash
    # Example with macOS Keychain
@@ -68,7 +95,7 @@ insecureClient, err := wnc.NewClient(
    export WNC_ACCESS_TOKEN="$TOKEN"
    ```
 
-5. **Context & Timeouts**: Always bound requests
+5. **Context & Timeouts**: Always bound requests <a id="context-timeouts"></a>
 
    ```go
    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -79,45 +106,34 @@ insecureClient, err := wnc.NewClient(
 
 ### ❌ Avoid
 
-- Hardcoding tokens
-- Committing `.env` with tokens
-- Reusing prod tokens in dev / staging
-- Logging Authorization headers
-- Sharing tokens between individuals
+Avoid these practices to reduce exposure, preserve accountability, and prevent secret leakage.
 
-## 🌐 Network & Access
+- Hardcoding tokens — Exposes credentials and prevents safe rotation.
+- Committing `.env` with tokens — Leaks secrets through VCS and CI artifacts.
+- Reusing prod tokens in dev or staging — Increases blast radius across environments.
+- Logging Authorization headers — Risks credential disclosure in logs.
+- Sharing tokens between individuals — Breaks accountability and auditability.
 
-| Control       | Recommendation                         |
-| ------------- | -------------------------------------- |
-| Transport     | HTTPS only (default)                   |
-| Port          | 443 (RESTCONF)                         |
-| Segmentation  | Restrict controller to mgmt VLAN / VPN |
-| Accounts      | Least privilege service accounts       |
-| Rate limiting | Enforce on controller / upstream proxy |
-| Auditing      | Periodic review of auth logs           |
+## 🌐 Network & Access <a id="network-access"></a>
 
-### 📝 Logging
+This section defines network controls and access policies to protect the controller and data.
 
-```go
-import (
-    "log/slog"
-    "os"
-)
+| Control       | Recommendation                                  |
+| ------------- | ----------------------------------------------- |
+| Transport     | Use HTTPS for all requests.                     |
+| Port          | Expose only port 443 for RESTCONF.              |
+| Segmentation  | Limit controller access to a mgmt VLAN or VPN.  |
+| Accounts      | Use least‑privilege service accounts.           |
+| Rate limiting | Apply rate limits on the controller or a proxy. |
+| Auditing      | Review authentication logs regularly.           |
 
-// Security-focused logging configuration
-logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-    Level: slog.LevelInfo, // Avoid debug level in production
-    AddSource: true,
-}))
+## 📝 Logging <a id="logging"></a>
 
-client, err := wnc.NewClient(
-    os.Getenv("WNC_CONTROLLER"),
-    os.Getenv("WNC_ACCESS_TOKEN"),
-    wnc.WithLogger(logger),
-)
-```
+Prefer structured logs, exclude secrets, and log only necessary context for operations and audits.
 
-## 🏭 Environment Isolation
+## 🏭 Environment Isolation <a id="environment-isolation"></a>
+
+Use separate clients and credentials for dev, staging, and prod to limit blast radius and enforce tailored timeouts.
 
 ```go
 dev, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_DEV_TOKEN"), wnc.WithInsecureSkipVerify(true), wnc.WithTimeout(5*time.Second))
@@ -126,16 +142,20 @@ prod, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_PROD_TOKEN"), w
 _, _, _ = dev, staging, prod
 ```
 
-### 📊 Monitoring Focus
+### 📊 Monitoring
 
-| Area    | Metric / Signal                        |
-| ------- | -------------------------------------- |
-| Auth    | Failed vs success ratio                |
-| Volume  | Requests per service (AP, Client, RRM) |
-| Latency | P95 request duration                   |
-| TLS     | Handshake failures                     |
+Monitor authentication, request volume, latency, and TLS signals to detect issues early and guide response.
+
+| Area    | Metric / Signal                                                 |
+| ------- | --------------------------------------------------------------- |
+| Auth    | Track failed versus successful authentications.                 |
+| Volume  | Monitor request volume per service such as AP, Client, and RRM. |
+| Latency | Watch the 95th percentile request duration.                     |
+| TLS     | Alert on TLS handshake failures.                                |
 
 ### 🔧 Error Handling
+
+Log actionable context for operators, return generic messages to users, and prevent any secret leakage.
 
 ```go
 apData, err := client.AP().GetOper(ctx)
@@ -148,53 +168,7 @@ if err != nil {
 }
 ```
 
-## 🛡️ Checklist
-
-### ✅ Pre‑Deployment
-
-- [ ] TLS certificate verification enabled (`InsecureSkipVerify: false`)
-- [ ] Authentication tokens stored in secure credential management
-- [ ] No hardcoded credentials in source code
-- [ ] Environment-specific configurations separated
-- [ ] Logging configured with appropriate security levels
-- [ ] Network access restricted to necessary endpoints
-- [ ] Service accounts configured with minimal privileges
-- [ ] Context timeouts configured for all API calls
-
-### 🔍 Regular Review
-
-- [ ] Rotate authentication tokens quarterly
-- [ ] Review API access logs monthly
-- [ ] Audit user permissions quarterly
-- [ ] Update dependency versions regularly
-- [ ] Monitor for security advisories
-- [ ] Test backup authentication mechanisms
-- [ ] Validate network security controls
-
-## 🚨 Incident Response
-
-### Auth Compromise
-
-1. **Immediate Actions**:
-
-   - Revoke compromised tokens on controller
-   - Generate new authentication credentials
-   - Update environment variables/credential stores
-   - Restart affected applications
-
-2. **Investigate**: Review logs, correlate IPs, timeline events
-
-### Network Breach
-
-1. **Immediate Actions**:
-
-   - Isolate affected controllers from network
-   - Review firewall rules and network segmentation
-   - Check for lateral movement attempts
-
-2. **Recovery**: Re-issue certs, validate ACLs, enhance detection
-
-## 📖 References
+## 📖 References <a id="references"></a>
 
 - [Go Security Best Practices](https://go.dev/security/)
 - [RESTCONF Security Best Practices](https://tools.ietf.org/html/rfc8040#section-2.5)
