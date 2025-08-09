@@ -18,7 +18,7 @@ Following is a summary of available Make targets:
 | `deps`                 | Install / update dev tools              | `scripts/install_dependencies.sh`       |
 | `clean`                | Remove caches / temp / coverage files   | `scripts/clean_artifacts.sh`            |
 | `lint`                 | Run golangci-lint                       | `scripts/lint.sh`                       |
-| `build`                | Verify build (go build ./...)           | (inline)                                |
+| `build`                | Verify build (`go build ./...`)         | (inline)                                |
 | `test-unit`            | Unit + table + fail-fast                | `scripts/test_unit.sh`                  |
 | `test-integration`     | Integration against live controller     | `scripts/test_integration.sh`           |
 | `test-coverage`        | Unified coverage (unit+integration)     | `scripts/test_coverage.sh`              |
@@ -26,9 +26,9 @@ Following is a summary of available Make targets:
 | `yang-list`            | List available YANG models              | `scripts/get_yang_models.sh`            |
 | `yang-model`           | Fetch a YANG module definition          | `scripts/get_yang_model_details.sh`     |
 | `yang-statement`       | Fetch a YANG subtree (RESTCONF)         | `scripts/get_yang_statement_details.sh` |
-| `pre-commit-install`   | Install pre-commit hook                 | (inline)                                |
+| `pre-commit-install`   | Install pre-commit hook with symlink    | (inline)                                |
 | `pre-commit-test`      | Test pre-commit hook without installing | `scripts/pre_commit_hook.sh`            |
-| `pre-commit-uninstall` | Remove pre-commit hook                  | (inline)                                |
+| `pre-commit-uninstall` | Remove a symlink to pre-commit hook     | (inline)                                |
 
 > [!NOTE]
 > For detailed script usage and examples, see the Scripts Reference: `docs/SCRIPT_REFERENCE.md`.
