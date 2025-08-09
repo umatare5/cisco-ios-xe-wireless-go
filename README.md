@@ -90,12 +90,6 @@ func main() {
 - 💉 **[Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 - 📜 **[Script Reference](./docs/SCRIPT_REFERENCE.md)** — Standalone `curl` scripts for debugging
 
-> [!NOTE]
-> Runnable examples are available:
->
-> - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
-> - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
-
 ## 🤝 Contributing
 
 Please read the **[Contributing Guide](./CONTRIBUTING.md)** before submitting PRs or issues. I welcome contributions from the community. 👍️
