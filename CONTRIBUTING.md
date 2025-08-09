@@ -32,7 +32,7 @@ The helper scripts use `curl` to access WNC directly, so they have **no dependen
 
 ```bash
 export WNC_ACCESS_TOKEN=your-wnc-access-token
-export WNC_CONTROLLER=your-wnc-hostname
+export WNC_CONTROLLER=wnc1.example.internal
 
 make lint             # Static analysis
 make test-unit        # Run unit tests (runs lint first)

@@ -187,7 +187,7 @@ func TestTestClient(t *testing.T) {
 // Additional coverage-focused tests for TestClient helper edge branches.
 func TestTestClient_AdditionalBranches(t *testing.T) {
 	// Preserve globals & env.
-	origController, origToken := os.Getenv("WNC_CONTROLLER"), os.Getenv("WNC_ACCESS_TOKEN")
+	origController, originalToken := os.Getenv("WNC_CONTROLLER"), os.Getenv("WNC_ACCESS_TOKEN")
 	origCreate := createCoreClient
 	origFail := failOnClientError
 	origSim := simulateFatalAsLog
@@ -197,10 +197,10 @@ func TestTestClient_AdditionalBranches(t *testing.T) {
 		} else {
 			os.Setenv("WNC_CONTROLLER", origController)
 		}
-		if origToken == "" {
+		if originalToken == "" {
 			os.Unsetenv("WNC_ACCESS_TOKEN")
 		} else {
-			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+			os.Setenv("WNC_ACCESS_TOKEN", originalToken)
 		}
 		createCoreClient = origCreate
 		failOnClientError = origFail
@@ -355,15 +355,15 @@ func TestTestContext(t *testing.T) {
 func TestTestClient_ErrorSkip(t *testing.T) {
 	// Save and clear env to force missing vars
 	origController := os.Getenv("WNC_CONTROLLER")
-	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
 	t.Cleanup(func() {
 		if origController != "" {
 			os.Setenv("WNC_CONTROLLER", origController)
 		} else {
 			os.Unsetenv("WNC_CONTROLLER")
 		}
-		if origToken != "" {
-			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+		if originalToken != "" {
+			os.Setenv("WNC_ACCESS_TOKEN", originalToken)
 		} else {
 			os.Unsetenv("WNC_ACCESS_TOKEN")
 		}
@@ -386,15 +386,15 @@ func TestTestContextNilDefensive(t *testing.T) {
 // TestTestClient_FatalSimulated covers the fatal branch via simulateFatalAsLog hook.
 func TestTestClient_FatalSimulated(t *testing.T) {
 	origController := os.Getenv("WNC_CONTROLLER")
-	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
 	t.Cleanup(func() {
 		if origController != "" {
 			os.Setenv("WNC_CONTROLLER", origController)
 		} else {
 			os.Unsetenv("WNC_CONTROLLER")
 		}
-		if origToken != "" {
-			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+		if originalToken != "" {
+			os.Setenv("WNC_ACCESS_TOKEN", originalToken)
 		} else {
 			os.Unsetenv("WNC_ACCESS_TOKEN")
 		}
@@ -934,7 +934,7 @@ func TestTestClientExtensiveCoverage(t *testing.T) {
 func TestTestClientAttemptCoverage(t *testing.T) {
 	// Missing env vars path
 	origController := os.Getenv("WNC_CONTROLLER")
-	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
 	os.Unsetenv("WNC_CONTROLLER")
 	os.Unsetenv("WNC_ACCESS_TOKEN")
 	if _, err := TestClientAttempt(); err == nil {
@@ -948,7 +948,7 @@ func TestTestClientAttemptCoverage(t *testing.T) {
 	defer func() {
 		createCoreClient = origCreate
 		os.Setenv("WNC_CONTROLLER", origController)
-		os.Setenv("WNC_ACCESS_TOKEN", origToken)
+		os.Setenv("WNC_ACCESS_TOKEN", originalToken)
 	}()
 	if _, err := TestClientAttempt(); err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -980,7 +980,7 @@ func TestRunServiceTestsIntegrationBranch(t *testing.T) {
 	defer func() { shortModeCheck = origShort }()
 
 	origController := os.Getenv("WNC_CONTROLLER")
-	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
 	os.Setenv("WNC_CONTROLLER", "dummy-controller")
 	os.Setenv("WNC_ACCESS_TOKEN", "dummy-token")
 	defer func() {
@@ -989,10 +989,10 @@ func TestRunServiceTestsIntegrationBranch(t *testing.T) {
 		} else {
 			os.Setenv("WNC_CONTROLLER", origController)
 		}
-		if origToken == "" {
+		if originalToken == "" {
 			os.Unsetenv("WNC_ACCESS_TOKEN")
 		} else {
-			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+			os.Setenv("WNC_ACCESS_TOKEN", originalToken)
 		}
 	}()
 
@@ -1920,15 +1920,15 @@ func TestRunServiceTestsSkipBranches(t *testing.T) {
 func TestRunServiceTestsNilClientSkip(t *testing.T) {
 	// Ensure env vars cleared so TestClient not created
 	origController := os.Getenv("WNC_CONTROLLER")
-	origToken := os.Getenv("WNC_ACCESS_TOKEN")
+	originalToken := os.Getenv("WNC_ACCESS_TOKEN")
 	os.Unsetenv("WNC_CONTROLLER")
 	os.Unsetenv("WNC_ACCESS_TOKEN")
 	defer func() {
 		if origController != "" {
 			os.Setenv("WNC_CONTROLLER", origController)
 		}
-		if origToken != "" {
-			os.Setenv("WNC_ACCESS_TOKEN", origToken)
+		if originalToken != "" {
+			os.Setenv("WNC_ACCESS_TOKEN", originalToken)
 		}
 	}()
 	cfg := ServiceTestConfig{ServiceName: "NilClientService", SkipShortTests: false}

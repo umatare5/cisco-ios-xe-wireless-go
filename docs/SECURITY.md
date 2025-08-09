@@ -7,10 +7,10 @@ This document provides an overview of security practices for using this library.
 Strict certificate validation is enforced unless you explicitly opt out via option.
 
 ```go
-client, err := wnc.NewClient("wnc.example.com", token)
+client, err := wnc.NewClient("wnc1.example.internal", token)
 
 insecureClient, err := wnc.NewClient(
-    "wnc-dev.local", token,
+    "wnc1.example.internal", token,
     wnc.WithInsecureSkipVerify(true), // LAB ONLY
 )
 ```
@@ -120,9 +120,9 @@ client, err := wnc.NewClient(
 ## 🏭 Environment Isolation
 
 ```go
-dev, _ := wnc.NewClient("wnc-dev.local", os.Getenv("WNC_DEV_TOKEN"), wnc.WithInsecureSkipVerify(true), wnc.WithTimeout(5*time.Second))
-staging, _ := wnc.NewClient("wnc-staging.local", os.Getenv("WNC_STAGING_TOKEN"), wnc.WithTimeout(15*time.Second))
-prod, _ := wnc.NewClient("wnc-prod.local", os.Getenv("WNC_PROD_TOKEN"), wnc.WithTimeout(30*time.Second))
+dev, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_DEV_TOKEN"), wnc.WithInsecureSkipVerify(true), wnc.WithTimeout(5*time.Second))
+staging, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_STAGING_TOKEN"), wnc.WithTimeout(15*time.Second))
+prod, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_PROD_TOKEN"), wnc.WithTimeout(30*time.Second))
 _, _, _ = dev, staging, prod
 ```
 
