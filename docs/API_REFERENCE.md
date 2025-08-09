@@ -7,7 +7,7 @@ High-level reference for the exported, user‑facing API of this Go library. Dom
 
 ## 🧭 Domain Services
 
-Each accessor on `*wnc.Client` returns a lightweight value receiver service. Services have no internal mutable state; re-use freely.
+Each `*wnc.Client` accessor returns a lightweight, stateless value‑receiver service.
 
 | Accessor          | Package         | Example Call                          |
 | ----------------- | --------------- | ------------------------------------- |
@@ -40,9 +40,122 @@ Each accessor on `*wnc.Client` returns a lightweight value receiver service. Ser
 | `LISP()`          | `lisp`          | `client.LISP().GetOper(ctx)`          |
 | `NMSP()`          | `nmsp`          | `client.NMSP().GetOper(ctx)`          |
 
+Please refer to the following list for the methods of each service:
+
+- <details><summary><strong>Access Point Service</strong></summary>
+
+  | Method                        | Description                      |
+  | ----------------------------- | -------------------------------- |
+  | `GetCfg`                      | Access point configuration (all) |
+  | `GetTagSourcePriorityConfigs` | Tag source priority config       |
+  | `GetApTags`                   | AP tag assignments               |
+  | `GetOper`                     | AP operational root data         |
+  | `GetRadioNeighbor`            | Radio neighbor info              |
+  | `GetNameMacMap`               | AP name ↔ MAC list               |
+  | `GetCapwapData`               | CAPWAP session data              |
+  | `GetGlobalOper`               | Global AP operational data       |
+  | `GetHistory`                  | AP history records               |
+  | `GetEwlcApStats`              | EWLC AP statistics               |
+
+  </details>
+
+- <details><summary><strong>Client Service</strong></summary>
+
+  | Method                 | Description                 |
+  | ---------------------- | --------------------------- |
+  | `GetOper`              | Client operational overview |
+  | `GetCommonOperData`    | Common operational subset   |
+  | `GetDot11OperData`     | 802.11 specific data        |
+  | `GetMobilityOperData`  | Mobility related data       |
+  | `GetMmIfClientStats`   | MM IF client stats          |
+  | `GetMmIfClientHistory` | MM IF client history        |
+  | `GetTrafficStats`      | Traffic statistics          |
+  | `GetPolicyData`        | Policy association data     |
+  | `GetSisfDBMac`         | SISF DB MAC entries         |
+  | `GetDcInfo`            | Data center info            |
+
+  </details>
+
+- <details><summary><strong>WLAN Service</strong></summary>
+
+  | Method                        | Description                  |
+  | ----------------------------- | ---------------------------- |
+  | `GetCfg`                      | WLAN configuration           |
+  | `GetCfgEntries`               | Individual WLAN entries      |
+  | `GetPolicies`                 | WLAN policies                |
+  | `GetPolicyListEntries`        | Policy list entries          |
+  | `GetWirelessAaaPolicyConfigs` | AAA policy configs           |
+  | `GetGlobalOper`               | Global WLAN operational data |
+
+  </details>
+
+- <details><summary><strong>RRM Service</strong></summary>
+
+  | Method          | Description                |
+  | --------------- | -------------------------- |
+  | `GetCfg`        | RRM configuration          |
+  | `GetOper`       | Per-radio RRM data         |
+  | `GetGlobalOper` | Global RRM data            |
+  | `GetEmulOper`   | Emulation operational data |
+
+  </details>
+
+- <details><summary><strong>General Service</strong></summary>
+
+  | Method                       | Description                |
+  | ---------------------------- | -------------------------- |
+  | `GetOper`                    | General operational root   |
+  | `GetMgmtIntfData`            | Management interface data  |
+  | `GetCfg`                     | General configuration      |
+  | `GetMewlcConfig`             | ME WLC config              |
+  | `GetCacConfig`               | CAC config                 |
+  | `GetMfp`                     | MFP config/data            |
+  | `GetFipsCfg`                 | FIPS config                |
+  | `GetWsaApClientEvent`        | AP client event log        |
+  | `GetSimL3InterfaceCacheData` | SIM L3 interface cache     |
+  | `GetWlcManagementData`       | Controller management data |
+  | `GetLaginfo`                 | LAG info                   |
+  | `GetMulticastConfig`         | Multicast config           |
+  | `GetFeatureUsageCfg`         | Feature usage              |
+  | `GetThresholdWarnCfg`        | Threshold warnings         |
+  | `GetApLocRangingCfg`         | AP location ranging config |
+  | `GetGeolocationCfg`          | Geolocation config         |
+
+  </details>
+
+- <details><summary><strong>Other Services</strong></summary>
+
+  | Package         | Key Methods                                                               |
+  | --------------- | ------------------------------------------------------------------------- |
+  | `radio`         | `GetCfg`                                                                  |
+  | `rf`            | `GetCfg`, `GetProfiles`                                                   |
+  | `afc`           | `GetOper`, `GetAPResp`, `GetCloudOper`, `GetCloudStats`                   |
+  | `rogue`         | `GetOper`, `GetStats`, `GetData`, `GetClientData`, `GetRldpStats`         |
+  | `mcast`         | `GetOper`, `GetFlexMediastreamClientSummary`, `GetVlanL2MgidOp`           |
+  | `mdns`          | `GetOper`, `GetGlobalStats`, `GetWlanStats`                               |
+  | `mesh`          | `GetOper`, `GetCfg`                                                       |
+  | `mobility`      | `GetOper`                                                                 |
+  | `geolocation`   | `GetOper`, `GetApGeoLocStats`                                             |
+  | `hyperlocation` | `GetOper`, `GetProfiles`                                                  |
+  | `location`      | `GetCfg`                                                                  |
+  | `site`          | `GetOper`                                                                 |
+  | `ble`           | `GetOper`                                                                 |
+  | `cts`           | `GetCfg`                                                                  |
+  | `dot11`         | `GetCfg`                                                                  |
+  | `dot15`         | `GetCfg`                                                                  |
+  | `flex`          | `GetCfg`                                                                  |
+  | `fabric`        | `GetCfg`                                                                  |
+  | `apf`           | `GetCfg`                                                                  |
+  | `awips`         | `GetOper`                                                                 |
+  | `rfid`          | `GetCfg`                                                                  |
+  | `lisp`          | `GetOper`                                                                 |
+  | `nmsp`          | `GetOper`, `GetClientRegistration`, `GetCmxConnection`, `GetCmxCloudInfo` |
+
+  </details>
+
 ## 📦 Response & Error Handling
 
-Every `Get*` method returns `(*model.<Type>Response, error)`, or pointer to slice for list wrappers, with JSON unmarshalled data. Errors:
+Each `Get*` returns a JSON‑unmarshalled `*model.<Type>Response` and an error; list endpoints return a pointer to a slice.
 
 | Sentinel                  | Meaning                       |
 | ------------------------- | ----------------------------- |
@@ -65,127 +178,6 @@ func (s Service) GetOper(ctx context.Context) (*model.DomainOperResponse, error)
 ```
 
 No retries, caching, pagination or filtering are currently implemented.
-
-## 📚 Domain Method Index
-
-Low-priority exhaustive lists are collapsed below. Expand only what you need.
-
-<details>
-<summary><strong>Access Point (ap)</strong></summary>
-
-| Method                        | Description                      |
-| ----------------------------- | -------------------------------- |
-| `GetCfg`                      | Access point configuration (all) |
-| `GetTagSourcePriorityConfigs` | Tag source priority config       |
-| `GetApTags`                   | AP tag assignments               |
-| `GetOper`                     | AP operational root data         |
-| `GetRadioNeighbor`            | Radio neighbor info              |
-| `GetNameMacMap`               | AP name ↔ MAC list               |
-| `GetCapwapData`               | CAPWAP session data              |
-| `GetGlobalOper`               | Global AP operational data       |
-| `GetHistory`                  | AP history records               |
-| `GetEwlcApStats`              | EWLC AP statistics               |
-
-</details>
-
-<details>
-<summary><strong>Client (client)</strong></summary>
-
-| Method                 | Description                 |
-| ---------------------- | --------------------------- |
-| `GetOper`              | Client operational overview |
-| `GetCommonOperData`    | Common operational subset   |
-| `GetDot11OperData`     | 802.11 specific data        |
-| `GetMobilityOperData`  | Mobility related data       |
-| `GetMmIfClientStats`   | MM IF client stats          |
-| `GetMmIfClientHistory` | MM IF client history        |
-| `GetTrafficStats`      | Traffic statistics          |
-| `GetPolicyData`        | Policy association data     |
-| `GetSisfDBMac`         | SISF DB MAC entries         |
-| `GetDcInfo`            | Data center info            |
-
-</details>
-
-<details>
-<summary><strong>WLAN (wlan)</strong></summary>
-
-| Method                        | Description                  |
-| ----------------------------- | ---------------------------- |
-| `GetCfg`                      | WLAN configuration           |
-| `GetCfgEntries`               | Individual WLAN entries      |
-| `GetPolicies`                 | WLAN policies                |
-| `GetPolicyListEntries`        | Policy list entries          |
-| `GetWirelessAaaPolicyConfigs` | AAA policy configs           |
-| `GetGlobalOper`               | Global WLAN operational data |
-
-</details>
-
-<details>
-<summary><strong>RRM (rrm)</strong></summary>
-
-| Method          | Description                |
-| --------------- | -------------------------- |
-| `GetCfg`        | RRM configuration          |
-| `GetOper`       | Per-radio RRM data         |
-| `GetGlobalOper` | Global RRM data            |
-| `GetEmulOper`   | Emulation operational data |
-
-</details>
-
-<details>
-<summary><strong>General (general)</strong></summary>
-
-| Method                       | Description                |
-| ---------------------------- | -------------------------- |
-| `GetOper`                    | General operational root   |
-| `GetMgmtIntfData`            | Management interface data  |
-| `GetCfg`                     | General configuration      |
-| `GetMewlcConfig`             | ME WLC config              |
-| `GetCacConfig`               | CAC config                 |
-| `GetMfp`                     | MFP config/data            |
-| `GetFipsCfg`                 | FIPS config                |
-| `GetWsaApClientEvent`        | AP client event log        |
-| `GetSimL3InterfaceCacheData` | SIM L3 interface cache     |
-| `GetWlcManagementData`       | Controller management data |
-| `GetLaginfo`                 | LAG info                   |
-| `GetMulticastConfig`         | Multicast config           |
-| `GetFeatureUsageCfg`         | Feature usage              |
-| `GetThresholdWarnCfg`        | Threshold warnings         |
-| `GetApLocRangingCfg`         | AP location ranging config |
-| `GetGeolocationCfg`          | Geolocation config         |
-
-</details>
-
-<details>
-<summary><strong>Other Domains (Grouped)</strong></summary>
-
-| Package         | Key Methods                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| `radio`         | `GetCfg`                                                                  |
-| `rf`            | `GetCfg`, `GetProfiles`                                                   |
-| `afc`           | `GetOper`, `GetAPResp`, `GetCloudOper`, `GetCloudStats`                   |
-| `rogue`         | `GetOper`, `GetStats`, `GetData`, `GetClientData`, `GetRldpStats`         |
-| `mcast`         | `GetOper`, `GetFlexMediastreamClientSummary`, `GetVlanL2MgidOp`           |
-| `mdns`          | `GetOper`, `GetGlobalStats`, `GetWlanStats`                               |
-| `mesh`          | `GetOper`, `GetCfg`                                                       |
-| `mobility`      | `GetOper`                                                                 |
-| `geolocation`   | `GetOper`, `GetApGeoLocStats`                                             |
-| `hyperlocation` | `GetOper`, `GetProfiles`                                                  |
-| `location`      | `GetCfg`                                                                  |
-| `site`          | `GetOper`                                                                 |
-| `ble`           | `GetOper`                                                                 |
-| `cts`           | `GetCfg`                                                                  |
-| `dot11`         | `GetCfg`                                                                  |
-| `dot15`         | `GetCfg`                                                                  |
-| `flex`          | `GetCfg`                                                                  |
-| `fabric`        | `GetCfg`                                                                  |
-| `apf`           | `GetCfg`                                                                  |
-| `awips`         | `GetOper`                                                                 |
-| `rfid`          | `GetCfg`                                                                  |
-| `lisp`          | `GetOper`                                                                 |
-| `nmsp`          | `GetOper`, `GetClientRegistration`, `GetCmxConnection`, `GetCmxCloudInfo` |
-
-</details>
 
 ## ❓ FAQ
 
