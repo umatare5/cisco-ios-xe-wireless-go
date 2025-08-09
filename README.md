@@ -26,8 +26,8 @@
 - Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
 - The controller must have **RESTCONF** enabled and support **HTTPS** access.
 
-> [!NOTE]
-> To configure RESTCONF on the C9800, see the [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432).
+  > [!NOTE]
+  > To configure RESTCONF on the C9800, see the [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432).
 
 ## 📦 Installation
 
