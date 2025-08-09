@@ -116,14 +116,13 @@ The library provides a set of functions for interacting with all major Cisco Cat
 
 ## 🤝 Contributing
 
-I welcome all kinds of contributions from the community!
+I welcome all kinds of contributions from the community! Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
-- Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
-- There are several useful documentation resources for supporting the contribution available:
+There is a several useful documentation resources for supporting the contribution available:
 
-  - **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
-  - **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
-  - **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
+- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
+- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
+- **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 
 > [!NOTE]
 > This library is under **active development**; breaking changes may occur until `v1.0.0`.
