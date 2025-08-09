@@ -2,17 +2,6 @@
 
 High-level reference for the exported, user‑facing API of this Go library. Domain data access uses a consistent pattern: construct a unified client, pick a domain service accessor, call a `Get*` method with a `context.Context`.
 
-## ⏰️ Quick Reference
-
-| Aspect       | Rule                                                                                      |
-| ------------ | ----------------------------------------------------------------------------------------- |
-| Import       | `import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"`                               |
-| Construction | `client, err := wnc.NewClient(host, token, wnc.WithTimeout(30*time.Second))`              |
-| Pattern      | `resp, err := client.AP().GetOper(ctx)`                                                   |
-| Errors       | Wrap with `errors.Is / errors.As` using exported sentinels (`ErrAuthenticationFailed`, …) |
-| HTTP Methods | Only `GET` is implemented (read‑only)                                                     |
-| Filtering    | Not yet supported (future enhancement)                                                    |
-
 > [!NOTE]
 > All data shapes map directly to Cisco YANG models for IOS-XE 17.12.1. See official [YANG Models](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme) for field semantics.
 

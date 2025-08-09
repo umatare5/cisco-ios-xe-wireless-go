@@ -110,7 +110,7 @@ func main() {
 ## 📚 Documentation
 
 - **🌐 [API Reference](./docs/API_REFERENCE.md)** — All available functions and supported endpoints
-- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Standalone `curl` scripts for debugging
+- **📜 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and underlying scripts
 - **💉 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 - **📖 [Contribution Guide](./CONTRIBUTING.md)** — How to contribute to this project
 

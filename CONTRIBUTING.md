@@ -59,7 +59,7 @@ These scripts are particularly helpful for:
 - Debugging API responses without building the Go library
 
 They use `curl` to access WNC, so they are independent of Go.
-For detailed usage, see **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
+For detailed usage, see **[MAKE_REFERENCE.md](./docs/MAKE_REFERENCE.md)**.
 
 ---
 
@@ -70,28 +70,28 @@ PR reviewers are responsible for executing tests and refreshing the coverage rep
 
 Reviewer checklist:
 
-1. Ensure you have access to a development Cisco C9800 WNC (RESTCONF enabled) and export the required env vars:
+- Ensure you have access to a development Cisco C9800 WNC (RESTCONF enabled) and export the required env vars:
 
 ```bash
 export WNC_CONTROLLER=<controller-host-or-ip>
 export WNC_ACCESS_TOKEN=<base64-username:password>
 ```
 
-1. Run tests and generate coverage outputs:
+- Run tests and generate coverage outputs:
 
 ```bash
 make test-coverage        # produces tmp/coverage.out
 make test-coverage-report # writes coverage/report.html and coverage/report.out
 ```
 
-1. Commit coverage artifacts (CI will build the badge):
+- Commit coverage artifacts (CI will build the badge):
 
-   - Commit the updated files:
-     - `coverage/report.out` (coverprofile for CI)
-     - `coverage/report.html` (human-readable report)
-   - CI generates `docs/assets/coverage.svg` from `coverage/report.out` automatically.
+  - Commit the updated files:
+    - `coverage/report.out` (coverprofile for CI)
+    - `coverage/report.html` (human-readable report)
+  - CI generates `docs/assets/coverage.svg` from `coverage/report.out` automatically.
 
-1. In the PR description, mention the resulting total coverage and, if helpful, link to `coverage/report.html`.
+- In the PR description, mention the resulting total coverage and, if helpful, link to `coverage/report.html`.
 
 Notes:
 
@@ -104,8 +104,8 @@ _This section is for maintainers. Contributors do not need to perform these step
 
 To release a new version:
 
-1. **Update the version** in the `VERSION` file.
-2. **Submit a pull request** with the updated `VERSION` file.
+- **Update the version** in the `VERSION` file.
+- **Submit a pull request** with the updated `VERSION` file.
 
 Once merged, GitHub Actions will automatically:
 
