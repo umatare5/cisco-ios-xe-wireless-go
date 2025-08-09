@@ -13,7 +13,7 @@
 
 <p align="center">A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.</p>
 
-## ✨️ Features
+## ✨️ Key Features
 
 - **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
 - **📊 Comprehensive Coverage**: Access most status information and metrics available from the WNC
@@ -130,7 +130,7 @@ Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PR
 
 ## 🙏 Acknowledgments
 
-This project was developed with the assistance of **GitHub Copilot Agent Mode**. Thanks to the global open-source community for knowledge, tools, and inspiration.
+This project was developed with the assistance of **GitHub Copilot Agent Mode**. Thanks to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
 
 ## 📄 License
 
