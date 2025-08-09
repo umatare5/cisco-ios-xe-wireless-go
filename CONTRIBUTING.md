@@ -84,13 +84,12 @@ make test-coverage        # produces tmp/coverage.out
 make test-coverage-report # writes coverage/report.html and coverage/report.out
 ```
 
-1. Update the coverage badge and commit artifacts:
+1. Commit coverage artifacts (CI will build the badge):
 
-   - Run `octocov` from the repository root to refresh the badge using `.octocov.yml`.
    - Commit the updated files:
-     - `docs/assets/coverage.svg` (badge)
-     - `coverage/report.out` (coverprofile for octocov)
+     - `coverage/report.out` (coverprofile for CI)
      - `coverage/report.html` (human-readable report)
+   - CI generates `docs/assets/coverage.svg` from `coverage/report.out` automatically.
 
 1. In the PR description, mention the resulting total coverage and, if helpful, link to `coverage/report.html`.
 

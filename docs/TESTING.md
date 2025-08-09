@@ -282,6 +282,9 @@ Validating CLI tools (level: standard)...
 
 </details>
 
+> [!NOTE]
+> CI generates the coverage badge (`docs/assets/coverage.svg`) from `coverage/report.out`. Commit `coverage/report.out` so the badge updates.
+
 ## � Tips
 
 1. Run unit first (`make test-unit`)

@@ -1,5 +1,4 @@
 coverage:
-  if: true
   paths:
     - coverage/report.out
   acceptable: 90%
