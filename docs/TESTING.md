@@ -9,18 +9,16 @@ This guide explains how to run unit and integration tests, manage test data, and
 
 There are four main layers of tests:
 
-| Layer        | Purpose                                | Make Target             |
-| ------------ | -------------------------------------- | ----------------------- |
-| Unit         | JSON ↔ Go struct fidelity              | `make test-unit`        |
-| Table-driven | Multiple scenario assertions           | `make test-unit`        |
-| Fail-fast    | Immediate surface of unexpected errors | `make test-unit`        |
-| Integration  | Live controller data shape sanity      | `make test-integration` |
+- **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
+- **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
+- **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
+- **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
 
 ## 🧰 Prerequisites
 
 Tools and environment required to run unit and integration tests.
 
-### Unit / Table / Fail-fast
+### For Unit / Table / Fail-fast Tests
 
 Unit tests require no special configuration and can be run in any Go development environment.
 
@@ -29,7 +27,7 @@ Unit tests require no special configuration and can be run in any Go development
 | Go          | 1.24+   | Uses only stdlib testing |
 | make        | Latest  | Convenience targets      |
 
-### Integration
+### For Integration Tests
 
 #### 1. Cisco Catalyst 9800 Wireless Network Controller
 
@@ -72,7 +70,7 @@ Primary Make targets:
 > [!NOTE]
 > Lint runs automatically where configured; see Make and Scripts references.
 
-## 📦️ Test data artifacts
+## 📊 Test Data Collection
 
 Integration tests persist controller responses to support regression and offline inspection.
 
@@ -94,11 +92,9 @@ test_data/
 
 </details>
 
-## 📈 Coverage
+## 📈 Coverage Reports
 
 Generate coverage summaries and an HTML report to assess tested code paths.
-
-### Reports
 
 | Target  | Command                     | Notes                           |
 | ------- | --------------------------- | ------------------------------- |
