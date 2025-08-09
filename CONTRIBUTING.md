@@ -1,4 +1,4 @@
-# 🤝 CONTRIBUTING
+# 🤝 Contribution Guide
 
 Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go library**!
 This document explains how you can get involved, the development workflow, and our release process.
@@ -14,7 +14,7 @@ We welcome all kinds of contributions, including:
 
 **Before you start coding:**
 
-1. Check the [Issues](../../issues) to avoid duplicate work.
+1. Check the [Issues](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues) to avoid duplicate work.
 2. Open a new issue if your change is significant or affects functionality.
 3. Fork this repository and create a feature branch from `main`.
 4. Follow the [Development](#️-development) and [Testing](#-testing) guidelines below.
@@ -62,6 +62,42 @@ They use `curl` to access WNC, so they are independent of Go.
 For detailed usage, see **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
 
 ---
+
+## Review Process
+
+Because the WNC is not reachable from CI, automated pipelines cannot run integration tests or produce coverage.
+PR reviewers are responsible for executing tests and refreshing the coverage report locally.
+
+Reviewer checklist:
+
+1. Ensure you have access to a development Cisco C9800 WNC (RESTCONF enabled) and export the required env vars:
+
+```bash
+export WNC_CONTROLLER=<controller-host-or-ip>
+export WNC_ACCESS_TOKEN=<base64-username:password>
+```
+
+1. Run tests and generate coverage outputs:
+
+```bash
+make test-coverage        # produces tmp/coverage.out
+make test-coverage-report # writes coverage/report.html and coverage/report.out
+```
+
+1. Update the coverage badge and commit artifacts:
+
+   - Run `octocov` from the repository root to refresh the badge using `.octocov.yml`.
+   - Commit the updated files:
+     - `docs/assets/coverage.svg` (badge)
+     - `coverage/report.out` (coverprofile for octocov)
+     - `coverage/report.html` (human-readable report)
+
+1. In the PR description, mention the resulting total coverage and, if helpful, link to `coverage/report.html`.
+
+Notes:
+
+- CI cannot access a WNC instance; manual execution is required to validate integration behavior and coverage.
+- Reviewers therefore must have a functional WNC development environment to complete reviews.
 
 ## 🚀 Release Process _(Maintainers Only)_
 
