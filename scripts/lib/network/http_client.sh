@@ -28,7 +28,7 @@ execute_curl_request() {
     # Early return for successful curl request
     if curl "${curl_args[@]}" \
         -H "accept: $accept_type_yang" \
-        -H "Authorization: Bearer $token" \
+        -H "Authorization: Basic $token" \
         "$url" \
         -o "$output_file" 2>/dev/null; then
         return 0
@@ -108,10 +108,14 @@ test_connection() {
 
     local test_url="${base_url}${restconf_data_path}"
 
+    # Build curl args, append -k only when insecure_flag is provided
+    local curl_args=(-sS -X 'GET')
+    [[ -n "$insecure_flag" ]] && curl_args+=("$insecure_flag")
+
     # Early return for successful connection test
-    if curl -sS -X 'GET' "${insecure_flag}" \
+    if curl "${curl_args[@]}" \
         -H "accept: $accept_type_yang" \
-        -H "Authorization: Bearer $token" \
+        -H "Authorization: Basic $token" \
         "$test_url" \
         -o /dev/null 2>/dev/null; then
         return 0
