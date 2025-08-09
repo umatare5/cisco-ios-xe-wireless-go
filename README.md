@@ -91,7 +91,7 @@ func main() {
 > Runnable examples are available:
 >
 > - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
->   
+>
 >   ```bash
 >   ❯ go run examples/minimal/main.go
 >   Successfully connected! Found 2 APs
@@ -99,14 +99,14 @@ func main() {
 >
 > - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
 >
-> ```bash
-> ❯ go run examples/advanced/main.go
-> time=2025-08-09T12:47:34.089+09:00 level=INFO msg="starting advanced WNC example" controller=wnc1.example.internal
-> time=2025-08-09T12:47:34.666+09:00 level=INFO msg="retrieved AP operational data" ptr=true
-> time=2025-08-09T12:47:35.175+09:00 level=INFO msg="retrieved Client operational data" ptr=true
-> time=2025-08-09T12:47:35.399+09:00 level=INFO msg="retrieved Rogue operational data" ptr=true
-> time=2025-08-09T12:47:35.399+09:00 level=INFO msg="workflow completed successfully"
-> ```
+>   ```bash
+>   ❯ go run examples/advanced/main.go
+>   time=2025-08-09T12:47:34.089+09:00 level=INFO msg="starting advanced WNC example" controller=wnc1.example.internal
+>   time=2025-08-09T12:47:34.666+09:00 level=INFO msg="retrieved AP operational data" ptr=true
+>   time=2025-08-09T12:47:35.175+09:00 level=INFO msg="retrieved Client operational data" ptr=true
+>   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="retrieved Rogue operational data" ptr=true
+>   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="workflow completed successfully"
+>   ```
 
 ## 📚 Documentation
 
