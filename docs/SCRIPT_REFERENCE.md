@@ -42,9 +42,7 @@ scripts/
 
 ## 📦 Development Scripts
 
-### install_dependencies.sh
-
-<a id="install_dependencies.sh"></a> <!-- anchor for internal links -->
+### install_dependencies.sh <a id="install_dependencies.sh"></a> <!-- anchor for internal links -->
 
 install_dependencies.sh installs or updates development tools required for the project. It checks for necessary CLI tools, downloads dependencies, and ensures the environment is ready for development.
 
