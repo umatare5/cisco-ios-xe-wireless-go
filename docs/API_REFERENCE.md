@@ -1,6 +1,9 @@
 # 🌐 API Reference
 
-High-level reference for the exported, user‑facing API of this Go library. Domain data access uses a consistent pattern: construct a unified client, pick a domain service accessor, call a `Get*` method with a `context.Context`.
+High-level reference for the exported, user‑facing API of this Go library.
+
+- Construct a unified client.
+- Pick a domain service accessor and call a `Get*` method with a `context.Context`.
 
 > [!NOTE]
 > All data shapes map directly to Cisco YANG models for IOS-XE 17.12.1. See official [YANG Models](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme) for field semantics.
@@ -44,18 +47,18 @@ Please refer to the following list for the methods of each service:
 
 - <details><summary><strong>Access Point Service</strong></summary>
 
-  | Method                        | Description                      |
-  | ----------------------------- | -------------------------------- |
-  | `GetCfg`                      | Access point configuration (all) |
-  | `GetTagSourcePriorityConfigs` | Tag source priority config       |
-  | `GetApTags`                   | AP tag assignments               |
-  | `GetOper`                     | AP operational root data         |
-  | `GetRadioNeighbor`            | Radio neighbor info              |
-  | `GetNameMacMap`               | AP name ↔ MAC list               |
-  | `GetCapwapData`               | CAPWAP session data              |
-  | `GetGlobalOper`               | Global AP operational data       |
-  | `GetHistory`                  | AP history records               |
-  | `GetEwlcApStats`              | EWLC AP statistics               |
+  | Method                        | Description                            |
+  | ----------------------------- | -------------------------------------- |
+  | `GetCfg`                      | Access point configuration for all APs |
+  | `GetTagSourcePriorityConfigs` | Tag source priority config             |
+  | `GetApTags`                   | AP tag assignments                     |
+  | `GetOper`                     | AP operational root data               |
+  | `GetRadioNeighbor`            | Radio neighbor info                    |
+  | `GetNameMacMap`               | AP name ↔ MAC list                     |
+  | `GetCapwapData`               | CAPWAP session data                    |
+  | `GetGlobalOper`               | Global AP operational data             |
+  | `GetHistory`                  | AP history records                     |
+  | `GetEwlcApStats`              | EWLC AP statistics                     |
 
   </details>
 
@@ -157,13 +160,13 @@ Please refer to the following list for the methods of each service:
 
 Each `Get*` returns a JSON‑unmarshalled `*model.<Type>Response` and an error; list endpoints return a pointer to a slice.
 
-| Sentinel                  | Meaning                       |
-| ------------------------- | ----------------------------- |
-| `ErrAuthenticationFailed` | 401 credentials/token invalid |
-| `ErrAccessForbidden`      | 403 authorization failure     |
-| `ErrResourceNotFound`     | 404 on RESTCONF path          |
-| `ErrInvalidConfiguration` | Client misuse (construction)  |
-| `ErrRequestTimeout`       | Request exceeded timeout      |
+| Sentinel                  | Meaning                           |
+| ------------------------- | --------------------------------- |
+| `ErrAuthenticationFailed` | 401 credentials/token invalid     |
+| `ErrAccessForbidden`      | 403 authorization failure         |
+| `ErrResourceNotFound`     | 404 on RESTCONF path              |
+| `ErrInvalidConfiguration` | Client misuse during construction |
+| `ErrRequestTimeout`       | Request exceeded timeout          |
 
 Use `errors.Is(err, wnc.ErrAuthenticationFailed)` or `errors.As(err, *wnc.APIError)`.
 

@@ -23,7 +23,11 @@
 
 ## 📡 Supported Environment
 
-Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
+- Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
+- The controller must have **RESTCONF** enabled and support **HTTPS** access.
+
+> [!NOTE]
+> To configure RESTCONF on the C9800, see the [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432).
 
 ## 📦 Installation
 
@@ -32,8 +36,6 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 ```
 
 ## 🚀 Quick Start
-
-Prerequisite: Enable RESTCONF on your Cisco C9800 (IOS-XE 17.12.x) and ensure HTTPS access. To configure RESTCONF on the C9800, see the [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432). Have a local username/password ready; you will encode these in step 1.
 
 ### 1. Generate a Basic Auth token
 

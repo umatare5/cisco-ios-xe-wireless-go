@@ -1,15 +1,12 @@
 # 📋 Make Command Reference
 
-Primary reference for Make targets used in this repository. Make is the recommended entry point; each
-target delegates to a thin shell script under `scripts/` that provides consistent banners, validation,
-and output formatting.
+Primary reference for Make targets used in this repository.
 
-## Prerequisites
+- Make is the recommended entry point; each target delegates to a thin shell script under `scripts/` that provides consistent banners, validation, and output formatting.
+- Integration-related targets require a reachable Cisco C9800 controller. following variables before running them:
 
-Integration-related targets require a reachable Cisco C9800 controller. following variables before running them:
-
-- `WNC_CONTROLLER`
-- `WNC_ACCESS_TOKEN`
+  - `WNC_CONTROLLER`
+  - `WNC_ACCESS_TOKEN`
 
 ## 🧰 Commands
 
