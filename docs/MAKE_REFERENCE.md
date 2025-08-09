@@ -4,20 +4,12 @@ Primary reference for Make targets used in this repository. Make is the recommen
 target delegates to a thin shell script under `scripts/` that provides consistent banners, validation,
 and output formatting.
 
-## 🚀 Quick start
+## Prerequisites
 
-```bash
-# Optional (only for integration/coverage that hit a live controller)
-export WNC_CONTROLLER=<controller-host-or-ip>
-export WNC_ACCESS_TOKEN=<base64-username:password>
+Integration-related targets require a reachable Cisco C9800 controller. following variables before running them:
 
-make deps                  # install/update dev tools
-make lint                  # static analysis
-make test-unit             # unit + table + fail-fast after lint
-make test-integration      # live controller tests (env required)
-make test-coverage         # unified coverage (unit+integration)
-make test-coverage-report  # HTML coverage export
-```
+- `WNC_CONTROLLER`
+- `WNC_ACCESS_TOKEN`
 
 ## 🧰 Commands
 
@@ -39,20 +31,17 @@ make test-coverage-report  # HTML coverage export
 | `pre-commit-test`      | Test pre-commit hook without installing | `scripts/pre_commit_hook.sh`            |
 | `pre-commit-uninstall` | Remove pre-commit hook                  | `scripts/pre_commit_hook.sh`            |
 
-For detailed script usage and examples, see the Scripts Reference: `docs/SCRIPT_REFERENCE.md`.
-
 > [!NOTE]
-> Integration-related targets require a reachable Cisco C9800 controller. following variables before running them:
->
-> - `WNC_CONTROLLER`
-> - `WNC_ACCESS_TOKEN` (Base64 `user:pass`)
+> For detailed script usage and examples, see the Scripts Reference: `docs/SCRIPT_REFERENCE.md`.
 
 > [!TIP]
 > YANG targets accept variables: `make yang-model MODEL=<name>` and `make yang-statement MODEL=<name> STATEMENT=<stmt>`.
 
-## 🔍 Use Cases
+## 🔍 Examples
 
 ### Development loop
+
+Install tools, lint the code, and verify the build in one step.
 
 ```bash
 make deps && make lint && make build
@@ -60,14 +49,18 @@ make deps && make lint && make build
 
 ### Testing & coverage
 
+Execute unit/integration tests and generate unified coverage plus an HTML report.
+
 ```bash
-make test-unit
-make test-integration   # requires WNC_* env
-make test-coverage
-make test-coverage-report
+make test-unit             # unit + table + fail-fast after lint
+make test-integration      # live controller tests (env required)
+make test-coverage         # unified coverage (unit+integration)
+make test-coverage-report  # HTML coverage export
 ```
 
 ### YANG exploration
+
+List available YANG models and inspect a model or a specific statement.
 
 ```bash
 make yang-list
