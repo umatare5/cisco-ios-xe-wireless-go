@@ -1,4 +1,4 @@
-# 📋 Scripts Reference
+# 📜 Scripts Reference
 
 Central reference for all development scripts under `scripts/`. Each entry point focuses on a single concern and delegates shared logic to modular libraries in `scripts/lib/`. All scripts are: idempotent, side‑effect constrained, and exit non‑zero on failure.
 

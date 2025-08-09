@@ -113,9 +113,9 @@ func main() {
 ## 📚 Documentation
 
 - **🌐 [API Reference](./docs/API_REFERENCE.md)** — All available functions and supported endpoints
-- **📜 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and underlying scripts
+- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
+- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
 - **💉 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
-- **📖 [Contribution Guide](./CONTRIBUTING.md)** — How to contribute to this project
 
 ## 🤝 Contributing
 
@@ -125,8 +125,7 @@ Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PR
 
 This library is under **active development**; breaking changes may occur until `v1.0.0`.
 
-> [!NOTE]
-> The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
+- The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 🙏 Acknowledgments
 
