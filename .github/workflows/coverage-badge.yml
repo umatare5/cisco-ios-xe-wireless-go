@@ -31,7 +31,7 @@ jobs:
       - name: Generate coverage badge
         run: |
           test -f coverage/report.out || { echo "coverage/report.out not found"; exit 1; }
-          $RUNNER_TEMP/octocov badge --out docs/assets/coverage.svg
+          $RUNNER_TEMP/octocov badge coverage --out docs/assets/coverage.svg
 
       - name: Commit coverage badge
         run: |
