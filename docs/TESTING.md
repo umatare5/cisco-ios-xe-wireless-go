@@ -22,7 +22,7 @@ Tools and environment required to run unit and integration tests.
 
 ### Unit / Table / Fail-fast
 
-Run locally without a controller to validate structs, scenarios, and early failures.
+Unit tests require no special configuration and can be run in any Go development environment.
 
 | Requirement | Version | Notes                    |
 | ----------- | ------- | ------------------------ |
@@ -31,7 +31,13 @@ Run locally without a controller to validate structs, scenarios, and early failu
 
 ### Integration
 
-Requires a reachable controller and credentials:
+#### 1. Cisco Catalyst 9800 Wireless Network Controller
+
+Integration tests require a real Cisco Catalyst 9800 WNC. Please refer to [#References](#references).
+
+#### 2. Environment Variables
+
+Integration tests also require the following environment variables:
 
 | Variable           | Description        | Example                 |
 | ------------------ | ------------------ | ----------------------- |
@@ -48,7 +54,7 @@ export WNC_ACCESS_TOKEN="<base64 user:pass>"
 </details>
 
 > [!CAUTION]
-> Never commit real tokens or `.env` files; see Security → Token Handling.
+> Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
 
 ## 🚀 Running tests
 
@@ -66,7 +72,7 @@ Primary Make targets:
 > [!NOTE]
 > Lint runs automatically where configured; see Make and Scripts references.
 
-## �️ Test data artifacts
+## 📦️ Test data artifacts
 
 Integration tests persist controller responses to support regression and offline inspection.
 
@@ -100,22 +106,32 @@ Generate coverage summaries and an HTML report to assess tested code paths.
 | HTML    | `make test-coverage-report` | Generates `./tmp/coverage.html` |
 
 > [!NOTE]
-> CI may publish a coverage badge from `coverage/report.out` when present.
+> CI publish a coverage badge from `coverage/report.out` when present.
 
-## 💡 Tips
+## 📚️ Appendix
 
-Practical guidance to keep test runs fast, reliable, and easy to debug.
+### Testing Tips
 
-1. Run unit first (`make test-unit`).
-2. Export env vars only when needed for integration.
-3. Use `grep` over `test_data/` to spot schema drift.
-4. Keep JSON fixtures minimal to aid diffs.
-5. Fail fast: add explicit error checks in new tests.
+For efficient testing workflow, start with unit tests and gradually move to integration tests.
+
+1. **Install Dependencies**: `make deps` - Install gotestsum and other development tools.
+2. **Unit Tests First**: `make test-unit` - Ensure basic functionality with enhanced output.
+3. **Environment Setup**: Configure environment variables for integration tests.
+4. **Environment Verification**: Check controller access to verify connectivity and credentials.
+5. **Coverage Analysis**: `make test-coverage` - Run tests with coverage analysis.
+6. **HTML Coverage Report**: `make test-coverage-report` - Generate detailed HTML coverage report.
+7. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
+8. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
+9. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
 
 > [!TIP]
-> Unit tests can run on CI without a controller; integration can be opt‑in.
+> For comprehensive testing, run both `make test-unit` and `make test-integration` sequentially to validate all functionality.
 
-## 🧩 Troubleshooting
+### Development Dependencies
+
+The project uses several tools to enhance the testing experience. Install all dependencies with: `make deps`
+
+### Troubleshooting
 
 Common issues and concise fixes for failed or flaky test runs.
 
@@ -124,3 +140,17 @@ Common issues and concise fixes for failed or flaky test runs.
 - TLS errors: see Security → TLS Verification and avoid disabling checks in prod.
 - Auth failures: ensure the token is Base64 of `user:pass` and not expired.
 - Flaky tests: re-run with verbose logs; isolate by package using `go test ./pkg`.
+
+### References
+
+These references provide additional information on Cisco Catalyst 9800 WNC and related technologies:
+
+- 📖 [Cisco Catalyst 9800-CL Wireless Controller for Cloud Deployment Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/c9800-cl-dg.html)
+  - A comprehensive guide for deploying Cisco Catalyst 9800-CL WNC in cloud environments.
+  - This includes setup instructions, configuration examples, and best practices.
+- 📖 [Cisco Catalyst 9800 Series Wireless Controller Programmability Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/programmability-guide/b_c9800_programmability_cg/cisco-catalyst-9800-series-wireless-controller-programmability-guide.html)
+  - A guide for programming and automating Cisco Catalyst 9800 WNC.
+  - This includes information on RESTCONF APIs, YANG models, and more.
+- 📖 [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme)
+  - A repository containing YANG models and platform capabilities for Cisco IOS XE 17.12.1.
+  - This is useful for understanding the data structures used in the API.
