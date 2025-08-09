@@ -1,27 +1,14 @@
 <h1 align="center">📗 cisco-ios-xe-wireless-go - Go Library for C9800</h1>
 
 <p align="center">
-    <img alt="GitHub Tag" src="https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version" />
-    <a href="https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml">
-        <img alt="Test and Build" src="https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main" />
-    </a>
-    <img alt="Test Coverage" src="docs/assets/coverage.svg" />
-    <a href="https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go">
-        <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go" />
-    </a>
-    <a href="https://www.bestpractices.dev/projects/10969">
-        <img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/10969/badge" />
-    </a>
-    <a href="https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go">
-        <img alt="Go Reference" src="https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg" />
-    </a>
-    <a href="./LICENSE">
-        <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-    </a>
-    <a href="https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go">
-        <img alt="Published" src="https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg" />
-    </a>
-  
+  <img alt="GitHub Tag" src="https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version" />
+  <a href="https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml"><img alt="Test and Build" src="https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main" /></a>
+  <img alt="Test Coverage" src="docs/assets/coverage.svg" />
+  <a href="https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go" /></a>
+  <a href="https://www.bestpractices.dev/projects/10969"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/10969/badge" /></a>
+  <a href="https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go"><img alt="Go Reference" src="https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg" /></a>
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+  <a href="https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go"><img alt="Published" src="https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg" /></a>
 </p>
 
 A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
