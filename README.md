@@ -11,7 +11,7 @@
   <a href="https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go"><img alt="Published" src="https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg" /></a>
 </p>
 
-A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
+<p align="center">A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.</p>
 
 - **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
 - **📊 Comprehensive Coverage**: Access most status information and metrics available from the WNC
@@ -38,7 +38,7 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ### 1. Generate a Basic Auth token
 
-Encode your controller credentials as Base64 (`username:password`).
+Encode your controller credentials as Base64.
 
 ```bash
 # username:password → Base64
@@ -91,7 +91,22 @@ func main() {
 > Runnable examples are available:
 >
 > - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
+>
+> ```bash
+> ❯ go run examples/minimal/main.go
+> Successfully connected! Found 2 APs
+> ```
+>
 > - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
+>
+> ```bash
+> ❯ go run examples/advanced/main.go
+> time=2025-08-09T12:47:34.089+09:00 level=INFO msg="starting advanced WNC example" controller=wnc1.example.internal
+> time=2025-08-09T12:47:34.666+09:00 level=INFO msg="retrieved AP operational data" ptr=true
+> time=2025-08-09T12:47:35.175+09:00 level=INFO msg="retrieved Client operational data" ptr=true
+> time=2025-08-09T12:47:35.399+09:00 level=INFO msg="retrieved Rogue operational data" ptr=true
+> time=2025-08-09T12:47:35.399+09:00 level=INFO msg="workflow completed successfully"
+> ```
 
 ## 📚 Documentation
 
@@ -116,3 +131,7 @@ This project was developed with the assistance of **GitHub Copilot Agent Mode**.
 ## 📄 License
 
 [MIT License](./LICENSE)
+
+```
+
+```
