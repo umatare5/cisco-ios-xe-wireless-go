@@ -1,14 +1,16 @@
 # 📋 Make Command Reference
 
-Primary reference for Make targets used in this repository.
+This document provides an overview of Make targets used in this repository.
 
-- Make is the recommended entry point; each target delegates to a thin shell script under `scripts/` that provides consistent banners, validation, and output formatting.
-- Integration-related targets require a reachable Cisco C9800 controller. following variables before running them:
-
-  - `WNC_CONTROLLER`
-  - `WNC_ACCESS_TOKEN`
+> [!NOTE]
+> Some scripts require an accessible Cisco C9800 and the following variables:
+>
+> - `WNC_CONTROLLER`
+> - `WNC_ACCESS_TOKEN`
 
 ## 🧰 Commands
+
+Following is a summary of available Make targets:
 
 | Target                 | Purpose                                 | Underlying script                       |
 | ---------------------- | --------------------------------------- | --------------------------------------- |
@@ -24,9 +26,9 @@ Primary reference for Make targets used in this repository.
 | `yang-list`            | List available YANG models              | `scripts/get_yang_models.sh`            |
 | `yang-model`           | Fetch a YANG module definition          | `scripts/get_yang_model_details.sh`     |
 | `yang-statement`       | Fetch a YANG subtree (RESTCONF)         | `scripts/get_yang_statement_details.sh` |
-| `pre-commit-install`   | Install pre-commit hook                 | `scripts/pre_commit_hook.sh`            |
+| `pre-commit-install`   | Install pre-commit hook                 | (inline)                                |
 | `pre-commit-test`      | Test pre-commit hook without installing | `scripts/pre_commit_hook.sh`            |
-| `pre-commit-uninstall` | Remove pre-commit hook                  | `scripts/pre_commit_hook.sh`            |
+| `pre-commit-uninstall` | Remove pre-commit hook                  | (inline)                                |
 
 > [!NOTE]
 > For detailed script usage and examples, see the Scripts Reference: `docs/SCRIPT_REFERENCE.md`.

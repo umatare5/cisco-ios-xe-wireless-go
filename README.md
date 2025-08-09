@@ -119,13 +119,14 @@ func main() {
 
 ## 🤝 Contributing
 
+I welcome all kinds of contributions from the community!
+
 Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
-## 🙇‍♂️ Agreement
-
-This library is under **active development**; breaking changes may occur until `v1.0.0`.
-
-- The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
+> [!NOTE]
+> This library is under **active development**; breaking changes may occur until `v1.0.0`.
+>
+> - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 🙏 Acknowledgments
 

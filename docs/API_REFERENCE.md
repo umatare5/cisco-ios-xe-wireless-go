@@ -2,10 +2,6 @@
 
 This document provides an overview of the API functions available in the WNC Go client library.
 
-- **Functional Organization**: The API is organized by functional areas such as Access Points, Clients and others.
-- **Context-Aware Requests**: Pick a domain service accessor and call a `Get*` method with a `context.Context`.
-- **Structured Responses and Errors**: Each API returns structured data with comprehensive error handling based on original responses.
-
 > [!NOTE]
 > All data shapes map directly to Cisco YANG models for IOS-XE 17.12.1. See official [YANG Models](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme) for field semantics.
 

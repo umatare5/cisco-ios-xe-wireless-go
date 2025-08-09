@@ -1,6 +1,6 @@
 # 🔐 Security
 
-Practical guidance for safely using this read‑only (GET‑only) library against Cisco Catalyst 9800 controllers.
+This document provides an overview of security practices for using this library.
 
 ## 🔒 TLS Verification
 

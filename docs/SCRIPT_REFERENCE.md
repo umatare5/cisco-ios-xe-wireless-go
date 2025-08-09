@@ -1,18 +1,33 @@
 # 📜 Scripts Reference
 
-Central reference for all development scripts under `scripts/`. Each entry point focuses on a single concern and delegates shared logic to modular libraries in `scripts/lib/`. All scripts are: idempotent, side‑effect constrained, and exit non‑zero on failure.
+This document provides an overview of the development scripts available in this repository.
 
-- There are five main domains of entry point scripts:
+> [!NOTE]
+> Some scripts require an accessible Cisco C9800 and the following variables:
+>
+> - `WNC_CONTROLLER`
+> - `WNC_ACCESS_TOKEN`
 
-  | Domain         | Entry Point Scripts                                                                                                                                                            |
-  | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-  | Development    | [install_dependencies.sh](#install_dependencies.sh), [clean_artifacts.sh](#clean_artifacts.sh)                                                                                 |
-  | Testing        | [test_unit.sh](#test_unit.sh), [test_integration.sh](#test_integration.sh), [test_coverage.sh](#test_coverage.sh), [generate_coverage_report.sh](#generate_coverage_report.sh) |
-  | Quality        | [lint.sh](#lint.sh), [pre_commit_hook.sh](#pre_commit_hook.sh)                                                                                                                 |
-  | YANG Operation | [get_yang_models.sh](#get_yang_models.sh), [get_yang_model_details.sh](#get_yang_model_details.sh), [get_yang_statement_details.sh](#get_yang_statement_details.sh)            |
-  | Help           | [help.sh](#help.sh)                                                                                                                                                            |
+## 🧭 Scripts
 
-- Makefile targets support all scripts, allowing you to run them.
+## 🧰 Commands
+
+Following is a summary of available scripts:
+
+| Script                                                          | Purpose                               | Make target            |
+| --------------------------------------------------------------- | ------------------------------------- | ---------------------- |
+| [help.sh](#help.sh)                                             | Show command help overview            | `help`                 |
+| [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`                 |
+| [clean_artifacts.sh](#clean_artifacts.sh)                       | Remove caches / temp / coverage files | `clean`                |
+| [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`                 |
+| [test_unit.sh](#test_unit.sh)                                   | Run unit tests with optional coverage | `test-unit`            |
+| [test_integration.sh](#test_integration.sh)                     | Run tests against a live controller   | `test-integration`     |
+| [test_coverage.sh](#test_coverage.sh)                           | Unified coverage (unit+integration)   | `test-coverage`        |
+| [generate_coverage_report.sh](#generate_coverage_report.sh)     | Generate HTML coverage report         | `test-coverage-report` |
+| [get_yang_models.sh](#get_yang_models.sh)                       | List available YANG models            | `yang-list`            |
+| [get_yang_model_details.sh](#get_yang_model_details.sh)         | Fetch a YANG module definition        | `yang-model`           |
+| [get_yang_statement_details.sh](#get_yang_statement_details.sh) | Fetch a YANG subtree (RESTCONF)       | `yang-statement`       |
+| [pre_commit_hook.sh](#pre_commit_hook.sh)                       | Run pre-commit validations            | `pre-commit-test`      |
 
 ## 🗂️ Structure
 
