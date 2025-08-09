@@ -31,7 +31,13 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ## 🚀 Quick Start
 
-### 1. Create your basic auth token
+## Prerequisite
+
+Please Enable RESTCONF on your Cisco C9800 (IOS-XE 17.12.x) and ensure HTTPS access.
+
+### 1. Generate a Basic Auth token
+
+Encode your controller credentials as Base64 (`username:password`).
 
 ```bash
 # username:password → Base64
@@ -39,7 +45,9 @@ echo -n "admin:your-password" | base64
 # Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-### 2. Write and run a sample code
+### 2. Run the sample program
+
+Use your controller host and token to fetch AP operational data.
 
 ```go
 package main
