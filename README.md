@@ -121,7 +121,7 @@ I welcome all kinds of contributions from the community! Please read the **[Cont
 For additional guidance, please also see the following documents:
 
 - **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
-- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
+- **📜 [Scripts Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
 - **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 
 > [!NOTE]
@@ -135,4 +135,4 @@ This project was developed with the assistance of **GitHub Copilot Agent Mode**.
 
 ## 📄 License
 
-[MIT License](./LICENSE)
+[MIT](./LICENSE)
