@@ -15,7 +15,8 @@ insecureClient, err := wnc.NewClient(
 )
 ```
 
-> [!WARNING] > `WithInsecureSkipVerify(true)` disables TLS validation. Use only in isolated lab environments with disposable data.
+> [!CAUTION]
+> The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
 ## 🔑 Token Handling
 
