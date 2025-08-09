@@ -90,14 +90,14 @@ func main() {
 > [!NOTE]
 > Runnable examples are available:
 >
-> **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
+> - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
+>   
+>   ```bash
+>   ❯ go run examples/minimal/main.go
+>   Successfully connected! Found 2 APs
+>   ```
 >
-> ```bash
-> ❯ go run examples/minimal/main.go
-> Successfully connected! Found 2 APs
-> ```
->
-> **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
+> - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
 >
 > ```bash
 > ❯ go run examples/advanced/main.go
