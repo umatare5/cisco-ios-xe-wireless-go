@@ -109,17 +109,18 @@ func main() {
 
 ## 📚 Documentation
 
-- **[🌐 API Reference](./docs/API_REFERENCE.md)** — All available functions and supported endpoints
-- **[📜 Script Reference](./docs/SCRIPT_REFERENCE.md)** — Standalone `curl` scripts for debugging
-- **[💉 Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
+- **🌐 [API Reference](./docs/API_REFERENCE.md)** — All available functions and supported endpoints
+- **📜 [Script Reference](./docs/SCRIPT_REFERENCE.md)** — Standalone `curl` scripts for debugging
+- **💉 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
+- **📖 [Contribution Guide](./CONTRIBUTING.md)** — How to contribute to this project
 
 ## 🤝 Contributing
 
-Please read the **[🤝 Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
+Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
 ## 🙇‍♂️ Agreement
 
-Current library is in **development**. Breaking changes may occur until `v1.0.0`.
+This library is under **active development**; breaking changes may occur until `v1.0.0`.
 
 > [!NOTE]
 > The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
