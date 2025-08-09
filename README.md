@@ -23,9 +23,7 @@
 
 ## 📡 Supported Environment
 
-Following environment is supported to use this library:
-
-- Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
+Cisco Catalyst 9800 Wireless Network Controller running Cisco IOS-XE `17.12.x`.
 
 ## 📦 Installation
 
@@ -36,7 +34,9 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 ## 🚀 Quick Start
 
 > [!NOTE]
-> Enable RESTCONF and HTTPS on the C9800 before using this library. Please see: [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432).
+> Please enable RESTCONF and HTTPS on the C9800 before using this library. To know how to configure it, please see:
+>
+> - [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432).
 
 ### 1. Generate a Basic Auth token
 
