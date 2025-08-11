@@ -1,5 +1,3 @@
-# ISSUE_TEMPLATE.md
-
 <!-- Please fill in all sections. Keep outputs concise; collapse long logs with details. -->
 
 ## 📦 SDK Version
@@ -13,10 +11,8 @@
 
 ## ⚠️ Actual Behavior
 
-<!-- Please describe the context:
-     e.g. New API Foo, Bar and Baz is not supported yet. -->
+<!-- Please describe the context: e.g. New API Foo, Bar and Baz is not supported yet. -->
 
 ## ✅ Expected Behavior
 
-<!-- Please describe the context:
-     e.g. New API Foo, Bar and Baz is supported. -->
+<!-- Please describe the context: e.g. New API Foo, Bar and Baz is supported. -->
