@@ -1,8 +1,8 @@
 # Temporary files
 tmp/
+vendor/
 
 # Test data files
-tests/
 test_data/
 
 # Build artifacts
@@ -16,6 +16,9 @@ test_data/
 
 # Coverage files
 *.out
+coverage/*
+!coverage/report.out
+!coverage/report.html
 
 # IDE files
 .idea/

@@ -1,98 +1,90 @@
 # Makefile for cisco-ios-xe-wireless-go Go library package
+#
+# This Makefile provides direct access to specialized build and test scripts
+# located in the scripts/ directory for focused development tasks.
+#
+# For comprehensive help, use: make help
+# For specific script options, use: ./scripts/<script_name>.sh --help
 
-.PHONY: help clean deps lint test-unit test-integration test-coverage test-coverage-html
+.PHONY: help clean deps lint test-unit test-unit-coverage test-integration test-integration-coverage \
+	test-coverage-report build yang-list yang-model yang-statement \
+        pre-commit-install pre-commit-test pre-commit-uninstall
+
+# Default args (can be overridden: make test-integration INTEGRATION_ARGS="")
+INTEGRATION_ARGS ?= --check-env-only
 
 # Default target
 help:
-	@echo "Available targets:"
-	@echo "  clean            - Clean build artifacts"
-	@echo "  deps             - Install development dependencies (including gotestsum)"
-	@echo "  lint             - Run linting tools"
-	@echo "  test-unit        - Run unit tests only"
-	@echo "  test-integration - Run integration tests (requires environment variables)"
-	@echo "  test-coverage    - Run tests with coverage analysis"
-	@echo "  test-coverage-html - Generate HTML coverage report"
+	@./scripts/help.sh
 
 # Clean build artifacts
 clean:
-	@echo "Cleaning build artifacts..."
-	rm -f coverage.out
-	rm -rf ./tmp
-	cd ../.. && go clean -cache -testcache
+	@./scripts/clean_artifacts.sh
 
 # Install development dependencies
 deps:
-	@echo "Installing development dependencies..."
-	@if ! command -v golangci-lint >/dev/null 2>&1; then \
-		echo "Installing golangci-lint..."; \
-		go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest; \
-	fi
-	@if ! command -v goreleaser >/dev/null 2>&1; then \
-		echo "Installing goreleaser..."; \
-		go install github.com/goreleaser/goreleaser@latest; \
-	fi
-	@if ! command -v gotestsum >/dev/null 2>&1; then \
-		echo "Installing gotestsum..."; \
-		go install gotest.tools/gotestsum@latest; \
-	fi
-	@echo "Development dependencies installed!"
+	@./scripts/install_dependencies.sh
 
-# Run linting (if tools are available)
+# Run linting tools
 lint:
-	@echo "Running linting..."
-	@if command -v golangci-lint >/dev/null 2>&1; then \
-		cd ../.. && golangci-lint run ./...; \
-	else \
-		echo "golangci-lint not found, running go vet instead..."; \
-		cd ../.. && go vet ./...; \
-	fi
+	@./scripts/lint.sh
 
-.PHONY: test-unit
+# Run unit tests only
 test-unit:
-	@echo "Running unit tests only (no environment variables required)..."
-	@if command -v gotestsum >/dev/null 2>&1; then \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" gotestsum --format testname -- -race ./...; \
-	else \
-		echo "gotestsum not found, running go test with verbose output..."; \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -v -race ./...; \
-	fi
+	@./scripts/test_unit.sh
 
-.PHONY: test-integration
+# Run unit tests with coverage analysis
+test-unit-coverage:
+	@./scripts/test_unit.sh --coverage
+
+# Run integration tests (requires environment variables)
 test-integration:
-	@echo "Running integration tests (requires WNC_CONTROLLER and WNC_ACCESS_TOKEN)..."
-	@if [ -z "$$WNC_CONTROLLER" ] || [ -z "$$WNC_ACCESS_TOKEN" ]; then \
-		echo "Error: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set"; \
-		exit 1; \
-	fi
-	@if command -v gotestsum >/dev/null 2>&1; then \
-		gotestsum --format testname -- -race ./...; \
-	else \
-		echo "gotestsum not found, running go test with verbose output..."; \
-		go test -v -race ./...; \
-	fi
+	@./scripts/test_integration.sh $(INTEGRATION_ARGS)
 
-.PHONY: test-coverage
-test-coverage:
-	@echo "Running tests with coverage..."
-	@mkdir -p ./tmp
-	@if command -v gotestsum >/dev/null 2>&1; then \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" gotestsum --format testname -- -race -coverprofile=./tmp/coverage.out ./...; \
-	else \
-		echo "gotestsum not found, running go test with verbose output..."; \
-		WNC_CONTROLLER="" WNC_ACCESS_TOKEN="" go test -v -race -coverprofile=./tmp/coverage.out ./...; \
-	fi
-	@if [ -f ./tmp/coverage.out ]; then \
-		echo "Coverage report generated at ./tmp/coverage.out"; \
-		go tool cover -func=./tmp/coverage.out | tail -1; \
-	fi
+# Run integration tests with coverage analysis (requires environment variables)
+test-integration-coverage:
+	@./scripts/test_integration.sh --coverage
 
-.PHONY: test-coverage-html
-test-coverage-html: test-coverage
-	@echo "Generating HTML coverage report..."
-	@mkdir -p ./tmp
-	@if [ -f ./tmp/coverage.out ]; then \
-		go tool cover -html=./tmp/coverage.out -o ./tmp/coverage.html; \
-		echo "HTML coverage report generated at ./tmp/coverage.html"; \
-	else \
-		echo "No coverage file found. Run 'make test-coverage' first."; \
-	fi
+# Generate HTML coverage report
+test-coverage-report:
+	@./scripts/generate_coverage_report.sh
+
+# Verify build compilation
+build:
+	@go build ./...
+
+# YANG Model Development Tools
+# List all available YANG models
+yang-list:
+	@./scripts/get_yang_models.sh $(ARGS) || { \
+		echo "ℹ YANG list skipped (offline or unreachable controller)"; true; }
+
+# Get YANG model details from controller
+# (usage: make yang-model MODEL=model-name)
+yang-model:
+	@[ -n "$(MODEL)" ] || { echo "ℹ YANG model skipped (MODEL not set)"; exit 0; }
+	@./scripts/get_yang_model_details.sh $(ARGS) --model $(MODEL) || { \
+		echo "ℹ YANG model skipped (offline or unreachable controller)"; true; }
+
+# Get YANG statement details from controller
+# (usage: make yang-statement MODEL=model-name STATEMENT=statement-name)
+yang-statement:
+	@[ -n "$(MODEL)" ] && [ -n "$(STATEMENT)" ] || { \
+		echo "ℹ YANG statement skipped (MODEL and/or STATEMENT not set)"; exit 0; }
+	@./scripts/get_yang_statement_details.sh $(ARGS) --model $(MODEL) --statement $(STATEMENT) || { \
+		echo "ℹ YANG statement skipped (offline or unreachable controller)"; true; }
+
+# Pre-commit Hook Management
+# Install pre-commit hook to prevent direct commits to main branch
+pre-commit-install:
+	@ln -sf ../../scripts/pre_commit_hook.sh .git/hooks/pre-commit
+	@echo "✓ Pre-commit hook installed"
+
+# Test pre-commit hook without installing
+pre-commit-test:
+	@./scripts/pre_commit_hook.sh
+
+# Uninstall pre-commit hook
+pre-commit-uninstall:
+	@rm -f .git/hooks/pre-commit
+	@echo "✓ Pre-commit hook uninstalled"
