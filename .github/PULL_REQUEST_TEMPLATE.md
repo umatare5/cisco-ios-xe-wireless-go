@@ -8,4 +8,4 @@
 
 ## CHECKS
 
-- [ ] Coverage support required (maintainers will perform coverage analysis)
+- [ ] Require Integration Test Support <!-- maintainers will perform integration test and coverage analysis. -->
