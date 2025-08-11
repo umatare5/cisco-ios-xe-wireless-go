@@ -1,5 +1,3 @@
-# ISSUE_TEMPLATE.md
-
 ## WHAT
 
 <!-- Describe what this PR changes. Keep it concise. -->
