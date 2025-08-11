@@ -1,37 +1,55 @@
-# 🔐 Security Considerations
+# 🔐 Security
 
-This document outlines security best practices when using the `cisco-ios-xe-wireless-go` Go library for Cisco Catalyst 9800 Wireless Network Controllers.
+This document provides an overview of security practices for using this library.
 
-## 🔒 TLS Certificate Verification
+## 🛡️ Checklist
 
-By default, the library enforces strict TLS certificate verification:
+This section lists essential security checks for pre‑deployment and ongoing review.
+
+### ✅ Pre‑Deployment
+
+- [ ] Enable TLS certificate verification and set `InsecureSkipVerify` to false. → See [TLS Verification](#tls-verification)
+- [ ] Store authentication tokens in a secure credential manager. → See [Secure Storage](#token-storage)
+- [ ] Ensure no credentials are hardcoded in source code. → See [Environment Variables](#token-env)
+- [ ] Separate configurations for dev, staging, and production. → See [Environment Isolation](#environment-isolation)
+- [ ] Configure logging to exclude secrets and use appropriate levels. → See [Logging](#logging)
+- [ ] Restrict network access to only required endpoints. → See [Network & Access](#network-access)
+- [ ] Use service accounts with minimal permissions. → See [Network & Access](#network-access)
+- [ ] Apply timeouts to all API requests using contexts. → See [Context & Timeouts](#context-timeouts)
+
+### 🔍 Periodic Review
+
+- [ ] Rotate authentication tokens on a regular schedule. → See [Token Rotation](#token-rotation)
+- [ ] Review API access logs monthly for anomalies. → See [Logging](#logging)
+- [ ] Audit user permissions to maintain least‑privilege. → See [Network & Access](#network-access)
+- [ ] Update dependencies and toolchain to current versions. → See [Token Handling](#token-handling)
+- [ ] Monitor for upstream security advisories and CVEs. → See [References](#references)
+- [ ] Test backup or fallback authentication mechanisms. → See [Token Handling](#token-handling)
+- [ ] Validate firewall rules, ACLs, and rate limits are enforced. → See [Network & Access](#network-access)
+
+## 🔒 TLS Verification <a id="tls-verification"></a>
+
+Strict certificate validation is enforced unless you explicitly opt out via option.
 
 ```go
-// Secure connection (default)
-config := wnc.Config{
-    Controller:  "wnc.example.com",
-    AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
-    // InsecureSkipVerify: false (default)
-}
-client, err := wnc.NewClient(config)
+client, err := wnc.NewClient("wnc1.example.internal", token)
 
-// Skip verification only for development/testing
-config := wnc.Config{
-    Controller:         "wnc-dev.local",
-    AccessToken:        "YWRtaW46ZGV2LXBhc3N3b3Jk",
-    InsecureSkipVerify: true, // Only for development
-}
-client, err := wnc.NewClient(config)
+insecureClient, err := wnc.NewClient(
+    "wnc1.example.internal", token,
+    wnc.WithInsecureSkipVerify(true), // LAB ONLY
+)
 ```
 
-> [!WARNING]
-> The `InsecureSkipVerify: true` option disables TLS certificate verification and should only be used in trusted development environments with self-signed certificates. **Never use this option in production environments** as it compromises security.
+> [!CAUTION]
+> The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
-## 🔑 Authentication Token Security
+## 🔑 Token Handling <a id="token-handling"></a>
 
-### ✅ Best Practices
+Handle authentication tokens securely with isolated storage, periodic rotation, and no exposure in logs.
 
-1. **Environment Variables**: Store tokens in environment variables, never in source code:
+### ✅ Recommended
+
+1. **Environment Variables**: Store tokens in environment variables, never in source code: <a id="token-env"></a>
 
    ```go
    import (
@@ -39,142 +57,128 @@ client, err := wnc.NewClient(config)
        wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
    )
 
-   config := wnc.Config{
-       Controller:  os.Getenv("WNC_CONTROLLER"),
-       AccessToken: os.Getenv("WNC_ACCESS_TOKEN"),
-   }
+   client, err := wnc.NewClient(
+       os.Getenv("WNC_CONTROLLER"),
+       os.Getenv("WNC_ACCESS_TOKEN"),
+       wnc.WithTimeout(30*time.Second),
+   )
    ```
 
-2. **Token Generation**: Use Base64 encoding for username:password combinations:
+2. **Token Generation**: Use Base64 encoding for username:password combinations: <a id="token-generation"></a>
 
    ```bash
-   # Generate token manually (not recommended for automation)
+    # Generate token manually (ad-hoc only)
    echo -n "admin:your-secure-password" | base64
    # Output: YWRtaW46eW91ci1zZWN1cmUtcGFzc3dvcmQ=
 
-   # Better: Use the wnc CLI tool for token generation
-   wnc generate token -u admin -p "$SECURE_PASSWORD"
+    # Prefer central secret store, not ad-hoc scripts
    ```
 
-3. **Token Rotation**: Regenerate tokens regularly and update environment variables:
+3. **Token Rotation**: Regenerate tokens regularly and update environment variables: <a id="token-rotation"></a>
 
    ```bash
    # Automated token refresh script
    NEW_TOKEN=$(echo -n "admin:$NEW_PASSWORD" | base64)
-   export WNC_ACCESS_TOKEN="$NEW_TOKEN"
+   export WNC_ACCESS_TOKEN="<base64-username:password>"
    ```
 
-4. **Secure Credential Management**: Use secure credential stores:
+4. **Secure Storage**: Use OS / Vault stores <a id="token-storage"></a>
 
    ```bash
    # Example with macOS Keychain
    PASSWORD=$(security find-generic-password -a admin -s wnc-password -w)
    TOKEN=$(echo -n "admin:$PASSWORD" | base64)
-   export WNC_ACCESS_TOKEN="$TOKEN"
+   export WNC_ACCESS_TOKEN="<base64-username:password>"
 
    # Example with HashiCorp Vault
    TOKEN=$(vault kv get -field=token secret/wnc/credentials)
-   export WNC_ACCESS_TOKEN="$TOKEN"
+   export WNC_ACCESS_TOKEN="<base64-username:password>"
    ```
 
-5. **Context-Aware Requests**: Always use context with timeouts:
+5. **Context & Timeouts**: Always bound requests <a id="context-timeouts"></a>
 
    ```go
    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
    defer cancel()
 
-   apData, err := client.GetApOper(ctx)
+    apData, err := client.AP().GetOper(ctx)
    ```
 
-### ❌ What to Avoid
+### ❌ Avoid
 
-- Never hardcode authentication tokens in source code
-- Don't store tokens in version control systems
-- Avoid logging authentication tokens in application logs
-- Don't share tokens between environments (dev/staging/prod)
-- Never commit configuration files containing tokens
+Avoid these practices to reduce exposure, preserve accountability, and prevent secret leakage.
 
-## 🌐 Network Security
+- Hardcoding tokens — Exposes credentials and prevents safe rotation.
+- Committing `.env` with tokens — Leaks secrets through VCS and CI artifacts.
+- Reusing prod tokens in dev or staging — Increases blast radius across environments.
+- Logging Authorization headers — Risks credential disclosure in logs.
+- Sharing tokens between individuals — Breaks accountability and auditability.
 
-### 🔥 Firewall Considerations
+## 🌐 Network & Access <a id="network-access"></a>
 
-- **HTTPS Traffic**: Port 443 (default for RESTCONF API)
-- **Outbound Connections**: From client application to controller management interfaces
-- **Network Segmentation**: Consider VPN or dedicated management networks for production
-- **Controller Access**: Ensure controllers are on secure, isolated management networks
+This section defines network controls and access policies to protect the controller and data.
 
-### 🚪 Access Control
+| Control       | Recommendation                                  |
+| ------------- | ----------------------------------------------- |
+| Transport     | Use HTTPS for all requests.                     |
+| Port          | Expose only port 443 for RESTCONF.              |
+| Segmentation  | Limit controller access to a mgmt VLAN or VPN.  |
+| Accounts      | Use least‑privilege service accounts.           |
+| Rate limiting | Apply rate limits on the controller or a proxy. |
+| Auditing      | Review authentication logs regularly.           |
 
-- **Dedicated Service Accounts**: Use service accounts with minimal required privileges
-- **Read-Only Access**: Implement read-only access where possible (this library currently supports GET operations only)
-- **API Rate Limiting**: Monitor and implement rate limiting on controller side
-- **Regular Audits**: Audit user permissions and API access patterns
+## 📝 Logging <a id="logging"></a>
 
-### 📝 Logging and Monitoring
-
-Configure structured logging for security monitoring:
+Prefer structured logs, exclude secrets, and log only necessary context for operations and audits.
 
 ```go
 import (
-    "log/slog"
-    "os"
+   "log/slog"
+   "os"
+   "time"
+   wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 )
 
-// Security-focused logging configuration
-logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-    Level: slog.LevelInfo, // Avoid debug level in production
-    AddSource: true,
+logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+   Level: slog.LevelInfo,
 }))
 
-config := wnc.Config{
-    Controller:  "wnc.example.com",
-    AccessToken: os.Getenv("WNC_ACCESS_TOKEN"),
-    Logger:      logger,
-}
+client, err := wnc.NewClient(
+   "wnc1.example.internal",
+   os.Getenv("WNC_ACCESS_TOKEN"),
+   wnc.WithLogger(logger),
+   wnc.WithTimeout(30*time.Second),
+)
 ```
 
-## 🏭 Production Deployment
+## 🏭 Environment Isolation <a id="environment-isolation"></a>
 
-### 🏗️ Environment Isolation
+Use separate clients and credentials for dev, staging, and prod to limit blast radius and enforce tailored timeouts.
 
 ```go
-// Development environment
-devConfig := wnc.Config{
-    Controller:         "wnc-dev.local",
-    AccessToken:        os.Getenv("WNC_DEV_TOKEN"),
-    InsecureSkipVerify: true, // Only acceptable in dev
-    Timeout:            5 * time.Second,
-}
-
-// Staging environment
-stagingConfig := wnc.Config{
-    Controller:  "wnc-staging.company.com",
-    AccessToken: os.Getenv("WNC_STAGING_TOKEN"),
-    Timeout:     15 * time.Second,
-}
-
-// Production environment
-prodConfig := wnc.Config{
-    Controller:  "wnc-prod.company.com",
-    AccessToken: os.Getenv("WNC_PROD_TOKEN"),
-    Timeout:     30 * time.Second,
-    // InsecureSkipVerify: false (never set to true in production)
-}
+dev, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_DEV_TOKEN"), wnc.WithInsecureSkipVerify(true), wnc.WithTimeout(5*time.Second))
+staging, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_STAGING_TOKEN"), wnc.WithTimeout(15*time.Second))
+prod, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_PROD_TOKEN"), wnc.WithTimeout(30*time.Second))
+_, _, _ = dev, staging, prod
 ```
 
-### 📊 Security Monitoring
+### 📊 Monitoring
 
-1. **Request Monitoring**: Track API call patterns and volumes
-2. **Authentication Failures**: Monitor and alert on authentication errors
-3. **Network Anomalies**: Watch for unusual traffic patterns
-4. **Configuration Changes**: Log all configuration modifications
+Monitor authentication, request volume, latency, and TLS signals to detect issues early and guide response.
+
+| Area    | Metric / Signal                                                 |
+| ------- | --------------------------------------------------------------- |
+| Auth    | Track failed versus successful authentications.                 |
+| Volume  | Monitor request volume per service such as AP, Client, and RRM. |
+| Latency | Watch the 95th percentile request duration.                     |
+| TLS     | Alert on TLS handshake failures.                                |
 
 ### 🔧 Error Handling
 
-Implement secure error handling that doesn't leak sensitive information:
+Log actionable context for operators, return generic messages to users, and prevent any secret leakage.
 
 ```go
-apData, err := client.GetApOper(ctx)
+apData, err := client.AP().GetOper(ctx)
 if err != nil {
     // Log detailed errors securely (not to end users)
     logger.Error("API request failed", "error", err, "endpoint", "ap-oper")
@@ -184,64 +188,7 @@ if err != nil {
 }
 ```
 
-## 🛡️ Security Checklist
+## 📖 References <a id="references"></a>
 
-### ✅ Pre-Deployment Checklist
-
-- [ ] TLS certificate verification enabled (`InsecureSkipVerify: false`)
-- [ ] Authentication tokens stored in secure credential management
-- [ ] No hardcoded credentials in source code
-- [ ] Environment-specific configurations separated
-- [ ] Logging configured with appropriate security levels
-- [ ] Network access restricted to necessary endpoints
-- [ ] Service accounts configured with minimal privileges
-- [ ] Context timeouts configured for all API calls
-
-### 🔍 Regular Security Reviews
-
-- [ ] Rotate authentication tokens quarterly
-- [ ] Review API access logs monthly
-- [ ] Audit user permissions quarterly
-- [ ] Update dependency versions regularly
-- [ ] Monitor for security advisories
-- [ ] Test backup authentication mechanisms
-- [ ] Validate network security controls
-
-## 🚨 Incident Response
-
-### Authentication Compromise
-
-1. **Immediate Actions**:
-
-   - Revoke compromised tokens on controller
-   - Generate new authentication credentials
-   - Update environment variables/credential stores
-   - Restart affected applications
-
-2. **Investigation**:
-   - Review API access logs for suspicious activity
-   - Check for unauthorized configuration changes
-   - Validate network access patterns
-
-### Network Security Breach
-
-1. **Immediate Actions**:
-
-   - Isolate affected controllers from network
-   - Review firewall rules and network segmentation
-   - Check for lateral movement attempts
-
-2. **Recovery**:
-   - Validate controller configurations
-   - Update network security policies
-   - Implement additional monitoring
-
-## 📖 Additional Resources
-
-- [Cisco Catalyst 9800 Security Configuration Guide](https://www.cisco.com/c/en/us/support/wireless/catalyst-9800-series-wireless-controllers/products-installation-and-configuration-guides-list.html)
-- [RESTCONF Security Best Practices](https://tools.ietf.org/html/rfc8040#section-2.5)
 - [Go Security Best Practices](https://go.dev/security/)
-
----
-
-**Back to:** [API Reference](API_REFERENCE.md) | [Main README](../README.md)
+- [RESTCONF Security Best Practices](https://tools.ietf.org/html/rfc8040#section-2.5)

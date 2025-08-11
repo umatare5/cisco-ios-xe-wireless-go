@@ -1,14 +1,19 @@
-# 📗 cisco-ios-xe-wireless-go - Go Library for C9800
+<h1 align="center">📗 cisco-ios-xe-wireless-go - Go Library for C9800</h1>
 
-![GitHub Tag](https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version)
-[![Test and Build](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main)](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go)](https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/10969/badge)](https://www.bestpractices.dev/projects/10969)
-[![Go Reference](https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg)](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/main/LICENSE)
-[![Published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go)
+<p align="center">
+  <img alt="GitHub Tag" src="https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version" />
+  <a href="https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml"><img alt="Test and Build" src="https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-test-build.yml/badge.svg?branch=main" /></a>
+  <img alt="Test Coverage" src="docs/assets/coverage.svg" />
+  <a href="https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go" /></a>
+  <a href="https://www.bestpractices.dev/projects/10969"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/10969/badge" /></a>
+  <a href="https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go"><img alt="Go Reference" src="https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg" /></a>
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+  <a href="https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go"><img alt="Published" src="https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg" /></a>
+</p>
 
-A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
+<p align="center">A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.</p>
+
+## ✨️ Key Features
 
 - **🔧 Developer Friendly**: Transparent YANG model handling with all responses in JSON format
 - **📊 Comprehensive Coverage**: Access most status information and metrics available from the WNC
@@ -28,167 +33,106 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ## 🚀 Quick Start
 
-### 🔑 Creating Basic Auth Token
+> [!NOTE]
+> You have to enable RESTCONF and HTTPS on the C9800 before using this library. Please see:
+>
+> - [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432)
 
-You must create a Basic Auth token using your Cisco WNC credentials before using the client.
+### 1. Generate a Basic Auth token
+
+Encode your controller credentials as Base64.
 
 ```bash
-# Create token for username:password
+# username:password → Base64
 echo -n "admin:your-password" | base64
 # Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-### 🔧 Basic Usage
+### 2. Run the sample application
 
-Start with this simple example to verify your WNC connection and credentials.
+Use your controller host and token to fetch AP operational data.
 
 ```go
 package main
 
-import (
-    "context"
-    "fmt"
-    "time"
-
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-)
+import wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
 
 func main() {
-    // Create configuration
-    config := wnc.Config{
-        Controller:  "192.168.1.100",
-        AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
-        Timeout:     30 * time.Second,
-    }
+    // Load environment variables
+    controller := os.Getenv("WNC_CONTROLLER")
+    token := os.Getenv("WNC_ACCESS_TOKEN")
 
-    // Create client with configuration
-    client, err := wnc.NewClient(config)
-    if err != nil {
-        fmt.Printf("Failed to create client: %v\n", err)
-        return
-    }
+    // Create client
+    client, err := wnc.NewClient(controller, token,
+        wnc.WithTimeout(30*time.Second),
+        wnc.WithInsecureSkipVerify(true), // remove for production
+    )
 
-    // Get AP operational data with context timeout
-    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+    // Create simple context with timeout
+    ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
     defer cancel()
 
-    apData, err := client.GetApOper(ctx)
+    // Request AP operational data
+    apData, err := client.AP().GetOper(ctx)
     if err != nil {
-        fmt.Printf("Failed to get AP data: %v\n", err)
-        return
+        fmt.Fprintln(os.Stderr, "AP oper request:", err)
+        os.Exit(1)
     }
 
-    fmt.Printf("Successfully connected! Found %d APs\n", len(apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.OperData))
-}
-```
-
-### ⚙️ Advanced Configuration
-
-Customize client behavior using configuration options to optimize for your specific environment and requirements.
-
-```go
-import (
-    "log/slog"
-    "time"
-
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-)
-
-// Create client with custom configuration
-config := wnc.Config{
-    Controller:         "192.168.1.100",
-    AccessToken:        "YWRtaW46eW91ci1wYXNzd29yZA==",
-    Timeout:            30 * time.Second,
-    InsecureSkipVerify: true, // Only for development
-}
-
-client, err := wnc.NewClient(config)
-if err != nil {
-    fmt.Printf("Failed to create client: %v\n", err)
-    return
+    // Print AP operational data
+    fmt.Printf("Successfully connected! Found %d APs\n",
+        len(apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.OperData)
+    )
 }
 ```
 
 > [!CAUTION]
-> The `WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
+> The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
-### 📊 Custom Logging
-
-The library supports structured logging using Go's standard `slog` package.
-
-```go
-import (
-    "log/slog"
-    "os"
-
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-)
-
-logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-    Level: slog.LevelDebug,
-}))
-
-config := wnc.Config{
-    Controller:  "192.168.1.100",
-    AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
-    Logger:      logger,
-}
-
-client, err := wnc.NewClient(config)
-```
-
-## ⚙️ Configuration Options
-
-All configuration options are set in the `Config` struct during client creation.
-
-| Field                | Type            | Description                                    |
-| -------------------- | --------------- | ---------------------------------------------- |
-| `Controller`         | `string`        | Hostname or IP address of the WNC (required)   |
-| `AccessToken`        | `string`        | Authentication token for API access (required) |
-| `Timeout`            | `time.Duration` | HTTP request timeout (default: 15s)            |
-| `InsecureSkipVerify` | `bool`          | Skips TLS certificate verification (dev only)  |
-| `Logger`             | `*slog.Logger`  | Custom structured logger instance              |
+> [!NOTE]
+> Runnable examples are available:
+>
+> - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
+>
+>   ```bash
+>   ❯ go run examples/minimal/main.go
+>   Successfully connected! Found 2 APs
+>   ```
+>
+> - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
+>
+>   ```bash
+>   ❯ go run examples/advanced/main.go
+>   time=2025-08-09T12:47:34.089+09:00 level=INFO msg="starting advanced WNC example" controller=wnc1.example.internal
+>   time=2025-08-09T12:47:34.666+09:00 level=INFO msg="retrieved AP operational data" ptr=true
+>   time=2025-08-09T12:47:35.175+09:00 level=INFO msg="retrieved Client operational data" ptr=true
+>   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="retrieved Rogue operational data" ptr=true
+>   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="workflow completed successfully"
+>   ```
 
 ## 🌐 API Reference
 
-The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see **[API_REFERENCE.md](./docs/API_REFERENCE.md)**.
-
-## 🧪 Testing
-
-This library includes comprehensive unit and integration tests to ensure reliability and compatibility with Cisco Catalyst 9800 controllers. For detailed testing information, please see **[TESTING.md](./docs/TESTING.md)**.
-
-## 🛠️ Debugging
-
-This library includes the scripts that are useful for debugging and development. These scripts use `curl` to access WNC, so they don't depend on Go. For detailed scripts documentation, please refer to **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
+The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see [API Reference](./docs/API_REFERENCE.md).
 
 ## 🤝 Contributing
 
-I welcome contributions to improve this library. Please follow these guidelines to ensure smooth collaboration.
+I welcome all kinds of contributions from the community! Please read the **[Contribution Guide](./CONTRIBUTING.md)** before submitting PRs or issues.
 
-1. **Fork the repository** and create a feature branch from `main`
-2. **Make your changes** following existing code style and conventions
-3. **Add comprehensive tests** for new functionality
-4. **Update documentation** including README.md and code comments
-5. **Ensure all tests pass** including unit and integration tests
-6. **Submit a pull request** with a clear description of changes
+For additional guidance, please also see the following documents:
 
-## 🚀 Release Process
+- **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
+- **📜 [Scripts Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
+- **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
 
-To release a new version:
-
-1. **Update the version** in the `VERSION` file
-2. **Submit a pull request** with the updated `VERSION` file
-
-Once merged, the GitHub Workflow will automatically:
-
-- **Create and push a new tag** based on the `VERSION` file
-
-After that, manual release via [GitHub Actions: release workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/release.yaml).
+> [!WARNING]
+> This library is under **active development**; I'll make the breaking changes until `v1.0.0`.
+>
+> - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 🙏 Acknowledgments
 
-This code was developed with the assistance of **GitHub Copilot Agent Mode**. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
+This project was developed with the assistance of **GitHub Copilot Agent Mode**. Thanks to the global developer community who have contributed their knowledge and code to open source projects and public repositories.
 
 ## 📄 License
 
-Please see the [LICENSE](./LICENSE) file for details.
+[MIT](./LICENSE)
