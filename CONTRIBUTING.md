@@ -119,7 +119,4 @@ To release a new version:
 - **Update the version** in the `VERSION` file.
 - **Submit a pull request** with the updated `VERSION` file.
 
-Once merged, GitHub Actions will automatically:
-
-- **Create and push a new tag** via [Tagging Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/tagging.yml).
-- **Release the new version** via [Release Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-release.yml).
+Once merged, GitHub Actions will automatically release the new version using [Release Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-release.yml).
