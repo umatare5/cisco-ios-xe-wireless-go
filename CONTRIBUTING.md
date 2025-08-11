@@ -93,6 +93,7 @@ export WNC_ACCESS_TOKEN="<base64-username:password>"
 make test-unit-coverage        # produces unit test coverage in tmp/coverage.out
 make test-integration-coverage # produces integration test coverage in tmp/coverage.out
 make test-coverage-report      # writes coverage/report.html and coverage/report.out
+octocov badge coverage --out docs/assets/coverage.svg # generates coverage badge
 ```
 
 - Commit coverage artifacts (CI will build the badge):
@@ -100,7 +101,7 @@ make test-coverage-report      # writes coverage/report.html and coverage/report
   - Commit the updated files:
     - `coverage/report.out` (coverprofile for CI)
     - `coverage/report.html` (human-readable report)
-  - CI generates `docs/assets/coverage.svg` from `coverage/report.out` automatically.
+    - `docs/assets/coverage.svg` (coverage badge)
 
 - In the PR description, mention the resulting total coverage and, if helpful, link to `coverage/report.html`.
 
