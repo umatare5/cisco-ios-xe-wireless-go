@@ -1,0 +1,9 @@
+{
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "file": ".vscode/.copilot-commit-message-instructions.md"
+        }
+    ],
+    "chat.promptFiles": true,
+}

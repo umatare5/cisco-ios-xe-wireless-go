@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Pre-commit Hook - Prevent Direct Pushes to Main Branch
+# This hook prevents direct commits to the main branch and enforces
+# proper development workflow through feature branches.
+#
+
+set -euo pipefail
+
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Delegate to the main validation script
+# Adjusted path: scripts lives at repo root, not under .githooks/scripts
+exec "${SCRIPT_DIR}/../scripts/pre_commit_hook.sh" "$@"

@@ -1,0 +1,9 @@
+# ShellCheck configuration file
+# https://github.com/koalaman/shellcheck/blob/master/shellcheck.1.md#rc-files
+
+# Disable SC1090: Not following sourced files (for modular script architecture)
+disable=SC1090
+
+# Disable SC1091: Not following sourced files (for modular script architecture)
+disable=SC1091
+
