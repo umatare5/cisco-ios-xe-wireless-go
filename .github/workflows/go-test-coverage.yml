@@ -1,0 +1,16 @@
+name: Coverage
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+    uses: umatare5/common/.github/workflows/go-test-coverage.yml@49d5d37a92af3d54a6aeb9e55b8ab40e3713343c # v0.10.0
+    with:
+      go_version: "1.24.5"
+      coverage_threshold: 95

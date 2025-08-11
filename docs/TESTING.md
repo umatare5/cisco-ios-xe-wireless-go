@@ -1,91 +1,87 @@
 # 🧪 Testing
 
-This library includes following tests that validate API functionality and client behavior:
+This guide explains how to run unit and integration tests, manage test data, and generate coverage reports.
+
+> [!NOTE]
+> Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`.
+
+## 🎯 Scopes
+
+There are four main layers of tests:
 
 - **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
 - **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
 - **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
 - **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
 
-> [!Note]
-> Currently, the test coverage is insufficient. All tests will be covered in the future release `v0.3.0`.
+## 🧰 Prerequisites
 
-## 🎯 Prerequisites
+Tools and environment required to run unit and integration tests.
 
-### For Unit, Table-driven and Fail-fast Tests
+### For Unit / Table / Fail-fast Tests
 
 Unit tests require no special configuration and can be run in any Go development environment.
 
-| Requirement   | Version/Details  | Description                                          |
-| ------------- | ---------------- | ---------------------------------------------------- |
-| Go            | 1.24 or later    | Required for running tests and building the project. |
-| Testing Tools | Standard library | Built-in Go testing framework.                       |
+| Requirement | Version | Notes                    |
+| ----------- | ------- | ------------------------ |
+| Go          | 1.24+   | Uses only stdlib testing |
+| make        | Latest  | Convenience targets      |
 
 ### For Integration Tests
 
 #### 1. Cisco Catalyst 9800 Wireless Network Controller
 
-Integration tests require a real Cisco Catalyst 9800 WNC. For instructions on setting up WNC, please refer to [References Section](#references).
+Integration tests require a real Cisco Catalyst 9800 WNC. Please refer to [#References](#references).
 
 #### 2. Environment Variables
 
 Integration tests also require the following environment variables:
 
-| Variable           | Description                | Example                |
-| ------------------ | -------------------------- | ---------------------- |
-| `WNC_CONTROLLER`   | WNC IP address or hostname | `192.168.1.100`        |
-| `WNC_ACCESS_TOKEN` | Base64 encoded credentials | `YWRtaW46cGFzc3dvcmQ=` |
+| Variable           | Description        | Example                 |
+| ------------------ | ------------------ | ----------------------- |
+| `WNC_CONTROLLER`   | Controller host/IP | `wnc1.example.internal` |
+| `WNC_ACCESS_TOKEN` | Base64 `user:pass` | `YWRtaW46cGFzc3dvcmQ=`  |
 
-<details><summary>Environment Variable Configuration</summary>
+<details><summary>Environment setup</summary>
 
 ```bash
-export WNC_CONTROLLER="192.168.1.100"          # Your WNC IP address
-export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:password
+export WNC_CONTROLLER="<controller-host-or-ip>"
+export WNC_ACCESS_TOKEN="<base64-username:password>"
 ```
 
 </details>
 
-## 🚀 Running Tests
+> [!CAUTION]
+> Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
 
-The project includes convenient Makefile targets for testing:
+## 🚀 Running tests
 
-| Command                 | Description                                        |
-| ----------------------- | -------------------------------------------------- |
-| `make test-unit`        | Run unit tests. WNC access is not required.        |
-| `make test-integration` | Run integration tests. **WNC access is required.** |
+Run unit and integration suites via Make targets for consistent, reproducible results.
 
-<details><summary>Example of command result</summary>
+Primary Make targets:
 
-```text
-📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
-  ✅ TestClientConfig (0s)
-  ✅ TestClientFunctions (10.67s)
-  ✅ TestClientFunctions/GET_APOper (5.63s)
-    client_test.go:399: GET AP oper request successful
-  🚧 TestClientFunctions (0s)
-    client_test.go:364: WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables must be set for integration tests
+| Command                          | Description                           |
+| -------------------------------- | ------------------------------------- |
+| `make test-unit`                 | Run unit + table + fail-fast suites   |
+| `make test-integration`          | Run integration (skips if env unset)  |
+| `make test-unit-coverage`        | Run unit tests with coverage analysis |
+| `make test-integration-coverage` | Run integration tests with coverage   |
+| `make test-coverage-report`      | Generate HTML coverage report         |
 
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (1.1% coverage)
-  ✅ TestApOperationFailFast/NilClient (0s)
-    oper_test.go:210: Correctly returned error with nil client: invalid client configuration: client cannot be nil
-  🚧 TestAPConfigurationFunctions (0s)
-    cfg_test.go:48: Required environment variables not set - skipping test
-
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil
-    coverage: 0.0% of statements
-```
-
-</details>
+> [!NOTE]
+> Lint runs automatically where configured; see Make and Scripts references.
 
 ## 📊 Test Data Collection
 
-Integration tests automatically collect and save real WNC data to JSON files for validation and debugging purposes.
+Integration tests persist controller responses to support regression and offline inspection.
 
-- **Location**: `test_data/` directory in each module
-- **Format**: JSON files with descriptive names (e.g., `ap_oper_response.json`)
-- **Purpose**: Verify API response structure and enable offline debugging
+| Aspect   | Detail                                 |
+| -------- | -------------------------------------- |
+| Location | `*/test_data/*.json`                   |
+| Format   | Raw controller JSON (pretty if stable) |
+| Use      | Schema drift and offline analysis      |
 
-<details><summary>Example of test data tree structure</summary>
+<details><summary>Example layout</summary>
 
 ```text
 test_data/
@@ -97,29 +93,18 @@ test_data/
 
 </details>
 
-## 📈 Coverage Analysis
+## 📈 Coverage Reports
 
-The project supports comprehensive test coverage analysis:
+Generate coverage summaries and an HTML report to assess tested code paths.
 
-### Coverage Reports
+| Command                          | Notes                                                         |
+| -------------------------------- | ------------------------------------------------------------- |
+| `make test-unit-coverage`        | Writes `./tmp/coverage.out` from unit tests.                  |
+| `make test-integration-coverage` | Writes `./tmp/coverage.out` from integration tests.           |
+| `make test-coverage-report`      | Generates `report.out` and `report.html` under `./coverage/.` |
 
-| Output Type     | Command                   | Description                                  |
-| --------------- | ------------------------- | -------------------------------------------- |
-| Terminal Output | `make test-coverage`      | Run tests with coverage analysis.            |
-| HTML Report     | `make test-coverage-html` | Run tests and generate HTML coverage report. |
-
-<details><summary>Example of Coverage Output</summary>
-
-```text
-Coverage report generated at ./tmp/coverage.out
-total: (statements) 6.1%
-
-📦 github.com/umatare5/cisco-ios-xe-wireless-go (42.9% coverage)
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/awips (75% coverage)
-📦 github.com/umatare5/cisco-ios-xe-wireless-go/ap (1.1% coverage)
-```
-
-</details>
+> [!NOTE]
+> CI publish a coverage badge from `coverage/report.out` when present.
 
 ## 📚️ Appendix
 
@@ -131,8 +116,8 @@ For efficient testing workflow, start with unit tests and gradually move to inte
 2. **Unit Tests First**: `make test-unit` - Ensure basic functionality with enhanced output.
 3. **Environment Setup**: Configure environment variables for integration tests.
 4. **Environment Verification**: Check controller access to verify connectivity and credentials.
-5. **Coverage Analysis**: `make test-coverage` - Run tests with coverage analysis.
-6. **HTML Coverage Report**: `make test-coverage-html` - Generate detailed HTML coverage report.
+5. **Coverage Analysis**: `make test-unit-coverage` or `make test-integration-coverage` - Run tests with coverage analysis.
+6. **HTML Coverage Report**: `make test-coverage-report` - Generate detailed HTML coverage report.
 7. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
 8. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
 9. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
@@ -140,16 +125,19 @@ For efficient testing workflow, start with unit tests and gradually move to inte
 > [!TIP]
 > For comprehensive testing, run both `make test-unit` and `make test-integration` sequentially to validate all functionality.
 
-### 🔧 Development Dependencies
+### Development Dependencies
 
-The project uses several tools to enhance the testing experience:
+The project uses several tools to enhance the testing experience. Install all dependencies with: `make deps`
 
-- **gotestsum**: Provides enhanced, human-readable test output with various formats
-- **golangci-lint**: Code linting and static analysis
-- **goreleaser**: Release automation
+### Troubleshooting
 
-> [!Note]
-> Install all dependencies with: `make deps`
+Common issues and concise fixes for failed or flaky test runs.
+
+- Missing env vars: set `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN` for integration.
+- Unreachable controller: verify DNS or use `wnc1.example.internal` or an IP.
+- TLS errors: see Security → TLS Verification and avoid disabling checks in prod.
+- Auth failures: ensure the token is Base64 of `user:pass` and not expired.
+- Flaky tests: re-run with verbose logs; isolate by package using `go test ./pkg`.
 
 ### References
 
