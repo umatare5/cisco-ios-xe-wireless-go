@@ -5,6 +5,8 @@ applyTo: "**/*.sh"
 
 # Bash Shell **Scripts** & Bootstrap System Instructions
 
+GitHub Copilot **MUST** follow these instructions when generating or modifying Bash scripts in this repository.
+
 ## Scope & Metadata
 
 - **Last Updated**: 2025-08-11

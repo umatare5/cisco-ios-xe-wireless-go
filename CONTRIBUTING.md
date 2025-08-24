@@ -1,7 +1,11 @@
 # 🤝 Contribution Guide
 
-Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go library**!
-This document explains how you can get involved, the development workflow, and our release process.
+Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go library**! This document explains how you can get involved, the development workflow, and our release process.
+
+> [!WARNING]
+> This library is under **active development**. I'll make the breaking changes until `v1.0.0`. Please create an issue before contributing to avoid duplicate work.
+>
+> - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 💡 How to Contribute
 
