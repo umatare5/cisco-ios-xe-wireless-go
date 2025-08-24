@@ -25,6 +25,19 @@ run_lints() {
     return $exit_code
 }
 
+# Run formatting operations for Go code
+run_formats() {
+    local exit_code=0
+
+    printf 'Running formatting operations...\n' >&2
+
+    fmt_goimports || exit_code=1
+    fmt_go || exit_code=1
+
+    show_formatting_summary "$exit_code"
+    return $exit_code
+}
+
 # Run Go code linting with golangci-lint or go vet fallback
 lint_go() {
     printf '\n--- Go Code Linting (golangci-lint) ---\n' >&2
@@ -35,6 +48,46 @@ lint_go() {
         printf 'Warning: golangci-lint not found, falling back to go vet\n' >&2
         go vet ./...
     fi
+}
+
+# Format Go code using gofumpt
+fmt_go() {
+    printf '\n--- Go Code Formatting (gofumpt) ---\n' >&2
+
+    if ! command_exists gofumpt; then
+        printf 'Warning: gofumpt not found, skipping formatting\n' >&2
+        return 0
+    fi
+
+    local go_files
+    go_files=$(find . -type f -name "*.go" | grep -v vendor/ | grep -v ".git/")
+
+    if [[ -z "$go_files" ]]; then
+        printf 'No Go files found to format\n' >&2
+        return 0
+    fi
+
+    echo "$go_files" | xargs gofumpt -w
+}
+
+# Organize Go imports using goimports
+fmt_goimports() {
+    printf '\n--- Go Code Formatting (goimports) ---\n' >&2
+
+    if ! command_exists goimports; then
+        printf 'Warning: goimports not found, skipping import organization\n' >&2
+        return
+    fi
+
+    local go_files
+    go_files=$(find . -type f -name "*.go" | grep -v vendor/ | grep -v ".git/")
+
+    if [[ -z "$go_files" ]]; then
+        printf 'No Go files found for import organization\n' >&2
+        return
+    fi
+
+    echo "$go_files" | xargs goimports -w
 }
 
 # Run shell script linting with shellcheck
@@ -82,6 +135,22 @@ show_linting_summary() {
     fi
 
     printf 'All linting checks passed successfully\n' >&2
+    printf '\n' >&2
+}
+
+# Show formatting summary based on exit code
+show_formatting_summary() {
+    local exit_code="${1:-0}"
+
+    printf '\n--- Formatting Summary ---\n' >&2
+
+    if [[ "$exit_code" -ne 0 ]]; then
+        printf 'Formatting failed - please fix the issues above\n' >&2
+        printf '\n' >&2
+        return
+    fi
+
+    printf 'All formatting operations completed successfully\n' >&2
     printf '\n' >&2
 }
 
