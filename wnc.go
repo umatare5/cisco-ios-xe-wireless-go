@@ -5,35 +5,36 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/afc"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/ap"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/apf"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/awips"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/ble"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/client"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/cts"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/dot11"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/dot15"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/fabric"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/flex"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/general"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/geolocation"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/hyperlocation"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/lisp"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/location"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mcast"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mdns"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mesh"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mobility"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/nmsp"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/radio"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rf"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rfid"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rogue"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rrm"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/site"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wlan"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/afc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ap"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/apf"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/awips"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ble"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/client"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/controller"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/cts"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/dot11"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/dot15"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/fabric"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/flex"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/general"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/geolocation"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/hyperlocation"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/lisp"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/location"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mcast"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mdns"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mesh"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mobility"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/nmsp"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/radio"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rf"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rfid"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rogue"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rrm"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/site"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan"
 )
 
 // Client represents the unified WNC API client with access to all domain services.
@@ -119,6 +120,11 @@ func (c *Client) BLE() ble.Service {
 // Client returns the wireless client service.
 func (c *Client) Client() client.Service {
 	return client.NewService(c.core)
+}
+
+// Controller returns the controller management service.
+func (c *Client) Controller() controller.Service {
+	return controller.NewService(c.core)
 }
 
 // CTS returns the Cisco TrustSec service.

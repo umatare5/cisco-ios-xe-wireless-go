@@ -5,6 +5,8 @@ applyTo: "**/*.md"
 
 # Additional Documentation and Content Creation Standards
 
+GitHub Copilot **MUST** follow these instructions when generating or modifying Markdown files in this repository.
+
 ### Scope & Metadata
 
 - **Last Updated**: 2025-08-10

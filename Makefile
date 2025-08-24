@@ -7,7 +7,7 @@
 # For specific script options, use: ./scripts/<script_name>.sh --help
 
 .PHONY: help clean deps lint test-unit test-unit-coverage test-integration test-integration-coverage \
-	test-coverage-report build yang-list yang-model yang-statement \
+	test-coverage-report build yang-list yang-model yang-statement yang-filters \
         pre-commit-install pre-commit-test pre-commit-uninstall
 
 # Default args (can be overridden: make test-integration INTEGRATION_ARGS="")
@@ -73,6 +73,14 @@ yang-statement:
 		echo "ℹ YANG statement skipped (MODEL and/or STATEMENT not set)"; exit 0; }
 	@./scripts/get_yang_statement_details.sh $(ARGS) --model $(MODEL) --statement $(STATEMENT) || { \
 		echo "ℹ YANG statement skipped (offline or unreachable controller)"; true; }
+
+# Extract filterable fields from YANG data
+# (usage: make yang-filters MODEL=model-name STATEMENT=statement-name)
+yang-filters:
+	@[ -n "$(MODEL)" ] && [ -n "$(STATEMENT)" ] || { \
+		echo "ℹ YANG filters skipped (MODEL and/or STATEMENT not set)"; exit 0; }
+	@./scripts/get_yang_model_filters.sh $(ARGS) --model $(MODEL) --statement $(STATEMENT) || { \
+		echo "ℹ YANG filters skipped (offline or unreachable controller)"; true; }
 
 # Pre-commit Hook Management
 # Install pre-commit hook to prevent direct commits to main branch

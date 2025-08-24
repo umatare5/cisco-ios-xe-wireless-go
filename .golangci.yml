@@ -16,14 +16,11 @@ run:
 linters:
   default: none # enable only what is listed explicitly
   enable:
-    # --- core (kept from the original config) ---
     - govet
     - errcheck
     - staticcheck
     - ineffassign
     - unused
-
-    # --- additions for higher quality ---
     - errorlint
     - unparam
     - unconvert

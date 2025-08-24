@@ -19,6 +19,7 @@ run_lint_operation() {
 
     format_lint_info "Starting code linting..."
     local exit_code=0
+    execute_format_command "$project_root" || exit_code=$?
     execute_lint_command "$project_root" || exit_code=$?
 
     display_lint_results "$exit_code" "$project_root"

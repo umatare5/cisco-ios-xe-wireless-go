@@ -114,61 +114,8 @@ func TestNormalizeEndpointPath(t *testing.T) {
 	}
 }
 
-func TestBuildYANGLibraryURL(t *testing.T) {
-	builder := NewBuilder("https", "core.example.com")
-	url := builder.BuildYANGLibraryURL()
-
-	expected := "https://core.example.com/restconf/data?fields=ietf-yang-library:modules-state/module"
-	if url != expected {
-		t.Errorf("BuildYANGLibraryURL() = %q, want %q", url, expected)
-	}
-}
-
-func TestBuildYANGModuleURL(t *testing.T) {
-	builder := NewBuilder("https", "core.example.com")
-
-	testCases := []struct {
-		name      string
-		yangModel string
-		revision  string
-		expected  string
-	}{
-		{
-			"standard module",
-			"Cisco-IOS-XE-wireless-afc-oper",
-			"2021-07-01",
-			"https://core.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-afc-oper/2021-07-01",
-		},
-		{
-			"config module",
-			"Cisco-IOS-XE-wireless-ap-cfg",
-			"2022-03-15",
-			"https://core.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-ap-cfg/2022-03-15",
-		},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			url := builder.BuildYANGModuleURL(tt.yangModel, tt.revision)
-
-			if url != tt.expected {
-				t.Errorf("BuildYANGModuleURL(%q, %q) = %q, want %q", tt.yangModel, tt.revision, url, tt.expected)
-			}
-		})
-	}
-}
-
-func TestBuildEndpointURL(t *testing.T) {
-	builder := NewBuilder("https", "core.example.com")
-	endpoint := "/Cisco-IOS-XE-wireless-general-oper:general-oper-data"
-
-	endpointURL := builder.BuildEndpointURL(endpoint)
-	restconfURL := builder.BuildRESTCONFURL(endpoint)
-
-	if endpointURL != restconfURL {
-		t.Errorf("BuildEndpointURL() = %q, BuildRESTCONFURL() = %q, should be equal", endpointURL, restconfURL)
-	}
-}
+// NOTE: Tests for BuildYANGLibraryURL, BuildYANGModuleURL, and BuildEndpointURL
+// were removed as those methods have been removed from the builder
 
 func TestIsValidProtocol(t *testing.T) {
 	testCases := []struct {
@@ -295,52 +242,6 @@ func TestIsValidRevision(t *testing.T) {
 
 			if result != tt.expected {
 				t.Errorf("IsValidRevision(%q) = %v, want %v", tt.revision, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestHasValidDateFormat(t *testing.T) {
-	testCases := []struct {
-		name     string
-		revision string
-		expected bool
-	}{
-		{"valid format", "2021-07-01", true},
-		{"invalid separators", "2021/07/01", false},
-		{"no separators", "20210701", false},
-		{"wrong separator positions", "21-07-011", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := hasValidDateFormat(tt.revision)
-
-			if result != tt.expected {
-				t.Errorf("hasValidDateFormat(%q) = %v, want %v", tt.revision, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestHasValidDateComponents(t *testing.T) {
-	testCases := []struct {
-		name     string
-		revision string
-		expected bool
-	}{
-		{"all numeric", "2021-07-01", true},
-		{"non-numeric year", "abcd-07-01", false},
-		{"non-numeric month", "2021-ab-01", false},
-		{"non-numeric day", "2021-07-ab", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := hasValidDateComponents(tt.revision)
-
-			if result != tt.expected {
-				t.Errorf("hasValidDateComponents(%q) = %v, want %v", tt.revision, result, tt.expected)
 			}
 		})
 	}

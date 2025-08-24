@@ -91,6 +91,7 @@ func TestClientServiceAccessors(t *testing.T) {
 	_ = client.AWIPS()         // Should not panic
 	_ = client.BLE()           // Should not panic
 	_ = client.Client()        // Should not panic
+	_ = client.Controller()    // Should not panic
 	_ = client.CTS()           // Should not panic
 	_ = client.Dot11()         // Should not panic
 	_ = client.Dot15()         // Should not panic

@@ -83,18 +83,73 @@ Please refer to the following list for the methods of each service:
 
 <details><summary><strong>Access Point Service</strong></summary>
 
+The AP service provides comprehensive access point management with extensive filtering capabilities.
+
+**Base Methods:**
+
 | Method                        | Description                            |
 | ----------------------------- | -------------------------------------- |
 | `GetCfg`                      | Access point configuration for all APs |
 | `GetTagSourcePriorityConfigs` | Tag source priority config             |
 | `GetApTags`                   | AP tag assignments                     |
 | `GetOper`                     | AP operational root data               |
-| `GetRadioNeighbor`            | Radio neighbor info                    |
 | `GetNameMacMap`               | AP name ↔ MAC list                     |
 | `GetCapwapData`               | CAPWAP session data                    |
 | `GetGlobalOper`               | Global AP operational data             |
-| `GetHistory`                  | AP history records                     |
-| `GetEwlcApStats`              | EWLC AP statistics                     |
+| `GetGlobalOperApHistory`      | AP history records                     |
+| `GetGlobalOperEwlcApStats`    | EWLC AP statistics                     |
+
+**Configuration Filter Methods (GetCfg\*):**
+
+| Method              | Description               |
+| ------------------- | ------------------------- |
+| `GetCfgByMAC`       | Filter by AP MAC address  |
+| `GetCfgByPolicyTag` | Filter by policy tag name |
+| `GetCfgBySiteTag`   | Filter by site tag name   |
+| `GetCfgByRfTag`     | Filter by RF tag name     |
+| `GetCfgByPriority`  | Filter by priority value  |
+| `GetCfgByTagSrc`    | Filter by tag source      |
+
+**Operational Filter Methods (GetOper\*):**
+
+| Method                           | Description                    |
+| -------------------------------- | ------------------------------ |
+| `GetOperByWtpName`               | Filter by WTP name             |
+| `GetOperByWtpMac`                | Filter by WTP MAC address      |
+| `GetOperByEthMac`                | Filter by Ethernet MAC address |
+| `GetOperByRadioID`               | Filter by radio ID             |
+| `GetOperByApIPAddr`              | Filter by AP IP address        |
+| `GetOperByPrimaryControllerName` | Filter by primary controller   |
+| `GetOperByPowerType`             | Filter by power type           |
+| `GetOperBySlotID`                | Filter by slot ID              |
+| `GetOperByPrimaryChannel`        | Filter by primary channel      |
+
+**Global Operational Filter Methods (GetGlobalOper\*):**
+
+| Method                              | Description                    |
+| ----------------------------------- | ------------------------------ |
+| `GetGlobalOperByApName`             | Filter by AP name              |
+| `GetGlobalOperByWtpMac`             | Filter by WTP MAC address      |
+| `GetGlobalOperByEthernetMac`        | Filter by Ethernet MAC address |
+| `GetGlobalOperByApIPAddr`           | Filter by AP IP address        |
+| `GetGlobalOperByIsJoined`           | Filter by join status          |
+| `GetGlobalOperByApDisconnectReason` | Filter by disconnect reason    |
+
+**Examples:**
+
+```go
+// Get all APs
+aps, err := client.AP().GetCfg(ctx)
+
+// Get specific AP by MAC address
+ap, err := client.AP().GetCfgByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+
+// Get operational data for specific WTP
+operData, err := client.AP().GetOperByWtpName(ctx, "AP-01")
+
+// Get global operational data by AP name
+globalOper, err := client.AP().GetGlobalOperByApName(ctx, "AP-Lab-01")
+```
 
 </details>
 
@@ -112,19 +167,29 @@ Please refer to the following list for the methods of each service:
 | `GetPolicyData`        | Policy association data     |
 | `GetSisfDBMac`         | SISF DB MAC entries         |
 | `GetDcInfo`            | Data center info            |
+| `GetOperByClientMac`   | Filter by client MAC        |
+| `GetOperByApName`      | Filter by AP name           |
+| `GetOperByWlanId`      | Filter by WLAN ID           |
+| `GetOperByClientType`  | Filter by client type       |
+| `GetOperByCoState`     | Filter by client state      |
+| `GetOperByMsRadioType` | Filter by radio type        |
+| `GetOperByUsername`    | Filter by username          |
 
 </details>
 
 <details><summary><strong>WLAN Service</strong></summary>
 
-| Method                        | Description                  |
-| ----------------------------- | ---------------------------- |
-| `GetCfg`                      | WLAN configuration           |
-| `GetCfgEntries`               | Individual WLAN entries      |
-| `GetPolicies`                 | WLAN policies                |
-| `GetPolicyListEntries`        | Policy list entries          |
-| `GetWirelessAaaPolicyConfigs` | AAA policy configs           |
-| `GetGlobalOper`               | Global WLAN operational data |
+| Method                           | Description                                    |
+| -------------------------------- | ---------------------------------------------- |
+| `GetCfg`                         | WLAN configuration                             |
+| `GetCfgEntries`                  | Individual WLAN entries                        |
+| `GetPolicies`                    | WLAN policies                                  |
+| `GetPolicyListEntries`           | Policy list entries                            |
+| `GetWirelessAaaPolicyConfigs`    | AAA policy configs                             |
+| `GetGlobalOper`                  | Global WLAN operational data                   |
+| `GetCfgByProfileName`            | Filter configuration by WLAN profile name      |
+| `GetPoliciesByPolicyProfileName` | Filter policies by policy profile name         |
+| `GetGlobalOperByWlanProfile`     | Filter global operational data by WLAN profile |
 
 </details>
 
@@ -164,31 +229,31 @@ Please refer to the following list for the methods of each service:
 
 <details><summary><strong>Other Services</strong></summary>
 
-| Package         | Key Methods                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| `radio`         | `GetCfg`                                                                  |
-| `rf`            | `GetCfg`, `GetProfiles`                                                   |
-| `afc`           | `GetOper`, `GetAPResp`, `GetCloudOper`, `GetCloudStats`                   |
-| `rogue`         | `GetOper`, `GetStats`, `GetData`, `GetClientData`, `GetRldpStats`         |
-| `mcast`         | `GetOper`, `GetFlexMediastreamClientSummary`, `GetVlanL2MgidOp`           |
-| `mdns`          | `GetOper`, `GetGlobalStats`, `GetWlanStats`                               |
-| `mesh`          | `GetOper`, `GetCfg`                                                       |
-| `mobility`      | `GetOper`                                                                 |
-| `geolocation`   | `GetOper`, `GetApGeoLocStats`                                             |
-| `hyperlocation` | `GetOper`, `GetProfiles`                                                  |
-| `location`      | `GetCfg`                                                                  |
-| `site`          | `GetOper`                                                                 |
-| `ble`           | `GetOper`                                                                 |
-| `cts`           | `GetCfg`                                                                  |
-| `dot11`         | `GetCfg`                                                                  |
-| `dot15`         | `GetCfg`                                                                  |
-| `flex`          | `GetCfg`                                                                  |
-| `fabric`        | `GetCfg`                                                                  |
-| `apf`           | `GetCfg`                                                                  |
-| `awips`         | `GetOper`                                                                 |
-| `rfid`          | `GetCfg`                                                                  |
-| `lisp`          | `GetOper`                                                                 |
-| `nmsp`          | `GetOper`, `GetClientRegistration`, `GetCmxConnection`, `GetCmxCloudInfo` |
+| Package         | Key Methods                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `radio`         | `GetCfg`, `GetCfgByName`                                                                                                  |
+| `rf`            | `GetCfg`, `GetProfiles`                                                                                                   |
+| `afc`           | `GetOper`, `GetAPResp`, `GetCloudOper`, `GetCloudStats`                                                                   |
+| `rogue`         | `GetOper`, `GetStats`, `GetData`, `GetClientData`, `GetRldpStats`, `GetOperByRogueAddress`, `GetOperByRogueClientAddress` |
+| `mcast`         | `GetOper`, `GetFlexMediastreamClientSummary`, `GetVlanL2MgidOp`, `GetOperByClientMAC`, `GetOperByVlanIndex`               |
+| `mdns`          | `GetOper`, `GetGlobalStats`, `GetWlanStats`, `GetOperByWlanID`                                                            |
+| `mesh`          | `GetOper`, `GetCfg`, `GetCfgByProfileName`                                                                                |
+| `mobility`      | `GetOper`, `GetOperByClientMAC`, `GetOperByAPMac`                                                                         |
+| `geolocation`   | `GetOper`, `GetApGeoLocStats`                                                                                             |
+| `hyperlocation` | `GetOper`, `GetProfiles`                                                                                                  |
+| `location`      | `GetCfg`                                                                                                                  |
+| `site`          | `GetOper`                                                                                                                 |
+| `ble`           | `GetOper`, `GetOperByApMac`, `GetOperByApMacSlotAntenna`                                                                  |
+| `cts`           | `GetCfg`, `GetCfgBySxpProfileName`                                                                                        |
+| `dot11`         | `GetCfg`, `GetCfgByCountryCode`, `GetCfgByBand`, `GetCfgBySpatialStreamAndIndex`                                          |
+| `dot15`         | `GetCfg`                                                                                                                  |
+| `flex`          | `GetCfg`, `GetCfgByPolicyName`                                                                                            |
+| `fabric`        | `GetCfg`, `GetCfgByFabricProfileName`, `GetCfgByControlPlaneName`                                                         |
+| `apf`           | `GetCfg` (Application Policy Framework - single global configuration object)                                              |
+| `awips`         | `GetOper`, `GetOperByApMac`, `GetOperByApMacDownloadStatus`                                                               |
+| `rfid`          | `GetCfg`                                                                                                                  |
+| `lisp`          | `GetOper`                                                                                                                 |
+| `nmsp`          | `GetOper`, `GetClientRegistration`, `GetCmxConnection`, `GetCmxCloudInfo`, `GetOperByClientID`                            |
 
 </details>
 

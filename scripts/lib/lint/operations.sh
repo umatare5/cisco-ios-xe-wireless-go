@@ -28,6 +28,11 @@ prepare_lint_arguments() {
     return 0
 }
 
+execute_format_command() {
+    local project_root="${1:-.}"
+    run_formats "$project_root"
+}
+
 execute_lint_command() {
     local project_root="${1:-.}"
     run_lints "$project_root"

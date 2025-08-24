@@ -182,3 +182,84 @@ func TestHTTPStatusConstants(t *testing.T) {
 		})
 	}
 }
+
+// TestIsNotFoundError tests the IsNotFoundError function
+func TestIsNotFoundError(t *testing.T) {
+	testCases := []struct {
+		name     string
+		err      error
+		expected bool
+	}{
+		{
+			name:     "nil_error",
+			err:      nil,
+			expected: false,
+		},
+		{
+			name: "http_error_404",
+			err: &HTTPError{
+				Status: http.StatusNotFound,
+				Body:   []byte("Not Found"),
+			},
+			expected: true,
+		},
+		{
+			name: "http_error_500",
+			err: &HTTPError{
+				Status: http.StatusInternalServerError,
+				Body:   []byte("Internal Server Error"),
+			},
+			expected: false,
+		},
+		{
+			name: "api_error_404",
+			err: &APIError{
+				StatusCode: http.StatusNotFound,
+				Message:    "Resource not found",
+			},
+			expected: true,
+		},
+		{
+			name: "api_error_403",
+			err: &APIError{
+				StatusCode: http.StatusForbidden,
+				Message:    "Access forbidden",
+			},
+			expected: false,
+		},
+		{
+			name:     "string_error_with_404",
+			err:      errors.New("API error (HTTP 404): resource not found"),
+			expected: true,
+		},
+		{
+			name:     "string_error_with_not_found",
+			err:      errors.New("resource not found"),
+			expected: true,
+		},
+		{
+			name:     "string_error_with_not_found_uppercase",
+			err:      errors.New("API error: Not Found"),
+			expected: true,
+		},
+		{
+			name:     "string_error_without_404",
+			err:      errors.New("internal server error"),
+			expected: false,
+		},
+		{
+			name:     "generic_error",
+			err:      errors.New("some other error"),
+			expected: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := IsNotFoundError(tc.err)
+			if result != tc.expected {
+				t.Errorf("Expected %v, got %v for error: %v", tc.expected, result, tc.err)
+			}
+		})
+	}
+}

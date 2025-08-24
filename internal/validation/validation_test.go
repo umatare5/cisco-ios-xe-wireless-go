@@ -1,6 +1,8 @@
 package validation
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 	"time"
 )
@@ -16,11 +18,8 @@ func TestValidationConstants(t *testing.T) {
 		value    int
 		expected int
 	}{
-		{"MinEndpointLengthChars", MinEndpointLengthChars, 10},
-		{"MinTokenLengthChars", MinTokenLengthChars, 8},
 		{"MinEndpointLength", MinEndpointLength, 10},
 		{"MinTokenLength", MinTokenLength, 8},
-		{"ZeroTimeoutSeconds", ZeroTimeoutSeconds, 0},
 		{"ValidationTimeoutThreshold", ValidationTimeoutThreshold, 1},
 	}
 
@@ -73,8 +72,8 @@ func TestIsValidAccessToken(t *testing.T) {
 		{"ValidLongToken", "YWRtaW46cGFzc3dvcmQxMjM0NTY3ODkw", true},
 		{"ValidShortToken", "dGVzdA==", true},
 		{"EmptyToken", "", false},
-		{"SpaceOnlyToken", " ", true}, // Non-empty string is valid
-		{"TabToken", "\t", true},      // Non-empty string is valid
+		{"SpaceOnlyToken", " ", false}, // Whitespace-only string is invalid
+		{"TabToken", "\t", false},      // Whitespace-only string is invalid
 	}
 
 	for _, tt := range testCases {
@@ -194,4 +193,143 @@ func TestValidationFunctionsBoundaryConditions(t *testing.T) {
 			t.Error("Expected very large timeout to be valid")
 		}
 	})
+}
+
+// TestValidateAPMac tests MAC address validation
+func TestValidateAPMac(t *testing.T) {
+	testCases := []struct {
+		name    string
+		macAddr string
+		valid   bool
+	}{
+		{"ValidColonFormat", "00:11:22:33:44:55", true},
+		{"ValidHyphenFormat", "00-11-22-33-44-55", true},
+		{"ValidNoSeparator", "001122334455", true},
+		{"ValidUppercase", "AA:BB:CC:DD:EE:FF", true},
+		{"ValidMixed", "12:34:56:78:9a:bc", true},
+		{"EmptyString", "", false},
+		{"TooShort", "00:11:22:33:44", false},
+		{"TooLong", "00:11:22:33:44:55:66", false},
+		{"InvalidHex", "00:11:22:33:44:gg", false},
+		{"InvalidChar", "00:11:22:33:44:5z", false},
+		{"NonHexString", "xyz", false},
+		{"OnlyNumbers", "123456789012", true},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateAPMac(tt.macAddr)
+			if tt.valid && err != nil {
+				t.Errorf("Expected MAC address %s to be valid, got error: %v", tt.macAddr, err)
+			}
+			if !tt.valid && err == nil {
+				t.Errorf("Expected MAC address %s to be invalid, but validation passed", tt.macAddr)
+			}
+		})
+	}
+}
+
+// TestNormalizeAPMac tests MAC address normalization
+func TestNormalizeAPMac(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{"ColonFormat", "00:11:22:33:44:55", "00:11:22:33:44:55"},
+		{"HyphenFormat", "00-11-22-33-44-55", "00:11:22:33:44:55"},
+		{"NoSeparator", "001122334455", "00:11:22:33:44:55"},
+		{"UppercaseToLowercase", "AA:BB:CC:DD:EE:FF", "aa:bb:cc:dd:ee:ff"},
+		{"MixedCase", "Aa:Bb:Cc:Dd:Ee:Ff", "aa:bb:cc:dd:ee:ff"},
+		{"DotFormat", "00.11.22.33.44.55", "00:11:22:33:44:55"},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			result := NormalizeAPMac(tt.input)
+			if result != tt.expected {
+				t.Errorf("Expected NormalizeAPMac(%s) to be %s, got %s", tt.input, tt.expected, result)
+			}
+		})
+	}
+}
+
+// TestValidateNonEmptyString tests string validation
+func TestValidateNonEmptyString(t *testing.T) {
+	testCases := []struct {
+		name      string
+		input     string
+		fieldName string
+		valid     bool
+	}{
+		{"ValidString", "test", "field", true},
+		{"EmptyString", "", "field", false},
+		{"WhitespaceOnly", "   ", "field", false},
+		{"TabOnly", "\t", "field", false},
+		{"NewlineOnly", "\n", "field", false},
+		{"ValidWithWhitespace", " test ", "field", true},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateNonEmptyString(tt.input, tt.fieldName)
+			if tt.valid && err != nil {
+				t.Errorf("Expected string %q to be valid, got error: %v", tt.input, err)
+			}
+			if !tt.valid && err == nil {
+				t.Errorf("Expected string %q to be invalid, but validation passed", tt.input)
+			}
+			if !tt.valid && err != nil && !strings.Contains(err.Error(), tt.fieldName) {
+				t.Errorf("Expected error to contain field name %q, got: %v", tt.fieldName, err)
+			}
+		})
+	}
+}
+
+// TestIsStringEmpty tests string empty checking
+func TestIsStringEmpty(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{"EmptyString", "", true},
+		{"NonEmptyString", "test", false},
+		{"SpaceString", " ", false},
+		{"TabString", "\t", false},
+		{"NewlineString", "\n", false},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsStringEmpty(tt.input)
+			if result != tt.expected {
+				t.Errorf("IsStringEmpty(%q) = %v, expected %v", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestIsHexChar tests the IsHexChar function
+func TestIsHexChar(t *testing.T) {
+	validHexChars := []rune{
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
+		'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F',
+	}
+	for _, char := range validHexChars {
+		t.Run(fmt.Sprintf("valid_%c", char), func(t *testing.T) {
+			if !IsHexChar(char) {
+				t.Errorf("Expected %c to be a valid hex character", char)
+			}
+		})
+	}
+
+	invalidHexChars := []rune{'g', 'G', 'z', 'Z', '!', '@', ' ', '\t', '\n', ':', '-', '.'}
+	for _, char := range invalidHexChars {
+		t.Run(fmt.Sprintf("invalid_%c", char), func(t *testing.T) {
+			if IsHexChar(char) {
+				t.Errorf("Expected %c to be an invalid hex character", char)
+			}
+		})
+	}
 }

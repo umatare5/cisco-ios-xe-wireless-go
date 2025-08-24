@@ -73,6 +73,62 @@ build_yang_model_details_url() {
     printf '%s\n' "${base_url}${restconf_modules_path}/${yang_model}/${revision}"
 }
 
+# Build RESTCONF filter query string
+build_restconf_filter_query() {
+    local filter_expr="$1"
+    local filter_key
+    local filter_value
+
+    if [[ "$filter_expr" =~ ^([^=]+)=(.+)$ ]]; then
+        filter_key="${BASH_REMATCH[1]}"
+        filter_value="${BASH_REMATCH[2]}"
+
+        # Use RESTCONF content query parameter with XPath-like filtering
+        case "$filter_key" in
+            "wlan-id")
+                # Filter for specific wlan-id in wlan-cfg-entry list
+                printf 'fields=wlan-cfg-entries/wlan-cfg-entry(%s)' "$filter_value"
+                ;;
+            "profile-name")
+                # Filter for specific profile-name in wlan-cfg-entry list
+                printf 'fields=wlan-cfg-entries/wlan-cfg-entry(%s)' "$filter_value"
+                ;;
+            "policy-profile-name")
+                # Filter for specific policy-profile-name in wlan-policy list
+                printf 'fields=wlan-policies/wlan-policy(%s)' "$filter_value"
+                ;;
+            "ssid")
+                # This is more complex as ssid is nested, use simple field selection
+                printf 'fields=wlan-cfg-entries'
+                ;;
+            "tag-name")
+                # Filter for specific tag-name in policy-list-entry list
+                printf 'fields=policy-list-entries/policy-list-entry(%s)' "$filter_value"
+                ;;
+            "ap-profile-name"|"profile-name-ap")
+                # Filter for specific profile-name in ap-cfg-profile list (site-cfg)
+                printf 'fields=ap-cfg-profiles/ap-cfg-profile' # RESTCONF key filtering is complex, use simple field selection
+                ;;
+            "site-tag-name"|"site-tag")
+                # Filter for specific site-tag-name in site-tag-config list (site-cfg)
+                printf 'fields=site-tag-configs/site-tag-config' # RESTCONF key filtering is complex, use simple field selection
+                ;;
+            *)
+                # For site-cfg models, detect the model type and use appropriate default
+                if [[ "$filter_expr" =~ site-cfg ]]; then
+                    printf 'fields=ap-cfg-profiles,site-tag-configs'
+                else
+                    # Generic filter - default to wlan-cfg-entries
+                    printf 'fields=wlan-cfg-entries'
+                fi
+                ;;
+        esac
+    else
+        error "Invalid filter format. Expected: key=value"
+        return 1
+    fi
+}
+
 # Build URL for YANG statement details endpoint
 build_yang_statement_url() {
     local protocol="$1"
@@ -81,10 +137,13 @@ build_yang_statement_url() {
     local identifier="$4"
     local base_url
     local restconf_data_path
+    local full_url
 
     base_url="$(build_base_url "$protocol" "$controller")"
     restconf_data_path="$(get_restconf_data_path)"
-    printf '%s\n' "${base_url}${restconf_data_path}/${yang_model}:${identifier}"
+    full_url="${base_url}${restconf_data_path}/${yang_model}:${identifier}"
+
+    printf '%s\n' "$full_url"
 }
 
 # Test connection to controller

@@ -5,15 +5,6 @@ This guide explains how to run unit and integration tests, manage test data, and
 > [!NOTE]
 > Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`.
 
-## 🎯 Scopes
-
-There are four main layers of tests:
-
-- **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
-- **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
-- **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
-- **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
-
 ## 🧰 Prerequisites
 
 Tools and environment required to run unit and integration tests.
@@ -77,14 +68,14 @@ Integration tests persist controller responses to support regression and offline
 
 | Aspect   | Detail                                 |
 | -------- | -------------------------------------- |
-| Location | `*/test_data/*.json`                   |
+| Location | `*/testdata/*.json`                    |
 | Format   | Raw controller JSON (pretty if stable) |
 | Use      | Schema drift and offline analysis      |
 
 <details><summary>Example layout</summary>
 
 ```text
-test_data/
+testdata/
 ├── ap_oper_response.json
 ├── client_oper_response.json
 ├── general_cfg_response.json

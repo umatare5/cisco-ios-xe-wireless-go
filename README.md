@@ -1,4 +1,4 @@
-<h1 align="center">📗 cisco-ios-xe-wireless-go - Go Library for C9800</h1>
+<h1 align="center">cisco-ios-xe-wireless-go - Go Library for C9800</h1>
 
 <p align="center">
   <img alt="GitHub Tag" src="https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version" />
@@ -6,7 +6,7 @@
   <img alt="Test Coverage" src="docs/assets/coverage.svg" />
   <a href="https://goreportcard.com/report/github.com/umatare5/cisco-ios-xe-wireless-go"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/umatare5/cisco-ios-xe-wireless-go" /></a>
   <a href="https://www.bestpractices.dev/projects/10969"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/10969/badge" /></a>
-  <a href="https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go"><img alt="Go Reference" src="https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg" /></a>
+  <a href="https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main"><img alt="Go Reference" src="https://pkg.go.dev/badge/umatare5/cisco-ios-xe-wireless-go.svg" /></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
   <a href="https://developer.cisco.com/codeexchange/github/repo/umatare5/cisco-ios-xe-wireless-go"><img alt="Published" src="https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg" /></a>
 </p>
@@ -48,7 +48,7 @@ echo -n "admin:your-password" | base64
 # Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
-### 2. Run the sample application
+### 2. Create a sample application
 
 Use your controller host and token to fetch AP operational data.
 
@@ -89,30 +89,61 @@ func main() {
 > [!CAUTION]
 > The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
-> [!NOTE]
-> Runnable examples are available:
->
-> - **Minimal**: [`examples/minimal`](./examples/minimal) — create a client and call a single endpoint
->
->   ```bash
->   ❯ go run examples/minimal/main.go
->   Successfully connected! Found 2 APs
->   ```
->
-> - **Advanced**: [`examples/advanced`](./examples/advanced) — multi-service workflow with logging and context
->
->   ```bash
->   ❯ go run examples/advanced/main.go
->   time=2025-08-09T12:47:34.089+09:00 level=INFO msg="starting advanced WNC example" controller=wnc1.example.internal
->   time=2025-08-09T12:47:34.666+09:00 level=INFO msg="retrieved AP operational data" ptr=true
->   time=2025-08-09T12:47:35.175+09:00 level=INFO msg="retrieved Client operational data" ptr=true
->   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="retrieved Rogue operational data" ptr=true
->   time=2025-08-09T12:47:35.399+09:00 level=INFO msg="workflow completed successfully"
->   ```
+### 3. Run the application with environment variables
+
+```bash
+# Set environment variables
+export WNC_CONTROLLER="wnc1.example.internal"
+export WNC_ACCESS_TOKEN="YWRtaW46eW91ci1wYXNzd29yZA=="
+
+# Run the application
+go run main.go
+```
 
 ## 🌐 API Reference
 
-The library provides a set of functions for interacting with all major Cisco Catalyst 9800 WNC subsystems. For detailed API documentation, please see [API Reference](./docs/API_REFERENCE.md).
+This library provides a client to interact with the Cisco Catalyst 9800 Wireless Network Controller's RESTCONF API.
+
+### Client Options
+
+There are several options to customize the client behavior:
+
+| Option                      | Type            | Default                    | Description                              |
+| --------------------------- | --------------- | -------------------------- | ---------------------------------------- |
+| `WithTimeout(d)`            | `time.Duration` | `wnc.DefaultTimeout` (60s) | Sets HTTP request timeout; must be > 0.  |
+| `WithInsecureSkipVerify(b)` | `bool`          | `false`                    | Skips TLS verify; use only in labs.      |
+| `WithLogger(l)`             | `*slog.Logger`  | `slog.Default()`           | Sets structured logger; cannot be nil.   |
+| `WithUserAgent(ua)`         | `string`        | `"wnc-go-client/1.0"`      | Custom User-Agent; may be ignored today. |
+
+### Supported Service APIs
+
+Please refer to **[https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main)**.
+
+> [!TIP]
+>
+> - Most Set operations in AP service require either the AP’s **Radio MAC** (`radioMac`) or **Ethernet MAC** (`apMac`). If you want to specify the AP by hostname, you can use the following function to perform the conversion.
+> - `wtpMac` refers to the **Radio MAC** as same as `radioMac`. `WTP` (Wireless Termination Point) is a term defined in [RFC 5415: CAPWAP Protocol Specification](https://datatracker.ietf.org/doc/html/rfc5415) that denotes an AP.
+
+## 🔖 Usecases
+
+Runnable examples are available:
+
+### Count Associated APs
+
+[`cmd/count_aps`](./cmd/count_aps) — count associated APs
+
+```bash
+❯ go run cmd/count_aps/main.go
+Successfully connected! Found 2 APs
+```
+
+## Reload an AP
+
+[`cmd/reload_ap`](./cmd/reload_ap) — manually reload an AP **(dangerous operation)**
+
+## Reload a Controller
+
+[`cmd/reload_controller`](./cmd/reload_controller) — manually reload the controller **(dangerous operation)**
 
 ## 🤝 Contributing
 
@@ -121,11 +152,6 @@ I welcome all kinds of contributions from the community! Please read the **[Cont
 - **📋 [Make Command Reference](./docs/MAKE_REFERENCE.md)** — Make targets and the usage
 - **📜 [Scripts Reference](./docs/SCRIPT_REFERENCE.md)** — Per-script usage and sample outputs
 - **🧪 [Testing Guide](./docs/TESTING.md)** — How to run unit and integration tests
-
-> [!WARNING]
-> This library is under **active development**; I'll make the breaking changes until `v1.0.0`.
->
-> - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 🙏 Acknowledgments
 

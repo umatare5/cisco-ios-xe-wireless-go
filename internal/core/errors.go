@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 // Custom error types for better error handling and debugging
@@ -89,4 +90,26 @@ func isNotFoundError(statusCode int) bool {
 // isDeadlineExceededError checks if error is due to context deadline exceeded
 func isDeadlineExceededError(err error) bool {
 	return errors.Is(err, context.DeadlineExceeded)
+}
+
+// IsNotFoundError checks if the error is a 404 not found error
+func IsNotFoundError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	var httpErr *HTTPError
+	if errors.As(err, &httpErr) {
+		return httpErr.Status == http.StatusNotFound
+	}
+
+	var apiErr *APIError
+	if errors.As(err, &apiErr) {
+		return apiErr.StatusCode == http.StatusNotFound
+	}
+
+	errStr := err.Error()
+	return strings.Contains(errStr, "404") ||
+		strings.Contains(errStr, "not found") ||
+		strings.Contains(errStr, "Not Found")
 }
