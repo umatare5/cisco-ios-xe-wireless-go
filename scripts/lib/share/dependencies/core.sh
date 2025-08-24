@@ -29,6 +29,12 @@ validate_dependencies_environment() {
         return 1
     fi
 
+    # Check gofumpt installation
+    if ! is_command_available "gofumpt"; then
+        error "gofumpt is not installed. Please install with 'go install mvdan.cc/gofumpt@latest'"
+        return 1
+    fi
+
     # Display Go version
     local go_version
     go_version="$(go version 2>/dev/null | cut -d' ' -f3)"
