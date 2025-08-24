@@ -3,6 +3,8 @@ package restconf
 
 import (
 	"fmt"
+	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -10,6 +12,8 @@ import (
 const (
 	// RESTCONFPathPrefix is the base path for all RESTCONF API endpoints
 	RESTCONFPathPrefix = "/restconf/data"
+	// RESTCONFOperationsPathPrefix is the base path for RESTCONF RPC operations
+	RESTCONFOperationsPathPrefix = "/restconf/operations"
 	// RESTCONFModulesPathPrefix is the base path for YANG module queries
 	RESTCONFModulesPathPrefix = "/restconf/tailf/modules"
 	// RESTCONFLibraryQuery is the query string for YANG library modules
@@ -34,22 +38,22 @@ const (
 
 // YANG model validation constants
 const (
-	// RestconfYANGModelPrefix is the expected prefix for Cisco wireless YANG models
-	RestconfYANGModelPrefix = "Cisco-IOS-XE-wireless-"
-	// RestconfYANGModelOperSuffix is the suffix for operational YANG models
-	RestconfYANGModelOperSuffix = "-oper"
-	// RestconfYANGModelCfgSuffix is the suffix for configuration YANG models
-	RestconfYANGModelCfgSuffix = "-cfg"
-)
-
-// Common YANG model patterns
-const (
-	// CiscoIOSXEWirelessPrefix is the common prefix for all wireless YANG models
-	CiscoIOSXEWirelessPrefix = RestconfYANGModelPrefix
+	// YANGModelPrefix is the standard prefix for wireless-related YANG models
+	YANGModelPrefix = "Cisco-IOS-XE-wireless-"
+	// YANGModelOperSuffix is the suffix for operational YANG models
+	YANGModelOperSuffix = "-oper"
+	// YANGModelCfgSuffix is the suffix for configuration YANG models
+	YANGModelCfgSuffix = "-cfg"
 	// OperDataSuffix is the common suffix for operational data endpoints
-	OperDataSuffix = RestconfYANGModelOperSuffix + "-data"
+	OperDataSuffix = YANGModelOperSuffix + "-data"
 	// CfgDataSuffix is the common suffix for configuration data endpoints
-	CfgDataSuffix = RestconfYANGModelCfgSuffix + "-data"
+	CfgDataSuffix = YANGModelCfgSuffix + "-data"
+
+	// Compatibility aliases for existing code
+	RestconfYANGModelPrefix     = YANGModelPrefix
+	RestconfYANGModelOperSuffix = YANGModelOperSuffix
+	RestconfYANGModelCfgSuffix  = YANGModelCfgSuffix
+	CiscoIOSXEWirelessPrefix    = YANGModelPrefix
 )
 
 // Builder provides utility functions for building WNC RESTCONF API URLs
@@ -77,6 +81,17 @@ func (b *Builder) BuildRESTCONFURL(endpointPath string) string {
 	return fmt.Sprintf("%s%s%s", b.BuildBaseURL(), RESTCONFPathPrefix, normalizedEndpointPath)
 }
 
+// BuildRPCURL constructs a RESTCONF RPC operations URL for the given RPC path
+func (b *Builder) BuildRPCURL(rpcPath string) string {
+	// RPC paths already contain /restconf/operations prefix, so we build base URL + path
+	if strings.HasPrefix(rpcPath, RESTCONFOperationsPathPrefix) {
+		return fmt.Sprintf("%s%s", b.BuildBaseURL(), rpcPath)
+	}
+	// If path doesn't include operations prefix, add it
+	normalizedRPCPath := b.normalizeEndpointPath(rpcPath)
+	return fmt.Sprintf("%s%s%s", b.BuildBaseURL(), RESTCONFOperationsPathPrefix, normalizedRPCPath)
+}
+
 // normalizeEndpointPath ensures endpoint path starts with forward slash
 func (b *Builder) normalizeEndpointPath(endpointPath string) string {
 	if !strings.HasPrefix(endpointPath, URLPathSeparator) {
@@ -85,19 +100,76 @@ func (b *Builder) normalizeEndpointPath(endpointPath string) string {
 	return endpointPath
 }
 
-// BuildYANGLibraryURL constructs the URL for querying YANG library modules
-func (b *Builder) BuildYANGLibraryURL() string {
-	return fmt.Sprintf("%s%s%s", b.BuildBaseURL(), RESTCONFPathPrefix, RESTCONFLibraryQuery)
+// NOTE: BuildYANGLibraryURL, BuildYANGModuleURL, and BuildEndpointURL were removed
+// as they were only used in tests and provided no additional value over existing methods.
+
+// BuildFieldsURL constructs URL with fields parameter for selective data retrieval
+func (b *Builder) BuildFieldsURL(baseURL, fields string) string {
+	if fields == "" {
+		return baseURL
+	}
+	return baseURL + "?fields=" + url.QueryEscape(fields)
 }
 
-// BuildYANGModuleURL constructs the URL for getting details of a specific YANG module
-func (b *Builder) BuildYANGModuleURL(yangModel, revision string) string {
-	return fmt.Sprintf("%s%s/%s/%s", b.BuildBaseURL(), RESTCONFModulesPathPrefix, yangModel, revision)
+// BuildPathQueryURL constructs URLs with path and key-value parameters
+// Format: endpoint/key=value
+func (b *Builder) BuildPathQueryURL(endpoint, key, value string) string {
+	return fmt.Sprintf("%s/%s=%s", endpoint, key, value)
 }
 
-// BuildEndpointURL is a convenience method that delegates to BuildRESTCONFURL
-func (b *Builder) BuildEndpointURL(endpoint string) string {
-	return b.BuildRESTCONFURL(endpoint)
+// BuildQueryURL constructs URLs for queries with key-value parameters
+// Format: endpoint=identifier
+func (b *Builder) BuildQueryURL(endpoint, identifier string) string {
+	return fmt.Sprintf("%s=%s", endpoint, identifier)
+}
+
+// convertToString converts interface{} values to strings for URL construction
+func convertToString(v interface{}) string {
+	switch val := v.(type) {
+	case string:
+		return val
+	case int:
+		return strconv.Itoa(val)
+	case int64:
+		return strconv.FormatInt(val, 10)
+	case float64:
+		return strconv.FormatFloat(val, 'f', -1, 64)
+	case bool:
+		return strconv.FormatBool(val)
+	default:
+		return fmt.Sprintf("%v", val)
+	}
+}
+
+// BuildCompositeKeyURL constructs URLs with composite key parameters
+// Format: endpoint/key=value1,value2,value3...
+func (b *Builder) BuildCompositeKeyURL(endpoint, key string, values ...interface{}) string {
+	strValues := make([]string, len(values))
+	for i, v := range values {
+		strValues[i] = convertToString(v)
+	}
+	return fmt.Sprintf("%s/%s=%s", endpoint, key, strings.Join(strValues, ","))
+}
+
+// BuildQueryCompositeURL constructs URLs for queries with composite parameters
+// Format: endpoint=value1,value2,value3...
+func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{}) string {
+	strValues := make([]string, len(values))
+	for i, v := range values {
+		strValues[i] = convertToString(v)
+	}
+	return fmt.Sprintf("%s=%s", endpoint, strings.Join(strValues, ","))
+}
+
+// BuildFieldsURLMultiple constructs URL with multiple fields parameter for selective data retrieval
+func (b *Builder) BuildFieldsURLMultiple(basePath string, fields []string) string {
+	if len(fields) == 0 {
+		return basePath
+	}
+
+	params := url.Values{}
+	params.Add("fields", strings.Join(fields, ","))
+	return fmt.Sprintf("%s?%s", basePath, params.Encode())
 }
 
 // Validation functions for URL components
@@ -114,13 +186,13 @@ func IsValidYANGModel(yangModelName string) bool {
 
 // hasValidYANGPrefix checks if model name has required Cisco prefix
 func hasValidYANGPrefix(yangModelName string) bool {
-	return strings.HasPrefix(yangModelName, RestconfYANGModelPrefix)
+	return strings.HasPrefix(yangModelName, YANGModelPrefix)
 }
 
 // hasValidYANGSuffix checks if model name has valid operational or configuration suffix
 func hasValidYANGSuffix(yangModelName string) bool {
-	return strings.HasSuffix(yangModelName, RestconfYANGModelOperSuffix) ||
-		strings.HasSuffix(yangModelName, RestconfYANGModelCfgSuffix)
+	return strings.HasSuffix(yangModelName, YANGModelOperSuffix) ||
+		strings.HasSuffix(yangModelName, YANGModelCfgSuffix)
 }
 
 // IsValidRevision checks if the revision follows YYYY-MM-DD format
@@ -130,21 +202,9 @@ func IsValidRevision(revisionString string) bool {
 		return false
 	}
 
-	return hasValidDateFormat(revisionString) && hasValidDateComponents(revisionString)
-}
-
-// hasValidDateFormat checks for correct date separator positions
-func hasValidDateFormat(revisionString string) bool {
-	return revisionString[4] == '-' && revisionString[7] == '-'
-}
-
-// hasValidDateComponents checks if year, month, and day components are numeric
-func hasValidDateComponents(revisionString string) bool {
-	yearComponent := revisionString[0:4]
-	monthComponent := revisionString[5:7]
-	dayComponent := revisionString[8:10]
-
-	return isDigits(yearComponent) && isDigits(monthComponent) && isDigits(dayComponent)
+	// Check date format and components in one validation pass
+	return revisionString[4] == '-' && revisionString[7] == '-' &&
+		isDigits(revisionString[0:4]) && isDigits(revisionString[5:7]) && isDigits(revisionString[8:10])
 }
 
 // isDigits checks if a string contains only digits
