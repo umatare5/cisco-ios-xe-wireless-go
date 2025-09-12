@@ -1,7 +1,11 @@
 # 🤝 Contribution Guide
 
-Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go library**!
-This document explains how you can get involved, the development workflow, and our release process.
+Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go library**! This document explains how you can get involved, the development workflow, and our release process.
+
+> [!WARNING]
+> This library is under **active development**. I'll make the breaking changes until `v1.0.0`. Please create an issue before contributing to avoid duplicate work.
+>
+> - The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 💡 How to Contribute
 
@@ -47,7 +51,6 @@ make lint                    # Static analysis
 make test-unit               # Run unit tests (runs lint first)
 make test-integration        # Test live connection to WNC
 make test-unit-coverage      # Check unit test coverage
-make test-integration-coverage # Check integration test coverage
 ```
 
 ## 🧪 Testing
@@ -68,33 +71,61 @@ These scripts are particularly helpful for:
 - Exploring new API endpoints quickly
 - Debugging API responses without building the Go library
 
-They use `curl` to access WNC, so they are independent of Go.
-For detailed usage, see **[MAKE_REFERENCE.md](./docs/MAKE_REFERENCE.md)**.
+They use `curl` to access WNC, so they are independent of Go. For detailed usage, see **[MAKE_REFERENCE.md](./docs/MAKE_REFERENCE.md)**.
 
 ---
 
-## Review Process _(Maintainers Only)_
+## Change Review Process _(Maintainers Only)_
 
-Because the WNC may not be reachable from CI, automated pipelines cannot run integration tests.
-PR reviewers are responsible for executing integration tests if contributors request it on their PR.
+> [!Note]
+>
+> This section is for maintainers. Contributors do not need to perform these steps.
 
-Reviewer checklist:
+GitHub Actions cannot access a live WNC. Therefore, the maintainers have to run the integration and scenario tests manually to validate the behavior.
 
 - Ensure you have access to a development Cisco C9800 WNC (RESTCONF enabled) and export the required env vars:
 
-```bash
-export WNC_CONTROLLER="<controller-host-or-ip>"
-export WNC_ACCESS_TOKEN="<base64-username:password>"
-```
+  ```bash
+  export WNC_CONTROLLER="<controller-host-or-ip>"
+  export WNC_ACCESS_TOKEN="<base64-username:password>"
+  ```
 
-- Run tests and generate coverage outputs:
+- Run unit and integration tests as follows:
 
-```bash
-make test-unit-coverage        # produces unit test coverage in tmp/coverage.out
-make test-integration-coverage # produces integration test coverage in tmp/coverage.out
-make test-coverage-report      # writes coverage/report.html and coverage/report.out
-octocov badge coverage --out docs/assets/coverage.svg # generates coverage badge
-```
+  ```bash
+  make test-unit
+  make test-integration
+  ```
+
+- Run scenario tests as follows:
+
+  ```bash
+  # Run AP Admin State Change and AP Radio State Change Test
+  go test ./tests/scenario/ap/ -tags=scenario -run TestAPAdminStateScenario -v
+  go test ./tests/scenario/ap/ -tags=scenario -run TestAPRadioStateScenario -v
+
+  # Run Site Tag, Policy Tag and RF Tag Test
+  go test ./tests/scenario/tag/ -tags=scenario -run TestSiteTagScenario -v
+  go test ./tests/scenario/tag/ -tags=scenario -run TestPolicyTagScenario -v
+  go test ./tests/scenario/tag/ -tags=scenario -run TestRFTagScenario -v
+  ```
+
+- Run destructive operations as follows:
+
+  ```bash
+  # Reload AP
+  go run ./example/reload_ap/main.go
+
+  # Reload WNC
+  go run ./example/reload_controller/main.go
+  ```
+
+- Generate and commit coverage reports:
+
+  ```bash
+  make test-unit-coverage # writes coverage/report.html and coverage/report.out
+  octocov badge coverage --out docs/assets/coverage.svg # generates coverage badge
+  ```
 
 - Commit coverage artifacts (CI will build the badge):
 
@@ -112,7 +143,9 @@ Notes:
 
 ## 🚀 Release Process _(Maintainers Only)_
 
-_This section is for maintainers. Contributors do not need to perform these steps._
+> [!Note]
+>
+> This section is for maintainers. Contributors do not need to perform these steps.
 
 To release a new version:
 
