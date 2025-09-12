@@ -5,36 +5,55 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/afc"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/ap"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/apf"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/awips"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/ble"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/client"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/cts"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/dot11"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/dot15"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/fabric"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/flex"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/general"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/geolocation"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/hyperlocation"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/lisp"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/location"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mcast"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mdns"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mesh"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/mobility"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/nmsp"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/radio"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rf"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rfid"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rogue"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/rrm"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/site"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/wlan"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/afc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ap"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/apf"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/awips"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ble"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/client"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/controller"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/cts"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/dot11"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/dot15"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/fabric"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/flex"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/general"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/geolocation"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/hyperlocation"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/lisp"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/location"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mcast"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mdns"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mesh"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mobility"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/nmsp"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/radio"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rf"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rfid"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rogue"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rrm"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/site"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/spaces"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/urwb"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/wat"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan"
 )
+
+// DefaultTimeout is the default request timeout (re-export of core.DefaultTimeout).
+const DefaultTimeout = core.DefaultTimeout
+
+// Error sentinels re-exported for consumer side error handling with errors.Is.
+var (
+	ErrAuthenticationFailed = core.ErrAuthenticationFailed
+	ErrAccessForbidden      = core.ErrAccessForbidden
+	ErrResourceNotFound     = core.ErrResourceNotFound
+	ErrInvalidConfiguration = core.ErrInvalidConfiguration
+	ErrRequestTimeout       = core.ErrRequestTimeout
+)
+
+// APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
+type APIError = core.APIError
 
 // Client represents the unified WNC API client with access to all domain services.
 // This provides a single-import approach to accessing all wireless controller functionality.
@@ -67,21 +86,6 @@ func WithLogger(l *slog.Logger) Option { return core.WithLogger(l) }
 
 // WithUserAgent sets a custom User-Agent header value.
 func WithUserAgent(ua string) Option { return core.WithUserAgent(ua) }
-
-// DefaultTimeout is the default request timeout (re-export of core.DefaultTimeout).
-const DefaultTimeout = core.DefaultTimeout
-
-// Error sentinels re-exported for consumer side error handling with errors.Is.
-var (
-	ErrAuthenticationFailed = core.ErrAuthenticationFailed
-	ErrAccessForbidden      = core.ErrAccessForbidden
-	ErrResourceNotFound     = core.ErrResourceNotFound
-	ErrInvalidConfiguration = core.ErrInvalidConfiguration
-	ErrRequestTimeout       = core.ErrRequestTimeout
-)
-
-// APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
-type APIError = core.APIError
 
 // Core returns the underlying core.Client for advanced use cases.
 // This should typically not be needed for normal usage.
@@ -119,6 +123,11 @@ func (c *Client) BLE() ble.Service {
 // Client returns the wireless client service.
 func (c *Client) Client() client.Service {
 	return client.NewService(c.core)
+}
+
+// Controller returns the controller management service.
+func (c *Client) Controller() controller.Service {
+	return controller.NewService(c.core)
 }
 
 // CTS returns the Cisco TrustSec service.
@@ -226,7 +235,45 @@ func (c *Client) Site() site.Service {
 	return site.NewService(c.core)
 }
 
+// Spaces returns the Cisco Spaces integration service.
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func (c *Client) Spaces() spaces.Service {
+	return spaces.NewService(c.core)
+}
+
+// URWB returns the Ultra Reliable Wireless Backhaul service.
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func (c *Client) URWB() urwb.Service {
+	return urwb.NewService(c.core)
+}
+
+// WAT returns the Wireless Application Templates service.
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func (c *Client) WAT() wat.Service {
+	return wat.NewService(c.core)
+}
+
 // WLAN returns the WLAN configuration service.
 func (c *Client) WLAN() wlan.Service {
 	return wlan.NewService(c.core)
+}
+
+// Tag service accessors - provide direct access to tag management services
+
+// PolicyTag returns the Policy Tag service for policy tag management operations.
+// This provides direct access to policy tag CRUD operations without going through WLAN service.
+func (c *Client) PolicyTag() *wlan.PolicyTagService {
+	return wlan.NewPolicyTagService(c.core)
+}
+
+// RFTag returns the RF Tag service for RF tag management operations.
+// This provides direct access to RF tag CRUD operations without going through RF service.
+func (c *Client) RFTag() *rf.RFTagService {
+	return rf.NewRFTagService(c.core)
+}
+
+// SiteTag returns the Site Tag service for site tag management operations.
+// This provides direct access to site tag CRUD operations without going through Site service.
+func (c *Client) SiteTag() *site.SiteTagService {
+	return site.NewSiteTagService(c.core)
 }
