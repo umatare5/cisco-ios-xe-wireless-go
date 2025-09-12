@@ -1,6 +1,6 @@
 ---
-description: 'Instructions for writing Go code following idiomatic Go practices and community standards'
-applyTo: '**/*.go,**/go.mod,**/go.sum'
+description: "Instructions for writing Go code following idiomatic Go practices and community standards"
+applyTo: "**/*.go,**/go.mod,**/go.sum"
 ---
 
 # Go Development Instructions
@@ -211,7 +211,7 @@ Follow idiomatic Go practices and community standards when writing Go code. Thes
 ### Writing Tests
 
 - Use table-driven tests for multiple test cases
-- Name tests descriptively using `Test_functionName_scenario`
+- Follow project-specific test naming conventions (see copilot-instructions.md for mandatory patterns)
 - Use subtests with `t.Run` for better organization
 - Test both success and error cases
 - Use `testify` or similar libraries sparingly
