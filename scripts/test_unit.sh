@@ -10,6 +10,9 @@
 # @flag   -c --coverage               Generate coverage data
 # @option -o --output <FILE>          Coverage output file [default: ./tmp/coverage.out]
 # @option -t --timeout <DURATION>     Test timeout duration [default: 30s]
+# @flag   -r --report                 Generate HTML coverage report
+# @option    --html-output <FILE>     HTML output file [default: ./coverage/report.html]
+# @option    --report-output <FILE>   Coverage report file [default: ./coverage/report.out]
 # @flag      --no-color               Disable colored output
 
 set -euo pipefail
@@ -35,6 +38,13 @@ main() {
         # If coverage is requested, use coverage test operation
         local coverage_file="${argc_output:-./tmp/coverage.out}"
         run_coverage_test_operation "$project_root" "$coverage_file"
+
+        # Generate HTML report if requested
+        if [[ "${argc_report:-0}" == "1" ]]; then
+            local html_output="${argc_html_output:-./coverage/report.html}"
+            local report_output="${argc_report_output:-./coverage/report.out}"
+            run_coverage_html_operation "$project_root" "$coverage_file" "$html_output" "$report_output"
+        fi
         return
     fi
 
