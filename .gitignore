@@ -3,7 +3,7 @@ tmp/
 vendor/
 
 # Test data files
-test_data/
+testdata/
 
 # Build artifacts
 *.exe
@@ -22,9 +22,11 @@ coverage/*
 
 # IDE files
 .idea/
+.copilot_reports/
 *.swp
 *.swo
-.copilot_reports/
+.env
+.envrc
 
 # OS files
 .DS_Store
