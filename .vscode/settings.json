@@ -1,9 +1,21 @@
 {
-    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
-    "github.copilot.chat.commitMessageGeneration.instructions": [
-        {
-            "file": ".vscode/.copilot-commit-message-instructions.md"
-        }
-    ],
-    "chat.promptFiles": true,
+  "go.buildTags": "integration,scenario,sample",
+  "gopls": {
+    "build.buildFlags": ["-tags=integration,scenario,sample"],
+    "build.env": {
+      "GOFLAGS": "-tags=integration,scenario,sample"
+    },
+    "analyses": {
+      "unusedparams": true,
+      "unusedwrite": true
+    },
+    "staticcheck": true,
+    "gofumpt": true
+  },
+  "go.useLanguageServer": true,
+  "go.lintOnSave": "package",
+  "go.formatTool": "goimports",
+  "go.alternateTools": {
+    "go": "go"
+  }
 }
