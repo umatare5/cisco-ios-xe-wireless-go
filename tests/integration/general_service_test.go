@@ -1,0 +1,136 @@
+//go:build integration
+
+package integration_test
+
+import (
+	"context"
+	"testing"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/general"
+)
+
+// TestGeneralServiceIntegration_GetOperationalOperations_Success validates General service
+// operational data retrieval against live WNC controller.
+func TestGeneralServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
+	t.Parallel() // Safe for parallel execution as read-only operations
+	suite := client.IntegrationTestSuite{
+		Config: client.TestSuiteConfig{
+			ServiceName: "General",
+			ServiceConstructor: func(client any) any {
+				return general.NewService(client.(*core.Client))
+			},
+			UseTimeout: true,
+		},
+		BasicMethods: []client.IntegrationTestMethod{
+			{
+				Name: "GetOperational",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetOperational(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetManagementInterfaceState",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetManagementInterfaceState(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetAPLocationRangingConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetAPLocationRangingConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetCACConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetCACConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetFeatureUsageConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetFeatureUsageConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetFIPSConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetFIPSConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetGeolocationConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetGeolocationConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetLAGInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetLAGInfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetMEWLCConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetMEWLCConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetMFPConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetMFPConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetMulticastConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetMulticastConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListSIML3InterfaceCache",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListSIML3InterfaceCache(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetThresholdWarningConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetThresholdWarningConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetWLCManagementInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetWLCManagementInfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetWSAAPClientEventConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).GetWSAAPClientEventConfig(ctx)
+				},
+				LogResult: true,
+			},
+		},
+	}
+
+	client.RunIntegrationTestSuite(t, suite)
+}
