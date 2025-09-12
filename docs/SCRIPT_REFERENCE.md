@@ -7,24 +7,24 @@ This document provides an overview of the development scripts available in this 
 >
 > - `WNC_CONTROLLER`
 > - `WNC_ACCESS_TOKEN`
+> - `WNC_AP_MAC_ADDR`
 
 ## 🧰 Scripts
 
 Following is a summary of available scripts:
 
-| Script                                                          | Purpose                               | Upstream Make Target   |
-| --------------------------------------------------------------- | ------------------------------------- | ---------------------- |
-| [help.sh](#help.sh)                                             | Show command help overview            | `help`                 |
-| [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`                 |
-| [clean_artifacts.sh](#clean_artifacts.sh)                       | Remove caches / temp / coverage files | `clean`                |
-| [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`                 |
-| [test_unit.sh](#test_unit.sh)                                   | Run unit tests with unified coverage  | `test-unit`            |
-| [test_integration.sh](#test_integration.sh)                     | Run integration tests with coverage   | `test-integration`     |
-| [generate_coverage_report.sh](#generate_coverage_report.sh)     | Generate HTML coverage report         | `test-coverage-report` |
-| [get_yang_models.sh](#get_yang_models.sh)                       | List available YANG models            | `yang-list`            |
-| [get_yang_model_details.sh](#get_yang_model_details.sh)         | Fetch a YANG module definition        | `yang-model`           |
-| [get_yang_statement_details.sh](#get_yang_statement_details.sh) | Fetch a YANG subtree (RESTCONF)       | `yang-statement`       |
-| [pre_commit_hook.sh](#pre_commit_hook.sh)                       | Run pre-commit validations            | `pre-commit-test`      |
+| Script                                                          | Purpose                               | Upstream Make Target |
+| --------------------------------------------------------------- | ------------------------------------- | -------------------- |
+| [help.sh](#help.sh)                                             | Show command help overview            | `help`               |
+| [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`               |
+| [clean_artifacts.sh](#clean_artifacts.sh)                       | Remove caches / temp / coverage files | `clean`              |
+| [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`               |
+| [test_unit.sh](#test_unit.sh)                                   | Run unit tests with unified coverage  | `test-unit`          |
+| [test_integration.sh](#test_integration.sh)                     | Run integration tests with coverage   | `test-integration`   |
+| [get_yang_models.sh](#get_yang_models.sh)                       | List available YANG models            | `yang-list`          |
+| [get_yang_model_details.sh](#get_yang_model_details.sh)         | Fetch a YANG module definition        | `yang-model`         |
+| [get_yang_statement_details.sh](#get_yang_statement_details.sh) | Fetch a YANG subtree (RESTCONF)       | `yang-statement`     |
+| [pre_commit_hook.sh](#pre_commit_hook.sh)                       | Run pre-commit validations            | `pre-commit-test`    |
 
 ## 🗂️ Structure
 
@@ -100,7 +100,7 @@ Validating CLI tools (level: standard)...
           Module Management
 ======================================
 
-ℹ Dependencies Info: Using Go version: go1.24.4
+ℹ Dependencies Info: Using Go version: go1.25.1
 [2] Downloading dependencies...
 ✓ Dependencies Success: Dependencies tidied
 ✓ Dependencies Success: Dependencies downloaded
@@ -282,56 +282,6 @@ DONE 1004 tests, 21 skipped in 4.215s
 
 </details>
 
-### generate_coverage_report.sh <a id="generate_coverage_report.sh"></a> <!-- anchor for internal links -->
-
-Generates an HTML coverage report from `coverage.out`.
-
-#### Usage
-
-```bash
-❯ scripts/generate_coverage_report.sh --help
-
-USAGE: generate_coverage_report [OPTIONS]
-
-OPTIONS:
-  -p, --project <DIR>  Project root directory [default: .]
-  -i, --input <FILE>   Coverage input file [default: ./tmp/coverage.out]
-  -o, --output <FILE>  HTML output file [default: ./coverage/report.html]
-      --report <FILE>  Coverprofile artifact file [default: ./coverage/report.out]
-  -v, --verbose        Enable verbose output
-      --no-color       Disable colored output
-  -h, --help           Print help
-  -V, --version        Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/generate_coverage_report.sh
-Validating CLI tools (level: standard)...
-✓ curl
-<snip>
-
-✓ All 4 required CLI tools are available
-======================================
-       Coverage HTML Generator
-      Go Tool Cover Integration
-======================================
-
-→ Generating HTML coverage report...
-
-✓ HTML coverage report generated successfully
-ℹ Info: Report location: ./coverage/report.html
-ℹ Info: Report size: 159374 bytes
-
-ℹ Info: To view the report:
-  open ./coverage/report.html
-```
-
-</details>
-
 ## ✅ Quality Scripts
 
 ### lint.sh <a id="lint.sh"></a> <!-- anchor for internal links -->
@@ -455,8 +405,8 @@ Validating CLI tools (level: strict)...
       <snip>
       {
         "name": "tailf-yang-patch",
-        "revision": "2023-01-24",
-        "schema": "https://192.168.122.48:443/restconf/tailf/modules/tailf-yang-patch/2023-01-24",
+        "revision": "2023-01.25",
+        "schema": "https://192.168.122.48:443/restconf/tailf/modules/tailf-yang-patch/2023-01.25",
         "namespace": "http://tail-f.com/ns/tailf-yang-patch",
         "conformance-type": "implement"
       }
@@ -604,7 +554,7 @@ Prints a consolidated help guide covering common Make targets, environment varia
 
 ```text
 ✗ scripts/help.sh
-🔧 Cisco WNC Development Scripts
+Cisco WNC Development Scripts
 -------------------------------
 
 USAGE:
@@ -617,9 +567,9 @@ COMMON DEVELOPMENT TARGETS:
     deps                Install development dependencies
     lint                Run code linting tools
     build               Verify build compilation
-    test-unit           Run unit tests (supports --coverage for comprehensive analysis)
-    test-integration    Run integration tests (supports --coverage, requires environment)
-    test-coverage-report Generate HTML coverage report
+    test-unit           Run unit tests only
+    test-integration    Run integration tests (requires environment)
+    test-coverage       Run tests with coverage analysis
 
 YANG MODEL DEVELOPMENT:
     yang-list           List all available YANG models
@@ -635,12 +585,8 @@ EXAMPLES:
     make deps               # Install dependencies
     make lint               # Check code quality
     make test-unit          # Run unit tests
+    make test-unit-coverage # Run unit tests with coverage
     make build              # Verify compilation
-
-    # Coverage testing
-    ./scripts/test_unit.sh --coverage        # Unit tests with comprehensive coverage
-    ./scripts/test_integration.sh --coverage # Integration tests with coverage
-    make test-coverage-report                # Generate HTML coverage report
 
     # YANG development
     make yang-list                                    # List models
@@ -660,8 +606,8 @@ SCRIPT DETAILS:
     - clean_artifacts.sh      Clean build artifacts
     - install_dependencies.sh Install Go dependencies
     - lint.sh                Run golangci-lint
-    - test_unit.sh           Run unit tests (with unified --coverage support)
-    - test_integration.sh    Run integration tests (with --coverage support)
+    - test_unit.sh           Run unit tests (supports --coverage)
+    - test_integration.sh    Run integration tests (supports --coverage)
     - generate_coverage_report.sh Generate HTML coverage
     - get_yang_models.sh     List YANG models
     - get_yang_model_details.sh Get model details
@@ -677,11 +623,6 @@ PROJECT STRUCTURE:
     |   +-- testing/       Test utilities
     |   +-- utils/         Utility functions
     |   +-- validation/    Git commit validation
-    |   +-- yang/          YANG-specific functions
-    +-- *.sh               Entry point scripts
-
-This project uses a modular script architecture with shared libraries
-for maintainability and consistency across all development operations.
 ````
 
 </details>
