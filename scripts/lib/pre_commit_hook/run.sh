@@ -30,6 +30,11 @@ run_pre_commit_validation() {
     return 1
   fi
 
+  # Run comprehensive formatting (gofumpt, goimports)
+  if ! run_formats; then
+    return 1
+  fi
+
   # Run comprehensive linting (Go, Shell, Markdown)
   if ! run_lints; then
     return 1
