@@ -101,7 +101,7 @@ Handle authentication tokens securely with isolated storage, periodic rotation, 
    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
    defer cancel()
 
-    apData, err := client.AP().GetOper(ctx)
+    apData, err := client.AP().GetOperational(ctx)
    ```
 
 ### ❌ Avoid
@@ -178,7 +178,7 @@ Monitor authentication, request volume, latency, and TLS signals to detect issue
 Log actionable context for operators, return generic messages to users, and prevent any secret leakage.
 
 ```go
-apData, err := client.AP().GetOper(ctx)
+apData, err := client.AP().GetOperational(ctx)
 if err != nil {
     // Log detailed errors securely (not to end users)
     logger.Error("API request failed", "error", err, "endpoint", "ap-oper")
