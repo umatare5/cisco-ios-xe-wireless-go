@@ -54,13 +54,13 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 							{
 								"mcast-ip": "224.0.0.251",
 								"stream-name": "-",
-								"ap-mac": "28:ac:9e:bb:3c:80",
+								"ap-mac": "aa:bb:cc:dd:ee:ff",
 								"is-direct": false
 							},
 							{
 								"mcast-ip": "ff02::fb",
 								"stream-name": "-",
-								"ap-mac": "28:ac:9e:bb:3c:80",
+								"ap-mac": "aa:bb:cc:dd:ee:ff",
 								"is-direct": false
 							}
 						]
@@ -90,13 +90,13 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 						{
 							"mcast-ip": "224.0.0.251",
 							"stream-name": "-",
-							"ap-mac": "28:ac:9e:bb:3c:80",
+							"ap-mac": "aa:bb:cc:dd:ee:ff",
 							"is-direct": false
 						},
 						{
 							"mcast-ip": "ff02::fb",
 							"stream-name": "-",
-							"ap-mac": "28:ac:9e:bb:3c:80",
+							"ap-mac": "aa:bb:cc:dd:ee:ff",
 							"is-direct": false
 						}
 					]
@@ -108,13 +108,13 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 						{
 							"mcast-ip": "224.0.0.251",
 							"stream-name": "-",
-							"ap-mac": "28:ac:9e:bb:3c:80",
+							"ap-mac": "aa:bb:cc:dd:ee:ff",
 							"is-direct": false
 						},
 						{
 							"mcast-ip": "ff02::fb",
 							"stream-name": "-",
-							"ap-mac": "28:ac:9e:bb:3c:80",
+							"ap-mac": "aa:bb:cc:dd:ee:ff",
 							"is-direct": false
 						}
 					]

@@ -40,7 +40,10 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
 	if err := validation.ValidateMACAddress(mac); err != nil {
 		return nil, fmt.Errorf(ErrInvalidAPMacFormat, mac)
 	}
-	normalizedMAC := validation.NormalizeMACAddress(mac)
+	normalizedMAC, err := validation.NormalizeMACAddress(mac)
+	if err != nil {
+		return nil, fmt.Errorf(ErrInvalidAPMacFormat, mac)
+	}
 
 	// Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
 	url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.APTagsPath, "ap-tag", normalizedMAC)
@@ -102,7 +105,10 @@ func (s Service) GetAPJoinStatsByWTPMAC(
 		return nil, core.ErrResourceNotFound
 	}
 
-	normalizedMAC := validation.NormalizeMACAddress(mac)
+	normalizedMAC, err := validation.NormalizeMACAddress(mac)
+	if err != nil {
+		return nil, fmt.Errorf("invalid MAC address %s: %w", mac, err)
+	}
 
 	// Build URL with RESTCONF path for ap-join-stats filtered by wtp-mac
 	url := s.Client().RestconfBuilder().BuildQueryURL(
@@ -227,11 +233,20 @@ func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
 		return nil, fmt.Errorf("invalid BSSID: %w", err)
 	}
 
+	normalizedAPMAC, err := validation.NormalizeMACAddress(apMac)
+	if err != nil {
+		return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+	}
+	normalizedBSSID, err := validation.NormalizeMACAddress(bssid)
+	if err != nil {
+		return nil, fmt.Errorf("invalid BSSID %s: %w", bssid, err)
+	}
+
 	url := s.Client().RestconfBuilder().BuildQueryCompositeURL(
 		routes.APRadioNeighborPath,
-		validation.NormalizeMACAddress(apMac),
+		normalizedAPMAC,
 		slotID,
-		validation.NormalizeMACAddress(bssid),
+		normalizedBSSID,
 	)
 	return core.Get[model.ApOperApRadioNeighbor](ctx, s.Client(), url)
 }
@@ -346,12 +361,15 @@ func (s Service) updateAPState(ctx context.Context, mac, mode string) error {
 		return fmt.Errorf("invalid AP MAC address: %s", mac)
 	}
 
-	normalizedMAC := validation.NormalizeMACAddress(mac)
+	normalizedMAC, err := validation.NormalizeMACAddress(mac)
+	if err != nil {
+		return fmt.Errorf("invalid AP MAC address: %s", mac)
+	}
 
-	payload := map[string]any{
-		"input": map[string]any{
-			"mac-addr": normalizedMAC,
-			"mode":     mode,
+	payload := model.APConfigRPCPayload{
+		Input: model.APConfigRPCInput{
+			Mode:    mode,
+			MACAddr: normalizedMAC,
 		},
 	}
 
@@ -368,6 +386,11 @@ func (s Service) updateRadioState(ctx context.Context, apMac string, radioBand *
 		return ierrors.RequiredParameterError("radio band")
 	}
 
+	normalizedMAC, err := validation.NormalizeMACAddress(apMac)
+	if err != nil {
+		return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+	}
+
 	radioBandInfo, err := core.GetRadioBandInfo(int(*radioBand))
 	if err != nil {
 		return err
@@ -378,7 +401,7 @@ func (s Service) updateRadioState(ctx context.Context, apMac string, radioBand *
 			Mode:    core.GetAdminStateMode(enabled),
 			SlotID:  int(radioBandInfo.SlotID),
 			Band:    strconv.Itoa(int(radioBandInfo.Band)),
-			MACAddr: validation.NormalizeMACAddress(apMac),
+			MACAddr: normalizedMAC,
 		},
 	}
 
@@ -397,7 +420,10 @@ func (s Service) assignTags(ctx context.Context, apMac string, tags model.ApTag)
 		return ierrors.RequiredParameterError("at least one tag")
 	}
 
-	normalizedMAC := validation.NormalizeMACAddress(apMac)
+	normalizedMAC, err := validation.NormalizeMACAddress(apMac)
+	if err != nil {
+		return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+	}
 	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
 	tagData := buildAPCfgApTagData(normalizedMAC, tags)
 

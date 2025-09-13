@@ -48,21 +48,21 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			}
 		}`,
 		// Add mock responses for MAC-based queries
-		"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-data-detail=28:ac:9e:bb:3c:80": `{
+		"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-data-detail=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-emltd-data": {
-				"mac-address": "28:ac:9e:bb:3c:80",
+				"mac-address": "aa:bb:cc:dd:ee:ff",
 				"location": "Building A"
 			}
 		}`,
-		"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data/rfid-data=28:ac:9e:bb:3c:80": `{
+		"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data/rfid-data=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-rfid-oper:rfid-data": {
-				"mac-address": "28:ac:9e:bb:3c:80",
+				"mac-address": "aa:bb:cc:dd:ee:ff",
 				"status": "active"
 			}
 		}`,
-		"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-radio-data=28:ac:9e:bb:3c:80,00:25:36:57:ed:cb,0": `{
+		"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-radio-data=aa:bb:cc:dd:ee:ff,00:25:36:57:ed:cb,0": `{
 			"Cisco-IOS-XE-wireless-rfid-oper:rfid-radio-data": {
-				"mac-address": "28:ac:9e:bb:3c:80",
+				"mac-address": "aa:bb:cc:dd:ee:ff",
 				"ap-mac-address": "00:25:36:57:ed:cb",
 				"slot": 0
 			}
@@ -108,7 +108,7 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 
 	// Test uncovered functions
 	t.Run("GetGlobalDetailByMAC", func(t *testing.T) {
-		result, err := service.GetGlobalDetailByMAC(ctx, "28:ac:9e:bb:3c:80")
+		result, err := service.GetGlobalDetailByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("GetGlobalDetailByMAC returned unexpected error: %v", err)
 		}
@@ -118,7 +118,7 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	})
 
 	t.Run("GetRadioInfo", func(t *testing.T) {
-		result, err := service.GetRadioInfo(ctx, "28:ac:9e:bb:3c:80", "00:25:36:57:ed:cb", 0)
+		result, err := service.GetRadioInfo(ctx, "aa:bb:cc:dd:ee:ff", "00:25:36:57:ed:cb", 0)
 		if err != nil {
 			t.Errorf("GetRadioInfo returned unexpected error: %v", err)
 		}
@@ -128,7 +128,7 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	})
 
 	t.Run("GetDetailByMAC", func(t *testing.T) {
-		result, err := service.GetDetailByMAC(ctx, "28:ac:9e:bb:3c:80")
+		result, err := service.GetDetailByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("GetDetailByMAC returned unexpected error: %v", err)
 		}

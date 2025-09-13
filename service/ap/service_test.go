@@ -93,10 +93,10 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"ap-history": [{
 					"ethernet-mac": "28:ac:9e:11:48:10",
 					"ap-name": "TEST-AP01",
-					"wtp-mac": "28:ac:9e:bb:3c:80"
+					"wtp-mac": "aa:bb:cc:dd:ee:ff"
 				}],
 				"ap-join-stats": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"ap-join-info": {
 						"ap-ip-addr": "192.168.255.11",
 						"ap-ethernet-mac": "28:ac:9e:11:48:10",
@@ -121,12 +121,12 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-ap-global-oper:ap-history": [{
 				"ethernet-mac": "28:ac:9e:11:48:10",
 				"ap-name": "TEST-AP01",
-				"wtp-mac": "28:ac:9e:bb:3c:80"
+				"wtp-mac": "aa:bb:cc:dd:ee:ff"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-join-stats": `{
 			"Cisco-IOS-XE-wireless-ap-global-oper:ap-join-stats": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"ap-join-info": {
 					"ap-ip-addr": "192.168.255.11",
 					"ap-ethernet-mac": "28:ac:9e:11:48:10",
@@ -144,7 +144,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": {
 				"capwap-data": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"ip-addr": "192.168.255.11",
 					"name": "TEST-AP01",
 					"device-detail": {
@@ -158,11 +158,11 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}],
 				"ap-name-mac-map": [{
 					"wtp-name": "TEST-AP01",
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"eth-mac": "28:ac:9e:11:48:10"
 				}],
 				"radio-oper-data": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"radio-slot-id": 0,
 					"slot-id": 0,
 					"radio-type": "radio-80211bg",
@@ -170,28 +170,28 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"oper-state": "radio-up"
 				}],
 				"ap-radio-neighbor": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"radio-slot-id": 0,
 					"bssid": "aa:bb:cc:dd:ee:ff"
 				}],
 				"ap-image-active-location": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"image-location": "flash:/c9800-universal-k9.16.12.07.SPA.bin"
 				}],
 				"ap-image-prepare-location": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"image-location": "flash:/c9800-universal-k9.16.12.07.SPA.bin"
 				}],
 				"ap-pwr-info": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"power-consumption": 20.5
 				}],
 				"ap-sensor-status": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"temperature": 42
 				}],
 				"capwap-pkts": [{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"tx-pkts": 1000,
 					"rx-pkts": 950
 				}]
@@ -199,7 +199,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"ip-addr": "192.168.255.11",
 				"name": "TEST-AP01",
 				"device-detail": {
@@ -577,12 +577,12 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-ap-global-oper:ap-history": [{
 				"ethernet-mac": "28:ac:9e:11:48:10",
 				"ap-name": "TEST-AP01",
-				"wtp-mac": "28:ac:9e:bb:3c:80"
+				"wtp-mac": "aa:bb:cc:dd:ee:ff"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-join-stats=28:ac:9e:bb:3c:80": `{
+		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-join-stats=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-ap-global-oper:ap-join-stats": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"ap-join-info": {
 					"ap-ip-addr": "192.168.255.11",
 					"ap-ethernet-mac": "28:ac:9e:11:48:10",
@@ -597,9 +597,9 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 				"client-count": 0
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=28:ac:9e:bb:3c:80": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"ip-addr": "192.168.255.11",
 				"name": "TEST-AP01"
 			}]
@@ -607,13 +607,13 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-name-mac-map=TEST-AP01": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map": [{
 				"wtp-name": "TEST-AP01",
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"eth-mac": "28:ac:9e:11:48:10"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-oper-data=28:ac:9e:bb:3c:80,0": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-oper-data=aa:bb:cc:dd:ee:ff,0": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:radio-oper-data": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"radio-slot-id": 0,
 				"slot-id": 0,
 				"radio-type": "radio-80211bg",
@@ -621,22 +621,22 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 				"oper-state": "radio-up"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-radio-neighbor=28:ac:9e:bb:3c:80,0": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-radio-neighbor=aa:bb:cc:dd:ee:ff,0": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:ap-radio-neighbor": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"radio-slot-id": 0,
 				"bssid": "aa:bb:cc:dd:ee:ff"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-radio-neighbor=28:ac:9e:bb:3c:80,0,aa:bb:cc:dd:ee:ff": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-radio-neighbor=aa:bb:cc:dd:ee:ff,0,aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:ap-radio-neighbor": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"radio-slot-id": 0,
 				"bssid": "aa:bb:cc:dd:ee:ff"
 			}]
 		}`,
 		// PUT/POST endpoints for tag assignment
-		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=28:ac:9e:bb:3c:80": `{}`,
+		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff": `{}`,
 	}
 	mockServer := testutil.NewMockServer(responses)
 	defer mockServer.Close()
@@ -678,7 +678,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 	})
 
 	t.Run("GetAPJoinStatsByWTPMAC", func(t *testing.T) {
-		result, err := service.GetAPJoinStatsByWTPMAC(ctx, "28:ac:9e:bb:3c:80")
+		result, err := service.GetAPJoinStatsByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("Expected no error for GetAPJoinStatsByWTPMAC, got: %v", err)
 		}
@@ -699,7 +699,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 
 	// Test filtered operational operations
 	t.Run("GetCAPWAPDataByWTPMAC", func(t *testing.T) {
-		result, err := service.GetCAPWAPDataByWTPMAC(ctx, "28:ac:9e:bb:3c:80")
+		result, err := service.GetCAPWAPDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("Expected no error for GetCAPWAPDataByWTPMAC, got: %v", err)
 		}
@@ -719,7 +719,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 	})
 
 	t.Run("GetRadioStatusByWTPMACAndSlot", func(t *testing.T) {
-		result, err := service.GetRadioStatusByWTPMACAndSlot(ctx, "28:ac:9e:bb:3c:80", 0)
+		result, err := service.GetRadioStatusByWTPMACAndSlot(ctx, "aa:bb:cc:dd:ee:ff", 0)
 		if err != nil {
 			t.Errorf("Expected no error for GetRadioStatusByWTPMACAndSlot, got: %v", err)
 		}
@@ -729,7 +729,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 	})
 
 	t.Run("GetRadioNeighborByAPMACSlotAndBSSID", func(t *testing.T) {
-		result, err := service.GetRadioNeighborByAPMACSlotAndBSSID(ctx, "28:ac:9e:bb:3c:80", 0, "aa:bb:cc:dd:ee:ff")
+		result, err := service.GetRadioNeighborByAPMACSlotAndBSSID(ctx, "aa:bb:cc:dd:ee:ff", 0, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("Expected no error for GetRadioNeighborByAPMACSlotAndBSSID, got: %v", err)
 		}
@@ -841,10 +841,10 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state":      `{"status": "success"}`,
 		"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state": `{"status": "success"}`,
 		"Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset":                `{"status": "success"}`,
-		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=28:ac:9e:bb:3c:80":  `{"status": "success"}`,
+		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff":  `{"status": "success"}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
-				"wtp-mac": "28:ac:9e:bb:3c:80",
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"name": "TEST-AP01"
 			}]
 		}`,
@@ -858,14 +858,14 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 
 	// Test AP admin state operations
 	t.Run("EnableAP", func(t *testing.T) {
-		err := service.EnableAP(ctx, "28:ac:9e:bb:3c:80")
+		err := service.EnableAP(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("Expected no error for EnableAP, got: %v", err)
 		}
 	})
 
 	t.Run("DisableAP", func(t *testing.T) {
-		err := service.DisableAP(ctx, "28:ac:9e:bb:3c:80")
+		err := service.DisableAP(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("Expected no error for DisableAP, got: %v", err)
 		}
@@ -873,14 +873,14 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 
 	// Test radio state operations (using core.RadioBand constants)
 	t.Run("EnableRadio", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "28:ac:9e:bb:3c:80", core.RadioBand24GHz)
+		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz)
 		if err != nil {
 			t.Errorf("Expected no error for EnableRadio, got: %v", err)
 		}
 	})
 
 	t.Run("DisableRadio", func(t *testing.T) {
-		err := service.DisableRadio(ctx, "28:ac:9e:bb:3c:80", core.RadioBand5GHz)
+		err := service.DisableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand5GHz)
 		if err != nil {
 			t.Errorf("Expected no error for DisableRadio, got: %v", err)
 		}
@@ -888,21 +888,21 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 
 	// Test tag assignment operations
 	t.Run("AssignSiteTag", func(t *testing.T) {
-		err := service.AssignSiteTag(ctx, "28:ac:9e:bb:3c:80", "labo-site-flex")
+		err := service.AssignSiteTag(ctx, "aa:bb:cc:dd:ee:ff", "labo-site-flex")
 		if err != nil {
 			t.Errorf("Expected no error for AssignSiteTag, got: %v", err)
 		}
 	})
 
 	t.Run("AssignPolicyTag", func(t *testing.T) {
-		err := service.AssignPolicyTag(ctx, "28:ac:9e:bb:3c:80", "labo-wlan-flex")
+		err := service.AssignPolicyTag(ctx, "aa:bb:cc:dd:ee:ff", "labo-wlan-flex")
 		if err != nil {
 			t.Errorf("Expected no error for AssignPolicyTag, got: %v", err)
 		}
 	})
 
 	t.Run("AssignRFTag", func(t *testing.T) {
-		err := service.AssignRFTag(ctx, "28:ac:9e:bb:3c:80", "labo-inside")
+		err := service.AssignRFTag(ctx, "aa:bb:cc:dd:ee:ff", "labo-inside")
 		if err != nil {
 			t.Errorf("Expected no error for AssignRFTag, got: %v", err)
 		}
@@ -910,7 +910,7 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 
 	// Test AP reload operation
 	t.Run("Reload", func(t *testing.T) {
-		err := service.Reload(ctx, "28:ac:9e:bb:3c:80")
+		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
 			t.Errorf("Expected no error for Reload, got: %v", err)
 		}
@@ -1035,7 +1035,7 @@ func TestApServiceUnit_NilCAPWAPData(t *testing.T) {
 
 	// Test reload with failed CAPWAP data retrieval
 	t.Run("Reload_FailedCAPWAPDataRetrieval", func(t *testing.T) {
-		err := service.Reload(ctx, "28:ac:9e:bb:3c:80")
+		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed CAPWAP data retrieval, got nil")
 		}
@@ -1054,7 +1054,7 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 			StatusCode:   400,
 			ErrorMessage: "Invalid request",
 		},
-		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=28:ac:9e:bb:3c:80": {
+		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff": {
 			StatusCode:   400,
 			ErrorMessage: "Invalid request",
 		},
@@ -1069,7 +1069,7 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 
 	// Test updateAPState error handling
 	t.Run("UpdateAPState_RPCError", func(t *testing.T) {
-		err := service.EnableAP(ctx, "28:ac:9e:bb:3c:80")
+		err := service.EnableAP(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed RPC call, got nil")
 		}
@@ -1077,7 +1077,7 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 
 	// Test updateRadioState error handling
 	t.Run("UpdateRadioState_RPCError", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "28:ac:9e:bb:3c:80", core.RadioBand24GHz)
+		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz)
 		if err == nil {
 			t.Error("Expected error for failed radio RPC call, got nil")
 		}
@@ -1085,7 +1085,7 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 
 	// Test updateRadioState with invalid radio band
 	t.Run("UpdateRadioState_InvalidRadioBand", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "28:ac:9e:bb:3c:80", core.RadioBand(999)) // Invalid band
+		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand(999)) // Invalid band
 		if err == nil {
 			t.Error("Expected error for invalid radio band, got nil")
 		}
@@ -1093,7 +1093,7 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 
 	// Test assignTags error handling
 	t.Run("AssignTags_RPCError", func(t *testing.T) {
-		err := service.AssignSiteTag(ctx, "28:ac:9e:bb:3c:80", "test-site")
+		err := service.AssignSiteTag(ctx, "aa:bb:cc:dd:ee:ff", "test-site")
 		if err == nil {
 			t.Error("Expected error for failed tag assignment RPC call, got nil")
 		}
@@ -1149,7 +1149,7 @@ func TestApServiceUnit_ReloadEdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.Reload(ctx, "28:ac:9e:bb:3c:80")
+		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for nil CAPWAP response, got nil")
 		}
@@ -1172,7 +1172,7 @@ func TestApServiceUnit_ReloadEdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.Reload(ctx, "28:ac:9e:bb:3c:80")
+		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}

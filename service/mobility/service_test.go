@@ -91,7 +91,7 @@ func TestMobilityServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 	responses := map[string]string{
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/ap-cache": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:ap-cache": [{
-				"ap-mac": "28:ac:9e:bb:3c:80",
+				"ap-mac": "aa:bb:cc:dd:ee:ff",
 				"ap-name": "TEST-AP01"
 			}]
 		}`,

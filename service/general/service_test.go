@@ -100,6 +100,29 @@ func TestGeneralServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 
 	// Mock responses based on real WNC data structure for general configuration
 	responses := map[string]string{
+		"Cisco-IOS-XE-wireless-general-cfg:general-cfg-data": `{
+			"Cisco-IOS-XE-wireless-general-cfg:general-cfg-data": {
+				"mewlc-config": {},
+				"cac-config": {},
+				"mfp": {},
+				"fips-cfg": {},
+				"wsa-ap-client-event": {},
+				"sim-l3-interface-cache-data": {
+					"interface-name": "Vlan801"
+				},
+				"wlc-management-data": {
+					"pki-trustpoint-name": "WNC1_WLC_TP"
+				},
+				"laginfo": {},
+				"multicast-config": {
+					"is-mdns-enabled": false
+				},
+				"feature-usage-cfg": {},
+				"threshold-warn-cfg": {},
+				"ap-loc-ranging-cfg": {},
+				"geolocation-cfg": {}
+			}
+		}`,
 		"Cisco-IOS-XE-wireless-general-oper:general-oper-data/mgmt-intf-data": `{
 			"Cisco-IOS-XE-wireless-general-oper:mgmt-intf-data": {
 				"intf-name": "Vlan801",
@@ -184,6 +207,31 @@ func TestGeneralServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	testClient := testutil.NewTestClient(mockServer)
 	service := general.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
+
+	t.Run("GetConfig", func(t *testing.T) {
+		result, err := service.GetConfig(ctx)
+		if err != nil {
+			t.Errorf("GetConfig returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("GetConfig returned nil result")
+			return
+		}
+
+		// Validate that the main configuration structure is properly populated
+		cfgData := result.CiscoIOSXEWirelessGeneralCfgGeneralCfgData
+
+		// Check that all expected configuration sections exist
+		if cfgData.SimL3InterfaceCacheData == nil {
+			t.Error("Expected sim-l3-interface-cache-data to be present")
+		}
+		if cfgData.WlcManagementData == nil {
+			t.Error("Expected wlc-management-data to be present")
+		}
+		if cfgData.MulticastConfig == nil {
+			t.Error("Expected multicast-config to be present")
+		}
+	})
 
 	t.Run("GetManagementInterfaceState", func(t *testing.T) {
 		result, err := service.GetManagementInterfaceState(ctx)
@@ -329,6 +377,19 @@ func TestGeneralServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 // TestGeneralServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
 func TestGeneralServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	t.Parallel()
+
+	t.Run("GetConfig_NilClient", func(t *testing.T) {
+		service := general.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.GetConfig(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
 
 	t.Run("GetManagementInterfaceState_NilClient", func(t *testing.T) {
 		service := general.NewService(nil)

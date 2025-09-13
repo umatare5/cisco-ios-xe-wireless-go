@@ -675,7 +675,7 @@ func TestUrwbServiceUnit_ListStats_Success(t *testing.T) {
 		"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data": {
 			"urwbnet-stats": [
 				{
-					"mac": "28:ac:9e:bb:3c:80",
+					"mac": "aa:bb:cc:dd:ee:ff",
 					"nodes-cnt": 15,
 					"coordinator-id": 1
 				},
@@ -707,8 +707,8 @@ func TestUrwbServiceUnit_ListStats_Success(t *testing.T) {
 		t.Fatalf("Expected 2 stats, got %d", len(result))
 	}
 
-	if result[0].Mac != "28:ac:9e:bb:3c:80" {
-		t.Errorf("Expected MAC '28:ac:9e:bb:3c:80', got '%s'", result[0].Mac)
+	if result[0].Mac != "aa:bb:cc:dd:ee:ff" {
+		t.Errorf("Expected MAC 'aa:bb:cc:dd:ee:ff', got '%s'", result[0].Mac)
 	}
 
 	if result[0].NodesCount != 15 {

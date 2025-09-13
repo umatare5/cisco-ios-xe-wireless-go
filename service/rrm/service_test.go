@@ -66,13 +66,13 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data": {
 				"ap-auto-rf-dot11-data": [
 					{
-						"wtp-mac": "28:ac:9e:bb:3c:80",
+						"wtp-mac": "aa:bb:cc:dd:ee:ff",
 						"radio-slot-id": 0,
 						"neighbor-radio-info": {
 							"neighbor-radio-list": [
 								{
 									"neighbor-radio-info": {
-										"neighbor-radio-mac": "28:ac:9e:bb:3c:80",
+										"neighbor-radio-mac": "aa:bb:cc:dd:ee:ff",
 										"neighbor-radio-slot-id": 0,
 										"rssi": -19,
 										"snr": 62,

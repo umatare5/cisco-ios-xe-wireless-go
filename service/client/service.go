@@ -57,15 +57,6 @@ func (s Service) ListDCInfo(ctx context.Context) (*model.ClientOperDcInfo, error
 }
 
 // GetDCInfoByMAC retrieves dc-info for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns client device classification information including device type,
-// confidence level, and classification timestamp.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetDCInfoByMAC(ctx context.Context, clientMAC string) (*model.ClientOperDcInfo, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
@@ -115,15 +106,6 @@ func (s Service) ListMMIFClientHistory(ctx context.Context) (*model.ClientOperMm
 }
 
 // GetMMIFClientHistoryByMAC retrieves mm-if-client-history for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns mobility manager interface client history data including
-// authentication and association history.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetMMIFClientHistoryByMAC(
 	ctx context.Context,
 	clientMAC string,
@@ -142,15 +124,6 @@ func (s Service) ListMMIFClientStats(ctx context.Context) (*model.ClientOperMmIf
 }
 
 // GetMMIFClientStatsByMAC retrieves mm-if-client-stats for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns mobility manager interface client statistics including
-// authentication and association counters.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetMMIFClientStatsByMAC(
 	ctx context.Context,
 	clientMAC string,
@@ -169,15 +142,6 @@ func (s Service) ListMobilityInfo(ctx context.Context) (*model.ClientOperMobilit
 }
 
 // GetMobilityInfoByMAC retrieves mobility-oper-data for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns mobility operational data including roaming history,
-// anchor information, and mobility state.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetMobilityInfoByMAC(
 	ctx context.Context,
 	clientMAC string,
@@ -196,15 +160,6 @@ func (s Service) ListPolicyInfo(ctx context.Context) (*model.ClientOperPolicyDat
 }
 
 // GetPolicyInfoByMAC retrieves policy-data for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns policy data including QoS policies, bandwidth allocations,
-// and access control information.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetPolicyInfoByMAC(ctx context.Context, clientMAC string) (*model.ClientOperPolicyData, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
@@ -220,15 +175,6 @@ func (s Service) ListSISFDB(ctx context.Context) (*model.ClientOperSisfDBMac, er
 }
 
 // GetSISFDBByMAC retrieves sisf-db-mac for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns SISF (Source IP and MAC Validation) database entry
-// including IP-MAC binding information.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetSISFDBByMAC(ctx context.Context, clientMAC string) (*model.ClientOperSisfDBMac, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
@@ -244,15 +190,6 @@ func (s Service) ListTrafficStats(ctx context.Context) (*model.ClientOperTraffic
 }
 
 // GetTrafficStatsByMAC retrieves traffic-stats for a specific client by MAC address.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation
-//   - clientMAC: Client MAC address (e.g., "aa:bb:cc:dd:ee:ff")
-//
-// Returns traffic statistics including bytes transmitted/received,
-// packet counts, and throughput information.
-//
-// The MAC address must be in standard format (6 hex octets separated by colons).
 func (s Service) GetTrafficStatsByMAC(
 	ctx context.Context,
 	clientMAC string,

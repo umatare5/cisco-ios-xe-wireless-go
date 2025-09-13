@@ -29,6 +29,11 @@ func (s Service) GetManagementInterfaceState(ctx context.Context) (*model.Genera
 	return core.Get[model.GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
 }
 
+// GetConfig retrieves complete general configuration data from the controller.
+func (s Service) GetConfig(ctx context.Context) (*model.GeneralCfg, error) {
+	return core.Get[model.GeneralCfg](ctx, s.Client(), routes.GeneralCfgPath)
+}
+
 // Configuration data retrieval methods
 
 // GetAPLocationRangingConfig retrieves AP location ranging configuration data.
