@@ -1,9 +1,9 @@
 {
-  "go.buildTags": "integration,scenario,sample",
+  "go.buildTags": "integration,scenario,example",
   "gopls": {
-    "build.buildFlags": ["-tags=integration,scenario,sample"],
+    "build.buildFlags": ["-tags=integration,scenario,example"],
     "build.env": {
-      "GOFLAGS": "-tags=integration,scenario,sample"
+      "GOFLAGS": "-tags=integration,scenario,example"
     },
     "analyses": {
       "unusedparams": true,

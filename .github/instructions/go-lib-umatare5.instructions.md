@@ -9,7 +9,7 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
 
 ## Scope & Metadata
 
-- **Last Updated**: 2025-09-13
+- **Last Updated**: 2025-09-14
 - **Precedence**: 1. `copilot-instructions.md` (Global) → 2. `go.instructions.md` (Community) → 3. `go-lib-umatare5.instructions.md` (This)
 - **Compatibility**: Go 1.25+ cross-platform
 - **Style Base**: [Effective Go](https://go.dev/doc/effective_go), [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments)
@@ -37,9 +37,9 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
 
   1. **(Optional)** Local aliases referencing central routes (see `internal/restconf/routes`).
   2. Type definitions (service struct, enums).
-  3. Constructor (**return a concrete type**): `func NewService(c *core.Client) *Service`.
-  4. Configuration methods (`GetCfg*`).
-  5. Operational methods (`GetOper*`, `GetGlobalOper*`).
+  3. Constructor (**return a concrete type**): `func NewService(c *core.Client) Service` (returns concrete type, not pointer).
+  4. Configuration methods (`GetConfig`, `GetCfg*`, `ListTagConfigs`).
+  5. Operational methods (`GetOperational`, `GetGlobalInfo`, `ListCAPWAPData`).
   6. Administrative methods (`Enable*`, `Disable*`, `Assign*`, `Reload`, etc.).
   7. Internal helpers (private).
 
@@ -52,10 +52,10 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
 ### 3.A Test Structure
 
 - **TS-001 (MUST)** Organize unit tests per service using table-driven tests and `t.Run` subtests. Use multiple `*_test.go` files by topic when it improves clarity (e.g., constructor, get-ops, errors, validation).
-- **TS-002 (MUST)** Use `pkg/testutil` mock servers (`NewMockServer`, `NewMockErrorServer`, `NewMockServerWithCustomErrors`) with standard library `testing`/`httptest`.
+- **TS-002 (MUST)** Use `pkg/testutil` servers (`NewRESTCONFServer`, `NewRESTCONFSuccessServer`, `NewRESTCONFErrorServer`) with standard library `testing`/`httptest`.
 - **TS-003 (MUST)** Simulate IOS-XE version gaps (e.g., 17.18.1+ features such as WAT, URWB, Spaces) with custom handlers returning representative status codes (e.g., 404) for unsupported versions.
 - **TS-004 (MUST)** Base mock responses on real WNC data when available and include the source context in comments.
-- **TS-005 (SHOULD)** Place integration tests under `tests/integration/{service}_*_test.go` and name them per **TNL-001**.
+- **TS-005 (SHOULD)** Place integration tests under `tests/integration/{service}_*_test.go` and name them per **TNL-001**. Use `tests/testutil/integration` for integration-specific configuration and setup utilities.
 - **TS-006 (SHOULD)** Store golden files under `testdata/` and read via `os.ReadFile`. Use `embed` only when hermetic builds are required.
 
 ### 3.B Modern Go Patterns
@@ -81,8 +81,10 @@ clear(m) // when resetting maps/slices
 - **TS-008 (MUST)** Define generic types as type definitions.
 
 ```go
-type HandlerMap[T any] map[string]map[string]T
-type MockServerHandlers = HandlerMap[string] // simple alias without type parameters
+type HandlerMap[T any] = map[string]map[string]T
+// Used in actual testutil implementation:
+// - HandlerMap[func() (int, string)] for RESTCONFServer
+// - HandlerMap[string] for endpoint response mappings
 ```
 
 ---
@@ -112,9 +114,10 @@ type MockServerHandlers = HandlerMap[string] // simple alias without type parame
 
 - **NET-001 (MUST)** Reuse a single `http.Client` and close `resp.Body` along all paths.
 - **NET-002 (MUST)** Set explicit timeouts and honor `context.Context`.
-- **NET-003 (SHOULD)** Use shared generic helpers (`core.Get[T]`, `core.Post[T]`, `core.Put[T]`, etc.).
-- **NET-004 (SHOULD)** Use the client's RPC helper for YANG RPCs.
-- **NET-005 (SHOULD)** Normalize identifiers before URL composition (e.g., MAC formatting).
+- **NET-003 (SHOULD)** Use shared generic helpers (`core.Get[T]`, `core.Post[T]`, `core.PostVoid`, `core.PutVoid`, `core.PostRPCVoid`, etc.).
+- **NET-004 (SHOULD)** Use the client's RPC helper for YANG RPCs (`core.PostRPCVoid`).
+- **NET-005 (SHOULD)** Normalize identifiers before URL composition (e.g., MAC formatting using `validation.NormalizeMACAddress`).
+- **NET-006 (MUST)** Handle HTTP 204 (No Content) responses appropriately with specialized response types instead of treating them as errors.
 
 ---
 
@@ -126,7 +129,9 @@ type MockServerHandlers = HandlerMap[string] // simple alias without type parame
   - `internal/core` — transport helpers, generic HTTP, RPC facade.
   - `internal/validation` — validators and normalizers.
   - `internal/model/*` — wire models with docs.
-  - `pkg/testutil` — standard-library-based test utilities.
+  - `internal/testutil` — internal assertion functions for unit testing.
+  - `pkg/testutil` — public test utilities (mock servers, testing helpers).
+  - `tests/testutil/integration` — integration-specific configuration and setup utilities.
 
 - **PKG-002 (SHOULD)** Use `tag_*.go` to structure tag operations by concern (CRUD, models, helpers).
 
@@ -158,15 +163,17 @@ type MockServerHandlers = HandlerMap[string] // simple alias without type parame
 - **DOC-003 (MUST)** Describe unsupported endpoints in Known Limitations.
 - **DOC-004 (SHOULD)** Include a minimal example using the root client and a service accessor.
 - **DOC-005 (SHOULD)** Start exported identifiers’ comments with the identifier name.
+- **DOC-006 (SHOULD)** Keep `doc.go` package documentation concise (≤ 5 lines) unless special circumstances require detailed explanations.
 
 ---
 
 ## 11. Tag Management
 
-- **TAG-001 (MUST)** Use **TagSetOper** terminology with a standardized CRUD method set.
+- **TAG-001 (MUST)** Use dedicated tag service types (e.g., `PolicyTagService`, `RFTagService`, `SiteTagService`) with standardized CRUD method set.
 - **TAG-002 (MUST)** Use **TagName** as the identifier field across tag structs.
 - **TAG-003 (MUST)** Place tag operations in logically split files using the `tag_*.go` pattern.
-- **TAG-004 (MUST)** Enforce YANG constraints (e.g., tag name length ≤ 32).
+- **TAG-004 (MUST)** Enforce YANG constraints (e.g., tag name length ≤ 32 characters).
+- **TAG-005 (MUST)** Provide direct tag service accessors from main client (e.g., `Client.PolicyTag()`, `Client.RFTag()`).
 
 ---
 
@@ -200,10 +207,11 @@ type MockServerHandlers = HandlerMap[string] // simple alias without type parame
 
 ## 15. Advanced Testing Standards
 
-- **ATS-001 (MUST)** Use small package-local helpers in `_test.go`. Put cross-package test servers/utilities in `pkg/testutil` (stdlib `testing/httptest`).
-- **ATS-002 (MUST)** Base mock payloads on **real WNC JSON structures** captured from supported versions.
-- **ATS-003 (MUST)** For features introduced in IOS-XE 17.18.1+ (e.g., WAT, URWB, Spaces), include **version-compatibility scenarios** using `MockErrorServer`.
+- **ATS-001 (MUST)** Use small package-local helpers in `_test.go`. Put cross-package test servers in `pkg/testutil` (using `NewRESTCONFSuccessServer`, `NewRESTCONFErrorServer`), internal assertion functions in `internal/testutil`, and integration-specific utilities in `tests/testutil/integration` (all stdlib `testing/httptest`).
+- **ATS-002 (MUST)** Base mock payloads on **real WNC JSON structures** captured from supported versions. Use comprehensive endpoint mapping in test responses.
+- **ATS-003 (MUST)** For features introduced in IOS-XE 17.18.1+ (e.g., WAT, URWB, Spaces), include **version-compatibility scenarios** using `NewRESTCONFErrorServer`.
 - **ATS-004 (MUST)** Target **≥ 90% unit test coverage per service**, and keep CI fully green.
+- **ATS-005 (MUST)** Create test methods for Constructor, GetOperations, SetOperations, ErrorHandling, and ValidationErrors categories.
 
 ---
 
@@ -214,13 +222,14 @@ type MockServerHandlers = HandlerMap[string] // simple alias without type parame
   - `Test{Service}Unit_{Category}_{Scenario}`
   - `Test{Service}Integration_{Category}_{Scenario}`
 
-- **TNL-002 (MUST)** Apply consistent service names: `Client`, `Afc`, `Wat`, `Urwb`, `Spaces` (exact service names in codebase).
+- **TNL-002 (MUST)** Apply consistent service names: `ApServiceUnit`, `WlanServiceUnit`, `ClientServiceUnit`, `AfcServiceUnit`, etc. (exact service names in codebase).
 - **TNL-003 (MUST)** Use standard categories: `Constructor`, `GetOperations`, `SetOperations`, `ErrorHandling`, `ValidationErrors`.
 - **TNL-004 (MUST)** Use standard scenarios: `Success`, `MockSuccess`, `ErrorExpected`, `RealDataSuccess`, `EmptyMAC` (or service-appropriate `EmptyParam`).
 - **TNL-005 (MUST)** Follow placement conventions:
 
   - Unit tests: `service/{service}/service_test.go` (source co-located).
   - Integration tests: `tests/integration/{service}_service_test.go`.
+  - Test utilities: `pkg/testutil/` (public), `internal/testutil/` (internal), `tests/testutil/integration/` (integration-specific).
 
 - **TNL-006 (MUST)** Apply the unified pattern exclusively and replace legacy names systematically.
 
@@ -241,31 +250,31 @@ type MockServerHandlers = HandlerMap[string] // simple alias without type parame
 ## 18. Centralized Routes & Builders — Example
 
 ```go
-// internal/restconf/routes/wlan.go
+// internal/restconf/routes/ap.go
 package routes
 
-// WLAN Configuration Paths
+// AP Configuration Paths
 const (
-    // WLANCfgPath provides the path for retrieving WLAN configuration data
-    WLANCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"
+    // APCfgPath retrieves complete access point configuration data
+    APCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"
 
-    // WLANWlanCfgEntriesPath provides the path for WLAN configuration entries
-    WLANWlanCfgEntriesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries"
+    // APTagsPath retrieves access point tag configurations
+    APTagsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags"
 
-    // WLANWlanCfgEntryPath provides the path template for specific WLAN configuration entry
-    WLANWlanCfgEntryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries/wlan-cfg-entry"
+    // APTagPath retrieves specific access point tag configuration
+    APTagPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag"
 )
 ```
 
 ```go
-// service/wlan/service.go
-package wlan
+// service/ap/service.go
+package ap
 
 import (
     "context"
 
     "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-    "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wlan"
+    model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/ap"
     "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
     "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -278,9 +287,14 @@ func NewService(client *core.Client) Service {
     return Service{BaseService: service.NewBaseService(client)}
 }
 
-func (s Service) GetProfileConfig(ctx context.Context, profileName string) (*WlanCfgEntry, error) {
-    url := s.Client().RestconfBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
-    return core.Get[WlanCfgEntry](ctx, s.Client(), url)
+func (s Service) GetConfig(ctx context.Context) (*model.ApCfg, error) {
+    return core.Get[model.ApCfg](ctx, s.Client(), routes.APCfgPath)
+}
+
+func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCfgApTag, error) {
+    // Validation and MAC normalization...
+    url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.APTagsPath, "ap-tag", normalizedMAC)
+    return core.Get[model.ApCfgApTag](ctx, s.Client(), url)
 }
 ```
 
@@ -301,22 +315,46 @@ func (s *Service) GetByID(ctx context.Context, id string) (*WLAN, error) {
 ## 20. Naming Examples
 
 ```go
-// Remote read (OK to use Get*)
-func (s *Service) GetByID(ctx context.Context, id string) (*WLAN, error)
+// Remote read operations (OK to use Get*)
+func (s Service) GetConfig(ctx context.Context) (*model.ApCfg, error)
+func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCfgApTag, error)
+func (s Service) GetAPJoinStatsByWTPMAC(ctx context.Context, mac string) (*model.ApGlobalOperApJoinStats, error)
+
+// List operations for collections
+func (s Service) ListTagConfigs(ctx context.Context) (*model.ApCfgApTag, error)
+func (s Service) ListAPHistory(ctx context.Context) (*model.ApGlobalOperApHistory, error)
 
 // Trivial accessor (avoid Get prefix)
-func (c *Client) Token() string
+func (c *Client) Core() *core.Client
 ```
 
 ## 21. Test Helpers — Example
 
-```go
-// service/wlan/service_test.go (local helper)
-func must(ctx context.Context, t *testing.T, fn func(context.Context) error) {
-    t.Helper()
-    if err := fn(ctx); err != nil { t.Fatal(err) }
+````go
+// service/ap/service_test.go (local helper)
+func TestApServiceUnit_Constructor_Success(t *testing.T) {
+    // Test implementation with NewMockServer
+    responses := map[string]string{
+        "test-endpoint": `{"status": "success"}`,
+    }
+    mockServer := testutil.NewMockServer(responses)
+    defer mockServer.Close()
+    // ... rest of test
 }
 
-// pkg/testutil/mockserver.go (shared)
-func NewMockServer(handlers HandlerMap[http.HandlerFunc]) *httptest.Server { /* ... */ }
-```
+```go
+// pkg/testutil/mock.go (shared mock servers)
+func NewRESTCONFSuccessServer(endpoints map[string]string) *httptest.Server { /* ... */ }
+func NewRESTCONFErrorServer(paths []string, status int) *httptest.Server { /* ... */ }
+func NewTLSClientForServer(t *testing.T, srv *httptest.Server) *core.Client { /* ... */ }
+
+// pkg/testutil/testing.go (public test utilities)
+func NewMockServer(responses map[string]string) MockServer { /* ... */ }
+func NewMockErrorServer(errorPaths []string, statusCode int) MockServer { /* ... */ }
+
+// internal/testutil/helper.go (internal assertions)
+func AssertStringEquals(t *testing.T, actual, expected, message string) { t.Helper(); /* ... */ }
+
+// tests/testutil/integration/config.go (integration config)
+func LoadConfig() (*Config, error) { /* ... */ }
+````

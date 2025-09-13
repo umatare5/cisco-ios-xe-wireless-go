@@ -1,4 +1,4 @@
-# Makefile for cisco-ios-xe-wireless-go library package
+# Makefile for cisco-ios-xe-wireless-go SDK package
 #
 # This Makefile provides direct access to specialized build and test scripts
 # located in the scripts/ directory for focused development tasks.

@@ -2,7 +2,7 @@
 mode: "agent"
 model: "Claude Sonnet 4"
 tools: ["codebase", "think", "fetch", "githubRepo"]
-description: "Develop Go library for Cisco Catalyst 9800 Wireless Network Controller"
+description: "Develop Go SDK for Cisco Catalyst 9800 Wireless Network Controller"
 ---
 
 # fix-instructions-compliant.prompt.md
