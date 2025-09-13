@@ -7,23 +7,25 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rogue"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // TestRogueServiceIntegration_GetOperationalOperations_Success validates Rogue service
 // operational data retrieval against live WNC controller.
 func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "Rogue",
 			ServiceConstructor: func(client any) any {
 				return rogue.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -81,13 +83,14 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 				LogResult: true,
 			},
 		},
-		FilterMethods: []client.IntegrationTestMethod{
+		FilterMethods: []integration.TestMethod{
 			{
 				Name: "GetRogueByMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetRogueByMAC(ctx, "00:11:22:33:44:55")
+					return service.(rogue.Service).GetRogueByMAC(ctx, integration.TestClientMac())
 				},
-				ExpectNotFound: true, // Rogue may not exist
+				LogResult:      true,
+				ExpectNotFound: true, // Test MAC may not exist unless WNC_CLIENT_MAC_ADDR is set
 			},
 			{
 				Name: "GetRogueClientByMAC",
@@ -99,9 +102,10 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 			{
 				Name: "GetOperByRogueAddress",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetOperByRogueAddress(ctx, "00:11:22:33:44:55")
+					return service.(rogue.Service).GetOperByRogueAddress(ctx, integration.TestClientMac())
 				},
-				ExpectNotFound: true, // Rogue may not exist
+				LogResult:      true,
+				ExpectNotFound: true, // Test rogue address may not exist unless WNC_CLIENT_MAC_ADDR is set
 			},
 			{
 				Name: "GetOperByRogueClientAddress",
@@ -113,7 +117,7 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 			// Note: GetOperByClassType and GetOperByContainmentLevel are disabled
 			// because these query parameters are not supported by the API (returns HTTP 400)
 		},
-		ValidationTests: []client.ValidationTestMethod{
+		ValidationTests: []integration.ValidationTestMethod{
 			{
 				Name: "GetOperByRogueAddress_EmptyAddress",
 				Method: func(ctx context.Context, service any) error {
@@ -137,5 +141,5 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 		},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }

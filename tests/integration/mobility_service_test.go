@@ -7,23 +7,25 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/mobility"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // TestMobilityServiceIntegration_GetOperationalOperations_Success validates Mobility service
 // operational data retrieval against live WNC controller.
 func TestMobilityServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "Mobility",
 			ServiceConstructor: func(client any) any {
 				return mobility.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -74,9 +76,9 @@ func TestMobilityServiceIntegration_GetOperationalOperations_Success(t *testing.
 				LogResult: true,
 			},
 		},
-		FilterMethods:   []client.IntegrationTestMethod{},
-		ValidationTests: []client.ValidationTestMethod{},
+		FilterMethods:   []integration.TestMethod{},
+		ValidationTests: []integration.ValidationTestMethod{},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }

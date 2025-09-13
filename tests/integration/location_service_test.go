@@ -7,23 +7,25 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/location"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // TestLocationServiceIntegration_GetOperationalOperations_Success validates Location service
 // operational data retrieval against live WNC controller.
 func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "Location",
 			ServiceConstructor: func(client any) any {
 				return location.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -33,12 +35,12 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 				ExpectNotFound: true, // Location services may not be configured
 			},
 			{
-				Name: "GetStats",
+				Name: "LocationRssiMeasurements",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(location.Service).GetStats(ctx)
+					return service.(location.Service).LocationRssiMeasurements(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true,
+				ExpectNotFound: true, // Should return empty response for HTTP 204
 			},
 			{
 				Name: "GetConfig",
@@ -46,36 +48,36 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 					return service.(location.Service).GetConfig(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true,
+				ExpectNotFound: false, // GetConfig returns data
 			},
 			{
 				Name: "ListProfileConfigs",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(location.Service).ListProfileConfigs(ctx)
+					return service.(location.Service).ListOperatorLocations(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true,
+				ExpectNotFound: false, // Should return empty response for HTTP 204
 			},
 			{
 				Name: "ListServerConfigs",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(location.Service).ListServerConfigs(ctx)
+					return service.(location.Service).ListNmspConfig(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true,
+				ExpectNotFound: false, // Should return empty response for HTTP 204
 			},
 			{
-				Name: "GetSettingsConfig",
+				Name: "GetLocation",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(location.Service).GetSettingsConfig(ctx)
+					return service.(location.Service).GetLocation(ctx)
 				},
 				LogResult:      true,
 				ExpectNotFound: true,
 			},
 		},
-		FilterMethods:   []client.IntegrationTestMethod{},
-		ValidationTests: []client.ValidationTestMethod{},
+		FilterMethods:   []integration.TestMethod{},
+		ValidationTests: []integration.ValidationTestMethod{},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }

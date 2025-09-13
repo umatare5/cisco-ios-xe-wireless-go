@@ -7,24 +7,26 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/spaces"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // TestSpacesServiceIntegration_GetOperationalOperations_Success validates Cisco Spaces service
 // operational data retrieval against live WNC controller (IOS-XE 17.18.1+).
 // Note: This service requires IOS-XE 17.18.1+ and uses MockErrorServer for unsupported versions.
 func TestSpacesServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "Spaces",
 			ServiceConstructor: func(client any) any {
 				return spaces.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -58,9 +60,9 @@ func TestSpacesServiceIntegration_GetOperationalOperations_Success(t *testing.T)
 				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
 			},
 		},
-		FilterMethods:   []client.IntegrationTestMethod{},
-		ValidationTests: []client.ValidationTestMethod{},
+		FilterMethods:   []integration.TestMethod{},
+		ValidationTests: []integration.ValidationTestMethod{},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }
