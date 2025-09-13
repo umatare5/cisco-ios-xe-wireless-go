@@ -1,4 +1,4 @@
-//go:build integration
+//go:build integration || scenario
 
 // Package integration provides test utilities for integration tests.
 package integration
