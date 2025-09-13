@@ -16,8 +16,8 @@ const (
 	// LocationNmspConfigPath provides the path for retrieving location servers.
 	LocationNmspConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/nmsp-config"
 
-	// LocationSettingsPath provides the path for retrieving location settings (not supported).
-	LocationSettingsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/location"
+	// LocationPath provides the path for retrieving location settings (not supported).
+	LocationPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/location"
 )
 
 // Location Operational Paths.

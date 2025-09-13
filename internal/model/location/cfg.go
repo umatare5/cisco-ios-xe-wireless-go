@@ -1,9 +1,34 @@
 // Package location provides data models for location configuration data.
 package location
 
+type LocationCfgData struct {
+	// Live WNC 17.12.5: contains nmsp-config (empty object {})
+	NmspConfig *NmspConfig `json:"nmsp-config,omitempty"`
+	// YANG 17.12.1: location container (not present in live data)
+	LocationConfig *LocationConfig `json:"location,omitempty"` // (YANG: IOS-XE 17.12.1+)
+	// YANG 17.12.1: operator-locations container (not present in live data)
+	OperatorLocations *OperatorLocations `json:"operator-locations,omitempty"` // (YANG: IOS-XE 17.12.1+)
+}
+
 // LocationCfg represents the structure for Location configuration data from WNC 17.12.5.
 type LocationCfg struct {
 	LocationCfgData LocationCfgData `json:"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"`
+}
+
+// OperatorLocations represents AAA Location Operators container.
+type OperatorLocations struct {
+	// List of operator location configurations
+	OperatorLocation []OperatorLocation `json:"operator-location,omitempty"` // (YANG: IOS-XE 17.12.1+)
+}
+
+// LocationServerConfigResponse represents the response structure for nmsp-config endpoint.
+type LocationServerConfigResponse struct {
+	NmspConfig *NmspConfig `json:"Cisco-IOS-XE-wireless-location-cfg:nmsp-config,omitempty"`
+}
+
+// LocationSettings represents the response structure for location settings endpoint (HTTP 204).
+type LocationSettings struct {
+	LocationConfig *LocationConfig `json:"Cisco-IOS-XE-wireless-location-cfg:location,omitempty"`
 }
 
 // LocationCfgLocationConfig represents the corresponding data structure for location config from WNC 17.12.5.
@@ -14,15 +39,6 @@ type LocationCfgLocationConfig struct {
 // LocationCfgNmspConfig represents the corresponding data structure for NMSP config from WNC 17.12.5.
 type LocationCfgNmspConfig struct {
 	NmspConfig *NmspConfig `json:"Cisco-IOS-XE-wireless-location-cfg:nmsp-config,omitempty"`
-}
-
-type LocationCfgData struct {
-	// Live WNC 17.12.5: contains nmsp-config (empty object {})
-	NmspConfig *NmspConfig `json:"nmsp-config,omitempty"`
-	// YANG 17.12.1: location container (not present in live data)
-	LocationConfig *LocationConfig `json:"location,omitempty"` // (YANG: IOS-XE 17.12.1+)
-	// YANG 17.12.1: operator-locations container (not present in live data)
-	OperatorLocations *OperatorLocations `json:"operator-locations,omitempty"` // (YANG: IOS-XE 17.12.1+)
 }
 
 type LocationConfig struct {
@@ -74,12 +90,6 @@ type NmspCloudParams struct {
 	ProxyPort *uint16 `json:"proxy-port,omitempty"` // (YANG: IOS-XE 17.12.1+)
 	// Authentication token for CMX cloud services
 	AuthToken *string `json:"auth-token,omitempty"` // (YANG: IOS-XE 17.12.1+)
-}
-
-// OperatorLocations represents AAA Location Operators container.
-type OperatorLocations struct {
-	// List of operator location configurations
-	OperatorLocation []OperatorLocation `json:"operator-location,omitempty"` // (YANG: IOS-XE 17.12.1+)
 }
 
 // OperatorLocation represents AAA Location Operator parameters.

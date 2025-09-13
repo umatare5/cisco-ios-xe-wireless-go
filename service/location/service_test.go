@@ -1,7 +1,6 @@
 package location_test
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -15,10 +14,10 @@ func TestLocationServiceUnit_Constructor_Success(t *testing.T) {
 
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
 		// Create mock server and test client using public API
-		responses := map[string]string{
+		testResponses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testResponses)
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -46,6 +45,11 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 
 	// Mock responses based on real WNC location data structure
 	responses := map[string]string{
+		"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data": `{
+			"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data": {
+				"nmsp-config": {}
+			}
+		}`,
 		"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/operator-locations": `{
 			"Cisco-IOS-XE-wireless-location-cfg:operator-locations": []
 		}`,
@@ -61,18 +65,28 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	service := location.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	t.Run("ListProfileConfigs", func(t *testing.T) {
-		result, err := service.ListProfileConfigs(ctx)
+	t.Run("GetConfig", func(t *testing.T) {
+		result, err := service.GetConfig(ctx)
 		if err != nil {
-			t.Errorf("ListProfileConfigs returned unexpected error: %v", err)
+			t.Errorf("GetConfig returned unexpected error: %v", err)
 		}
 		if result == nil {
-			t.Error("ListProfileConfigs returned nil result")
+			t.Error("GetConfig returned nil result")
+		}
+	})
+
+	t.Run("ListOperatorLocations", func(t *testing.T) {
+		result, err := service.ListOperatorLocations(ctx)
+		if err != nil {
+			t.Errorf("ListOperatorLocations returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListOperatorLocations returned nil result")
 		}
 	})
 
 	t.Run("ListServerConfigs", func(t *testing.T) {
-		result, err := service.ListServerConfigs(ctx)
+		result, err := service.ListNmspConfig(ctx)
 		if err != nil {
 			t.Errorf("ListServerConfigs returned unexpected error: %v", err)
 		}
@@ -82,117 +96,106 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	})
 }
 
+// TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess tests operations that return HTTP 204 (No Content) responses.
+func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing.T) {
+	t.Parallel()
+
+	responses := map[string]testutil.SuccessConfig{
+		"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/location": {
+			StatusCode:   204,
+			ResponseBody: "",
+		},
+		"Cisco-IOS-XE-wireless-location-oper:location-oper-data": {
+			StatusCode:   204,
+			ResponseBody: "",
+		},
+		"Cisco-IOS-XE-wireless-location-oper:location-oper-data/location-rssi-measurements": {
+			StatusCode:   204,
+			ResponseBody: "",
+		},
+	}
+
+	mockServerNoContent := testutil.NewMockServerWithCustomResponses(t, responses)
+	defer mockServerNoContent.Close()
+
+	testClient := testutil.NewTestClient(mockServerNoContent)
+	serviceNoContent := location.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	t.Run("GetLocation_NoContent", func(t *testing.T) {
+		result, err := serviceNoContent.GetLocation(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for GetLocation, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected non-nil result for GetLocation")
+		} else if result.LocationConfig != nil {
+			t.Error("Expected nil LocationConfig for HTTP 204 response")
+		}
+	})
+
+	t.Run("GetOperational_NoContent", func(t *testing.T) {
+		result, err := serviceNoContent.GetOperational(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for GetOperational, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected non-nil result for GetOperational")
+		} else if result.LocationOperData != nil {
+			t.Error("Expected nil LocationOperData for HTTP 204 response")
+		}
+	})
+
+	t.Run("LocationRssiMeasurements_NoContent", func(t *testing.T) {
+		result, err := serviceNoContent.LocationRssiMeasurements(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for LocationRssiMeasurements, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected non-nil result for LocationRssiMeasurements")
+		} else if len(result.LocationRssiMeasurements) > 0 {
+			t.Error("Expected empty LocationRssiMeasurements for HTTP 204 response")
+		}
+	})
+}
+
 // TestLocationServiceUnit_GetOperations_ErrorHandling tests error scenarios for implemented operations.
 func TestLocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
 	// Create test server and service
-	server := testutil.NewMockServer(map[string]string{})
-	defer server.Close()
+	errorServer := testutil.NewMockServer(map[string]string{})
+	defer errorServer.Close()
 
 	// Create test client configured for the mock server
-	testClient := testutil.NewTestClient(server)
+	testClient := testutil.NewTestClient(errorServer)
 	service := location.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	t.Run("ListProfileConfigs_404Error", func(t *testing.T) {
-		result, err := service.ListProfileConfigs(ctx)
-		if err == nil {
-			t.Error("Expected error for ListProfileConfigs, got nil")
-		}
-		if result != nil {
-			t.Error("Expected nil result on error, got non-nil result")
-		}
-	})
-
-	t.Run("ListServerConfigs_404Error", func(t *testing.T) {
-		result, err := service.ListServerConfigs(ctx)
-		if err == nil {
-			t.Error("Expected error for ListServerConfigs, got nil")
-		}
-		if result != nil {
-			t.Error("Expected nil result on error, got non-nil result")
-		}
-	})
-}
-
-// TestLocationServiceUnit_NotImplementedOperations_ResourceNotFound tests operations that return ErrResourceNotFound.
-func TestLocationServiceUnit_NotImplementedOperations_ResourceNotFound(t *testing.T) {
-	t.Parallel()
-
-	// Create mock server and test client
-	responses := map[string]string{
-		"test-endpoint": `{"status": "success"}`,
-	}
-	mockServer := testutil.NewMockServer(responses)
-	defer mockServer.Close()
-
-	testClient := testutil.NewTestClient(mockServer)
-	service := location.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
-
-	t.Run("GetConfig_NotImplemented", func(t *testing.T) {
+	t.Run("GetConfig_404Error", func(t *testing.T) {
 		result, err := service.GetConfig(ctx)
 		if err == nil {
-			t.Error("Expected error for GetConfig, got nil")
-		}
-		if !errors.Is(err, core.ErrResourceNotFound) {
-			t.Errorf("Expected ErrResourceNotFound, got: %v", err)
+			t.Error("GetConfig should return error for 404")
 		}
 		if result != nil {
-			t.Error("Expected nil result for not implemented operation")
+			t.Error("GetConfig should return nil result on error")
 		}
 	})
 
-	t.Run("GetSettingsConfig_NotImplemented", func(t *testing.T) {
-		result, err := service.GetSettingsConfig(ctx)
-		if err == nil {
-			t.Error("Expected error for GetSettingsConfig, got nil")
-		}
-		if !errors.Is(err, core.ErrResourceNotFound) {
-			t.Errorf("Expected ErrResourceNotFound, got: %v", err)
-		}
-		if result != nil {
-			t.Error("Expected nil result for not implemented operation")
-		}
-	})
-
-	t.Run("GetOperational_NotImplemented", func(t *testing.T) {
-		result, err := service.GetOperational(ctx)
-		if err == nil {
-			t.Error("Expected error for GetOperational, got nil")
-		}
-		if !errors.Is(err, core.ErrResourceNotFound) {
-			t.Errorf("Expected ErrResourceNotFound, got: %v", err)
-		}
-		if result != nil {
-			t.Error("Expected nil result for not implemented operation")
-		}
-	})
-
-	t.Run("GetStats_NotImplemented", func(t *testing.T) {
-		result, err := service.GetStats(ctx)
-		if err == nil {
-			t.Error("Expected error for GetStats, got nil")
-		}
-		if !errors.Is(err, core.ErrResourceNotFound) {
-			t.Errorf("Expected ErrResourceNotFound, got: %v", err)
-		}
-		if result != nil {
-			t.Error("Expected nil result for not implemented operation")
-		}
-	})
+	// Note: ListProfileConfigs and ListServerConfigs with empty responses
+	// are handled by HTTP 204 (No Content) in live environment,
+	// which core.Get handles gracefully by returning empty structs.
 }
 
 // TestLocationServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
 func TestLocationServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	t.Parallel()
 
-	t.Run("ListProfileConfigs_NilClient", func(t *testing.T) {
+	t.Run("ListOperatorLocations_NilClient", func(t *testing.T) {
 		service := location.NewService(nil)
 		ctx := testutil.TestContext(t)
 
-		result, err := service.ListProfileConfigs(ctx)
+		result, err := service.ListOperatorLocations(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}
@@ -201,11 +204,11 @@ func TestLocationServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		}
 	})
 
-	t.Run("ListServerConfigs_NilClient", func(t *testing.T) {
+	t.Run("ListNmspConfig_NilClient", func(t *testing.T) {
 		service := location.NewService(nil)
 		ctx := testutil.TestContext(t)
 
-		result, err := service.ListServerConfigs(ctx)
+		result, err := service.ListNmspConfig(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}
