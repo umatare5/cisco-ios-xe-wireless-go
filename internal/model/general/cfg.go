@@ -233,5 +233,6 @@ type ApLocRangingCfgData struct {
 
 // GeolocationCfgData represents geolocation configuration data structure.
 type GeolocationCfgData struct {
-	// Geolocation configuration fields would be defined here based on YANG model (YANG: IOS-XE 17.12.1+)
+	// TODO: Implement geolocation configuration fields based on YANG model (YANG: IOS-XE 17.12.1+)
+	//       See tracking issue: https://your-issue-tracker.example.com/issues/12345
 }
