@@ -7,36 +7,23 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/data"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ap"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // TestAPServiceIntegration_GetConfigOperations_Success validates AP service
 // configuration retrieval operations against live WNC controller.
-//
-// This test verifies that basic configuration operations (GetConfig, ListTagConfigs,
-// ListTagSourcePriorityConfigs) return valid data structures and can communicate
-// with the WNC API endpoint successfully.
-//
-// Test Coverage:
-//   - Basic configuration retrieval methods
-//   - Filter-based configuration operations
-//   - Validation of returned data structures
-//   - Live WNC controller connectivity
 func TestAPServiceIntegration_GetConfigOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
+	t.Parallel()
 
-	constants := data.StandardTestConstants()
-
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "AP Get Config",
 			ServiceConstructor: func(client any) any {
 				return ap.NewService(client.(*core.Client))
 			},
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetConfig",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -59,11 +46,11 @@ func TestAPServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 		},
-		FilterMethods: []client.IntegrationTestMethod{
+		FilterMethods: []integration.TestMethod{
 			{
 				Name: "GetTagConfigByMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetTagConfigByMAC(ctx, constants.TestEthMAC)
+					return service.(ap.Service).GetTagConfigByMAC(ctx, "28:ac:9e:11:48:10")
 				},
 				LogResult: true,
 			},
@@ -75,7 +62,7 @@ func TestAPServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 		},
-		ValidationTests: []client.ValidationTestMethod{
+		ValidationTests: []integration.ValidationTestMethod{
 			{
 				Name: "GetTagConfigByMAC_InvalidMAC",
 				Method: func(ctx context.Context, service any) error {
@@ -97,20 +84,18 @@ func TestAPServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 		},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }
 
 func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	constants := data.StandardTestConstants()
-
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "AP Get Operational",
 			ServiceConstructor: func(client any) any {
 				return ap.NewService(client.(*core.Client))
 			},
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -182,11 +167,11 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 		},
-		FilterMethods: []client.IntegrationTestMethod{
+		FilterMethods: []integration.TestMethod{
 			{
 				Name: "GetCAPWAPDataByWTPMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetCAPWAPDataByWTPMAC(ctx, constants.TestAPMac)
+					return service.(ap.Service).GetCAPWAPDataByWTPMAC(ctx, integration.TestAPMac())
 				},
 				LogResult:      true,
 				ExpectNotFound: true, // May not have specific WTP MAC data available
@@ -194,21 +179,21 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 			{
 				Name: "ListAPHistoryByEthernetMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).ListAPHistoryByEthernetMAC(ctx, constants.TestEthMAC)
+					return service.(ap.Service).ListAPHistoryByEthernetMAC(ctx, "28:ac:9e:11:48:10")
 				},
 				LogResult: true,
 			},
 			{
 				Name: "GetAPJoinStatsByWTPMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetAPJoinStatsByWTPMAC(ctx, constants.TestAPMac)
+					return service.(ap.Service).GetAPJoinStatsByWTPMAC(ctx, integration.TestAPMac())
 				},
 				LogResult: true,
 			},
 			{
 				Name: "GetWLANClientStatsByWLANID",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetWLANClientStatsByWLANID(ctx, constants.TestWlanID)
+					return service.(ap.Service).GetWLANClientStatsByWLANID(ctx, 1)
 				},
 				LogResult: true,
 			},
@@ -223,13 +208,13 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 			{
 				Name: "GetRadioStatusByWTPMACAndSlot",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetRadioStatusByWTPMACAndSlot(ctx, constants.TestAPMac, 0)
+					return service.(ap.Service).GetRadioStatusByWTPMACAndSlot(ctx, integration.TestAPMac(), 0)
 				},
 				LogResult:      true,
 				ExpectNotFound: true, // May not have specific slot data available
 			},
 		},
-		ValidationTests: []client.ValidationTestMethod{
+		ValidationTests: []integration.ValidationTestMethod{
 			{
 				Name: "GetCAPWAPDataByWTPMAC_EmptyMAC",
 				Method: func(ctx context.Context, service any) error {
@@ -242,21 +227,21 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 		},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }
 
-// Test_ApGlobalOper_IntegrationTests runs comprehensive AP global operational data integration tests
+// Test_ApGlobalOper_IntegrationTests validates AP service global operational data retrieval
 func TestAPServiceIntegration_GlobalOperations_Success(t *testing.T) {
 	// Define the test suite configuration
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "AP Global Operational",
 			ServiceConstructor: func(client any) any {
 				return ap.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetGlobalInfo",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -293,51 +278,38 @@ func TestAPServiceIntegration_GlobalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 		},
-		FilterMethods:   []client.IntegrationTestMethod{},
-		ValidationTests: []client.ValidationTestMethod{},
+		FilterMethods:   []integration.TestMethod{},
+		ValidationTests: []integration.ValidationTestMethod{},
 	}
 
 	// Run the unified test suite
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }
 
 // TestAPServiceIntegration_AdvancedFilterOperations_Success validates advanced
 // AP service filtering operations with complex parameters.
-//
-// This test covers advanced filtering operations that require multiple parameters:
-//   - Radio neighbor operations with MAC/slot/BSSID filtering
-//   - Complex composite key operations
-//   - Multi-parameter validation scenarios
-//
-// Test Coverage:
-//   - Complex parameter filtering against live WNC
-//   - Composite key parameter validation
-//   - Advanced error handling scenarios
-//   - Real data structure validation with complex filters
 func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
-	constants := data.StandardTestConstants()
+	t.Parallel()
 
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "AP Advanced Filter Operations",
 			ServiceConstructor: func(client any) any {
 				return ap.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		FilterMethods: []client.IntegrationTestMethod{
+		FilterMethods: []integration.TestMethod{
 			{
 				Name: "GetRadioNeighborByAPMACSlotAndBSSID",
 				Method: func(ctx context.Context, service any) (any, error) {
-					// Use actual BSSID from live data: 98:f1:99:c2:03:db (slot 0)
-					testBSSID := "98:f1:99:c2:03:db"
 					return service.(ap.Service).GetRadioNeighborByAPMACSlotAndBSSID(
-						ctx, constants.TestAPMac, 0, testBSSID)
+						ctx, integration.TestAPMac(), 0, integration.TestAPNeighborBSSID())
 				},
 				LogResult: true,
 			},
 		},
-		ValidationTests: []client.ValidationTestMethod{
+		ValidationTests: []integration.ValidationTestMethod{
 			{
 				Name: "GetRadioNeighborByAPMACSlotAndBSSID_EmptyMAC",
 				Method: func(ctx context.Context, service any) error {
@@ -352,7 +324,7 @@ func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
 				Name: "GetRadioNeighborByAPMACSlotAndBSSID_EmptyBSSID",
 				Method: func(ctx context.Context, service any) error {
 					_, err := service.(ap.Service).GetRadioNeighborByAPMACSlotAndBSSID(
-						ctx, constants.TestAPMac, 0, "")
+						ctx, integration.TestAPMac(), 0, "")
 					return err
 				},
 				ExpectedError: true,
@@ -371,5 +343,5 @@ func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
 		},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }

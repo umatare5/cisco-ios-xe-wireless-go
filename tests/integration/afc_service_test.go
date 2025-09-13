@@ -7,22 +7,24 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/afc"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // Test_AfcGetOperational_IntegrationTests runs comprehensive AFC operational data integration tests
 func TestAFCServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "AFC",
 			ServiceConstructor: func(client any) any {
 				return afc.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -55,5 +57,5 @@ func TestAFCServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 	}
 
 	// Run the unified test suite
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }

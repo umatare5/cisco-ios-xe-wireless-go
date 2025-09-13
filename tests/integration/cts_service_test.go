@@ -7,23 +7,25 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/cts"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
 // TestCTSServiceIntegration_GetOperationalOperations_Success validates CTS service
 // configuration retrieval against live WNC controller.
 func TestCTSServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
-	t.Parallel() // Safe for parallel execution as read-only operations
-	suite := client.IntegrationTestSuite{
-		Config: client.TestSuiteConfig{
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
 			ServiceName: "CTS",
 			ServiceConstructor: func(client any) any {
 				return cts.NewService(client.(*core.Client))
 			},
 			UseTimeout: true,
 		},
-		BasicMethods: []client.IntegrationTestMethod{
+		BasicMethods: []integration.TestMethod{
 			{
 				Name: "GetConfig",
 				Method: func(ctx context.Context, service any) (any, error) {
@@ -33,8 +35,8 @@ func TestCTSServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				ExpectNotFound: true, // CTS may not be configured
 			},
 		},
-		ValidationTests: []client.ValidationTestMethod{},
+		ValidationTests: []integration.ValidationTestMethod{},
 	}
 
-	client.RunIntegrationTestSuite(t, suite)
+	integration.RunTestSuite(t, suite)
 }
