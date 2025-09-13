@@ -8,19 +8,19 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 func TestClientUnit_NewRequestBuilder_Success(t *testing.T) {
 	t.Run("ValidParams", func(t *testing.T) {
 		restBuilder := restconf.NewBuilder("https", "controller.example.com")
 		rb := NewRequestBuilder(restBuilder, "token", slog.Default())
-		helper.AssertNotNil(t, rb, "NewRequestBuilder result")
+		testutil.AssertNotNil(t, rb, "NewRequestBuilder result")
 	})
 
 	t.Run("NilRESTCONFBuilder", func(t *testing.T) {
 		rb := NewRequestBuilder(nil, "token", slog.Default())
-		helper.AssertNotNil(t, rb, "NewRequestBuilder result for nil RESTCONF builder")
+		testutil.AssertNotNil(t, rb, "NewRequestBuilder result for nil RESTCONF builder")
 	})
 }
 
@@ -36,16 +36,16 @@ func TestClientUnit_RequestBuilderCreateRequestWithPayload_Success(t *testing.T)
 			"test/path",
 			map[string]string{"test": "data"},
 		)
-		helper.AssertNoError(t, err, "CreateRequestWithPayload")
+		testutil.AssertNoError(t, err, "CreateRequestWithPayload")
 
-		helper.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
+		testutil.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
 	})
 
 	t.Run("NilRESTCONFBuilder", func(t *testing.T) {
 		rb := NewRequestBuilder(nil, "token", slog.Default())
 		_, err := rb.CreateRequestWithPayload(context.Background(), http.MethodGet, "test/path", nil)
-		helper.AssertError(t, err, "Expected error for nil RESTCONF builder")
-		helper.AssertStringContains(t, err.Error(), "RESTCONF builder is not properly initialized", "error message")
+		testutil.AssertError(t, err, "Expected error for nil RESTCONF builder")
+		testutil.AssertStringContains(t, err.Error(), "RESTCONF builder is not properly initialized", "error message")
 	})
 }
 
@@ -61,16 +61,16 @@ func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing
 			"test/rpc",
 			map[string]string{"test": "data"},
 		)
-		helper.AssertNoError(t, err, "CreateRPCRequestWithPayload")
+		testutil.AssertNoError(t, err, "CreateRPCRequestWithPayload")
 
-		helper.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
+		testutil.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
 	})
 
 	t.Run("NilRESTCONFBuilder", func(t *testing.T) {
 		rb := NewRequestBuilder(nil, "token", slog.Default())
 		_, err := rb.CreateRPCRequestWithPayload(context.Background(), http.MethodPost, "test/rpc", nil)
-		helper.AssertError(t, err, "Expected error for nil RESTCONF builder")
-		helper.AssertStringContains(t, err.Error(), "RESTCONF builder is not properly initialized", "error message")
+		testutil.AssertError(t, err, "Expected error for nil RESTCONF builder")
+		testutil.AssertStringContains(t, err.Error(), "RESTCONF builder is not properly initialized", "error message")
 	})
 
 	t.Run("InvalidHTTPMethodWithNilPayload", func(t *testing.T) {
@@ -80,8 +80,8 @@ func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing
 
 		// Test with invalid method and nil payload
 		_, err := rb.CreateRPCRequestWithPayload(context.Background(), "\n", "test/rpc", nil)
-		helper.AssertError(t, err, "Expected error for invalid HTTP method")
-		helper.AssertStringContains(t, err.Error(), "failed to create RPC request", "error message")
+		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
+		testutil.AssertStringContains(t, err.Error(), "failed to create RPC request", "error message")
 	})
 
 	t.Run("InvalidHTTPMethodWithPayload", func(t *testing.T) {
@@ -96,8 +96,8 @@ func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing
 			"test/rpc",
 			map[string]string{"test": "data"},
 		)
-		helper.AssertError(t, err, "Expected error for invalid HTTP method")
-		helper.AssertStringContains(t, err.Error(), "failed to create RPC request", "error message")
+		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
+		testutil.AssertStringContains(t, err.Error(), "failed to create RPC request", "error message")
 	})
 }
 
@@ -113,7 +113,7 @@ func TestClientUnit_RequestBuilderExecuteRequest_Success(t *testing.T) {
 		if resp != nil {
 			resp.Body.Close()
 		}
-		helper.AssertError(t, err, "Expected error for nil request")
+		testutil.AssertError(t, err, "Expected error for nil request")
 	})
 
 	t.Run("NilClient", func(t *testing.T) {
@@ -122,12 +122,12 @@ func TestClientUnit_RequestBuilderExecuteRequest_Success(t *testing.T) {
 		rb := NewRequestBuilder(restBuilder, "token", logger)
 
 		req, err := rb.CreateRequestWithPayload(context.Background(), http.MethodGet, "test/path", nil)
-		helper.AssertNoError(t, err, "CreateRequestWithPayload")
+		testutil.AssertNoError(t, err, "CreateRequestWithPayload")
 
 		// Test with nil client should panic
 		defer func() {
 			if r := recover(); r == nil {
-				helper.AssertTrue(t, false, "Expected panic for nil client")
+				testutil.AssertTrue(t, false, "Expected panic for nil client")
 			}
 		}()
 
@@ -146,17 +146,17 @@ func TestClientUnit_RequestBuilderCreateRequest_Success(t *testing.T) {
 		rb := NewRequestBuilder(restBuilder, "token", logger)
 
 		req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test/path")
-		helper.AssertNoError(t, err, "CreateRequest")
-		helper.AssertNotNil(t, req, "Request should not be nil")
-		helper.AssertStringEquals(t, req.Method, http.MethodGet, "HTTP method")
-		helper.AssertStringNotEmpty(t, req.Header.Get("Authorization"), "Authorization header")
+		testutil.AssertNoError(t, err, "CreateRequest")
+		testutil.AssertNotNil(t, req, "Request should not be nil")
+		testutil.AssertStringEquals(t, req.Method, http.MethodGet, "HTTP method")
+		testutil.AssertStringNotEmpty(t, req.Header.Get("Authorization"), "Authorization header")
 	})
 
 	t.Run("NilRESTCONFBuilder", func(t *testing.T) {
 		rb := NewRequestBuilder(nil, "token", slog.Default())
 		_, err := rb.CreateRequest(context.Background(), http.MethodGet, "test/path")
-		helper.AssertError(t, err, "Expected error for nil RESTCONF builder")
-		helper.AssertStringContains(t, err.Error(), "RESTCONF builder is not properly initialized", "error message")
+		testutil.AssertError(t, err, "Expected error for nil RESTCONF builder")
+		testutil.AssertStringContains(t, err.Error(), "RESTCONF builder is not properly initialized", "error message")
 	})
 
 	t.Run("InvalidHTTPMethod", func(t *testing.T) {
@@ -166,8 +166,8 @@ func TestClientUnit_RequestBuilderCreateRequest_Success(t *testing.T) {
 
 		// Test with invalid method that causes http.NewRequestWithContext to fail
 		_, err := rb.CreateRequest(context.Background(), "\n", "test/path")
-		helper.AssertError(t, err, "Expected error for invalid HTTP method")
-		helper.AssertStringContains(t, err.Error(), "failed to create request", "error message")
+		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
+		testutil.AssertStringContains(t, err.Error(), "failed to create request", "error message")
 	})
 }
 
@@ -187,14 +187,14 @@ func TestClientUnit_ExecuteRequestWithMockServer_Success(t *testing.T) {
 	client := mockServer.Client()
 
 	req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test-endpoint")
-	helper.AssertNoError(t, err, "CreateRequest")
+	testutil.AssertNoError(t, err, "CreateRequest")
 
 	resp, err := rb.ExecuteRequest(client, req)
-	helper.AssertNoError(t, err, "ExecuteRequest")
-	helper.AssertNotNil(t, resp, "Response should not be nil")
+	testutil.AssertNoError(t, err, "ExecuteRequest")
+	testutil.AssertNotNil(t, resp, "Response should not be nil")
 	defer resp.Body.Close()
 
-	helper.AssertIntEquals(t, resp.StatusCode, http.StatusOK, "Status code")
+	testutil.AssertIntEquals(t, resp.StatusCode, http.StatusOK, "Status code")
 }
 
 // Test CreateRequestWithPayload error scenarios.
@@ -213,8 +213,8 @@ func TestClientUnit_CreateRequestWithPayload_ErrorScenarios(t *testing.T) {
 			"test/path",
 			invalidPayload,
 		)
-		helper.AssertError(t, err, "Expected error for invalid payload")
-		helper.AssertStringContains(t, err.Error(), "failed to marshal payload", "error message")
+		testutil.AssertError(t, err, "Expected error for invalid payload")
+		testutil.AssertStringContains(t, err.Error(), "failed to marshal payload", "error message")
 	})
 
 	t.Run("NilPayload", func(t *testing.T) {
@@ -228,9 +228,9 @@ func TestClientUnit_CreateRequestWithPayload_ErrorScenarios(t *testing.T) {
 			"test/path",
 			nil, // nil payload
 		)
-		helper.AssertNoError(t, err, "Should handle nil payload")
-		helper.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
-		helper.AssertStringEquals(
+		testutil.AssertNoError(t, err, "Should handle nil payload")
+		testutil.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
+		testutil.AssertStringEquals(
 			t,
 			req.Header.Get("Content-Type"),
 			"",
@@ -255,8 +255,8 @@ func TestClientUnit_CreateRPCRequestWithPayload_ErrorScenarios(t *testing.T) {
 			"test/rpc",
 			invalidPayload,
 		)
-		helper.AssertError(t, err, "Expected error for invalid payload")
-		helper.AssertStringContains(t, err.Error(), "failed to marshal payload", "error message")
+		testutil.AssertError(t, err, "Expected error for invalid payload")
+		testutil.AssertStringContains(t, err.Error(), "failed to marshal payload", "error message")
 	})
 
 	t.Run("NilPayload", func(t *testing.T) {
@@ -270,9 +270,9 @@ func TestClientUnit_CreateRPCRequestWithPayload_ErrorScenarios(t *testing.T) {
 			"test/rpc",
 			nil, // nil payload
 		)
-		helper.AssertNoError(t, err, "Should handle nil payload")
-		helper.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
-		helper.AssertStringEquals(
+		testutil.AssertNoError(t, err, "Should handle nil payload")
+		testutil.AssertStringEquals(t, req.Method, http.MethodPost, "HTTP method")
+		testutil.AssertStringEquals(
 			t,
 			req.Header.Get("Content-Type"),
 			"",
@@ -290,15 +290,15 @@ func TestClientUnit_ExecuteRequest_ErrorScenarios(t *testing.T) {
 		client := &http.Client{}
 
 		req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test-endpoint")
-		helper.AssertNoError(t, err, "CreateRequest")
+		testutil.AssertNoError(t, err, "CreateRequest")
 
 		// This should fail due to network error
 		resp, err := rb.ExecuteRequest(client, req)
 		if resp != nil {
 			resp.Body.Close()
 		}
-		helper.AssertError(t, err, "Expected network error")
-		helper.AssertStringContains(t, err.Error(), "request failed", "error message should contain request failed")
+		testutil.AssertError(t, err, "Expected network error")
+		testutil.AssertStringContains(t, err.Error(), "request failed", "error message should contain request failed")
 	})
 
 	t.Run("HTTPErrorStatus", func(t *testing.T) {
@@ -315,14 +315,14 @@ func TestClientUnit_ExecuteRequest_ErrorScenarios(t *testing.T) {
 		client := mockServer.Client()
 
 		req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test-endpoint")
-		helper.AssertNoError(t, err, "CreateRequest")
+		testutil.AssertNoError(t, err, "CreateRequest")
 
 		// ExecuteRequest should succeed but return 404 status
 		resp, err := rb.ExecuteRequest(client, req)
-		helper.AssertNoError(t, err, "ExecuteRequest should not fail on HTTP error status")
-		helper.AssertNotNil(t, resp, "Response should not be nil")
+		testutil.AssertNoError(t, err, "ExecuteRequest should not fail on HTTP error status")
+		testutil.AssertNotNil(t, resp, "Response should not be nil")
 		defer resp.Body.Close()
 
-		helper.AssertIntEquals(t, resp.StatusCode, http.StatusNotFound, "Status code should be 404")
+		testutil.AssertIntEquals(t, resp.StatusCode, http.StatusNotFound, "Status code should be 404")
 	})
 }

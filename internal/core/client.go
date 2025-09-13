@@ -1,5 +1,3 @@
-// Package core provides the core client for the Cisco Wireless Network Controller API.
-// This package implements three-layer architecture with Core, Domain Service, and Generated Type separation.
 package core
 
 import (

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // ========================================
@@ -21,11 +21,11 @@ func TestAPIErrorStructure(t *testing.T) {
 	}
 
 	expectedError := "API error (HTTP 404): Resource not found"
-	helper.AssertStringEquals(t, apiErr.Error(), expectedError, "APIError.Error() should return expected format")
+	testutil.AssertStringEquals(t, apiErr.Error(), expectedError, "APIError.Error() should return expected format")
 
-	helper.AssertIntEquals(t, apiErr.StatusCode, http.StatusNotFound, "APIError.StatusCode should be 404")
+	testutil.AssertIntEquals(t, apiErr.StatusCode, http.StatusNotFound, "APIError.StatusCode should be 404")
 
-	helper.AssertStringEquals(t, apiErr.Message, "Resource not found", "APIError.Message should match expected value")
+	testutil.AssertStringEquals(t, apiErr.Message, "Resource not found", "APIError.Message should match expected value")
 }
 
 // TestErrorConstants tests predefined error constants.
@@ -44,7 +44,7 @@ func TestErrorConstants(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			helper.AssertStringEquals(t, tt.err.Error(), tt.expected, "Error constant should return expected message")
+			testutil.AssertStringEquals(t, tt.err.Error(), tt.expected, "Error constant should return expected message")
 		})
 	}
 }
@@ -59,7 +59,7 @@ func TestAPIErrorEdgeCases(t *testing.T) {
 	}
 
 	expectedError := "API error (HTTP 500): "
-	helper.AssertStringEquals(t, apiErr.Error(), expectedError,
+	testutil.AssertStringEquals(t, apiErr.Error(), expectedError,
 		"APIError with empty message should return expected format")
 
 	// Test with zero status code
@@ -70,7 +70,7 @@ func TestAPIErrorEdgeCases(t *testing.T) {
 	}
 
 	expectedError = "API error (HTTP 0): Zero status code"
-	helper.AssertStringEquals(t, apiErr.Error(), expectedError,
+	testutil.AssertStringEquals(t, apiErr.Error(), expectedError,
 		"APIError with zero status code should return expected format")
 }
 
@@ -97,7 +97,7 @@ func TestHTTPStatusConstants(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			helper.AssertIntEquals(t, tt.constant, tt.expected, "HTTP status constant should match expected value")
+			testutil.AssertIntEquals(t, tt.constant, tt.expected, "HTTP status constant should match expected value")
 		})
 	}
 }
@@ -176,7 +176,7 @@ func TestIsNotFoundError(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			result := IsNotFoundError(tc.err)
-			helper.AssertBoolEquals(t, result, tc.expected, "IsNotFoundError should return expected boolean value")
+			testutil.AssertBoolEquals(t, result, tc.expected, "IsNotFoundError should return expected boolean value")
 		})
 	}
 }

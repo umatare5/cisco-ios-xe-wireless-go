@@ -1,4 +1,3 @@
-// nolint:SA1012 // Testing nil context behavior
 package core
 
 import (
@@ -13,13 +12,24 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // Test constants.
 const (
 	testTimeout = 10 * time.Second
 )
+
+// requireEnvironmentVars validates that all required environment variables are set.
+func requireEnvironmentVars(t *testing.T, vars map[string]string) {
+	t.Helper()
+
+	for name, value := range vars {
+		if value == "" {
+			t.Skipf("%s environment variable must be set for integration tests", name)
+		}
+	}
+}
 
 // TestCoreClientUnit_Constructor_Success tests the new core client creation.
 func TestCoreClientUnit_Constructor_Success(t *testing.T) {
@@ -28,17 +38,17 @@ func TestCoreClientUnit_Constructor_Success(t *testing.T) {
 
 	t.Run("ValidClient", func(t *testing.T) {
 		client, err := New(controller, token)
-		helper.AssertClientCreated(t, client, err, "ValidClient")
+		testutil.AssertClientCreated(t, client, err, "ValidClient")
 	})
 
 	t.Run("EmptyController", func(t *testing.T) {
 		_, err := New("", token)
-		helper.AssertClientCreationError(t, err, "EmptyController")
+		testutil.AssertClientCreationError(t, err, "EmptyController")
 	})
 
 	t.Run("EmptyToken", func(t *testing.T) {
 		_, err := New(controller, "")
-		helper.AssertClientCreationError(t, err, "EmptyToken")
+		testutil.AssertClientCreationError(t, err, "EmptyToken")
 	})
 }
 
@@ -49,17 +59,17 @@ func TestCoreClientUnit_Options_Success(t *testing.T) {
 
 	t.Run("WithTimeout", func(t *testing.T) {
 		client, err := New(controller, token, WithTimeout(testTimeout))
-		helper.AssertClientCreated(t, client, err, "WithTimeout")
+		testutil.AssertClientCreated(t, client, err, "WithTimeout")
 	})
 
 	t.Run("WithInsecureSkipVerify", func(t *testing.T) {
 		client, err := New(controller, token, WithInsecureSkipVerify(true))
-		helper.AssertClientCreated(t, client, err, "WithInsecureSkipVerify")
+		testutil.AssertClientCreated(t, client, err, "WithInsecureSkipVerify")
 	})
 
 	t.Run("InvalidTimeout", func(t *testing.T) {
 		_, err := New(controller, token, WithTimeout(0))
-		helper.AssertClientCreationError(t, err, "InvalidTimeout")
+		testutil.AssertClientCreationError(t, err, "InvalidTimeout")
 	})
 }
 
@@ -69,14 +79,14 @@ func TestCoreClientUnit_DoOperations_Success(t *testing.T) {
 	token := os.Getenv("WNC_ACCESS_TOKEN")
 	apMac := os.Getenv("WNC_AP_MAC_ADDR")
 
-	helper.RequireEnvironmentVars(t, map[string]string{
+	requireEnvironmentVars(t, map[string]string{
 		"WNC_CONTROLLER":   controller,
 		"WNC_ACCESS_TOKEN": token,
 		"WNC_AP_MAC_ADDR":  apMac,
 	})
 
 	client, err := New(controller, token, WithInsecureSkipVerify(true), WithTimeout(testTimeout))
-	helper.AssertNoError(t, err, "Failed to create client")
+	testutil.AssertNoError(t, err, "Failed to create client")
 
 	ctx, cancel := context.WithTimeout(context.Background(), testTimeout)
 	defer cancel()
@@ -92,19 +102,19 @@ func TestCoreClientUnit_DoOperations_Success(t *testing.T) {
 
 	t.Run("InvalidMethod", func(t *testing.T) {
 		_, err := client.Do(ctx, "INVALID", "/restconf/data/test")
-		helper.AssertError(t, err, "Expected error for invalid HTTP method")
+		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
 	})
 
 	t.Run("NilContext", func(t *testing.T) {
 		// Using a nil context variable instead of nil literal to test the validation
 		var nilCtx context.Context //nolint:staticcheck // Testing nil context behavior
 		_, err := client.Do(nilCtx, http.MethodGet, "/restconf/data/test")
-		helper.AssertError(t, err, "Expected error for nil context")
+		testutil.AssertError(t, err, "Expected error for nil context")
 	})
 
 	t.Run("NilOutput", func(t *testing.T) {
 		_, err := client.Do(ctx, http.MethodGet, "/restconf/data/test")
-		helper.AssertError(t, err, "Expected error for nil output")
+		testutil.AssertError(t, err, "Expected error for nil output")
 	})
 }
 
@@ -116,7 +126,7 @@ func TestCoreClientUnit_ErrorHandling_HTTPErrors(t *testing.T) {
 	}
 
 	expected := "HTTP 404: Not Found"
-	helper.AssertErrorMessage(t, err, expected, "HTTPError should format status and body correctly")
+	testutil.AssertErrorMessage(t, err, expected, "HTTPError should format status and body correctly")
 }
 
 // ========================================
@@ -133,7 +143,7 @@ func TestCoreClientUnit_Options_ExtendedTests(t *testing.T) {
 			name:   "WithTimeout",
 			option: WithTimeout(10 * time.Second),
 			test: func(c *Client) error {
-				helper.AssertDurationEquals(t, c.httpClient.Timeout, 10*time.Second,
+				testutil.AssertDurationEquals(t, c.httpClient.Timeout, 10*time.Second,
 					"Client timeout should be set correctly")
 				return nil
 			},
@@ -167,24 +177,24 @@ func TestCoreClientUnit_Options_ExtendedTests(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			client, err := New("example.com", "token", tt.option)
-			helper.AssertClientCreated(t, client, err, "Failed to create client")
+			testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
-			helper.AssertNoError(t, tt.test(client), "Test execution failed")
+			testutil.AssertNoError(t, tt.test(client), "Test execution failed")
 		})
 	}
 }
 
 func TestCoreClientUnit_Validation_NilLogger(t *testing.T) {
 	_, err := New("example.com", "token", WithLogger(nil))
-	helper.AssertError(t, err, "Expected error for nil logger")
-	helper.AssertStringContains(t, err.Error(), "logger cannot be nil",
+	testutil.AssertError(t, err, "Expected error for nil logger")
+	testutil.AssertStringContains(t, err.Error(), "logger cannot be nil",
 		"Error message should contain expected text about nil logger")
 }
 
 func TestCoreClientUnit_Validation_ZeroTimeout(t *testing.T) {
 	_, err := New("example.com", "token", WithTimeout(0))
-	helper.AssertError(t, err, "Expected error for zero timeout")
-	helper.AssertStringContains(t, err.Error(),
+	testutil.AssertError(t, err, "Expected error for zero timeout")
+	testutil.AssertStringContains(t, err.Error(),
 		"timeout must be positive",
 		"Error message should contain expected text about positive timeout")
 }
@@ -195,20 +205,20 @@ func TestCoreClientUnit_Validation_ZeroTimeout(t *testing.T) {
 
 func TestCoreClientUnit_DoOperations_ErrorHandling(t *testing.T) {
 	client, err := New("nonexistent.invalid", "token", WithTimeout(1*time.Second))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// Test with invalid host to cover error paths
 	_, err = client.Do(ctx, http.MethodGet, "/test")
-	helper.AssertError(t, err, "Expected error for invalid host")
+	testutil.AssertError(t, err, "Expected error for invalid host")
 
 	// Test with canceled context
 	canceledCtx, cancel := context.WithCancel(context.Background())
 	cancel()
 
 	_, err = client.Do(canceledCtx, http.MethodGet, "/test")
-	helper.AssertError(t, err, "Expected error for canceled context")
+	testutil.AssertError(t, err, "Expected error for canceled context")
 }
 
 func TestCoreClientUnit_DoOperations_NilParameters(t *testing.T) {
@@ -221,13 +231,13 @@ func TestCoreClientUnit_DoOperations_NilParameters(t *testing.T) {
 
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	// Using a nil context variable instead of nil literal to test the validation
 	var nilCtx context.Context //nolint:staticcheck // Testing nil context behavior
 	_, err = client.Do(nilCtx, http.MethodGet, "/test")
-	helper.AssertError(t, err, "Expected error for nil context")
-	helper.AssertStringContains(t, err.Error(),
+	testutil.AssertError(t, err, "Expected error for nil context")
+	testutil.AssertStringContains(t, err.Error(),
 		"context cannot be nil",
 		"Error message should contain expected text about nil context")
 
@@ -248,13 +258,13 @@ func TestCoreClientUnit_DoOperations_NilParameters(t *testing.T) {
 func TestCoreClientUnit_DoOperations_ErrorResponse(t *testing.T) {
 	// Create a test server that returns different HTTP status codes
 	client, err := New("httpbin.org", "token", WithTimeout(5*time.Second))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// Test 404 error response
 	_, err = client.Do(ctx, http.MethodGet, "/status/404")
-	helper.AssertError(t, err, "Expected error for 404 response")
+	testutil.AssertError(t, err, "Expected error for 404 response")
 
 	// Check if it's an HTTPError
 	if strings.Contains(err.Error(), "HTTP 404") {
@@ -266,7 +276,7 @@ func TestCoreClientUnit_DoOperations_ErrorResponse(t *testing.T) {
 // TestCoreClientUnit_DoOperations_SpecificCoverage tests specific code paths in the Do method.
 func TestCoreClientUnit_DoOperations_SpecificCoverage(t *testing.T) {
 	client, err := New("example.com", "token")
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	t.Run("ContextDeadlineExceeded", func(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 1*time.Nanosecond)
@@ -276,7 +286,7 @@ func TestCoreClientUnit_DoOperations_SpecificCoverage(t *testing.T) {
 		time.Sleep(2 * time.Nanosecond)
 
 		_, err := client.Do(ctx, http.MethodGet, "/test")
-		helper.AssertError(t, err, "Expected error for expired context")
+		testutil.AssertError(t, err, "Expected error for expired context")
 	})
 
 	t.Run("InvalidHTTPMethod", func(t *testing.T) {
@@ -284,7 +294,7 @@ func TestCoreClientUnit_DoOperations_SpecificCoverage(t *testing.T) {
 
 		// Test with invalid HTTP method that might cause request creation to fail
 		_, err := client.Do(ctx, "INVALID METHOD WITH SPACES", "/test")
-		helper.AssertError(t, err, "Expected error for invalid HTTP method")
+		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
 		if !strings.Contains(err.Error(), "failed to create request") {
 			t.Logf("Got error (expected): %v", err)
 		}
@@ -299,7 +309,7 @@ func TestCoreClientUnit_DoOperations_SpecificCoverage(t *testing.T) {
 		_, err := client.Do(ctx, http.MethodGet, "/valid/path")
 		// I expect a network error, not a request creation error
 		if err != nil && strings.Contains(err.Error(), "failed to create request") {
-			helper.AssertNoError(t, err, "Unexpected request creation error")
+			testutil.AssertNoError(t, err, "Unexpected request creation error")
 		}
 		// Any other error (network, etc.) is expected and acceptable
 		t.Logf("Request creation successful, network error expected: %v", err)
@@ -309,7 +319,7 @@ func TestCoreClientUnit_DoOperations_SpecificCoverage(t *testing.T) {
 // TestCoreClientUnit_DoOperations_JSONHandling tests JSON unmarshaling in the Do method.
 func TestCoreClientUnit_DoOperations_JSONHandling(t *testing.T) {
 	client, err := New("httpbin.org", "token", WithTimeout(5*time.Second))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -322,7 +332,7 @@ func TestCoreClientUnit_DoOperations_JSONHandling(t *testing.T) {
 			if !strings.Contains(err.Error(), "failed to unmarshal") {
 				t.Logf("Network error expected: %v", err)
 			} else {
-				helper.AssertNoError(t, err, "Unexpected JSON unmarshaling error")
+				testutil.AssertNoError(t, err, "Unexpected JSON unmarshaling error")
 			}
 		} else {
 			t.Log("Successfully parsed JSON response")
@@ -352,7 +362,7 @@ func TestCoreClientUnit_DoOperations_JSONHandling(t *testing.T) {
 // TestCoreClientUnit_DoOperations_ResponseBodyHandling tests response body handling edge cases.
 func TestCoreClientUnit_DoOperations_ResponseBodyHandling(t *testing.T) {
 	client, err := New("httpbin.org", "token", WithTimeout(5*time.Second))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -389,7 +399,7 @@ func TestCoreClientUnit_DoOperations_ResponseBodyReadError(t *testing.T) {
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 
 	client, err := New(serverURL, "token", WithTimeout(1*time.Second), WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
@@ -424,15 +434,15 @@ func TestCoreClientUnit_DoOperations_HTTPErrorBoundaries(t *testing.T) {
 
 			serverURL := strings.TrimPrefix(server.URL, "https://")
 			client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-			helper.AssertClientCreated(t, client, err, "Failed to create client")
+			testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 			ctx := context.Background()
 			_, err = client.Do(ctx, http.MethodGet, "/test")
 
 			if tc.expectErr {
-				helper.AssertError(t, err, fmt.Sprintf("Expected error for status %d", tc.statusCode))
+				testutil.AssertError(t, err, fmt.Sprintf("Expected error for status %d", tc.statusCode))
 			} else {
-				helper.AssertNoError(t, err, fmt.Sprintf("Expected no error for status %d", tc.statusCode))
+				testutil.AssertNoError(t, err, fmt.Sprintf("Expected no error for status %d", tc.statusCode))
 			}
 		})
 	}
@@ -449,13 +459,13 @@ func TestCoreClientUnit_DoOperations_ResponseBodyCloseError(t *testing.T) {
 
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// This test covers the successful path including the deferred body close
 	_, err = client.Do(ctx, http.MethodGet, "/test")
-	helper.AssertNoError(t, err, "Unexpected error")
+	testutil.AssertNoError(t, err, "Unexpected error")
 }
 
 // TestCoreClientUnit_DoOperations_ResponseBodyReadFailure tests response body read error handling.
@@ -481,12 +491,12 @@ func TestCoreClientUnit_DoOperations_LargeResponse(t *testing.T) {
 
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	_, err = client.Do(ctx, http.MethodGet, "/test")
-	helper.AssertNoError(t, err, "Unexpected error with large response")
+	testutil.AssertNoError(t, err, "Unexpected error with large response")
 }
 
 // TestCoreClientUnit_DoOperations_EmptyResponseBody tests handling of empty response bodies.
@@ -499,16 +509,16 @@ func TestCoreClientUnit_DoOperations_EmptyResponseBody(t *testing.T) {
 
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// Do method should succeed with empty body (returns raw bytes)
 	body, err := client.Do(ctx, http.MethodGet, "/test")
-	helper.AssertNoError(t, err, "Unexpected error for empty response")
+	testutil.AssertNoError(t, err, "Unexpected error for empty response")
 
 	// Body should be empty
-	helper.AssertIntEquals(t, len(body), 0, "Response body should be empty")
+	testutil.AssertIntEquals(t, len(body), 0, "Response body should be empty")
 }
 
 // TestCoreClientUnit_DoOperations_InvalidJSONResponse tests handling of invalid JSON in responses.
@@ -521,30 +531,30 @@ func TestCoreClientUnit_DoOperations_InvalidJSONResponse(t *testing.T) {
 
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// Do method should succeed (returns raw bytes, no JSON parsing)
 	body, err := client.Do(ctx, http.MethodGet, "/test")
-	helper.AssertNoError(t, err, "Unexpected error for Do method")
+	testutil.AssertNoError(t, err, "Unexpected error for Do method")
 
 	// Body should contain the invalid JSON
 	expected := `{"invalid": json}`
-	helper.AssertStringEquals(t, string(body), expected, "Response body should match expected content")
+	testutil.AssertStringEquals(t, string(body), expected, "Response body should match expected content")
 }
 
 // TestCoreClientUnit_Validation_NilContext tests handling of nil context.
 func TestCoreClientUnit_Validation_NilContext(t *testing.T) {
 	client, err := New("example.com", "token")
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	// Using a nil context variable instead of nil literal to test the validation
 	var nilCtx context.Context //nolint:staticcheck // Testing nil context behavior
 	_, err = client.Do(nilCtx, http.MethodGet, "/test")
-	helper.AssertError(t, err, "Expected error with nil context")
+	testutil.AssertError(t, err, "Expected error with nil context")
 
-	helper.AssertStringContains(t, err.Error(),
+	testutil.AssertStringContains(t, err.Error(),
 		"context cannot be nil",
 		"Error message should contain expected text about nil context")
 }
@@ -560,28 +570,28 @@ func TestCoreClientUnit_DoOperations_NilOutput(t *testing.T) {
 
 	serverURL := strings.TrimPrefix(server.URL, "https://")
 	client, err := New(serverURL, "token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// The Do method should succeed - it doesn't validate output parameters
 	// since it returns raw bytes, not unmarshaled data
 	_, err = client.Do(ctx, http.MethodGet, "/test")
-	helper.AssertNoError(t, err, "Unexpected error from Do method")
+	testutil.AssertNoError(t, err, "Unexpected error from Do method")
 }
 
 // TestCoreClientUnit_DoOperations_RequestCreationError tests handling of request creation errors.
 func TestCoreClientUnit_DoOperations_RequestCreationError(t *testing.T) {
 	client, err := New("example.com", "token")
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	ctx := context.Background()
 
 	// Use an invalid HTTP method to trigger request creation error
 	_, err = client.Do(ctx, "INVALID METHOD\nWITH\nNEWLINES", "/test")
-	helper.AssertError(t, err, "Expected error with invalid HTTP method")
+	testutil.AssertError(t, err, "Expected error with invalid HTTP method")
 
-	helper.AssertStringContains(t, err.Error(),
+	testutil.AssertStringContains(t, err.Error(),
 		"failed to create request",
 		"Error message should contain expected text about request creation")
 }
@@ -594,9 +604,9 @@ func TestCoreClientUnit_Validation_NilClient(t *testing.T) {
 
 	// Test that validateDoParameters correctly handles nil client
 	err := nilClient.validateDoParameters(ctx)
-	helper.AssertError(t, err, "Expected error with nil client")
+	testutil.AssertError(t, err, "Expected error with nil client")
 
-	helper.AssertStringContains(t, err.Error(),
+	testutil.AssertStringContains(t, err.Error(),
 		"client cannot be nil",
 		"Error message should contain expected text about nil client")
 }
@@ -604,7 +614,7 @@ func TestCoreClientUnit_Validation_NilClient(t *testing.T) {
 // TestCoreClientUnit_ErrorHandling_ResponseBodyClose tests error handling in closeResponseBody.
 func TestCoreClientUnit_ErrorHandling_ResponseBodyClose(t *testing.T) {
 	client, err := New("example.com", "token")
-	helper.AssertClientCreated(t, client, err, "Failed to create client")
+	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	// Create a mock reader that will fail on Close()
 	mockReader := &errorCloser{closed: false}
@@ -619,14 +629,14 @@ func TestCoreClientUnit_ErrorHandling_ResponseBodyClose(t *testing.T) {
 	// This should log an error but not panic
 	defer func() {
 		if r := recover(); r != nil {
-			helper.AssertTrue(t, false, fmt.Sprintf("closeResponseBody should not panic: %v", r))
+			testutil.AssertTrue(t, false, fmt.Sprintf("closeResponseBody should not panic: %v", r))
 		}
 	}()
 
 	client.closeResponseBody(resp)
 
 	// Verify that Close() was called
-	helper.AssertBoolEquals(t, mockReader.closed, true, "Expected Close() to be called on response body")
+	testutil.AssertBoolEquals(t, mockReader.closed, true, "Expected Close() to be called on response body")
 
 	t.Log("closeResponseBody completed without panic, handled error correctly")
 }
@@ -651,32 +661,32 @@ func TestCoreClientUnit_PostOperations_Success(t *testing.T) {
 		var nilClient *Client
 		payload := map[string]string{"test": "value"}
 		err := PostVoid(context.Background(), nilClient, "/test-endpoint", payload)
-		helper.AssertError(t, err, "Expected error for nil client")
-		helper.AssertStringContains(t, err.Error(),
+		testutil.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertStringContains(t, err.Error(),
 			"client cannot be nil",
 			"Error message should contain expected text about nil client")
 	})
 
 	t.Run("Post_marshal_error", func(t *testing.T) {
 		client, err := New("test.example.com", "test-token")
-		helper.AssertClientCreated(t, client, err, "Failed to create client")
+		testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 		// Use a payload that cannot be marshaled to JSON
 		invalidPayload := make(chan int)
 		err = PostVoid(context.Background(), client, "/test-endpoint", invalidPayload)
-		helper.AssertError(t, err, "Expected error for unmarshalable payload")
+		testutil.AssertError(t, err, "Expected error for unmarshalable payload")
 	})
 
 	t.Run("Post_context_canceled", func(t *testing.T) {
 		client, err := New("test.example.com", "test-token")
-		helper.AssertClientCreated(t, client, err, "Failed to create client")
+		testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 
 		payload := map[string]string{"test": "value"}
 		err = PostVoid(ctx, client, "/test-endpoint", payload)
-		helper.AssertError(t, err, "Expected error for canceled context")
+		testutil.AssertError(t, err, "Expected error for canceled context")
 	})
 }
 
@@ -700,7 +710,7 @@ func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 	// Create test client
 	serverURL := strings.TrimPrefix(server.URL, "http://")
 	testClient, err := New(serverURL, "test-token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, testClient, err, "Failed to create test client")
+	testutil.AssertClientCreated(t, testClient, err, "Failed to create test client")
 
 	ctx := context.Background()
 	rpcPath := "/test-rpc"
@@ -713,21 +723,21 @@ func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 			return
 		}
 		if result == nil {
-			helper.AssertNotNil(t, result, "DoRPCWithPayload() result should not be nil")
+			testutil.AssertNotNil(t, result, "DoRPCWithPayload() result should not be nil")
 		}
 	})
 
 	t.Run("NilClient", func(t *testing.T) {
 		var nilClient *Client
 		_, err := nilClient.DoRPCWithPayload(ctx, http.MethodPost, rpcPath, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("NilContext", func(t *testing.T) {
 		// Use a variable to avoid direct nil literal which triggers SA1012
 		var nilCtx context.Context // This is nil by default
 		_, err := testClient.DoRPCWithPayload(nilCtx, http.MethodPost, rpcPath, payload)
-		helper.AssertError(t, err, "Expected error for nil context")
+		testutil.AssertError(t, err, "Expected error for nil context")
 	})
 }
 
@@ -756,7 +766,7 @@ func TestCoreClientUnit_HTTPMethods_PutPatchDelete(t *testing.T) {
 	// Create test client
 	serverURL := strings.TrimPrefix(server.URL, "http://")
 	testClient, err := New(serverURL, "test-token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, testClient, err, "Failed to create test client")
+	testutil.AssertClientCreated(t, testClient, err, "Failed to create test client")
 
 	ctx := context.Background()
 	endpoint := "/test-endpoint"
@@ -786,19 +796,19 @@ func TestCoreClientUnit_HTTPMethods_PutPatchDelete(t *testing.T) {
 	t.Run("PutWithNilClient", func(t *testing.T) {
 		var nilClient *Client
 		err := PutVoid(ctx, nilClient, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("PatchWithNilClient", func(t *testing.T) {
 		var nilClient *Client
 		err := PatchVoid(ctx, nilClient, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("DeleteWithNilClient", func(t *testing.T) {
 		var nilClient *Client
 		err := Delete(ctx, nilClient, endpoint)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 }
 
@@ -833,7 +843,7 @@ func TestCoreClientUnit_GenericRequests_AllMethods(t *testing.T) {
 	// Create test client
 	serverURL := strings.TrimPrefix(server.URL, "http://")
 	testClient, err := New(serverURL, "test-token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, testClient, err, "Failed to create test client")
+	testutil.AssertClientCreated(t, testClient, err, "Failed to create test client")
 
 	ctx := context.Background()
 	endpoint := "/test-endpoint"
@@ -851,13 +861,13 @@ func TestCoreClientUnit_GenericRequests_AllMethods(t *testing.T) {
 			return
 		}
 		if result == nil {
-			helper.AssertNotNil(t, result, "Get() result should not be nil")
+			testutil.AssertNotNil(t, result, "Get() result should not be nil")
 		}
 	})
 
 	t.Run("GetNilClient", func(t *testing.T) {
 		_, err := Get[testResponse](ctx, nil, endpoint)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("Post", func(t *testing.T) {
@@ -867,13 +877,13 @@ func TestCoreClientUnit_GenericRequests_AllMethods(t *testing.T) {
 			return
 		}
 		if result == nil {
-			helper.AssertNotNil(t, result, "Post() result should not be nil")
+			testutil.AssertNotNil(t, result, "Post() result should not be nil")
 		}
 	})
 
 	t.Run("PostNilClient", func(t *testing.T) {
 		_, err := Post[testResponse](ctx, nil, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("Put", func(t *testing.T) {
@@ -883,13 +893,13 @@ func TestCoreClientUnit_GenericRequests_AllMethods(t *testing.T) {
 			return
 		}
 		if result == nil {
-			helper.AssertNotNil(t, result, "Put() result should not be nil")
+			testutil.AssertNotNil(t, result, "Put() result should not be nil")
 		}
 	})
 
 	t.Run("PutNilClient", func(t *testing.T) {
 		_, err := Put[testResponse](ctx, nil, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("Patch", func(t *testing.T) {
@@ -899,13 +909,13 @@ func TestCoreClientUnit_GenericRequests_AllMethods(t *testing.T) {
 			return
 		}
 		if result == nil {
-			helper.AssertNotNil(t, result, "Patch() result should not be nil")
+			testutil.AssertNotNil(t, result, "Patch() result should not be nil")
 		}
 	})
 
 	t.Run("PatchNilClient", func(t *testing.T) {
 		_, err := Patch[testResponse](ctx, nil, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -917,7 +927,7 @@ func TestCoreClientUnit_GenericRequests_AllMethods(t *testing.T) {
 
 	t.Run("DeleteNilClient", func(t *testing.T) {
 		err := Delete(ctx, nil, endpoint)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 }
 
@@ -948,7 +958,7 @@ func TestCoreClientUnit_VoidRequests_AllMethods(t *testing.T) {
 	// Create test client
 	serverURL := strings.TrimPrefix(server.URL, "http://")
 	testClient, err := New(serverURL, "test-token", WithInsecureSkipVerify(true))
-	helper.AssertClientCreated(t, testClient, err, "Failed to create test client")
+	testutil.AssertClientCreated(t, testClient, err, "Failed to create test client")
 
 	ctx := context.Background()
 	endpoint := "/test-endpoint"
@@ -964,7 +974,7 @@ func TestCoreClientUnit_VoidRequests_AllMethods(t *testing.T) {
 
 	t.Run("PostVoidNilClient", func(t *testing.T) {
 		err := PostVoid(ctx, nil, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("PostRPCVoid", func(t *testing.T) {
@@ -976,7 +986,7 @@ func TestCoreClientUnit_VoidRequests_AllMethods(t *testing.T) {
 
 	t.Run("PostRPCVoidNilClient", func(t *testing.T) {
 		err := PostRPCVoid(ctx, nil, rpcPath, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("PutVoid", func(t *testing.T) {
@@ -988,7 +998,7 @@ func TestCoreClientUnit_VoidRequests_AllMethods(t *testing.T) {
 
 	t.Run("PutVoidNilClient", func(t *testing.T) {
 		err := PutVoid(ctx, nil, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("PatchVoid", func(t *testing.T) {
@@ -1000,7 +1010,7 @@ func TestCoreClientUnit_VoidRequests_AllMethods(t *testing.T) {
 
 	t.Run("PatchVoidNilClient", func(t *testing.T) {
 		err := PatchVoid(ctx, nil, endpoint, payload)
-		helper.AssertError(t, err, "Expected error for nil client")
+		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 }
 
@@ -1016,15 +1026,15 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		defer mockServer.Close()
 
 		client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		ctx := context.Background()
 
 		payload := map[string]string{"test": "data"}
 		body, err := client.DoWithPayload(ctx, "POST", "/restconf/data/test", payload)
 
-		helper.AssertNoError(t, err, "DoWithPayload should succeed")
-		helper.AssertTrue(t, len(body) > 0, "Response body should not be empty")
+		testutil.AssertNoError(t, err, "DoWithPayload should succeed")
+		testutil.AssertTrue(t, len(body) > 0, "Response body should not be empty")
 	})
 
 	// Test DoRPCWithPayload success path
@@ -1037,32 +1047,32 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		defer mockServer.Close()
 
 		client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		ctx := context.Background()
 
 		payload := map[string]string{"rpc": "data"}
 		body, err := client.DoRPCWithPayload(ctx, "POST", "/test-rpc", payload)
 
-		helper.AssertNoError(t, err, "DoRPCWithPayload should succeed")
-		helper.AssertTrue(t, len(body) > 0, "RPC response body should not be empty")
+		testutil.AssertNoError(t, err, "DoRPCWithPayload should succeed")
+		testutil.AssertTrue(t, len(body) > 0, "RPC response body should not be empty")
 	}) // Test RestconfBuilder
 	t.Run("RestconfBuilder_Success", func(t *testing.T) {
 		controller := "test.example.com"
 		token := "test-token"
 		client, err := New(controller, token)
 
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		builder := client.RestconfBuilder()
-		helper.AssertTrue(t, builder != nil, "RestconfBuilder should return non-nil builder")
+		testutil.AssertTrue(t, builder != nil, "RestconfBuilder should return non-nil builder")
 	})
 
 	// Test RestconfBuilder with nil client
 	t.Run("RestconfBuilder_NilClient", func(t *testing.T) {
 		var client *Client
 		builder := client.RestconfBuilder()
-		helper.AssertTrue(t, builder == nil, "RestconfBuilder should return nil for nil client")
+		testutil.AssertTrue(t, builder == nil, "RestconfBuilder should return nil for nil client")
 	})
 
 	// Test Get success path
@@ -1075,7 +1085,7 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		defer mockServer.Close()
 
 		client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		ctx := context.Background()
 
@@ -1087,9 +1097,9 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 
 		result, err := Get[TestData](ctx, client, "/restconf/data/test")
 
-		helper.AssertNoError(t, err, "Get should succeed")
-		helper.AssertTrue(t, result != nil, "Result should not be nil")
-		helper.AssertStringEquals(t, result.Data.Value, "test", "Data should match")
+		testutil.AssertNoError(t, err, "Get should succeed")
+		testutil.AssertTrue(t, result != nil, "Result should not be nil")
+		testutil.AssertStringEquals(t, result.Data.Value, "test", "Data should match")
 	}) // Test Post success path
 	t.Run("Post_SuccessPath", func(t *testing.T) {
 		mockServer := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -1100,7 +1110,7 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		defer mockServer.Close()
 
 		client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		ctx := context.Background()
 
@@ -1113,9 +1123,9 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		payload := map[string]string{"name": "test"}
 		result, err := Post[CreateResponse](ctx, client, "/restconf/data/test", payload)
 
-		helper.AssertNoError(t, err, "Post should succeed")
-		helper.AssertTrue(t, result != nil, "Result should not be nil")
-		helper.AssertStringEquals(t, result.Created.ID, "123", "Created ID should match")
+		testutil.AssertNoError(t, err, "Post should succeed")
+		testutil.AssertTrue(t, result != nil, "Result should not be nil")
+		testutil.AssertStringEquals(t, result.Created.ID, "123", "Created ID should match")
 	})
 
 	// Test Put success path
@@ -1128,7 +1138,7 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		defer mockServer.Close()
 
 		client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		ctx := context.Background()
 
@@ -1141,9 +1151,9 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		payload := map[string]string{"field": "value"}
 		result, err := Put[UpdateResponse](ctx, client, "/restconf/data/test", payload)
 
-		helper.AssertNoError(t, err, "Put should succeed")
-		helper.AssertTrue(t, result != nil, "Result should not be nil")
-		helper.AssertStringEquals(t, result.Updated.Status, "success", "Update status should match")
+		testutil.AssertNoError(t, err, "Put should succeed")
+		testutil.AssertTrue(t, result != nil, "Result should not be nil")
+		testutil.AssertStringEquals(t, result.Updated.Status, "success", "Update status should match")
 	})
 
 	// Test Patch success path
@@ -1156,7 +1166,7 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		defer mockServer.Close()
 
 		client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
-		helper.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertNoError(t, err, "Client creation should succeed")
 
 		ctx := context.Background()
 
@@ -1169,10 +1179,8 @@ func TestCoreClientUnit_SuccessPaths_Coverage(t *testing.T) {
 		payload := map[string]string{"patch": "data"}
 		result, err := Patch[PatchResponse](ctx, client, "/restconf/data/test", payload)
 
-		helper.AssertNoError(t, err, "Patch should succeed")
-		helper.AssertTrue(t, result != nil, "Result should not be nil")
-		helper.AssertStringEquals(t, result.Patched.Result, "ok", "Patch result should match")
+		testutil.AssertNoError(t, err, "Patch should succeed")
+		testutil.AssertTrue(t, result != nil, "Result should not be nil")
+		testutil.AssertStringEquals(t, result.Patched.Result, "ok", "Patch result should match")
 	})
 }
-
-// TestCoreClientUnit_AdditionalCoverage_EdgeCases provides additional coverage for edge cases.

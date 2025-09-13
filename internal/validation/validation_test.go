@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // ========================================
@@ -27,7 +27,7 @@ func TestValidationUnit_Constants_Success(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			helper.AssertIntEquals(t, tt.value, tt.expected, tt.name+" constant")
+			testutil.AssertIntEquals(t, tt.value, tt.expected, tt.name+" constant")
 		})
 	}
 }
@@ -54,7 +54,7 @@ func TestValidationUnit_ControllerValidation_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidController(tt.controller)
-			helper.AssertBoolEquals(t, result, tt.expected, "IsValidController for "+tt.controller)
+			testutil.AssertBoolEquals(t, result, tt.expected, "IsValidController for "+tt.controller)
 		})
 	}
 }
@@ -77,7 +77,7 @@ func TestValidationUnit_TokenValidation_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidAccessToken(tt.token)
-			helper.AssertBoolEquals(t, result, tt.expected, "IsValidAccessToken for "+tt.token)
+			testutil.AssertBoolEquals(t, result, tt.expected, "IsValidAccessToken for "+tt.token)
 		})
 	}
 }
@@ -101,7 +101,7 @@ func TestValidationUnit_TimeoutValidation_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsPositiveTimeout(tt.timeout)
-			helper.AssertBoolEquals(t, result, tt.expected, "IsPositiveTimeout for "+tt.timeout.String())
+			testutil.AssertBoolEquals(t, result, tt.expected, "IsPositiveTimeout for "+tt.timeout.String())
 		})
 	}
 }
@@ -125,7 +125,7 @@ func TestValidationUnit_ErrorTemplates_Success(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			helper.AssertStringEquals(t, tt.template, tt.expected, tt.name+" template")
+			testutil.AssertStringEquals(t, tt.template, tt.expected, tt.name+" template")
 		})
 	}
 }
@@ -134,35 +134,35 @@ func TestValidationUnit_ErrorTemplates_Success(t *testing.T) {
 func TestValidationUnit_BoundaryConditions_Success(t *testing.T) {
 	t.Run("ControllerValidation", func(t *testing.T) {
 		// Test empty string
-		helper.AssertBoolEquals(t, IsValidController(""), false, "empty controller should be invalid")
+		testutil.AssertBoolEquals(t, IsValidController(""), false, "empty controller should be invalid")
 
 		// Test single character
-		helper.AssertBoolEquals(t, IsValidController("a"), true, "single character controller should be valid")
+		testutil.AssertBoolEquals(t, IsValidController("a"), true, "single character controller should be valid")
 
 		// Test with spaces
-		helper.AssertBoolEquals(t, IsValidController("test host"), true, "controller with spaces should be valid")
+		testutil.AssertBoolEquals(t, IsValidController("test host"), true, "controller with spaces should be valid")
 	})
 
 	t.Run("AccessTokenValidation", func(t *testing.T) {
 		// Test empty string
-		helper.AssertBoolEquals(t, IsValidAccessToken(""), false, "empty token should be invalid")
+		testutil.AssertBoolEquals(t, IsValidAccessToken(""), false, "empty token should be invalid")
 
 		// Test single character
-		helper.AssertBoolEquals(t, IsValidAccessToken("a"), true, "single character token should be valid")
+		testutil.AssertBoolEquals(t, IsValidAccessToken("a"), true, "single character token should be valid")
 	})
 
 	t.Run("TimeoutValidation", func(t *testing.T) {
 		// Test exactly at threshold
 		threshold := time.Duration(ValidationTimeoutThreshold) * time.Second
-		helper.AssertBoolEquals(t, IsPositiveTimeout(threshold), false, "timeout at threshold should be invalid")
+		testutil.AssertBoolEquals(t, IsPositiveTimeout(threshold), false, "timeout at threshold should be invalid")
 
 		// Test just above threshold
 		justAbove := threshold + time.Nanosecond
-		helper.AssertBoolEquals(t, IsPositiveTimeout(justAbove), true, "timeout just above threshold should be valid")
+		testutil.AssertBoolEquals(t, IsPositiveTimeout(justAbove), true, "timeout just above threshold should be valid")
 
 		// Test very large timeout
 		largeTimeout := 24 * time.Hour
-		helper.AssertBoolEquals(t, IsPositiveTimeout(largeTimeout), true, "very large timeout should be valid")
+		testutil.AssertBoolEquals(t, IsPositiveTimeout(largeTimeout), true, "very large timeout should be valid")
 	})
 }
 
@@ -191,9 +191,9 @@ func TestValidationUnit_MACValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateMACAddress(tt.macAddr)
 			if tt.valid {
-				helper.AssertNoError(t, err, "MAC address "+tt.macAddr+" should be valid")
+				testutil.AssertNoError(t, err, "MAC address "+tt.macAddr+" should be valid")
 			} else {
-				helper.AssertError(t, err, "MAC address "+tt.macAddr+" should be invalid")
+				testutil.AssertError(t, err, "MAC address "+tt.macAddr+" should be invalid")
 			}
 		})
 	}
@@ -216,8 +216,27 @@ func TestValidationUnit_MACNormalization_Success(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			result := NormalizeMACAddress(tt.input)
-			helper.AssertStringEquals(t, result, tt.expected, "NormalizeMACAddress for "+tt.input)
+			result, err := NormalizeMACAddress(tt.input)
+			testutil.AssertNoError(t, err, "NormalizeMACAddress should not return error for "+tt.input)
+			testutil.AssertStringEquals(t, result, tt.expected, "NormalizeMACAddress for "+tt.input)
+		})
+	}
+
+	// Test error cases
+	errorCases := []struct {
+		name  string
+		input string
+	}{
+		{"EmptyString", ""},
+		{"TooShort", "00:11:22:33:44"},
+		{"TooLong", "00:11:22:33:44:55:66"},
+		{"InvalidHex", "00:11:22:33:44:5z"},
+	}
+
+	for _, tt := range errorCases {
+		t.Run("Error_"+tt.name, func(t *testing.T) {
+			_, err := NormalizeMACAddress(tt.input)
+			testutil.AssertError(t, err, "NormalizeMACAddress should return error for "+tt.input)
 		})
 	}
 }
@@ -242,10 +261,10 @@ func TestValidationUnit_StringValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateNonEmptyString(tt.input, tt.fieldName)
 			if tt.valid {
-				helper.AssertNoError(t, err, "string \""+tt.input+"\" should be valid")
+				testutil.AssertNoError(t, err, "string \""+tt.input+"\" should be valid")
 			} else {
-				helper.AssertError(t, err, "string \""+tt.input+"\" should be invalid")
-				helper.AssertStringContains(t, err.Error(), tt.fieldName, "error should contain field name")
+				testutil.AssertError(t, err, "string \""+tt.input+"\" should be invalid")
+				testutil.AssertStringContains(t, err.Error(), tt.fieldName, "error should contain field name")
 			}
 		})
 	}
@@ -270,7 +289,7 @@ func TestValidationUnit_TimeoutCheck_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidTimeout(tt.timeout)
-			helper.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsValidTimeout(%v)", tt.timeout))
+			testutil.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsValidTimeout(%v)", tt.timeout))
 		})
 	}
 }
@@ -294,7 +313,7 @@ func TestValidationUnit_NonEmptyStringCheck_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsNonEmptyString(tt.input)
-			helper.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.input))
+			testutil.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.input))
 		})
 	}
 }
@@ -317,7 +336,7 @@ func TestValidationUnit_MACFormatCheck_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidMACAddr(tt.mac)
-			helper.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsValidMACAddr(%q)", tt.mac))
+			testutil.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsValidMACAddr(%q)", tt.mac))
 		})
 	}
 }
@@ -339,7 +358,7 @@ func TestValidationUnit_TagValidation_Success(t *testing.T) {
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				result := IsNonEmptyString(tt.tag)
-				helper.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.tag))
+				testutil.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.tag))
 			})
 		}
 	})
@@ -359,7 +378,7 @@ func TestValidationUnit_TagValidation_Success(t *testing.T) {
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				result := IsNonEmptyString(tt.tag)
-				helper.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.tag))
+				testutil.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.tag))
 			})
 		}
 	})
@@ -379,7 +398,7 @@ func TestValidationUnit_TagValidation_Success(t *testing.T) {
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				result := IsNonEmptyString(tt.tag)
-				helper.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.tag))
+				testutil.AssertBoolEquals(t, result, tt.expected, fmt.Sprintf("IsNonEmptyString(%q)", tt.tag))
 			})
 		}
 	})
@@ -403,9 +422,9 @@ func TestValidationUnit_SlotIDValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateSlotID(tt.slotID)
 			if tt.wantErr {
-				helper.AssertError(t, err, fmt.Sprintf("ValidateSlotID(%d)", tt.slotID))
+				testutil.AssertError(t, err, fmt.Sprintf("ValidateSlotID(%d)", tt.slotID))
 			} else {
-				helper.AssertNoError(t, err, fmt.Sprintf("ValidateSlotID(%d)", tt.slotID))
+				testutil.AssertNoError(t, err, fmt.Sprintf("ValidateSlotID(%d)", tt.slotID))
 			}
 		})
 	}
@@ -430,9 +449,9 @@ func TestValidationUnit_SpatialStreamValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateSpatialStream(tt.stream)
 			if tt.wantErr {
-				helper.AssertError(t, err, fmt.Sprintf("ValidateSpatialStream(%d)", tt.stream))
+				testutil.AssertError(t, err, fmt.Sprintf("ValidateSpatialStream(%d)", tt.stream))
 			} else {
-				helper.AssertNoError(t, err, fmt.Sprintf("ValidateSpatialStream(%d)", tt.stream))
+				testutil.AssertNoError(t, err, fmt.Sprintf("ValidateSpatialStream(%d)", tt.stream))
 			}
 		})
 	}
@@ -455,9 +474,9 @@ func TestValidationUnit_WlanIDValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateWlanID(tt.wlanID)
 			if tt.wantErr {
-				helper.AssertError(t, err, fmt.Sprintf("ValidateWlanID(%q)", tt.wlanID))
+				testutil.AssertError(t, err, fmt.Sprintf("ValidateWlanID(%q)", tt.wlanID))
 			} else {
-				helper.AssertNoError(t, err, fmt.Sprintf("ValidateWlanID(%q)", tt.wlanID))
+				testutil.AssertNoError(t, err, fmt.Sprintf("ValidateWlanID(%q)", tt.wlanID))
 			}
 		})
 	}
@@ -479,9 +498,9 @@ func TestValidationUnit_RogueAddressValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateMACAddress(tt.address)
 			if tt.wantErr {
-				helper.AssertError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
+				testutil.AssertError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
 			} else {
-				helper.AssertNoError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
+				testutil.AssertNoError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
 			}
 		})
 	}
@@ -503,9 +522,9 @@ func TestValidationUnit_RogueClientAddressValidation_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateMACAddress(tt.address)
 			if tt.wantErr {
-				helper.AssertError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
+				testutil.AssertError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
 			} else {
-				helper.AssertNoError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
+				testutil.AssertNoError(t, err, fmt.Sprintf("ValidateMACAddress(%q)", tt.address))
 			}
 		})
 	}
@@ -516,53 +535,53 @@ func TestValidationUnit_DirectGoIdioms_Success(t *testing.T) {
 	t.Run("DirectNilCheck", func(t *testing.T) {
 		var nilInterface interface{} = nil
 		result := nilInterface == nil
-		helper.AssertBoolEquals(t, result, true, "nilInterface == nil")
+		testutil.AssertBoolEquals(t, result, true, "nilInterface == nil")
 
 		notNilString := "not nil"
 		result = notNilString == ""
-		helper.AssertBoolEquals(t, result, false, "notNilString is not empty")
+		testutil.AssertBoolEquals(t, result, false, "notNilString is not empty")
 
 		// Note: typed nil pointers are not nil in Go interface comparison
 		var nilPointer *int
 		result = nilPointer == nil
-		helper.AssertBoolEquals(t, result, true, "nilPointer == nil")
+		testutil.AssertBoolEquals(t, result, true, "nilPointer == nil")
 	})
 
 	t.Run("DirectErrorCheck", func(t *testing.T) {
 		var err error = nil
 		result := err != nil
-		helper.AssertBoolEquals(t, result, false, "err != nil with nil error")
+		testutil.AssertBoolEquals(t, result, false, "err != nil with nil error")
 
 		err = errors.New("test error")
 		result = err != nil
-		helper.AssertBoolEquals(t, result, true, "err != nil with actual error")
+		testutil.AssertBoolEquals(t, result, true, "err != nil with actual error")
 	})
 
 	t.Run("DirectValidityCheck", func(t *testing.T) {
 		response := "response"
 		var err error = nil
 		result := response != "" && err == nil
-		helper.AssertBoolEquals(t, result, true, "response != \"\" && err == nil")
+		testutil.AssertBoolEquals(t, result, true, "response != \"\" && err == nil")
 
 		response = ""
 		err = nil
 		result = response != "" && err == nil
-		helper.AssertBoolEquals(t, result, false, "empty response fails validity check")
+		testutil.AssertBoolEquals(t, result, false, "empty response fails validity check")
 
 		response = "response"
 		err = errors.New("error")
 		result = response != "" && err == nil
-		helper.AssertBoolEquals(t, result, false, "response with error fails validity check")
+		testutil.AssertBoolEquals(t, result, false, "response with error fails validity check")
 	})
 
 	t.Run("DirectFieldComparison", func(t *testing.T) {
 		// Test literal equality comparison
 		testString := "test"
 		result := testString == "test"
-		helper.AssertBoolEquals(t, result, true, "\"test\" == \"test\"")
+		testutil.AssertBoolEquals(t, result, true, "\"test\" == \"test\"")
 
 		result = "test" == "different"
-		helper.AssertBoolEquals(t, result, false, "\"test\" == \"different\"")
+		testutil.AssertBoolEquals(t, result, false, "\"test\" == \"different\"")
 	})
 }
 
@@ -587,7 +606,7 @@ func TestValidationUnit_CompositeValidation_Success(t *testing.T) {
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				result := HasValidTags(tt.siteTag, tt.policyTag, tt.rfTag)
-				helper.AssertBoolEquals(t, result, tt.expected,
+				testutil.AssertBoolEquals(t, result, tt.expected,
 					fmt.Sprintf("HasValidTags(%q, %q, %q)", tt.siteTag, tt.policyTag, tt.rfTag))
 			})
 		}
@@ -609,7 +628,7 @@ func TestValidationUnit_CompositeValidation_Success(t *testing.T) {
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				result := HasValidMACOrName(tt.apMac, tt.apName)
-				helper.AssertBoolEquals(t, result, tt.expected,
+				testutil.AssertBoolEquals(t, result, tt.expected,
 					fmt.Sprintf("HasValidMACOrName(%q, %q)", tt.apMac, tt.apName))
 			})
 		}
@@ -631,7 +650,7 @@ func TestValidationUnit_CompositeValidation_Success(t *testing.T) {
 		for _, tt := range testCases {
 			t.Run(tt.name, func(t *testing.T) {
 				result := HasEitherMACOrName(tt.apMac, tt.apName)
-				helper.AssertBoolEquals(t, result, tt.expected,
+				testutil.AssertBoolEquals(t, result, tt.expected,
 					fmt.Sprintf("HasEitherMACOrName(%q, %q)", tt.apMac, tt.apName))
 			})
 		}
@@ -655,7 +674,7 @@ func TestValidationUnit_SelectNonEmptyValue_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := SelectNonEmptyValue(tt.primary, tt.defaultValue)
-			helper.AssertStringEquals(t, result, tt.expected,
+			testutil.AssertStringEquals(t, result, tt.expected,
 				fmt.Sprintf("SelectNonEmptyValue(%q, %q)", tt.primary, tt.defaultValue))
 		})
 	}
@@ -680,7 +699,7 @@ func TestValidationUnit_TagAssignmentValidation_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			result := IsValidTagAssignment(tt.tagValue, tt.tagType)
-			helper.AssertBoolEquals(t, result, tt.expected,
+			testutil.AssertBoolEquals(t, result, tt.expected,
 				fmt.Sprintf("IsValidTagAssignment(%q, %q)", tt.tagValue, tt.tagType))
 		})
 	}
@@ -700,7 +719,7 @@ func TestValidationUnit_DefaultTagConstants_Success(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			helper.AssertStringEquals(t, tt.constant, tt.expected, tt.name)
+			testutil.AssertStringEquals(t, tt.constant, tt.expected, tt.name)
 		})
 	}
 }

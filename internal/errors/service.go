@@ -1,4 +1,3 @@
-// Package errors provides service-specific error patterns and utilities.
 package errors
 
 import "fmt"

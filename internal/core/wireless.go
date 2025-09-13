@@ -1,4 +1,3 @@
-// Package core provides radio-related helper functions and constants.
 package core
 
 import (

@@ -1,4 +1,3 @@
-// Package validation provides common validation functions for the Cisco Wireless Network Controller client.
 package validation
 
 import (
@@ -97,29 +96,32 @@ func IsStringEmpty(str string) bool {
 
 // MAC address validation functions
 
-// ValidateMACAddress validates MAC address format
+// ValidateMACAddress validates MAC address format.
 // MAC address can be formatted as aa:bb:cc:dd:ee:ff, aa-bb-cc-dd-ee-ff, or aabbccddeeff.
 func ValidateMACAddress(mac string) error {
 	normalized := normalizeMACAddress(mac)
 
 	if len(normalized) != MACAddressHexCharLength {
-		return fmt.Errorf("MAC address must be %d hex characters", MACAddressHexCharLength)
+		return fmt.Errorf("MAC address must be %d hex characters, got %d", MACAddressHexCharLength, len(normalized))
 	}
 
 	for _, c := range normalized {
 		if (c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F') {
-			return fmt.Errorf("MAC address validation failed: %w",
-				fmt.Errorf("invalid hexadecimal character '%c' in address %s", c, mac))
+			return fmt.Errorf("invalid hexadecimal character '%c' in MAC address %s", c, mac)
 		}
 	}
 
 	return nil
 }
 
-// NormalizeMACAddress normalizes MAC address to colon-separated format (aa:bb:cc:dd:ee:ff).
-func NormalizeMACAddress(mac string) string {
-	normalized := strings.ToLower(normalizeMACAddress(mac))
+// NormalizeMACAddress validates and normalizes MAC address to colon-separated format (aa:bb:cc:dd:ee:ff).
+// Returns normalized MAC address and validation error if invalid.
+func NormalizeMACAddress(mac string) (string, error) {
+	if err := ValidateMACAddress(mac); err != nil {
+		return "", err
+	}
 
+	normalized := strings.ToLower(normalizeMACAddress(mac))
 	var result strings.Builder
 	for i := 0; i < len(normalized); i += 2 {
 		if i > 0 {
@@ -128,7 +130,7 @@ func NormalizeMACAddress(mac string) string {
 		result.WriteString(normalized[i : i+2])
 	}
 
-	return result.String()
+	return result.String(), nil
 }
 
 // normalizeMACAddress removes all separators from MAC address.
