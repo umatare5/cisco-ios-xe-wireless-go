@@ -1,4 +1,4 @@
-// Package testutil provides public testing utilities for the Cisco IOS-XE Wireless Go client library.
+// Package testutil provides public testing utilities for the Cisco IOS-XE Wireless Go client SDK.
 //
 // This package offers mock RESTCONF servers (NewMockServer, NewMockErrorServer) and test client
 // abstractions (NewTestClient) for service layer testing. It provides interface-based abstractions
