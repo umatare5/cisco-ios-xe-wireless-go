@@ -1,4 +1,3 @@
-// Package restconf provides RESTCONF URL building utilities for the WNC client.
 package restconf
 
 import (

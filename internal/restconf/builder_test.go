@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 func TestRESTCONFBuilderUnit_NewBuilder_Success(t *testing.T) {
@@ -13,10 +13,10 @@ func TestRESTCONFBuilderUnit_NewBuilder_Success(t *testing.T) {
 
 	builder := NewBuilder(protocol, controller)
 
-	helper.AssertNotNil(t, builder, "NewBuilder result")
+	testutil.AssertNotNil(t, builder, "NewBuilder result")
 
-	helper.AssertStringEquals(t, builder.protocol, protocol, "protocol")
-	helper.AssertStringEquals(t, builder.controller, controller, "controller")
+	testutil.AssertStringEquals(t, builder.protocol, protocol, "protocol")
+	testutil.AssertStringEquals(t, builder.controller, controller, "controller")
 }
 
 func TestRESTCONFBuilderUnit_buildBaseURL_Success(t *testing.T) {
@@ -35,7 +35,7 @@ func TestRESTCONFBuilderUnit_buildBaseURL_Success(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			builder := NewBuilder(tt.protocol, tt.controller)
 			baseURL := builder.buildBaseURL()
-			helper.AssertStringEquals(t, baseURL, tt.expected, "buildBaseURL()")
+			testutil.AssertStringEquals(t, baseURL, tt.expected, "buildBaseURL()")
 		})
 	}
 }
@@ -68,12 +68,17 @@ func TestRESTCONFBuilderUnit_BuildDataURL_Success(t *testing.T) {
 			"/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces",
 			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces",
 		},
+		{
+			"endpoint already with restconf data path",
+			"/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data",
+			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data",
+		},
 	}
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			url := builder.BuildDataURL(tt.endpointPath)
-			helper.AssertStringEquals(t, url, tt.expected, "BuildDataURL()")
+			testutil.AssertStringEquals(t, url, tt.expected, "BuildDataURL()")
 		})
 	}
 }
@@ -96,7 +101,7 @@ func TestRESTCONFBuilderUnit_NormalizeEndpointPath_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			normalized := builder.normalizeEndpointPath(tt.path)
-			helper.AssertStringEquals(t, normalized, tt.expected, "normalizeEndpointPath()")
+			testutil.AssertStringEquals(t, normalized, tt.expected, "normalizeEndpointPath()")
 		})
 	}
 }
@@ -118,21 +123,21 @@ func TestRESTCONFBuilderUnit_isValidProtocol_Success(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.protocol, func(t *testing.T) {
 			result := isValidProtocol(tt.protocol)
-			helper.AssertBoolEquals(t, result, tt.expected, "isValidProtocol()")
+			testutil.AssertBoolEquals(t, result, tt.expected, "isValidProtocol()")
 		})
 	}
 }
 
 func TestRESTCONFBuilderUnit_Constants_Success(t *testing.T) {
 	// Test RESTCONF constants
-	helper.AssertStringEquals(t, routes.RESTCONFDataPath, "/restconf/data", "RESTCONFDataPath")
+	testutil.AssertStringEquals(t, routes.RESTCONFDataPath, "/restconf/data", "RESTCONFDataPath")
 
 	// Test protocol constants
-	helper.AssertStringEquals(t, ProtocolHTTP, "http", "ProtocolHTTP")
+	testutil.AssertStringEquals(t, ProtocolHTTP, "http", "ProtocolHTTP")
 
-	helper.AssertStringEquals(t, ProtocolHTTPS, "https", "ProtocolHTTPS")
+	testutil.AssertStringEquals(t, ProtocolHTTPS, "https", "ProtocolHTTPS")
 
-	helper.AssertStringEquals(t, DefaultProtocol, ProtocolHTTPS, "DefaultProtocol")
+	testutil.AssertStringEquals(t, DefaultProtocol, ProtocolHTTPS, "DefaultProtocol")
 }
 
 // TestBuildOperationsURL tests RPC URL construction.
@@ -169,7 +174,7 @@ func TestRESTCONFBuilderUnit_BuildOperationsURL_Success(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := builder.BuildOperationsURL(tt.rpcPath)
-			helper.AssertStringEquals(t, result, tt.expected, "BuildOperationsURL()")
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildOperationsURL()")
 		})
 	}
 }
@@ -211,7 +216,7 @@ func TestRESTCONFBuilderUnit_BuildPathQueryURL_Success(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := builder.BuildPathQueryURL(tt.endpoint, tt.key, tt.value)
-			helper.AssertStringEquals(t, result, tt.expected, "BuildPathQueryURL()")
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildPathQueryURL()")
 		})
 	}
 }
@@ -249,7 +254,7 @@ func TestRESTCONFBuilderUnit_BuildQueryURL_Success(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := builder.BuildQueryURL(tt.endpoint, tt.identifier)
-			helper.AssertStringEquals(t, result, tt.expected, "BuildQueryURL()")
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildQueryURL()")
 		})
 	}
 }
@@ -288,12 +293,36 @@ func TestRESTCONFBuilderUnit_BuildQueryCompositeURL_Success(t *testing.T) {
 			values:   []interface{}{},
 			expected: "empty=",
 		},
+		{
+			name:     "Int64 values",
+			endpoint: "int64-test",
+			values:   []interface{}{int64(123456789)},
+			expected: "int64-test=123456789",
+		},
+		{
+			name:     "Float64 values",
+			endpoint: "float64-test",
+			values:   []interface{}{float64(123.456)},
+			expected: "float64-test=123.456",
+		},
+		{
+			name:     "Bool values",
+			endpoint: "bool-test",
+			values:   []interface{}{true, false},
+			expected: "bool-test=true,false",
+		},
+		{
+			name:     "Custom type fallback",
+			endpoint: "custom-test",
+			values:   []interface{}{struct{ Name string }{"test"}},
+			expected: "custom-test={test}",
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := builder.BuildQueryCompositeURL(tt.endpoint, tt.values...)
-			helper.AssertStringEquals(t, result, tt.expected, "BuildQueryCompositeURL()")
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildQueryCompositeURL()")
 		})
 	}
 }
