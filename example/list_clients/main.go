@@ -1,4 +1,4 @@
-//go:build sample
+//go:build example
 
 // Package main in example/list_clients demonstrates how to list wireless clients (MAC and IP addresses) managed by a Cisco IOS-XE Wireless Network Controller.
 package main

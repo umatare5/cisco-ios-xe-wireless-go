@@ -1,6 +1,6 @@
-//go:build sample
+//go:build example
 
-// Package main in example/count_aps demonstrates how to list access points managed by a Cisco IOS-XE Wireless Network Controller.
+// Package main in example/list_aps demonstrates how to list access points managed by a Cisco IOS-XE Wireless Network Controller.
 package main
 
 import (
@@ -43,7 +43,7 @@ func run(controller, token string, logger *slog.Logger) ([]APInfo, error) {
 
 	var aps []APInfo
 
-	// Create maps for quick lookups
+	// Create map for AP MAC to Name lookup
 	nameMap := make(map[string]string)
 	for _, nameMapping := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.ApNameMacMap {
 		nameMap[nameMapping.WtpMac] = nameMapping.WtpName
@@ -57,11 +57,7 @@ func run(controller, token string, logger *slog.Logger) ([]APInfo, error) {
 		}
 
 		// Get AP name from the name map
-		if name, exists := nameMap[capwapData.WtpMac]; exists && name != "" {
-			apInfo.Name = name
-		} else {
-			apInfo.Name = "N/A"
-		}
+		apInfo.Name = nameMap[capwapData.WtpMac]
 
 		// Get status from AP state
 		if capwapData.ApState.ApOperationState != "" {
@@ -121,10 +117,10 @@ func start() int {
 		slog.Int("ap_count", len(aps)))
 
 	fmt.Printf("Successfully connected! Found %d APs\n\n", len(aps))
-	fmt.Println("MAC Address           | AP Name                | IP Address      | Status")
-	fmt.Println("----------------------|------------------------|-----------------|-----------------")
+	fmt.Println("AP Name           | MAC Address         | IP Address       | Status")
+	fmt.Println("------------------|---------------------|------------------|-----------------")
 	for _, ap := range aps {
-		fmt.Printf("%-21s | %-22s | %-15s | %s\n", ap.MAC, ap.Name, ap.IP, ap.Status)
+		fmt.Printf("%-17s | %-19s | %-16s | %-15s\n", ap.Name, ap.MAC, ap.IP, ap.Status)
 	}
 
 	return 0

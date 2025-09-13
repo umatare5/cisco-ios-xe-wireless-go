@@ -1,4 +1,4 @@
-//go:build sample
+//go:build example
 
 // Package main in example/reload_controller demonstrates how to restart a Cisco IOS-XE Wireless Network Controller using the provided Go client library.
 package main
@@ -12,13 +12,12 @@ import (
 	"time"
 
 	wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/transport"
 )
 
 const (
 	// Safety constants
-	defaultTimeout       = transport.QuickTimeout
-	defaultClientTimeout = transport.QuickTimeout
+	defaultTimeout       = 30 * time.Second
+	defaultClientTimeout = 30 * time.Second
 	confirmationPrompt   = "This will restart the WNC controller. Type 'YES' to confirm: "
 
 	// Environment variables

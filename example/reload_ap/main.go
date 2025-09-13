@@ -1,4 +1,4 @@
-//go:build sample
+//go:build example
 
 // Package main in example/reload_ap demonstrates how to restart an access point managed by a Cisco IOS-XE Wireless Network Controller.
 package main
