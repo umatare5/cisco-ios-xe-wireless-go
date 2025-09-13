@@ -7,9 +7,8 @@ import (
 	"time"
 
 	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rf"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rf"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/scenario"
 )
 
 // Test constants
@@ -30,72 +29,75 @@ func generateTestRFTagName() string {
 // TestRFTagScenario executes a comprehensive scenario test for RF tag management.
 func TestRFTagServiceScenario_TagLifecycleManagement_Success(t *testing.T) {
 	// Initialize scenario context
-	tsc, skip := client.InitializeTagScenario(t, generateTestRFTagName)
-	if skip {
-		return
-	}
+	tsc := scenario.SetupTag(t, generateTestRFTagName)
 
 	// Initialize service
 	service := rf.NewRFTagService(tsc.Client)
-
-	// Cleanup on exit
-	defer tsc.CreateCleanupFunction(service.DeleteRFTag)()
 
 	// Execute standard 6-step workflow
 	executeStandardRFTagWorkflow(t, tsc, service)
 }
 
 // executeStandardRFTagWorkflow performs the standard RF tag scenario
-func executeStandardRFTagWorkflow(t *testing.T, tsc *client.TagScenarioContext, service *rf.RFTagService) {
-	// Step 1: List initial tags
-	initialTags := client.ExecuteStepWithResult(tsc, client.StepInitialList,
-		"Getting initial RF tags list", func() ([]model.RfTag, error) {
-			return service.ListRFTags(tsc.Ctx)
-		})
-	initialCount := len(initialTags)
-	tsc.SetInitialCount(initialCount)
+func executeStandardRFTagWorkflow(t *testing.T, tsc *scenario.TagContext, service *rf.RFTagService) {
+	// Step 1: List initial tags and set count
+	t.Logf("Step 1: Getting initial RF tags list")
+	if err := tsc.SetInitialCount(func() (int, error) {
+		tags, err := service.ListRFTags(tsc.Ctx)
+		return len(tags), err
+	}); err != nil {
+		t.Fatalf("Failed to get initial RF tags count: %v", err)
+	}
 
 	// Step 2: Create test tag
-	tsc.ExecuteStep(client.StepCreate, "Creating test RF tag", func() error {
-		return service.CreateRFTag(tsc.Ctx, &model.RfTag{
-			TagName:     tsc.TestTagName,
-			Description: expectedRFTagDescription,
-		})
-	})
-	tsc.LogSuccess("created")
+	t.Logf("Step 2: Creating test RF tag: %s", tsc.TestTagName)
+	if err := service.CreateRFTag(tsc.Ctx, &model.RfTag{
+		TagName:     tsc.TestTagName,
+		Description: expectedRFTagDescription,
+	}); err != nil {
+		t.Fatalf("Failed to create RF tag %s: %v", tsc.TestTagName, err)
+	}
+	t.Logf("Successfully created RF tag: %s", tsc.TestTagName)
 
 	// Step 3: Configure RF profiles
-	tsc.ExecuteStep(client.StepConfigure, "Configuring RF profiles for test tag", func() error {
-		return configureRFTagProfiles(t, tsc, service)
-	})
-	tsc.LogSuccess("configured")
+	t.Logf("Step 3: Configuring RF profiles for test tag: %s", tsc.TestTagName)
+	if err := configureRFTagProfiles(t, tsc, service); err != nil {
+		t.Fatalf("Failed to configure RF tag profiles for %s: %v", tsc.TestTagName, err)
+	}
+	t.Logf("Successfully configured RF tag: %s", tsc.TestTagName)
 
 	// Step 4: Get and validate configuration
-	retrievedConfig := client.ExecuteStepWithResult(tsc, client.StepGet,
-		"Getting configuration for test tag", func() (*model.RfTag, error) {
-			return service.GetRFTag(tsc.Ctx, tsc.TestTagName)
-		})
+	t.Logf("Step 4: Getting configuration for test tag: %s", tsc.TestTagName)
+	retrievedConfig, err := service.GetRFTag(tsc.Ctx, tsc.TestTagName)
+	if err != nil {
+		t.Fatalf("Failed to retrieve RF tag configuration for %s: %v", tsc.TestTagName, err)
+	}
 	validateRFTagConfig(t, tsc, retrievedConfig)
-	tsc.LogSuccess("validated")
+	t.Logf("Successfully validated RF tag: %s", tsc.TestTagName)
 
 	// Step 5: Delete test tag
-	tsc.ExecuteDeleteStep("Deleting test RF tag", func() error {
-		return service.DeleteRFTag(tsc.Ctx, tsc.TestTagName)
-	})
-	tsc.LogSuccess("deleted")
+	t.Logf("Step 5: Deleting RF tag: %s", tsc.TestTagName)
+	if err := service.DeleteRFTag(tsc.Ctx, tsc.TestTagName); err != nil {
+		t.Fatalf("Failed to delete RF tag %s: %v", tsc.TestTagName, err)
+	}
+	tsc.MarkTagDeleted()
+	t.Logf("Successfully deleted RF tag: %s", tsc.TestTagName)
 
-	// Step 6: Verify deletion
-	finalTags := client.ExecuteStepWithResult(tsc, client.StepFinalList,
-		"Getting final RF tags list", func() ([]model.RfTag, error) {
-			return service.ListRFTags(tsc.Ctx)
-		})
-	finalCount := len(finalTags)
+	// Step 6: Verify final tag count
+	t.Logf("Step 6: Verifying final RF tags list")
+	finalTags, err := service.ListRFTags(tsc.Ctx)
+	if err != nil {
+		t.Fatalf("Failed to list final RF tags: %v", err)
+	}
 	validateRFTagDeletion(t, tsc.TestTagName, finalTags)
-	tsc.ValidateTagCount(finalCount)
+	tsc.ValidateTagCount(func() (int, error) {
+		tags, err := service.ListRFTags(tsc.Ctx)
+		return len(tags), err
+	}, len(finalTags))
 }
 
 // configureRFTagProfiles sets up RF profiles for the test tag
-func configureRFTagProfiles(t *testing.T, tsc *client.TagScenarioContext, service *rf.RFTagService) error {
+func configureRFTagProfiles(t *testing.T, tsc *scenario.TagContext, service *rf.RFTagService) error {
 	// Configure 2.4GHz profile
 	if err := service.SetDot11BRfProfile(tsc.Ctx, tsc.TestTagName, testRF24GHzProfile); err != nil {
 		return err
@@ -115,18 +117,28 @@ func configureRFTagProfiles(t *testing.T, tsc *client.TagScenarioContext, servic
 }
 
 // validateRFTagConfig validates the retrieved RF tag configuration
-func validateRFTagConfig(t *testing.T, tsc *client.TagScenarioContext, config *model.RfTag) {
-	client.ValidateConfigNotNil(t, config, tsc.TestTagName)
-	client.ValidateCommonTagFields(t, tsc.TestTagName, expectedRFTagDescription,
-		config.TagName, config.Description)
+func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *model.RfTag) {
+	if config == nil {
+		t.Fatalf("Expected RF tag configuration for %s, but got nil", tsc.TestTagName)
+	}
 
-	// Validate 2.4GHz profile using standardized assertion
-	helper.AssertStringEquals(t, config.Dot11BRfProfileName, testRF24GHzProfile,
-		"2.4GHz RF profile validation")
+	if config.TagName != tsc.TestTagName {
+		t.Errorf("Expected tag name %s, got %s", tsc.TestTagName, config.TagName)
+	}
 
-	// Validate 5GHz profile using standardized assertion
-	helper.AssertStringEquals(t, config.Dot11ARfProfileName, testRF5GHzProfile,
-		"5GHz RF profile validation")
+	if config.Description != expectedRFTagDescription {
+		t.Errorf("Expected description %s, got %s", expectedRFTagDescription, config.Description)
+	}
+
+	// Validate 2.4GHz profile
+	if config.Dot11BRfProfileName != testRF24GHzProfile {
+		t.Errorf("2.4GHz RF profile validation: expected '%s', got '%s'", testRF24GHzProfile, config.Dot11BRfProfileName)
+	}
+
+	// Validate 5GHz profile
+	if config.Dot11ARfProfileName != testRF5GHzProfile {
+		t.Errorf("5GHz RF profile validation: expected '%s', got '%s'", testRF5GHzProfile, config.Dot11ARfProfileName)
+	}
 
 	// Validate 6GHz profile (may be empty in some environments)
 	if config.Dot116GhzRfProfName != testRF6GHzProfile {

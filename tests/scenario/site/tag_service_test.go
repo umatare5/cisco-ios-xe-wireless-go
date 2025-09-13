@@ -7,8 +7,8 @@ import (
 	"time"
 
 	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/site"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/client"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/site"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/scenario"
 )
 
 // Test constants
@@ -28,71 +28,78 @@ func generateTestSiteTagName() string {
 // TestSiteTagScenario executes a comprehensive scenario test for site tag management.
 func TestSiteTagServiceScenario_TagLifecycleManagement_Success(t *testing.T) {
 	// Initialize scenario context
-	tsc, skip := client.InitializeTagScenario(t, generateTestSiteTagName)
-	if skip {
-		return
-	}
+	tsc := scenario.SetupTag(t, generateTestSiteTagName)
 
 	// Initialize service
 	service := site.NewSiteTagService(tsc.Client)
-
-	// Cleanup on exit
-	defer tsc.CreateCleanupFunction(service.DeleteSiteTag)()
 
 	// Execute standard 6-step workflow
 	executeStandardSiteTagWorkflow(t, tsc, service)
 }
 
 // executeStandardSiteTagWorkflow performs the standard site tag scenario
-func executeStandardSiteTagWorkflow(t *testing.T, tsc *client.TagScenarioContext, service *site.SiteTagService) {
-	// Step 1: List initial tags
-	initialTags := client.ExecuteStepWithResult(tsc, client.StepInitialList,
-		"Getting current site tags list", func() ([]model.SiteListEntry, error) {
-			return service.ListSiteTags(tsc.Ctx)
-		})
-	tsc.SetInitialCount(len(initialTags))
+func executeStandardSiteTagWorkflow(t *testing.T, tsc *scenario.TagContext, service *site.SiteTagService) {
+	// Step 1: List initial tags and set count
+	t.Logf("Step 1: Getting current site tags list")
+	if err := tsc.SetInitialCount(func() (int, error) {
+		tags, err := service.ListSiteTags(tsc.Ctx)
+		return len(tags), err
+	}); err != nil {
+		t.Fatalf("Failed to get initial site tags count: %v", err)
+	}
 
 	// Step 2: Create test tag
-	tsc.ExecuteStep(client.StepCreate, "Creating test site tag", func() error {
-		description := expectedSiteTagDescription
-		return service.CreateSiteTag(tsc.Ctx, &model.SiteListEntry{
-			SiteTagName: tsc.TestTagName,
-			Description: &description,
-		})
-	})
-	tsc.LogSuccess("created")
+	t.Logf("Step 2: Creating test site tag: %s", tsc.TestTagName)
+	description := expectedSiteTagDescription
+	if err := service.CreateSiteTag(tsc.Ctx, &model.SiteListEntry{
+		SiteTagName: tsc.TestTagName,
+		Description: &description,
+	}); err != nil {
+		t.Fatalf("Failed to create site tag %s: %v", tsc.TestTagName, err)
+	}
+	t.Logf("Successfully created site tag: %s", tsc.TestTagName)
 
 	// Step 3: Configure site profiles
-	tsc.ExecuteStep(client.StepConfigure, "Setting profiles for test tag", func() error {
-		return configureSiteTagProfiles(t, tsc, service)
-	})
-	tsc.LogSuccess("configured")
+	t.Logf("Step 3: Setting profiles for test tag: %s", tsc.TestTagName)
+	if err := configureSiteTagProfiles(t, tsc, service); err != nil {
+		t.Fatalf("Failed to configure site tag profiles for %s: %v", tsc.TestTagName, err)
+	}
+	t.Logf("Successfully configured site tag: %s", tsc.TestTagName)
 
 	// Step 4: Get and validate configuration
-	retrievedConfig := client.ExecuteStepWithResult(tsc, client.StepGet,
-		"Getting configuration for test tag", func() (*model.SiteListEntry, error) {
-			return service.GetSiteTag(tsc.Ctx, tsc.TestTagName)
-		})
+	t.Logf("Step 4: Getting configuration for test tag: %s", tsc.TestTagName)
+	retrievedConfig, err := service.GetSiteTag(tsc.Ctx, tsc.TestTagName)
+	if err != nil {
+		t.Fatalf("Failed to retrieve site tag configuration for %s: %v", tsc.TestTagName, err)
+	}
 	validateSiteTagConfiguration(t, tsc, retrievedConfig)
-	tsc.LogSuccess("validated")
+	t.Logf("Successfully validated site tag: %s", tsc.TestTagName)
 
 	// Step 5: Delete test tag
-	tsc.ExecuteDeleteStep("Deleting test site tag", func() error {
-		return service.DeleteSiteTag(tsc.Ctx, tsc.TestTagName)
-	})
-	tsc.LogSuccess("deleted")
+	t.Logf("Step 5: Deleting site tag: %s", tsc.TestTagName)
+	if err := service.DeleteSiteTag(tsc.Ctx, tsc.TestTagName); err != nil {
+		t.Fatalf("Failed to delete site tag %s: %v", tsc.TestTagName, err)
+	}
+	tsc.MarkTagDeleted()
+	t.Logf("Successfully deleted site tag: %s", tsc.TestTagName)
 
-	// Step 6: List final tags and verify deletion
-	finalTags := client.ExecuteStepWithResult(tsc, client.StepFinalList,
-		"Getting final site tags list", func() ([]model.SiteListEntry, error) {
-			return service.ListSiteTags(tsc.Ctx)
-		})
+	// Step 6: Verify final tag count
+	t.Logf("Step 6: Verifying final site tags list")
+	finalTags, err := service.ListSiteTags(tsc.Ctx)
+	if err != nil {
+		t.Fatalf("Failed to list final site tags: %v", err)
+	}
 	validateSiteTagDeletion(t, tsc.TestTagName, finalTags)
-	tsc.ValidateTagCount(len(finalTags))
+	if err := tsc.ValidateTagCount(func() (int, error) {
+		tags, err := service.ListSiteTags(tsc.Ctx)
+		return len(tags), err
+	}, len(finalTags)); err != nil {
+		t.Fatalf("Tag count validation failed: %v", err)
+	}
 }
 
 // configureSiteTagProfiles sets up profiles for the test tag
-func configureSiteTagProfiles(t *testing.T, tsc *client.TagScenarioContext, service *site.SiteTagService) error {
+func configureSiteTagProfiles(t *testing.T, tsc *scenario.TagContext, service *site.SiteTagService) error {
 	// Step 3a: Set is-local-site to false
 	t.Logf("Step 3a: Setting is-local-site to false for test tag: %s", tsc.TestTagName)
 	if err := service.SetLocalSite(tsc.Ctx, tsc.TestTagName, false); err != nil {
@@ -118,16 +125,24 @@ func configureSiteTagProfiles(t *testing.T, tsc *client.TagScenarioContext, serv
 }
 
 // validateSiteTagConfiguration validates the retrieved site tag configuration
-func validateSiteTagConfiguration(t *testing.T, tsc *client.TagScenarioContext, config *model.SiteListEntry) {
-	client.ValidateConfigNotNil(t, config, tsc.TestTagName)
+func validateSiteTagConfiguration(t *testing.T, tsc *scenario.TagContext, config *model.SiteListEntry) {
+	if config == nil {
+		t.Fatalf("Expected site tag configuration for %s, but got nil", tsc.TestTagName)
+	}
 
 	// Get description value for validation
 	var description string
 	if config.Description != nil {
 		description = *config.Description
 	}
-	client.ValidateCommonTagFields(t, tsc.TestTagName, expectedSiteTagDescription,
-		config.SiteTagName, description)
+
+	if config.SiteTagName != tsc.TestTagName {
+		t.Errorf("Expected tag name %s, got %s", tsc.TestTagName, config.SiteTagName)
+	}
+
+	if description != expectedSiteTagDescription {
+		t.Errorf("Expected description %s, got %s", expectedSiteTagDescription, description)
+	}
 
 	// Validate is-local-site setting
 	if config.IsLocalSite == nil || *config.IsLocalSite != false {
