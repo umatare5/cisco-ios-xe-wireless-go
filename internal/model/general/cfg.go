@@ -201,7 +201,8 @@ type WlcManagementDataInfo struct {
 
 // LaginfoData represents LAG information data structure.
 type LaginfoData struct {
-	// LAG configuration fields would be defined here based on YANG model (YANG: IOS-XE 17.12.1+)
+	// TODO: Implement LAG configuration fields based on YANG model (YANG: IOS-XE 17.12.1+)
+	//       See Cisco IOS-XE wireless YANG model for details.
 }
 
 // MulticastConfigData represents multicast configuration data structure.
