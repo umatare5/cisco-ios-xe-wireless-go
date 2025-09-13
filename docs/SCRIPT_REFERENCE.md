@@ -8,6 +8,7 @@ This document provides an overview of the development scripts available in this 
 > - `WNC_CONTROLLER`
 > - `WNC_ACCESS_TOKEN`
 > - `WNC_AP_MAC_ADDR`
+> - `WNC_CLIENT_MAC_ADDR` (optional for enhanced client testing)
 
 ## 🧰 Scripts
 
@@ -36,7 +37,6 @@ Scripts share a consistent bootstrap pattern:
 - Invoke exactly one exported `run_*_operation` function.
 - Keep entry points thin; centralize behavior under `scripts/lib/`.
 - Output is standardized via shared `show_*` helpers and `printf` (no `echo -e`); when `--insecure` is used, `-k` is appended to curl calls only when requested.
-- **Coverage Integration**: Both `test_unit.sh` and `test_integration.sh` support unified `--coverage` flag that switches to comprehensive coverage analysis using `run_coverage_test_operation()` from `lib/share/testing/core.sh`.
 
 ```text
 scripts/
@@ -168,7 +168,7 @@ Validating CLI tools (level: minimal)...
 
 ### test_unit.sh <a id="test_unit.sh"></a> <!-- anchor for internal links -->
 
-Runs unit tests with unified coverage support. When `--coverage` is used, automatically switches to comprehensive coverage analysis via `run_coverage_test_operation()` from the shared testing library.
+Runs unit tests with unified coverage support.
 
 #### Usage
 
@@ -225,7 +225,7 @@ DONE 932 tests, 77 skipped in 8.463s
 
 ### test_integration.sh <a id="test_integration.sh"></a> <!-- anchor for internal links -->
 
-Runs integration tests against a live Cisco C9800 controller. Requires `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN`. Supports `--coverage` flag for comprehensive coverage analysis via unified testing operations.
+Runs integration tests against a live Cisco C9800 controller. Requires `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN`.
 
 #### Usage
 
@@ -238,7 +238,6 @@ OPTIONS:
   -p, --project <DIR>       Project root directory [default: .]
   -v, --verbose             Enable verbose test output
       --race                Enable race detection [default: true]
-  -c, --coverage            Generate coverage data
   -o, --output <FILE>       Coverage output file [default: ./tmp/coverage.out]
   -t, --timeout <DURATION>  Test timeout [default: 10m]
       --package <PATTERN>   Package pattern to test [default: ./...]
@@ -320,7 +319,7 @@ Validating CLI tools (level: standard)...
 
 ### pre_commit_hook.sh <a id="pre_commit_hook.sh"></a> <!-- anchor for internal links -->
 
-Runs repository pre-commit validations (formatting, build, tests, coverage presence). Intended to be wired to git hooks or run ad-hoc.
+Runs repository pre-commit validations (formatting, build, tests). Intended to be wired to git hooks or run ad-hoc.
 
 #### Usage
 
@@ -553,7 +552,6 @@ Prints a consolidated help guide covering common Make targets, environment varia
 <details><summary>Click to expand sample output</summary>
 
 ```text
-✗ scripts/help.sh
 Cisco WNC Development Scripts
 -------------------------------
 
@@ -607,8 +605,8 @@ SCRIPT DETAILS:
     - install_dependencies.sh Install Go dependencies
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)
-    - test_integration.sh    Run integration tests (supports --coverage)
-    - generate_coverage_report.sh Generate HTML coverage
+    - test_integration.sh    Run integration tests
+    - pre_commit_hook.sh     Pre-commit validation hook
     - get_yang_models.sh     List YANG models
     - get_yang_model_details.sh Get model details
     - get_yang_statement_details.sh Get statement details

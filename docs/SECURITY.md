@@ -1,6 +1,6 @@
-# 🔐 Security
+# 🔐 Security Guide
 
-This document provides an overview of security practices for using this library.
+This document provides an overview of security practices for using this SDK.
 
 ## 🛡️ Checklist
 

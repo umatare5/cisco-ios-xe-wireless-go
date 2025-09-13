@@ -4,7 +4,7 @@
 
   <h1>cisco-ios-xe-wireless-go</h1>
 
-  <p>A Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.</p>
+  <p>A Go SDK for interacting with Cisco Catalyst 9800 Wireless Network Controller.</p>
 
   <p>
     <img alt="GitHub Tag" src="https://img.shields.io/github/v/tag/umatare5/cisco-ios-xe-wireless-go?label=Latest%20version" />
@@ -28,10 +28,10 @@
 
 ## 📡 Supported Environment
 
-Cisco Catalyst 9800 Wireless Network Controller running:
+Cisco Catalyst 9800 Wireless Network Controller running on:
 
-- **Primary Support**: Cisco IOS-XE **17.12.x**
-- **Experimental Support**: Cisco IOS-XE **17.18.x** (802.11be, Cisco Spaces, URWB, WAT features)
+- **Cisco IOS-XE 17.12.x**
+- **Cisco IOS-XE 17.18.x** (Experimental Support: 802.11be, Cisco Spaces, URWB, WAT features)
 
 ## 📦 Installation
 
@@ -41,10 +41,9 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 ## 🚀 Quick Start
 
-> [!NOTE]
-> You have to enable RESTCONF and HTTPS on the C9800 before using this library. Please see:
->
-> - [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432)
+You have to enable RESTCONF and HTTPS on the C9800 before using this SDK. Please see:
+
+- [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432)
 
 ### 1. Generate a Basic Auth token
 
@@ -120,7 +119,7 @@ go run main.go
 
 ## 🌐 API Reference
 
-This library provides a client to interact with the Cisco Catalyst 9800 Wireless Network Controller's RESTCONF.
+This SDK provides a client to interact with the Cisco Catalyst 9800 Wireless Network Controller's RESTCONF.
 
 ### Client Initialization
 
@@ -155,46 +154,46 @@ The following table summarizes the supported service APIs and their capabilities
 
 - ✅️ Supported
 - 🟩 Partial Supported
-- 🟨 Experimental Supported (17.18.x)
+- 🟨 Experimental Supported
 - ⬜️ Not Supported
 
-| API                                                                                                     | `GetOperational()` | `GetConfig()` | Other Functions | Notes                     |
-| ------------------------------------------------------------------------------------------------------- | :----------------: | :-----------: | :-------------: | ------------------------- |
-| [`AFC()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/afc)                     |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`AP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/ap)                       |        ✅️         |      ✅️      |       🟩        |                           |
-| [`APF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/apf)                     |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`AWIPS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/awips)                 |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`BLE()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/ble)                     |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Client()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/client)               |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Controller()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/controller)       |        ⬜️         |      ⬜️      |       🟩        |                           |
-| [`CTS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/cts)                     |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`Dot11()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/dot11)                 |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`Dot15()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/dot15)                 |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`Fabric()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/fabric)               |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`Flex()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/flex)                   |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`General()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/general)             |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Geolocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/geolocation)     |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Hyperlocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/hyperlocation) |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`LISP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/lisp)                   |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Location()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/location)           |        ✅️         |      ✅️      |       ⬜️       |                           |
-| [`Mcast()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mcast)                 |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`MDNS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mdns)                   |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Mesh()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mesh)                   |        ✅️         |      ✅️      |       ⬜️       |                           |
-| [`Mobility()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mobility)           |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`NMSP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/nmsp)                   |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`Radio()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/radio)                 |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`RF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rf)                       |        ⬜️         |      ✅️      |       ⬜️       |                           |
-| [`RFTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rf)                    |        ⬜️         |      ⬜️      |       🟩        |                           |
-| [`RFID()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rfid)                   |        ✅️         |      ✅️      |       ⬜️       |                           |
-| [`Rogue()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rogue)                 |        ✅️         |      ⬜️      |       ⬜️       |                           |
-| [`RRM()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rrm)                     |        ✅️         |      ✅️      |       ⬜️       |                           |
-| [`Site()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/site)                   |        ✅️         |      ✅️      |       ⬜️       |                           |
-| [`SiteTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/site)                |        ⬜️         |      ⬜️      |       🟩        |                           |
-| [`Spaces()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/spaces)               |         🟨         |      ⬜️      |       ⬜️       | Requires IOS-XE 17.18.1+. |
-| [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/urwb)                   |         🟨         |      🟨       |       ⬜️       | Requires IOS-XE 17.18.1+. |
-| [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wat)                     |        ⬜️         |      🟨       |       ⬜️       | Requires IOS-XE 17.18.1+. |
-| [`WLAN()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wlan)                   |        ✅️         |      ✅️      |       ⬜️       |                           |
-| [`PolicyTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wlan)              |        ⬜️         |      ⬜️      |       🟩        |                           |
+| API                                                                                                     | `GetOperational()` | `GetConfig()` | Other Functions | Notes                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------- | :----------------: | :-----------: | :-------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`AFC()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/afc)                     |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`AP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/ap)                       |        ✅️         |      ✅️      |       🟩        |                                                                                                                                                             |
+| [`APF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/apf)                     |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`AWIPS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/awips)                 |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`BLE()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/ble)                     |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`Client()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/client)               |        ✅️         |      ⬜️      |       ⬜️       | 17.18.1 issues [#28](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues/28), [#29](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues/29) |
+| [`Controller()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/controller)       |        ⬜️         |      ⬜️      |       🟩        |                                                                                                                                                             |
+| [`CTS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/cts)                     |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Dot11()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/dot11)                 |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Dot15()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/dot15)                 |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Fabric()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/fabric)               |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Flex()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/flex)                   |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`General()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/general)             |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Geolocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/geolocation)     |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`Hyperlocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/hyperlocation) |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`LISP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/lisp)                   |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`Location()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/location)           |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Mcast()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mcast)                 |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`MDNS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mdns)                   |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`Mesh()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mesh)                   |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Mobility()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/mobility)           |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`NMSP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/nmsp)                   |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`Radio()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/radio)                 |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`RF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rf)                       |        ⬜️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`RFTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rf)                    |        ⬜️         |      ⬜️      |       🟩        |                                                                                                                                                             |
+| [`RFID()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rfid)                   |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Rogue()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rogue)                 |        ✅️         |      ⬜️      |       ⬜️       |                                                                                                                                                             |
+| [`RRM()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/rrm)                     |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`Site()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/site)                   |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`SiteTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/site)                |        ⬜️         |      ⬜️      |       🟩        |                                                                                                                                                             |
+| [`Spaces()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/spaces)               |         🟨         |      ⬜️      |       ⬜️       | Requires 17.18.1+                                                                                                                                           |
+| [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/urwb)                   |         🟨         |      🟨       |       🟨        | Requires 17.18.1+                                                                                                                                           |
+| [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wat)                     |        ⬜️         |      🟨       |       🟨        | Requires 17.18.1+                                                                                                                                           |
+| [`WLAN()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wlan)                   |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
+| [`PolicyTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wlan)              |        ⬜️         |      ⬜️      |       🟩        |                                                                                                                                                             |
 
 > [!TIP]
 >
@@ -204,102 +203,149 @@ The following table summarizes the supported service APIs and their capabilities
 
 Runnable examples are available:
 
-- **List Associating APs**
+### List Operation
 
-  [`example/list_aps/main.go`](./example/list_aps/main.go) lists the number of APs managed by the controller.
+#### List Associating APs
 
-  <details><summary><u>Click to show example</u></summary><p>
+[`example/list_aps/main.go`](./example/list_aps/main.go) lists the number of APs managed by the controller.
 
-  ```bash
-  ❯ go run example/list_aps/main.go
+<details><summary><u>Click to show example</u></summary><p>
 
-  Successfully connected! Found 1 APs
+```bash
+❯ go run -tags sample example/list_aps/main.go
 
-  MAC Address           | AP Name                | IP Address      | Status
-  ----------------------|------------------------|-----------------|-----------------
-  28:ac:9e:bb:3c:80     | TEST-AP01              | 192.168.255.11  | registered
-  ```
+Successfully connected! Found 2 APs
 
-  </p></details>
+AP Name           | MAC Address         | IP Address       | Status
+------------------|---------------------|------------------|-----------------
+TEST-AP01         | aa:bb:ff:dd:ee:a0   | 192.168.255.11   | registered
+TEST-AP02         | aa:bb:ff:dd:ee:b0   | 192.168.255.12   | registered
+```
 
-- **List Associating Clients**
+</p></details>
 
-  [`example/list_clients/main.go`](./example/list_clients/main.go) lists wireless client MAC addresses and IP addresses.
+#### List WLANs and BSSIDs
 
-  <details><summary><u>Click to show example</u></summary><p>
+[`example/list_wlans/main.go`](./example/list_wlans/main.go) lists comprehensive WLAN information including Radio, WLAN, and BSSID details.
 
-  ```bash
-  ❯ go run example/list_clients/main.go
+<details><summary><u>Click to show example</u></summary><p>
 
-  Successfully connected! Found 17 clients
+```bash
+❯ go run -tags sample example/list_wlans/main.go
 
-  MAC Address           | IP Address
-  ----------------------|----------------
-  08:84:9d:92:47:00     | 192.168.0.84
-  2a:e3:42:8f:06:c8     | 192.168.0.89
-  40:23:43:3e:c5:bf     | 192.168.0.62
-  40:80:e1:6b:11:16     | 192.168.0.92
-  <snip>
-  ```
+Successfully connected! Found 7 WLANs across all APs
 
-  </p></details>
+AP Name           | AP MAC Address    | Slot | WLAN | BSSID             | SSID
+------------------|-------------------|------|------|-------------------|-------------------------
+TEST-AP01         | aa:bb:ff:dd:ee:a0 |    0 |    1 | aa:bb:ff:dd:ee:a1 | labo-wlan
+TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    2 | aa:bb:ff:dd:ee:ad | labo-psk
+TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    4 | aa:bb:ff:dd:ee:af | labo-tls
+<snip>
+```
 
-- **Reload an AP**
+</p></details>
 
-  [`example/reload_ap/main.go`](./cmd/reload_ap/main.go) reloads an AP by its hostname.
+#### List AP Neighbors
 
-  <details><summary><u>Click to show example</u></summary><p>
+[`example/list_neighbors/main.go`](./example/list_neighbors/main.go) lists AP radio neighbors detected by the controller.
 
-  ```bash
-  ❯ go run example/reload_ap/main.go
+<details><summary><u>Click to show example</u></summary><p>
 
-  === Access Point Reload Tool ===
-  WARNING: This tool will restart access points causing service interruption!
-  Use only in controlled environments with proper authorization.
+```bash
+❯ go run -tags sample example/list_neighbors/main.go
 
-  Target Controller: wnc1.example.internal
-  Enter AP MAC address (format: xx:xx:xx:xx:xx:xx or xx-xx-xx-xx-xx-xx): 28:ac:9e:bb:3c:80
-  Target AP MAC: 28:ac:9e:bb:3c:80
-  This will restart the specified Access Point(s). Type 'YES' to confirm: YES
+Successfully connected! Found 11 AP neighbors
 
-  ✓ WNC client created successfully
-  Executing AP reload for MAC 28:ac:9e:bb:3c:80
-  WARNING: AP will become unavailable and disconnect all clients during restart...
+AP Name           | Slot | Neighbor BSSID    | Neighbor SSID          | RSSI  | Channel | Last Heard At
+------------------|------|-------------------|------------------------|-------|---------|--------------------------
+TEST-AP01         |    0 | d8:21:da:a2:30:f0 | Rogue-WiFi             |   -20 |      11 | 2025-09-12 20:24:57
+TEST-AP01         |    0 | 08:10:86:bf:07:e3 | rogue-abcdef123-g      |   -62 |       4 | 2025-09-13 06:49:59
+TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 |      36 | 2025-09-13 06:52:57
+<snip>
+```
 
-  ✓ AP reload command sent successfully for MAC: 28:ac:9e:bb:3c:80
-  Note: AP is now restarting and will be temporarily unavailable
-  Clients will need to reconnect after AP restart completes
-  ```
+</p></details>
 
-  </p></details>
+#### List Associating Clients
 
-- **Reload a Controller**
+[`example/list_clients/main.go`](./example/list_clients/main.go) lists wireless client MAC addresses and IP addresses.
 
-  [`example/reload_controller/main.go`](./cmd/reload_controller/main.go) reloads the entire controller.
+<details><summary><u>Click to show example</u></summary><p>
 
-  <details><summary><u>Click to show example</u></summary><p>
+```bash
+❯ go run example/list_clients/main.go
 
-  ```bash
-  ❯ go run ./example/reload_controller/main.go
+Successfully connected! Found 17 clients
 
-  === WNC Controller Reload Tool ===
-  WARNING: This tool will restart the wireless controller!
-  Use only in controlled environments with proper authorization.
+MAC Address           | IP Address
+----------------------|----------------
+08:84:9d:92:47:00     | 192.168.0.84
+2a:e3:42:8f:06:c8     | 192.168.0.89
+40:23:43:3e:c5:bf     | 192.168.0.62
+40:80:e1:6b:11:16     | 192.168.0.92
+<snip>
+```
 
-  Target Controller: wnc1.example.internal
+</p></details>
 
-  This will restart the WNC controller. Type 'YES' to confirm: YES
+### Destructive Operation
 
-  ✓ WNC client created successfully
-  Executing controller reload with reason: Manual reload via CLI tool at 2025-09-06T13:11:50+09:00
-  WARNING: Controller will become unavailable during restart...
+#### **Reload an AP**
 
-  ✓ Controller reload command sent successfully
-  Note: Controller is now restarting and will be temporarily unavailable
-  Wait for controller to complete restart before attempting reconnection
-  ```
+[`example/reload_ap/main.go`](./example/reload_ap/main.go) reloads an AP by its hostname.
 
-  </p></details>
+<details><summary><u>Click to show example</u></summary><p>
+
+```bash
+❯ go run example/reload_ap/main.go
+
+=== Access Point Reload Tool ===
+WARNING: This tool will restart access points causing service interruption!
+Use only in controlled environments with proper authorization.
+
+Target Controller: wnc1.example.internal
+Enter AP MAC address (format: xx:xx:xx:xx:xx:xx or xx-xx-xx-xx-xx-xx): aa:bb:ff:dd:ee:a0
+Target AP MAC: aa:bb:ff:dd:ee:a0
+This will restart the specified Access Point(s). Type 'YES' to confirm: YES
+
+✓ WNC client created successfully
+Executing AP reload for MAC aa:bb:ff:dd:ee:a0
+WARNING: AP will become unavailable and disconnect all clients during restart...
+
+✓ AP reload command sent successfully for MAC: aa:bb:ff:dd:ee:a0
+Note: AP is now restarting and will be temporarily unavailable
+Clients will need to reconnect after AP restart completes
+```
+
+</p></details>
+
+#### Reload a Controller
+
+[`example/reload_controller/main.go`](./example/reload_controller/main.go) reloads the entire controller.
+
+<details><summary><u>Click to show example</u></summary><p>
+
+```bash
+❯ go run ./example/reload_controller/main.go
+
+=== WNC Controller Reload Tool ===
+WARNING: This tool will restart the wireless controller!
+Use only in controlled environments with proper authorization.
+
+Target Controller: wnc1.example.internal
+
+This will restart the WNC controller. Type 'YES' to confirm: YES
+
+✓ WNC client created successfully
+Executing controller reload with reason: Manual reload via CLI tool at 2025-09-06T13:11:50+09:00
+WARNING: Controller will become unavailable during restart...
+
+✓ Controller reload command sent successfully
+Note: Controller is now restarting and will be temporarily unavailable
+Wait for controller to complete restart before attempting reconnection
+```
+
+</p></details>
 
 ## 🤝 Contributing
 

@@ -8,6 +8,7 @@ This document provides an overview of Make targets used in this repository.
 > - `WNC_CONTROLLER`
 > - `WNC_ACCESS_TOKEN`
 > - `WNC_AP_MAC_ADDR`
+> - `WNC_CLIENT_MAC_ADDR` (optional for enhanced client testing)
 
 ## 🧰 Commands
 

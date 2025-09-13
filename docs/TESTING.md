@@ -3,7 +3,7 @@
 This guide explains the testing strategy, conventions, and execution procedures for the Cisco IOS-XE Wireless Go SDK.
 
 > [!NOTE]
-> Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`, `WNC_AP_MAC_ADDR`.
+> Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`, `WNC_AP_MAC_ADDR`, and optionally `WNC_CLIENT_MAC_ADDR`.
 
 ## 🎯 Testing Strategy
 
@@ -11,13 +11,13 @@ This guide explains the testing strategy, conventions, and execution procedures 
 
 The SDK implements **standardized test patterns** using direct `pkg/testutil` integration:
 
-| Category          | Purpose                                   | Implementation Pattern       | Coverage Target |
-| ----------------- | ----------------------------------------- | ---------------------------- | --------------- |
-| **Service Tests** | Service construction and lifecycle        | Direct service instantiation | 100%            |
-| **Get Tests**     | Mock-based GET operations with validation | `testutil.NewMockServer`     | Get/List: 100%  |
-| **Set Tests**     | Mock-based SET/RPC operations             | `MockErrorServer` patterns   | Set/Admin: 90%+ |
-| **Integration**   | Live WNC operations (GET only)            | Direct test implementation   | N/A             |
-| **Scenario/E2E**  | Non-disruptive CRUD against live WNC      | Custom scenario suites       | N/A             |
+| Category             | Purpose                                   | Implementation Pattern        | Coverage Target |
+| -------------------- | ----------------------------------------- | ----------------------------- | --------------- |
+| **1. Service Tests** | Service construction and lifecycle        | Direct service instantiation  | 100%            |
+| **2. Get Tests**     | Mock-based GET operations with validation | `testutil.NewMockServer`      | Get/List: 100%  |
+| **3. Set Tests**     | Mock-based SET/RPC operations             | `testutil.NewMockErrorServer` | Set/Admin: 90%+ |
+| **4. Integration**   | Live WNC operations (GET only)            | Integration test suites       | N/A             |
+| **5. Scenario/E2E**  | Non-disruptive CRUD against live WNC      | Scenario-based test workflows | N/A             |
 
 ### IOS-XE Version Support
 
@@ -31,9 +31,8 @@ The SDK implements **standardized test patterns** using direct `pkg/testutil` in
 
 ### Coverage Requirements
 
-- **Service package** (`service/`): **90% minimum**
 - **Repository overall**: **80% minimum**
-- **Critical paths** (Get/List methods): **100% required**
+- **Service package** (`service/`): **90% minimum**
 
 ## 📂 Test Organization
 
@@ -44,17 +43,23 @@ cisco-ios-xe-wireless-go/
 ├── service/
 │   └── {service}/
 │       ├── service_test.go         # Direct service tests using pkg/testutil
-│       └── errors.go              # Service-specific error constants
+│       ├── service.go              # Service implementation
+│       ├── errors.go              # Service-specific error constants
+│       └── doc.go                 # Package documentation
 ├── tests/
 │   ├── integration/
 │   │   ├── {service}_service_test.go  # Live WNC integration tests per service
 │   │   └── ...                       # Additional integration tests
 │   └── scenario/                     # E2E scenario tests
+│       ├── ap/                       # AP scenario tests
+│       ├── rf/                       # RF scenario tests
+│       ├── site/                     # Site scenario tests
+│       └── wlan/                     # WLAN scenario tests
 └── pkg/
     └── testutil/
-        ├── client.go               # Test client utilities
-        ├── mock.go                 # Mock server implementations
-        └── helper.go              # Test helper functions
+        ├── testing.go              # Main testing utilities and mock server
+        ├── context.go              # Test context management
+        └── doc.go                  # Package documentation
 ```
 
 ### Naming Conventions
@@ -63,26 +68,30 @@ cisco-ios-xe-wireless-go/
 
 ```go
 // Unit tests (service/ directory)
-TestXServiceUnit_Constructor_Success        // Service construction tests
-TestXServiceUnit_GetOperations_MockSuccess  // GET operations with mock server
-TestXServiceUnit_GetOperations_ValidationErrors // GET validation and edge cases
-TestXServiceUnit_SetOperations_MockSuccess  // SET/RPC operations with mock server
+TestXServiceUnit_Constructor_Success            // Service construction tests
+TestXServiceUnit_GetOperations_MockSuccess     // GET operations with mock server
+TestXServiceUnit_GetOperations_ErrorHandling   // GET error scenarios and edge cases
+TestXServiceUnit_SetOperations_MockSuccess     // SET/RPC operations with mock server
 TestXServiceUnit_SetOperations_ValidationErrors // SET validation and edge cases
+TestXServiceUnit_GetOperations_FilteredSuccess // Filtered GET operations
+TestXServiceUnit_ValidationErrors              // Input validation tests
+TestXServiceUnit_EdgeCases_MockSuccess         // Edge cases and error branches
 
 // Integration tests (tests/integration/ directory)
-TestXServiceIntegration_GetOperations_Success // Live WNC GET operations
-TestXServiceIntegration_GetConfig_Success     // Live WNC configuration retrieval
+TestXServiceIntegration_GetOperationalOperations_Success // Live WNC GET operations
+TestXServiceIntegration_GetConfigurationOperations_Success // Live WNC configuration retrieval
 ```
 
 **Examples:**
 
-- `TestAPServiceUnit_Constructor_Success` - AP service construction using direct instantiation
-- `TestWLANServiceUnit_GetOperations_MockSuccess` - WLAN GET operations with mock server
-- `TestRFServiceIntegration_GetConfig_Success` - RF configuration retrieval with live controller
+- `TestApServiceUnit_Constructor_Success` - AP service construction using direct instantiation
+- `TestApServiceUnit_GetOperations_MockSuccess` - AP GET operations with mock server
+- `TestApServiceUnit_SetOperations_ValidationErrors` - AP SET validation and edge cases
+- `TestClientServiceIntegration_GetOperationalOperations_Success` - Client operational data retrieval with live controller
 
 ## 🧰 Prerequisites
 
-### For Unit Tests (Layers 1-2)
+### For Unit Tests (Layers 1-3)
 
 Unit tests require no special configuration and can be run in any Go development environment.
 
@@ -91,7 +100,7 @@ Unit tests require no special configuration and can be run in any Go development
 | Go          | 1.25+   | Uses stdlib testing + pkg/testutil |
 | make        | Latest  | Convenience targets                |
 
-### For Integration/E2E Tests (Layers 3-4)
+### For Integration/E2E Tests (Layers 4-5)
 
 #### 1. Cisco Catalyst 9800 Wireless Network Controller
 
@@ -99,11 +108,14 @@ Integration and E2E tests require a real Cisco Catalyst 9800 WNC. Please refer t
 
 #### 2. Environment Variables
 
-| Variable           | Description         | Example                 |
-| ------------------ | ------------------- | ----------------------- |
-| `WNC_CONTROLLER`   | Controller host/IP  | `wnc1.example.internal` |
-| `WNC_ACCESS_TOKEN` | Base64 `user:pass`  | `YWRtaW46cGFzc3dvcmQ=`  |
-| `WNC_AP_MAC_ADDR`  | Test AP's Radio MAC | `00:11:22:33:dd:ee:f0`  |
+| Variable                | Description            | Example                 |
+| ----------------------- | ---------------------- | ----------------------- |
+| `WNC_CONTROLLER`        | Controller host/IP     | `wnc1.example.internal` |
+| `WNC_ACCESS_TOKEN`      | Base64 `user:pass`     | `YWRtaW46cGFzc3dvcmQ=`  |
+| `WNC_AP_MAC_ADDR`       | Test AP's Radio MAC    | `aa:bb:cc:dd:ee:f0`     |
+| `WNC_CLIENT_MAC_ADDR`   | Test Client MAC        | `11:22:33:aa:bb:cc`     |
+| `WNC_AP_WLAN_BSSID`     | Test AP WLAN BSSID     | `aa:bb:cc:dd:ee:f1`     |
+| `WNC_AP_NEIGHBOR_BSSID` | Test AP Neighbor BSSID | `11:22:33:dd:ee:ff`     |
 
 <details><summary>Environment setup</summary>
 
@@ -111,9 +123,15 @@ Integration and E2E tests require a real Cisco Catalyst 9800 WNC. Please refer t
 export WNC_CONTROLLER="<controller-host-or-ip>"
 export WNC_ACCESS_TOKEN="<base64-username:password>"
 export WNC_AP_MAC_ADDR="<test-ap-radio-mac-address>"
+export WNC_CLIENT_MAC_ADDR="<test-client-mac-address>"
+export WNC_AP_WLAN_BSSID="<test-ap-wlan-bssid>"
+export WNC_AP_NEIGHBOR_BSSID="<test-ap-neighbor-bssid>"
 ```
 
 </details>
+
+> [!TIP]
+> Environment variables such as `WNC_AP_MAC_ADDR` and `WNC_CLIENT_MAC_ADDR` can be discovered by running the example commands listed in the [README.md](../README.md) **Usecases** section.
 
 > [!CAUTION]
 > Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
@@ -136,106 +154,40 @@ make test-integration
 
 Tests service construction and lifecycle using direct service instantiation.
 
-<details><summary><strong>Example:</strong> Service Constructor Test</summary>
-
-```go
-// Service constructor test using direct instantiation
-func TestWatServiceUnit_Constructor_Success(t *testing.T) {
-    service := wat.NewService(nil)
-    if service.Client() != nil {
-        t.Error("Expected nil client service")
-    }
-
-    // Test with valid client
-    mockServer := testutil.NewMockServer(map[string]string{
-        "test": `{"data": {}}`,
-    })
-    defer mockServer.Close()
-
-    client := testutil.NewTestClient(mockServer)
-    service = wat.NewService(client.Core().(*core.Client))
-    if service.Client() == nil {
-        t.Error("Expected service to have client, got nil")
-    }
-}
-```
-
 ```bash
-go test ./service/ap -run "TestAPServiceUnit_Constructor"
+go test ./service/ap -run "TestApServiceUnit_Constructor" -v
 ```
 
-</details>
+**Example:**
 
-#### Layer 2: Mock-based Method Tests
+- [`service/ap/service_test.go`](../service/ap/service_test.go) - See `TestApServiceUnit_Constructor_Success`
+
+#### Layer 2 and 3: Mock-based Method Tests
 
 Tests all operations with **mock server** using direct `pkg/testutil` implementation.
 
-<details><summary><strong>Example:</strong> Mock-based Method Tests</summary>
-
-```go
-// Real WNC data-based mock test (Core services)
-func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
-    // Mock responses based on real IOS-XE 17.12.x WNC data
-    responses := map[string]string{
-        "Cisco-IOS-XE-wireless-client-oper:client-oper-data": `{
-            "Cisco-IOS-XE-wireless-client-oper:client-oper-data": {
-                "common-oper-data": [{
-                    "client-mac": "02:40:f1:f7:f7:87",
-                    "ap-name": "TEST-AP01",
-                    "wlan-id": 1
-                }]
-            }
-        }`,
-    }
-    mockServer := testutil.NewMockServer(responses)
-    defer mockServer.Close()
-
-    testClient := testutil.NewTestClient(mockServer)
-    service := client.NewService(testClient.Core().(*core.Client))
-    ctx := testutil.TestContext(t)
-
-    result, err := service.GetOperational(ctx)
-    if err != nil {
-        t.Errorf("GetOperational failed: %v", err)
-    }
-}
-
-// IOS-XE 17.18.1+ service with 404 expectation test
-func TestUrwbServiceUnit_GetConfig_ErrorExpected(t *testing.T) {
-    mockServer := testutil.NewMockErrorServer([]string{
-        "Cisco-IOS-XE-wireless-urwbnet-cfg:urwbnet-cfg-data",
-    }, 404)
-    defer mockServer.Close()
-
-    client := testutil.NewTestClient(mockServer)
-    service := urwb.NewService(client.Core().(*core.Client))
-    ctx := testutil.TestContext(t)
-
-    _, err := service.GetConfig(ctx)
-    if err == nil {
-        t.Error("Expected 404 error for unconfigured URWB service")
-    }
-}
-```
-
 ```bash
-go test ./service/ap -run "TestAPServiceUnit.*Mock"
+go test ./service/ap -run "TestApServiceUnit_GetOperations_Mock" -v
 ```
 
-</details>
+**Example:**
+
+- [`service/ap/service_test.go`](../service/ap/service_test.go) - See `TestApServiceUnit_GetOperations_MockSuccess`
+- [`service/wat/service_test.go`](../service/wat/service_test.go) - See `TestWatServiceUnit_GetOperations_ErrorExpected`
 
 #### Layer 3: Integration Tests
 
 Tests only GET operations with **live WNC**.
 
 ```bash
-go test ./tests/integration -tags=integration
+go test ./tests/integration -tags=integration -v
 ```
 
 **Example:**
 
-- [`tests/integration/client_service_test.go`](../tests/integration/client_service_test.go) - `TestClientServiceIntegration_GetOperations_Success`
-- [`tests/integration/rrm_service_test.go`](../tests/integration/rrm_service_test.go) - `TestRrmServiceIntegration_GetConfig_Success`
+- [`tests/integration/client_service_test.go`](../tests/integration/client_service_test.go)
+- [`tests/integration/ap_service_test.go`](../tests/integration/ap_service_test.go)
+- [`tests/integration/rrm_service_test.go`](../tests/integration/rrm_service_test.go)
 
 #### Layer 4: E2E Scenario Tests
 
@@ -250,8 +202,10 @@ go test ./tests/scenario/wlan/ -tags=scenario -v
 
 **Example:**
 
-- [`tests/scenario/ap/service_test.go#TestAPServiceScenario_AdminStateManagement_Success`](../tests/scenario/ap/service_test.go)
-- [`tests/scenario/site/tag_service_test.go#TestSiteTagServiceScenario_TagLifecycleManagement_Success`](../tests/scenario/site/tag_service_test.go)
+- [`tests/scenario/ap/service_test.go`](../tests/scenario/ap/service_test.go) - AP admin state management workflow
+- [`tests/scenario/site/tag_service_test.go`](../tests/scenario/site/tag_service_test.go) - Site tag operations
+- [`tests/scenario/rf/service_test.go`](../tests/scenario/rf/service_test.go) - RF profile management
+- [`tests/scenario/wlan/service_test.go`](../tests/scenario/wlan/service_test.go) - WLAN configuration scenarios
 
 > [!NOTE]
 > Tag operations in scenario tests **MUST** use newly created tags to avoid communication impact.
@@ -280,46 +234,41 @@ go test -cover ./...
 
 ### Test Fixtures
 
-Tests use real WNC data for accurate mock responses.
+Tests use real WNC data for accurate mock responses. Mock data is embedded directly in test files based on actual controller responses.
 
-| Location                      | Purpose                          |
-| ----------------------------- | -------------------------------- |
-| `testdata/*.json`             | Raw controller responses         |
-| `pkg/testutil/`               | Mock server implementations      |
-| `tests/integration/testdata/` | Integration test snapshots       |
-| Service test files            | Inline real WNC data with source |
+| Location             | Purpose                                   |
+| -------------------- | ----------------------------------------- |
+| Service test files   | Inline real WNC data with source comments |
+| `pkg/testutil/`      | Mock server implementations               |
+| `internal/testutil/` | Internal testing utilities                |
+| `tests/integration/` | Integration test implementations          |
+| `tests/scenario/`    | E2E scenario test suites                  |
 
-<details><summary>Example structure</summary>
+**Example:**
 
-```text
-testdata/
-├── ap_oper_response.json
-├── client_oper_response.json
-├── general_cfg_response.json
-└── rrm_global_oper_response.json
-```
-
-</details>
+- [`service/ap/service_test.go`](../service/ap/service_test.go) - Real WNC data embedded in test responses
 
 ## 📚 Appendix
 
 ### Testing Tips
 
-1. **Start with unit tests** - Validate basic functionality first
-2. **Use real WNC data** - Base mock responses on actual controller data
-3. **Test 404 scenarios** - IOS-XE 17.18.1+ services may not be configured
-4. **Follow TN-001 naming** - Use standardized test function names
-5. **Direct pkg/testutil usage** - No framework abstractions needed
-6. **Coverage-driven development** - Write tests to meet coverage targets
+1. **Start with unit tests** - Validate basic functionality first using mock servers
+2. **Use real WNC data** - Base mock responses on actual controller data from IOS-XE 17.12.x
+3. **Test error scenarios** - IOS-XE 17.18.1+ services may return 404 when not configured
+4. **Follow naming conventions** - Use standardized test function names (e.g., `TestXServiceUnit_*`)
+5. **Direct pkg/testutil usage** - Use `testutil.NewMockServer()` and `testutil.TestContext(t)`
+6. **Coverage-driven development** - Write comprehensive tests to meet coverage targets
+7. **Parallel-safe integration** - Mark integration tests with `t.Parallel()` for GET-only operations
+8. **Scenario isolation** - Use newly created resources in E2E scenarios to avoid impact
 
 ### Troubleshooting
 
-| Issue                  | Solution                                                                  |
-| ---------------------- | ------------------------------------------------------------------------- |
-| Missing env vars       | Set `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` and `WNC_AP_MAC_ADDR`            |
-| Unreachable controller | Verify DNS/IP connectivity                                                |
-| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only |
-| Auth failures          | Ensure token is Base64 of `user:pass`                                     |
+| Issue                  | Solution                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Missing env vars       | Set `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` and `WNC_AP_MAC_ADDR`; optionally set `WNC_CLIENT_MAC_ADDR` for better client integration testing |
+| Unreachable controller | Verify DNS/IP connectivity                                                                                                                 |
+| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only                                                                  |
+| Auth failures          | Ensure token is Base64 of `user:pass`                                                                                                      |
 
 ### References
 
