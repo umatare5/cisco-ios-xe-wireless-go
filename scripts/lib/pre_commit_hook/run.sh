@@ -18,6 +18,11 @@ run_pre_commit_validation() {
   fi
   branch="${CURRENT_BRANCH:-}"
 
+  # Clean up backup files before validation
+  if ! cleanup_backup_files; then
+    return 1
+  fi
+
   # Display current validation status
   show_validation_status "$branch"
 

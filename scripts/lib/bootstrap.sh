@@ -32,7 +32,7 @@ _load_share_libraries() {
             continue
         fi
 
-        # Load all .sh files in this library directory
+        # Load all .sh files in this SDK directory
         for lib_file in "$lib_dir"/*.sh; do
             if _is_file_exists "$lib_file"; then
                 source "$lib_file"

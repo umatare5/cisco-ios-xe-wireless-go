@@ -95,6 +95,7 @@ validate_test_environment() {
         if ! _has_required_integration_env; then
             error "Integration tests require WNC environment variables"
             info "Set WNC_CONTROLLER, WNC_ACCESS_TOKEN, and WNC_AP_MAC_ADDR environment variables"
+            info "Optionally set WNC_CLIENT_MAC_ADDR for enhanced client testing"
             return 1
         fi
     fi
