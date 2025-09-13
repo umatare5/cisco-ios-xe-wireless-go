@@ -131,7 +131,7 @@ export WNC_AP_NEIGHBOR_BSSID="<test-ap-neighbor-bssid>"
 </details>
 
 > [!TIP]
-> Environment variables such as `WNC_AP_MAC_ADDR` and `WNC_CLIENT_MAC_ADDR` can be discovered by running the example commands listed in the [README.md](../README.md) **Usecases** section.
+> Environment variables such as `WNC_AP_MAC_ADDR` and `WNC_CLIENT_MAC_ADDR` can be discovered by running the example commands listed in the [README.md - Usecases](../README.md?#-usecases) section.
 
 > [!CAUTION]
 > Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
