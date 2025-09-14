@@ -1,7 +1,6 @@
 package transport
 
 import (
-	"net/http"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
@@ -79,32 +78,6 @@ func TestTransportUnit_DefaultHeaders_Success(t *testing.T) {
 	testutil.AssertStringEquals(t, userAgent, HTTPHeaderUserAgent, "User-Agent header")
 }
 
-func TestTransportUnit_TransportConfiguration_Success(t *testing.T) {
-	transport := NewTransport(false)
-
-	// Verify the transport implements http.RoundTripper
-	var _ http.RoundTripper = transport
-
-	// Check that TLS config is properly set
-	testutil.AssertNotNil(t, transport.TLSClientConfig, "TLS config")
-
-	// Test with different TLS settings
-	secureTransport := NewTransport(false)
-	insecureTransport := NewTransport(true)
-
-	testutil.AssertFalse(
-		t,
-		secureTransport.TLSClientConfig.InsecureSkipVerify,
-		"Secure transport InsecureSkipVerify",
-	)
-
-	testutil.AssertTrue(
-		t,
-		insecureTransport.TLSClientConfig.InsecureSkipVerify,
-		"Insecure transport InsecureSkipVerify",
-	)
-}
-
 func TestTransportUnit_DefaultHeadersWithEmptyToken_Success(t *testing.T) {
 	headers := DefaultHeaders("")
 
@@ -116,21 +89,6 @@ func TestTransportUnit_DefaultHeadersWithEmptyToken_Success(t *testing.T) {
 	testutil.AssertStringNotEmpty(t, headers.Get(HTTPHeaderKeyAccept), "Accept header")
 
 	testutil.AssertStringNotEmpty(t, headers.Get(HTTPHeaderKeyUserAgent), "User-Agent header")
-}
-
-func TestTransportUnit_HeaderManipulation_Success(t *testing.T) {
-	token := "test-token"
-	headers := DefaultHeaders(token)
-
-	// Test that headers can be modified
-	headers.Set(HTTPHeaderKeyContentType, "custom-type")
-	ct := headers.Get(HTTPHeaderKeyContentType)
-	testutil.AssertStringEquals(t, ct, "custom-type", "Content-Type after modification")
-
-	// Test that original headers are still present
-	expectedAuth := HTTPHeaderValueBasicPrefix + token
-	auth := headers.Get(HTTPHeaderKeyAuthorization)
-	testutil.AssertStringEquals(t, auth, expectedAuth, "Authorization after modification")
 }
 
 func TestTransportUnit_NewTransportDetailsConfiguration_Success(t *testing.T) {

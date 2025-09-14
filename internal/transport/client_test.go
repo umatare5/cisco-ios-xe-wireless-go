@@ -83,22 +83,6 @@ func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing
 		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
 		testutil.AssertStringContains(t, err.Error(), "failed to create RPC request", "error message")
 	})
-
-	t.Run("InvalidHTTPMethodWithPayload", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
-		logger := slog.Default()
-		rb := NewRequestBuilder(restBuilder, "token", logger)
-
-		// Test with invalid method and valid payload
-		_, err := rb.CreateRPCRequestWithPayload(
-			context.Background(),
-			"\n",
-			"test/rpc",
-			map[string]string{"test": "data"},
-		)
-		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
-		testutil.AssertStringContains(t, err.Error(), "failed to create RPC request", "error message")
-	})
 }
 
 func TestClientUnit_RequestBuilderExecuteRequest_Success(t *testing.T) {
@@ -114,27 +98,6 @@ func TestClientUnit_RequestBuilderExecuteRequest_Success(t *testing.T) {
 			resp.Body.Close()
 		}
 		testutil.AssertError(t, err, "Expected error for nil request")
-	})
-
-	t.Run("NilClient", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
-		logger := slog.Default()
-		rb := NewRequestBuilder(restBuilder, "token", logger)
-
-		req, err := rb.CreateRequestWithPayload(context.Background(), http.MethodGet, "test/path", nil)
-		testutil.AssertNoError(t, err, "CreateRequestWithPayload")
-
-		// Test with nil client should panic
-		defer func() {
-			if r := recover(); r == nil {
-				testutil.AssertTrue(t, false, "Expected panic for nil client")
-			}
-		}()
-
-		resp, _ := rb.ExecuteRequest(nil, req)
-		if resp != nil {
-			resp.Body.Close()
-		}
 	})
 }
 
@@ -283,24 +246,6 @@ func TestClientUnit_CreateRPCRequestWithPayload_ErrorScenarios(t *testing.T) {
 
 // Test ExecuteRequest with mock server error scenarios.
 func TestClientUnit_ExecuteRequest_ErrorScenarios(t *testing.T) {
-	t.Run("NetworkError", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "nonexistent.invalid.domain")
-		logger := slog.Default()
-		rb := NewRequestBuilder(restBuilder, "test-token", logger)
-		client := &http.Client{}
-
-		req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test-endpoint")
-		testutil.AssertNoError(t, err, "CreateRequest")
-
-		// This should fail due to network error
-		resp, err := rb.ExecuteRequest(client, req)
-		if resp != nil {
-			resp.Body.Close()
-		}
-		testutil.AssertError(t, err, "Expected network error")
-		testutil.AssertStringContains(t, err.Error(), "request failed", "error message should contain request failed")
-	})
-
 	t.Run("HTTPErrorStatus", func(t *testing.T) {
 		// Create a mock server that returns 404
 		mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

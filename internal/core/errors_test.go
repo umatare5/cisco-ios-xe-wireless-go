@@ -12,6 +12,18 @@ import (
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // ========================================
 
+// TestCoreErrorsUnit_HTTPError_Success tests HTTPError methods.
+func TestCoreErrorsUnit_HTTPError_Success(t *testing.T) {
+	httpErr := &HTTPError{
+		Status: 404,
+		Body:   []byte("Not Found"),
+	}
+
+	expected := "HTTP 404: Not Found"
+	actual := httpErr.Error()
+	testutil.AssertStringEquals(t, actual, expected, "HTTPError.Error() output")
+}
+
 // TestAPIErrorStructure tests the basic structure of APIError.
 func TestAPIErrorStructure(t *testing.T) {
 	apiErr := &APIError{
