@@ -179,48 +179,6 @@ func TestRESTCONFBuilderUnit_BuildOperationsURL_Success(t *testing.T) {
 	}
 }
 
-// TestBuildPathQueryURL tests path query URL construction.
-func TestRESTCONFBuilderUnit_BuildPathQueryURL_Success(t *testing.T) {
-	builder := NewBuilder("https", "192.168.1.1")
-
-	tests := []struct {
-		name     string
-		endpoint string
-		key      string
-		value    string
-		expected string
-	}{
-		{
-			name:     "Simple key-value",
-			endpoint: "/restconf/data/cisco-wireless:wireless-oper/ap-oper",
-			key:      "ap-name",
-			value:    "TEST-AP-001",
-			expected: "/restconf/data/cisco-wireless:wireless-oper/ap-oper/ap-name=TEST-AP-001",
-		},
-		{
-			name:     "MAC address key",
-			endpoint: "/restconf/data/cisco-wireless:wireless-oper/ap-oper",
-			key:      "wtp-mac",
-			value:    "aa:bb:cc:dd:ee:ff",
-			expected: "/restconf/data/cisco-wireless:wireless-oper/ap-oper/wtp-mac=aa:bb:cc:dd:ee:ff",
-		},
-		{
-			name:     "Empty value",
-			endpoint: "/api/test",
-			key:      "id",
-			value:    "",
-			expected: "/api/test/id=",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := builder.BuildPathQueryURL(tt.endpoint, tt.key, tt.value)
-			testutil.AssertStringEquals(t, result, tt.expected, "BuildPathQueryURL()")
-		})
-	}
-}
-
 // TestBuildQueryURL tests query URL construction.
 func TestRESTCONFBuilderUnit_BuildQueryURL_Success(t *testing.T) {
 	builder := NewBuilder("https", "192.168.1.1")

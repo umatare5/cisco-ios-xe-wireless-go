@@ -62,12 +62,6 @@ func (b *Builder) BuildQueryURL(endpoint, identifier string) string {
 	return fmt.Sprintf("%s=%s", endpoint, identifier)
 }
 
-// BuildPathQueryURL constructs URLs with path and key-value parameters
-// Format: endpoint/key=value.
-func (b *Builder) BuildPathQueryURL(endpoint, key, value string) string {
-	return fmt.Sprintf("%s/%s=%s", endpoint, key, value)
-}
-
 // BuildQueryCompositeURL constructs URLs for queries with composite parameters
 // Format: endpoint=value1,value2,value3...
 func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{}) string {
@@ -89,11 +83,6 @@ func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{})
 		}
 	}
 	return fmt.Sprintf("%s=%s", endpoint, strings.Join(strValues, ","))
-}
-
-// URLValue represents types that can be safely converted to URL parameters.
-type URLValue interface {
-	~string | ~int | ~int64 | ~float64 | ~bool
 }
 
 // buildBaseURL constructs the base URL for the controller.
