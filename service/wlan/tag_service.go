@@ -188,9 +188,8 @@ func (s *PolicyTagService) validateTagName(tagName string) error {
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *PolicyTagService) buildTagURL(tagName string) string {
-	return s.Client().RestconfBuilder().BuildPathQueryURL(
-		routes.WLANPolicyListEntriesPath,
-		"policy-list-entry",
+	return s.Client().RestconfBuilder().BuildQueryURL(
+		routes.WLANPolicyListEntryQueryPath,
 		tagName,
 	)
 }

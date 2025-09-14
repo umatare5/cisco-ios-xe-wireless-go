@@ -16,7 +16,7 @@ func TestWlanServiceUnit_Constructor_Success(t *testing.T) {
 
 func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	// Mock server with basic WLAN response structure
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data": `{
 			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data": {
 				"global-params": {
@@ -82,7 +82,7 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			}
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)

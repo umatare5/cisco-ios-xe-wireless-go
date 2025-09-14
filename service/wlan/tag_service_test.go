@@ -17,7 +17,7 @@ func TestWlanPolicyTagServiceUnit_Constructor_Success(t *testing.T) {
 
 func TestWlanPolicyTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	// Mock server with policy tag responses
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries": `{
 			"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entries": {
 				"policy-list-entry": [
@@ -60,7 +60,7 @@ func TestWlanPolicyTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			]
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -112,7 +112,7 @@ func TestWlanPolicyTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 
 func TestWlanPolicyTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	// Mock server with policy tag CRUD responses
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries": `{
 			"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entries": {
 				"policy-list-entry": [
@@ -164,7 +164,7 @@ func TestWlanPolicyTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 			]
 		}`,
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries/policy-list-entry=test-tag": `{}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -262,13 +262,13 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_EmptyTagName(t *testing.T) {
 
 func TestWlanPolicyTagServiceUnit_ErrorHandling_NonExistentTag(t *testing.T) {
 	// Mock server with error responses for SetPolicyProfile and SetDescription operations
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries": `{
 			"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entries": {
 				"policy-list-entry": []
 			}
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -330,9 +330,9 @@ func TestWlanPolicyTagServiceUnit_GetOperations_EdgeCases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockServer := testutil.NewMockServer(map[string]string{
+			mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 				"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries": tt.mockResponse,
-			})
+			}))
 			defer mockServer.Close()
 
 			client := testutil.NewTestClient(mockServer)
@@ -398,7 +398,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 	t.Parallel()
 
 	t.Run("ValidationErrors_TagName", func(t *testing.T) {
-		mockServer := testutil.NewMockServer(map[string]string{})
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -428,7 +428,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 			}`,
 		}
 
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -456,7 +456,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 			}`,
 		}
 
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -482,7 +482,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 			}`,
 		}
 
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -502,9 +502,9 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 
 	t.Run("SetPolicyProfile_GetError", func(t *testing.T) {
 		// Mock server that returns error for GET operations (ListPolicyTags call)
-		mockServer := testutil.NewMockErrorServer([]string{
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses([]string{
 			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries",
-		}, 500)
+		}, 500))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -529,7 +529,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 			}`,
 		}
 
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -545,7 +545,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 	})
 
 	t.Run("DeletePolicyTag_ValidationError", func(t *testing.T) {
-		mockServer := testutil.NewMockServer(map[string]string{})
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -562,9 +562,9 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 
 	t.Run("DeletePolicyTag_ServerError", func(t *testing.T) {
 		// Mock server that returns error for DELETE operations
-		mockServer := testutil.NewMockErrorServer([]string{
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses([]string{
 			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries/policy-list-entry=test-tag",
-		}, 500)
+		}, 500))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
