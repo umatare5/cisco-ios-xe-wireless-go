@@ -3,14 +3,14 @@ package afc
 // AfcOper represents AFC operational data container.
 type AfcOper struct {
 	CiscoIOSXEWirelessAfcOperAfcOperData struct {
-		EwlcAfcApResp []EwlcAfcApResp `json:"ewlc-afc-ap-resp"`
-		EwlcAfcApReq  []EwlcAfcApReq  `json:"ewlc-afc-ap-req,omitempty"`
+		EwlcAfcApResp []EwlcAfcApResp `json:"ewlc-afc-ap-resp"`          // AFC response list (Live: IOS-XE 17.12.5)
+		EwlcAfcApReq  []EwlcAfcApReq  `json:"ewlc-afc-ap-req,omitempty"` // AFC request list (YANG: IOS-XE 17.18.1+)
 	} `json:"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"`
 }
 
 // AfcOperEwlcAfcApResp represents AFC AP response data container.
 type AfcOperEwlcAfcApResp struct {
-	EwlcAfcApResp []EwlcAfcApResp `json:"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp"`
+	EwlcAfcApResp []EwlcAfcApResp `json:"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp"` // AFC response list (Live: IOS-XE 17.12.5)
 }
 
 // EwlcAfcApReq represents AFC request information from access point.
@@ -98,41 +98,41 @@ type AfcChannelResponse struct {
 
 // EwlcAfcApResp represents AFC response from access point.
 type EwlcAfcApResp struct {
-	ApMac    string `json:"ap-mac"` // Access point MAC address
+	ApMac    string `json:"ap-mac"` // Access point MAC address (Live: IOS-XE 17.12.5)
 	RespData struct {
-		RequestID string `json:"request-id"` // AFC request identifier
+		RequestID string `json:"request-id"` // AFC request identifier (Live: IOS-XE 17.12.5)
 		RulesetID string `json:"ruleset-id"` // AFC ruleset identifier (YANG: IOS-XE 17.18.1+)
 		RespCode  struct {
-			Code             int    `json:"code"`              // AFC response code (YANG: IOS-XE 17.18.1+)
-			Description      string `json:"description"`       // Response code description (YANG: IOS-XE 17.18.1+)
-			SupplementalInfo string `json:"supplemental-info"` // Additional response information (YANG: IOS-XE 17.18.1+)
-		} `json:"resp-code"` // AFC response code details (YANG: IOS-XE 17.18.1+)
+			Code             int    `json:"code"`              // AFC response code (Live: IOS-XE 17.12.5)
+			Description      string `json:"description"`       // Response code description (Live: IOS-XE 17.12.5)
+			SupplementalInfo string `json:"supplemental-info"` // Additional response information (Live: IOS-XE 17.12.5)
+		} `json:"resp-code"` // AFC response code details (Live: IOS-XE 17.12.5)
 		Band20 struct {
-			GlobalOperClass int                  `json:"global-oper-class"`  // 20MHz global operating class (YANG: IOS-XE 17.18.1+)
-			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 20MHz channels (YANG: IOS-XE 17.18.1+)
-		} `json:"band20"` // 20MHz band response (YANG: IOS-XE 17.18.1+)
+			GlobalOperClass int                  `json:"global-oper-class"`  // 20MHz global operating class (Live: IOS-XE 17.12.5)
+			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 20MHz channels (Live: IOS-XE 17.12.5)
+		} `json:"band20"` // 20MHz band response (Live: IOS-XE 17.12.5)
 		Band40 struct {
-			GlobalOperClass int                  `json:"global-oper-class"`  // 40MHz global operating class (YANG: IOS-XE 17.18.1+)
-			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 40MHz channels (YANG: IOS-XE 17.18.1+)
-		} `json:"band40"` // 40MHz band response (YANG: IOS-XE 17.18.1+)
+			GlobalOperClass int                  `json:"global-oper-class"`  // 40MHz global operating class (Live: IOS-XE 17.12.5)
+			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 40MHz channels (Live: IOS-XE 17.12.5)
+		} `json:"band40"` // 40MHz band response (Live: IOS-XE 17.12.5)
 		Band80 struct {
-			GlobalOperClass int                  `json:"global-oper-class"`  // 80MHz global operating class (YANG: IOS-XE 17.18.1+)
-			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 80MHz channels (YANG: IOS-XE 17.18.1+)
-		} `json:"band80"` // 80MHz band response (YANG: IOS-XE 17.18.1+)
+			GlobalOperClass int                  `json:"global-oper-class"`  // 80MHz global operating class (Live: IOS-XE 17.12.5)
+			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 80MHz channels (Live: IOS-XE 17.12.5)
+		} `json:"band80"` // 80MHz band response (Live: IOS-XE 17.12.5)
 		Band160 struct {
-			GlobalOperClass int                  `json:"global-oper-class"`  // 160MHz global operating class (YANG: IOS-XE 17.18.1+)
-			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 160MHz channels (YANG: IOS-XE 17.18.1+)
-		} `json:"band160"` // 160MHz band response (YANG: IOS-XE 17.18.1+)
+			GlobalOperClass int                  `json:"global-oper-class"`  // 160MHz global operating class (Live: IOS-XE 17.12.5)
+			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 160MHz channels (Live: IOS-XE 17.12.5)
+		} `json:"band160"` // 160MHz band response (Live: IOS-XE 17.12.5)
 		Band80Plus struct {
-			GlobalOperClass int                  `json:"global-oper-class"`  // 80+ MHz global operating class (YANG: IOS-XE 17.18.1+)
-			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 80+ MHz channels (YANG: IOS-XE 17.18.1+)
-		} `json:"band80plus"` // 80+ MHz band response (YANG: IOS-XE 17.18.1+)
+			GlobalOperClass int                  `json:"global-oper-class"`  // 80+ MHz global operating class (Live: IOS-XE 17.12.5)
+			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 80+ MHz channels (Live: IOS-XE 17.12.5)
+		} `json:"band80plus"` // 80+ MHz band response (Live: IOS-XE 17.12.5)
 		Band320 *struct {
 			GlobalOperClass int                  `json:"global-oper-class"`  // 320MHz global operating class (YANG: IOS-XE 17.18.1+)
 			Channels        []AfcChannelResponse `json:"channels,omitempty"` // Available 320MHz channels (YANG: IOS-XE 17.18.1+)
 		} `json:"band320,omitempty"` // 320MHz band response (YANG: IOS-XE 17.18.1+)
-		ExpireTime        string `json:"expire-time"`         // Response expiration time (YANG: IOS-XE 17.18.1+)
-		RespRcvdTimestamp string `json:"resp-rcvd-timestamp"` // Response received timestamp (YANG: IOS-XE 17.18.1+)
-	} `json:"resp-data"` // AFC response data (YANG: IOS-XE 17.18.1+)
-	Slot int `json:"slot"` // Access point slot number (YANG: IOS-XE 17.18.1+)
+		ExpireTime        string `json:"expire-time"`         // Response expiration time (Live: IOS-XE 17.12.5)
+		RespRcvdTimestamp string `json:"resp-rcvd-timestamp"` // Response received timestamp (Live: IOS-XE 17.12.5)
+	} `json:"resp-data"` // AFC response data (Live: IOS-XE 17.12.5)
+	Slot int `json:"slot"` // Access point slot number (Live: IOS-XE 17.12.5)
 }
