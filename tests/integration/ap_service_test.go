@@ -166,6 +166,13 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListIotFirmware",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListIotFirmware(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		FilterMethods: []integration.TestMethod{
 			{

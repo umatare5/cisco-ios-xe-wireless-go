@@ -280,6 +280,11 @@ func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCapwapPkts
 	return core.Get[model.ApOperCapwapPkts](ctx, s.Client(), routes.APCapwapPktsPath)
 }
 
+// ListIotFirmware retrieves IoT firmware information for all access points.
+func (s Service) ListIotFirmware(ctx context.Context) (*model.ApOperIotFirmware, error) {
+	return core.Get[model.ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
+}
+
 // EnableAP enables the administrative state of an access point.
 func (s Service) EnableAP(ctx context.Context, mac string) error {
 	return s.updateAPState(ctx, mac, "admin-state-enabled")

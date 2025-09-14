@@ -263,6 +263,28 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"rx-pkts": 2000
 			}]
 		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/iot-firmware": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:iot-firmware": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff"
+					"if-name": "ttyiot0",
+					"is-default": [null],
+					"version": "2.7.21",
+					"vendor-name": "Cisco Systems Inc",
+					"type": "iot-radio-fw-ble",
+					"desc": "Firmware developed by Cisco for IoT use"
+				},
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff"
+					"if-name": "ttyiot0",
+					"is-default": [null],
+					"version": "3.1.0",
+					"vendor-name": "Cisco Systems Inc",
+					"type": "iot-radio-fw-ble",
+					"desc": "Firmware developed by Cisco for IoT use"
+				}
+			]
+		}`,
 	}
 	mockServer := testutil.NewMockServer(responses)
 	defer mockServer.Close()
@@ -452,6 +474,16 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Error("Expected result for ListCAPWAPPackets, got nil")
+		}
+	})
+
+	t.Run("ListIotFirmware", func(t *testing.T) {
+		result, err := service.ListIotFirmware(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListIotFirmware, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListIotFirmware, got nil")
 		}
 	})
 }

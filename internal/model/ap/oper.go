@@ -31,7 +31,7 @@ type ApOper struct {
 		ApNhGlobalData          ApNhGlobalData           `json:"ap-nh-global-data"`
 		ApImagePrepareLocation  []ApImagePrepareLocation `json:"ap-image-prepare-location"`
 		ApImageActiveLocation   []ApImageActiveLocation  `json:"ap-image-active-location"`
-		IotFirmware             interface{}              `json:"iot-firmware,omitempty"`
+		IotFirmware             []IotFirmware            `json:"iot-firmware,omitempty"`
 	} `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"`
 }
 
@@ -173,6 +173,11 @@ type ApOperApPwrInfo struct {
 // ApOperApSensorStatus represents the AP sensor status response.
 type ApOperApSensorStatus struct {
 	ApSensorStatus []ApSensorStatus `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-sensor-status"`
+}
+
+// ApOperIotFirmware represents the IoT firmware response.
+type ApOperIotFirmware struct {
+	IotFirmware []IotFirmware `json:"Cisco-IOS-XE-wireless-access-point-oper:iot-firmware"`
 }
 
 // ApPwrInfo represents AP power information.
@@ -1341,3 +1346,17 @@ type PersistentSsid struct {
 type CdpIPAddress struct {
 	IPAddressValue []string `json:"ip-address-value"` // CDP IP address values
 }
+
+// IotFirmware represents IoT firmware information for access points.
+type IotFirmware struct {
+	ApMac      string    `json:"ap-mac"`      // Access point MAC address (Live: IOS-XE 17.12.5)
+	IfName     string    `json:"if-name"`     // Interface name for IoT radio (Live: IOS-XE 17.12.5)
+	IsDefault  EmptyType `json:"is-default"`  // Default firmware status (Live: IOS-XE 17.12.5)
+	Version    string    `json:"version"`     // Firmware version string (Live: IOS-XE 17.12.5)
+	VendorName string    `json:"vendor-name"` // Firmware vendor name (Live: IOS-XE 17.12.5)
+	Type       string    `json:"type"`        // Firmware type identifier (Live: IOS-XE 17.12.5)
+	Desc       string    `json:"desc"`        // Firmware description (Live: IOS-XE 17.12.5)
+}
+
+// EmptyType represents YANG empty type fields appearing as null arrays in RESTCONF JSON.
+type EmptyType []interface{} // appears as [null]

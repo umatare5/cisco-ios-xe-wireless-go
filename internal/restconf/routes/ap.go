@@ -72,6 +72,9 @@ const (
 
 	// APCapwapPktsPath retrieves CAPWAP packets information.
 	APCapwapPktsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-pkts"
+
+	// APIotFirmwarePath retrieves IoT firmware information for access points.
+	APIotFirmwarePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/iot-firmware"
 )
 
 // AP RPC Operations
