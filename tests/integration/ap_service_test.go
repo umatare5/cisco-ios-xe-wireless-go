@@ -314,6 +314,7 @@ func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
 						ctx, integration.TestAPMac(), 0, integration.TestAPNeighborBSSID())
 				},
 				LogResult: true,
+				WhenError: skipOnNeighborBSSIDNotFound,
 			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{
@@ -351,4 +352,18 @@ func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
 	}
 
 	integration.RunTestSuite(t, suite)
+}
+
+// skipOnNeighborBSSIDNotFound skips the test when neighbor BSSID is not found
+func skipOnNeighborBSSIDNotFound(t *testing.T, methodName string, err error) bool {
+	// Only handle NotFound errors for neighbor BSSID tests
+	if !core.IsNotFoundError(err) {
+		return false
+	}
+
+	t.Skipf("%s: Neighbor BSSID not found - this may caused as neighbor data changes frequently. "+
+		"To update with current data, run: 'go run ./example/list_neighbors/main.go' "+
+		"and set WNC_AP_NEIGHBOR_BSSID environment variable. "+
+		"Error details: %v", methodName, err)
+	return true
 }
