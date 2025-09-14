@@ -2,17 +2,14 @@ package model
 
 // WatCfg represents the complete WAT configuration from YANG 17.18.1+.
 type WatCfg struct {
-	WatCfgData *WatCfgData `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data"`
+	CiscoIOSXEWirelessWatCfgData struct {
+		WatConfig *WatConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
+	} `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data"`
 }
 
 // WatCfgWatConfig represents the WAT configuration container from YANG 17.18.1+.
 type WatCfgWatConfig struct {
 	WatConfig *WatConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
-}
-
-// WatCfgData represents the WAT configurational data container from YANG 17.18.1+.
-type WatCfgData struct {
-	WatConfig *WatConfig `json:"wat-config,omitempty"`
 }
 
 // WatConfig represents Wireless Active Testing (WAT) ThousandEyes configurations from YANG 17.18.1+.

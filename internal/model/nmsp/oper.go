@@ -3,10 +3,10 @@ package nmsp
 // NmspOper represents the NMSP operational data container.
 type NmspOper struct {
 	CiscoIOSXEWirelessNmspOperData struct {
-		ClientRegistration []ClientRegistration `json:"client-registration"`
-		CmxConnection      []CmxConnection      `json:"cmx-connection"`
-		CmxCloudInfo       CmxCloudInfo         `json:"cmx-cloud-info"`
-	} `json:"Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"`
+		ClientRegistration []ClientRegistration `json:"client-registration"` // NMSP client applications providing services (Live: IOS-XE 17.12.5)
+		CmxConnection      []CmxConnection      `json:"cmx-connection"`      // CMX connection table (Live: IOS-XE 17.12.5)
+		CmxCloudInfo       CmxCloudInfo         `json:"cmx-cloud-info"`      // NMSP services over HTTPS transport info (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"` // Network Mobility Services Protocol (YANG: IOS-XE 17.12.1)
 }
 
 // NmspClientRegistration represents the NMSP client registration data container.
@@ -24,99 +24,97 @@ type NmspCmxCloudInfo struct {
 	CmxCloudInfo CmxCloudInfo `json:"Cisco-IOS-XE-wireless-nmsp-oper:cmx-cloud-info"`
 }
 
-// NMSP Supporting Types
-
-// EmptyType represents YANG empty type fields appearing as null arrays in RESTCONF JSON.
-type EmptyType []interface{}
-
 // ClientRegistration represents individual NMSP client registration record.
 type ClientRegistration struct {
-	ClientID int          `json:"client-id"` // NMSP client identifier
-	Services NmspServices `json:"services"`  // NMSP services configuration
+	ClientID int          `json:"client-id"` // NMSP client identifier (Live: IOS-XE 17.12.5)
+	Services NmspServices `json:"services"`  // NMSP capabilities provided by EWLC app (Live: IOS-XE 17.12.5)
 }
 
 // NmspServices represents NMSP service configuration and status.
 type NmspServices struct {
-	Mask                        string     `json:"mask"`                                    // NMSP services bitmask
-	RssiMs                      *EmptyType `json:"rssi-ms,omitempty"`                       // NMSP mobile station RSSI service
-	RssiRfid                    *EmptyType `json:"rssi-rfid,omitempty"`                     // NMSP RFID RSSI service
-	RssiRogue                   *EmptyType `json:"rssi-rogue,omitempty"`                    // NMSP rogue RSSI service
-	RssiInterferer              *EmptyType `json:"rssi-interferer,omitempty"`               // NMSP RSSI interferer service (YANG: IOS-XE 17.12.1+)
-	RssiHs                      *EmptyType `json:"rssi-hs,omitempty"`                       // NMSP RSSI hotspot service (YANG: IOS-XE 17.12.1+)
-	RssiMsAssociatedOnly        *EmptyType `json:"rssi-ms-associated-only,omitempty"`       // NMSP associated mobile station RSSI service
-	SpectrumInterferer          *EmptyType `json:"spectrum-interferer,omitempty"`           // NMSP spectrum interferer service
-	SpectrumAirQuality          *EmptyType `json:"spectrum-air-quality,omitempty"`          // NMSP spectrum air quality service
-	SpectrumAggregateInterferer *EmptyType `json:"spectrum-aggregate-interferer,omitempty"` // NMSP spectrum aggregate interferer service
-	InfoMs                      *EmptyType `json:"info-ms,omitempty"`                       // NMSP mobile station information service
-	InfoRfid                    *EmptyType `json:"info-rfid,omitempty"`                     // NMSP RFID information service (YANG: IOS-XE 17.12.1+)
-	InfoRogue                   *EmptyType `json:"info-rogue,omitempty"`                    // NMSP rogue information service
-	InfoHs                      *EmptyType `json:"info-hs,omitempty"`                       // NMSP hotspot information service (YANG: IOS-XE 17.12.1+)
-	StatsMs                     *EmptyType `json:"stats-ms,omitempty"`                      // NMSP mobile station statistics service
-	StatsRfid                   *EmptyType `json:"stats-rfid,omitempty"`                    // NMSP RFID statistics service
-	StatsRogue                  *EmptyType `json:"stats-rogue,omitempty"`                   // NMSP rogue statistics service
-	Attach                      *EmptyType `json:"attach,omitempty"`                        // NMSP attach notification service (YANG: IOS-XE 17.12.1+)
-	Location                    *EmptyType `json:"location,omitempty"`                      // NMSP location service (YANG: IOS-XE 17.12.1+)
-	Fmchs                       *EmptyType `json:"fmchs,omitempty"`                         // NMSP FMCHS service (YANG: IOS-XE 17.12.1+)
-	ApMonitor                   *EmptyType `json:"ap-monitor,omitempty"`                    // NMSP access point monitor service
-	Wips                        *EmptyType `json:"wips,omitempty"`                          // NMSP WIPS service (YANG: IOS-XE 17.12.1+)
-	OnDemand                    *EmptyType `json:"on-demand,omitempty"`                     // NMSP on-demand service
-	ApInfo                      *EmptyType `json:"ap-info,omitempty"`                       // NMSP access point information service
+	Mask                        string     `json:"mask"`                                    // NMSP subservice bitmask combination (Live: IOS-XE 17.12.5)
+	RssiMs                      *EmptyType `json:"rssi-ms,omitempty"`                       // RSSI Mobile Station capability (Live: IOS-XE 17.12.5)
+	RssiRfid                    *EmptyType `json:"rssi-rfid,omitempty"`                     // RSSI RFID Tag capability (Live: IOS-XE 17.12.5)
+	RssiRogue                   *EmptyType `json:"rssi-rogue,omitempty"`                    // RSSI Rogue capability (Live: IOS-XE 17.12.5)
+	RssiInterferer              *EmptyType `json:"rssi-interferer,omitempty"`               // RSSI Interferer capability (YANG: IOS-XE 17.12.1)
+	RssiHs                      *EmptyType `json:"rssi-hs,omitempty"`                       // RSSI Handover Client capability (YANG: IOS-XE 17.12.1)
+	RssiMsAssociatedOnly        *EmptyType `json:"rssi-ms-associated-only,omitempty"`       // RSSI Associated Mobile Station only capability (Live: IOS-XE 17.12.5)
+	SpectrumInterferer          *EmptyType `json:"spectrum-interferer,omitempty"`           // Spectrum Interferer capability (Live: IOS-XE 17.12.5)
+	SpectrumAirQuality          *EmptyType `json:"spectrum-air-quality,omitempty"`          // Spectrum Air Quality capability (Live: IOS-XE 17.12.5)
+	SpectrumAggregateInterferer *EmptyType `json:"spectrum-aggregate-interferer,omitempty"` // Spectrum Aggregate Interferer capability (Live: IOS-XE 17.12.5)
+	InfoMs                      *EmptyType `json:"info-ms,omitempty"`                       // Information Mobile Station capability (Live: IOS-XE 17.12.5)
+	InfoRfid                    *EmptyType `json:"info-rfid,omitempty"`                     // Information RFID Tag capability (YANG: IOS-XE 17.12.1)
+	InfoRogue                   *EmptyType `json:"info-rogue,omitempty"`                    // Information Rogue capability (Live: IOS-XE 17.12.5)
+	InfoHs                      *EmptyType `json:"info-hs,omitempty"`                       // Information Handover Client capability (YANG: IOS-XE 17.12.1)
+	StatsMs                     *EmptyType `json:"stats-ms,omitempty"`                      // Statistics Mobile Station capability (Live: IOS-XE 17.12.5)
+	StatsRfid                   *EmptyType `json:"stats-rfid,omitempty"`                    // Statistics RFID Tag capability (Live: IOS-XE 17.12.5)
+	StatsRogue                  *EmptyType `json:"stats-rogue,omitempty"`                   // Statistics Rogue capability (Live: IOS-XE 17.12.5)
+	Attach                      *EmptyType `json:"attach,omitempty"`                        // Mobile Station Attachment capability (YANG: IOS-XE 17.12.1)
+	Location                    *EmptyType `json:"location,omitempty"`                      // Location Service capability (YANG: IOS-XE 17.12.1)
+	Fmchs                       *EmptyType `json:"fmchs,omitempty"`                         // Handover Service capability (YANG: IOS-XE 17.12.1)
+	ApMonitor                   *EmptyType `json:"ap-monitor,omitempty"`                    // AP Monitor Service capability (Live: IOS-XE 17.12.5)
+	Wips                        *EmptyType `json:"wips,omitempty"`                          // Wireless Intrusion Detection System capability (YANG: IOS-XE 17.12.1)
+	OnDemand                    *EmptyType `json:"on-demand,omitempty"`                     // On-Demand Service capability (Live: IOS-XE 17.12.5)
+	ApInfo                      *EmptyType `json:"ap-info,omitempty"`                       // AP Info Service capability (Live: IOS-XE 17.12.5)
 }
 
 // CmxConnection represents individual CMX connection details.
 type CmxConnection struct {
-	PeerIP        string      `json:"peer-ip"`       // CMX peer IP address
-	ConnectionID  string      `json:"connection-id"` // CMX connection identifier
-	Active        bool        `json:"active"`        // CMX connection active status
-	ConStats      CmxConStats `json:"con-stats"`     // CMX connection statistics
+	PeerIP        string      `json:"peer-ip"`       // IP address of the CMX (Live: IOS-XE 17.12.5)
+	ConnectionID  string      `json:"connection-id"` // Internal connection ID of the CMX (Live: IOS-XE 17.12.5)
+	Active        bool        `json:"active"`        // Flag indicating whether CMX connection is active (Live: IOS-XE 17.12.5)
+	ConStats      CmxConStats `json:"con-stats"`     // Statistics of messages sent/received (Live: IOS-XE 17.12.5)
 	Subscriptions struct {
-		Mask string `json:"mask"` // CMX subscription mask
-	} `json:"subscriptions"` // CMX subscription configuration
-	Transport string `json:"transport"` // CMX transport protocol
+		Mask string `json:"mask"` // NMSP subservice bitmask combination (Live: IOS-XE 17.12.5)
+	} `json:"subscriptions"` // Service subscriptions established by given CMX (Live: IOS-XE 17.12.5)
+	Transport string `json:"transport"` // The transport used for this CMX connection (Live: IOS-XE 17.12.5)
 }
 
 // CmxConStats represents CMX connection statistics.
 type CmxConStats struct {
-	TxMsgCounter        []MsgCounter `json:"tx-msg-counter"`        // Transmitted message counters
-	RxMsgCounter        []MsgCounter `json:"rx-msg-counter"`        // Received message counters
-	UnsupportedMsgCount string       `json:"unsupported-msg-count"` // Unsupported message count
-	TxDataFrames        string       `json:"tx-data-frames"`        // Transmitted data frames count
-	RxDataFrames        string       `json:"rx-data-frames"`        // Received data frames count
-	Connections         string       `json:"connections"`           // Total connections count
-	Disconnections      string       `json:"disconnections"`        // Total disconnections count
+	TxMsgCounter        []MsgCounter `json:"tx-msg-counter"`        // Messages transmitted from NMSPd to CMX (Live: IOS-XE 17.12.5)
+	RxMsgCounter        []MsgCounter `json:"rx-msg-counter"`        // Messages received by NMSPd from CMX (Live: IOS-XE 17.12.5)
+	UnsupportedMsgCount string       `json:"unsupported-msg-count"` // Unsupported messages received by NMSP daemon (Live: IOS-XE 17.12.5)
+	TxDataFrames        string       `json:"tx-data-frames"`        // Data frames transferred from NMSP daemon to CMX (Live: IOS-XE 17.12.5)
+	RxDataFrames        string       `json:"rx-data-frames"`        // Data frames received by NMSP daemon from CMX (Live: IOS-XE 17.12.5)
+	Connections         string       `json:"connections"`           // Amount of successful connections (Live: IOS-XE 17.12.5)
+	Disconnections      string       `json:"disconnections"`        // Amount of disconnections (Live: IOS-XE 17.12.5)
 }
 
 // MsgCounter represents message counter statistics.
 type MsgCounter struct {
-	Counter string `json:"counter"` // Message counter value
-	MsgID   int    `json:"msg-id"`  // Message identifier
+	Counter string `json:"counter"` // Amount of messages sent or received (Live: IOS-XE 17.12.5)
+	MsgID   int    `json:"msg-id"`  // NMSP protocol message identifier (Live: IOS-XE 17.12.5)
 }
 
 // CmxCloudInfo represents CMX cloud information container.
 type CmxCloudInfo struct {
-	CloudStatus CloudStatus `json:"cloud-status"` // CMX cloud connection status
-	CloudStats  CloudStats  `json:"cloud-stats"`  // CMX cloud connection statistics
+	CloudStatus CloudStatus `json:"cloud-status"` // Status of the cloud connection (Live: IOS-XE 17.12.5)
+	CloudStats  CloudStats  `json:"cloud-stats"`  // Statistics of the cloud connection (Live: IOS-XE 17.12.5)
 }
 
 // CloudStatus represents CMX cloud connection status.
 type CloudStatus struct {
-	IPAddress         string `json:"ip-address"`          // CMX cloud server IP address
-	Connectivity      string `json:"connectivity"`        // CMX cloud connectivity status
-	ServiceUp         bool   `json:"service-up"`          // CMX cloud service availability
-	LastRequestStatus string `json:"last-request-status"` // Last request status
-	HeartbeatStatusOk bool   `json:"heartbeat-status-ok"` // Heartbeat status indicator
+	IPAddress         string `json:"ip-address"`          // IP Address which CMX cloud server is resolved (Live: IOS-XE 17.12.5)
+	Connectivity      string `json:"connectivity"`        // Enum representing status UP/DOWN of HTTP connection (Live: IOS-XE 17.12.5)
+	ServiceUp         bool   `json:"service-up"`          // True if NMSP connectivity towards CMX cloud is UP (Live: IOS-XE 17.12.5)
+	LastRequestStatus string `json:"last-request-status"` // String representing the last request status (Live: IOS-XE 17.12.5)
+	HeartbeatStatusOk bool   `json:"heartbeat-status-ok"` // True if last heartbeat was successful (Live: IOS-XE 17.12.5)
 }
 
 // CloudStats represents CMX cloud connection statistics.
 type CloudStats struct {
-	TxDataframes     int `json:"tx-dataframes"`     // Transmitted data frames to cloud
-	RxDataframes     int `json:"rx-dataframes"`     // Received data frames from cloud
-	TxHeartbeatReq   int `json:"tx-heartbeat-req"`  // Transmitted heartbeat requests
-	HeartbeatTimeout int `json:"heartbeat-timeout"` // Heartbeat timeout count
-	RxSubscriberReq  int `json:"rx-subscriber-req"` // Received subscriber requests
-	TxDatabytes      int `json:"tx-databytes"`      // Transmitted data bytes
-	RxDatabytes      int `json:"rx-databytes"`      // Received data bytes
-	TxHeartbeatFail  int `json:"tx-heartbeat-fail"` // Failed heartbeat transmissions
-	RxDataFail       int `json:"rx-data-fail"`      // Failed data receptions
-	TxDataFail       int `json:"tx-data-fail"`      // Failed data transmissions
+	TxDataframes     int `json:"tx-dataframes"`     // Number of data frames sent (Live: IOS-XE 17.12.5)
+	RxDataframes     int `json:"rx-dataframes"`     // Number of data frames received (Live: IOS-XE 17.12.5)
+	TxHeartbeatReq   int `json:"tx-heartbeat-req"`  // Number of HTTP heartbeats sent (Live: IOS-XE 17.12.5)
+	HeartbeatTimeout int `json:"heartbeat-timeout"` // Number of heartbeat timeouts (Live: IOS-XE 17.12.5)
+	RxSubscriberReq  int `json:"rx-subscriber-req"` // Number of requests from subscriber (Live: IOS-XE 17.12.5)
+	TxDatabytes      int `json:"tx-databytes"`      // Number of bytes sent (Live: IOS-XE 17.12.5)
+	RxDatabytes      int `json:"rx-databytes"`      // Number of bytes received (Live: IOS-XE 17.12.5)
+	TxHeartbeatFail  int `json:"tx-heartbeat-fail"` // Count of failures sending heartbeat (Live: IOS-XE 17.12.5)
+	RxDataFail       int `json:"rx-data-fail"`      // Number of failures receiving data (Live: IOS-XE 17.12.5)
+	TxDataFail       int `json:"tx-data-fail"`      // Number of failures sending data (Live: IOS-XE 17.12.5)
 }
+
+// EmptyType represents YANG empty type fields appearing as null arrays in RESTCONF JSON.
+type EmptyType []interface{} // appears as [null]

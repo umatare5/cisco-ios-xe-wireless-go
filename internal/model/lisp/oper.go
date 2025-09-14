@@ -2,37 +2,34 @@ package lisp
 
 // LispAgentOper represents LISP agent operational data root structure.
 type LispAgentOper struct {
-	LispAgentOperData LispAgentOperData `json:"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data"` // LISP agent operational data container
-}
-
-// LispAgentOperData represents main container for LISP agent operational data.
-type LispAgentOperData struct {
-	LispAgentMemoryStats *LispAgentMemoryStats `json:"lisp-agent-memory-stats,omitempty"` // LISP agent memory statistics
-	LispWLCCapabilities  *LispWLCCapabilities  `json:"lisp-wlc-capabilities,omitempty"`   // LISP WLC capabilities information
-	LispAPCapabilities   []LispAPCapability    `json:"lisp-ap-capabilities,omitempty"`    // LISP AP capabilities per AP type
+	CiscoIOSXEWirelessLispAgentOperData struct {
+		LispAgentMemoryStats *LispAgentMemoryStats `json:"lisp-agent-memory-stats,omitempty"` // Lisp Agent Memory Statistics (YANG: IOS-XE 17.12.1)
+		LispWLCCapabilities  *LispWLCCapabilities  `json:"lisp-wlc-capabilities,omitempty"`   // Wireless Fabric WLC Capabilities (YANG: IOS-XE 17.12.1)
+		LispAPCapabilities   []LispAPCapability    `json:"lisp-ap-capabilities,omitempty"`    // Wireless Fabric AP Capabilities (YANG: IOS-XE 17.12.1)
+	} `json:"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data"` // Lisp Agent operational data (YANG: IOS-XE 17.12.1)
 }
 
 // LispAgentMemoryStats represents LISP agent memory allocation statistics.
 type LispAgentMemoryStats struct {
-	MallocPskBuf        string `json:"malloc-psk-buf"`         // Allocated PSK buffer count
-	FreePskBuf          string `json:"free-psk-buf"`           // Free PSK buffer count
-	MallocMapRegMsg     string `json:"malloc-map-reg-msg"`     // Allocated map register message count
-	FreeMapRegMsg       string `json:"free-map-reg-msg"`       // Free map register message count
-	MallocMapReqMsg     string `json:"malloc-map-req-msg"`     // Allocated map request message count
-	FreeMapReqMsg       string `json:"free-map-req-msg"`       // Free map request message count
-	MallocLispHANode    string `json:"malloc-lisp-ha-node"`    // Allocated LISP HA node count
-	FreeLispHANode      string `json:"free-lisp-ha-node"`      // Free LISP HA node count
-	MallocMapServerCtxt string `json:"malloc-map-server-ctxt"` // Allocated map server context count
-	FreeMapServerCtxt   string `json:"free-map-server-ctxt"`   // Free map server context count
+	MallocPskBuf        string `json:"malloc-psk-buf"`         // Malloc count of psk buffer (YANG: IOS-XE 17.12.1)
+	FreePskBuf          string `json:"free-psk-buf"`           // Free count of psk buffer (YANG: IOS-XE 17.12.1)
+	MallocMapRegMsg     string `json:"malloc-map-reg-msg"`     // Malloc count of map register message (YANG: IOS-XE 17.12.1)
+	FreeMapRegMsg       string `json:"free-map-reg-msg"`       // Free count of map register message (YANG: IOS-XE 17.12.1)
+	MallocMapReqMsg     string `json:"malloc-map-req-msg"`     // Malloc count of map request message (YANG: IOS-XE 17.12.1)
+	FreeMapReqMsg       string `json:"free-map-req-msg"`       // Free count of map request message (YANG: IOS-XE 17.12.1)
+	MallocLispHANode    string `json:"malloc-lisp-ha-node"`    // Malloc count of lisp HA node (YANG: IOS-XE 17.12.1)
+	FreeLispHANode      string `json:"free-lisp-ha-node"`      // Free count of lisp HA node (YANG: IOS-XE 17.12.1)
+	MallocMapServerCtxt string `json:"malloc-map-server-ctxt"` // Malloc count of control plane context (YANG: IOS-XE 17.12.1)
+	FreeMapServerCtxt   string `json:"free-map-server-ctxt"`   // Free count of control plane context (YANG: IOS-XE 17.12.1)
 }
 
 // LispWLCCapabilities represents LISP wireless controller capabilities.
 type LispWLCCapabilities struct {
-	FabricCapable bool `json:"fabric-capable"` // Fabric mode capability flag
+	FabricCapable bool `json:"fabric-capable"` // WLC Fabric capable (YANG: IOS-XE 17.12.1)
 }
 
 // LispAPCapability represents LISP access point capability for specific AP type.
 type LispAPCapability struct {
-	APType        int  `json:"ap-type"`        // Access point type identifier
-	FabricCapable bool `json:"fabric-capable"` // Fabric mode capability flag for this AP type
+	APType        int  `json:"ap-type"`        // AP Type (YANG: IOS-XE 17.12.1)
+	FabricCapable bool `json:"fabric-capable"` // AP Fabric capable (YANG: IOS-XE 17.12.1)
 }

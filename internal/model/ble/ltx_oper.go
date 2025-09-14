@@ -2,23 +2,20 @@ package ble
 
 // BleLtxOper represents BLE LTX operational data container.
 type BleLtxOper struct {
-	BleLtxOperData BleLtxOperData `json:"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data"` // BLE LTX operational data container (YANG: IOS-XE 17.12.1)
+	CiscoIOSXEWirelessBleLtxOperData struct {
+		BleLtxApAntenna []BleLtxApAntenna `json:"ble-ltx-ap-antenna"` // BLE LTX AP antenna information (YANG: IOS-XE 17.12.1)
+		BleLtxAp        []BleLtxAp        `json:"ble-ltx-ap"`         // BLE LTX AP data (YANG: IOS-XE 17.12.1)
+	} `json:"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data"` // BLE LTX operational data (YANG: IOS-XE 17.12.1)
 }
 
 // BleLtxOperBleLtxApAntenna represents BLE LTX AP antenna collection wrapper.
 type BleLtxOperBleLtxApAntenna struct {
-	BleLtxApAntenna []BleLtxApAntenna `json:"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap-antenna"` // BLE LTX AP antenna information (YANG: IOS-XE 17.12.1)
+	BleLtxApAntenna []BleLtxApAntenna `json:"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap-antenna"`
 }
 
 // BleLtxOperBleLtxAp represents BLE LTX AP collection wrapper.
 type BleLtxOperBleLtxAp struct {
-	BleLtxAp []BleLtxAp `json:"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap"` // BLE LTX AP data (YANG: IOS-XE 17.12.1)
-}
-
-// BleLtxOperData represents BLE LTX operational data container.
-type BleLtxOperData struct {
-	BleLtxApAntenna []BleLtxApAntenna `json:"ble-ltx-ap-antenna"` // BLE LTX AP antenna information (YANG: IOS-XE 17.12.1)
-	BleLtxAp        []BleLtxAp        `json:"ble-ltx-ap"`         // BLE LTX AP data (YANG: IOS-XE 17.12.1)
+	BleLtxAp []BleLtxAp `json:"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap"`
 }
 
 // BleLtxApAntenna represents BLE antenna configuration for specific AP.

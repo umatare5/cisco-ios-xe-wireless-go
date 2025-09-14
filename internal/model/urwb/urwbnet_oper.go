@@ -1,24 +1,21 @@
-package model
+package urwb
 
 import "time"
 
-// UrwbnetOper represents the complete URWB network operational data from YANG 17.18.1+.
+// UrwbnetOper represents the complete URWB network operational data from YANG 17.18.1.
 type UrwbnetOper struct {
-	UrwbnetOperData *UrwbnetOperData `json:"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data"`
+	CiscoIOSXEWirelessUrwbnetOperData *struct {
+		UrwbnetStats []UrwbnetStats `json:"urwbnet-stats"`
+		UrwbnetNodeG []UrwbnetNodeG `json:"urwbnet-node-g,omitempty"`
+	} `json:"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data"`
 }
 
-// UrwbnetOperUrwbnetStats represents the URWB network stats container from YANG 17.18.1+.
+// UrwbnetOperUrwbnetStats represents the URWB network stats container from YANG 17.18.1.
 type UrwbnetOperUrwbnetStats struct {
 	UrwbnetStats []UrwbnetStats `json:"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-stats"`
 }
 
-// UrwbnetOperData represents the URWB network operational data container from YANG 17.18.1+.
-type UrwbnetOperData struct {
-	UrwbnetStats []UrwbnetStats `json:"urwbnet-stats"`
-	UrwbnetNodeG []UrwbnetNodeG `json:"urwbnet-node-g,omitempty"`
-}
-
-// UrwbnetStats represents URWB network operational data per coordinator from YANG 17.18.1+.
+// UrwbnetStats represents URWB network operational data per coordinator from YANG 17.18.1.
 type UrwbnetStats struct {
 	Mac                string              `json:"mac"`                    // Coordinator MAC address
 	Gateway            *UrwbnetMeshID      `json:"gw,omitempty"`           // Gateway identifier
@@ -28,14 +25,14 @@ type UrwbnetStats struct {
 	UrwbnetCoordRoutes []UrwbnetCoordRoute `json:"urwbnet-coord-routes,omitempty"`
 }
 
-// UrwbnetMeshID represents mesh identifier information.
+// UrwbnetMeshID represents mesh identifier information from YANG 17.18.1.
 type UrwbnetMeshID struct {
 	Address   string `json:"addr"`                 // Network address
 	MeshName  string `json:"mesh-name,omitempty"`  // Mesh network name
 	NetworkID string `json:"network-id,omitempty"` // Network identifier
 }
 
-// UrwbnetNode represents URWB network node information.
+// UrwbnetNode represents URWB network node information from YANG 17.18.1.
 type UrwbnetNode struct {
 	// From st-urwbnet-mesh-id (inherited by key "addr")
 	Address string `json:"addr"` // Node address (key field)
@@ -51,7 +48,7 @@ type UrwbnetNode struct {
 	ConnDevCount uint8             `json:"conn-dev-count,omitempty"` // Connected device count
 }
 
-// UrwbnetNodeIntf represents URWB network node interface statistics.
+// UrwbnetNodeIntf represents URWB network node interface statistics from YANG 17.18.1.
 type UrwbnetNodeIntf struct {
 	IntfID      *UrwbnetMeshID `json:"intf-id,omitempty"`      // URWB network node interface id
 	IntfEnabled bool           `json:"intf-enabled,omitempty"` // Interface enable status
@@ -63,7 +60,7 @@ type UrwbnetNodeIntf struct {
 	FreqScan    bool           `json:"freq-scan,omitempty"`    // frequency scan status
 }
 
-// UrwbnetNodeMetrics represents node performance metrics.
+// UrwbnetNodeMetrics represents node performance metrics from YANG 17.18.1.
 type UrwbnetNodeMetrics struct {
 	BytesSent       uint64    `json:"bytes-sent,omitempty"`
 	BytesReceived   uint64    `json:"bytes-received,omitempty"`
@@ -74,7 +71,7 @@ type UrwbnetNodeMetrics struct {
 	Uptime          time.Time `json:"uptime,omitempty"`
 }
 
-// UrwbnetCoordRoute represents coordinator routing information.
+// UrwbnetCoordRoute represents coordinator routing information from YANG 17.18.1.
 type UrwbnetCoordRoute struct {
 	Destination string    `json:"destination"`            // Destination address
 	NextHop     string    `json:"next-hop,omitempty"`     // Next hop address
@@ -84,7 +81,7 @@ type UrwbnetCoordRoute struct {
 	LastUpdated time.Time `json:"last-updated,omitempty"` // Route last update time
 }
 
-// UrwbnetNodeG represents URWB network node group information.
+// UrwbnetNodeG represents URWB network node group information from YANG 17.18.1.
 type UrwbnetNodeG struct {
 	GroupID        string        `json:"group-id"`                  // Group identifier
 	GroupName      string        `json:"group-name,omitempty"`      // Group name

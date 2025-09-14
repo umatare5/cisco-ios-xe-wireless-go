@@ -1,40 +1,40 @@
 package rrm
 
-// RrmCfg represents RRM configuration response data from WNC 17.12.5.
+// RrmCfg represents RRM configuration response data.
 type RrmCfg struct {
-	CiscoIOSXEWirelessRrmCfgRrmCfgData RrmCfgData `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"` // RRM configuration data container
+	CiscoIOSXEWirelessRrmCfgRrmCfgData RrmCfgData `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"` // All fields related rrm feature (Live: IOS-XE 17.12.5)
 }
 
-// RrmCfgData represents RRM configuration data container from WNC 17.12.5.
+// RrmCfgData represents RRM configuration data container.
 type RrmCfgData struct {
-	Rrms             *Rrms             `json:"rrms,omitempty"`                // RRM band configurations
-	RrmMgrCfgEntries *RrmMgrCfgEntries `json:"rrm-mgr-cfg-entries,omitempty"` // RRM manager configuration entries
+	Rrms             *Rrms             `json:"rrms,omitempty"`                // RRM configuration (Live: IOS-XE 17.12.5)
+	RrmMgrCfgEntries *RrmMgrCfgEntries `json:"rrm-mgr-cfg-entries,omitempty"` // Configuration related to RRM Algorithms (Live: IOS-XE 17.12.5)
 }
 
 // Rrms represents RRM configurations by band.
 type Rrms struct {
-	Rrm []RrmByBand `json:"rrm,omitempty"` // RRM configurations for each band
+	Rrm []RrmByBand `json:"rrm,omitempty"` // All rrm grouping algorithm related configurations (Live: IOS-XE 17.12.5)
 }
 
-// RrmByBand represents RRM configuration for a specific band from WNC 17.12.5.
+// RrmByBand represents RRM configuration for a specific band.
 type RrmByBand struct {
-	Band string     `json:"band"`          // Radio band identifier
-	Rrm  *RrmConfig `json:"rrm,omitempty"` // RRM configuration for this band
+	Band string     `json:"band"`          // Key to st_rrm table, indicates band of configurations (Live: IOS-XE 17.12.5)
+	Rrm  *RrmConfig `json:"rrm,omitempty"` // All the basic rrm algorithms configurations (Live: IOS-XE 17.12.5)
 }
 
-// RrmConfig represents RRM configuration settings from WNC 17.12.5.
+// RrmConfig represents RRM configuration settings.
 type RrmConfig struct {
-	RoamingEn           bool   `json:"roaming-en"`                     // Enable optimized roaming for band
-	DataRateThreshold   string `json:"data-rate-threshold"`            // Data rate threshold for optimized roaming
-	MeasurementInterval *int   `json:"measurement-interval,omitempty"` // RRM measurement interval in seconds
+	RoamingEn           bool   `json:"roaming-en"`                     // Optimized roaming mode enable/disable (Live: IOS-XE 17.12.5)
+	DataRateThreshold   string `json:"data-rate-threshold"`            // Data rate threshold for 802.11 Optimized Roaming (Live: IOS-XE 17.12.5)
+	MeasurementInterval *int   `json:"measurement-interval,omitempty"` // How often signal strength measurements at each AP (Live: IOS-XE 17.12.5)
 }
 
 // RrmMgrCfgEntries represents RRM manager configuration entries.
 type RrmMgrCfgEntries struct {
-	RrmMgrCfgEntry []RrmMgrCfgEntry `json:"rrm-mgr-cfg-entry,omitempty"` // List of RRM manager configuration entries
+	RrmMgrCfgEntry []RrmMgrCfgEntry `json:"rrm-mgr-cfg-entry,omitempty"` // A list of entries related to RRM Algorithms (Live: IOS-XE 17.12.5)
 }
 
 // RrmMgrCfgEntry represents a single RRM manager configuration entry.
 type RrmMgrCfgEntry struct {
-	Band string `json:"band"` // Radio band for RRM manager configuration
+	Band string `json:"band"` // Key to st_rrm_mgr table, indicates band of configurations (Live: IOS-XE 17.12.5)
 }

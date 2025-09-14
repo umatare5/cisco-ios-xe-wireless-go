@@ -1,34 +1,33 @@
-// Package client provides data models for client operational data.
 package client
 
 import "time"
 
-// ClientOper represents the complete client operational data from WNC 17.12.5.
+// ClientOper represents the complete client operational data.
 type ClientOper struct {
 	CiscoIOSXEWirelessClientOperClientOperData struct {
-		CommonOperData    []CommonOperData    `json:"common-oper-data"`
-		Dot11OperData     []Dot11OperData     `json:"dot11-oper-data"`
-		MobilityOperData  []MobilityOperData  `json:"mobility-oper-data"`
-		MmIfClientStats   []MmIfClientStats   `json:"mm-if-client-stats"`
-		MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history"`
-		TrafficStats      []TrafficStats      `json:"traffic-stats"`
-		PolicyData        []PolicyData        `json:"policy-data"`
-		SisfDBMac         []SisfDBMac         `json:"sisf-db-mac"`
-		DcInfo            []DcInfo            `json:"dc-info"`
-	} `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"`
+		CommonOperData    []CommonOperData    `json:"common-oper-data"`     // Common operational data for all wireless clients (Live: IOS-XE 17.12.5)
+		Dot11OperData     []Dot11OperData     `json:"dot11-oper-data"`      // IEEE 802.11 operational data for wireless clients (Live: IOS-XE 17.12.5)
+		MobilityOperData  []MobilityOperData  `json:"mobility-oper-data"`   // Mobility operational data for roaming clients (Live: IOS-XE 17.12.5)
+		MmIfClientStats   []MmIfClientStats   `json:"mm-if-client-stats"`   // Mobility manager interface client statistics (YANG: IOS-XE 17.12.1)
+		MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history"` // Mobility manager interface client history (YANG: IOS-XE 17.12.1)
+		TrafficStats      []TrafficStats      `json:"traffic-stats"`        // Client traffic statistics and counters (Live: IOS-XE 17.12.5)
+		PolicyData        []PolicyData        `json:"policy-data"`          // Client policy configuration and VLAN data (Live: IOS-XE 17.12.5)
+		SisfDBMac         []SisfDBMac         `json:"sisf-db-mac"`          // SISF database MAC address bindings (YANG: IOS-XE 17.12.1)
+		DcInfo            []DcInfo            `json:"dc-info"`              // Device classification information (YANG: IOS-XE 17.12.1)
+	} `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"` // Client operational data (Live: IOS-XE 17.12.5)
 }
 
-// ClientOperCommonOperData represents the common operational data from WNC 17.12.5.
+// ClientOperCommonOperData represents the common operational data.
 type ClientOperCommonOperData struct {
 	CommonOperData []CommonOperData `json:"Cisco-IOS-XE-wireless-client-oper:common-oper-data"`
 }
 
-// ClientOperDot11OperData represents the 802.11 operational data from WNC 17.12.5.
+// ClientOperDot11OperData represents the 802.11 operational data.
 type ClientOperDot11OperData struct {
 	Dot11OperData []Dot11OperData `json:"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data"`
 }
 
-// ClientOperMobilityOperData represents the mobility operational data from WNC 17.12.5.
+// ClientOperMobilityOperData represents the mobility operational data.
 type ClientOperMobilityOperData struct {
 	MobilityOperData []MobilityOperData `json:"Cisco-IOS-XE-wireless-client-oper:mobility-oper-data"`
 }
@@ -65,333 +64,333 @@ type ClientOperDcInfo struct {
 
 // CommonOperData represents common client operational data.
 type CommonOperData struct {
-	ClientMac             string `json:"client-mac"`              // Client MAC address
-	ApName                string `json:"ap-name"`                 // Access point name
-	MsApSlotID            int    `json:"ms-ap-slot-id"`           // AP slot identifier
-	MsRadioType           string `json:"ms-radio-type"`           // Radio type identifier
-	WlanID                int    `json:"wlan-id"`                 // WLAN identifier
-	ClientType            string `json:"client-type"`             // Client device type
-	CoState               string `json:"co-state"`                // Client operational state
-	AaaOverridePassphrase bool   `json:"aaa-override-passphrase"` // AAA passphrase override flag
-	IsTviEnabled          bool   `json:"is-tvi-enabled"`          // TVI enablement status
+	ClientMac             string `json:"client-mac"`              // MAC address used as network address for wireless stations (Live: IOS-XE 17.12.5)
+	ApName                string `json:"ap-name"`                 // Access Point name client is connected to (Live: IOS-XE 17.12.5)
+	MsApSlotID            int    `json:"ms-ap-slot-id"`           // Radio slot on AP client is connected to (Live: IOS-XE 17.12.5)
+	MsRadioType           string `json:"ms-radio-type"`           // Wireless Radio type client connected with (Live: IOS-XE 17.12.5)
+	WlanID                int    `json:"wlan-id"`                 // Unique Wireless LAN identifier client connected to (Live: IOS-XE 17.12.5)
+	ClientType            string `json:"client-type"`             // Wireless network type based on traffic switching mode (Live: IOS-XE 17.12.5)
+	CoState               string `json:"co-state"`                // Last association phase client completed successfully (Live: IOS-XE 17.12.5)
+	AaaOverridePassphrase bool   `json:"aaa-override-passphrase"` // AAA override passphrase enabled status (Live: IOS-XE 17.12.5)
+	IsTviEnabled          bool   `json:"is-tvi-enabled"`          // Encrypted Traffic Analytics enablement for client (Live: IOS-XE 17.12.5)
 	WlanPolicy            struct {
-		CurrentSwitchingMode  string `json:"current-switching-mode"` // Current data switching mode
-		WlanSwitchingMode     string `json:"wlan-switching-mode"`    // WLAN switching mode configuration
-		CentralAuthentication string `json:"central-authentication"` // Central authentication setting
-		CentralDhcp           bool   `json:"central-dhcp"`           // Central DHCP enablement
-		CentralAssocEnable    bool   `json:"central-assoc-enable"`   // Central association enablement
-		VlanCentralSwitching  bool   `json:"vlan-central-switching"` // VLAN central switching flag
-		IsFabricClient        bool   `json:"is-fabric-client"`       // Fabric client status
-		IsGuestFabricClient   bool   `json:"is-guest-fabric-client"` // Guest fabric client status
-		UpnBitFlag            string `json:"upn-bit-flag"`           // UPN bit flag setting
+		CurrentSwitchingMode  string `json:"current-switching-mode"` // Current traffic switching mode for client (Live: IOS-XE 17.12.5)
+		WlanSwitchingMode     string `json:"wlan-switching-mode"`    // WLAN traffic switching mode based on properties (Live: IOS-XE 17.12.5)
+		CentralAuthentication string `json:"central-authentication"` // Central or local authentication mode (Live: IOS-XE 17.12.5)
+		CentralDhcp           bool   `json:"central-dhcp"`           // Central or local DHCP mode (Live: IOS-XE 17.12.5)
+		CentralAssocEnable    bool   `json:"central-assoc-enable"`   // Central or local association mode (Live: IOS-XE 17.12.5)
+		VlanCentralSwitching  bool   `json:"vlan-central-switching"` // VLAN-based central switching mode (Live: IOS-XE 17.12.5)
+		IsFabricClient        bool   `json:"is-fabric-client"`       // Client associated to Fabric WLAN (Live: IOS-XE 17.12.5)
+		IsGuestFabricClient   bool   `json:"is-guest-fabric-client"` // Client associated to Guest Fabric WLAN (Live: IOS-XE 17.12.5)
+		UpnBitFlag            string `json:"upn-bit-flag"`           // User Defined Network enabled status (Live: IOS-XE 17.12.5)
 	} `json:"wlan-policy"`
-	Username           string `json:"username"` // Client username
+	Username           string `json:"username"` // Client username (Live: IOS-XE 17.12.5)
 	GuestLanClientInfo struct {
-		WiredVlan       int `json:"wired-vlan"`        // Wired VLAN identifier
-		PhyIfid         int `json:"phy-ifid"`          // Physical interface identifier
-		IdleTimeSeconds int `json:"idle-time-seconds"` // Idle time in seconds
+		WiredVlan       int `json:"wired-vlan"`        // VLAN client joins and is learned on foreign controller (Live: IOS-XE 17.12.5)
+		PhyIfid         int `json:"phy-ifid"`          // Physical interface ID client joins on foreign controller (Live: IOS-XE 17.12.5)
+		IdleTimeSeconds int `json:"idle-time-seconds"` // Idle time for guest-lan clients in seconds (Live: IOS-XE 17.12.5)
 	} `json:"guest-lan-client-info"`
-	MethodID                 string    `json:"method-id"`                   // Authentication method identifier
-	L3VlanOverrideReceived   bool      `json:"l3-vlan-override-received"`   // L3 VLAN override received flag
-	UpnID                    int       `json:"upn-id"`                      // UPN identifier
-	IsLocallyAdministeredMac bool      `json:"is-locally-administered-mac"` // Locally administered MAC flag
-	IdleTimeout              int       `json:"idle-timeout"`                // Idle timeout value
-	IdleTimestamp            time.Time `json:"idle-timestamp"`              // Idle timestamp
-	ClientDuid               string    `json:"client-duid"`                 // Client DHCP unique identifier
-	VrfName                  string    `json:"vrf-name"`                    // VRF name
+	MethodID                 string    `json:"method-id"`                   // Method Identifier (Live: IOS-XE 17.12.5)
+	L3VlanOverrideReceived   bool      `json:"l3-vlan-override-received"`   // VLAN Override received after L3 authentication (Live: IOS-XE 17.12.5)
+	UpnID                    int       `json:"upn-id"`                      // User Defined Network Identity (Live: IOS-XE 17.12.5)
+	IsLocallyAdministeredMac bool      `json:"is-locally-administered-mac"` // Client MAC address locally administered status (Live: IOS-XE 17.12.5)
+	IdleTimeout              int       `json:"idle-timeout"`                // Client idle timeout before deletion (Live: IOS-XE 17.12.5)
+	IdleTimestamp            time.Time `json:"idle-timestamp"`              // Timestamp when client moved to idle state (Live: IOS-XE 17.12.5)
+	ClientDuid               string    `json:"client-duid"`                 // Client device user identity (Live: IOS-XE 17.12.5)
+	VrfName                  string    `json:"vrf-name"`                    // VRF Name (Live: IOS-XE 17.12.5)
 
-	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1+)
-	L3AccessEnabled bool `json:"l3-access-enabled,omitempty"` // L3 access enablement (YANG: IOS-XE 17.18.1+)
-	MultiLinkClient bool `json:"multi-link-client,omitempty"` // Multi-link client capability (YANG: IOS-XE 17.18.1+)
+	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
+	L3AccessEnabled bool `json:"l3-access-enabled,omitempty"` // Client Layer 3 access enabled status (YANG: IOS-XE 17.18.1)
+	MultiLinkClient bool `json:"multi-link-client,omitempty"` // Multi Link client capability (YANG: IOS-XE 17.18.1)
 }
 
 // Dot11OperData represents 802.11 operational data.
 type Dot11OperData struct {
-	MsMacAddress        string    `json:"ms-mac-address"`         // Mobile station MAC address
-	Dot11State          string    `json:"dot11-state"`            // 802.11 connection state
-	MsBssid             string    `json:"ms-bssid"`               // Mobile station BSSID
-	ApMacAddress        string    `json:"ap-mac-address"`         // Access point MAC address
-	CurrentChannel      int       `json:"current-channel"`        // Current radio channel
-	MsWlanID            int       `json:"ms-wlan-id"`             // Mobile station WLAN ID
-	VapSsid             string    `json:"vap-ssid"`               // Virtual AP SSID
-	PolicyProfile       string    `json:"policy-profile"`         // Policy profile name
-	MsApSlotID          int       `json:"ms-ap-slot-id"`          // Mobile station AP slot ID
-	RadioType           string    `json:"radio-type"`             // Radio type identifier
-	MsAssociationID     int       `json:"ms-association-id"`      // Mobile station association ID
-	MsAuthAlgNum        string    `json:"ms-auth-alg-num"`        // Authentication algorithm number
-	MsReasonCode        string    `json:"ms-reason-code"`         // Mobile station reason code
-	MsAssocTime         time.Time `json:"ms-assoc-time"`          // Mobile station association time
-	Is11GClient         bool      `json:"is-11g-client"`          // 802.11g client capability
-	MsSupportedRatesStr string    `json:"ms-supported-rates-str"` // Mobile station supported rates
+	MsMacAddress        string    `json:"ms-mac-address"`         // Mac Address of the Client (Live: IOS-XE 17.12.5)
+	Dot11State          string    `json:"dot11-state"`            // DOT11 status for Client (Live: IOS-XE 17.12.5)
+	MsBssid             string    `json:"ms-bssid"`               // Basic Service Set Identifier client connected to (Live: IOS-XE 17.12.5)
+	ApMacAddress        string    `json:"ap-mac-address"`         // MAC Address of AP client has joined (Live: IOS-XE 17.12.5)
+	CurrentChannel      int       `json:"current-channel"`        // Current Channel client communicating on (Live: IOS-XE 17.12.5)
+	MsWlanID            int       `json:"ms-wlan-id"`             // Wireless LAN ID client connected to (Live: IOS-XE 17.12.5)
+	VapSsid             string    `json:"vap-ssid"`               // Service Set Identifier of Wireless LAN (Live: IOS-XE 17.12.5)
+	PolicyProfile       string    `json:"policy-profile"`         // Policy profile applied on WLAN (Live: IOS-XE 17.12.5)
+	MsApSlotID          int       `json:"ms-ap-slot-id"`          // Slot ID of AP radio client connected on (Live: IOS-XE 17.12.5)
+	RadioType           string    `json:"radio-type"`             // Type of Radio of AP client associated to (Live: IOS-XE 17.12.5)
+	MsAssociationID     int       `json:"ms-association-id"`      // Association ID of mobile station (Live: IOS-XE 17.12.5)
+	MsAuthAlgNum        string    `json:"ms-auth-alg-num"`        // Authentication algorithm (Live: IOS-XE 17.12.5)
+	MsReasonCode        string    `json:"ms-reason-code"`         // Reason code for deauth/disassoc frames (Live: IOS-XE 17.12.5)
+	MsAssocTime         time.Time `json:"ms-assoc-time"`          // Time association request received (Live: IOS-XE 17.12.5)
+	Is11GClient         bool      `json:"is-11g-client"`          // IEEE 802.11g protocol client indicator (Live: IOS-XE 17.12.5)
+	MsSupportedRatesStr string    `json:"ms-supported-rates-str"` // Supported radio rates by mobile station (Live: IOS-XE 17.12.5)
 	MsWifi              struct {
-		WpaVersion           string `json:"wpa-version"`             // WPA version information
-		CipherSuite          string `json:"cipher-suite"`            // Cipher suite configuration
-		AuthKeyMgmt          string `json:"auth-key-mgmt"`           // Authentication key management
-		GroupMgmtCipherSuite string `json:"group-mgmt-cipher-suite"` // Group management cipher suite
-		GroupCipherSuite     string `json:"group-cipher-suite"`      // Group cipher suite
-		PweMode              string `json:"pwe-mode"`                // PWE mode setting
+		WpaVersion           string `json:"wpa-version"`             // WPA version of the client (Live: IOS-XE 17.12.5)
+		CipherSuite          string `json:"cipher-suite"`            // IEEE 802.11i Cipher Suite type (Live: IOS-XE 17.12.5)
+		AuthKeyMgmt          string `json:"auth-key-mgmt"`           // IEEE 802.11i Auth Key Management (Live: IOS-XE 17.12.5)
+		GroupMgmtCipherSuite string `json:"group-mgmt-cipher-suite"` // IEEE 802.11i Group Management Cipher Suite (Live: IOS-XE 17.12.5)
+		GroupCipherSuite     string `json:"group-cipher-suite"`      // IEEE 802.11i Group Cipher Suite (Live: IOS-XE 17.12.5)
+		PweMode              string `json:"pwe-mode"`                // SAE Password Element Mode (Live: IOS-XE 17.12.5)
 	} `json:"ms-wifi"`
-	MsWmeEnabled        bool   `json:"ms-wme-enabled"`         // Mobile station WME enablement
-	Dot11WEnabled       bool   `json:"dot11w-enabled"`         // 802.11w enablement status
-	EwlcMsPhyType       string `json:"ewlc-ms-phy-type"`       // EWLC mobile station PHY type
-	EncryptionType      string `json:"encryption-type"`        // Encryption type
-	SecurityMode        string `json:"security-mode"`          // Security mode
-	ClientWepPolicyType string `json:"client-wep-policy-type"` // Client WEP policy type
-	BssTransCapable     bool   `json:"bss-trans-capable"`      // BSS transition capability
-	MsAppleCapable      bool   `json:"ms-apple-capable"`       // Mobile station Apple capability
-	WlanProfile         string `json:"wlan-profile"`           // WLAN profile name
-	DmsCapable          bool   `json:"dms-capable"`            // DMS capability
+	MsWmeEnabled        bool   `json:"ms-wme-enabled"`         // Wireless Multimedia Extensions enabled indicator (Live: IOS-XE 17.12.5)
+	Dot11WEnabled       bool   `json:"dot11w-enabled"`         // IEEE 802.11w feature enabled indicator (Live: IOS-XE 17.12.5)
+	EwlcMsPhyType       string `json:"ewlc-ms-phy-type"`       // Radio PHY type client connected to (Live: IOS-XE 17.12.5)
+	EncryptionType      string `json:"encryption-type"`        // Encryption policy client uses with AP (Live: IOS-XE 17.12.5)
+	SecurityMode        string `json:"security-mode"`          // Security mode for client association (Live: IOS-XE 17.12.5)
+	ClientWepPolicyType string `json:"client-wep-policy-type"` // Client Wired Equivalent Privacy policy type (Live: IOS-XE 17.12.5)
+	BssTransCapable     bool   `json:"bss-trans-capable"`      // IEEE 802.11v capable indicator (Live: IOS-XE 17.12.5)
+	MsAppleCapable      bool   `json:"ms-apple-capable"`       // Client Fastlane Support indicator (Live: IOS-XE 17.12.5)
+	WlanProfile         string `json:"wlan-profile"`           // Profile applied on Wireless/Remote/Guest LAN (Live: IOS-XE 17.12.5)
+	DmsCapable          bool   `json:"dms-capable"`            // Directed Multicast Service capable indicator (Live: IOS-XE 17.12.5)
 	EogreClient         struct {
-		IsEogre             bool   `json:"is-eogre"`              // EoGRE client status
-		PreviousMatchReason string `json:"previous-match-reason"` // Previous match reason
-		MatchReason         string `json:"match-reason"`          // Current match reason
-		IsAaaData           bool   `json:"is-aaa-data"`           // AAA data availability
-		Realm               string `json:"realm"`                 // Authentication realm
-		Vlan                int    `json:"vlan"`                  // VLAN identifier
-		Domain              string `json:"domain"`                // Domain name
-		PlumbedGw           string `json:"plumbed-gw"`            // Plumbed gateway
-		TunnelIfid          int    `json:"tunnel-ifid"`           // Tunnel interface ID
-		IsCentralFwd        bool   `json:"is-central-fwd"`        // Central forwarding flag
+		IsEogre             bool   `json:"is-eogre"`              // Whether this is an EoGRE client (Live: IOS-XE 17.12.5)
+		PreviousMatchReason string `json:"previous-match-reason"` // Previous EoGRE client match process output (Live: IOS-XE 17.12.5)
+		MatchReason         string `json:"match-reason"`          // EoGRE client match process output (Live: IOS-XE 17.12.5)
+		IsAaaData           bool   `json:"is-aaa-data"`           // AAA override received for this client (Live: IOS-XE 17.12.5)
+		Realm               string `json:"realm"`                 // Client's realm matching EoGRE rule (Live: IOS-XE 17.12.5)
+		Vlan                int    `json:"vlan"`                  // VLAN tagging for EoGRE client traffic (Live: IOS-XE 17.12.5)
+		Domain              string `json:"domain"`                // EoGRE domain (Live: IOS-XE 17.12.5)
+		PlumbedGw           string `json:"plumbed-gw"`            // Tunnel Gateway Name for client traffic (Live: IOS-XE 17.12.5)
+		TunnelIfid          int    `json:"tunnel-ifid"`           // Tunnel Gateway datapath index (Live: IOS-XE 17.12.5)
+		IsCentralFwd        bool   `json:"is-central-fwd"`        // Client is centrally forwarded (Live: IOS-XE 17.12.5)
 	} `json:"eogre-client"`
 	MsHs20Data struct {
-		IsHs20                     bool      `json:"is-hs20"`                      // Hotspot 2.0 capability
-		Version                    string    `json:"version"`                      // Hotspot 2.0 version
-		ConsortiumOi               string    `json:"consortium-oi"`                // Consortium organization identifier
-		PpsMoID                    int       `json:"pps-mo-id"`                    // PPS management object ID
-		SwtTimer                   int       `json:"swt-timer"`                    // Session wait timer
-		SwtTimestamp               time.Time `json:"swt-timestamp"`                // Session wait timestamp
-		TermsConditionsURL         string    `json:"terms-conditions-url"`         // Terms and conditions URL
-		SubscriptionRemediationURL string    `json:"subscription-remediation-url"` // Subscription remediation URL
-		DeauthReasonURL            string    `json:"deauth-reason-url"`            // Deauthentication reason URL
+		IsHs20                     bool      `json:"is-hs20"`                      // Hotspot 2.0 data received for this client (Live: IOS-XE 17.12.5)
+		Version                    string    `json:"version"`                      // Supported Hotspot release version (Live: IOS-XE 17.12.5)
+		ConsortiumOi               string    `json:"consortium-oi"`                // Roaming consortium membership OI (Live: IOS-XE 17.12.5)
+		PpsMoID                    int       `json:"pps-mo-id"`                    // Per provider subscription (Live: IOS-XE 17.12.5)
+		SwtTimer                   int       `json:"swt-timer"`                    // Session Warning Timer value (Live: IOS-XE 17.12.5)
+		SwtTimestamp               time.Time `json:"swt-timestamp"`                // SWT timestamp (Live: IOS-XE 17.12.5)
+		TermsConditionsURL         string    `json:"terms-conditions-url"`         // Terms and conditions URL (Live: IOS-XE 17.12.5)
+		SubscriptionRemediationURL string    `json:"subscription-remediation-url"` // Subscription remediation URL (Live: IOS-XE 17.12.5)
+		DeauthReasonURL            string    `json:"deauth-reason-url"`            // WNM deauthentication reason URL (Live: IOS-XE 17.12.5)
 	} `json:"ms-hs20-data"`
-	QosmapCapable                   bool   `json:"qosmap-capable"`  // QoS map capability
-	RmCapabilities                  string `json:"rm-capabilities"` // Radio measurement capabilities
+	QosmapCapable                   bool   `json:"qosmap-capable"`  // QoS map capability indicator (YANG: IOS-XE 17.12.1)
+	RmCapabilities                  string `json:"rm-capabilities"` // Radio measurement capabilities (YANG: IOS-XE 17.12.1)
 	Dot11KRmBeaconMeasReqParameters struct {
-		Period              int       `json:"period"`                // Measurement period
-		RepeatNum           int       `json:"repeat-num"`            // Repeat number
-		OperatingClass      int       `json:"operating-class"`       // Operating class
-		ChannelNum          int       `json:"channel-num"`           // Channel number
-		MeasMode            string    `json:"meas-mode"`             // Measurement mode
-		CurrentBssid        bool      `json:"current-bssid"`         // Current BSSID flag
-		Bssid               string    `json:"bssid"`                 // BSSID value
-		CurrentSsid         bool      `json:"current-ssid"`          // Current SSID flag
-		Ssid                string    `json:"ssid"`                  // SSID value
-		DefaultRandInterval bool      `json:"default-rand-interval"` // Default random interval flag
-		RandInterval        int       `json:"rand-interval"`         // Random interval
-		DefaultMeasDuration bool      `json:"default-meas-duration"` // Default measurement duration flag
-		MeasDuration        int       `json:"meas-duration"`         // Measurement duration
-		DialogToken         int       `json:"dialog-token"`          // Dialog token
-		LastReqTrigger      string    `json:"last-req-trigger"`      // Last request trigger
-		LastReqTime         time.Time `json:"last-req-time"`         // Last request time
-		NextReqTime         time.Time `json:"next-req-time"`         // Next request time
-		LastReportTime      time.Time `json:"last-report-time"`      // Last report time
+		Period              int       `json:"period"`                // Beacon measurement request period (YANG: IOS-XE 17.12.1)
+		RepeatNum           int       `json:"repeat-num"`            // Measurement repeat number (YANG: IOS-XE 17.12.1)
+		OperatingClass      int       `json:"operating-class"`       // IEEE 802.11 operating class (YANG: IOS-XE 17.12.1)
+		ChannelNum          int       `json:"channel-num"`           // Channel number for measurement (YANG: IOS-XE 17.12.1)
+		MeasMode            string    `json:"meas-mode"`             // Measurement mode active/passive (YANG: IOS-XE 17.12.1)
+		CurrentBssid        bool      `json:"current-bssid"`         // Use current BSSID flag (YANG: IOS-XE 17.12.1)
+		Bssid               string    `json:"bssid"`                 // Target BSSID for measurement (YANG: IOS-XE 17.12.1)
+		CurrentSsid         bool      `json:"current-ssid"`          // Use current SSID flag (YANG: IOS-XE 17.12.1)
+		Ssid                string    `json:"ssid"`                  // Target SSID for measurement (YANG: IOS-XE 17.12.1)
+		DefaultRandInterval bool      `json:"default-rand-interval"` // Use default randomization interval (YANG: IOS-XE 17.12.1)
+		RandInterval        int       `json:"rand-interval"`         // Randomization interval value (YANG: IOS-XE 17.12.1)
+		DefaultMeasDuration bool      `json:"default-meas-duration"` // Use default measurement duration (YANG: IOS-XE 17.12.1)
+		MeasDuration        int       `json:"meas-duration"`         // Measurement duration value (YANG: IOS-XE 17.12.1)
+		DialogToken         int       `json:"dialog-token"`          // Dialog token for request tracking (YANG: IOS-XE 17.12.1)
+		LastReqTrigger      string    `json:"last-req-trigger"`      // Last request trigger event (YANG: IOS-XE 17.12.1)
+		LastReqTime         time.Time `json:"last-req-time"`         // Last request timestamp (YANG: IOS-XE 17.12.1)
+		NextReqTime         time.Time `json:"next-req-time"`         // Next request timestamp (YANG: IOS-XE 17.12.1)
+		LastReportTime      time.Time `json:"last-report-time"`      // Last report timestamp (YANG: IOS-XE 17.12.1)
 	} `json:"dot11k-rm-beacon-meas-req-parameters"`
 	CellularInfo struct {
-		Capable     bool   `json:"capable"`      // Cellular capability
-		NetworkType string `json:"network-type"` // Cellular network type
-		SignalScale string `json:"signal-scale"` // Signal scale measurement
-		CellID      int    `json:"cell-id"`      // Cellular cell ID
+		Capable     bool   `json:"capable"`      // Cellular capability indicator (YANG: IOS-XE 17.12.1)
+		NetworkType string `json:"network-type"` // Cellular network type (YANG: IOS-XE 17.12.1)
+		SignalScale string `json:"signal-scale"` // Signal scale measurement (YANG: IOS-XE 17.12.1)
+		CellID      int    `json:"cell-id"`      // Cellular cell ID (YANG: IOS-XE 17.12.1)
 	} `json:"cellular-info"`
 	WifiDirectClientCapabilities struct {
-		WifiDirectCapable bool `json:"wifi-direct-capable"` // Wi-Fi Direct capability
+		WifiDirectCapable bool `json:"wifi-direct-capable"` // Wi-Fi Direct capability indicator (YANG: IOS-XE 17.12.1)
 	} `json:"wifi-direct-client-capabilities"`
-	WtcSupport      bool `json:"wtc-support"`       // WTC support capability
-	AbrSupport      bool `json:"abr-support"`       // ABR support capability
-	WtcResp         bool `json:"wtc-resp"`          // WTC response status
-	WtcRespCode     int  `json:"wtc-resp-code"`     // WTC response code
-	Dot116GhzCap    bool `json:"dot11-6ghz-cap"`    // 802.11 6GHz capability
-	LinkLocalEnable bool `json:"link-local-enable"` // Link local enablement
+	WtcSupport      bool `json:"wtc-support"`       // WTC support capability (YANG: IOS-XE 17.12.1)
+	AbrSupport      bool `json:"abr-support"`       // ABR support capability (YANG: IOS-XE 17.12.1)
+	WtcResp         bool `json:"wtc-resp"`          // WTC response status (YANG: IOS-XE 17.12.1)
+	WtcRespCode     int  `json:"wtc-resp-code"`     // WTC response code (YANG: IOS-XE 17.12.1)
+	Dot116GhzCap    bool `json:"dot11-6ghz-cap"`    // 802.11 6GHz capability (YANG: IOS-XE 17.12.1)
+	LinkLocalEnable bool `json:"link-local-enable"` // Link local enablement (YANG: IOS-XE 17.12.1)
 
-	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1+)
-	EhtCapable      bool          `json:"eht-capable,omitempty"`       // EHT capability (YANG: IOS-XE 17.18.1+)
-	MultiLinkClient bool          `json:"multi-link-client,omitempty"` // Multi-link client capability (YANG: IOS-XE 17.18.1+)
-	MultilinkInfo   []LinkInfo    `json:"multilink-info,omitempty"`    // Multi-link information (YANG: IOS-XE 17.18.1+)
-	KnownLinkInfo   []LinkInfoMin `json:"known-link-info,omitempty"`   // Known link information (YANG: IOS-XE 17.18.1+)
-	EmlrMode        string        `json:"emlr-mode,omitempty"`         // EMLR mode (YANG: IOS-XE 17.18.1+)
-	StrCapable      bool          `json:"str-capable,omitempty"`       // STR capability (YANG: IOS-XE 17.18.1+)
+	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
+	EhtCapable      bool          `json:"eht-capable,omitempty"`       // EHT capability indicator (YANG: IOS-XE 17.18.1)
+	MultiLinkClient bool          `json:"multi-link-client,omitempty"` // Multi-link client capability (YANG: IOS-XE 17.18.1)
+	MultilinkInfo   []LinkInfo    `json:"multilink-info,omitempty"`    // Multi-link information of the client (YANG: IOS-XE 17.18.1)
+	KnownLinkInfo   []LinkInfoMin `json:"known-link-info,omitempty"`   // Known link information (YANG: IOS-XE 17.18.1)
+	EmlrMode        string        `json:"emlr-mode,omitempty"`         // Enhanced multilink radio operation mode (YANG: IOS-XE 17.18.1)
+	StrCapable      bool          `json:"str-capable,omitempty"`       // Simultaneous transmit and receive capability (YANG: IOS-XE 17.18.1)
 }
 
 // LinkInfo represents multi-link information for Wi-Fi 7 clients.
 type LinkInfo struct {
-	Band       string `json:"band"`         // Frequency band (YANG: IOS-XE 17.18.1+)
-	BssMacAddr string `json:"bss-mac-addr"` // BSS MAC address (YANG: IOS-XE 17.18.1+)
-	SlotID     int    `json:"slot-id"`      // Slot identifier (YANG: IOS-XE 17.18.1+)
-	RadioType  string `json:"radio-type"`   // Radio type (YANG: IOS-XE 17.18.1+)
+	Band       string `json:"band"`         // Frequency band identifier (YANG: IOS-XE 17.18.1)
+	BssMacAddr string `json:"bss-mac-addr"` // BSS MAC address (YANG: IOS-XE 17.18.1)
+	SlotID     int    `json:"slot-id"`      // Slot identifier (YANG: IOS-XE 17.18.1)
+	RadioType  string `json:"radio-type"`   // Radio type identifier (YANG: IOS-XE 17.18.1)
 }
 
 // LinkInfoMin represents minimal multi-link information for Wi-Fi 7 clients.
 type LinkInfoMin struct {
-	StaMac string `json:"sta-mac"` // Station MAC address (YANG: IOS-XE 17.18.1+)
-	Band   string `json:"band"`    // Frequency band (YANG: IOS-XE 17.18.1+)
+	StaMac string `json:"sta-mac"` // Station MAC address (YANG: IOS-XE 17.18.1)
+	Band   string `json:"band"`    // Frequency band identifier (YANG: IOS-XE 17.18.1)
 }
 
 // MobilityOperData represents client mobility operational data.
 type MobilityOperData struct {
-	MsMacAddr           string    `json:"ms-mac-addr"`             // Mobile station MAC address
-	MmClientRole        string    `json:"mm-client-role"`          // Mobility manager client role
-	MmClientRoamType    string    `json:"mm-client-roam-type"`     // Mobility manager client roam type
-	MmInstance          int       `json:"mm-instance"`             // Mobility manager instance
-	MmCompleteTimestamp time.Time `json:"mm-complete-timestamp"`   // Mobility manager completion timestamp
-	MmRemoteTunnelIP    string    `json:"mm-remote-tunnel-ip"`     // Mobility manager remote tunnel IP
-	MmRemoteTunnelSecIP string    `json:"mm-remote-tunnel-sec-ip"` // Mobility manager remote tunnel secondary IP
-	MmRemotePlatformID  int       `json:"mm-remote-platform-id"`   // Mobility manager remote platform ID
-	MmRemoteTunnelID    int       `json:"mm-remote-tunnel-id"`     // Mobility manager remote tunnel ID
-	MmAnchorIP          string    `json:"mm-anchor-ip"`            // Mobility manager anchor IP
+	MsMacAddr           string    `json:"ms-mac-addr"`             // MAC address of wireless mobile station (Live: IOS-XE 17.12.5)
+	MmClientRole        string    `json:"mm-client-role"`          // Mobility role on Wireless LAN Controller (Live: IOS-XE 17.12.5)
+	MmClientRoamType    string    `json:"mm-client-roam-type"`     // Layer 2 or Layer 3 mobility roam type (Live: IOS-XE 17.12.5)
+	MmInstance          int       `json:"mm-instance"`             // Inter-controller roam count performed by client (Live: IOS-XE 17.12.5)
+	MmCompleteTimestamp time.Time `json:"mm-complete-timestamp"`   // Mobility discovery completion timestamp (Live: IOS-XE 17.12.5)
+	MmRemoteTunnelIP    string    `json:"mm-remote-tunnel-ip"`     // Primary IP of mobility peer for anchor/foreign client (Live: IOS-XE 17.12.5)
+	MmRemoteTunnelSecIP string    `json:"mm-remote-tunnel-sec-ip"` // Secondary IP of mobility peer (Live: IOS-XE 17.12.5)
+	MmRemotePlatformID  int       `json:"mm-remote-platform-id"`   // Platform ID of mobility peer (Live: IOS-XE 17.12.5)
+	MmRemoteTunnelID    int       `json:"mm-remote-tunnel-id"`     // Mobility peer tunnel identifier (Live: IOS-XE 17.12.5)
+	MmAnchorIP          string    `json:"mm-anchor-ip"`            // Anchor WLC address for foreign client (Live: IOS-XE 17.12.5)
 
 	// Wi-Fi 7 / MLO Support - Evidence-based classification
-	Dot11RoamType string `json:"dot11-roam-type,omitempty"` // 802.11 roam type
-	IsMloAssoc    string `json:"is-mlo-assoc,omitempty"`    // Multi-link operation association status (YANG: IOS-XE 17.18.1+)
+	Dot11RoamType string `json:"dot11-roam-type,omitempty"` // 802.11 roam type (YANG: IOS-XE 17.12.1)
+	IsMloAssoc    string `json:"is-mlo-assoc,omitempty"`    // Multi-link operation association status (YANG: IOS-XE 17.18.1)
 }
 
 // MmIfClientStats represents mobility manager interface client statistics.
 type MmIfClientStats struct {
-	ClientMac  string `json:"client-mac"` // Client MAC address
+	ClientMac  string `json:"client-mac"` // Client MAC address (YANG: IOS-XE 17.12.1)
 	MbltyStats struct {
-		EventDataAllocs               int `json:"event-data-allocs"`                 // Event data allocations
-		EventDataFrees                int `json:"event-data-frees"`                  // Event data frees
-		MmifFsmInvalidEvents          int `json:"mmif-fsm-invalid-events"`           // MMIF FSM invalid events
-		MmifScheduleErrors            int `json:"mmif-schedule-errors"`              // MMIF schedule errors
-		MmifFsmFailure                int `json:"mmif-fsm-failure"`                  // MMIF FSM failures
-		MmifIpcFailure                int `json:"mmif-ipc-failure"`                  // MMIF IPC failures
-		MmifDBFailure                 int `json:"mmif-db-failure"`                   // MMIF database failures
-		MmifInvalidParamsFailure      int `json:"mmif-invalid-params-failure"`       // MMIF invalid parameters failures
-		MmifMmMsgDecodeFailure        int `json:"mmif-mm-msg-decode-failure"`        // MMIF MM message decode failures
-		MmifUnknownFailure            int `json:"mmif-unknown-failure"`              // MMIF unknown failures
-		MmifClientHandoffFailure      int `json:"mmif-client-handoff-failure"`       // MMIF client handoff failures
-		MmifClientHandoffSuccess      int `json:"mmif-client-handoff-success"`       // MMIF client handoff successes
-		MmifAnchorDeny                int `json:"mmif-anchor-deny"`                  // MMIF anchor denials
-		MmifRemoteDelete              int `json:"mmif-remote-delete"`                // MMIF remote deletions
-		MmifTunnelDownDelete          int `json:"mmif-tunnel-down-delete"`           // MMIF tunnel down deletions
-		MmifMbssidDownEvent           int `json:"mmif-mbssid-down-event"`            // MMIF MBSSID down events
-		IntraWncdRoamCount            int `json:"intra-wncd-roam-count"`             // Intra-WNCD roam count
-		RemoteInterCtrlrRoams         int `json:"remote-inter-ctrlr-roams"`          // Remote inter-controller roams
-		RemoteWebauthPendRoams        int `json:"remote-webauth-pend-roams"`         // Remote webauth pending roams
-		AnchorRequestSent             int `json:"anchor-request-sent"`               // Anchor requests sent
-		AnchorRequestGrantReceived    int `json:"anchor-request-grant-received"`     // Anchor request grants received
-		AnchorRequestDenyReceived     int `json:"anchor-request-deny-received"`      // Anchor request denials received
-		AnchorRequestReceived         int `json:"anchor-request-received"`           // Anchor requests received
-		AnchorRequestGrantSent        int `json:"anchor-request-grant-sent"`         // Anchor request grants sent
-		AnchorRequestDenySent         int `json:"anchor-request-deny-sent"`          // Anchor request denials sent
-		HandoffReceivedOk             int `json:"handoff-received-ok"`               // Handoff received OK
-		HandoffReceivedGrpMismatch    int `json:"handoff-received-grp-mismatch"`     // Handoff received group mismatch
-		HandoffReceivedMsUnknown      int `json:"handoff-received-ms-unknown"`       // Handoff received MS unknown
-		HandoffReceivedMsSsid         int `json:"handoff-received-ms-ssid"`          // Handoff received MS SSID
-		HandoffReceivedDeny           int `json:"handoff-received-deny"`             // Handoff received denials
-		HandoffSentOk                 int `json:"handoff-sent-ok"`                   // Handoff sent OK
-		HandoffSentGrpMismatch        int `json:"handoff-sent-grp-mismatch"`         // Handoff sent group mismatch
-		HandoffSentMsUnknown          int `json:"handoff-sent-ms-unknown"`           // Handoff sent MS unknown
-		HandoffSentMsSsid             int `json:"handoff-sent-ms-ssid"`              // Handoff sent MS SSID
-		HandoffSentDeny               int `json:"handoff-sent-deny"`                 // Handoff sent denials
-		HandoffReceivedL3VlanOverride int `json:"handoff-received-l3-vlan-override"` // Handoff received L3 VLAN override
-		HandoffReceivedUnknownPeer    int `json:"handoff-received-unknown-peer"`     // Handoff received unknown peer
-		HandoffSentL3VlanOverride     int `json:"handoff-sent-l3-vlan-override"`     // Handoff sent L3 VLAN override
+		EventDataAllocs               int `json:"event-data-allocs"`                 // Event data allocations count (YANG: IOS-XE 17.12.1)
+		EventDataFrees                int `json:"event-data-frees"`                  // Event data deallocations count (YANG: IOS-XE 17.12.1)
+		MmifFsmInvalidEvents          int `json:"mmif-fsm-invalid-events"`           // MMIF finite state machine invalid events (YANG: IOS-XE 17.12.1)
+		MmifScheduleErrors            int `json:"mmif-schedule-errors"`              // MMIF scheduling error count (YANG: IOS-XE 17.12.1)
+		MmifFsmFailure                int `json:"mmif-fsm-failure"`                  // MMIF finite state machine failure count (YANG: IOS-XE 17.12.1)
+		MmifIpcFailure                int `json:"mmif-ipc-failure"`                  // MMIF inter-process communication failures (YANG: IOS-XE 17.12.1)
+		MmifDBFailure                 int `json:"mmif-db-failure"`                   // MMIF database operation failure count (YANG: IOS-XE 17.12.1)
+		MmifInvalidParamsFailure      int `json:"mmif-invalid-params-failure"`       // MMIF invalid parameter failure count (YANG: IOS-XE 17.12.1)
+		MmifMmMsgDecodeFailure        int `json:"mmif-mm-msg-decode-failure"`        // MMIF mobility message decode failures (YANG: IOS-XE 17.12.1)
+		MmifUnknownFailure            int `json:"mmif-unknown-failure"`              // MMIF unknown failure count (YANG: IOS-XE 17.12.1)
+		MmifClientHandoffFailure      int `json:"mmif-client-handoff-failure"`       // MMIF client handoff failure count (YANG: IOS-XE 17.12.1)
+		MmifClientHandoffSuccess      int `json:"mmif-client-handoff-success"`       // MMIF client handoff success count (YANG: IOS-XE 17.12.1)
+		MmifAnchorDeny                int `json:"mmif-anchor-deny"`                  // MMIF anchor denial count (YANG: IOS-XE 17.12.1)
+		MmifRemoteDelete              int `json:"mmif-remote-delete"`                // MMIF remote deletion count (YANG: IOS-XE 17.12.1)
+		MmifTunnelDownDelete          int `json:"mmif-tunnel-down-delete"`           // MMIF tunnel down deletion count (YANG: IOS-XE 17.12.1)
+		MmifMbssidDownEvent           int `json:"mmif-mbssid-down-event"`            // MMIF multi-BSSID down event count (YANG: IOS-XE 17.12.1)
+		IntraWncdRoamCount            int `json:"intra-wncd-roam-count"`             // Intra-WNC daemon roam count (YANG: IOS-XE 17.12.1)
+		RemoteInterCtrlrRoams         int `json:"remote-inter-ctrlr-roams"`          // Remote inter-controller roam count (YANG: IOS-XE 17.12.1)
+		RemoteWebauthPendRoams        int `json:"remote-webauth-pend-roams"`         // Remote web auth pending roam count (YANG: IOS-XE 17.12.1)
+		AnchorRequestSent             int `json:"anchor-request-sent"`               // Anchor request messages sent count (YANG: IOS-XE 17.12.1)
+		AnchorRequestGrantReceived    int `json:"anchor-request-grant-received"`     // Anchor request grant responses received (YANG: IOS-XE 17.12.1)
+		AnchorRequestDenyReceived     int `json:"anchor-request-deny-received"`      // Anchor request deny responses received (YANG: IOS-XE 17.12.1)
+		AnchorRequestReceived         int `json:"anchor-request-received"`           // Anchor request messages received count (YANG: IOS-XE 17.12.1)
+		AnchorRequestGrantSent        int `json:"anchor-request-grant-sent"`         // Anchor request grant responses sent (YANG: IOS-XE 17.12.1)
+		AnchorRequestDenySent         int `json:"anchor-request-deny-sent"`          // Anchor request deny responses sent (YANG: IOS-XE 17.12.1)
+		HandoffReceivedOk             int `json:"handoff-received-ok"`               // Successful handoff messages received count (YANG: IOS-XE 17.12.1)
+		HandoffReceivedGrpMismatch    int `json:"handoff-received-grp-mismatch"`     // Handoff received group mismatch count (YANG: IOS-XE 17.12.1)
+		HandoffReceivedMsUnknown      int `json:"handoff-received-ms-unknown"`       // Handoff received unknown mobile station (YANG: IOS-XE 17.12.1)
+		HandoffReceivedMsSsid         int `json:"handoff-received-ms-ssid"`          // Handoff received mobile station SSID (YANG: IOS-XE 17.12.1)
+		HandoffReceivedDeny           int `json:"handoff-received-deny"`             // Handoff deny messages received count (YANG: IOS-XE 17.12.1)
+		HandoffSentOk                 int `json:"handoff-sent-ok"`                   // Successful handoff messages sent count (YANG: IOS-XE 17.12.1)
+		HandoffSentGrpMismatch        int `json:"handoff-sent-grp-mismatch"`         // Handoff sent group mismatch count (YANG: IOS-XE 17.12.1)
+		HandoffSentMsUnknown          int `json:"handoff-sent-ms-unknown"`           // Handoff sent unknown mobile station (YANG: IOS-XE 17.12.1)
+		HandoffSentMsSsid             int `json:"handoff-sent-ms-ssid"`              // Handoff sent mobile station SSID (YANG: IOS-XE 17.12.1)
+		HandoffSentDeny               int `json:"handoff-sent-deny"`                 // Handoff deny messages sent count (YANG: IOS-XE 17.12.1)
+		HandoffReceivedL3VlanOverride int `json:"handoff-received-l3-vlan-override"` // Handoff received L3 VLAN override count (YANG: IOS-XE 17.12.1)
+		HandoffReceivedUnknownPeer    int `json:"handoff-received-unknown-peer"`     // Handoff received unknown peer count (YANG: IOS-XE 17.12.1)
+		HandoffSentL3VlanOverride     int `json:"handoff-sent-l3-vlan-override"`     // Handoff sent L3 VLAN override count (YANG: IOS-XE 17.12.1)
 	} `json:"mblty-stats"`
 	IpcStats []struct {
-		Type      int    `json:"type"`        // IPC message type
-		Allocs    int    `json:"allocs"`      // Allocations
-		Frees     int    `json:"frees"`       // Frees
-		Tx        int    `json:"tx"`          // Transmitted messages
-		Rx        int    `json:"rx"`          // Received messages
-		Forwarded int    `json:"forwarded"`   // Forwarded messages
-		TxErrors  int    `json:"tx-errors"`   // Transmission errors
-		RxErrors  int    `json:"rx-errors"`   // Reception errors
-		TxRetries int    `json:"tx-retries"`  // Transmission retries
-		Drops     int    `json:"drops"`       // Dropped messages
-		Built     int    `json:"built"`       // Built messages
-		Processed int    `json:"processed"`   // Processed messages
-		MmMsgType string `json:"mm-msg-type"` // MM message type
+		Type      int    `json:"type"`        // IPC message type identifier (YANG: IOS-XE 17.12.1)
+		Allocs    int    `json:"allocs"`      // IPC message allocation count (YANG: IOS-XE 17.12.1)
+		Frees     int    `json:"frees"`       // IPC message deallocation count (YANG: IOS-XE 17.12.1)
+		Tx        int    `json:"tx"`          // IPC messages transmitted count (YANG: IOS-XE 17.12.1)
+		Rx        int    `json:"rx"`          // IPC messages received count (YANG: IOS-XE 17.12.1)
+		Forwarded int    `json:"forwarded"`   // IPC messages forwarded count (YANG: IOS-XE 17.12.1)
+		TxErrors  int    `json:"tx-errors"`   // IPC transmission error count (YANG: IOS-XE 17.12.1)
+		RxErrors  int    `json:"rx-errors"`   // IPC reception error count (YANG: IOS-XE 17.12.1)
+		TxRetries int    `json:"tx-retries"`  // IPC transmission retry count (YANG: IOS-XE 17.12.1)
+		Drops     int    `json:"drops"`       // IPC messages dropped count (YANG: IOS-XE 17.12.1)
+		Built     int    `json:"built"`       // IPC messages built count (YANG: IOS-XE 17.12.1)
+		Processed int    `json:"processed"`   // IPC messages processed count (YANG: IOS-XE 17.12.1)
+		MmMsgType string `json:"mm-msg-type"` // Mobility manager message type (YANG: IOS-XE 17.12.1)
 	} `json:"ipc-stats"`
 }
 
 // MmIfClientHistory represents mobility manager interface client history.
 type MmIfClientHistory struct {
-	ClientMac       string `json:"client-mac"` // Client MAC address
+	ClientMac       string `json:"client-mac"` // Client MAC address (YANG: IOS-XE 17.12.1)
 	MobilityHistory struct {
 		Entry []struct {
-			InstanceID    int       `json:"instance-id"`     // Instance identifier
-			MsApSlotID    int       `json:"ms-ap-slot-id"`   // Mobile station AP slot ID
-			MsAssocTime   time.Time `json:"ms-assoc-time"`   // Mobile station association time
-			Role          string    `json:"role"`            // Client role
-			Bssid         string    `json:"bssid"`           // BSSID
-			ApName        string    `json:"ap-name"`         // Access point name
-			RunLatency    int       `json:"run-latency"`     // Run latency
-			Dot11RoamType string    `json:"dot11-roam-type"` // 802.11 roam type
+			InstanceID    int       `json:"instance-id"`     // Mobility instance identifier (YANG: IOS-XE 17.12.1)
+			MsApSlotID    int       `json:"ms-ap-slot-id"`   // Mobile station AP slot ID (YANG: IOS-XE 17.12.1)
+			MsAssocTime   time.Time `json:"ms-assoc-time"`   // Mobile station association timestamp (YANG: IOS-XE 17.12.1)
+			Role          string    `json:"role"`            // Client mobility role (YANG: IOS-XE 17.12.1)
+			Bssid         string    `json:"bssid"`           // Basic Service Set identifier (YANG: IOS-XE 17.12.1)
+			ApName        string    `json:"ap-name"`         // Access point name (YANG: IOS-XE 17.12.1)
+			RunLatency    int       `json:"run-latency"`     // Mobility operation latency (YANG: IOS-XE 17.12.1)
+			Dot11RoamType string    `json:"dot11-roam-type"` // IEEE 802.11 roam type (YANG: IOS-XE 17.12.1)
 		} `json:"entry"`
 	} `json:"mobility-history"`
 }
 
 // TrafficStats represents client traffic statistics.
 type TrafficStats struct {
-	MsMacAddress             string    `json:"ms-mac-address"`              // Mobile station MAC address
-	BytesRx                  string    `json:"bytes-rx"`                    // Bytes received
-	BytesTx                  string    `json:"bytes-tx"`                    // Bytes transmitted
-	PolicyErrs               string    `json:"policy-errs"`                 // Policy errors
-	PktsRx                   string    `json:"pkts-rx"`                     // Packets received
-	PktsTx                   string    `json:"pkts-tx"`                     // Packets transmitted
-	DataRetries              string    `json:"data-retries"`                // Data retries
-	RtsRetries               string    `json:"rts-retries"`                 // RTS retries
-	DuplicateRcv             string    `json:"duplicate-rcv"`               // Duplicate receives
-	DecryptFailed            string    `json:"decrypt-failed"`              // Decryption failures
-	MicMismatch              string    `json:"mic-mismatch"`                // MIC mismatches
-	MicMissing               string    `json:"mic-missing"`                 // MIC missing
-	MostRecentRssi           int       `json:"most-recent-rssi"`            // Most recent RSSI
-	MostRecentSnr            int       `json:"most-recent-snr"`             // Most recent SNR
-	TxExcessiveRetries       string    `json:"tx-excessive-retries"`        // Transmission excessive retries
-	TxRetries                string    `json:"tx-retries"`                  // Transmission retries
-	PowerSaveState           int       `json:"power-save-state"`            // Power save state
-	CurrentRate              string    `json:"current-rate"`                // Current data rate
-	Speed                    int       `json:"speed"`                       // Connection speed
-	SpatialStream            int       `json:"spatial-stream"`              // Spatial stream count
-	ClientActive             bool      `json:"client-active"`               // Client active status
-	GlanStatsUpdateTimestamp time.Time `json:"glan-stats-update-timestamp"` // GLAN stats update timestamp
-	GlanIdleUpdateTimestamp  time.Time `json:"glan-idle-update-timestamp"`  // GLAN idle update timestamp
-	RxGroupCounter           string    `json:"rx-group-counter"`            // RX group counter
-	TxTotalDrops             string    `json:"tx-total-drops"`              // Total transmission drops
+	MsMacAddress             string    `json:"ms-mac-address"`              // MAC address used as network address for mobile station (Live: IOS-XE 17.12.5)
+	BytesRx                  string    `json:"bytes-rx"`                    // Bytes of wireless data traffic received (Live: IOS-XE 17.12.5)
+	BytesTx                  string    `json:"bytes-tx"`                    // Bytes of wireless data traffic transmitted (Live: IOS-XE 17.12.5)
+	PolicyErrs               string    `json:"policy-errs"`                 // Mobile station policy errors (Live: IOS-XE 17.12.5)
+	PktsRx                   string    `json:"pkts-rx"`                     // Packets of wireless data traffic received (Live: IOS-XE 17.12.5)
+	PktsTx                   string    `json:"pkts-tx"`                     // Packets of wireless data traffic transmitted (Live: IOS-XE 17.12.5)
+	DataRetries              string    `json:"data-retries"`                // Retries mobile station executed for data traffic (Live: IOS-XE 17.12.5)
+	RtsRetries               string    `json:"rts-retries"`                 // Frames received with retry bit set (Live: IOS-XE 17.12.5)
+	DuplicateRcv             string    `json:"duplicate-rcv"`               // Duplicate frames received (Live: IOS-XE 17.12.5)
+	DecryptFailed            string    `json:"decrypt-failed"`              // Decrypt failed packets (Live: IOS-XE 17.12.5)
+	MicMismatch              string    `json:"mic-mismatch"`                // Packets with Message Integrity Check mismatch (Live: IOS-XE 17.12.5)
+	MicMissing               string    `json:"mic-missing"`                 // Packets with Message Integrity Check missing (Live: IOS-XE 17.12.5)
+	MostRecentRssi           int       `json:"most-recent-rssi"`            // Last updated Radio Signal Strength indicator (Live: IOS-XE 17.12.5)
+	MostRecentSnr            int       `json:"most-recent-snr"`             // Last updated Signal To Noise Ratio (Live: IOS-XE 17.12.5)
+	TxExcessiveRetries       string    `json:"tx-excessive-retries"`        // Mobile station excessive retries (Live: IOS-XE 17.12.5)
+	TxRetries                string    `json:"tx-retries"`                  // Frames transmitted with Retry bit set (Live: IOS-XE 17.12.5)
+	PowerSaveState           int       `json:"power-save-state"`            // Power save state (Live: IOS-XE 17.12.5)
+	CurrentRate              string    `json:"current-rate"`                // Current Rate (Live: IOS-XE 17.12.5)
+	Speed                    int       `json:"speed"`                       // Latest speed of connected client (Live: IOS-XE 17.12.5)
+	SpatialStream            int       `json:"spatial-stream"`              // Number of Spatial Streams supported (Live: IOS-XE 17.12.5)
+	ClientActive             bool      `json:"client-active"`               // Client status as active identification (Live: IOS-XE 17.12.5)
+	GlanStatsUpdateTimestamp time.Time `json:"glan-stats-update-timestamp"` // Guest-lan client statistics last update time (Live: IOS-XE 17.12.5)
+	GlanIdleUpdateTimestamp  time.Time `json:"glan-idle-update-timestamp"`  // Guest-lan client idle time last update (Live: IOS-XE 17.12.5)
+	RxGroupCounter           string    `json:"rx-group-counter"`            // Total broadcast and multicast frames sent (Live: IOS-XE 17.12.5)
+	TxTotalDrops             string    `json:"tx-total-drops"`              // Packets failed to transmit to client (Live: IOS-XE 17.12.5)
 }
 
 // PolicyData represents client policy data.
 type PolicyData struct {
-	Mac         string `json:"mac"`           // Client MAC address
-	ResVlanID   int    `json:"res-vlan-id"`   // Resolved VLAN ID
-	ResVlanName string `json:"res-vlan-name"` // Resolved VLAN name
+	Mac         string `json:"mac"`           // Client MAC address (Live: IOS-XE 17.12.5)
+	ResVlanID   int    `json:"res-vlan-id"`   // Resolved VLAN ID (Live: IOS-XE 17.12.5)
+	ResVlanName string `json:"res-vlan-name"` // Resolved VLAN name (Live: IOS-XE 17.12.5)
 }
 
 // SisfDBMac represents SISF database MAC information.
 type SisfDBMac struct {
-	MacAddr     string `json:"mac-addr"` // MAC address
+	MacAddr     string `json:"mac-addr"` // MAC address (YANG: IOS-XE 17.12.1)
 	Ipv4Binding struct {
 		IPKey struct {
-			ZoneID int    `json:"zone-id"` // Zone identifier
-			IPAddr string `json:"ip-addr"` // IPv4 address
+			ZoneID int    `json:"zone-id"` // Zone identifier (YANG: IOS-XE 17.12.1)
+			IPAddr string `json:"ip-addr"` // IPv4 address (YANG: IOS-XE 17.12.1)
 		} `json:"ip-key"`
 	} `json:"ipv4-binding"`
 	Ipv6Binding []struct {
 		Ipv6BindingIPKey struct {
-			ZoneID int64  `json:"zone-id"` // Zone identifier
-			IPAddr string `json:"ip-addr"` // IPv6 address
+			ZoneID int64  `json:"zone-id"` // Zone identifier (YANG: IOS-XE 17.12.1)
+			IPAddr string `json:"ip-addr"` // IPv6 address (YANG: IOS-XE 17.12.1)
 		} `json:"ip-key"`
 	} `json:"ipv6-binding,omitempty"`
 }
 
 // DcInfo represents device classification information.
 type DcInfo struct {
-	ClientMac        string    `json:"client-mac"`                   // Client MAC address
-	DeviceType       string    `json:"device-type"`                  // Device type
-	ProtocolMap      string    `json:"protocol-map"`                 // Protocol map
-	ConfidenceLevel  int       `json:"confidence-level"`             // Confidence level
-	ClassifiedTime   time.Time `json:"classified-time"`              // Classification time
-	DayZeroDc        string    `json:"day-zero-dc"`                  // Day zero device classification
-	SwVersionSrc     string    `json:"sw-version-src"`               // Software version source
-	DeviceOs         string    `json:"device-os,omitempty"`          // Device operating system
-	DeviceSubVersion string    `json:"device-sub-version,omitempty"` // Device sub-version
-	DeviceOsSrc      string    `json:"device-os-src"`                // Device OS source
-	DeviceName       string    `json:"device-name"`                  // Device name
-	DeviceVendorSrc  string    `json:"device-vendor-src"`            // Device vendor source
-	SalesCodeSrc     string    `json:"sales-code-src"`               // Sales code source
-	DeviceSrc        string    `json:"device-src"`                   // Device source
-	CountryNameSrc   string    `json:"country-name-src"`             // Country name source
-	ModelNameSrc     string    `json:"model-name-src"`               // Model name source
-	PowerTypeSrc     string    `json:"power-type-src"`               // Power type source
-	HwModelSrc       string    `json:"hw-model-src"`                 // Hardware model source
-	DeviceVendor     string    `json:"device-vendor,omitempty"`      // Device vendor
+	ClientMac        string    `json:"client-mac"`                   // Client MAC address (YANG: IOS-XE 17.12.1)
+	DeviceType       string    `json:"device-type"`                  // Device type (YANG: IOS-XE 17.12.1)
+	ProtocolMap      string    `json:"protocol-map"`                 // Protocol map (YANG: IOS-XE 17.12.1)
+	ConfidenceLevel  int       `json:"confidence-level"`             // Confidence level (YANG: IOS-XE 17.12.1)
+	ClassifiedTime   time.Time `json:"classified-time"`              // Classification time (YANG: IOS-XE 17.12.1)
+	DayZeroDc        string    `json:"day-zero-dc"`                  // Day zero device classification (YANG: IOS-XE 17.12.1)
+	SwVersionSrc     string    `json:"sw-version-src"`               // Software version source (YANG: IOS-XE 17.12.1)
+	DeviceOs         string    `json:"device-os,omitempty"`          // Device operating system (YANG: IOS-XE 17.12.1)
+	DeviceSubVersion string    `json:"device-sub-version,omitempty"` // Device sub-version (YANG: IOS-XE 17.12.1)
+	DeviceOsSrc      string    `json:"device-os-src"`                // Device OS source (YANG: IOS-XE 17.12.1)
+	DeviceName       string    `json:"device-name"`                  // Device name (YANG: IOS-XE 17.12.1)
+	DeviceVendorSrc  string    `json:"device-vendor-src"`            // Device vendor source (YANG: IOS-XE 17.12.1)
+	SalesCodeSrc     string    `json:"sales-code-src"`               // Sales code source (YANG: IOS-XE 17.12.1)
+	DeviceSrc        string    `json:"device-src"`                   // Device source (YANG: IOS-XE 17.12.1)
+	CountryNameSrc   string    `json:"country-name-src"`             // Country name source (YANG: IOS-XE 17.12.1)
+	ModelNameSrc     string    `json:"model-name-src"`               // Model name source (YANG: IOS-XE 17.12.1)
+	PowerTypeSrc     string    `json:"power-type-src"`               // Power type source (YANG: IOS-XE 17.12.1)
+	HwModelSrc       string    `json:"hw-model-src"`                 // Hardware model source (YANG: IOS-XE 17.12.1)
+	DeviceVendor     string    `json:"device-vendor,omitempty"`      // Device vendor (YANG: IOS-XE 17.12.1)
 }

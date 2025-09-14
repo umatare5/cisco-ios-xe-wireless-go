@@ -8,7 +8,7 @@ type ApOper struct {
 		ApRadioNeighbor         []ApRadioNeighbor        `json:"ap-radio-neighbor"`          // AP radio neighbor information (Live: IOS-XE 17.12.5)
 		RadioOperData           []RadioOperData          `json:"radio-oper-data"`            // Radio operational data corresponding to a radio of the 802.11 LWAPP AP (Live: IOS-XE 17.12.5)
 		RadioResetStats         []RadioResetStats        `json:"radio-reset-stats"`          // Radio reset stats (Live: IOS-XE 17.12.5)
-		QosClientData           []QosClientData          `json:"qos-client-data"`            // QoS client data (YANG: IOS-XE 17.12.1+)
+		QosClientData           []QosClientData          `json:"qos-client-data,omitempty"`  // QoS client data (YANG: IOS-XE 17.12.1)
 		CapwapData              []CapwapData             `json:"capwap-data"`                // Information about the 802.11 LWAPP AP that has joined the controller (Live: IOS-XE 17.12.5)
 		ApNameMacMap            []ApNameMacMap           `json:"ap-name-mac-map"`            // Mapping between AP name and radio MAC of AP (Live: IOS-XE 17.12.5)
 		WtpSlotWlanStats        []WtpSlotWlanStats       `json:"wtp-slot-wlan-stats"`        // AP slot and WLAN stats (Live: IOS-XE 17.12.5)
@@ -19,7 +19,7 @@ type ApOper struct {
 		ApIoxOperData           []ApIoxOperData          `json:"ap-iox-oper-data"`           // IOx application hosting operational data reported by the AP (Live: IOS-XE 17.12.5)
 		QosGlobalStats          QosGlobalStats           `json:"qos-global-stats"`           // QoS Global statistics data in DB (Live: IOS-XE 17.12.5)
 		OperData                []ApOperInternalData     `json:"oper-data"`                  // Operational data corresponding to an 802.11 LWAPP AP (Live: IOS-XE 17.12.5)
-		RlanOper                []RlanOper               `json:"rlan-oper"`                  // LAN information of the AP (YANG: IOS-XE 17.12.1+)
+		RlanOper                []RlanOper               `json:"rlan-oper,omitempty"`        // LAN information of the AP (YANG: IOS-XE 17.12.1)
 		EwlcMewlcPredownloadRec EwlcMewlcPredownloadRec  `json:"ewlc-mewlc-predownload-rec"` // Embedded Wireless Controller predownload data (Live: IOS-XE 17.12.5)
 		CdpCacheData            []CdpCacheData           `json:"cdp-cache-data"`             // Cached neighbor information via CDP messages on APs (Live: IOS-XE 17.12.5)
 		LldpNeigh               []LldpNeigh              `json:"lldp-neigh"`                 // Cached neighbor information via LLDP messages on APs (Live: IOS-XE 17.12.5)
@@ -31,8 +31,8 @@ type ApOper struct {
 		ApNhGlobalData          ApNhGlobalData           `json:"ap-nh-global-data"`          // Information about the RRM based AP clustering algorithm stats (Live: IOS-XE 17.12.5)
 		ApImagePrepareLocation  []ApImagePrepareLocation `json:"ap-image-prepare-location"`  // AP image for prepare location (Live: IOS-XE 17.12.5)
 		ApImageActiveLocation   []ApImageActiveLocation  `json:"ap-image-active-location"`   // AP image for active location (Live: IOS-XE 17.12.5)
-		IotFirmware             []IotFirmware            `json:"iot-firmware,omitempty"`     // IoT radio firmware operational data (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"`
+		IotFirmware             []IotFirmware            `json:"iot-firmware"`               // IoT radio firmware operational data (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.5)
 }
 
 // ApOperApRadioNeighbor represents the access point radio neighbor response.
@@ -286,14 +286,14 @@ type RadioOperData struct {
 	ObssPdSrgCapable       bool              `json:"obss-pd-srg-capable,omitempty"`      // OBSS PD SRG capability (Live: IOS-XE 17.12.5)
 	CoverageOverlapFactor  uint8             `json:"coverage-overlap-factor,omitempty"`  // RF coverage overlap factor (Live: IOS-XE 17.12.5)
 
-	// 6GHz related (YANG: IOS-XE 17.12.1+)
-	Ap6GhzPwrMode    *string `json:"ap-6ghz-pwr-mode,omitempty"`     // 6GHz power mode (LPI/SP/VLP) (YANG: IOS-XE 17.12.1+)
-	Ap6GhzPwrModeCap *string `json:"ap-6ghz-pwr-mode-cap,omitempty"` // 6GHz power mode capability (YANG: IOS-XE 17.12.1+)
+	// 6GHz related (YANG: IOS-XE 17.12.1)
+	Ap6GhzPwrMode    *string `json:"ap-6ghz-pwr-mode,omitempty"`     // 6GHz power mode (LPI/SP/VLP) (YANG: IOS-XE 17.12.1)
+	Ap6GhzPwrModeCap *string `json:"ap-6ghz-pwr-mode-cap,omitempty"` // 6GHz power mode capability (YANG: IOS-XE 17.12.1)
 
 	// AFC related
-	AfcBelowTxmin    bool `json:"afc-below-txmin,omitempty"`    // AFC below minimum transmission power (YANG: IOS-XE 17.12.1+)
-	AfcLicenseNeeded bool `json:"afc-license-needed,omitempty"` // AFC license requirement status (YANG: IOS-XE 17.12.1+)
-	PushAfcRespDone  bool `json:"push-afc-resp-done,omitempty"` // AFC response push completion status (YANG: IOS-XE 17.12.1+)
+	AfcBelowTxmin    bool `json:"afc-below-txmin,omitempty"`    // AFC below minimum transmission power (YANG: IOS-XE 17.12.1)
+	AfcLicenseNeeded bool `json:"afc-license-needed,omitempty"` // AFC license requirement status (YANG: IOS-XE 17.12.1)
+	PushAfcRespDone  bool `json:"push-afc-resp-done,omitempty"` // AFC response push completion status (YANG: IOS-XE 17.12.1)
 }
 
 // RadioResetStats represents radio reset statistics.
@@ -364,15 +364,15 @@ type CapwapData struct {
 	GnssInfo              GnssInfo          `json:"gnss-info"`                // GNSS positioning data (Live: IOS-XE 17.12.5)
 
 	// Basic Configuration Fields
-	ApLagEnabled    bool   `json:"ap-lag-enabled"`    // LAG configuration status (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	ApLagEnabled    bool   `json:"ap-lag-enabled"`    // LAG configuration status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	CountryCode     string `json:"country-code"`      // Regulatory country code (Live: IOS-XE 17.12.5)
 	NumRadioSlots   uint8  `json:"num-radio-slots"`   // Number of radio slots available (Live: IOS-XE 17.12.5)
-	Ipv6Joined      uint8  `json:"ipv6-joined"`       // IPv6 join status (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
-	DartIsConnected bool   `json:"dart-is-connected"` // DART connection status (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
-	IsMaster        bool   `json:"is-master"`         // Master AP designation (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	Ipv6Joined      uint8  `json:"ipv6-joined"`       // IPv6 join status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	DartIsConnected bool   `json:"dart-is-connected"` // DART connection status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	IsMaster        bool   `json:"is-master"`         // Master AP designation (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	CdpEnable       bool   `json:"cdp-enable"`        // CDP enablement (Live: IOS-XE 17.12.5)
-	GrpcEnabled     bool   `json:"grpc-enabled"`      // gRPC streaming enablement (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
-	LocalDhcp       bool   `json:"local-dhcp"`        // Local DHCP server status (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	GrpcEnabled     bool   `json:"grpc-enabled"`      // gRPC streaming enablement (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	LocalDhcp       bool   `json:"local-dhcp"`        // Local DHCP server status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 
 	// Status and operational fields
 	ApStationType        string `json:"ap-stationing-type,omitempty"`      // AP stationing type configuration (Live: IOS-XE 17.12.5)
@@ -381,15 +381,15 @@ type CapwapData struct {
 	MdnsGroupID          uint32 `json:"mdns-group-id,omitempty"`           // mDNS group identifier (Live: IOS-XE 17.12.5)
 	MdnsRuleName         string `json:"mdns-rule-name,omitempty"`          // Applied mDNS filtering rule name (Live: IOS-XE 17.12.5)
 	MdnsGroupMethod      string `json:"mdns-group-method,omitempty"`       // mDNS group assignment method (Live: IOS-XE 17.12.5)
-	MerakiCapable        bool   `json:"meraki-capable,omitempty"`          // Meraki cloud capability (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	MerakiCapable        bool   `json:"meraki-capable,omitempty"`          // Meraki cloud capability (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	MerakiConnectStatus  string `json:"meraki-connect-status,omitempty"`   // Meraki cloud connection status (Live: IOS-XE 17.12.5)
-	MerakiMonitorCapable bool   `json:"meraki-monitor-capable,omitempty"`  // Meraki monitoring capability (YANG: IOS-XE 17.18.1+) (Live: IOS-XE 17.12.5)
+	MerakiMonitorCapable bool   `json:"meraki-monitor-capable,omitempty"`  // Meraki monitoring capability (YANG: IOS-XE 17.18.1) (Live: IOS-XE 17.12.5)
 	KernelCoredumpCount  uint16 `json:"kernel-coredump-count,omitempty"`   // Kernel coredump count (Live: IOS-XE 17.12.5)
 	RegDomain            string `json:"reg-domain,omitempty"`              // Regulatory domain configuration (Live: IOS-XE 17.12.5)
 	DartConStatus        string `json:"dart-con-status,omitempty"`         // DART connection status (Live: IOS-XE 17.12.5)
-	ApAfcPreNotification bool   `json:"ap-afc-pre-notification,omitempty"` // AFC pre-notification capability (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	ApAfcPreNotification bool   `json:"ap-afc-pre-notification,omitempty"` // AFC pre-notification capability (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	OobImgDwldMethod     string `json:"oob-img-dwld-method,omitempty"`     // Out-of-band image download method (Live: IOS-XE 17.12.5)
-	WtpIP                string `json:"wtp-ip,omitempty"`                  // WTP IP address (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	WtpIP                string `json:"wtp-ip,omitempty"`                  // WTP IP address (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 }
 
 // ApTimeInfo represents AP time related information.
@@ -439,9 +439,9 @@ type ProxyInfo struct {
 	Hostname     string  `json:"hostname"`                // HTTP proxy server hostname or IP (Live: IOS-XE 17.12.5)
 	Port         uint16  `json:"port"`                    // HTTP proxy server TCP port (Live: IOS-XE 17.12.5)
 	NoProxyList  string  `json:"no-proxy-list"`           // URLs to bypass proxy (Live: IOS-XE 17.12.5)
-	Username     *string `json:"username,omitempty"`      // HTTP proxy username (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
-	PasswordType *string `json:"password-type,omitempty"` // HTTP proxy password type (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
-	Password     *string `json:"password,omitempty"`      // HTTP proxy password (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	Username     *string `json:"username,omitempty"`      // HTTP proxy username (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	PasswordType *string `json:"password-type,omitempty"` // HTTP proxy password type (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	Password     *string `json:"password,omitempty"`      // HTTP proxy password (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 }
 
 // Ipv4Pool represents DHCP IPv4 pool configuration.
@@ -458,7 +458,7 @@ type DisconnectDetail struct {
 
 // StatsMonitor represents AP statistics monitoring configuration.
 type StatsMonitor struct {
-	ActionApReload bool `json:"action-ap-reload"` // Auto AP reload on critical thresholds (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	ActionApReload bool `json:"action-ap-reload"` // Auto AP reload on critical thresholds (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 }
 
 // ApLscStatus represents AP LSC (Local Significant Certificate) status information.
@@ -475,7 +475,7 @@ type ApLscStatus struct {
 type RadioStatsMonitor struct {
 	Enable       bool          `json:"enable"`        // Radio statistics collection enable (Live: IOS-XE 17.12.5)
 	SampleIntvl  uint16        `json:"sample-intvl"`  // Sampling interval in seconds (Live: IOS-XE 17.12.5)
-	AlarmsEnable []interface{} `json:"alarms-enable"` // Statistics alarm enablement (YANG: IOS-XE 17.12.1+) (Live: IOS-XE 17.12.5)
+	AlarmsEnable []interface{} `json:"alarms-enable"` // Statistics alarm enablement (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	RadioReset   bool          `json:"radio-reset"`   // Auto radio reset on stuck condition (Live: IOS-XE 17.12.5)
 }
 
@@ -498,7 +498,7 @@ type GnssInfo struct {
 	AntType          string  `json:"ant-type"`             // GNSS antenna type (Live: IOS-XE 17.12.5)
 	AntCableLength   uint16  `json:"ant-cable-length"`     // GNSS antenna cable length in meters (Live: IOS-XE 17.12.5)
 	AntennaProductID string  `json:"antenna-product-id"`   // GNSS antenna product identifier (Live: IOS-XE 17.12.5)
-	AntennaSn        *string `json:"antenna-sn,omitempty"` // GNSS antenna serial number (YANG: IOS-XE 17.18.1+) (Live: IOS-XE 17.12.5)
+	AntennaSn        *string `json:"antenna-sn,omitempty"` // GNSS antenna serial number (YANG: IOS-XE 17.18.1) (Live: IOS-XE 17.12.5)
 }
 
 // ApState represents AP state information.

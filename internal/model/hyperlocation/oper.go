@@ -2,38 +2,30 @@ package hyperlocation
 
 // HyperlocationOper represents the hyperlocation operational data.
 type HyperlocationOper struct {
-	CiscoIOSXEWirelessHyperlocationOperHyperlocationOperData *HyperlocationOperData `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data,omitempty"`
-}
-
-// HyperlocationOperData represents the hyperlocation operational data container.
-type HyperlocationOperData struct {
-	EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"ewlc-hyperlocation-profile,omitempty"`
-}
-
-// HyperlocationOperEwlcHyperlocationProfile represents the EWLC hyperlocation profile endpoint response.
-type HyperlocationOperEwlcHyperlocationProfile struct {
-	EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:ewlc-hyperlocation-profile,omitempty"`
+	CiscoIOSXEWirelessHyperlocationOperHyperlocationOperData struct {
+		EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"ewlc-hyperlocation-profile"` // Hyperlocation AP profile data (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data"` // Hyperlocation operational data (Live: IOS-XE 17.12.5)
 }
 
 // HyperlocationProfiles represents the hyperlocation profiles collection.
 type HyperlocationProfiles struct {
-	EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:ewlc-hyperlocation-profile,omitempty"`
+	EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:ewlc-hyperlocation-profile"`
 }
 
 // EwlcHyperlocationProfile represents a single hyperlocation profile.
 type EwlcHyperlocationProfile struct {
-	Name              string             `json:"name"`                         // Hyperlocation profile name
-	HyperlocationData *HyperlocationData `json:"hyperlocation-data,omitempty"` // Hyperlocation configuration container
-	NtpServer         string             `json:"ntp-server"`                   // Configured NTP server address
-	Status            bool               `json:"status"`                       // Operational status flag
-	ReasonDown        string             `json:"reason-down"`                  // Reason for operational status being down
-	OperNtpServer     *string            `json:"oper-ntp-server,omitempty"`    // Operational NTP server address (YANG: IOS-XE 17.12.1+)
+	Name              string             `json:"name"`                         // AP profile name (Live: IOS-XE 17.12.5)
+	HyperlocationData *HyperlocationData `json:"hyperlocation-data,omitempty"` // Cisco AP hyperlocation details (Live: IOS-XE 17.12.5)
+	NtpServer         string             `json:"ntp-server"`                   // Configured hyperlocation NTP server (Live: IOS-XE 17.12.5)
+	Status            bool               `json:"status"`                       // Operational status (Live: IOS-XE 17.12.5)
+	ReasonDown        string             `json:"reason-down"`                  // Reason for operational status being down (Live: IOS-XE 17.12.5)
+	OperNtpServer     *string            `json:"oper-ntp-server,omitempty"`    // Operational NTP server (YANG: IOS-XE 17.18.1)
 }
 
 // HyperlocationData represents the hyperlocation configuration data.
 type HyperlocationData struct {
-	HyperlocationEnable       bool `json:"hyperlocation-enable"`         // Hyperlocation enable status
-	PakRssiThresholdDetection int  `json:"pak-rssi-threshold-detection"` // RSSI threshold for detection
-	PakRssiThresholdTrigger   int  `json:"pak-rssi-threshold-trigger"`   // RSSI threshold trigger value
-	PakRssiThresholdReset     int  `json:"pak-rssi-threshold-reset"`     // RSSI threshold reset value
+	HyperlocationEnable       bool `json:"hyperlocation-enable"`         // Enable hyperlocation (Live: IOS-XE 17.12.5)
+	PakRssiThresholdDetection int  `json:"pak-rssi-threshold-detection"` // Pak rssi threshold detection (Live: IOS-XE 17.12.5)
+	PakRssiThresholdTrigger   int  `json:"pak-rssi-threshold-trigger"`   // Pak rssi threshold trigger (Live: IOS-XE 17.12.5)
+	PakRssiThresholdReset     int  `json:"pak-rssi-threshold-reset"`     // Pak rssi threshold reset (Live: IOS-XE 17.12.5)
 }

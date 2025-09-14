@@ -5,11 +5,8 @@
 //
 // RESTCONF Endpoints:
 // - Configuration: /restconf/data/Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data
-// - Operational: /restconf/data/Cisco-IOS-XE-wireless-flex-oper:flex-oper-data
 //
 // YANG References:
 // - Cisco-IOS-XE-wireless-flex-cfg.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-flex-oper.yang (17.12.1)
 // - Cisco-IOS-XE-wireless-flex-cfg.yang (17.18.1)
-// - Cisco-IOS-XE-wireless-flex-oper.yang (17.18.1)
 package flex

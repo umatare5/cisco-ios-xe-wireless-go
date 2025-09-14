@@ -4,13 +4,13 @@ import "time"
 
 // ApGlobalOper represents the structure for AP global operational data.
 type ApGlobalOper struct {
-	ApHistory             []ApHistory           `json:"ap-history"`               // AP history data for state tracking (Live: IOS-XE 17.12.5)
-	EwlcApStats           EwlcApStats           `json:"ewlc-ap-stats"`            // AP radio statistics (Live: IOS-XE 17.12.5)
-	ApImgPredownloadStats ApImgPredownloadStats `json:"ap-img-predownload-stats"` // AP image predownload stats (Live: IOS-XE 17.12.5)
-	ApLocationStats       []ApLocationStats     `json:"ap-location-stats"`        // AP location statistics (YANG: IOS-XE 17.12.1+)
-	ApJoinStats           []ApJoinStats         `json:"ap-join-stats"`            // AP join statistics (Live: IOS-XE 17.12.5)
-	WlanClientStats       []WlanClientStats     `json:"wlan-client-stats"`        // WLAN client stats (Live: IOS-XE 17.12.5)
-	EmltdJoinCountStat    EmltdJoinCountStat    `json:"emltd-join-count-stat"`    // AP join count statistics (Live: IOS-XE 17.12.5)
+	ApHistory             []ApHistory           `json:"ap-history"`                  // AP history data for state tracking (Live: IOS-XE 17.12.5)
+	EwlcApStats           EwlcApStats           `json:"ewlc-ap-stats"`               // AP radio statistics (Live: IOS-XE 17.12.5)
+	ApImgPredownloadStats ApImgPredownloadStats `json:"ap-img-predownload-stats"`    // AP image predownload stats (Live: IOS-XE 17.12.5)
+	ApLocationStats       []ApLocationStats     `json:"ap-location-stats,omitempty"` // AP location statistics (YANG: IOS-XE 17.12.1)
+	ApJoinStats           []ApJoinStats         `json:"ap-join-stats"`               // AP join statistics (Live: IOS-XE 17.12.5)
+	WlanClientStats       []WlanClientStats     `json:"wlan-client-stats"`           // WLAN client stats (Live: IOS-XE 17.12.5)
+	EmltdJoinCountStat    EmltdJoinCountStat    `json:"emltd-join-count-stat"`       // AP join count statistics (Live: IOS-XE 17.12.5)
 }
 
 // ApGlobalOperApHistory represents the structure for AP history data.
@@ -55,28 +55,28 @@ type ApGlobalOperData struct {
 
 // ApLocationStats represents AP location statistics data.
 type ApLocationStats struct {
-	Location      string `json:"location"`       // AP location name (YANG: IOS-XE 17.12.1+)
-	ClientsJoined uint64 `json:"clients-joined"` // Number of clients joined (YANG: IOS-XE 17.12.1+)
-	ClientsOn11a  uint64 `json:"clients-on-11a"` // Number of clients joined on 11a (YANG: IOS-XE 17.12.1+)
-	ClientsOn11b  uint64 `json:"clients-on-11b"` // Number of clients joined on 11b (YANG: IOS-XE 17.12.1+)
-	ApsJoined     uint64 `json:"aps-joined"`     // Number of APs joined (YANG: IOS-XE 17.12.1+)
+	Location      string `json:"location"`       // AP location name (YANG: IOS-XE 17.12.1)
+	ClientsJoined uint64 `json:"clients-joined"` // Number of clients joined (YANG: IOS-XE 17.12.1)
+	ClientsOn11a  uint64 `json:"clients-on-11a"` // Number of clients joined on 11a (YANG: IOS-XE 17.12.1)
+	ClientsOn11b  uint64 `json:"clients-on-11b"` // Number of clients joined on 11b (YANG: IOS-XE 17.12.1)
+	ApsJoined     uint64 `json:"aps-joined"`     // Number of APs joined (YANG: IOS-XE 17.12.1)
 }
 
 // ApHistory represents AP historical state information.
 type ApHistory struct {
-	EthernetMac    string              `json:"ethernet-mac"`      // Ethernet MAC address (YANG: IOS-XE 17.12.1+)
-	ApName         string              `json:"ap-name"`           // AP name (YANG: IOS-XE 17.12.1+)
-	WtpMac         string              `json:"wtp-mac"`           // AP WTP mac (YANG: IOS-XE 17.12.1+)
-	EwlcApStatePtr []EwlcApStateRecord `json:"ewlc-ap-state-ptr"` // AP state (YANG: IOS-XE 17.12.1+)
+	EthernetMac    string              `json:"ethernet-mac"`      // Ethernet MAC address (YANG: IOS-XE 17.12.1)
+	ApName         string              `json:"ap-name"`           // AP name (YANG: IOS-XE 17.12.1)
+	WtpMac         string              `json:"wtp-mac"`           // AP WTP mac (YANG: IOS-XE 17.12.1)
+	EwlcApStatePtr []EwlcApStateRecord `json:"ewlc-ap-state-ptr"` // AP state (YANG: IOS-XE 17.12.1)
 }
 
 // EwlcApStateRecord represents EWLC AP state record information.
 type EwlcApStateRecord struct {
-	IsApJoined              bool      `json:"is-ap-joined"`              // AP joined or not (YANG: IOS-XE 17.12.1+)
-	Timestamp               time.Time `json:"timestamp"`                 // AP Joined or first disjoined timestamp (YANG: IOS-XE 17.12.1+)
-	LastDisconnectTimestamp time.Time `json:"last-disconnect-timestamp"` // Last disconnect timestamp (YANG: IOS-XE 17.12.1+)
-	Disconnects             int       `json:"disconnects"`               // Number of times AP disconnected (YANG: IOS-XE 17.12.1+)
-	ApDisconnectReasonStr   string    `json:"ap-disconnect-reason-str"`  // AP disconnect string (YANG: IOS-XE 17.12.1+)
+	IsApJoined              bool      `json:"is-ap-joined"`              // AP joined or not (YANG: IOS-XE 17.12.1)
+	Timestamp               time.Time `json:"timestamp"`                 // AP Joined or first disjoined timestamp (YANG: IOS-XE 17.12.1)
+	LastDisconnectTimestamp time.Time `json:"last-disconnect-timestamp"` // Last disconnect timestamp (YANG: IOS-XE 17.12.1)
+	Disconnects             int       `json:"disconnects"`               // Number of times AP disconnected (YANG: IOS-XE 17.12.1)
+	ApDisconnectReasonStr   string    `json:"ap-disconnect-reason-str"`  // AP disconnect string (YANG: IOS-XE 17.12.1)
 }
 
 // EwlcApStats represents EWLC AP statistics data.

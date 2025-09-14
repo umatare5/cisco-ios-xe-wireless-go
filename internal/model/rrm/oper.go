@@ -2,12 +2,12 @@ package rrm
 
 import "time"
 
-// RrmOper represents RRM operational response data from WNC 17.12.5.
+// RrmOper represents RRM operational response data.
 type RrmOper struct {
 	CiscoIOSXEWirelessRrmOperRrmOperData RrmOperData `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container
 }
 
-// RrmOperData represents the main RRM operational data container from WNC 17.12.5.
+// RrmOperData represents the main RRM operational data container.
 type RrmOperData struct {
 	ApAutoRfDot11Data   []ApAutoRfDot11Data   `json:"ap-auto-rf-dot11-data,omitempty"`  // AP auto RF 802.11 data
 	ApDot11RadarData    []ApDot11RadarData    `json:"ap-dot11-radar-data,omitempty"`    // AP radar detection data
@@ -18,14 +18,14 @@ type RrmOperData struct {
 	RegDomainOper       *RegDomainOper        `json:"reg-domain-oper,omitempty"`        // Regulatory domain operational data
 }
 
-// ApAutoRfDot11Data represents AP auto RF 802.11 data from WNC 17.12.5.
+// ApAutoRfDot11Data represents AP auto RF 802.11 data.
 type ApAutoRfDot11Data struct {
 	WtpMac            string             `json:"wtp-mac"`                       // Access point MAC address
 	RadioSlotID       int                `json:"radio-slot-id"`                 // Radio slot identifier
 	NeighborRadioInfo *NeighborRadioInfo `json:"neighbor-radio-info,omitempty"` // Neighbor radio information
 }
 
-// NeighborRadioInfo represents neighbor radio information from WNC 17.12.5.
+// NeighborRadioInfo represents neighbor radio information.
 type NeighborRadioInfo struct {
 	NeighborRadioList []NeighborRadioListItem `json:"neighbor-radio-list,omitempty"` // List of neighboring radios
 }
@@ -35,7 +35,7 @@ type NeighborRadioListItem struct {
 	NeighborRadioInfo NeighborRadioDetail `json:"neighbor-radio-info"` // Detailed neighbor radio information
 }
 
-// NeighborRadioDetail represents detailed neighbor radio information from WNC 17.12.5.
+// NeighborRadioDetail represents detailed neighbor radio information.
 type NeighborRadioDetail struct {
 	NeighborRadioMac    string `json:"neighbor-radio-mac"`     // Neighbor radio MAC address
 	NeighborRadioSlotID int    `json:"neighbor-radio-slot-id"` // Neighbor radio slot identifier
@@ -48,21 +48,21 @@ type NeighborRadioDetail struct {
 	SensorCovered       bool   `json:"sensor-covered"`         // Sensor coverage status
 }
 
-// ApDot11RadarData represents AP radar data from WNC 17.12.5.
+// ApDot11RadarData represents AP radar data.
 type ApDot11RadarData struct {
 	WtpMac           string    `json:"wtp-mac"`             // Access point MAC address
 	RadioSlotID      int       `json:"radio-slot-id"`       // Radio slot identifier
 	LastRadarOnRadio time.Time `json:"last-radar-on-radio"` // Timestamp of last radar detection
 }
 
-// ApDot11SpectrumData represents AP spectrum data from WNC 17.12.5.
+// ApDot11SpectrumData represents AP spectrum data.
 type ApDot11SpectrumData struct {
 	WtpMac      string          `json:"wtp-mac"`          // Access point MAC address
 	RadioSlotID int             `json:"radio-slot-id"`    // Radio slot identifier
 	Config      *SpectrumConfig `json:"config,omitempty"` // Spectrum analysis configuration
 }
 
-// SpectrumConfig represents spectrum configuration from WNC 17.12.5.
+// SpectrumConfig represents spectrum configuration.
 type SpectrumConfig struct {
 	SpectrumIntelligenceEnable bool   `json:"spectrum-intelligence-enable"` // Enable spectrum intelligence feature
 	SpectrumWtpCaSiCapable     string `json:"spectrum-wtp-ca-si-capable"`   // WTP spectrum intelligence capability
@@ -74,7 +74,7 @@ type SpectrumConfig struct {
 	ScanRadioType              string `json:"scan-radio-type"`              // Radio type for spectrum scanning
 }
 
-// RrmMeasurement represents RRM measurement data from WNC 17.12.5.
+// RrmMeasurement represents RRM measurement data.
 type RrmMeasurement struct {
 	WtpMac      string   `json:"wtp-mac"`           // Access point MAC address
 	RadioSlotID int      `json:"radio-slot-id"`     // Radio slot identifier
@@ -88,7 +88,7 @@ type Foreign struct {
 	Foreign ForeignData `json:"foreign"` // Foreign interference data
 }
 
-// ForeignData represents foreign interference data from WNC 17.12.5.
+// ForeignData represents foreign interference data.
 type ForeignData struct {
 	ForeignData []ForeignDataItem `json:"foreign-data,omitempty"` // List of foreign interference measurements
 }
@@ -129,14 +129,14 @@ type Load struct {
 	NonWifiInter              int `json:"non-wifi-inter"`               // Non-WiFi interference level
 }
 
-// RadioSlot represents radio slot data from WNC 17.12.5.
+// RadioSlot represents radio slot data.
 type RadioSlot struct {
 	WtpMac      string     `json:"wtp-mac"`              // Access point MAC address
 	RadioSlotID int        `json:"radio-slot-id"`        // Radio slot identifier
 	RadioData   *RadioData `json:"radio-data,omitempty"` // Detailed radio operational data
 }
 
-// RadioData represents detailed radio operational data from WNC 17.12.5.
+// RadioData represents detailed radio operational data.
 type RadioData struct {
 	BestTxPwrLevel            int       `json:"best-tx-pwr-level"`           // Best transmit power level
 	BestRtsThresh             int       `json:"best-rts-thresh"`             // Best RTS threshold

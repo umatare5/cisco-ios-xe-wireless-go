@@ -1,17 +1,12 @@
-// Package location provides data models for location operational data.
 package location
 
 import "time"
 
 // LocationOper represents the response structure for location operational endpoint (HTTP 204).
 type LocationOper struct {
-	LocationOperData *LocationOperData `json:"Cisco-IOS-XE-wireless-location-oper:location-oper-data,omitempty"`
-}
-
-// LocationOperData represents location operational data container.
-type LocationOperData struct {
-	// Radio measurements for specific AP hearing from specific client
-	LocationRssiMeasurements []LocationRssiMeasurement `json:"location-rssi-measurements,omitempty"` // (YANG: IOS-XE 17.12.1+)
+	CiscoIOSXEWirelessLocationOperData *struct {
+		LocationRssiMeasurements []LocationRssiMeasurement `json:"location-rssi-measurements,omitempty"` // Radio measurements for specific AP hearing client (YANG: IOS-XE 17.12.1)
+	} `json:"Cisco-IOS-XE-wireless-location-oper:location-oper-data,omitempty"` // Location operational data (YANG: IOS-XE 17.12.1)
 }
 
 // LocationLocationRssiMeasurements represents the response structure for location RSSI measurements endpoint (HTTP 204).
@@ -21,32 +16,22 @@ type LocationLocationRssiMeasurements struct {
 
 // LocationRssiMeasurement represents radio measurements for AP-client pair.
 type LocationRssiMeasurement struct {
-	// Wireless client MAC address (key)
-	ClientMacAddr string `json:"client-mac-addr"` // (YANG: IOS-XE 17.12.1+)
-	// AP MAC address which heard the client (key)
-	LradAddr string `json:"lrad-addr"` // (YANG: IOS-XE 17.12.1+)
-	// List of radio measurements per AP slot (max 4 elements)
-	RadioMeasurements []RadioMeasurement `json:"radio-measurements,omitempty"` // (YANG: IOS-XE 17.12.1+)
+	ClientMacAddr     string             `json:"client-mac-addr"`              // Wireless client MAC address　(YANG: IOS-XE 17.12.1)
+	LradAddr          string             `json:"lrad-addr"`                    // AP MAC address which heard the client　(YANG: IOS-XE 17.12.1)
+	RadioMeasurements []RadioMeasurement `json:"radio-measurements,omitempty"` // List of radio measurement per AP slot　(YANG: IOS-XE 17.12.1)
 }
 
 // RadioMeasurement represents RSSI measurements for an AP radio slot.
 type RadioMeasurement struct {
-	// Radio band type enum
-	Band *string `json:"band,omitempty"` // (YANG: IOS-XE 17.12.1+)
-	// Source of radio measurement enum
-	Type *string `json:"type,omitempty"` // (YANG: IOS-XE 17.12.1+)
-	// RSSI samples for antennas A and B
-	Sample *RssiSample `json:"sample,omitempty"` // (YANG: IOS-XE 17.12.1+)
-	// Signal over noise ratio
-	Snr *int8 `json:"snr,omitempty"` // (YANG: IOS-XE 17.12.1+)
+	Band   *string     `json:"band,omitempty"`   // Radio band type　(YANG: IOS-XE 17.12.1)
+	Type   *string     `json:"type,omitempty"`   // Source of the radio measurement　(YANG: IOS-XE 17.12.1)
+	Sample *RssiSample `json:"sample,omitempty"` // RSSI samples for antennas A and B　(YANG: IOS-XE 17.12.1)
+	Snr    *int8       `json:"snr,omitempty"`    // Signal over noise ratio　(YANG: IOS-XE 17.12.1)
 }
 
 // RssiSample represents RSSI values per antenna and timestamp.
 type RssiSample struct {
-	// RSSI value of antenna A
-	RssiValueA *int8 `json:"rssi-value-a,omitempty"` // (YANG: IOS-XE 17.12.1+)
-	// RSSI value of antenna B
-	RssiValueB *int8 `json:"rssi-value-b,omitempty"` // (YANG: IOS-XE 17.12.1+)
-	// Last updated time for RSSI
-	RssiTimestamp *time.Time `json:"rssi-timestamp,omitempty"` // (YANG: IOS-XE 17.12.1+)
+	RssiValueA    *int8      `json:"rssi-value-a,omitempty"`   // RSSI value of antenna A　(YANG: IOS-XE 17.12.1)
+	RssiValueB    *int8      `json:"rssi-value-b,omitempty"`   // RSSI value of antenna B　(YANG: IOS-XE 17.12.1)
+	RssiTimestamp *time.Time `json:"rssi-timestamp,omitempty"` // Last updated time for the RSSI　(YANG: IOS-XE 17.12.1)
 }

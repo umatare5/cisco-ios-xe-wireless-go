@@ -3,12 +3,12 @@ package ap
 // ApCfg represents the complete access point configuration.
 type ApCfg struct {
 	CiscoIOSXEWirelessApCfgApCfgData struct {
-		LocationEntries          *LocationEntries          `json:"location-entries,omitempty"`             // AP location configurations (YANG: IOS-XE 17.12.1+)
-		TagSourcePriorityConfigs *TagSourcePriorityConfigs `json:"tag-source-priority-configs,omitempty"`  // Tag source priority configurations (Live: IOS-XE 17.12.5)
-		ApFilterConfigs          *ApFilterConfigs          `json:"ap-filter-configs,omitempty"`            // AP filter configurations (YANG: IOS-XE 17.12.1+)
-		ApRulePriorityConfigs    *ApRulePriorityConfigs    `json:"ap-rule-priority-cfg-entries,omitempty"` // AP rule priority configurations (YANG: IOS-XE 17.12.1+)
-		ApTags                   *ApTags                   `json:"ap-tags,omitempty"`                      // AP tag configurations (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"`
+		LocationEntries          *LocationEntries          `json:"location-entries,omitempty"`             // AP location configurations (YANG: IOS-XE 17.12.1)
+		TagSourcePriorityConfigs *TagSourcePriorityConfigs `json:"tag-source-priority-configs"`            // Tag source priority configurations (Live: IOS-XE 17.12.5)
+		ApFilterConfigs          *ApFilterConfigs          `json:"ap-filter-configs,omitempty"`            // AP filter configurations (YANG: IOS-XE 17.12.1)
+		ApRulePriorityConfigs    *ApRulePriorityConfigs    `json:"ap-rule-priority-cfg-entries,omitempty"` // AP rule priority configurations (YANG: IOS-XE 17.12.1)
+		ApTags                   *ApTags                   `json:"ap-tags"`                                // AP tag configurations (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"` // AP configuration data (Live: IOS-XE 17.12.5)
 }
 
 // ApCfgLocationEntries represents the AP location entries wrapper.
