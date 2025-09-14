@@ -3,7 +3,7 @@
 Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go SDK**! This document explains how you can get involved, the development workflow, and our release process.
 
 > [!WARNING]
-> This SDK is under **active development**. I'll make the breaking changes until `v1.0.0`. Please create an issue before contributing to avoid duplicate work. The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
+> This SDK is under **active development**. I'll make the breaking changes until `v1.0.0`. If you give the contribution to this repo, please create an issue before to avoid duplicate work. The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 💡 How to Contribute
 
@@ -149,3 +149,13 @@ To release a new version:
 - **Submit a pull request** with the updated `VERSION` file.
 
 Once merged, GitHub Actions will automatically release the new version using [Release Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-release.yml).
+
+## 📖 Reference
+
+### Adding New Service
+
+- N/A
+
+### Adding New Function to an Existing Service
+
+- [f595bb: feat/ap: add IoT firmware information support](https://github.com/umatare5/cisco-ios-xe-wireless-go/pull/27/commits/f595bbf830802703dce950ba42df3ee411d00b9a).
