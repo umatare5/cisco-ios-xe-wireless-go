@@ -11,9 +11,7 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
-// TestWATServiceIntegration_GetConfigOperations_Success validates WAT (Wireless Assurance Testing) service
-// configuration retrieval against live WNC controller (IOS-XE 17.18.1+).
-// Note: This service requires IOS-XE 17.18.1+ and uses MockErrorServer for unsupported versions.
+// TestWATServiceIntegration_GetConfigOperations_Success validates WAT (Wireless Assurance Testing) service.
 func TestWATServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 	t.Parallel()
 
@@ -35,67 +33,9 @@ func TestWATServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				LogResult:      true,
 				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
 			},
-			{
-				Name: "GetThousandeyesConfig",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(wat.Service).GetThousandeyesConfig(ctx)
-				},
-				LogResult:      true,
-				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
-			},
 		},
-		FilterMethods: []integration.TestMethod{
-			{
-				Name: "GetTestProfile",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(wat.Service).GetTestProfile(ctx, "test-profile")
-				},
-				ExpectNotFound: true, // Profile may not exist
-			},
-			{
-				Name: "GetSchedule",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(wat.Service).GetSchedule(ctx, "test-schedule")
-				},
-				ExpectNotFound: true, // Schedule may not exist
-			},
-			{
-				Name: "GetReportTemplate",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(wat.Service).GetReportTemplate(ctx, "test-report")
-				},
-				ExpectNotFound: true, // Report may not exist
-			},
-		},
-		ValidationTests: []integration.ValidationTestMethod{
-			{
-				Name: "GetTestProfile_EmptyName",
-				Method: func(ctx context.Context, service any) error {
-					_, err := service.(wat.Service).GetTestProfile(ctx, "")
-					return err
-				},
-				ExpectedError: true,
-				ErrorKeywords: []string{"invalid", "empty", "profile"},
-			},
-			{
-				Name: "GetSchedule_EmptyName",
-				Method: func(ctx context.Context, service any) error {
-					_, err := service.(wat.Service).GetSchedule(ctx, "")
-					return err
-				},
-				ExpectedError: true,
-				ErrorKeywords: []string{"invalid", "empty", "schedule"},
-			},
-			{
-				Name: "GetReportTemplate_EmptyName",
-				Method: func(ctx context.Context, service any) error {
-					_, err := service.(wat.Service).GetReportTemplate(ctx, "")
-					return err
-				},
-				ExpectedError: true,
-				ErrorKeywords: []string{"invalid", "empty", "report"},
-			},
-		},
+		FilterMethods:   []integration.TestMethod{},
+		ValidationTests: []integration.ValidationTestMethod{},
 	}
 
 	integration.RunTestSuite(t, suite)

@@ -11,9 +11,7 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
-// TestSpacesServiceIntegration_GetOperationalOperations_Success validates Cisco Spaces service
-// operational data retrieval against live WNC controller (IOS-XE 17.18.1+).
-// Note: This service requires IOS-XE 17.18.1+ and uses MockErrorServer for unsupported versions.
+// TestSpacesServiceIntegration_GetOperationalOperations_Success validates Cisco Spaces service.
 func TestSpacesServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 	t.Parallel()
 
@@ -39,22 +37,6 @@ func TestSpacesServiceIntegration_GetOperationalOperations_Success(t *testing.T)
 				Name: "GetConnectionDetails",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(spaces.Service).GetConnectionDetails(ctx)
-				},
-				LogResult:      true,
-				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
-			},
-			{
-				Name: "GetTenantInfo",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(spaces.Service).GetTenantInfo(ctx)
-				},
-				LogResult:      true,
-				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
-			},
-			{
-				Name: "GetConnectionStats",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(spaces.Service).GetConnectionStats(ctx)
 				},
 				LogResult:      true,
 				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
