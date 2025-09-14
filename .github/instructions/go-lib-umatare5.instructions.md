@@ -38,7 +38,7 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
   1. **(Optional)** Local aliases referencing central routes (see `internal/restconf/routes`).
   2. Type definitions (service struct, enums).
   3. Constructor (**return a concrete type**): `func NewService(c *core.Client) Service` (returns concrete type, not pointer).
-  4. Configuration methods (`GetConfig`, `GetCfg*`, `ListTagConfigs`).
+  4. Configuration methods (`GetConfig`, `ListTagConfigs`).
   5. Operational methods (`GetOperational`, `GetGlobalInfo`, `ListCAPWAPData`).
   6. Administrative methods (`Enable*`, `Disable*`, `Assign*`, `Reload`, etc.).
   7. Internal helpers (private).
@@ -150,8 +150,7 @@ type HandlerMap[T any] = map[string]map[string]T
 
 ## 9. Constants & Endpoints
 
-- **CONST-001 (MUST)** Keep endpoint routes centralized in `internal/restconf/routes`. Services may import local aliases but **must not** duplicate endpoint strings.
-- **END-001 (SHOULD)** Define `<Feature>BasePath` in central routes and compose leaf endpoints from it.
+- **END-001 (MUST)** Keep endpoint routes centralized in `internal/restconf/routes`. Services may import local aliases but **must not** duplicate endpoint strings.
 - **END-002 (MUST)** Build field-projection and leaf URLs via centralized helpers in `internal/restconf/routes`.
 
 ---
@@ -187,11 +186,9 @@ type HandlerMap[T any] = map[string]map[string]T
 ## 13. General Coding Standards
 
 - **GCS-001 (MUST)** Apply **KISS/DRY** consistently and keep public APIs minimal and composable.
-- **GCS-002 (MUST)** Prefer **named constants** and **typed enums** for domain values.
-- **GCS-003 (MUST)** Use **predicate helpers** (`isX`, `hasX`) for clarity in conditionals.
-- **GCS-004 (SHOULD)** Prefer Go 1.21+/1.22+/1.23+ idioms (`any`, `min/max/clear`, per-iteration `for` variables, iterator `range`) **when they improve clarity or performance**. Avoid gratuitous rewrites solely to use new syntax.
-- **GCS-005 (MUST)** Prefer **early return** patterns in conditionals and loops to keep blocks shallow.
-- **GCS-006 (MUST)** Organize packages with clear boundaries (service, model, transport, testutil) and eliminate cyclic deps.
+- **GCS-002 (SHOULD)** Prefer Go 1.21+/1.22+/1.23+ idioms (`any`, `min/max/clear`, per-iteration `for` variables, iterator `range`) **when they improve clarity or performance**. Avoid gratuitous rewrites solely to use new syntax.
+- **GCS-003 (MUST)** Prefer **early return** patterns in conditionals and loops to keep blocks shallow.
+- **GCS-004 (MUST)** Organize packages with clear boundaries (service, model, transport, testutil) and eliminate cyclic deps.
 
 ---
 
