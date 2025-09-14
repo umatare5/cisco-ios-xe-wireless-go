@@ -70,9 +70,9 @@ Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
 
 ## 7. Development Standards
 
-- **DEV-001 (MUST)** Follow **Go public coding standards** as defined in [./instructions/go.instructions.md](./instructions/go.instructions.md) primary.
-- **DEV-002 (MUST)** Follow **Go private coding standards** as defined in [./instructions/go-lib-umatare5.instructions.md](./instructions/go-lib-umatare5.instructions.md) secondary.
-- **DEV-003 (MUST)** Follow **Bash shell scripting private standards** as defined in [./instructions/bash-umatare5.instructions.md](./instructions/bash-umatare5.instructions.md).
+- **DEV-001 (MUST)** When editing go code, follow **Go public coding standards** as defined in [./instructions/go.instructions.md](./instructions/go.instructions.md) primary.
+- **DEV-002 (MUST)** When editing go code, follow **Go private coding standards** as defined in [./instructions/go-lib-umatare5.instructions.md](./instructions/go-lib-umatare5.instructions.md) secondary.
+- **DEV-003 (MUST)** When editing bash shell scripts, follow **Bash shell scripting private standards** as defined in [./instructions/bash-umatare5.instructions.md](./instructions/bash-umatare5.instructions.md).
 - **DEV-004 (MUST)** Apply lint/format/type checks as defined by repository configuration.
 - **DEV-005 (MUST)** Maintain **zero-violation quality bar** across all development artifacts.
 
@@ -88,10 +88,10 @@ Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
 - **QGA-002 (MUST)** For **v1.0.0+**, align all API changes with **SemVer** and update docs accordingly.
 - **QGA-003 (MUST)** Before completion, verify:
 
-  - [README.md](../README.md) baseline requirements updated when relevant.
-  - [CONTRIBUTING.md](../CONTRIBUTING.md) quality requirements satisfied.
-  - [SECURITY.md](../docs/SECURITY.md) security notes up to date.
-  - [TESTING.md](../docs/TESTING.md) test instructions accurate.
+  - `../README.md` baseline requirements updated when relevant.
+  - `../CONTRIBUTING.md` quality requirements satisfied.
+  - `../docs/SECURITY.md` security notes up to date.
+  - `../docs/TESTING.md` test instructions accurate.
   - Lint/format clean per repository settings（no ad-hoc overrides）.
   - Temp artifacts under `./tmp/` only, zero-byte files removed.
   - Report written to `./.copilot_reports/` as specified.
