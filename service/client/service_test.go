@@ -15,7 +15,7 @@ func TestClientServiceUnit_Constructor_Success(t *testing.T) {
 		responses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -296,7 +296,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			}]
 		}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -468,7 +468,7 @@ func TestClientServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	errorPaths := []string{
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data",
 	}
-	mockServer := testutil.NewMockErrorServer(errorPaths, 404)
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -486,7 +486,7 @@ func TestClientServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 func TestClientServiceUnit_ValidationErrors_EmptyMAC(t *testing.T) {
 	t.Parallel()
 
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 	testClient := testutil.NewTestClient(server)
 	service := client.NewService(testClient.Core().(*core.Client))
@@ -563,7 +563,7 @@ func TestClientServiceUnit_KnownIssueHandling_Success(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -585,16 +585,16 @@ func TestClientServiceUnit_KnownIssueHandling_Dot11Errors(t *testing.T) {
 	t.Parallel()
 
 	// Create mock server with specific error message for known Dot11 issues using pkg/testutil
-	errorConfig := map[string]testutil.ErrorConfig{
-		"dot11-oper-data": {
-			StatusCode:   500,
-			ErrorMessage: `{"ietf-restconf:errors": {"error": [{"error-message": "failed to retrieve table cursor"}]}}`,
-		},
-	}
-	server := testutil.NewMockServerWithCustomErrors(t, errorConfig)
+	server := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse("dot11-oper-data", testutil.ResponseConfig{
+			StatusCode: 500,
+			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "failed to retrieve table cursor"}]}}`,
+		}),
+	)
 	defer server.Close()
 
-	testClient := server.NewTestClient(t)
+	testClient := testutil.NewTestClient(server)
 	service := client.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
@@ -622,16 +622,16 @@ func TestClientServiceUnit_KnownIssueHandling_GetOperationalErrors(t *testing.T)
 	t.Parallel()
 
 	// Create mock server with specific error message for known GetOperational issues using pkg/testutil
-	errorConfig := map[string]testutil.ErrorConfig{
-		"client-oper-data": {
-			StatusCode:   500,
-			ErrorMessage: `{"ietf-restconf:errors": {"error": [{"error-message": "unexpected EOF"}]}}`,
-		},
-	}
-	server := testutil.NewMockServerWithCustomErrors(t, errorConfig)
+	server := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse("client-oper-data", testutil.ResponseConfig{
+			StatusCode: 500,
+			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unexpected EOF"}]}}`,
+		}),
+	)
 	defer server.Close()
 
-	testClient := server.NewTestClient(t)
+	testClient := testutil.NewTestClient(server)
 	service := client.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
@@ -650,16 +650,16 @@ func TestClientServiceUnit_KnownIssueHandling_AdditionalDot11Errors(t *testing.T
 	t.Parallel()
 
 	// Create mock server for additional known Dot11 error: "Process DBAL response failed" using pkg/testutil
-	errorConfig := map[string]testutil.ErrorConfig{
-		"dot11-oper-data": {
-			StatusCode:   500,
-			ErrorMessage: `{"ietf-restconf:errors": {"error": [{"error-message": "Process DBAL response failed"}]}}`,
-		},
-	}
-	server := testutil.NewMockServerWithCustomErrors(t, errorConfig)
+	server := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse("dot11-oper-data", testutil.ResponseConfig{
+			StatusCode: 500,
+			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "Process DBAL response failed"}]}}`,
+		}),
+	)
 	defer server.Close()
 
-	testClient := server.NewTestClient(t)
+	testClient := testutil.NewTestClient(server)
 	service := client.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
@@ -687,16 +687,16 @@ func TestClientServiceUnit_KnownIssueHandling_UnknownErrors(t *testing.T) {
 	t.Parallel()
 
 	// Create mock server with unknown error messages that should not be handled gracefully
-	errorConfig := map[string]testutil.ErrorConfig{
-		"dot11-oper-data": {
-			StatusCode:   500,
-			ErrorMessage: `{"ietf-restconf:errors": {"error": [{"error-message": "unknown database error"}]}}`,
-		},
-	}
-	server := testutil.NewMockServerWithCustomErrors(t, errorConfig)
+	server := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse("dot11-oper-data", testutil.ResponseConfig{
+			StatusCode: 500,
+			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unknown database error"}]}}`,
+		}),
+	)
 	defer server.Close()
 
-	testClient := server.NewTestClient(t)
+	testClient := testutil.NewTestClient(server)
 	service := client.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
@@ -718,16 +718,16 @@ func TestClientServiceUnit_KnownIssueHandling_GetOperationalUnknownErrors(t *tes
 	t.Parallel()
 
 	// Create mock server with unknown error message for GetOperational
-	errorConfig := map[string]testutil.ErrorConfig{
-		"client-oper-data": {
-			StatusCode:   500,
-			ErrorMessage: `{"ietf-restconf:errors": {"error": [{"error-message": "unknown system error"}]}}`,
-		},
-	}
-	server := testutil.NewMockServerWithCustomErrors(t, errorConfig)
+	server := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse("client-oper-data", testutil.ResponseConfig{
+			StatusCode: 500,
+			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unknown system error"}]}}`,
+		}),
+	)
 	defer server.Close()
 
-	testClient := server.NewTestClient(t)
+	testClient := testutil.NewTestClient(server)
 	service := client.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 

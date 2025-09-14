@@ -17,7 +17,7 @@ func TestLispServiceUnit_Constructor_Success(t *testing.T) {
 		responses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -95,7 +95,7 @@ func TestLispServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -139,7 +139,7 @@ func TestLispServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
 	// Create test server and service
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 
 	// Create test client configured for the mock server

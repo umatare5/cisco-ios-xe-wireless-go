@@ -46,7 +46,7 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
 	}
 
 	// Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
-	url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.APTagsPath, "ap-tag", normalizedMAC)
+	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
 	return core.Get[model.ApCfgApTag](ctx, s.Client(), url)
 }
 
@@ -60,9 +60,8 @@ func (s Service) GetTagSourcePriorityConfigByPriority(
 	ctx context.Context,
 	priority int,
 ) (*model.ApCfgTagSourcePriorityConfigs, error) {
-	url := s.Client().RestconfBuilder().BuildPathQueryURL(
-		routes.APTagSourcePriorityConfigsPath,
-		"tag-source-priority-config",
+	url := s.Client().RestconfBuilder().BuildQueryURL(
+		routes.APTagSourcePriorityConfigQueryPath,
 		strconv.Itoa(priority),
 	)
 	return core.Get[model.ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
@@ -90,7 +89,7 @@ func (s Service) ListAPHistoryByEthernetMAC(
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.APGlobalOperPath, "ap-history", ethernetMAC)
+	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
 	return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), url)
 }
 
@@ -126,9 +125,8 @@ func (s Service) GetWLANClientStatsByWLANID(
 	if wlanID <= 0 {
 		return nil, core.ErrResourceNotFound
 	}
-	url := s.Client().RestconfBuilder().BuildPathQueryURL(
-		routes.APGlobalOperPath,
-		"wlan-client-stats",
+	url := s.Client().RestconfBuilder().BuildQueryURL(
+		routes.APWlanClientStatsQueryPath,
 		strconv.Itoa(wlanID),
 	)
 	return core.Get[model.ApGlobalOperWlanClientStats](ctx, s.Client(), url)

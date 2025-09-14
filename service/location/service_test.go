@@ -17,7 +17,7 @@ func TestLocationServiceUnit_Constructor_Success(t *testing.T) {
 		testResponses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(testResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(testResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -58,7 +58,7 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -100,22 +100,27 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing.T) {
 	t.Parallel()
 
-	responses := map[string]testutil.SuccessConfig{
-		"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/location": {
-			StatusCode:   204,
-			ResponseBody: "",
-		},
-		"Cisco-IOS-XE-wireless-location-oper:location-oper-data": {
-			StatusCode:   204,
-			ResponseBody: "",
-		},
-		"Cisco-IOS-XE-wireless-location-oper:location-oper-data/location-rssi-measurements": {
-			StatusCode:   204,
-			ResponseBody: "",
-		},
-	}
-
-	mockServerNoContent := testutil.NewMockServerWithCustomResponses(t, responses)
+	mockServerNoContent := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse(
+			"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/location",
+			testutil.ResponseConfig{
+				StatusCode: 204,
+				Body:       "",
+			}),
+		testutil.WithCustomResponse(
+			"Cisco-IOS-XE-wireless-location-oper:location-oper-data",
+			testutil.ResponseConfig{
+				StatusCode: 204,
+				Body:       "",
+			}),
+		testutil.WithCustomResponse(
+			"Cisco-IOS-XE-wireless-location-oper:location-oper-data/location-rssi-measurements",
+			testutil.ResponseConfig{
+				StatusCode: 204,
+				Body:       "",
+			}),
+	)
 	defer mockServerNoContent.Close()
 
 	testClient := testutil.NewTestClient(mockServerNoContent)
@@ -141,8 +146,8 @@ func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing
 		}
 		if result == nil {
 			t.Error("Expected non-nil result for GetOperational")
-		} else if result.LocationOperData != nil {
-			t.Error("Expected nil LocationOperData for HTTP 204 response")
+		} else if result.CiscoIOSXEWirelessLocationOperData != nil {
+			t.Error("Expected nil CiscoIOSXEWirelessLocationOperData for HTTP 204 response")
 		}
 	})
 
@@ -164,7 +169,7 @@ func TestLocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
 	// Create test server and service
-	errorServer := testutil.NewMockServer(map[string]string{})
+	errorServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer errorServer.Close()
 
 	// Create test client configured for the mock server

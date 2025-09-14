@@ -10,7 +10,7 @@ import (
 func TestRfidServiceUnit_Constructor_Success(t *testing.T) {
 	t.Parallel()
 
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 	testClient := testutil.NewTestClient(server)
 	service := NewService(testClient.Core().(*core.Client))
@@ -69,7 +69,7 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -151,7 +151,7 @@ func TestRfidServiceUnit_GetConfigSettings_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -172,7 +172,7 @@ func TestRfidServiceUnit_GetConfigSettings_MockSuccess(t *testing.T) {
 func TestRfidServiceUnit_ValidationErrors_InvalidInputs(t *testing.T) {
 	t.Parallel()
 
-	mockServer := testutil.NewMockServer(map[string]string{})
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)

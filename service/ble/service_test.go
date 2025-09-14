@@ -15,7 +15,7 @@ func TestBleServiceUnit_Constructor_Success(t *testing.T) {
 		responses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -51,7 +51,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			}
 		}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -75,7 +75,7 @@ func TestBleServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	errorPaths := []string{
 		"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data",
 	}
-	mockServer := testutil.NewMockErrorServer(errorPaths, 404)
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)

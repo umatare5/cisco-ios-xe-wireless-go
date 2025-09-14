@@ -15,9 +15,9 @@ func TestRogueServiceUnit_Constructor_Success(t *testing.T) {
 	}
 
 	// Test with valid client
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"test": `{"data": {}}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -29,7 +29,7 @@ func TestRogueServiceUnit_Constructor_Success(t *testing.T) {
 
 func TestRogueServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	// Using real WNC rogue data structure with actual MAC addresses from live environment
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data": {
 				"rogue-stats": {
@@ -76,7 +76,7 @@ func TestRogueServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				]
 			}
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -101,7 +101,7 @@ func TestRogueServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 
 func TestRogueServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 	// Using real WNC rogue data structure
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-data": [
 				{
@@ -139,7 +139,7 @@ func TestRogueServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 				"friendly-count": 0
 			}
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -187,7 +187,7 @@ func TestRogueServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 
 func TestRogueServiceUnit_GetByMACOperations_MockSuccess(t *testing.T) {
 	// Using real WNC rogue data structure
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data=00:25:36:57:ed:cb": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-data": [
 				{
@@ -216,7 +216,7 @@ func TestRogueServiceUnit_GetByMACOperations_MockSuccess(t *testing.T) {
 				}
 			]
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -310,7 +310,7 @@ func TestRogueServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 
 func TestRogueServiceUnit_AliasOperations_MockSuccess(t *testing.T) {
 	// Test alias methods for integration test compatibility
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data": {
 				"rogue-stats": {
@@ -368,10 +368,10 @@ func TestRogueServiceUnit_AliasOperations_MockSuccess(t *testing.T) {
 					"rogue-client-address": "2a:c5:50:5d:6b:9c",
 					"rogue-client-bssid": "1c:61:b4:10:0e:7f",
 					"rogue-client-state": "rogue-state-alert"
-				}
-			]
-		}`,
-	})
+		}
+	]
+}`,
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)

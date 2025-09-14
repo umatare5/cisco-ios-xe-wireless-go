@@ -11,7 +11,7 @@ import (
 // TestDot11ServiceUnit_Constructor_Success tests service constructor.
 func TestDot11ServiceUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
-		mockServer := testutil.NewMockServer(map[string]string{})
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer mockServer.Close()
 
 		client := testutil.NewTestClient(mockServer)
@@ -31,7 +31,7 @@ func TestDot11ServiceUnit_Constructor_Success(t *testing.T) {
 
 // TestDot11ServiceUnit_GetOperations_MockSuccess tests Get operations using mock server.
 func TestDot11ServiceUnit_GetOperations_MockSuccess(t *testing.T) {
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data": `{
 			"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data": {
 				"config": {
@@ -39,7 +39,7 @@ func TestDot11ServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			}
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -54,9 +54,9 @@ func TestDot11ServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 
 // TestDot11ServiceUnit_GetOperations_ErrorHandling tests error scenarios using mock server.
 func TestDot11ServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
-	mockServer := testutil.NewMockErrorServer([]string{
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses([]string{
 		"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data",
-	}, 404)
+	}, 404))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)

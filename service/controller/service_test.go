@@ -15,7 +15,7 @@ func TestControllerServiceUnit_Constructor_Success(t *testing.T) {
 		responses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -49,7 +49,7 @@ func TestControllerServiceUnit_ReloadOperations_MockSuccess(t *testing.T) {
 			}
 		}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -82,7 +82,7 @@ func TestControllerServiceUnit_ReloadOperations_ErrorHandling(t *testing.T) {
 	errorPaths := []string{
 		"Cisco-IOS-XE-rpc:reload",
 	}
-	mockServer := testutil.NewMockErrorServer(errorPaths, 500)
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 500))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -107,7 +107,7 @@ func TestControllerServiceUnit_ReloadOperations_ValidationErrors(t *testing.T) {
 			}
 		}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)

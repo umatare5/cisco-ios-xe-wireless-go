@@ -15,7 +15,7 @@ func TestApServiceUnit_Constructor_Success(t *testing.T) {
 		responses := map[string]string{
 			"test-endpoint": `{"status": "success"}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -286,7 +286,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			]
 		}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -495,7 +495,7 @@ func TestApServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data",
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data",
 	}
-	mockServer := testutil.NewMockErrorServer(errorPaths, 404)
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -670,7 +670,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		// PUT/POST endpoints for tag assignment
 		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff": `{}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -775,7 +775,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 func TestApServiceUnit_ValidationErrors(t *testing.T) {
 	// Use minimal mock server since we're testing validation before network calls
 	responses := map[string]string{}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -881,7 +881,7 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 			}]
 		}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -952,7 +952,7 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 // TestApServiceUnit_SetOperations_ValidationErrors tests validation for state change operations.
 func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	responses := map[string]string{}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -1037,7 +1037,7 @@ func TestApServiceUnit_EdgeCases_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset": `{"status": "success"}`,
 	}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -1055,10 +1055,10 @@ func TestApServiceUnit_EdgeCases_MockSuccess(t *testing.T) {
 
 // TestApServiceUnit_NilCAPWAPData tests nil CAPWAP data handling.
 func TestApServiceUnit_NilCAPWAPData(t *testing.T) {
-	mockServer := testutil.NewMockErrorServer(
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(
 		[]string{"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data"},
 		500,
-	)
+	))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -1077,22 +1077,24 @@ func TestApServiceUnit_NilCAPWAPData(t *testing.T) {
 // TestApServiceUnit_AdditionalErrorCases tests additional error handling scenarios for 100% coverage.
 func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 	// Mock server with specific error responses for edge cases
-	errorConfig := map[string]testutil.ErrorConfig{
-		"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state": {
-			StatusCode:   400,
-			ErrorMessage: "Invalid request",
-		},
-		"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state": {
-			StatusCode:   400,
-			ErrorMessage: "Invalid request",
-		},
-		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff": {
-			StatusCode:   400,
-			ErrorMessage: "Invalid request",
-		},
-	}
-
-	mockServer := testutil.NewMockServerWithCustomErrors(t, errorConfig)
+	mockServer := testutil.NewMockServer(
+		testutil.WithTesting(t),
+		testutil.WithCustomResponse(
+			"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state", testutil.ResponseConfig{
+				StatusCode: 400,
+				Body:       "Invalid request",
+			}),
+		testutil.WithCustomResponse(
+			"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state", testutil.ResponseConfig{
+				StatusCode: 400,
+				Body:       "Invalid request",
+			}),
+		testutil.WithCustomResponse(
+			"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff", testutil.ResponseConfig{
+				StatusCode: 400,
+				Body:       "Invalid request",
+			}),
+	)
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -1135,7 +1137,7 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 // TestApServiceUnit_EdgeCaseValidation tests additional validation edge cases.
 func TestApServiceUnit_EdgeCaseValidation(t *testing.T) {
 	responses := map[string]string{}
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -1174,7 +1176,7 @@ func TestApServiceUnit_ReloadEdgeCases(t *testing.T) {
 		responses := map[string]string{
 			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `null`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -1197,7 +1199,7 @@ func TestApServiceUnit_ReloadEdgeCases(t *testing.T) {
 				}]
 			}`,
 		}
-		mockServer := testutil.NewMockServer(responses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)

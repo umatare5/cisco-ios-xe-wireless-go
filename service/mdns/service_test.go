@@ -14,7 +14,7 @@ func TestMdnsServiceUnit_Constructor_Success(t *testing.T) {
 
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
 		// Create test server and client
-		server := testutil.NewMockServer(map[string]string{})
+		server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer server.Close()
 
 		testClient := testutil.NewTestClient(server)
@@ -195,7 +195,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -239,7 +239,7 @@ func TestMdnsServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
 	// Create test server and service
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 
 	// Create test client configured for the mock server

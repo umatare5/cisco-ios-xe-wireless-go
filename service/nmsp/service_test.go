@@ -10,7 +10,7 @@ import (
 
 func TestNmspServiceUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
-		server := testutil.NewMockServer(map[string]string{})
+		server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer server.Close()
 		testClient := testutil.NewTestClient(server)
 		service := nmsp.NewService(testClient.Core().(*core.Client))
@@ -86,7 +86,7 @@ func TestNmspServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 	testClient := testutil.NewTestClient(mockServer)
 	service := nmsp.NewService(testClient.Core().(*core.Client))

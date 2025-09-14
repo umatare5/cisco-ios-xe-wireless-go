@@ -13,7 +13,7 @@ func TestRadioServiceUnit_Constructor_Success(t *testing.T) {
 	t.Parallel()
 
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
-		server := testutil.NewMockServer(map[string]string{})
+		server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer server.Close()
 		testClient := testutil.NewTestClient(server)
 		service := radio.NewService(testClient.Core().(*core.Client))
@@ -62,7 +62,7 @@ func TestRadioServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -95,7 +95,7 @@ func TestRadioServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
 	// Create test server and service
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 
 	// Create test client configured for the mock server

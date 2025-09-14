@@ -11,7 +11,7 @@ import (
 // TestCtsServiceUnit_Constructor_Success tests service constructor.
 func TestCtsServiceUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
-		mockServer := testutil.NewMockServer(map[string]string{})
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer mockServer.Close()
 
 		client := testutil.NewTestClient(mockServer)
@@ -31,7 +31,7 @@ func TestCtsServiceUnit_Constructor_Success(t *testing.T) {
 
 // TestCtsServiceUnit_GetOperations_MockSuccess tests Get operations using mock server.
 func TestCtsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
-	mockServer := testutil.NewMockServer(map[string]string{
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 		"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data": `{
 			"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data": {
 				"config": {
@@ -39,7 +39,7 @@ func TestCtsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			}
 		}`,
-	})
+	}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -54,9 +54,9 @@ func TestCtsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 
 // TestCtsServiceUnit_GetOperations_ErrorHandling tests error scenarios using mock server.
 func TestCtsServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
-	mockServer := testutil.NewMockErrorServer([]string{
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses([]string{
 		"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data",
-	}, 404)
+	}, 404))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)

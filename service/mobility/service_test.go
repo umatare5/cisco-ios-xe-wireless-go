@@ -12,7 +12,7 @@ import (
 func TestMobilityServiceUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
 		// Create test server and client
-		server := testutil.NewMockServer(map[string]string{})
+		server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer server.Close()
 
 		testClient := testutil.NewTestClient(server)
@@ -40,7 +40,7 @@ func TestMobilityServiceUnit_Constructor_Success(t *testing.T) {
 // TestMobilityServiceUnit_GetOperations_MockSuccess tests Get operations using mock server.
 func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	// Create mock server and service
-	mockServer := testutil.NewMockServer(map[string]string{})
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer mockServer.Close()
 
 	// Create test client configured for the mock server
@@ -63,7 +63,7 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 // TestMobilityServiceUnit_GetOperations_ErrorHandling tests error scenarios using mock server.
 func TestMobilityServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	// Create test server and service
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 
 	// Create test client configured for the mock server
@@ -133,7 +133,7 @@ func TestMobilityServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)

@@ -14,9 +14,9 @@ func TestRrmServiceUnit_Constructor_Success(t *testing.T) {
 
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
 		// Create mock server and test client
-		mockServer := testutil.NewMockServer(map[string]string{
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 			"test": `{"data": {}}`,
-		})
+		}))
 		defer mockServer.Close()
 
 		client := testutil.NewTestClient(mockServer)
@@ -115,7 +115,7 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -168,7 +168,7 @@ func TestRrmServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
 	// Create test server and service
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 
 	// Create test client configured for the mock server

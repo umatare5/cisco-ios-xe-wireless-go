@@ -55,8 +55,8 @@ func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*model.Ro
 }
 
 // GetStats retrieves rogue statistics.
-func (s Service) GetStats(ctx context.Context) (*model.RogueStats, error) {
-	return core.Get[model.RogueStats](ctx, s.Client(), routes.RogueStatsPath)
+func (s Service) GetStats(ctx context.Context) (*model.RogueStatsData, error) {
+	return core.Get[model.RogueStatsData](ctx, s.Client(), routes.RogueStatsPath)
 }
 
 // Alias methods for integration test compatibility
@@ -72,12 +72,12 @@ func (s Service) GetOperData(ctx context.Context) (*model.RogueData, error) {
 }
 
 // GetOperStats is an alias for GetStats.
-func (s Service) GetOperStats(ctx context.Context) (*model.RogueStats, error) {
+func (s Service) GetOperStats(ctx context.Context) (*model.RogueStatsData, error) {
 	return s.GetStats(ctx)
 }
 
 // GetRLDPStats retrieves RLDP (Rogue Location Discovery Protocol) statistics.
-func (s Service) GetRLDPStats(ctx context.Context) (*model.RogueStats, error) {
+func (s Service) GetRLDPStats(ctx context.Context) (*model.RogueStatsData, error) {
 	// For now, return the same as rogue stats since RLDP is part of rogue detection
 	return s.GetStats(ctx)
 }
