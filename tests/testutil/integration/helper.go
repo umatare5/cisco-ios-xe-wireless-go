@@ -5,7 +5,9 @@ package integration
 
 import (
 	"context"
+	"encoding/json"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -96,8 +98,10 @@ type TestMethod struct {
 	Name           string
 	Method         func(ctx context.Context, service any) (any, error)
 	ExpectNotFound bool
-	ExpectError    bool
 	LogResult      bool
+
+	// Optional callback for custom error handling. Returns true if handled.
+	WhenError func(t *testing.T, methodName string, err error) bool
 }
 
 // ValidationTestMethod represents parameter validation tests
@@ -118,23 +122,13 @@ func RunTestSuite(t *testing.T, suite TestSuite) {
 		t.Skip("Skipping integration tests: no client available")
 	}
 
-	// Create service instance
+	// Create service instance and test context
 	service := suite.Config.ServiceConstructor(setup.Client)
-
-	// Setup timeout context if requested
-	var testCtx context.Context
-	if suite.Config.UseTimeout {
-		duration := max(suite.Config.TimeoutDuration, 30*time.Second)
-		var cancel context.CancelFunc
-		testCtx, cancel = context.WithTimeout(setup.Context, duration)
-		defer cancel()
-	} else {
-		testCtx = setup.Context
-	}
+	testCtx := createTestContext(setup.Context, suite.Config)
 
 	// Run test groups
-	runBasicMethodTests(t, testCtx, service, suite.BasicMethods)
-	runFilteredMethodTests(t, testCtx, service, suite.FilterMethods)
+	runBasicMethodTests(t, testCtx, service, suite.BasicMethods, suite.Config.ServiceName)
+	runFilteredMethodTests(t, testCtx, service, suite.FilterMethods, suite.Config.ServiceName)
 	runValidationTests(t, testCtx, service, suite.ValidationTests)
 }
 
@@ -154,8 +148,24 @@ func isNetworkError(err error) bool {
 
 // Private helper functions
 
+// createTestContext creates an appropriate context based on suite configuration
+func createTestContext(baseCtx context.Context, config TestSuiteConfig) context.Context {
+	if !config.UseTimeout {
+		return baseCtx
+	}
+
+	duration := max(config.TimeoutDuration, 30*time.Second)
+	testCtx, cancel := context.WithTimeout(baseCtx, duration)
+
+	// Note: We can't defer cancel() here as the context needs to live beyond this function.
+	// The context will be automatically cancelled when the parent context is cancelled or times out.
+	_ = cancel // Suppress unused variable warning
+
+	return testCtx
+}
+
 // runBasicMethodTests executes basic method test group
-func runBasicMethodTests(t *testing.T, testCtx context.Context, service any, methods []TestMethod) {
+func runBasicMethodTests(t *testing.T, testCtx context.Context, service any, methods []TestMethod, serviceName string) {
 	if methods == nil {
 		return
 	}
@@ -164,14 +174,14 @@ func runBasicMethodTests(t *testing.T, testCtx context.Context, service any, met
 		for _, method := range methods {
 			t.Run(method.Name, func(t *testing.T) {
 				result, err := method.Method(testCtx, service)
-				handleMethodResult(t, method, result, err, "successfully retrieved data")
+				handleMethodResult(t, method, result, err, "successfully retrieved data", serviceName)
 			})
 		}
 	})
 }
 
 // runFilteredMethodTests executes filtered method test group
-func runFilteredMethodTests(t *testing.T, testCtx context.Context, service any, methods []TestMethod) {
+func runFilteredMethodTests(t *testing.T, testCtx context.Context, service any, methods []TestMethod, serviceName string) {
 	if methods == nil {
 		return
 	}
@@ -180,7 +190,7 @@ func runFilteredMethodTests(t *testing.T, testCtx context.Context, service any, 
 		for _, method := range methods {
 			t.Run(method.Name, func(t *testing.T) {
 				result, err := method.Method(testCtx, service)
-				handleMethodResult(t, method, result, err, "successfully retrieved filtered data")
+				handleMethodResult(t, method, result, err, "successfully retrieved filtered data", serviceName)
 			})
 		}
 	})
@@ -203,32 +213,46 @@ func runValidationTests(t *testing.T, testCtx context.Context, service any, vali
 }
 
 // handleMethodResult processes integration test method results
-func handleMethodResult(t *testing.T, method TestMethod, result any, err error, successMsg string) {
-	if method.ExpectError {
-		handleExpectedError(t, method.Name, err)
-		return
-	}
-
+func handleMethodResult(t *testing.T, method TestMethod, result any, err error, successMsg string, serviceName string) {
+	// Handle expected not-found scenarios first
 	if method.ExpectNotFound && err != nil {
 		handleExpectedNotFound(t, method.Name, err)
 		return
 	}
 
+	// Handle errors
 	if err != nil {
-		// Check for network errors and skip gracefully
-		if isNetworkError(err) {
-			t.Skipf("%s: skipping due to network error (controller unreachable): %v", method.Name, err)
-			return
-		}
-		t.Errorf("%s: unexpected error: %v", method.Name, err)
+		handleMethodError(t, method, err)
 		return
 	}
 
+	// Handle nil result case
 	if result == nil {
 		t.Errorf("%s: returned nil data", method.Name)
 		return
 	}
 
+	// Success path: save response and log result
+	saveTestResponse(t, serviceName, method.Name, result)
+	logMethodSuccess(t, method, successMsg)
+}
+
+// handleMethodError processes errors during method execution
+func handleMethodError(t *testing.T, method TestMethod, err error) {
+	if isNetworkError(err) {
+		t.Skipf("%s: skipping due to network error (controller unreachable): %v", method.Name, err)
+		return
+	}
+
+	if method.WhenError != nil && method.WhenError(t, method.Name, err) {
+		return // Custom error handler processed the error
+	}
+
+	t.Errorf("%s: unexpected error: %v", method.Name, err)
+}
+
+// logMethodSuccess logs successful method execution if configured
+func logMethodSuccess(t *testing.T, method TestMethod, successMsg string) {
 	if method.LogResult {
 		t.Logf("%s: %s", method.Name, successMsg)
 	}
@@ -236,32 +260,32 @@ func handleMethodResult(t *testing.T, method TestMethod, result any, err error, 
 
 // handleValidationResult processes parameter validation test results
 func handleValidationResult(t *testing.T, validationTest ValidationTestMethod, err error) {
-	if validationTest.ExpectedError {
-		if err == nil {
-			t.Errorf("%s: expected error but got none", validationTest.Name)
-			return
-		}
-
-		checkErrorKeywords(t, validationTest, err)
-		t.Logf("%s: correctly rejected invalid parameter: %v", validationTest.Name, err)
+	if !validationTest.ExpectedError {
+		handleUnexpectedValidationError(t, validationTest, err)
 		return
 	}
 
+	handleExpectedValidationError(t, validationTest, err)
+}
+
+// handleUnexpectedValidationError processes cases where no error was expected
+func handleUnexpectedValidationError(t *testing.T, validationTest ValidationTestMethod, err error) {
 	if err != nil {
 		t.Errorf("%s: unexpected error: %v", validationTest.Name, err)
 		return
 	}
-
 	t.Logf("%s: parameter validation passed", validationTest.Name)
 }
 
-// handleExpectedError processes expected error scenarios
-func handleExpectedError(t *testing.T, methodName string, err error) {
+// handleExpectedValidationError processes cases where an error was expected
+func handleExpectedValidationError(t *testing.T, validationTest ValidationTestMethod, err error) {
 	if err == nil {
-		t.Errorf("%s: expected error but got none", methodName)
+		t.Errorf("%s: expected error but got none", validationTest.Name)
 		return
 	}
-	t.Logf("%s: got expected error: %v", methodName, err)
+
+	checkErrorKeywords(t, validationTest, err)
+	t.Logf("%s: correctly rejected invalid parameter: %v", validationTest.Name, err)
 }
 
 // handleExpectedNotFound processes expected 404 scenarios
@@ -294,4 +318,95 @@ func checkErrorKeywords(t *testing.T, validationTest ValidationTestMethod, err e
 
 	t.Logf("%s: error did not contain expected keywords %v: %v",
 		validationTest.Name, validationTest.ErrorKeywords, err)
+}
+
+// saveTestResponse saves the test response to testdata directory for future reference
+func saveTestResponse(t *testing.T, serviceName, methodName string, response any) {
+	t.Helper()
+
+	if response == nil {
+		return
+	}
+
+	rootDir := getProjectRoot(t, methodName)
+	if rootDir == "" {
+		return
+	}
+
+	testdataDir := createTestdataDir(t, methodName, rootDir, serviceName)
+	if testdataDir == "" {
+		return
+	}
+
+	jsonData := marshalResponse(t, methodName, response)
+	if jsonData == nil {
+		return
+	}
+
+	saveResponseFile(t, methodName, serviceName, testdataDir, jsonData)
+}
+
+// getProjectRoot gets the project root directory
+func getProjectRoot(t *testing.T, methodName string) string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Logf("%s: warning: failed to get working directory: %v", methodName, err)
+		return ""
+	}
+	return findProjectRoot(cwd)
+}
+
+// createTestdataDir creates the testdata directory for the service
+func createTestdataDir(t *testing.T, methodName, rootDir, serviceName string) string {
+	sanitizedServiceName := strings.ToLower(strings.ReplaceAll(serviceName, " ", "_"))
+	testdataDir := filepath.Join(rootDir, "testdata", "integration", sanitizedServiceName)
+
+	if err := os.MkdirAll(testdataDir, 0o755); err != nil {
+		t.Logf("%s: warning: failed to create testdata directory: %v", methodName, err)
+		return ""
+	}
+
+	return testdataDir
+}
+
+// marshalResponse marshals the response to JSON
+func marshalResponse(t *testing.T, methodName string, response any) []byte {
+	jsonData, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		t.Logf("%s: warning: failed to marshal response: %v", methodName, err)
+		return nil
+	}
+	return jsonData
+}
+
+// saveResponseFile saves the JSON data to a file
+func saveResponseFile(t *testing.T, methodName, serviceName, testdataDir string, jsonData []byte) {
+	filename := strings.ToLower(methodName) + ".json"
+	fullPath := filepath.Join(testdataDir, filename)
+
+	if err := os.WriteFile(fullPath, jsonData, 0o644); err != nil {
+		t.Logf("%s: warning: failed to save test response: %v", methodName, err)
+		return
+	}
+
+	sanitizedServiceName := strings.ToLower(strings.ReplaceAll(serviceName, " ", "_"))
+	t.Logf("%s: saved response to testdata/integration/%s/%s.json", methodName, sanitizedServiceName, strings.ToLower(methodName))
+}
+
+// findProjectRoot walks up the directory tree to find the project root containing go.mod
+func findProjectRoot(startDir string) string {
+	currentDir := startDir
+
+	for {
+		if _, err := os.Stat(filepath.Join(currentDir, "go.mod")); err == nil {
+			return currentDir
+		}
+
+		parent := filepath.Dir(currentDir)
+		if parent == currentDir {
+			// Reached filesystem root, return start directory
+			return startDir
+		}
+		currentDir = parent
+	}
 }
