@@ -30,7 +30,7 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model
 		return nil, err
 	}
 
-	result, err := core.Get[model.SiteCfgSiteListEntry](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[model.SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
@@ -41,14 +41,13 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model
 		return nil, nil
 	}
 
-	// Return the first element directly - no conversion needed
 	return &result.SiteListEntry[0], nil
 }
 
 // ListSiteTags retrieves all site tag configurations.
 func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntry, error) {
 	type siteTagsResponse struct {
-		SiteListEntrys model.SiteListEntrys `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
+		SiteTagConfigs model.SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
 	}
 
 	result, err := core.Get[siteTagsResponse](ctx, s.Client(), routes.SiteTagConfigsPath)
@@ -58,11 +57,11 @@ func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntr
 	if result == nil {
 		return []model.SiteListEntry{}, nil
 	}
-	if len(result.SiteListEntrys.SiteListEntry) == 0 {
+	if len(result.SiteTagConfigs.SiteTagConfig) == 0 {
 		return []model.SiteListEntry{}, nil
 	}
 
-	return result.SiteListEntrys.SiteListEntry, nil
+	return result.SiteTagConfigs.SiteTagConfig, nil
 }
 
 // CreateSiteTag creates a new site tag configuration.
@@ -194,12 +193,12 @@ func (s *SiteTagService) validateTagName(tagName string) error {
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *SiteTagService) buildTagURL(tagName string) string {
-	return s.Client().RestconfBuilder().BuildPathQueryURL(routes.SiteTagConfigsPath, "site-tag-config", tagName)
+	return s.Client().RestconfBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
 }
 
 // buildPayload builds a payload for tag operations using the request model.
-func (s *SiteTagService) buildPayload(config model.SiteListEntry) model.SiteListEntrysPayload {
-	return model.SiteListEntrysPayload{
+func (s *SiteTagService) buildPayload(config model.SiteListEntry) model.SiteTagConfigsPayload {
+	return model.SiteTagConfigsPayload{
 		SiteListEntry: config,
 	}
 }

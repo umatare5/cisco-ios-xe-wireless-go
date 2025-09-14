@@ -16,7 +16,7 @@ func TestSiteServiceUnit_Constructor_Success(t *testing.T) {
 	}
 
 	// Test with valid client
-	mockServer := testutil.NewMockServer(map[string]string{})
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer mockServer.Close()
 
 	client := testutil.NewTestClient(mockServer)
@@ -58,7 +58,7 @@ func TestSiteServiceUnit_GetOperations_Success(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(mockResponses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -97,7 +97,7 @@ func TestSiteServiceUnit_GetOperations_Success(t *testing.T) {
 func TestSiteServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	t.Parallel()
 
-	mockServer := testutil.NewMockServer(map[string]string{})
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)

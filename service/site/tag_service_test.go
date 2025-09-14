@@ -43,7 +43,7 @@ func TestSiteTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(mockResponses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -98,7 +98,7 @@ func TestSiteTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(mockResponses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -159,7 +159,7 @@ func TestSiteTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 func TestSiteTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	t.Parallel()
 
-	mockServer := testutil.NewMockServer(map[string]string{})
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -273,7 +273,7 @@ func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(mockResponses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -387,9 +387,9 @@ func TestSiteTagServiceUnit_GetOperations_EdgeCases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockServer := testutil.NewMockServer(map[string]string{
+			mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
 				"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs": tt.mockResponse,
-			})
+			}))
 			defer mockServer.Close()
 
 			testClient := testutil.NewTestClient(mockServer)
@@ -436,7 +436,7 @@ func TestSiteTagServiceUnit_SetOperations_AdvancedScenarios(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(mockResponses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -477,7 +477,7 @@ func TestSiteTagServiceUnit_ErrorHandling_ComprehensiveScenarios(t *testing.T) {
 	t.Parallel()
 
 	t.Run("ValidationErrors_TagName", func(t *testing.T) {
-		mockServer := testutil.NewMockServer(map[string]string{})
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -505,7 +505,7 @@ func TestSiteTagServiceUnit_ErrorHandling_ComprehensiveScenarios(t *testing.T) {
 			}`,
 		}
 
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -552,9 +552,9 @@ func TestSiteTagServiceUnit_ErrorHandling_ComprehensiveScenarios(t *testing.T) {
 
 	t.Run("SetOperations_GetTagError", func(t *testing.T) {
 		// Mock server that returns error for GET operations using error server
-		mockServer := testutil.NewMockErrorServer([]string{
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses([]string{
 			"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs/site-tag-config=test-site",
-		}, 500)
+		}, 500))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)

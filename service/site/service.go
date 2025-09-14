@@ -35,6 +35,6 @@ func (s Service) ListAPProfileConfigs(ctx context.Context) (*model.SiteCfgApCfgP
 }
 
 // ListSiteTagConfigs retrieves all site tag configurations from the site configuration.
-func (s Service) ListSiteTagConfigs(ctx context.Context) (*model.SiteCfgSiteListEntrys, error) {
-	return core.Get[model.SiteCfgSiteListEntrys](ctx, s.Client(), routes.SiteTagConfigsPath)
+func (s Service) ListSiteTagConfigs(ctx context.Context) (*model.SiteCfgSiteTagConfigs, error) {
+	return core.Get[model.SiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath)
 }

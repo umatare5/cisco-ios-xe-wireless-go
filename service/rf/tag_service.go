@@ -35,7 +35,7 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RfT
 		return nil, err
 	}
 
-	result, err := core.Get[model.RfTagResponse](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[model.RfCfgRfTag](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RfT
 
 // ListRFTags retrieves all RF tag configurations.
 func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RfTag, error) {
-	result, err := core.Get[model.RfTagsResponse](ctx, s.Client(), routes.RFTagsPath)
+	result, err := core.Get[model.RfCfgRfTags](ctx, s.Client(), routes.RFTagsPath)
 	if err != nil {
 		return nil, err
 	}

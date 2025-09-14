@@ -12,10 +12,11 @@ import (
 func TestRfTagServiceUnit_Constructor_Success(t *testing.T) {
 	t.Parallel()
 
-	server := testutil.NewMockServer(map[string]string{})
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 	defer server.Close()
 	testClient := testutil.NewTestClient(server)
 	service := NewService(testClient.Core().(*core.Client))
+
 	rfTagService := service.RFTag()
 	if rfTagService.Client() == nil {
 		t.Error("Expected valid client, got nil")
@@ -83,7 +84,7 @@ func TestRfTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -164,7 +165,7 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags": `{"status": "success"}`,
 	}
 
-	mockServer := testutil.NewMockServer(responses)
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
 	testClient := testutil.NewTestClient(mockServer)
@@ -226,8 +227,7 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 func TestRfTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	t.Parallel()
 
-	mockServer := testutil.NewMockServer(map[string]string{})
-	defer mockServer.Close()
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 
 	testClient := testutil.NewTestClient(mockServer)
 	service := NewService(testClient.Core().(*core.Client))
@@ -331,7 +331,7 @@ func TestRfTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags",
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag=nonexistent-tag",
 		}
-		mockServer := testutil.NewMockErrorServer(errorPaths, 404)
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -352,7 +352,7 @@ func TestRfTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		errorPaths := []string{
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag=nonexistent-tag",
 		}
-		mockServer := testutil.NewMockErrorServer(errorPaths, 404)
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -370,7 +370,7 @@ func TestRfTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		errorPaths := []string{
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag=nonexistent-tag",
 		}
-		mockServer := testutil.NewMockErrorServer(errorPaths, 404)
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -393,7 +393,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 		mockResponses := map[string]string{
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag=test-tag": `null`,
 		}
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -416,7 +416,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 				"Cisco-IOS-XE-wireless-rf-cfg:rf-tag": []
 			}`,
 		}
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -437,7 +437,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 		mockResponses := map[string]string{
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags": `null`,
 		}
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -462,7 +462,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 				}
 			}`,
 		}
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -485,7 +485,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 				"Cisco-IOS-XE-wireless-rf-cfg:rf-tags": null
 			}`,
 		}
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -511,7 +511,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 				}]
 			}`,
 		}
-		mockServer := testutil.NewMockServer(mockResponses)
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(mockResponses))
 		defer mockServer.Close()
 
 		testClient := testutil.NewTestClient(mockServer)
@@ -528,8 +528,7 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 	})
 
 	t.Run("SetRFTag_ValidationErrors", func(t *testing.T) {
-		mockServer := testutil.NewMockServer(map[string]string{})
-		defer mockServer.Close()
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
 
 		testClient := testutil.NewTestClient(mockServer)
 		service := NewService(testClient.Core().(*core.Client))
