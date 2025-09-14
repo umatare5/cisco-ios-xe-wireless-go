@@ -2,15 +2,15 @@ package ap
 
 import "time"
 
-// ApGlobalOper represents the structure for AP global operational data from WNC 17.12.5.
+// ApGlobalOper represents the structure for AP global operational data.
 type ApGlobalOper struct {
-	ApHistory             []ApHistory           `json:"ap-history"` // AP history data
-	EwlcApStats           EwlcApStats           `json:"ewlc-ap-stats"`
-	ApImgPredownloadStats ApImgPredownloadStats `json:"ap-img-predownload-stats"`
-	ApLocationStats       []ApLocationStats     `json:"ap-location-stats"` // AP location statistics (YANG: IOS-XE 17.12.1+)
-	ApJoinStats           []ApJoinStats         `json:"ap-join-stats"`
-	WlanClientStats       []WlanClientStats     `json:"wlan-client-stats"`
-	EmltdJoinCountStat    EmltdJoinCountStat    `json:"emltd-join-count-stat"`
+	ApHistory             []ApHistory           `json:"ap-history"`               // AP history data for state tracking (Live: IOS-XE 17.12.5)
+	EwlcApStats           EwlcApStats           `json:"ewlc-ap-stats"`            // AP radio statistics (Live: IOS-XE 17.12.5)
+	ApImgPredownloadStats ApImgPredownloadStats `json:"ap-img-predownload-stats"` // AP image predownload stats (Live: IOS-XE 17.12.5)
+	ApLocationStats       []ApLocationStats     `json:"ap-location-stats"`        // AP location statistics (YANG: IOS-XE 17.12.1+)
+	ApJoinStats           []ApJoinStats         `json:"ap-join-stats"`            // AP join statistics (Live: IOS-XE 17.12.5)
+	WlanClientStats       []WlanClientStats     `json:"wlan-client-stats"`        // WLAN client stats (Live: IOS-XE 17.12.5)
+	EmltdJoinCountStat    EmltdJoinCountStat    `json:"emltd-join-count-stat"`    // AP join count statistics (Live: IOS-XE 17.12.5)
 }
 
 // ApGlobalOperApHistory represents the structure for AP history data.
@@ -55,7 +55,7 @@ type ApGlobalOperData struct {
 
 // ApLocationStats represents AP location statistics data.
 type ApLocationStats struct {
-	Location      string `json:"location"`       // AP location name
+	Location      string `json:"location"`       // AP location name (YANG: IOS-XE 17.12.1+)
 	ClientsJoined uint64 `json:"clients-joined"` // Number of clients joined (YANG: IOS-XE 17.12.1+)
 	ClientsOn11a  uint64 `json:"clients-on-11a"` // Number of clients joined on 11a (YANG: IOS-XE 17.12.1+)
 	ClientsOn11b  uint64 `json:"clients-on-11b"` // Number of clients joined on 11b (YANG: IOS-XE 17.12.1+)
@@ -64,163 +64,163 @@ type ApLocationStats struct {
 
 // ApHistory represents AP historical state information.
 type ApHistory struct {
-	EthernetMac    string              `json:"ethernet-mac"`      // AP ethernet MAC address
-	ApName         string              `json:"ap-name"`           // Access point name
-	WtpMac         string              `json:"wtp-mac"`           // WTP MAC address
-	EwlcApStatePtr []EwlcApStateRecord `json:"ewlc-ap-state-ptr"` // EWLC AP state records
+	EthernetMac    string              `json:"ethernet-mac"`      // Ethernet MAC address (YANG: IOS-XE 17.12.1+)
+	ApName         string              `json:"ap-name"`           // AP name (YANG: IOS-XE 17.12.1+)
+	WtpMac         string              `json:"wtp-mac"`           // AP WTP mac (YANG: IOS-XE 17.12.1+)
+	EwlcApStatePtr []EwlcApStateRecord `json:"ewlc-ap-state-ptr"` // AP state (YANG: IOS-XE 17.12.1+)
 }
 
 // EwlcApStateRecord represents EWLC AP state record information.
 type EwlcApStateRecord struct {
-	IsApJoined              bool      `json:"is-ap-joined"`              // AP join status flag
-	Timestamp               time.Time `json:"timestamp"`                 // State record timestamp
-	LastDisconnectTimestamp time.Time `json:"last-disconnect-timestamp"` // Last disconnect time
-	Disconnects             int       `json:"disconnects"`               // Number of disconnections
-	ApDisconnectReasonStr   string    `json:"ap-disconnect-reason-str"`  // Disconnect reason description
+	IsApJoined              bool      `json:"is-ap-joined"`              // AP joined or not (YANG: IOS-XE 17.12.1+)
+	Timestamp               time.Time `json:"timestamp"`                 // AP Joined or first disjoined timestamp (YANG: IOS-XE 17.12.1+)
+	LastDisconnectTimestamp time.Time `json:"last-disconnect-timestamp"` // Last disconnect timestamp (YANG: IOS-XE 17.12.1+)
+	Disconnects             int       `json:"disconnects"`               // Number of times AP disconnected (YANG: IOS-XE 17.12.1+)
+	ApDisconnectReasonStr   string    `json:"ap-disconnect-reason-str"`  // AP disconnect string (YANG: IOS-XE 17.12.1+)
 }
 
 // EwlcApStats represents EWLC AP statistics data.
 type EwlcApStats struct {
-	Stats80211ARad         RadioStats `json:"stats-80211-a-rad"`          // 802.11a radio statistics
-	Stats80211BgRad        RadioStats `json:"stats-80211-bg-rad"`         // 802.11bg radio statistics
-	Stats80211XorRad       RadioStats `json:"stats-80211-xor-rad"`        // 802.11 XOR radio statistics
-	Stats80211RxOnlyRad    RadioStats `json:"stats-80211-rx-only-rad"`    // 802.11 RX-only radio statistics
-	Stats80211AllRad       RadioStats `json:"stats-80211-all-rad"`        // 802.11 all radio statistics
-	Stats80211BgClntSrvg   RadioStats `json:"stats-80211bg-clnt-srvg"`    // 802.11bg client serving statistics
-	Stats80211AClntSrvg    RadioStats `json:"stats-80211a-clnt-srvg"`     // 802.11a client serving statistics
-	StatsRadMonMode        RadioStats `json:"stats-rad-mon-mode"`         // Radio monitor mode statistics
-	StatsMisconfiguredAps  int        `json:"stats-misconfigured-aps"`    // Number of misconfigured APs
-	Stats802116GhzRadios   RadioStats `json:"stats-80211-6ghz-radios"`    // 802.11 6GHz radio statistics
-	Stats802116GhzClntSrvg RadioStats `json:"stats-80211-6ghz-clnt-srvg"` // 802.11 6GHz client serving statistics
-	DualBandRadMonMode     RadioStats `json:"dual-band-rad-mon-mode"`     // Dual-band radio monitor mode statistics
-	Stats80211BgRadMonMode RadioStats `json:"stats-80211bg-rad-mon-mode"` // 802.11bg radio monitor mode statistics
-	Stats80211ARadMonMode  RadioStats `json:"stats-80211a-rad-mon-mode"`  // 802.11a radio monitor mode statistics
-	RadMonMode802116Ghz    RadioStats `json:"rad-mon-mode-80211-6ghz"`    // 6GHz radio monitor mode statistics
-	StatsDtlsLscFbkAps     int        `json:"stats-dtls-lsc-fbk-aps"`     // DTLS LSC fallback APs count
-	TotalHighCPUReload     int        `json:"total-high-cpu-reload"`      // High CPU reload events count
-	TotalHighMemReload     int        `json:"total-high-mem-reload"`      // High memory reload events count
-	TotalRadioStuckReset   int        `json:"total-radio-stuck-reset"`    // Radio stuck reset events count
-	DualBandRadSnfrMode    RadioStats `json:"dual-band-rad-snfr-mode"`    // Dual-band radio sniffer mode statistics
-	RadioSnfrMode80211Bg   RadioStats `json:"radio-snfr-mode-80211bg"`    // 802.11bg radio sniffer mode statistics
-	RadioSnfrMode80211A    RadioStats `json:"radio-snfr-mode-80211a"`     // 802.11a radio sniffer mode statistics
-	RadioSnfrMode802116Ghz RadioStats `json:"radio-snfr-mode-80211-6ghz"` // 6GHz radio sniffer mode statistics
-	RadioSnfrMode          RadioStats `json:"radio-snfr-mode"`            // Radio sniffer mode statistics
-	Total80211Xor56GhzRad  RadioStats `json:"total-80211-xor-5-6ghz-rad"` // 802.11 XOR 5/6GHz radio statistics
+	Stats80211ARad         RadioStats `json:"stats-80211-a-rad"`          // 802.11 5 GHz radio stats (Live: IOS-XE 17.12.5)
+	Stats80211BgRad        RadioStats `json:"stats-80211-bg-rad"`         // 802.11 2.4 GHz radio stats (Live: IOS-XE 17.12.5)
+	Stats80211XorRad       RadioStats `json:"stats-80211-xor-rad"`        // 802.11 dual band radio stats (Live: IOS-XE 17.12.5)
+	Stats80211RxOnlyRad    RadioStats `json:"stats-80211-rx-only-rad"`    // 802.11 RX radio stats (Live: IOS-XE 17.12.5)
+	Stats80211AllRad       RadioStats `json:"stats-80211-all-rad"`        // All radio stats (Live: IOS-XE 17.12.5)
+	Stats80211BgClntSrvg   RadioStats `json:"stats-80211bg-clnt-srvg"`    // 802.11 2.4 GHz client serving radio stats (Live: IOS-XE 17.12.5)
+	Stats80211AClntSrvg    RadioStats `json:"stats-80211a-clnt-srvg"`     // 802.11 5 GHz client serving radio stats (Live: IOS-XE 17.12.5)
+	StatsRadMonMode        RadioStats `json:"stats-rad-mon-mode"`         // Monitor radio stats (Live: IOS-XE 17.12.5)
+	StatsMisconfiguredAps  int        `json:"stats-misconfigured-aps"`    // Total number of misconfigured APs (Live: IOS-XE 17.12.5)
+	Stats802116GhzRadios   RadioStats `json:"stats-80211-6ghz-radios"`    // 802.11 6 GHz radio stats (Live: IOS-XE 17.12.5)
+	Stats802116GhzClntSrvg RadioStats `json:"stats-80211-6ghz-clnt-srvg"` // 802.11 6 GHz client serving radio stats (Live: IOS-XE 17.12.5)
+	DualBandRadMonMode     RadioStats `json:"dual-band-rad-mon-mode"`     // 802.11 dual band monitor radio stats (Live: IOS-XE 17.12.5)
+	Stats80211BgRadMonMode RadioStats `json:"stats-80211bg-rad-mon-mode"` // 802.11 2.4 GHz monitor radio stats (Live: IOS-XE 17.12.5)
+	Stats80211ARadMonMode  RadioStats `json:"stats-80211a-rad-mon-mode"`  // 802.11 5 GHz monitor radio stats (Live: IOS-XE 17.12.5)
+	RadMonMode802116Ghz    RadioStats `json:"rad-mon-mode-80211-6ghz"`    // 802.11 6 GHz monitor radio stats (Live: IOS-XE 17.12.5)
+	StatsDtlsLscFbkAps     int        `json:"stats-dtls-lsc-fbk-aps"`     // Total number of DTLS LSC fallback APs (Live: IOS-XE 17.12.5)
+	TotalHighCPUReload     int        `json:"total-high-cpu-reload"`      // Total number of AP reloads due to high CPU (Live: IOS-XE 17.12.5)
+	TotalHighMemReload     int        `json:"total-high-mem-reload"`      // Total number of AP reloads due to high memory (Live: IOS-XE 17.12.5)
+	TotalRadioStuckReset   int        `json:"total-radio-stuck-reset"`    // Total number of radio stuck resets (Live: IOS-XE 17.12.5)
+	DualBandRadSnfrMode    RadioStats `json:"dual-band-rad-snfr-mode"`    // 802.11 dual band sniffer radio stats (Live: IOS-XE 17.12.5)
+	RadioSnfrMode80211Bg   RadioStats `json:"radio-snfr-mode-80211bg"`    // 802.11 2.4 GHz sniffer radio stats (Live: IOS-XE 17.12.5)
+	RadioSnfrMode80211A    RadioStats `json:"radio-snfr-mode-80211a"`     // 802.11 5 GHz sniffer radio stats (Live: IOS-XE 17.12.5)
+	RadioSnfrMode802116Ghz RadioStats `json:"radio-snfr-mode-80211-6ghz"` // 802.11 6 GHz sniffer radio stats (Live: IOS-XE 17.12.5)
+	RadioSnfrMode          RadioStats `json:"radio-snfr-mode"`            // All sniffer radio stats (Live: IOS-XE 17.12.5)
+	Total80211Xor56GhzRad  RadioStats `json:"total-80211-xor-5-6ghz-rad"` // 802.11 dual band 5/6 GHz radio stats (Live: IOS-XE 17.12.5)
 }
 
 // RadioStats represents radio statistics information.
 type RadioStats struct {
-	TotalRadios int `json:"total-radios"` // Total number of radios
-	RadiosUp    int `json:"radios-up"`    // Number of radios in up state
-	RadiosDown  int `json:"radios-down"`  // Number of radios in down state
+	TotalRadios int `json:"total-radios"` // Total number of radios (Live: IOS-XE 17.12.5)
+	RadiosUp    int `json:"radios-up"`    // Total number of radios up (Live: IOS-XE 17.12.5)
+	RadiosDown  int `json:"radios-down"`  // Total number of radios down (Live: IOS-XE 17.12.5)
 }
 
 // ApImgPredownloadStats represents AP image predownload statistics.
 type ApImgPredownloadStats struct {
 	PredownloadStats struct {
-		NumInitiated            int  `json:"num-initiated"`              // Number of initiated predownloads
-		NumInProgress           int  `json:"num-in-progress"`            // Number of predownloads in progress
-		NumComplete             int  `json:"num-complete"`               // Number of completed predownloads
-		NumUnsupported          int  `json:"num-unsupported"`            // Number of unsupported predownloads
-		NumFailed               int  `json:"num-failed"`                 // Number of failed predownloads
-		IsPredownloadInProgress bool `json:"is-predownload-in-progress"` // Predownload progress status
-		NumTotal                int  `json:"num-total"`                  // Total number of predownloads
-	} `json:"predownload-stats"` // AP predownload statistics
-	DownloadsInProgress int `json:"downloads-in-progress"` // Current downloads in progress
-	DownloadsComplete   int `json:"downloads-complete"`    // Completed downloads count
+		NumInitiated            int  `json:"num-initiated"`              // Total AP predownload initiated for proactive distribution (Live: IOS-XE 17.12.5)
+		NumInProgress           int  `json:"num-in-progress"`            // Total AP predownload in-progress for bandwidth monitoring (Live: IOS-XE 17.12.5)
+		NumComplete             int  `json:"num-complete"`               // Total AP predownload completed for deployment tracking (Live: IOS-XE 17.12.5)
+		NumUnsupported          int  `json:"num-unsupported"`            // Total AP predownload not supported for compatibility check (Live: IOS-XE 17.12.5)
+		NumFailed               int  `json:"num-failed"`                 // Total AP predownload failed for troubleshooting analysis (Live: IOS-XE 17.12.5)
+		IsPredownloadInProgress bool `json:"is-predownload-in-progress"` // Status of AP image predownload process for monitoring (Live: IOS-XE 17.12.5)
+		NumTotal                int  `json:"num-total"`                  // Total AP connected for comprehensive coverage tracking (Live: IOS-XE 17.12.5)
+	} `json:"predownload-stats"` // AP predownload statistics for firmware management (Live: IOS-XE 17.12.5)
+	DownloadsInProgress int `json:"downloads-in-progress"` // Total APs download in-progress for bandwidth monitoring (Live: IOS-XE 17.12.5)
+	DownloadsComplete   int `json:"downloads-complete"`    // Total APs download completed for deployment tracking (Live: IOS-XE 17.12.5)
 	WlcPredownloadStats struct {
-		NumInitiated            int  `json:"num-initiated"`              // WLC initiated predownloads
-		NumInProgress           int  `json:"num-in-progress"`            // WLC predownloads in progress
-		NumComplete             int  `json:"num-complete"`               // WLC completed predownloads
-		NumUnsupported          int  `json:"num-unsupported"`            // WLC unsupported predownloads
-		NumFailed               int  `json:"num-failed"`                 // WLC failed predownloads
-		IsPredownloadInProgress bool `json:"is-predownload-in-progress"` // WLC predownload progress status
-		NumTotal                int  `json:"num-total"`                  // WLC total predownloads
-	} `json:"wlc-predownload-stats"` // WLC predownload statistics
+		NumInitiated            int  `json:"num-initiated"`              // Total AP predownload initiated for controller orchestration (Live: IOS-XE 17.12.5)
+		NumInProgress           int  `json:"num-in-progress"`            // Total AP predownload in-progress for resource monitoring (Live: IOS-XE 17.12.5)
+		NumComplete             int  `json:"num-complete"`               // Total AP predownload completed for deployment success (Live: IOS-XE 17.12.5)
+		NumUnsupported          int  `json:"num-unsupported"`            // Total AP predownload not supported for compatibility check (Live: IOS-XE 17.12.5)
+		NumFailed               int  `json:"num-failed"`                 // Total AP predownload failed for troubleshooting recovery (Live: IOS-XE 17.12.5)
+		IsPredownloadInProgress bool `json:"is-predownload-in-progress"` // Status of AP image predownload for coordination monitoring (Live: IOS-XE 17.12.5)
+		NumTotal                int  `json:"num-total"`                  // Total AP connected for controller-wide coordination (Live: IOS-XE 17.12.5)
+	} `json:"wlc-predownload-stats"` // Wireless controller predownload statistics for firmware management (Live: IOS-XE 17.12.5)
 }
 
 // ApJoinStats represents AP join statistics data.
 type ApJoinStats struct {
-	WtpMac             string          `json:"wtp-mac"`              // WTP MAC address
-	ApJoinInfo         ApJoinInfo      `json:"ap-join-info"`         // AP join process information
-	ApDiscoveryInfo    ApDiscoveryInfo `json:"ap-discovery-info"`    // AP discovery process information
-	DtlsSessInfo       DtlsSessInfo    `json:"dtls-sess-info"`       // DTLS session information
-	ApDisconnectReason string          `json:"ap-disconnect-reason"` // AP disconnect reason
-	RebootReason       string          `json:"reboot-reason"`        // AP reboot reason
-	DisconnectReason   string          `json:"disconnect-reason"`    // Disconnect reason details
+	WtpMac             string          `json:"wtp-mac"`              // AP radio MAC address for CAPWAP session identification (Live: IOS-XE 17.12.5)
+	ApJoinInfo         ApJoinInfo      `json:"ap-join-info"`         // AP join information for connection status tracking (Live: IOS-XE 17.12.5)
+	ApDiscoveryInfo    ApDiscoveryInfo `json:"ap-discovery-info"`    // AP discovery information for controller identification (Live: IOS-XE 17.12.5)
+	DtlsSessInfo       DtlsSessInfo    `json:"dtls-sess-info"`       // Data and Control DTLS phase statistics for secure tunnel (Live: IOS-XE 17.12.5)
+	ApDisconnectReason string          `json:"ap-disconnect-reason"` // Last disconnect reason of AP for troubleshooting (Live: IOS-XE 17.12.5)
+	RebootReason       string          `json:"reboot-reason"`        // Reboot reason from AP for system stability analysis (Live: IOS-XE 17.12.5)
+	DisconnectReason   string          `json:"disconnect-reason"`    // Disconnect reason from AP for failure diagnosis (Live: IOS-XE 17.12.5)
 }
 
 // ApJoinInfo represents AP join process information.
 type ApJoinInfo struct {
-	ApIPAddr              string    `json:"ap-ip-addr"`                // AP IP address
-	ApEthernetMac         string    `json:"ap-ethernet-mac"`           // AP ethernet MAC address
-	ApName                string    `json:"ap-name"`                   // Access point name
-	IsJoined              bool      `json:"is-joined"`                 // AP join status flag
-	NumJoinReqRecvd       int       `json:"num-join-req-recvd"`        // Number of join requests received
-	NumConfigReqRecvd     int       `json:"num-config-req-recvd"`      // Number of config requests received
-	LastJoinFailureType   string    `json:"last-join-failure-type"`    // Last join failure type
-	LastConfigFailureType string    `json:"last-config-failure-type"`  // Last config failure type
-	LastErrorType         string    `json:"last-error-type"`           // Last error type
-	LastErrorTime         time.Time `json:"last-error-time"`           // Last error timestamp
-	LastMsgDecrFailReason string    `json:"last-msg-decr-fail-reason"` // Last message decryption failure reason
-	NumSuccJoinRespSent   int       `json:"num-succ-join-resp-sent"`   // Number of successful join responses sent
-	NumUnsuccJoinReqProcn int       `json:"num-unsucc-join-req-procn"` // Number of unsuccessful join request processing
-	NumSuccConfRespSent   int       `json:"num-succ-conf-resp-sent"`   // Number of successful config responses sent
-	NumUnsuccConfReqProcn int       `json:"num-unsucc-conf-req-procn"` // Number of unsuccessful config request processing
-	LastSuccJoinAtmptTime time.Time `json:"last-succ-join-atmpt-time"` // Last successful join attempt time
-	LastFailJoinAtmptTime time.Time `json:"last-fail-join-atmpt-time"` // Last failed join attempt time
-	LastSuccConfAtmptTime time.Time `json:"last-succ-conf-atmpt-time"` // Last successful config attempt time
-	LastFailConfAtmptTime time.Time `json:"last-fail-conf-atmpt-time"` // Last failed config attempt time
+	ApIPAddr              string    `json:"ap-ip-addr"`                // IP address of the AP for network connectivity (Live: IOS-XE 17.12.5)
+	ApEthernetMac         string    `json:"ap-ethernet-mac"`           // AP ethernet MAC address for identification (Live: IOS-XE 17.12.5)
+	ApName                string    `json:"ap-name"`                   // Name of the AP for administrative identification (Live: IOS-XE 17.12.5)
+	IsJoined              bool      `json:"is-joined"`                 // AP join status flag indicating controller association (Live: IOS-XE 17.12.5)
+	NumJoinReqRecvd       int       `json:"num-join-req-recvd"`        // Total number of join requests received from AP (Live: IOS-XE 17.12.5)
+	NumConfigReqRecvd     int       `json:"num-config-req-recvd"`      // Total number of configuration requests received (Live: IOS-XE 17.12.5)
+	LastJoinFailureType   string    `json:"last-join-failure-type"`    // Last AP join failure reason for troubleshooting (Live: IOS-XE 17.12.5)
+	LastConfigFailureType string    `json:"last-config-failure-type"`  // Last AP config failure reason for diagnosis (Live: IOS-XE 17.12.5)
+	LastErrorType         string    `json:"last-error-type"`           // Last failure phase of AP connection for analysis (Live: IOS-XE 17.12.5)
+	LastErrorTime         time.Time `json:"last-error-time"`           // Time at which the last join error occurred (Live: IOS-XE 17.12.5)
+	LastMsgDecrFailReason string    `json:"last-msg-decr-fail-reason"` // Reason for last message decryption failure (Live: IOS-XE 17.12.5)
+	NumSuccJoinRespSent   int       `json:"num-succ-join-resp-sent"`   // Total number of successful join response sent (Live: IOS-XE 17.12.5)
+	NumUnsuccJoinReqProcn int       `json:"num-unsucc-join-req-procn"` // Total number of unsuccessful join request processed (Live: IOS-XE 17.12.5)
+	NumSuccConfRespSent   int       `json:"num-succ-conf-resp-sent"`   // Total number of successful configure response sent (Live: IOS-XE 17.12.5)
+	NumUnsuccConfReqProcn int       `json:"num-unsucc-conf-req-procn"` // Total number of unsuccessful config request processed (Live: IOS-XE 17.12.5)
+	LastSuccJoinAtmptTime time.Time `json:"last-succ-join-atmpt-time"` // Last successful join attempt time for baseline (Live: IOS-XE 17.12.5)
+	LastFailJoinAtmptTime time.Time `json:"last-fail-join-atmpt-time"` // Last join failure time for pattern analysis (Live: IOS-XE 17.12.5)
+	LastSuccConfAtmptTime time.Time `json:"last-succ-conf-atmpt-time"` // Last successful config attempt time for analysis (Live: IOS-XE 17.12.5)
+	LastFailConfAtmptTime time.Time `json:"last-fail-conf-atmpt-time"` // Last failed config attempt time for troubleshooting (Live: IOS-XE 17.12.5)
 }
 
 // ApDiscoveryInfo represents AP discovery process information.
 type ApDiscoveryInfo struct {
-	WtpMac               string    `json:"wtp-mac"`                 // WTP MAC address
-	EthernetMac          string    `json:"ethernet-mac"`            // Ethernet MAC address
-	ApIPAddress          string    `json:"ap-ip-address"`           // AP IP address
-	NumDiscoveryReqRecvd int       `json:"num-discovery-req-recvd"` // Number of discovery requests received
-	NumSuccDiscRespSent  int       `json:"num-succ-disc-resp-sent"` // Number of successful discovery responses sent
-	NumErrDiscReq        int       `json:"num-err-disc-req"`        // Number of error discovery requests
-	LastDiscFailureType  string    `json:"last-disc-failure-type"`  // Last discovery failure type
-	LastSuccessDiscTime  time.Time `json:"last-success-disc-time"`  // Last successful discovery time
-	LastFailedDiscTime   time.Time `json:"last-failed-disc-time"`   // Last failed discovery time
+	WtpMac               string    `json:"wtp-mac"`                 // AP radio MAC address for CAPWAP discovery session (Live: IOS-XE 17.12.5)
+	EthernetMac          string    `json:"ethernet-mac"`            // AP ethernet MAC address for network layer discovery (Live: IOS-XE 17.12.5)
+	ApIPAddress          string    `json:"ap-ip-address"`           // AP IP address used during CAPWAP discovery process (Live: IOS-XE 17.12.5)
+	NumDiscoveryReqRecvd int       `json:"num-discovery-req-recvd"` // Total number of discovery request received (Live: IOS-XE 17.12.5)
+	NumSuccDiscRespSent  int       `json:"num-succ-disc-resp-sent"` // Total number of successful discovery response sent (Live: IOS-XE 17.12.5)
+	NumErrDiscReq        int       `json:"num-err-disc-req"`        // Total number of errored discovery requests (Live: IOS-XE 17.12.5)
+	LastDiscFailureType  string    `json:"last-disc-failure-type"`  // Last discovery failure type for troubleshooting (Live: IOS-XE 17.12.5)
+	LastSuccessDiscTime  time.Time `json:"last-success-disc-time"`  // Last successful discovery attempt time for baseline (Live: IOS-XE 17.12.5)
+	LastFailedDiscTime   time.Time `json:"last-failed-disc-time"`   // Last failed discovery attempt time for tracking (Live: IOS-XE 17.12.5)
 }
 
 // DtlsSessInfo represents DTLS session information.
 type DtlsSessInfo struct {
-	MacAddr               string    `json:"mac-addr"`                  // MAC address
-	DataDtlsSetupReq      int       `json:"data-dtls-setup-req"`       // Data DTLS setup requests
-	DataDtlsSuccess       int       `json:"data-dtls-success"`         // Data DTLS successful connections
-	DataDtlsFailure       int       `json:"data-dtls-failure"`         // Data DTLS failed connections
-	CtrlDtlsSetupReq      int       `json:"ctrl-dtls-setup-req"`       // Control DTLS setup requests
-	CtrlDtlsSuccess       int       `json:"ctrl-dtls-success"`         // Control DTLS successful connections
-	CtrlDtlsFailure       int       `json:"ctrl-dtls-failure"`         // Control DTLS failed connections
-	DataDtlsFailureType   string    `json:"data-dtls-failure-type"`    // Data DTLS failure type
-	CtrlDtlsFailureType   string    `json:"ctrl-dtls-failure-type"`    // Control DTLS failure type
-	CtrlDtlsDecryptErr    int       `json:"ctrl-dtls-decrypt-err"`     // Control DTLS decryption errors
-	CtrlDtlsAntiReplayErr int       `json:"ctrl-dtls-anti-replay-err"` // Control DTLS anti-replay errors
-	DataDtlsDecryptErr    int       `json:"data-dtls-decrypt-err"`     // Data DTLS decryption errors
-	DataDtlsAntiReplayErr int       `json:"data-dtls-anti-replay-err"` // Data DTLS anti-replay errors
-	DataDtlsFailureTime   time.Time `json:"data-dtls-failure-time"`    // Data DTLS failure timestamp
-	DataDtlsSuccessTime   time.Time `json:"data-dtls-success-time"`    // Data DTLS success timestamp
-	CtrlDtlsFailureTime   time.Time `json:"ctrl-dtls-failure-time"`    // Control DTLS failure timestamp
-	CtrlDtlsSuccessTime   time.Time `json:"ctrl-dtls-success-time"`    // Control DTLS success timestamp
+	MacAddr               string    `json:"mac-addr"`                  // AP MAC address for DTLS session correlation (Live: IOS-XE 17.12.5)
+	DataDtlsSetupReq      int       `json:"data-dtls-setup-req"`       // DTLS session requests received for data channel (Live: IOS-XE 17.12.5)
+	DataDtlsSuccess       int       `json:"data-dtls-success"`         // Established DTLS session for data channel (Live: IOS-XE 17.12.5)
+	DataDtlsFailure       int       `json:"data-dtls-failure"`         // Unsuccessful DTLS session for data channel (Live: IOS-XE 17.12.5)
+	CtrlDtlsSetupReq      int       `json:"ctrl-dtls-setup-req"`       // DTLS session requests received for control channel (Live: IOS-XE 17.12.5)
+	CtrlDtlsSuccess       int       `json:"ctrl-dtls-success"`         // Established Dtls session for control channel (Live: IOS-XE 17.12.5)
+	CtrlDtlsFailure       int       `json:"ctrl-dtls-failure"`         // Unsuccessful Dtls session for control channel (Live: IOS-XE 17.12.5)
+	DataDtlsFailureType   string    `json:"data-dtls-failure-type"`    // Reason for last unsuccessful DTLS session on data (Live: IOS-XE 17.12.5)
+	CtrlDtlsFailureType   string    `json:"ctrl-dtls-failure-type"`    // Reason for last unsuccessful DTLS session on control (Live: IOS-XE 17.12.5)
+	CtrlDtlsDecryptErr    int       `json:"ctrl-dtls-decrypt-err"`     // SSL decrypt errors for control channel (Live: IOS-XE 17.12.5)
+	CtrlDtlsAntiReplayErr int       `json:"ctrl-dtls-anti-replay-err"` // SSL anti replay errors for control channel (Live: IOS-XE 17.12.5)
+	DataDtlsDecryptErr    int       `json:"data-dtls-decrypt-err"`     // SSL decrypt errors for data channel (Live: IOS-XE 17.12.5)
+	DataDtlsAntiReplayErr int       `json:"data-dtls-anti-replay-err"` // SSL anti replay errors for data channel (Live: IOS-XE 17.12.5)
+	DataDtlsFailureTime   time.Time `json:"data-dtls-failure-time"`    // Last unsuccessful data dtls session time (Live: IOS-XE 17.12.5)
+	DataDtlsSuccessTime   time.Time `json:"data-dtls-success-time"`    // Last successful data dtls session time (Live: IOS-XE 17.12.5)
+	CtrlDtlsFailureTime   time.Time `json:"ctrl-dtls-failure-time"`    // Last unsuccessful control dtls session time (Live: IOS-XE 17.12.5)
+	CtrlDtlsSuccessTime   time.Time `json:"ctrl-dtls-success-time"`    // Last successful control dtls session time (Live: IOS-XE 17.12.5)
 }
 
 // WlanClientStats represents WLAN client statistics data.
 type WlanClientStats struct {
-	WlanID                  int    `json:"wlan-id"`                    // WLAN identifier
-	WlanProfileName         string `json:"wlan-profile-name"`          // WLAN profile name
-	DataUsage               string `json:"data-usage"`                 // Data usage in bytes
-	TotalRandomMacClients   int    `json:"total-random-mac-clients"`   // Total random MAC clients
-	ClientCurrStateL2Auth   int    `json:"client-curr-state-l2auth"`   // Clients in L2 authentication state
-	ClientCurrStateMobility int    `json:"client-curr-state-mobility"` // Clients in mobility state
-	ClientCurrStateIplearn  int    `json:"client-curr-state-iplearn"`  // Clients in IP learning state
-	CurrStateWebauthPending int    `json:"curr-state-webauth-pending"` // Clients in web auth pending state
-	ClientCurrStateRun      int    `json:"client-curr-state-run"`      // Clients in running state
+	WlanID                  int    `json:"wlan-id"`                    // WLAN identifier for service-specific client tracking (Live: IOS-XE 17.12.5)
+	WlanProfileName         string `json:"wlan-profile-name"`          // WLAN profile name for administrative identification (Live: IOS-XE 17.12.5)
+	DataUsage               string `json:"data-usage"`                 // Data usage statistics for bandwidth monitoring (Live: IOS-XE 17.12.5)
+	TotalRandomMacClients   int    `json:"total-random-mac-clients"`   // Total random MAC clients for privacy protection tracking (Live: IOS-XE 17.12.5)
+	ClientCurrStateL2Auth   int    `json:"client-curr-state-l2auth"`   // Total number of clients in L2-authenticating state (Live: IOS-XE 17.12.5)
+	ClientCurrStateMobility int    `json:"client-curr-state-mobility"` // Total number of clients in mobility state (Live: IOS-XE 17.12.5)
+	ClientCurrStateIplearn  int    `json:"client-curr-state-iplearn"`  // Total number of clients in iplearn state (Live: IOS-XE 17.12.5)
+	CurrStateWebauthPending int    `json:"curr-state-webauth-pending"` // Total number of clients in webauth pending state (Live: IOS-XE 17.12.5)
+	ClientCurrStateRun      int    `json:"client-curr-state-run"`      // Total number of clients in run state (Live: IOS-XE 17.12.5)
 }
 
 // EmltdJoinCountStat represents emulated join count statistics.
 type EmltdJoinCountStat struct {
-	JoinedApsCount int `json:"joined-aps-count"` // Number of joined APs in emulated mode
+	JoinedApsCount int `json:"joined-aps-count"` // Number of APs joined on wireless LAN controller (Live: IOS-XE 17.12.5)
 }
