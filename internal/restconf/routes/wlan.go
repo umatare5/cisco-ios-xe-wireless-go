@@ -40,3 +40,9 @@ const (
 	// WLANWlanProfilesPath defines WLAN profiles path for operational data.
 	WLANWlanProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wlan-oper:wlan-oper/global-oper/wlan-profiles"
 )
+
+// WLAN Query Paths.
+const (
+	// WLANPolicyListEntryQueryPath provides the path for querying policy list entry by tag name.
+	WLANPolicyListEntryQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/policy-list-entries/policy-list-entry"
+)

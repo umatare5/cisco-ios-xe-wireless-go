@@ -20,11 +20,11 @@ const (
 // URWB Operational Paths.
 const (
 	// URWBOperPath provides the path for URWB operational data.
-	URWBOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data"
+	URWBNetOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data"
 
 	// URWBStatsPath provides the path for URWB statistics.
-	URWBStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data/urwbnet-stats"
+	URWBNetStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data/urwbnet-stats"
 
 	// URWBNodeGroupPath provides the path for URWB node groups.
-	URWBNodeGroupPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data/urwbnet-node-g"
+	URWBNetNodeGroupPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data/urwbnet-node-g"
 )

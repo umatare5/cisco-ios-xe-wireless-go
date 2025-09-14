@@ -22,3 +22,9 @@ const (
 	// APProfilesPath provides the path for AP profiles (site context).
 	APProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/ap-cfg-profiles"
 )
+
+// Site Query Paths.
+const (
+	// SiteTagConfigQueryPath provides the path for querying site tag config by tag name.
+	SiteTagConfigQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs/site-tag-config"
+)

@@ -92,3 +92,21 @@ const (
 	// APApResetRPC defines the RPC for AP reset operations.
 	APApResetRPC = RESTCONFOperationsPath + "/Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset"
 )
+
+// AP Query Paths.
+const (
+	// APTagQueryPath provides the path for querying AP tag by MAC address.
+	APTagQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag"
+
+	// APTagSourcePriorityConfigQueryPath provides the path for querying tag source priority config by priority.
+	APTagSourcePriorityConfigQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/tag-source-priority-configs/tag-source-priority-config"
+
+	// APHistoryQueryPath provides the path for querying AP history by ethernet MAC.
+	APHistoryQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-history"
+
+	// APJoinStatsQueryPath provides the path for querying AP join statistics by WTP MAC.
+	APJoinStatsQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-join-stats"
+
+	// APWlanClientStatsQueryPath provides the path for querying WLAN client statistics by WTP MAC.
+	APWlanClientStatsQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/wlan-client-stats"
+)

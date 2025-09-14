@@ -28,3 +28,12 @@ const (
 	// RFIDRadioDataPath provides the path for RFID radio data.
 	RFIDRadioDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-radio-data"
 )
+
+// RFID Query Paths.
+const (
+	// RFIDDataDetailQueryPath provides the path for querying RFID data detail by MAC.
+	RFIDDataDetailQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-data-detail"
+
+	// RFIDDataQueryPath provides the path for querying RFID data by MAC.
+	RFIDDataQueryPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data/rfid-data"
+)
