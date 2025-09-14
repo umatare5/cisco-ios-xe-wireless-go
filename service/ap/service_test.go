@@ -266,7 +266,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/iot-firmware": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:iot-firmware": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:ff"
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
 					"if-name": "ttyiot0",
 					"is-default": [null],
 					"version": "2.7.21",
@@ -275,7 +275,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"desc": "Firmware developed by Cisco for IoT use"
 				},
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:ff"
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
 					"if-name": "ttyiot0",
 					"is-default": [null],
 					"version": "3.1.0",
