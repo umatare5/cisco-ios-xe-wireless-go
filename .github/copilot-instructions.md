@@ -29,7 +29,7 @@ Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
 
 ## 2. Repository Purpose & Scope
 
-- **RPS-001 (MUST)** Treat this repository as an **importable Go client SDK** for the **Cisco Catalyst C9800 RESTCONF API (IOS-XE 17.12)**.
+- **RPS-001 (MUST)** Treat this repository as an **importable Go SDK** for the **Cisco Catalyst C9800 RESTCONF API (IOS-XE 17.12)**.
 - **RPS-002 (MUST)** Design for library use: clean APIs, stable SemVer surface, and integration by external Go programs.
 
 ## 3. Precedence & Applicability

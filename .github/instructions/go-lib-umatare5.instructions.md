@@ -52,7 +52,7 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
 ### 3.A Test Structure
 
 - **TS-001 (MUST)** Organize unit tests per service using table-driven tests and `t.Run` subtests. Use multiple `*_test.go` files by topic when it improves clarity (e.g., constructor, get-ops, errors, validation).
-- **TS-002 (MUST)** Use `pkg/testutil` servers (`NewRESTCONFServer`, `NewRESTCONFSuccessServer`, `NewRESTCONFErrorServer`) with standard library `testing`/`httptest`.
+- **TS-002 (MUST)** Use `pkg/testutil` unified API (`NewMockServer` with functional options: `WithSuccessResponses`, `WithErrorResponses`, `WithCustomResponse`) with standard library `testing`/`httptest`.
 - **TS-003 (MUST)** Simulate IOS-XE version gaps (e.g., 17.18.1+ features such as WAT, URWB, Spaces) with custom handlers returning representative status codes (e.g., 404) for unsupported versions.
 - **TS-004 (MUST)** Base mock responses on real WNC data when available and include the source context in comments.
 - **TS-005 (SHOULD)** Place integration tests under `tests/integration/{service}_*_test.go` and name them per **TNL-001**. Use `tests/testutil/integration` for integration-specific configuration and setup utilities.
@@ -212,6 +212,21 @@ type HandlerMap[T any] = map[string]map[string]T
 
 ---
 
+## 22. Unified Testing API Standards
+
+- **UTA-001 (MUST)** Use the unified `testutil.NewMockServer` API with functional options exclusively. Legacy functions are removed.
+- **UTA-002 (MUST)** Apply functional options pattern for test configuration:
+  - `WithSuccessResponses(map[string]string)` for successful GET operations
+  - `WithErrorResponses([]string, int)` for error scenarios with specific status codes
+  - `WithCustomResponse(string, ResponseConfig)` for complex response configurations
+  - `WithTesting(*testing.T)` for enhanced test integration
+- **UTA-003 (MUST)** Combine multiple options in single `NewMockServer` call for complex test scenarios.
+- **UTA-004 (MUST)** Use `defer mockServer.Close()` immediately after server creation.
+- **UTA-005 (SHOULD)** Prefer `WithSuccessResponses` for straightforward mock data, `WithErrorResponses` for error testing, and `WithCustomResponse` for advanced scenarios requiring specific HTTP methods or status codes.
+- **UTA-006 (MUST)** Structure mock responses based on real WNC JSON data with appropriate RESTCONF path mapping.
+
+---
+
 ## 16. Test Naming & Layout (Unified)
 
 - **TNL-001 (MUST)** Use standardized function names:
@@ -328,26 +343,50 @@ func (c *Client) Core() *core.Client
 ## 21. Test Helpers — Example
 
 ````go
-// service/ap/service_test.go (local helper)
+// service/ap/service_test.go (local helper using unified API)
 func TestApServiceUnit_Constructor_Success(t *testing.T) {
-    // Test implementation with NewMockServer
-    responses := map[string]string{
-        "test-endpoint": `{"status": "success"}`,
-    }
-    mockServer := testutil.NewMockServer(responses)
+    // Test implementation with unified MockServer API
+    mockServer := testutil.NewMockServer(
+        testutil.WithSuccessResponses(map[string]string{
+            "test-endpoint": `{"status": "success"}`,
+        }),
+        testutil.WithTesting(t),
+    )
     defer mockServer.Close()
     // ... rest of test
 }
 
-```go
-// pkg/testutil/mock.go (shared mock servers)
-func NewRESTCONFSuccessServer(endpoints map[string]string) *httptest.Server { /* ... */ }
-func NewRESTCONFErrorServer(paths []string, status int) *httptest.Server { /* ... */ }
-func NewTLSClientForServer(t *testing.T, srv *httptest.Server) *core.Client { /* ... */ }
+func TestApServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
+    // Error response testing
+    mockServer := testutil.NewMockServer(
+        testutil.WithErrorResponses([]string{
+            "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data",
+        }, 404),
+    )
+    defer mockServer.Close()
+    // ... test error scenario
+}
 
-// pkg/testutil/testing.go (public test utilities)
-func NewMockServer(responses map[string]string) MockServer { /* ... */ }
-func NewMockErrorServer(errorPaths []string, statusCode int) MockServer { /* ... */ }
+func TestApServiceUnit_SetOperations_CustomResponse(t *testing.T) {
+    // Custom response testing
+    mockServer := testutil.NewMockServer(
+        testutil.WithCustomResponse("custom-endpoint", testutil.ResponseConfig{
+            StatusCode: 202,
+            Body:       `{"custom": "response"}`,
+            Method:     "POST",
+        }),
+    )
+    defer mockServer.Close()
+    // ... test custom response
+}
+
+```go
+// pkg/testutil/testing.go (unified public test utilities)
+func NewMockServer(opts ...MockServerOption) MockServer { /* ... */ }
+func WithSuccessResponses(responses map[string]string) MockServerOption { /* ... */ }
+func WithErrorResponses(paths []string, statusCode int) MockServerOption { /* ... */ }
+func WithCustomResponse(path string, config ResponseConfig) MockServerOption { /* ... */ }
+func WithTesting(t *testing.T) MockServerOption { /* ... */ }
 
 // internal/testutil/helper.go (internal assertions)
 func AssertStringEquals(t *testing.T, actual, expected, message string) { t.Helper(); /* ... */ }

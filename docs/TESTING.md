@@ -3,21 +3,21 @@
 This guide explains the testing strategy, conventions, and execution procedures for the Cisco IOS-XE Wireless Go SDK.
 
 > [!NOTE]
-> Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`, `WNC_AP_MAC_ADDR`, and optionally `WNC_CLIENT_MAC_ADDR`.
+> Integration tests require an accessible Cisco C9800 and these variables: See [Prerequisites](#-prerequisites)
 
 ## 🎯 Testing Strategy
 
 ### Test Categories
 
-The SDK implements **standardized test patterns** using direct `pkg/testutil` integration:
+The SDK implements **standardized test patterns** using the unified `pkg/testutil` API:
 
-| Category             | Purpose                                   | Implementation Pattern        | Coverage Target |
-| -------------------- | ----------------------------------------- | ----------------------------- | --------------- |
-| **1. Service Tests** | Service construction and lifecycle        | Direct service instantiation  | 100%            |
-| **2. Get Tests**     | Mock-based GET operations with validation | `testutil.NewMockServer`      | Get/List: 100%  |
-| **3. Set Tests**     | Mock-based SET/RPC operations             | `testutil.NewMockErrorServer` | Set/Admin: 90%+ |
-| **4. Integration**   | Live WNC operations (GET only)            | Integration test suites       | N/A             |
-| **5. Scenario/E2E**  | Non-disruptive CRUD against live WNC      | Scenario-based test workflows | N/A             |
+| Category             | Purpose                                   | Implementation Pattern                                  | Coverage Target |
+| -------------------- | ----------------------------------------- | ------------------------------------------------------- | --------------- |
+| **1. Service Tests** | Service construction and lifecycle        | Direct service instantiation                            | 100%            |
+| **2. Get Tests**     | Mock-based GET operations with validation | `testutil.NewMockServer(testutil.WithSuccessResponses)` | Get/List: 100%  |
+| **3. Set Tests**     | Mock-based SET/RPC operations             | `testutil.NewMockServer(testutil.WithErrorResponses)`   | Set/Admin: 90%+ |
+| **4. Integration**   | Live WNC operations (GET only)            | Integration test suites                                 | N/A             |
+| **5. Scenario/E2E**  | Non-disruptive CRUD against live WNC      | Scenario-based test workflows                           | N/A             |
 
 ### IOS-XE Version Support
 
@@ -164,13 +164,43 @@ go test ./service/ap -run "TestApServiceUnit_Constructor" -v
 
 #### Layer 2 and 3: Mock-based Method Tests
 
-Tests all operations with **mock server** using direct `pkg/testutil` implementation.
+Tests all operations with **unified mock server API** using functional options.
 
 ```bash
 go test ./service/ap -run "TestApServiceUnit_GetOperations_Mock" -v
 ```
 
-**Example:**
+**Examples:**
+
+```go
+// Success response testing
+mockServer := testutil.NewMockServer(
+    testutil.WithSuccessResponses(map[string]string{
+        "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": `{"status": "success"}`,
+    }),
+)
+defer mockServer.Close()
+
+// Error response testing
+mockServer := testutil.NewMockServer(
+    testutil.WithErrorResponses([]string{
+        "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data",
+    }, 404),
+)
+defer mockServer.Close()
+
+// Custom response testing
+mockServer := testutil.NewMockServer(
+    testutil.WithCustomResponse("custom-endpoint", testutil.ResponseConfig{
+        StatusCode: 202,
+        Body:       `{"custom": "response"}`,
+        Method:     "POST",
+    }),
+)
+defer mockServer.Close()
+```
+
+**Test Files:**
 
 - [`service/ap/service_test.go`](../service/ap/service_test.go) - See `TestApServiceUnit_GetOperations_MockSuccess`
 - [`service/wat/service_test.go`](../service/wat/service_test.go) - See `TestWatServiceUnit_GetOperations_ErrorExpected`
@@ -234,32 +264,47 @@ go test -cover ./...
 
 ### Test Fixtures
 
-Tests use real WNC data for accurate mock responses. Mock data is embedded directly in test files based on actual controller responses.
+Tests use real WNC data for accurate mock responses. Mock data is embedded directly in test files based on actual controller responses, using the unified MockServer API.
 
-| Location             | Purpose                                   |
-| -------------------- | ----------------------------------------- |
-| Service test files   | Inline real WNC data with source comments |
-| `pkg/testutil/`      | Mock server implementations               |
-| `internal/testutil/` | Internal testing utilities                |
-| `tests/integration/` | Integration test implementations          |
-| `tests/scenario/`    | E2E scenario test suites                  |
+| Location             | Purpose                                          |
+| -------------------- | ------------------------------------------------ |
+| Service test files   | Inline real WNC data with functional options API |
+| `pkg/testutil/`      | Unified MockServer API with functional options   |
+| `internal/testutil/` | Internal testing utilities                       |
+| `tests/integration/` | Integration test implementations                 |
+| `tests/scenario/`    | E2E scenario test suites                         |
 
-**Example:**
+**Examples:**
 
-- [`service/ap/service_test.go`](../service/ap/service_test.go) - Real WNC data embedded in test responses
+```go
+// Real WNC data in service tests using unified API
+responses := map[string]string{
+    "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": `{
+        "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": {
+            "ap-tags": {
+                "ap-tag": [/* real WNC data */]
+            }
+        }
+    }`,
+}
+mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+```
+
+- [`service/ap/service_test.go`](../service/ap/service_test.go) - Real WNC data with unified MockServer API
 
 ## 📚 Appendix
 
 ### Testing Tips
 
-1. **Start with unit tests** - Validate basic functionality first using mock servers
+1. **Start with unit tests** - Validate basic functionality first using unified MockServer API
 2. **Use real WNC data** - Base mock responses on actual controller data from IOS-XE 17.12.x
 3. **Test error scenarios** - IOS-XE 17.18.1+ services may return 404 when not configured
 4. **Follow naming conventions** - Use standardized test function names (e.g., `TestXServiceUnit_*`)
-5. **Direct pkg/testutil usage** - Use `testutil.NewMockServer()` and `testutil.TestContext(t)`
-6. **Coverage-driven development** - Write comprehensive tests to meet coverage targets
-7. **Parallel-safe integration** - Mark integration tests with `t.Parallel()` for GET-only operations
-8. **Scenario isolation** - Use newly created resources in E2E scenarios to avoid impact
+5. **Use unified API** - Use `testutil.NewMockServer()` with functional options (`WithSuccessResponses`, `WithErrorResponses`, `WithCustomResponse`)
+6. **Leverage options** - Combine multiple `MockServerOption`s for complex test scenarios
+7. **Coverage-driven development** - Write comprehensive tests to meet coverage targets
+8. **Parallel-safe integration** - Mark integration tests with `t.Parallel()` for GET-only operations
+9. **Scenario isolation** - Use newly created resources in E2E scenarios to avoid impact
 
 ### Troubleshooting
 

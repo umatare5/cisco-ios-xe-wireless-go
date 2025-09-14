@@ -190,8 +190,8 @@ The following table summarizes the supported service APIs and their capabilities
 | [`Site()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/site)                   |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
 | [`SiteTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/site)                |        ⬜️         |      ⬜️      |       🟩        |                                                                                                                                                             |
 | [`Spaces()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/spaces)               |         🟨         |      ⬜️      |       ⬜️       | Requires 17.18.1+                                                                                                                                           |
-| [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/urwb)                   |         🟨         |      🟨       |       🟨        | Requires 17.18.1+                                                                                                                                           |
-| [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wat)                     |        ⬜️         |      🟨       |       🟨        | Requires 17.18.1+                                                                                                                                           |
+| [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/urwb)                   |         🟨         |      🟨       |       ⬜️       | Requires 17.18.1+                                                                                                                                           |
+| [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wat)                     |        ⬜️         |      🟨       |       ⬜️       | Requires 17.18.1+                                                                                                                                           |
 | [`WLAN()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wlan)                   |        ✅️         |      ✅️      |       ⬜️       |                                                                                                                                                             |
 | [`PolicyTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/wlan)              |        ⬜️         |      ⬜️      |       🟩        |                                                                                                                                                             |
 
@@ -205,7 +205,7 @@ Runnable examples are available:
 
 ### List Operation
 
-#### List Associating APs
+#### Usecase 1: List Associating APs
 
 [`example/list_aps/main.go`](./example/list_aps/main.go) lists the number of APs managed by the controller.
 
@@ -224,7 +224,7 @@ TEST-AP02         | aa:bb:ff:dd:ee:b0   | 192.168.255.12   | registered
 
 </p></details>
 
-#### List WLANs and BSSIDs
+#### Usecase 2: List WLANs and BSSIDs
 
 [`example/list_wlans/main.go`](./example/list_wlans/main.go) lists comprehensive WLAN information including Radio, WLAN, and BSSID details.
 
@@ -245,7 +245,7 @@ TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    4 | aa:bb:ff:dd:ee:af | labo-t
 
 </p></details>
 
-#### List AP Neighbors
+#### Usecase 3: List AP Neighbors
 
 [`example/list_neighbors/main.go`](./example/list_neighbors/main.go) lists AP radio neighbors detected by the controller.
 
@@ -266,7 +266,7 @@ TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 | 
 
 </p></details>
 
-#### List Associating Clients
+#### Usecase 4: List Associating Clients
 
 [`example/list_clients/main.go`](./example/list_clients/main.go) lists wireless client MAC addresses and IP addresses.
 
@@ -290,7 +290,7 @@ MAC Address           | IP Address
 
 ### Destructive Operation
 
-#### **Reload an AP**
+#### Usecase 1: Reload an AP
 
 [`example/reload_ap/main.go`](./example/reload_ap/main.go) reloads an AP by its hostname.
 
@@ -319,7 +319,7 @@ Clients will need to reconnect after AP restart completes
 
 </p></details>
 
-#### Reload a Controller
+#### Usecase 2: Reload a Controller
 
 [`example/reload_controller/main.go`](./example/reload_controller/main.go) reloads the entire controller.
 

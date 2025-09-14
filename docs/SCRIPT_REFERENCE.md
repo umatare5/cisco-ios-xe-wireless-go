@@ -3,12 +3,7 @@
 This document provides an overview of the development scripts available in this repository.
 
 > [!NOTE]
-> Some scripts require an accessible Cisco C9800 and the following variables:
->
-> - `WNC_CONTROLLER`
-> - `WNC_ACCESS_TOKEN`
-> - `WNC_AP_MAC_ADDR`
-> - `WNC_CLIENT_MAC_ADDR` (optional for enhanced client testing)
+> Integration tests require an accessible Cisco C9800 and these variables: See [TESTING.md - Prerequisites](./TESTING.md#-prerequisites)
 
 ## 🧰 Scripts
 

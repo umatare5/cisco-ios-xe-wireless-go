@@ -1,6 +1,6 @@
 //go:build example
 
-// Package main in example/reload_controller demonstrates how to restart a Cisco IOS-XE Wireless Network Controller using the provided Go client SDK.
+// Package main in example/reload_controller demonstrates how to restart a Cisco IOS-XE Wireless Network Controller using the provided Go SDK.
 package main
 
 import (

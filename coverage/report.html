@@ -55,7 +55,7 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go (90.5%)</option>
+				<option value="file0">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/client.go (87.4%)</option>
 				
 				<option value="file1">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/errors.go (100.0%)</option>
 				
@@ -71,21 +71,21 @@
 				
 				<option value="file7">github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper.go (60.9%)</option>
 				
-				<option value="file8">github.com/umatare5/cisco-ios-xe-wireless-go/internal/transport/client.go (100.0%)</option>
+				<option value="file8">github.com/umatare5/cisco-ios-xe-wireless-go/internal/transport/client.go (91.8%)</option>
 				
 				<option value="file9">github.com/umatare5/cisco-ios-xe-wireless-go/internal/transport/transport.go (100.0%)</option>
 				
-				<option value="file10">github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation/validation.go (100.0%)</option>
+				<option value="file10">github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation/validation.go (95.8%)</option>
 				
-				<option value="file11">github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/context.go (0.0%)</option>
+				<option value="file11">github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/context.go (100.0%)</option>
 				
-				<option value="file12">github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/mock/server.go (87.7%)</option>
+				<option value="file12">github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/mock.go (94.3%)</option>
 				
-				<option value="file13">github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/testing.go (0.0%)</option>
+				<option value="file13">github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/testing.go (88.9%)</option>
 				
 				<option value="file14">github.com/umatare5/cisco-ios-xe-wireless-go/service/afc/service.go (100.0%)</option>
 				
-				<option value="file15">github.com/umatare5/cisco-ios-xe-wireless-go/service/ap/service.go (92.1%)</option>
+				<option value="file15">github.com/umatare5/cisco-ios-xe-wireless-go/service/ap/service.go (92.2%)</option>
 				
 				<option value="file16">github.com/umatare5/cisco-ios-xe-wireless-go/service/apf/service.go (100.0%)</option>
 				
@@ -145,7 +145,7 @@
 				
 				<option value="file44">github.com/umatare5/cisco-ios-xe-wireless-go/service/spaces/service.go (100.0%)</option>
 				
-				<option value="file45">github.com/umatare5/cisco-ios-xe-wireless-go/service/urwb/service.go (91.2%)</option>
+				<option value="file45">github.com/umatare5/cisco-ios-xe-wireless-go/service/urwb/service.go (100.0%)</option>
 				
 				<option value="file46">github.com/umatare5/cisco-ios-xe-wireless-go/service/wat/service.go (100.0%)</option>
 				
@@ -212,32 +212,32 @@ type Client struct {
 type Option func(*Client) error
 
 // WithTimeout sets the timeout duration for HTTP requests.
-func WithTimeout(timeout time.Duration) Option <span class="cov6" title="9">{
-        return func(c *Client) error </span><span class="cov6" title="9">{
+func WithTimeout(timeout time.Duration) Option <span class="cov5" title="5">{
+        return func(c *Client) error </span><span class="cov5" title="5">{
                 if !validation.IsValidTimeout(timeout) </span><span class="cov2" title="2">{
                         return fmt.Errorf("client configuration failed: %w",
                                 fmt.Errorf("timeout validation failed: timeout must be positive, got %v", timeout))
                 }</span>
-                <span class="cov5" title="7">c.httpClient.Timeout = timeout
+                <span class="cov3" title="3">c.httpClient.Timeout = timeout
                 return nil</span>
         }
 }
 
 // WithInsecureSkipVerify configures TLS certificate verification.
-func WithInsecureSkipVerify(skip bool) Option <span class="cov8" title="23">{
-        return func(c *Client) error </span><span class="cov8" title="23">{
+func WithInsecureSkipVerify(skip bool) Option <span class="cov7" title="11">{
+        return func(c *Client) error </span><span class="cov7" title="11">{
                 c.httpClient.Transport = transport.NewTransport(skip)
                 return nil
         }</span>
 }
 
 // WithLogger sets a custom logger for the client.
-func WithLogger(logger *slog.Logger) Option <span class="cov2" title="2">{
-        return func(c *Client) error </span><span class="cov2" title="2">{
+func WithLogger(logger *slog.Logger) Option <span class="cov1" title="1">{
+        return func(c *Client) error </span><span class="cov1" title="1">{
                 if logger == nil </span><span class="cov1" title="1">{
                         return errors.New("logger cannot be nil")
                 }</span>
-                <span class="cov1" title="1">c.logger = logger
+                <span class="cov0" title="0">c.logger = logger
                 return nil</span>
         }
 }
@@ -252,19 +252,19 @@ func WithUserAgent(userAgent string) Option <span class="cov1" title="1">{
 }
 
 // New creates a new WNC client with the specified host, token, and options.
-func New(host, token string, opts ...Option) (*Client, error) <span class="cov9" title="44">{
+func New(host, token string, opts ...Option) (*Client, error) <span class="cov9" title="25">{
         // Validate inputs using existing validation functions
         if !validation.IsValidController(host) </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf("client initialization failed: %w",
                         fmt.Errorf("controller address validation failed: invalid format %s", host))
         }</span>
-        <span class="cov9" title="43">if !validation.IsValidAccessToken(token) </span><span class="cov1" title="1">{
+        <span class="cov9" title="24">if !validation.IsValidAccessToken(token) </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf("client initialization failed: %w",
                         errors.New("access token validation failed: token is empty or invalid format"))
         }</span>
 
         // Create HTTP client with transport
-        <span class="cov9" title="42">httpClient := &amp;http.Client{
+        <span class="cov9" title="23">httpClient := &amp;http.Client{
                 Transport: transport.NewTransport(false), // Default to secure
                 Timeout:   DefaultTimeout,
         }
@@ -284,31 +284,31 @@ func New(host, token string, opts ...Option) (*Client, error) <span class="cov9"
         client.requestBuilder = transport.NewRequestBuilder(restBuilder, token, client.logger)
 
         // Apply options
-        for _, opt := range opts </span><span class="cov9" title="35">{
+        for _, opt := range opts </span><span class="cov8" title="18">{
                 if err := opt(client); err != nil </span><span class="cov3" title="3">{
                         return nil, fmt.Errorf("failed to apply option: %w", err)
                 }</span>
         }
 
-        <span class="cov9" title="39">return client, nil</span>
+        <span class="cov8" title="20">return client, nil</span>
 }
 
 // Do executes an HTTP request and returns the response body.
-func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) <span class="cov8" title="29">{
+func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) <span class="cov7" title="13">{
         if err := c.validateDoParameters(ctx); err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov8" title="27">req, err := c.requestBuilder.CreateRequest(ctx, method, path)
-        if err != nil </span><span class="cov2" title="2">{
+        <span class="cov7" title="11">req, err := c.requestBuilder.CreateRequest(ctx, method, path)
+        if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov8" title="25">resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
-        if err != nil </span><span class="cov5" title="7">{
+        <span class="cov7" title="11">resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
-        <span class="cov7" title="18">defer c.closeResponseBody(resp)
+        <span class="cov7" title="10">defer c.closeResponseBody(resp)
 
         body, err := c.readResponseBody(resp)
         if err != nil </span><span class="cov0" title="0">{
@@ -316,57 +316,57 @@ func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) <s
         }</span>
 
         // Early return for HTTP errors
-        <span class="cov7" title="18">if err := c.checkHTTPErrors(resp, body); err != nil </span><span class="cov6" title="9">{
+        <span class="cov7" title="10">if err := c.checkHTTPErrors(resp, body); err != nil </span><span class="cov5" title="5">{
                 return nil, err
         }</span>
 
-        <span class="cov6" title="9">c.logger.Debug("Successfully processed API response", "path", path)
+        <span class="cov5" title="5">c.logger.Debug("Successfully processed API response", "path", path)
         return body, nil</span>
 }
 
 // DoWithPayload performs an HTTP request with a payload and returns the response body.
-func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) <span class="cov7" title="14">{
+func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) <span class="cov7" title="12">{
         if err := c.validateDoParameters(ctx); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov7" title="14">req, err := c.requestBuilder.CreateRequestWithPayload(ctx, method, path, payload)
+        <span class="cov7" title="12">req, err := c.requestBuilder.CreateRequestWithPayload(ctx, method, path, payload)
         if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov6" title="13">resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
-        if err != nil </span><span class="cov6" title="9">{
+        <span class="cov7" title="11">resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
-        <span class="cov4" title="4">defer c.closeResponseBody(resp)
+        <span class="cov7" title="10">defer c.closeResponseBody(resp)
 
         body, err := c.readResponseBody(resp)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov4" title="4">if err := c.checkHTTPErrors(resp, body); err != nil </span><span class="cov0" title="0">{
+        <span class="cov7" title="10">if err := c.checkHTTPErrors(resp, body); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov4" title="4">c.logger.Debug("Successfully processed API response", "path", path)
+        <span class="cov7" title="10">c.logger.Debug("Successfully processed API response", "path", path)
         return body, nil</span>
 }
 
 // DoRPCWithPayload performs an HTTP RPC request with a payload and returns the response body.
-func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, payload any) ([]byte, error) <span class="cov4" title="5">{
+func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, payload any) ([]byte, error) <span class="cov4" title="4">{
         if err := c.validateDoParameters(ctx); err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov3" title="3">req, err := c.requestBuilder.CreateRPCRequestWithPayload(ctx, method, rpcPath, payload)
+        <span class="cov2" title="2">req, err := c.requestBuilder.CreateRPCRequestWithPayload(ctx, method, rpcPath, payload)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov3" title="3">resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
-        if err != nil </span><span class="cov2" title="2">{
+        <span class="cov2" title="2">resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
         <span class="cov1" title="1">defer c.closeResponseBody(resp)
@@ -385,38 +385,38 @@ func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, p
 }
 
 // validateDoParameters validates input parameters for the Do method.
-func (c *Client) validateDoParameters(ctx context.Context) error <span class="cov10" title="49">{
+func (c *Client) validateDoParameters(ctx context.Context) error <span class="cov10" title="30">{
         if c == nil </span><span class="cov2" title="2">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov9" title="47">if ctx == nil </span><span class="cov3" title="3">{
+        <span class="cov9" title="28">if ctx == nil </span><span class="cov3" title="3">{
                 return errors.New("context cannot be nil")
         }</span>
-        <span class="cov9" title="44">return nil</span>
+        <span class="cov9" title="25">return nil</span>
 }
 
 // closeResponseBody safely closes the response body with error logging.
-func (c *Client) closeResponseBody(resp *http.Response) <span class="cov8" title="24">{
+func (c *Client) closeResponseBody(resp *http.Response) <span class="cov9" title="22">{
         if closeErr := resp.Body.Close(); closeErr != nil </span><span class="cov1" title="1">{
                 c.logger.Error("Failed to close response body", "error", closeErr)
         }</span>
 }
 
 // readResponseBody reads the complete response body.
-func (c *Client) readResponseBody(resp *http.Response) ([]byte, error) <span class="cov8" title="23">{
+func (c *Client) readResponseBody(resp *http.Response) ([]byte, error) <span class="cov9" title="21">{
         body, err := io.ReadAll(resp.Body)
         if err != nil </span><span class="cov0" title="0">{
                 c.logger.Error("Failed to read response body", "error", err)
                 return nil, fmt.Errorf("failed to read response: %w", err)
         }</span>
 
-        <span class="cov8" title="23">c.logger.Debug("Received API response", "status", resp.StatusCode, "content_length", len(body))
+        <span class="cov9" title="21">c.logger.Debug("Received API response", "status", resp.StatusCode, "content_length", len(body))
         return body, nil</span>
 }
 
 // checkHTTPErrors validates HTTP status codes and returns appropriate errors.
-func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error <span class="cov8" title="23">{
-        if resp.StatusCode &gt;= http.StatusBadRequest </span><span class="cov6" title="9">{
+func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error <span class="cov9" title="21">{
+        if resp.StatusCode &gt;= http.StatusBadRequest </span><span class="cov5" title="5">{
                 c.logger.Error("HTTP error response", "status", resp.StatusCode, "body", string(body))
                 return &amp;APIError{
                         StatusCode: resp.StatusCode,
@@ -424,7 +424,7 @@ func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error <span c
                         Body:       body,
                 }
         }</span>
-        <span class="cov7" title="14">return nil</span>
+        <span class="cov8" title="16">return nil</span>
 }
 
 // RestconfBuilder returns the RESTCONF URL builder for the client.
@@ -497,12 +497,12 @@ type APIError struct {
         Body       []byte `json:"-"`
 }
 
-func (e *APIError) Error() string <span class="cov10" title="11">{
+func (e *APIError) Error() string <span class="cov6" title="4">{
         return fmt.Sprintf("API error (HTTP %d): %s", e.StatusCode, e.Message)
 }</span>
 
 // IsNotFoundError checks if the error is a 404 not found error.
-func IsNotFoundError(err error) bool <span class="cov9" title="10">{
+func IsNotFoundError(err error) bool <span class="cov10" title="10">{
         if err == nil </span><span class="cov1" title="1">{
                 return false
         }</span>
@@ -540,19 +540,19 @@ import (
 // These functions provide a consistent interface for HTTP operations across all services.
 
 // Get is a generic helper reducing boilerplate in service GET methods.
-func Get[T any](ctx context.Context, c *Client, endpoint string) (*T, error) <span class="cov7" title="4">{
-        if c == nil </span><span class="cov4" title="2">{
+func Get[T any](ctx context.Context, c *Client, endpoint string) (*T, error) <span class="cov7" title="3">{
+        if c == nil </span><span class="cov1" title="1">{
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
         <span class="cov4" title="2">body, err := c.Do(ctx, http.MethodGet, endpoint)
-        if err != nil </span><span class="cov1" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">var out T
-        if len(body) &gt; 0 </span><span class="cov1" title="1">{
-                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="2">var out T
+        if len(body) &gt; 0 </span><span class="cov4" title="2">{
+                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov1" title="1">{
                         return nil, fmt.Errorf("failed to unmarshal response: %w", err)
                 }</span>
         }
@@ -561,19 +561,19 @@ func Get[T any](ctx context.Context, c *Client, endpoint string) (*T, error) <sp
 }
 
 // Post is a generic helper for sending POST requests with payload.
-func Post[T any](ctx context.Context, c *Client, endpoint string, payload any) (*T, error) <span class="cov7" title="4">{
-        if c == nil </span><span class="cov4" title="2">{
+func Post[T any](ctx context.Context, c *Client, endpoint string, payload any) (*T, error) <span class="cov7" title="3">{
+        if c == nil </span><span class="cov1" title="1">{
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
         <span class="cov4" title="2">body, err := c.DoWithPayload(ctx, http.MethodPost, endpoint, payload)
-        if err != nil </span><span class="cov1" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">var out T
-        if len(body) &gt; 0 </span><span class="cov1" title="1">{
-                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="2">var out T
+        if len(body) &gt; 0 </span><span class="cov4" title="2">{
+                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov1" title="1">{
                         return nil, fmt.Errorf("failed to unmarshal response: %w", err)
                 }</span>
         }
@@ -582,17 +582,17 @@ func Post[T any](ctx context.Context, c *Client, endpoint string, payload any) (
 }
 
 // PostVoid is a generic helper for POST operations without expecting a response body.
-func PostVoid(ctx context.Context, c *Client, endpoint string, payload any) error <span class="cov10" title="6">{
-        if c == nil </span><span class="cov6" title="3">{
+func PostVoid(ctx context.Context, c *Client, endpoint string, payload any) error <span class="cov10" title="5">{
+        if c == nil </span><span class="cov4" title="2">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov6" title="3">_, err := c.DoWithPayload(ctx, http.MethodPost, endpoint, payload)
+        <span class="cov7" title="3">_, err := c.DoWithPayload(ctx, http.MethodPost, endpoint, payload)
         return err</span>
 }
 
 // PostRPCVoid is a generic helper for RPC POST operations without expecting a response body.
-func PostRPCVoid(ctx context.Context, c *Client, rpcEndpoint string, payload any) error <span class="cov6" title="3">{
-        if c == nil </span><span class="cov4" title="2">{
+func PostRPCVoid(ctx context.Context, c *Client, rpcEndpoint string, payload any) error <span class="cov4" title="2">{
+        if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
         <span class="cov1" title="1">_, err := c.DoRPCWithPayload(ctx, http.MethodPost, rpcEndpoint, payload)
@@ -600,19 +600,19 @@ func PostRPCVoid(ctx context.Context, c *Client, rpcEndpoint string, payload any
 }
 
 // Put is a generic helper for PUT operations that expect a response body.
-func Put[T any](ctx context.Context, c *Client, endpoint string, payload any) (*T, error) <span class="cov7" title="4">{
-        if c == nil </span><span class="cov4" title="2">{
+func Put[T any](ctx context.Context, c *Client, endpoint string, payload any) (*T, error) <span class="cov7" title="3">{
+        if c == nil </span><span class="cov1" title="1">{
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
         <span class="cov4" title="2">body, err := c.DoWithPayload(ctx, http.MethodPut, endpoint, payload)
-        if err != nil </span><span class="cov1" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">var out T
-        if len(body) &gt; 0 </span><span class="cov1" title="1">{
-                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="2">var out T
+        if len(body) &gt; 0 </span><span class="cov4" title="2">{
+                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov1" title="1">{
                         return nil, fmt.Errorf("failed to unmarshal response: %w", err)
                 }</span>
         }
@@ -621,28 +621,28 @@ func Put[T any](ctx context.Context, c *Client, endpoint string, payload any) (*
 }
 
 // PutVoid is a generic helper for PUT operations without expecting a response body.
-func PutVoid(ctx context.Context, c *Client, endpoint string, payload any) error <span class="cov9" title="5">{
-        if c == nil </span><span class="cov6" title="3">{
+func PutVoid(ctx context.Context, c *Client, endpoint string, payload any) error <span class="cov4" title="2">{
+        if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov4" title="2">_, err := c.DoWithPayload(ctx, http.MethodPut, endpoint, payload)
+        <span class="cov1" title="1">_, err := c.DoWithPayload(ctx, http.MethodPut, endpoint, payload)
         return err</span>
 }
 
 // Patch is a generic helper for PATCH operations that expect a response body.
-func Patch[T any](ctx context.Context, c *Client, endpoint string, payload any) (*T, error) <span class="cov7" title="4">{
-        if c == nil </span><span class="cov4" title="2">{
+func Patch[T any](ctx context.Context, c *Client, endpoint string, payload any) (*T, error) <span class="cov7" title="3">{
+        if c == nil </span><span class="cov1" title="1">{
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
         <span class="cov4" title="2">body, err := c.DoWithPayload(ctx, http.MethodPatch, endpoint, payload)
-        if err != nil </span><span class="cov1" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">var out T
-        if len(body) &gt; 0 </span><span class="cov1" title="1">{
-                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="2">var out T
+        if len(body) &gt; 0 </span><span class="cov4" title="2">{
+                if err := json.Unmarshal(body, &amp;out); err != nil </span><span class="cov1" title="1">{
                         return nil, fmt.Errorf("failed to unmarshal response: %w", err)
                 }</span>
         }
@@ -651,20 +651,20 @@ func Patch[T any](ctx context.Context, c *Client, endpoint string, payload any) 
 }
 
 // PatchVoid is a generic helper for PATCH operations without expecting a response body.
-func PatchVoid(ctx context.Context, c *Client, endpoint string, payload any) error <span class="cov9" title="5">{
-        if c == nil </span><span class="cov6" title="3">{
+func PatchVoid(ctx context.Context, c *Client, endpoint string, payload any) error <span class="cov4" title="2">{
+        if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov4" title="2">_, err := c.DoWithPayload(ctx, http.MethodPatch, endpoint, payload)
+        <span class="cov1" title="1">_, err := c.DoWithPayload(ctx, http.MethodPatch, endpoint, payload)
         return err</span>
 }
 
 // Delete is a generic helper for DELETE operations without expecting a response body.
-func Delete(ctx context.Context, c *Client, endpoint string) error <span class="cov9" title="5">{
-        if c == nil </span><span class="cov6" title="3">{
+func Delete(ctx context.Context, c *Client, endpoint string) error <span class="cov4" title="2">{
+        if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov4" title="2">_, err := c.Do(ctx, http.MethodDelete, endpoint)
+        <span class="cov1" title="1">_, err := c.Do(ctx, http.MethodDelete, endpoint)
         return err</span>
 }
 </pre>
@@ -923,7 +923,7 @@ type Builder struct {
 }
 
 // NewBuilder creates a new RESTCONF URL builder for the specified protocol and controller.
-func NewBuilder(protocol, controller string) *Builder <span class="cov9" title="10">{
+func NewBuilder(protocol, controller string) *Builder <span class="cov8" title="9">{
         return &amp;Builder{
                 protocol:   protocol,
                 controller: controller,
@@ -954,12 +954,6 @@ func (b *Builder) BuildQueryURL(endpoint, identifier string) string <span class=
         return fmt.Sprintf("%s=%s", endpoint, identifier)
 }</span>
 
-// BuildPathQueryURL constructs URLs with path and key-value parameters
-// Format: endpoint/key=value.
-func (b *Builder) BuildPathQueryURL(endpoint, key, value string) string <span class="cov4" title="3">{
-        return fmt.Sprintf("%s/%s=%s", endpoint, key, value)
-}</span>
-
 // BuildQueryCompositeURL constructs URLs for queries with composite parameters
 // Format: endpoint=value1,value2,value3...
 func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{}) string <span class="cov8" title="8">{
@@ -981,11 +975,6 @@ func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{})
                 }
         }
         <span class="cov8" title="8">return fmt.Sprintf("%s=%s", endpoint, strings.Join(strValues, ","))</span>
-}
-
-// URLValue represents types that can be safely converted to URL parameters.
-type URLValue interface {
-        ~string | ~int | ~int64 | ~float64 | ~bool
 }
 
 // buildBaseURL constructs the base URL for the controller.
@@ -1265,7 +1254,7 @@ type RequestBuilder struct {
 }
 
 // NewRequestBuilder creates a new RequestBuilder instance.
-func NewRequestBuilder(restBuilder *restconf.Builder, token string, logger *slog.Logger) *RequestBuilder <span class="cov10" title="20">{
+func NewRequestBuilder(restBuilder *restconf.Builder, token string, logger *slog.Logger) *RequestBuilder <span class="cov10" title="17">{
         return &amp;RequestBuilder{
                 restBuilder: restBuilder,
                 token:       token,
@@ -1274,12 +1263,12 @@ func NewRequestBuilder(restBuilder *restconf.Builder, token string, logger *slog
 }</span>
 
 // CreateRequest creates and configures an HTTP request.
-func (rb *RequestBuilder) CreateRequest(ctx context.Context, method, path string) (*http.Request, error) <span class="cov7" title="8">{
+func (rb *RequestBuilder) CreateRequest(ctx context.Context, method, path string) (*http.Request, error) <span class="cov6" title="6">{
         if rb.restBuilder == nil </span><span class="cov1" title="1">{
                 return nil, errors.New("RESTCONF builder is not properly initialized")
         }</span>
 
-        <span class="cov6" title="7">url := rb.restBuilder.BuildDataURL(path)
+        <span class="cov6" title="5">url := rb.restBuilder.BuildDataURL(path)
 
         req, err := http.NewRequestWithContext(ctx, method, url, http.NoBody)
         if err != nil </span><span class="cov1" title="1">{
@@ -1287,7 +1276,7 @@ func (rb *RequestBuilder) CreateRequest(ctx context.Context, method, path string
                 return nil, fmt.Errorf("failed to create request: %w", err)
         }</span>
 
-        <span class="cov6" title="6">req.Header = DefaultHeaders(rb.token)
+        <span class="cov5" title="4">req.Header = DefaultHeaders(rb.token)
         rb.logger.Debug("Sending API request", "method", method, "url", url)
         return req, nil</span>
 }
@@ -1297,13 +1286,13 @@ func (rb *RequestBuilder) CreateRequestWithPayload(
         ctx context.Context,
         method, path string,
         payload any,
-) (*http.Request, error) <span class="cov5" title="5">{
+) (*http.Request, error) <span class="cov5" title="4">{
         if rb.restBuilder == nil </span><span class="cov1" title="1">{
                 return nil, errors.New("RESTCONF builder is not properly initialized")
         }</span>
 
         // Handle nil payload case early - reuse CreateRequest logic
-        <span class="cov5" title="4">if payload == nil </span><span class="cov3" title="2">{
+        <span class="cov4" title="3">if payload == nil </span><span class="cov1" title="1">{
                 return rb.CreateRequest(ctx, method, path)
         }</span>
 
@@ -1318,13 +1307,13 @@ func (rb *RequestBuilder) CreateRPCRequestWithPayload(
         ctx context.Context,
         method, rpcPath string,
         payload any,
-) (*http.Request, error) <span class="cov6" title="6">{
+) (*http.Request, error) <span class="cov6" title="5">{
         if rb.restBuilder == nil </span><span class="cov1" title="1">{
                 return nil, errors.New("RESTCONF builder is not properly initialized")
         }</span>
 
         // Handle nil payload case early
-        <span class="cov5" title="5">if payload == nil </span><span class="cov3" title="2">{
+        <span class="cov5" title="4">if payload == nil </span><span class="cov3" title="2">{
                 url := rb.restBuilder.BuildOperationsURL(rpcPath)
                 req, err := http.NewRequestWithContext(ctx, method, url, http.NoBody)
                 if err != nil </span><span class="cov1" title="1">{
@@ -1336,18 +1325,18 @@ func (rb *RequestBuilder) CreateRPCRequestWithPayload(
                 return req, nil</span>
         }
 
-        <span class="cov4" title="3">url := rb.restBuilder.BuildOperationsURL(rpcPath)
+        <span class="cov3" title="2">url := rb.restBuilder.BuildOperationsURL(rpcPath)
         // Marshal payload and create RPC request
         return rb.createRequestWithJSONPayload(ctx, method, url, payload, "RPC")</span>
 }
 
 // ExecuteRequest executes an HTTP request and handles basic error conditions.
-func (rb *RequestBuilder) ExecuteRequest(httpClient *http.Client, req *http.Request) (*http.Response, error) <span class="cov5" title="5">{
+func (rb *RequestBuilder) ExecuteRequest(httpClient *http.Client, req *http.Request) (*http.Response, error) <span class="cov4" title="3">{
         if req == nil </span><span class="cov1" title="1">{
                 return nil, errors.New("request cannot be nil")
         }</span>
-        <span class="cov5" title="4">resp, err := httpClient.Do(req)
-        if err != nil </span><span class="cov1" title="1">{
+        <span class="cov3" title="2">resp, err := httpClient.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
                 rb.logger.Error("HTTP request failed", "error", err, "url", req.URL.String())
                 return nil, fmt.Errorf("request failed: %w", err)
         }</span>
@@ -1360,15 +1349,15 @@ func (rb *RequestBuilder) createRequestWithJSONPayload(
         method, url string,
         payload any,
         logType string,
-) (*http.Request, error) <span class="cov5" title="5">{
+) (*http.Request, error) <span class="cov5" title="4">{
         jsonData, err := json.Marshal(payload)
         if err != nil </span><span class="cov3" title="2">{
                 return nil, fmt.Errorf("failed to marshal payload: %w", err)
         }</span>
 
-        <span class="cov4" title="3">body := bytes.NewReader(jsonData)
+        <span class="cov3" title="2">body := bytes.NewReader(jsonData)
         req, err := http.NewRequestWithContext(ctx, method, url, body)
-        if err != nil </span><span class="cov1" title="1">{
+        if err != nil </span><span class="cov0" title="0">{
                 rb.logger.Error("Failed to create HTTP "+logType+" request", "error", err, "url", url)
                 return nil, fmt.Errorf("failed to create "+logType+" request: %w", err)
         }</span>
@@ -1434,7 +1423,7 @@ const (
 )
 
 // NewTransport creates and configures a new HTTP transport with the specified TLS settings.
-func NewTransport(skipVerify bool) *http.Transport <span class="cov7" title="6">{
+func NewTransport(skipVerify bool) *http.Transport <span class="cov5" title="3">{
         return &amp;http.Transport{
                 TLSClientConfig: &amp;tls.Config{
                         InsecureSkipVerify: skipVerify, //nolint:gosec
@@ -1451,7 +1440,7 @@ func NewTransport(skipVerify bool) *http.Transport <span class="cov7" title="6">
 }</span>
 
 // DefaultHeaders returns a pre-configured header map with authentication and content type.
-func DefaultHeaders(token string) http.Header <span class="cov10" title="12">{
+func DefaultHeaders(token string) http.Header <span class="cov10" title="9">{
         headers := make(http.Header)
         headers.Set(HTTPHeaderKeyAuthorization, HTTPHeaderValueBasicPrefix+token)
         headers.Set(HTTPHeaderKeyAccept, HTTPHeaderValueYANGData)
@@ -1515,44 +1504,44 @@ const (
 // Core validation functions
 
 // IsValidController checks if controller address is valid (non-empty).
-func IsValidController(controller string) bool <span class="cov4" title="9">{
+func IsValidController(controller string) bool <span class="cov4" title="6">{
         return IsNonEmptyString(controller)
 }</span>
 
 // IsValidAccessToken checks if access token is valid (non-empty).
-func IsValidAccessToken(accessToken string) bool <span class="cov4" title="8">{
+func IsValidAccessToken(accessToken string) bool <span class="cov4" title="5">{
         return IsNonEmptyString(accessToken)
 }</span>
 
 // IsPositiveTimeout checks if timeout is greater than validation threshold.
-func IsPositiveTimeout(timeout time.Duration) bool <span class="cov4" title="10">{
+func IsPositiveTimeout(timeout time.Duration) bool <span class="cov3" title="4">{
         return timeout &gt; ValidationTimeoutThreshold*time.Second
 }</span>
 
 // IsValidTimeout returns true if timeout is greater than zero.
-func IsValidTimeout(timeout time.Duration) bool <span class="cov3" title="5">{
+func IsValidTimeout(timeout time.Duration) bool <span class="cov3" title="3">{
         return timeout &gt; 0
 }</span>
 
 // ValidateNonEmptyString validates that a string is not empty after trimming whitespace.
-func ValidateNonEmptyString(s, fieldName string) error <span class="cov4" title="10">{
-        if !IsNonEmptyString(s) </span><span class="cov3" title="6">{
+func ValidateNonEmptyString(s, fieldName string) error <span class="cov3" title="4">{
+        if !IsNonEmptyString(s) </span><span class="cov2" title="2">{
                 return fmt.Errorf("validation failed: %w",
                         fmt.Errorf("field %s cannot be empty or contain only whitespace", fieldName))
         }</span>
-        <span class="cov3" title="4">return nil</span>
+        <span class="cov2" title="2">return nil</span>
 }
 
 // String validation predicates
 
 // IsNonEmptyString checks if a string is not empty after trimming whitespace.
-func IsNonEmptyString(s string) bool <span class="cov8" title="79">{
+func IsNonEmptyString(s string) bool <span class="cov8" title="39">{
         return strings.TrimSpace(s) != ""
 }</span>
 
 // IsStringEmpty returns true if the string is literally empty (not trimmed)
 // This is different from !IsNonEmptyString as it doesn't trim whitespace.
-func IsStringEmpty(str string) bool <span class="cov3" title="5">{
+func IsStringEmpty(str string) bool <span class="cov4" title="7">{
         return str == ""
 }</span>
 
@@ -1560,43 +1549,43 @@ func IsStringEmpty(str string) bool <span class="cov3" title="5">{
 
 // ValidateMACAddress validates MAC address format.
 // MAC address can be formatted as aa:bb:cc:dd:ee:ff, aa-bb-cc-dd-ee-ff, or aabbccddeeff.
-func ValidateMACAddress(mac string) error <span class="cov6" title="34">{
+func ValidateMACAddress(mac string) error <span class="cov5" title="11">{
         normalized := normalizeMACAddress(mac)
 
-        if len(normalized) != MACAddressHexCharLength </span><span class="cov5" title="14">{
+        if len(normalized) != MACAddressHexCharLength </span><span class="cov3" title="4">{
                 return fmt.Errorf("MAC address must be %d hex characters, got %d", MACAddressHexCharLength, len(normalized))
         }</span>
 
-        <span class="cov5" title="20">for _, c := range normalized </span><span class="cov10" title="239">{
-                if (c &lt; '0' || c &gt; '9') &amp;&amp; (c &lt; 'a' || c &gt; 'f') &amp;&amp; (c &lt; 'A' || c &gt; 'F') </span><span class="cov2" title="3">{
+        <span class="cov4" title="7">for _, c := range normalized </span><span class="cov10" title="84">{
+                if (c &lt; '0' || c &gt; '9') &amp;&amp; (c &lt; 'a' || c &gt; 'f') &amp;&amp; (c &lt; 'A' || c &gt; 'F') </span><span class="cov0" title="0">{
                         return fmt.Errorf("invalid hexadecimal character '%c' in MAC address %s", c, mac)
                 }</span>
         }
 
-        <span class="cov5" title="17">return nil</span>
+        <span class="cov4" title="7">return nil</span>
 }
 
 // NormalizeMACAddress validates and normalizes MAC address to colon-separated format (aa:bb:cc:dd:ee:ff).
 // Returns normalized MAC address and validation error if invalid.
-func NormalizeMACAddress(mac string) (string, error) <span class="cov4" title="10">{
-        if err := ValidateMACAddress(mac); err != nil </span><span class="cov3" title="4">{
+func NormalizeMACAddress(mac string) (string, error) <span class="cov3" title="3">{
+        if err := ValidateMACAddress(mac); err != nil </span><span class="cov0" title="0">{
                 return "", err
         }</span>
 
-        <span class="cov3" title="6">normalized := strings.ToLower(normalizeMACAddress(mac))
+        <span class="cov3" title="3">normalized := strings.ToLower(normalizeMACAddress(mac))
         var result strings.Builder
-        for i := 0; i &lt; len(normalized); i += 2 </span><span class="cov6" title="36">{
-                if i &gt; 0 </span><span class="cov6" title="30">{
+        for i := 0; i &lt; len(normalized); i += 2 </span><span class="cov6" title="18">{
+                if i &gt; 0 </span><span class="cov6" title="15">{
                         result.WriteString(":")
                 }</span>
-                <span class="cov6" title="36">result.WriteString(normalized[i : i+2])</span>
+                <span class="cov6" title="18">result.WriteString(normalized[i : i+2])</span>
         }
 
-        <span class="cov3" title="6">return result.String(), nil</span>
+        <span class="cov3" title="3">return result.String(), nil</span>
 }
 
 // normalizeMACAddress removes all separators from MAC address.
-func normalizeMACAddress(mac string) string <span class="cov7" title="40">{
+func normalizeMACAddress(mac string) string <span class="cov6" title="14">{
         normalized := strings.ReplaceAll(mac, ":", "")
         normalized = strings.ReplaceAll(normalized, "-", "")
         normalized = strings.ReplaceAll(normalized, ".", "")
@@ -1604,33 +1593,33 @@ func normalizeMACAddress(mac string) string <span class="cov7" title="40">{
 }</span>
 
 // IsValidMACAddr performs MAC address validation and returns boolean.
-func IsValidMACAddr(mac string) bool <span class="cov3" title="6">{
+func IsValidMACAddr(mac string) bool <span class="cov4" title="5">{
         return ValidateMACAddress(mac) == nil
 }</span>
 
 // ValidateSlotID validates slot ID (radio slot, antenna slot, etc.)
-func ValidateSlotID(slotID int) error <span class="cov3" title="5">{
-        if slotID &lt; 0 </span><span class="cov2" title="2">{
+func ValidateSlotID(slotID int) error <span class="cov2" title="2">{
+        if slotID &lt; 0 </span><span class="cov1" title="1">{
                 return fmt.Errorf("slot ID must be non-negative, got %d", slotID)
         }</span>
-        <span class="cov2" title="3">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
 // ValidateSpatialStream validates the spatial stream parameter (must be 1-8).
-func ValidateSpatialStream(spatialStream int) error <span class="cov3" title="6">{
-        if spatialStream &lt; 1 || spatialStream &gt; 8 </span><span class="cov2" title="3">{
+func ValidateSpatialStream(spatialStream int) error <span class="cov2" title="2">{
+        if spatialStream &lt; 1 || spatialStream &gt; 8 </span><span class="cov1" title="1">{
                 return fmt.Errorf("spatial stream must be between 1 and 8, got %d", spatialStream)
         }</span>
-        <span class="cov2" title="3">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
 // ValidateWlanID validates WLAN ID format.
-func ValidateWlanID(wlanID string) error <span class="cov3" title="4">{
+func ValidateWlanID(wlanID string) error <span class="cov2" title="2">{
         return ValidateNonEmptyString(wlanID, "WLAN ID")
 }</span>
 
 // HasValidTags checks if at least one tag is provided.
-func HasValidTags(siteTag, policyTag, rfTag string) bool <span class="cov3" title="6">{
+func HasValidTags(siteTag, policyTag, rfTag string) bool <span class="cov3" title="3">{
         return IsNonEmptyString(siteTag) || IsNonEmptyString(policyTag) || IsNonEmptyString(rfTag)
 }</span>
 
@@ -1641,22 +1630,22 @@ func HasValidMACOrName(apMac, apName string) bool <span class="cov3" title="4">{
 }</span>
 
 // HasEitherMACOrName checks if at least one of MAC address or AP name is provided.
-func HasEitherMACOrName(apMac, apName string) bool <span class="cov3" title="4">{
+func HasEitherMACOrName(apMac, apName string) bool <span class="cov2" title="2">{
         return IsNonEmptyString(apMac) || IsNonEmptyString(apName)
 }</span>
 
 // General utility predicates
 
 // SelectNonEmptyValue returns the primary value if not empty, otherwise returns the default value.
-func SelectNonEmptyValue(primary, defaultValue string) string <span class="cov3" title="4">{
+func SelectNonEmptyValue(primary, defaultValue string) string <span class="cov2" title="2">{
         if IsNonEmptyString(primary) </span><span class="cov1" title="1">{
                 return primary
         }</span>
-        <span class="cov2" title="3">return defaultValue</span>
+        <span class="cov1" title="1">return defaultValue</span>
 }
 
 // IsValidTagAssignment validates tag value based on tag type.
-func IsValidTagAssignment(tagValue, tagType string) bool <span class="cov3" title="6">{
+func IsValidTagAssignment(tagValue, tagType string) bool <span class="cov4" title="5">{
         switch tagType </span>{
         case "site":<span class="cov2" title="2">
                 return IsNonEmptyString(tagValue)</span>
@@ -1664,7 +1653,7 @@ func IsValidTagAssignment(tagValue, tagType string) bool <span class="cov3" titl
                 return IsNonEmptyString(tagValue)</span>
         case "rf":<span class="cov1" title="1">
                 return IsNonEmptyString(tagValue)</span>
-        default:<span class="cov2" title="2">
+        default:<span class="cov1" title="1">
                 return false</span>
         }
 }
@@ -1681,34 +1670,27 @@ import (
 )
 
 // TestContext creates a test context with appropriate timeout.
-// Following Prometheus patterns for test context management.
-func TestContext(t *testing.T) context.Context <span class="cov0" title="0">{
+func TestContext(t *testing.T) context.Context <span class="cov8" title="1">{
         ctx, cancel := context.WithTimeout(context.Background(), transport.QuickTimeout)
         t.Cleanup(cancel)
         return ctx
 }</span>
 
 // TestContextWithTimeout creates a test context with custom timeout.
-// Following Kubernetes patterns for configurable test timeouts.
-func TestContextWithTimeout(t *testing.T, timeout time.Duration) context.Context <span class="cov0" title="0">{
+func TestContextWithTimeout(t *testing.T, timeout time.Duration) context.Context <span class="cov8" title="1">{
         ctx, cancel := context.WithTimeout(context.Background(), timeout)
         t.Cleanup(cancel)
         return ctx
 }</span>
 </pre>
 		
-		<pre class="file" id="file12" style="display: none">// Package mock provides utilities to create mock RESTCONF servers for testing.
-package mock
+		<pre class="file" id="file12" style="display: none">package testutil
 
 import (
         "net/http"
         "net/http/httptest"
-        "net/url"
         "strings"
         "testing"
-        "time"
-
-        "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 )
 
 // HandlerMap represents the handler mapping structure for mock servers.
@@ -1724,27 +1706,27 @@ type RESTCONFServer struct {
 // JSON body for each RESTCONF endpoint given. Keys in the map are endpoint strings without the
 // RESTCONF prefix (e.g., "Cisco-...:container/sub" or "operations/Cisco-...:rpc"). Values are raw JSON payloads to return.
 // Any non-matching path returns 404.
-func NewRESTCONFSuccessServer(endpoints map[string]string) *httptest.Server <span class="cov8" title="3">{
-        handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov8" title="3">{
+func NewRESTCONFSuccessServer(endpoints map[string]string) *httptest.Server <span class="cov9" title="7">{
+        handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov5" title="3">{
                 ep := r.URL.Path
                 ep = strings.TrimPrefix(ep, "/restconf/data/")
                 ep = strings.TrimPrefix(ep, "/restconf/operations/")
 
-                if body, ok := endpoints[ep]; ok </span><span class="cov5" title="2">{
+                if body, ok := endpoints[ep]; ok </span><span class="cov4" title="2">{
                         w.WriteHeader(http.StatusOK)
                         _, _ = w.Write([]byte(body))
                         return
                 }</span>
                 <span class="cov1" title="1">http.NotFound(w, r)</span>
         })
-        <span class="cov8" title="3">return httptest.NewTLSServer(handler)</span>
+        <span class="cov9" title="7">return httptest.NewTLSServer(handler)</span>
 }
 
 // NewRESTCONFErrorServer creates an HTTPS test server that returns the provided status code
 // for all listed RESTCONF endpoints. Endpoints should be provided without the RESTCONF prefix.
 // Supports both data operations and RPC operations paths.
 // Non-listed paths return 404.
-func NewRESTCONFErrorServer(paths []string, status int) *httptest.Server <span class="cov1" title="1">{ //nolint:revive // test helper
+func NewRESTCONFErrorServer(paths []string, status int) *httptest.Server <span class="cov5" title="3">{ //nolint:revive // test helper
         handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov1" title="1">{
                 // Handle both data operations (/restconf/data/) and RPC operations (/restconf/operations/)
                 ep := r.URL.Path
@@ -1759,83 +1741,73 @@ func NewRESTCONFErrorServer(paths []string, status int) *httptest.Server <span c
                 }
                 <span class="cov0" title="0">http.NotFound(w, r)</span>
         })
-        <span class="cov1" title="1">return httptest.NewTLSServer(handler)</span>
-}
-
-// NewTLSClientForServer constructs a core.Client configured to talk to the given TLS test server.
-// It sets a small timeout and disables certificate verification for the test server's self-signed cert.
-func NewTLSClientForServer(t *testing.T, srv *httptest.Server) *core.Client <span class="cov1" title="1">{ //nolint:revive // test helper
-        t.Helper()
-        u, err := url.Parse(srv.URL)
-        if err != nil </span><span class="cov0" title="0">{
-                t.Fatalf("failed to parse server URL: %v", err)
-                return nil
-        }</span>
-
-        <span class="cov1" title="1">c, err := core.New(u.Host, "token",
-                core.WithInsecureSkipVerify(true),
-                core.WithTimeout(5*time.Second),
-        )
-        if err != nil </span><span class="cov0" title="0">{
-                t.Fatalf("failed to create core client: %v", err)
-                return nil
-        }</span>
-        <span class="cov1" title="1">return c</span>
+        <span class="cov5" title="3">return httptest.NewTLSServer(handler)</span>
 }
 
 // NewRESTCONFServer creates a new flexible RESTCONF server for testing.
-func NewRESTCONFServer(t *testing.T) *RESTCONFServer <span class="cov10" title="4">{
+func NewRESTCONFServer(t *testing.T) *RESTCONFServer <span class="cov10" title="8">{
         t.Helper()
         server := &amp;RESTCONFServer{
                 handlers: nil,
         }
 
-        handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov8" title="3">{
-                method := r.Method
-                path := r.URL.Path
+        // Helper functions for cleaner handler logic
+        normalizePath := func(path string) string </span><span class="cov5" title="3">{
                 path = strings.TrimPrefix(path, "/restconf/data/")
                 path = strings.TrimPrefix(path, "/restconf/operations/")
+                return path
+        }</span>
 
-                methodHandlers, ok := server.handlers[method]
-                if !ok </span><span class="cov5" title="2">{
+        <span class="cov10" title="8">findHandler := func(path string, methodHandlers map[string]func() (int, string)) func() (int, string) </span><span class="cov1" title="1">{
+                for pathPrefix, handler := range methodHandlers </span><span class="cov1" title="1">{
+                        if strings.Contains(path, pathPrefix) </span><span class="cov1" title="1">{
+                                return handler
+                        }</span>
+                }
+                <span class="cov0" title="0">return nil</span>
+        }
+
+        <span class="cov10" title="8">writeResponse := func(w http.ResponseWriter, status int, body string) </span><span class="cov1" title="1">{
+                w.WriteHeader(status)
+                if body != "" </span><span class="cov1" title="1">{
+                        _, _ = w.Write([]byte(body))
+                }</span>
+        }
+
+        <span class="cov10" title="8">handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov5" title="3">{
+                path := normalizePath(r.URL.Path)
+                methodHandlers, ok := server.handlers[r.Method]
+                if !ok </span><span class="cov4" title="2">{
                         http.NotFound(w, r)
                         return
                 }</span>
 
-                <span class="cov1" title="1">for pathPrefix, handler := range methodHandlers </span><span class="cov1" title="1">{
-                        if !strings.Contains(path, pathPrefix) </span><span class="cov0" title="0">{
-                                continue</span>
-                        }
-                        <span class="cov1" title="1">status, body := handler()
-                        w.WriteHeader(status)
-                        if body != "" </span><span class="cov1" title="1">{
-                                _, _ = w.Write([]byte(body))
-                        }</span>
-                        <span class="cov1" title="1">return</span>
-                }
+                <span class="cov1" title="1">if handler := findHandler(path, methodHandlers); handler != nil </span><span class="cov1" title="1">{
+                        status, body := handler()
+                        writeResponse(w, status, body)
+                        return
+                }</span>
 
                 <span class="cov0" title="0">http.NotFound(w, r)</span>
         })
 
-        <span class="cov10" title="4">server.Server = httptest.NewTLSServer(handler)
+        <span class="cov10" title="8">server.Server = httptest.NewTLSServer(handler)
         return server</span>
 }
 
 // AddHandler adds a handler for a specific HTTP method and path pattern.
-func (s *RESTCONFServer) AddHandler(method, pathPrefix string, handler func() (int, string)) <span class="cov1" title="1">{
-        if s.handlers == nil </span><span class="cov1" title="1">{
+func (s *RESTCONFServer) AddHandler(method, pathPrefix string, handler func() (int, string)) <span class="cov9" title="7">{
+        if s.handlers == nil </span><span class="cov7" title="5">{
                 s.handlers = make(HandlerMap[func() (int, string)])
         }</span>
-        <span class="cov1" title="1">if s.handlers[method] == nil </span><span class="cov1" title="1">{
+        <span class="cov9" title="7">if s.handlers[method] == nil </span><span class="cov8" title="6">{
                 s.handlers[method] = make(map[string]func() (int, string))
         }</span>
-        <span class="cov1" title="1">s.handlers[method][pathPrefix] = handler</span>
+        <span class="cov9" title="7">s.handlers[method][pathPrefix] = handler</span>
 }
 </pre>
 		
-		<pre class="file" id="file13" style="display: none">// Package testutil provides public testing utilities for Cisco IOS-XE Wireless Go client.
-// Following Kubernetes patterns for public testing APIs that hide internal implementation details.
-package testutil
+		<pre class="file" id="file13" style="display: none">package testutil
 
 import (
         "net/http/httptest"
@@ -1843,11 +1815,9 @@ import (
         "testing"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        "github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil/mock"
 )
 
 // TestClient represents a test client with core functionality hidden.
-// Following Docker patterns for interface-based testing abstraction.
 type TestClient interface {
         // Core returns the underlying core client for service initialization.
         // The concrete type is *core.Client but returned as interface{} to hide internals.
@@ -1855,23 +1825,27 @@ type TestClient interface {
 }
 
 // MockServer represents a mock RESTCONF server for testing.
-// Following Prometheus patterns for test server abstraction.
 type MockServer interface {
         URL() string
         Close()
-        NewTestClient(t *testing.T) TestClient
 }
 
-// SuccessConfig defines configuration for custom success responses.
-type SuccessConfig struct {
-        StatusCode   int
-        ResponseBody string
+// ResponseConfig defines configuration for custom responses.
+type ResponseConfig struct {
+        StatusCode int
+        Body       string
+        Method     string // HTTP method, defaults to "GET" if empty
 }
 
-// ErrorConfig defines configuration for custom error responses.
-type ErrorConfig struct {
-        StatusCode   int
-        ErrorMessage string
+// MockServerOption configures a MockServer.
+type MockServerOption func(*mockServerConfig)
+
+// mockServerConfig holds configuration for MockServer.
+type mockServerConfig struct {
+        testing         *testing.T
+        successPaths    map[string]string         // path -&gt; response body (200 OK)
+        errorPaths      map[string]int            // path -&gt; status code
+        customResponses map[string]ResponseConfig // path -&gt; full response config
 }
 
 // testClientImpl implements TestClient interface hiding internal details.
@@ -1879,45 +1853,89 @@ type testClientImpl struct {
         client *core.Client
 }
 
+// Core returns the core client as interface{} to hide the concrete type.
+func (tc *testClientImpl) Core() interface{} <span class="cov3" title="2">{
+        return tc.client
+}</span>
+
 // mockServerImpl implements MockServer interface wrapping httptest.Server.
 type mockServerImpl struct {
         server *httptest.Server
 }
 
-// Core returns the core client as interface{} to hide the concrete type.
-func (tc *testClientImpl) Core() interface{} <span class="cov0" title="0">{
-        return tc.client
-}</span>
-
 // URL returns the mock server URL.
-func (ms *mockServerImpl) URL() string <span class="cov0" title="0">{
+func (ms *mockServerImpl) URL() string <span class="cov7" title="8">{
         return ms.server.URL
 }</span>
 
 // Close shuts down the mock server.
-func (ms *mockServerImpl) Close() <span class="cov0" title="0">{
+func (ms *mockServerImpl) Close() <span class="cov8" title="11">{
         ms.server.Close()
 }</span>
 
-// NewTestClient creates a test client connected to this mock server.
-// Following Kubernetes patterns for test client creation.
-func (ms *mockServerImpl) NewTestClient(t *testing.T) TestClient <span class="cov0" title="0">{
-        // Parse the server URL to get the host
-        u, err := url.Parse(ms.server.URL)
-        if err != nil </span><span class="cov0" title="0">{
-                t.Fatalf("failed to parse server URL: %v", err)
-        }</span>
+// WithSuccessResponse adds a successful response for a specific path.
+func WithSuccessResponse(path, body string) MockServerOption <span class="cov3" title="2">{
+        return func(cfg *mockServerConfig) </span><span class="cov3" title="2">{
+                if cfg.successPaths == nil </span><span class="cov3" title="2">{
+                        cfg.successPaths = make(map[string]string)
+                }</span>
+                <span class="cov3" title="2">cfg.successPaths[path] = body</span>
+        }
+}
 
-        <span class="cov0" title="0">client, err := core.New(u.Host, "test-token", core.WithInsecureSkipVerify(true))
-        if err != nil </span><span class="cov0" title="0">{
-                t.Fatalf("failed to create test client: %v", err)
+// WithSuccessResponses adds multiple successful responses.
+func WithSuccessResponses(responses map[string]string) MockServerOption <span class="cov6" title="5">{
+        return func(cfg *mockServerConfig) </span><span class="cov6" title="5">{
+                if cfg.successPaths == nil </span><span class="cov6" title="5">{
+                        cfg.successPaths = make(map[string]string)
+                }</span>
+                <span class="cov6" title="5">for path, body := range responses </span><span class="cov6" title="5">{
+                        cfg.successPaths[path] = body
+                }</span>
+        }
+}
+
+// WithErrorResponse adds an error response for a specific path.
+func WithErrorResponse(path string, statusCode int) MockServerOption <span class="cov1" title="1">{
+        return func(cfg *mockServerConfig) </span><span class="cov1" title="1">{
+                if cfg.errorPaths == nil </span><span class="cov1" title="1">{
+                        cfg.errorPaths = make(map[string]int)
+                }</span>
+                <span class="cov1" title="1">cfg.errorPaths[path] = statusCode</span>
+        }
+}
+
+// WithErrorResponses adds error responses for multiple paths.
+func WithErrorResponses(paths []string, statusCode int) MockServerOption <span class="cov3" title="2">{
+        return func(cfg *mockServerConfig) </span><span class="cov3" title="2">{
+                if cfg.errorPaths == nil </span><span class="cov3" title="2">{
+                        cfg.errorPaths = make(map[string]int)
+                }</span>
+                <span class="cov3" title="2">for _, path := range paths </span><span class="cov3" title="2">{
+                        cfg.errorPaths[path] = statusCode
+                }</span>
+        }
+}
+
+// WithCustomResponse adds a fully customizable response.
+func WithCustomResponse(path string, config ResponseConfig) MockServerOption <span class="cov4" title="3">{
+        return func(cfg *mockServerConfig) </span><span class="cov4" title="3">{
+                if cfg.customResponses == nil </span><span class="cov4" title="3">{
+                        cfg.customResponses = make(map[string]ResponseConfig)
+                }</span>
+                <span class="cov4" title="3">cfg.customResponses[path] = config</span>
+        }
+}
+
+// WithTesting provides a testing.T instance for enhanced server capabilities.
+func WithTesting(t *testing.T) MockServerOption <span class="cov4" title="3">{
+        return func(cfg *mockServerConfig) </span><span class="cov4" title="3">{
+                cfg.testing = t
         }</span>
-        <span class="cov0" title="0">return &amp;testClientImpl{client: client}</span>
 }
 
 // NewTestClient creates a test client for the given mock server.
-// Following Terraform patterns for test client abstraction.
-func NewTestClient(server MockServer) TestClient <span class="cov0" title="0">{
+func NewTestClient(server MockServer) TestClient <span class="cov4" title="3">{
         // Create a minimal test client without requiring *testing.T
         serverImpl, ok := server.(*mockServerImpl)
         if !ok </span><span class="cov0" title="0">{
@@ -1925,56 +1943,109 @@ func NewTestClient(server MockServer) TestClient <span class="cov0" title="0">{
         }
 
         // Parse the server URL to get the host
-        <span class="cov0" title="0">u, err := url.Parse(serverImpl.server.URL)
+        <span class="cov4" title="3">u, err := url.Parse(serverImpl.server.URL)
         if err != nil </span><span class="cov0" title="0">{
                 panic("testutil: failed to parse server URL: " + err.Error())</span>
         }
 
         // Create core client using the mock server host
-        <span class="cov0" title="0">client, err := core.New(u.Host, "test-token", core.WithInsecureSkipVerify(true))
+        <span class="cov4" title="3">client, err := core.New(u.Host, "test-token", core.WithInsecureSkipVerify(true))
         if err != nil </span><span class="cov0" title="0">{
                 panic("testutil: failed to create test client: " + err.Error())</span>
         }
 
-        <span class="cov0" title="0">return &amp;testClientImpl{client: client}</span>
+        <span class="cov4" title="3">return &amp;testClientImpl{client: client}</span>
 }
 
-// NewMockServer creates a mock RESTCONF server with the specified responses.
-// Following Kubernetes controller-runtime patterns for mock server creation.
-func NewMockServer(responses map[string]string) MockServer <span class="cov0" title="0">{
-        server := mock.NewRESTCONFSuccessServer(responses)
-        return &amp;mockServerImpl{server: server}
-}</span>
+// NewMockServer creates a mock RESTCONF server with functional options.
+// This is the unified constructor that supports all testing scenarios.
+//
+// Examples:
+//
+//        // Simple success responses
+//        server := NewMockServer(WithSuccessResponses(map[string]string{"path": "response"}))
+//
+//        // Error responses
+//        server := NewMockServer(WithErrorResponses([]string{"path"}, 404))
+//
+//        // Mixed responses
+//        server := NewMockServer(
+//          WithSuccessResponse("success-path", `{"status":"ok"}`),
+//          WithErrorResponse("error-path", 500),
+//          WithTesting(t),
+//        )
+func NewMockServer(opts ...MockServerOption) MockServer <span class="cov8" title="11">{
+        cfg := &amp;mockServerConfig{}
+        for _, opt := range opts </span><span class="cov10" title="16">{
+                opt(cfg)
+        }</span>
 
-// NewMockErrorServer creates a mock server that returns errors for specified paths.
-// Following Prometheus patterns for error simulation in tests.
-func NewMockErrorServer(errorPaths []string, statusCode int) MockServer <span class="cov0" title="0">{
-        server := mock.NewRESTCONFErrorServer(errorPaths, statusCode)
-        return &amp;mockServerImpl{server: server}
-}</span>
+        // If we have custom responses or testing context, use the flexible server
+        <span class="cov8" title="11">if len(cfg.customResponses) &gt; 0 || cfg.testing != nil </span><span class="cov5" title="4">{
+                return newAdvancedMockServer(cfg)
+        }</span>
 
-// NewMockServerWithCustomResponses creates a mock server with custom success responses.
-// Following Kubernetes patterns for detailed response simulation in tests.
-func NewMockServerWithCustomResponses(t *testing.T, responseConfig map[string]SuccessConfig) MockServer <span class="cov0" title="0">{
-        server := mock.NewRESTCONFServer(t)
-        for pathPattern, config := range responseConfig </span><span class="cov0" title="0">{
-                server.AddHandler("GET", pathPattern, func() (int, string) </span><span class="cov0" title="0">{
-                        return config.StatusCode, config.ResponseBody
-                }</span>)
+        // Handle simple success-only case
+        <span class="cov7" title="7">if len(cfg.successPaths) &gt; 0 &amp;&amp; len(cfg.errorPaths) == 0 </span><span class="cov6" title="5">{
+                server := NewRESTCONFSuccessServer(cfg.successPaths)
+                return &amp;mockServerImpl{server: server}
+        }</span>
+
+        // Handle simple error-only case
+        <span class="cov3" title="2">if len(cfg.errorPaths) &gt; 0 &amp;&amp; len(cfg.successPaths) == 0 </span><span class="cov3" title="2">{
+                // Convert error paths map to slice and uniform status code
+                paths := make([]string, 0, len(cfg.errorPaths))
+                var statusCode int
+                for path, status := range cfg.errorPaths </span><span class="cov3" title="2">{
+                        paths = append(paths, path)
+                        if statusCode == 0 </span><span class="cov3" title="2">{
+                                statusCode = status
+                        }</span>
+                }
+                <span class="cov3" title="2">server := NewRESTCONFErrorServer(paths, statusCode)
+                return &amp;mockServerImpl{server: server}</span>
         }
-        <span class="cov0" title="0">return &amp;mockServerImpl{server: server.Server}</span>
+
+        // Mixed case - use advanced server
+        <span class="cov0" title="0">return newAdvancedMockServer(cfg)</span>
 }
 
-// NewMockServerWithCustomErrors creates a mock server with custom error messages.
-// Following Kubernetes patterns for detailed error simulation in tests.
-func NewMockServerWithCustomErrors(t *testing.T, errorConfig map[string]ErrorConfig) MockServer <span class="cov0" title="0">{
-        server := mock.NewRESTCONFServer(t)
-        for pathPattern, config := range errorConfig </span><span class="cov0" title="0">{
-                server.AddHandler("GET", pathPattern, func() (int, string) </span><span class="cov0" title="0">{
-                        return config.StatusCode, config.ErrorMessage
+// newAdvancedMockServer creates a server using the flexible RESTCONFServer.
+func newAdvancedMockServer(cfg *mockServerConfig) MockServer <span class="cov5" title="4">{
+        t := cfg.testing
+        if t == nil </span><span class="cov1" title="1">{
+                // Create a minimal testing.T substitute for RESTCONFServer requirement
+                t = &amp;testing.T{}
+        }</span>
+
+        <span class="cov5" title="4">server := NewRESTCONFServer(t)
+
+        // Add success responses
+        for path, body := range cfg.successPaths </span><span class="cov3" title="2">{
+                server.AddHandler("GET", path, func() (int, string) </span><span class="cov0" title="0">{
+                        return 200, body
                 }</span>)
         }
-        <span class="cov0" title="0">return &amp;mockServerImpl{server: server.Server}</span>
+
+        // Add error responses
+        <span class="cov5" title="4">for path, statusCode := range cfg.errorPaths </span><span class="cov1" title="1">{
+                server.AddHandler("GET", path, func() (int, string) </span><span class="cov0" title="0">{
+                        return statusCode, ""
+                }</span>)
+        }
+
+        // Add custom responses
+        <span class="cov5" title="4">for path, config := range cfg.customResponses </span><span class="cov4" title="3">{
+                method := config.Method
+                if method == "" </span><span class="cov0" title="0">{
+                        method = "GET"
+                }</span>
+                <span class="cov4" title="3">server.AddHandler(method, path, func() (int, string) </span><span class="cov0" title="0">{
+                        return config.StatusCode, config.Body
+                }</span>)
+        }
+
+        <span class="cov5" title="4">return &amp;mockServerImpl{server: server.Server}</span>
 }
 </pre>
 		
@@ -2068,7 +2139,7 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
         }</span>
 
         // Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.APTagsPath, "ap-tag", normalizedMAC)
+        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
         return core.Get[model.ApCfgApTag](ctx, s.Client(), url)</span>
 }
 
@@ -2082,9 +2153,8 @@ func (s Service) GetTagSourcePriorityConfigByPriority(
         ctx context.Context,
         priority int,
 ) (*model.ApCfgTagSourcePriorityConfigs, error) <span class="cov1" title="1">{
-        url := s.Client().RestconfBuilder().BuildPathQueryURL(
-                routes.APTagSourcePriorityConfigsPath,
-                "tag-source-priority-config",
+        url := s.Client().RestconfBuilder().BuildQueryURL(
+                routes.APTagSourcePriorityConfigQueryPath,
                 strconv.Itoa(priority),
         )
         return core.Get[model.ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
@@ -2112,7 +2182,7 @@ func (s Service) ListAPHistoryByEthernetMAC(
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.APGlobalOperPath, "ap-history", ethernetMAC)
+        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
         return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), url)</span>
 }
 
@@ -2148,9 +2218,8 @@ func (s Service) GetWLANClientStatsByWLANID(
         if wlanID &lt;= 0 </span><span class="cov3" title="2">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildPathQueryURL(
-                routes.APGlobalOperPath,
-                "wlan-client-stats",
+        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(
+                routes.APWlanClientStatsQueryPath,
                 strconv.Itoa(wlanID),
         )
         return core.Get[model.ApGlobalOperWlanClientStats](ctx, s.Client(), url)</span>
@@ -2300,6 +2369,11 @@ func (s Service) ListSensorStatus(ctx context.Context) (*model.ApOperApSensorSta
 // ListCAPWAPPackets retrieves only CAPWAP packets data using fields parameter.
 func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCapwapPkts, error) <span class="cov1" title="1">{
         return core.Get[model.ApOperCapwapPkts](ctx, s.Client(), routes.APCapwapPktsPath)
+}</span>
+
+// ListIotFirmware retrieves IoT firmware information for all access points.
+func (s Service) ListIotFirmware(ctx context.Context) (*model.ApOperIotFirmware, error) <span class="cov1" title="1">{
+        return core.Get[model.ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
 }</span>
 
 // EnableAP enables the administrative state of an access point.
@@ -3644,7 +3718,7 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RfT
                 return nil, err
         }</span>
 
-        <span class="cov7" title="9">result, err := core.Get[model.RfTagResponse](ctx, s.Client(), s.buildTagURL(tagName))
+        <span class="cov7" title="9">result, err := core.Get[model.RfCfgRfTag](ctx, s.Client(), s.buildTagURL(tagName))
         if err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
@@ -3658,7 +3732,7 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RfT
 
 // ListRFTags retrieves all RF tag configurations.
 func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RfTag, error) <span class="cov5" title="5">{
-        result, err := core.Get[model.RfTagsResponse](ctx, s.Client(), routes.RFTagsPath)
+        result, err := core.Get[model.RfCfgRfTags](ctx, s.Client(), routes.RFTagsPath)
         if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
@@ -3848,7 +3922,7 @@ func (s Service) GetGlobalDetailByMAC(
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.RFIDGlobalOperPath, "rfid-data-detail", macAddr)
+        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
         return core.Get[model.RfidEmltdData](ctx, s.Client(), url)</span>
 }
 
@@ -3885,7 +3959,7 @@ func (s Service) GetDetailByMAC(ctx context.Context, macAddr string) (*model.Rfi
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildPathQueryURL(routes.RFIDOperPath, "rfid-data", macAddr)
+        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
         return core.Get[model.RfidData](ctx, s.Client(), url)</span>
 }
 </pre>
@@ -3947,8 +4021,8 @@ func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*model.Ro
 }
 
 // GetStats retrieves rogue statistics.
-func (s Service) GetStats(ctx context.Context) (*model.RogueStats, error) <span class="cov7" title="4">{
-        return core.Get[model.RogueStats](ctx, s.Client(), routes.RogueStatsPath)
+func (s Service) GetStats(ctx context.Context) (*model.RogueStatsData, error) <span class="cov7" title="4">{
+        return core.Get[model.RogueStatsData](ctx, s.Client(), routes.RogueStatsPath)
 }</span>
 
 // Alias methods for integration test compatibility
@@ -3964,12 +4038,12 @@ func (s Service) GetOperData(ctx context.Context) (*model.RogueData, error) <spa
 }</span>
 
 // GetOperStats is an alias for GetStats.
-func (s Service) GetOperStats(ctx context.Context) (*model.RogueStats, error) <span class="cov1" title="1">{
+func (s Service) GetOperStats(ctx context.Context) (*model.RogueStatsData, error) <span class="cov1" title="1">{
         return s.GetStats(ctx)
 }</span>
 
 // GetRLDPStats retrieves RLDP (Rogue Location Discovery Protocol) statistics.
-func (s Service) GetRLDPStats(ctx context.Context) (*model.RogueStats, error) <span class="cov1" title="1">{
+func (s Service) GetRLDPStats(ctx context.Context) (*model.RogueStatsData, error) <span class="cov1" title="1">{
         // For now, return the same as rogue stats since RLDP is part of rogue detection
         return s.GetStats(ctx)
 }</span>
@@ -4064,8 +4138,8 @@ func (s Service) ListAPProfileConfigs(ctx context.Context) (*model.SiteCfgApCfgP
 }</span>
 
 // ListSiteTagConfigs retrieves all site tag configurations from the site configuration.
-func (s Service) ListSiteTagConfigs(ctx context.Context) (*model.SiteCfgSiteListEntrys, error) <span class="cov3" title="2">{
-        return core.Get[model.SiteCfgSiteListEntrys](ctx, s.Client(), routes.SiteTagConfigsPath)
+func (s Service) ListSiteTagConfigs(ctx context.Context) (*model.SiteCfgSiteTagConfigs, error) <span class="cov3" title="2">{
+        return core.Get[model.SiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath)
 }</span>
 </pre>
 		
@@ -4101,7 +4175,7 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model
                 return nil, err
         }</span>
 
-        <span class="cov8" title="21">result, err := core.Get[model.SiteCfgSiteListEntry](ctx, s.Client(), s.buildTagURL(tagName))
+        <span class="cov8" title="21">result, err := core.Get[model.SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
         if err != nil </span><span class="cov5" title="5">{
                 return nil, err
         }</span>
@@ -4112,14 +4186,13 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model
                 return nil, nil
         }</span>
 
-        // Return the first element directly - no conversion needed
         <span class="cov7" title="11">return &amp;result.SiteListEntry[0], nil</span>
 }
 
 // ListSiteTags retrieves all site tag configurations.
 func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntry, error) <span class="cov5" title="6">{
         type siteTagsResponse struct {
-                SiteListEntrys model.SiteListEntrys `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
+                SiteTagConfigs model.SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
         }
 
         result, err := core.Get[siteTagsResponse](ctx, s.Client(), routes.SiteTagConfigsPath)
@@ -4129,11 +4202,11 @@ func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntr
         <span class="cov5" title="5">if result == nil </span><span class="cov0" title="0">{
                 return []model.SiteListEntry{}, nil
         }</span>
-        <span class="cov5" title="5">if len(result.SiteListEntrys.SiteListEntry) == 0 </span><span class="cov3" title="3">{
+        <span class="cov5" title="5">if len(result.SiteTagConfigs.SiteTagConfig) == 0 </span><span class="cov3" title="3">{
                 return []model.SiteListEntry{}, nil
         }</span>
 
-        <span class="cov2" title="2">return result.SiteListEntrys.SiteListEntry, nil</span>
+        <span class="cov2" title="2">return result.SiteTagConfigs.SiteTagConfig, nil</span>
 }
 
 // CreateSiteTag creates a new site tag configuration.
@@ -4265,12 +4338,12 @@ func (s *SiteTagService) validateTagName(tagName string) error <span class="cov1
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *SiteTagService) buildTagURL(tagName string) string <span class="cov9" title="30">{
-        return s.Client().RestconfBuilder().BuildPathQueryURL(routes.SiteTagConfigsPath, "site-tag-config", tagName)
+        return s.Client().RestconfBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
 }</span>
 
 // buildPayload builds a payload for tag operations using the request model.
-func (s *SiteTagService) buildPayload(config model.SiteListEntry) model.SiteListEntrysPayload <span class="cov6" title="10">{
-        return model.SiteListEntrysPayload{
+func (s *SiteTagService) buildPayload(config model.SiteListEntry) model.SiteTagConfigsPayload <span class="cov6" title="10">{
+        return model.SiteTagConfigsPayload{
                 SiteListEntry: config,
         }
 }</span>
@@ -4293,45 +4366,22 @@ type Service struct {
 }
 
 // NewService creates a new Spaces service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="18">{
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func NewService(client *core.Client) Service <span class="cov10" title="4">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetOperational retrieves all Cisco Spaces operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetOperational(ctx context.Context) (*model.CiscoSpacesOper, error) <span class="cov6" title="6">{
+func (s Service) GetOperational(ctx context.Context) (*model.CiscoSpacesOper, error) <span class="cov5" title="2">{
         return core.Get[model.CiscoSpacesOper](ctx, s.Client(), routes.SpacesOperPath)
 }</span>
 
 // GetConnectionDetails retrieves detailed connection information for Cisco Spaces integration.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConnectionDetails(ctx context.Context) (*model.SpacesConnectionDetail, error) <span class="cov8" title="10">{
+func (s Service) GetConnectionDetails(ctx context.Context) (*model.SpacesConnectionDetail, error) <span class="cov5" title="2">{
         return core.Get[model.SpacesConnectionDetail](ctx, s.Client(), routes.SpacesConnectionDetailPath)
 }</span>
-
-// GetTenantInfo retrieves tenant information for Cisco Spaces multi-tenant environments.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetTenantInfo(ctx context.Context) (*model.SpacesTenant, error) <span class="cov5" title="4">{
-        // Get connection details first, then extract tenant info
-        connDetails, err := s.GetConnectionDetails(ctx)
-        if err != nil </span><span class="cov4" title="3">{
-                return nil, err
-        }</span>
-
-        <span class="cov1" title="1">return connDetails.Tenant, nil</span>
-}
-
-// GetConnectionStats retrieves statistics and performance metrics for Cisco Spaces integration.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConnectionStats(ctx context.Context) (*model.SpacesConnectionStats, error) <span class="cov5" title="4">{
-        // Get connection details first, then extract stats
-        connDetails, err := s.GetConnectionDetails(ctx)
-        if err != nil </span><span class="cov4" title="3">{
-                return nil, err
-        }</span>
-
-        <span class="cov1" title="1">return connDetails.Stats, nil</span>
-}
 </pre>
 		
 		<pre class="file" id="file45" style="display: none">package urwb
@@ -4340,7 +4390,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        "github.com/umatare5/cisco-ios-xe-wireless-go/internal/errors"
         model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/urwb"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
@@ -4352,166 +4401,22 @@ type Service struct {
 }
 
 // NewService creates a new URWB service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="43">{
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
-// GetConfig retrieves the complete URWB configuration from the controller
+// GetConfig retrieves the complete URWB configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.UrwbProfiles, error) <span class="cov4" title="5">{
-        result, err := core.Get[model.UrwbCfgData](ctx, s.Client(), routes.URWBCfgPath)
-        if err != nil </span><span class="cov2" title="2">{
-                return nil, err
-        }</span>
-        <span class="cov3" title="3">return result.UrwbProfiles, nil</span>
-}
-
-// SetConfig configures the complete URWB configuration on the controller
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) SetConfig(ctx context.Context, profiles *model.UrwbProfiles) error <span class="cov5" title="8">{
-        config := &amp;model.UrwbCfgData{UrwbProfiles: profiles}
-        return core.PutVoid(ctx, s.Client(), routes.URWBCfgPath, config)
+func (s Service) GetConfig(ctx context.Context) (*model.UrwbCfg, error) <span class="cov4" title="2">{
+        return core.Get[model.UrwbCfg](ctx, s.Client(), routes.URWBCfgPath)
 }</span>
 
-// ListProfiles retrieves all URWB profiles
+// GetURWBNetOperational retrieves URWB network operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) ListProfiles(ctx context.Context) ([]model.UrwbProfile, error) <span class="cov8" title="25">{
-        result, err := core.Get[model.UrwbCfgData](ctx, s.Client(), routes.URWBCfgPath)
-        if err != nil </span><span class="cov5" title="6">{
-                return nil, err
-        }</span>
-        <span class="cov8" title="19">if result.UrwbProfiles == nil </span><span class="cov6" title="12">{
-                return nil, nil
-        }</span>
-        <span class="cov5" title="7">return result.UrwbProfiles.UrwbProfile, nil</span>
-}
-
-// GetProfile retrieves a specific URWB profile by name
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetProfile(ctx context.Context, profileName string) (*model.UrwbProfile, error) <span class="cov5" title="7">{
-        if profileName == "" </span><span class="cov1" title="1">{
-                return nil, errors.RequiredParameterError("profileName")
-        }</span>
-
-        // Get all profiles and search for the specific one (no XPath filtering)
-        <span class="cov5" title="6">profiles, err := s.ListProfiles(ctx)
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, err
-        }</span>
-
-        <span class="cov5" title="6">for _, profile := range profiles </span><span class="cov2" title="2">{
-                if profile.ProfileName == profileName </span><span class="cov2" title="2">{
-                        return &amp;profile, nil
-                }</span>
-        }
-        <span class="cov4" title="4">return nil, errors.NotFoundError("URWB profile", profileName)</span>
-}
-
-// UpsertProfile configures a URWB profile
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) UpsertProfile(ctx context.Context, profile *model.UrwbProfile) error <span class="cov5" title="8">{
-        if profile.ProfileName == "" </span><span class="cov1" title="1">{
-                return errors.RequiredParameterError("ProfileName")
-        }</span>
-
-        // Get current configuration
-        <span class="cov5" title="7">currentProfiles, err := s.ListProfiles(ctx)
-        if err != nil </span><span class="cov2" title="2">{
-                return err
-        }</span>
-
-        // Update or add the profile
-        <span class="cov4" title="5">updated := false
-        for i, currentProfile := range currentProfiles </span><span class="cov0" title="0">{
-                if currentProfile.ProfileName == profile.ProfileName </span><span class="cov0" title="0">{
-                        currentProfiles[i] = *profile
-                        updated = true
-                        break</span>
-                }
-        }
-
-        <span class="cov4" title="5">if !updated </span><span class="cov4" title="5">{
-                // Add new profile
-                currentProfiles = append(currentProfiles, *profile)
-        }</span>
-
-        // Set the complete configuration
-        <span class="cov4" title="5">profilesContainer := &amp;model.UrwbProfiles{
-                UrwbProfile: currentProfiles,
-        }
-        return s.SetConfig(ctx, profilesContainer)</span>
-}
-
-// DeleteProfile removes a URWB profile
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) DeleteProfile(ctx context.Context, profileName string) error <span class="cov6" title="9">{
-        if profileName == "" </span><span class="cov1" title="1">{
-                return errors.RequiredParameterError("profileName")
-        }</span>
-
-        // Get current configuration
-        <span class="cov5" title="8">currentProfiles, err := s.ListProfiles(ctx)
-        if err != nil </span><span class="cov3" title="3">{
-                return err
-        }</span>
-
-        // Find and remove the profile
-        <span class="cov4" title="5">newProfiles := make([]model.UrwbProfile, 0, len(currentProfiles))
-        found := false
-        for _, currentProfile := range currentProfiles </span><span class="cov1" title="1">{
-                if currentProfile.ProfileName != profileName </span><span class="cov0" title="0">{
-                        newProfiles = append(newProfiles, currentProfile)
-                }</span> else<span class="cov1" title="1"> {
-                        found = true
-                }</span>
-        }
-
-        <span class="cov4" title="5">if !found </span><span class="cov4" title="4">{
-                return errors.NotFoundError("URWB profile", profileName)
-        }</span>
-
-        // Set the updated configuration
-        <span class="cov1" title="1">profilesContainer := &amp;model.UrwbProfiles{
-                UrwbProfile: newProfiles,
-        }
-        return s.SetConfig(ctx, profilesContainer)</span>
-}
-
-// GetOperational retrieves the complete URWB operational data from the controller
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetOperational(ctx context.Context) (*model.UrwbnetOperData, error) <span class="cov4" title="5">{
-        result, err := core.Get[model.UrwbnetOper](ctx, s.Client(), routes.URWBOperPath)
-        if err != nil </span><span class="cov1" title="1">{
-                return nil, err
-        }</span>
-        <span class="cov4" title="4">return result.UrwbnetOperData, nil</span>
-}
-
-// ListStats retrieves URWB network statistics for all coordinators
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) ListStats(ctx context.Context) ([]model.UrwbnetStats, error) <span class="cov4" title="4">{
-        result, err := core.Get[model.UrwbnetOper](ctx, s.Client(), routes.URWBOperPath)
-        if err != nil </span><span class="cov1" title="1">{
-                return nil, err
-        }</span>
-        <span class="cov3" title="3">if result.UrwbnetOperData == nil </span><span class="cov2" title="2">{
-                return nil, nil
-        }</span>
-        <span class="cov1" title="1">return result.UrwbnetOperData.UrwbnetStats, nil</span>
-}
-
-// ListNodeGroups retrieves URWB node group information
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) ListNodeGroups(ctx context.Context) ([]model.UrwbnetNodeG, error) <span class="cov4" title="4">{
-        result, err := core.Get[model.UrwbnetOper](ctx, s.Client(), routes.URWBOperPath)
-        if err != nil </span><span class="cov1" title="1">{
-                return nil, err
-        }</span>
-        <span class="cov3" title="3">if result.UrwbnetOperData == nil </span><span class="cov2" title="2">{
-                return nil, nil
-        }</span>
-        <span class="cov1" title="1">return result.UrwbnetOperData.UrwbnetNodeG, nil</span>
-}
+func (s Service) GetURWBNetOperational(ctx context.Context) (*model.UrwbnetOper, error) <span class="cov1" title="1">{
+        return core.Get[model.UrwbnetOper](ctx, s.Client(), routes.URWBNetOperPath)
+}</span>
 </pre>
 		
 		<pre class="file" id="file46" style="display: none">package wat
@@ -4520,7 +4425,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        "github.com/umatare5/cisco-ios-xe-wireless-go/internal/errors"
         model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wat"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
@@ -4532,111 +4436,15 @@ type Service struct {
 }
 
 // NewService creates a new WAT service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="23">{
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves the complete WAT configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.WatConfig, error) <span class="cov6" title="8">{
-        cfgData, err := core.Get[model.WatCfg](ctx, s.Client(), routes.WATCfgPath)
-        if err != nil </span><span class="cov4" title="4">{
-                return nil, err
-        }</span>
-        <span class="cov4" title="4">if cfgData == nil || cfgData.WatCfgData == nil || cfgData.WatCfgData.WatConfig == nil </span><span class="cov4" title="3">{
-                return &amp;model.WatConfig{}, nil
-        }</span>
-        <span class="cov1" title="1">return cfgData.WatCfgData.WatConfig, nil</span>
-}
-
-// SetWatConfig configures the complete WAT configuration on the controller.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) SetWatConfig(ctx context.Context, config *model.WatConfig) error <span class="cov4" title="3">{
-        return core.PutVoid(ctx, s.Client(), routes.WATCfgPath, config)
-}</span>
-
-// GetThousandeyesConfig retrieves the ThousandEyes integration configuration.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetThousandeyesConfig(ctx context.Context) (*model.WatConfig, error) <span class="cov5" title="5">{
-        return core.Get[model.WatConfig](ctx, s.Client(), routes.WATThousandeyesPath)
-}</span>
-
-// SetThousandeyesConfig configures the ThousandEyes integration parameters.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) SetThousandeyesConfig(ctx context.Context, config *model.WatConfig) error <span class="cov2" title="2">{
-        return core.PutVoid(ctx, s.Client(), routes.WATThousandeyesPath, config)
-}</span>
-
-// GetTestProfile retrieves a specific WAT test profile by name.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetTestProfile(ctx context.Context, profileName string) (*model.WatTestProfile, error) <span class="cov4" title="3">{
-        path := s.Client().RestconfBuilder().BuildQueryURL(routes.WATTestProfilePath, profileName)
-        return core.Get[model.WatTestProfile](ctx, s.Client(), path)
-}</span>
-
-// CreateTestProfile creates a new WAT test profile.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) CreateTestProfile(ctx context.Context, profile *model.WatTestProfile) error <span class="cov4" title="4">{
-        if profile.ProfileName == "" </span><span class="cov1" title="1">{
-                return errors.RequiredParameterError("ProfileName")
-        }</span>
-        <span class="cov4" title="3">path := s.Client().RestconfBuilder().BuildQueryURL(routes.WATTestProfilePath, profile.ProfileName)
-        return core.PutVoid(ctx, s.Client(), path, profile)</span>
-}
-
-// DeleteTestProfile removes a WAT test profile by name.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) DeleteTestProfile(ctx context.Context, profileName string) error <span class="cov2" title="2">{
-        path := s.Client().RestconfBuilder().BuildQueryURL(routes.WATTestProfilePath, profileName)
-        return core.Delete(ctx, s.Client(), path)
-}</span>
-
-// GetSchedule retrieves a specific WAT schedule by name.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetSchedule(ctx context.Context, scheduleName string) (*model.WatSchedule, error) <span class="cov2" title="2">{
-        path := s.Client().RestconfBuilder().BuildPathQueryURL(routes.WATCfgPath, "schedule", scheduleName)
-        return core.Get[model.WatSchedule](ctx, s.Client(), path)
-}</span>
-
-// CreateSchedule creates a new WAT schedule.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) CreateSchedule(ctx context.Context, schedule *model.WatSchedule) error <span class="cov4" title="4">{
-        if schedule.ScheduleName == "" </span><span class="cov1" title="1">{
-                return errors.RequiredParameterError("ScheduleName")
-        }</span>
-        <span class="cov4" title="3">path := s.Client().RestconfBuilder().BuildPathQueryURL(routes.WATCfgPath, "schedule", schedule.ScheduleName)
-        return core.PutVoid(ctx, s.Client(), path, schedule)</span>
-}
-
-// DeleteSchedule removes a WAT schedule by name.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) DeleteSchedule(ctx context.Context, scheduleName string) error <span class="cov2" title="2">{
-        path := s.Client().RestconfBuilder().BuildPathQueryURL(routes.WATCfgPath, "schedule", scheduleName)
-        return core.Delete(ctx, s.Client(), path)
-}</span>
-
-// GetReportTemplate retrieves a specific WAT report template by name.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetReportTemplate(ctx context.Context, reportName string) (*model.WatReport, error) <span class="cov2" title="2">{
-        path := s.Client().RestconfBuilder().BuildPathQueryURL(routes.WATCfgPath, "report", reportName)
-        return core.Get[model.WatReport](ctx, s.Client(), path)
-}</span>
-
-// CreateReportTemplate creates a new WAT report template.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) CreateReportTemplate(ctx context.Context, report *model.WatReport) error <span class="cov4" title="4">{
-        if report.ReportName == "" </span><span class="cov1" title="1">{
-                return errors.RequiredParameterError("ReportName")
-        }</span>
-        <span class="cov4" title="3">path := s.Client().RestconfBuilder().BuildPathQueryURL(routes.WATCfgPath, "report", report.ReportName)
-        return core.PutVoid(ctx, s.Client(), path, report)</span>
-}
-
-// DeleteReportTemplate removes a WAT report template by name.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) DeleteReportTemplate(ctx context.Context, reportName string) error <span class="cov2" title="2">{
-        path := s.Client().RestconfBuilder().BuildPathQueryURL(routes.WATCfgPath, "report", reportName)
-        return core.Delete(ctx, s.Client(), path)
+func (s Service) GetConfig(ctx context.Context) (*model.WatCfg, error) <span class="cov7" title="3">{
+        return core.Get[model.WatCfg](ctx, s.Client(), routes.WATCfgPath)
 }</span>
 </pre>
 		
@@ -4894,9 +4702,8 @@ func (s *PolicyTagService) validateTagName(tagName string) error <span class="co
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *PolicyTagService) buildTagURL(tagName string) string <span class="cov6" title="7">{
-        return s.Client().RestconfBuilder().BuildPathQueryURL(
-                routes.WLANPolicyListEntriesPath,
-                "policy-list-entry",
+        return s.Client().RestconfBuilder().BuildQueryURL(
+                routes.WLANPolicyListEntryQueryPath,
                 tagName,
         )
 }</span>
