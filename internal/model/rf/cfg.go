@@ -1,190 +1,176 @@
-// Package rf provides data models for RF configuration data.
 package rf
 
 // RfCfg represents RF configuration data response structure.
 type RfCfg struct {
-	RfCfgData RfCfgData `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"`
+	RfCfgData struct {
+		MultiBssidProfiles      *MultiBssidProfiles      `json:"multi-bssid-profiles,omitempty"`       // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.5)
+		AtfPolicies             *AtfPolicies             `json:"atf-policies,omitempty"`               // Air Time Fairness policy configurations (Live: IOS-XE 17.12.5)
+		RfTags                  *RfTags                  `json:"rf-tags,omitempty"`                    // RF tag configuration data (Live: IOS-XE 17.12.5)
+		RfProfiles              *RfProfiles              `json:"rf-profiles,omitempty"`                // RF profile configuration data (Live: IOS-XE 17.12.5)
+		RfProfileDefaultEntries *RfProfileDefaultEntries `json:"rf-profile-default-entries,omitempty"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
+	} `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"` // RF configuration data (Live: IOS-XE 17.12.5)
 }
 
-// RfTagsPayload represents RF tag configuration request structure.
-type RfTagsPayload struct {
-	RfTag RfTag `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tag"`
-}
-
-// RfTagsResponse represents RF tags list response structure.
-type RfTagsResponse struct {
+// RfCfgRfTags represents RF tags list response structure.
+type RfCfgRfTags struct {
 	RfTags RfTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
 }
 
-// RfTagResponse represents individual RF tag response structure.
-type RfTagResponse struct {
+// RfCfgRfTag represents individual RF tag response structure.
+type RfCfgRfTag struct {
 	RfTagList []RfTag `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tag"`
-}
-
-// RfCfgData represents complete RF configuration data container.
-type RfCfgData struct {
-	MultiBssidProfiles      *MultiBssidProfiles      `json:"multi-bssid-profiles,omitempty"`       // Multi-BSSID profiles configuration
-	AtfPolicies             *AtfPolicies             `json:"atf-policies,omitempty"`               // Airtime Fairness policies configuration
-	RfTags                  *RfTags                  `json:"rf-tags,omitempty"`                    // RF tag configurations
-	RfProfiles              *RfProfiles              `json:"rf-profiles,omitempty"`                // RF profile configurations
-	RfProfileDefaultEntries *RfProfileDefaultEntries `json:"rf-profile-default-entries,omitempty"` // RF profile default entries
 }
 
 // MultiBssidProfiles represents Multi-BSSID profiles collection.
 type MultiBssidProfiles struct {
-	MultiBssidProfileList []MultiBssidProfile `json:"multi-bssid-profile"`
-}
-
-// MultiBssidProfile represents Multi-BSSID profile configuration.
-type MultiBssidProfile struct {
-	ProfileName string `json:"profile-name"`          // Multi-BSSID profile name identifier
-	Description string `json:"description,omitempty"` // Multi-BSSID profile description
+	MultiBssidProfileList []MultiBssidProfile `json:"multi-bssid-profile"` // Multi BSSID profile list (Live: IOS-XE 17.12.5)
 }
 
 // AtfPolicies represents ATF policies collection.
 type AtfPolicies struct {
-	AtfPolicyList []AtfPolicyDetail `json:"atf-policy"`
-}
-
-// AtfPolicy represents ATF policy structure container.
-type AtfPolicy struct {
-	AtfPolicyList []AtfPolicyDetail `json:"atf-policy"`
-}
-
-// AtfPolicyDetail represents ATF policy configuration details.
-type AtfPolicyDetail struct {
-	PolicyID      int    `json:"policy-id"`                // ATF policy identifier
-	AtfPolicyName string `json:"atfpolicy-name"`           // ATF policy name
-	PolicyWeight  int    `json:"policy-weight,omitempty"`  // ATF policy weight percentage
-	ClientSharing bool   `json:"client-sharing,omitempty"` // ATF client sharing enable flag
+	AtfPolicyList []AtfPolicyDetail `json:"atf-policy"` // Air Time Fairness policy list (Live: IOS-XE 17.12.5)
 }
 
 // RfTags represents RF tags collection.
 type RfTags struct {
-	RfTagList []RfTag `json:"rf-tag"`
-}
-
-// RfTag represents RF tag configuration.
-type RfTag struct {
-	TagName             string              `json:"tag-name"`                          // RF tag name identifier
-	Description         string              `json:"description,omitempty"`             // RF tag description
-	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name
-	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name
-	Dot116GhzRfProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name
-	RfTagRadioProfiles  *RfTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles configuration
-}
-
-// RfTagRadioProfiles represents RF tag radio profiles collection.
-type RfTagRadioProfiles struct {
-	RfTagRadioProfile []RfTagRadioProfile `json:"rf-tag-radio-profile"`
-}
-
-// RfTagRadioProfile represents RF tag radio profile configuration.
-type RfTagRadioProfile struct {
-	SlotID string `json:"slot-id"` // Radio slot identifier
-	BandID string `json:"band-id"` // Radio band identifier
+	RfTagList []RfTag `json:"rf-tag"` // RF tag configuration list (Live: IOS-XE 17.12.5)
 }
 
 // RfProfiles represents RF profiles collection.
 type RfProfiles struct {
-	RfProfileList []RfProfileDetail `json:"rf-profile"`
-}
-
-// RfProfile represents RF profile structure container.
-type RfProfile struct {
-	RfProfileList []RfProfileDetail `json:"rf-profile"`
-}
-
-// RfProfileDetail represents RF profile configuration details.
-type RfProfileDetail struct {
-	Name                             string                `json:"name"`                                           // RF profile name identifier
-	Description                      string                `json:"description,omitempty"`                          // RF profile description
-	TxPowerMin                       int                   `json:"tx-power-min,omitempty"`                         // Minimum transmit power in dBm
-	TxPowerMax                       int                   `json:"tx-power-max,omitempty"`                         // Maximum transmit power in dBm
-	TxPowerV1Threshold               int                   `json:"tx-power-v1-threshold,omitempty"`                // Transmit power version 1 threshold
-	TxPowerV2Threshold               int                   `json:"tx-power-v2-threshold,omitempty"`                // Transmit power version 2 threshold
-	Status                           bool                  `json:"status,omitempty"`                               // RF profile enable status
-	Band                             string                `json:"band,omitempty"`                                 // Radio frequency band
-	DataRate1M                       string                `json:"data-rate-1m,omitempty"`                         // 1 Mbps data rate setting
-	DataRate2M                       string                `json:"data-rate-2m,omitempty"`                         // 2 Mbps data rate setting
-	DataRate5_5M                     string                `json:"data-rate-5-5m,omitempty"`                       // 5.5 Mbps data rate setting
-	DataRate11M                      string                `json:"data-rate-11m,omitempty"`                        // 11 Mbps data rate setting
-	DataRate6M                       string                `json:"data-rate-6m,omitempty"`                         // 6 Mbps data rate setting
-	DataRate9M                       string                `json:"data-rate-9m,omitempty"`                         // 9 Mbps data rate setting
-	DataRate12M                      string                `json:"data-rate-12m,omitempty"`                        // 12 Mbps data rate setting
-	DataRate18M                      string                `json:"data-rate-18m,omitempty"`                        // 18 Mbps data rate setting
-	DataRate24M                      string                `json:"data-rate-24m,omitempty"`                        // 24 Mbps data rate setting
-	DataRate36M                      string                `json:"data-rate-36m,omitempty"`                        // 36 Mbps data rate setting
-	DataRate48M                      string                `json:"data-rate-48m,omitempty"`                        // 48 Mbps data rate setting
-	CoverageDataPacketRssiThreshold  int                   `json:"coverage-data-packet-rssi-threshold,omitempty"`  // Coverage data packet RSSI threshold in dBm
-	CoverageVoicePacketRssiThreshold int                   `json:"coverage-voice-packet-rssi-threshold,omitempty"` // Coverage voice packet RSSI threshold in dBm
-	LoadBalancingWindow              int                   `json:"load-balancing-window,omitempty"`                // Load balancing window in seconds
-	LoadBalancingDenialCount         int                   `json:"load-balancing-denial-count,omitempty"`          // Load balancing denial count threshold
-	AtfOperMode                      string                `json:"atf-oper-mode,omitempty"`                        // Airtime Fairness operation mode
-	AtfOptimization                  string                `json:"atf-optimization,omitempty"`                     // Airtime Fairness optimization setting
-	RfMcsEntries                     *RfMcsEntries         `json:"rf-mcs-entries,omitempty"`                       // RF MCS entries configuration
-	RfdcaRemovedChannels             *RfdcaRemovedChannels `json:"rfdca-removed-channels,omitempty"`               // RF DCA removed channels configuration
-	ChannelWidthMax                  string                `json:"channel-width-max,omitempty"`                    // Maximum channel width setting
-	MinNumClients                    int                   `json:"min-num-clients,omitempty"`                      // Minimum number of clients threshold
-	RxSenSopThreshold                string                `json:"rx-sen-sop-threshold,omitempty"`                 // Receive sensitivity SOP threshold
-	BandSelectProbeResponse          bool                  `json:"band-select-probe-response,omitempty"`           // Band select probe response enable flag
-}
-
-// RfMcsEntries represents RF MCS entries collection.
-type RfMcsEntries struct {
-	RfMcsEntry []RfMcsEntry `json:"rf-mcs-entry"`
-}
-
-// RfMcsEntry represents RF MCS entry configuration.
-type RfMcsEntry struct {
-	RfIndex           int   `json:"rf-index"`                       // RF MCS index identifier
-	Rf80211NMcsEnable *bool `json:"rf-80211n-mcs-enable,omitempty"` // 802.11n MCS enable flag
-}
-
-// RfdcaRemovedChannels represents DCA removed channels collection.
-type RfdcaRemovedChannels struct {
-	RfdcaRemovedChannel []RfdcaRemovedChannel `json:"rfdca-removed-channel"`
-}
-
-// RfdcaRemovedChannel represents DCA removed channel configuration.
-type RfdcaRemovedChannel struct {
-	Channel int `json:"channel"` // Channel number to remove from DCA
+	RfProfileList []RfProfileDetail `json:"rf-profile"` // Radio-Frequency profile list (Live: IOS-XE 17.12.5)
 }
 
 // RfProfileDefaultEntries represents RF profile default entries collection.
 type RfProfileDefaultEntries struct {
-	RfProfileDefaultEntryList []RfProfileDefaultEntry `json:"rf-profile-default-entry"`
+	RfProfileDefaultEntryList []RfProfileDefaultEntry `json:"rf-profile-default-entry"` // Default RF profile entry list (Live: IOS-XE 17.12.5)
+}
+
+// MultiBssidProfile represents Multi-BSSID profile configuration.
+type MultiBssidProfile struct {
+	ProfileName string `json:"profile-name"`          // 802.11ax Multi BSSID profile name (Live: IOS-XE 17.12.5)
+	Description string `json:"description,omitempty"` // Brief Multi BSSID profile description (Live: IOS-XE 17.12.5)
+}
+
+// AtfPolicy represents ATF policy structure container.
+type AtfPolicy struct {
+	AtfPolicyList []AtfPolicyDetail `json:"atf-policy"` // Air Time Fairness policy objects list (Live: IOS-XE 17.12.5)
+}
+
+// AtfPolicyDetail represents ATF policy configuration details.
+type AtfPolicyDetail struct {
+	PolicyID      int    `json:"policy-id"`                // Unique ATF policy identifier (Live: IOS-XE 17.12.5)
+	AtfPolicyName string `json:"atfpolicy-name"`           // ATF policy name (Live: IOS-XE 17.12.5)
+	PolicyWeight  int    `json:"policy-weight,omitempty"`  // ATF policy weight percentage (Live: IOS-XE 17.12.5)
+	ClientSharing bool   `json:"client-sharing,omitempty"` // ATF client fair sharing flag (Live: IOS-XE 17.12.5)
+}
+
+// RfTag represents RF tag configuration.
+type RfTag struct {
+	TagName             string              `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.5)
+	Description         string              `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.5)
+	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.5)
+	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.5)
+	Dot116GhzRfProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.5)
+	RfTagRadioProfiles  *RfTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.5)
+}
+
+// RfTagRadioProfiles represents RF tag radio profiles collection.
+type RfTagRadioProfiles struct {
+	RfTagRadioProfile []RfTagRadioProfile `json:"rf-tag-radio-profile"` // Slot specific radio profile list (Live: IOS-XE 17.12.5)
+}
+
+// RfTagRadioProfile represents RF tag radio profile configuration.
+type RfTagRadioProfile struct {
+	SlotID string `json:"slot-id"` // Radio slot identifier (Live: IOS-XE 17.12.5)
+	BandID string `json:"band-id"` // Radio band identifier (Live: IOS-XE 17.12.5)
+}
+
+// RfProfileDetail represents RF profile configuration details.
+type RfProfileDetail struct {
+	Name                             string                `json:"name"`                                           // RF profile name identifier (Live: IOS-XE 17.12.5)
+	Description                      string                `json:"description,omitempty"`                          // RF profile description (YANG: IOS-XE 17.12.1)
+	TxPowerMin                       int                   `json:"tx-power-min,omitempty"`                         // Minimum transmit power in dBm (Live: IOS-XE 17.12.5)
+	TxPowerMax                       int                   `json:"tx-power-max,omitempty"`                         // Maximum transmit power in dBm (YANG: IOS-XE 17.12.1)
+	TxPowerV1Threshold               int                   `json:"tx-power-v1-threshold,omitempty"`                // TPC version 1 threshold in dBm (Live: IOS-XE 17.12.5)
+	TxPowerV2Threshold               int                   `json:"tx-power-v2-threshold,omitempty"`                // TPC version 2 threshold in dBm (YANG: IOS-XE 17.12.1)
+	Status                           bool                  `json:"status,omitempty"`                               // RF profile operational state (Live: IOS-XE 17.12.5)
+	Band                             string                `json:"band,omitempty"`                                 // Radio frequency band type (Live: IOS-XE 17.12.5)
+	DataRate1M                       string                `json:"data-rate-1m,omitempty"`                         // 1 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate2M                       string                `json:"data-rate-2m,omitempty"`                         // 2 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate5_5M                     string                `json:"data-rate-5-5m,omitempty"`                       // 5.5 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate11M                      string                `json:"data-rate-11m,omitempty"`                        // 11 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate6M                       string                `json:"data-rate-6m,omitempty"`                         // 6 Mbps data rate state (Live: IOS-XE 17.12.5)
+	DataRate9M                       string                `json:"data-rate-9m,omitempty"`                         // 9 Mbps data rate state (Live: IOS-XE 17.12.5)
+	DataRate12M                      string                `json:"data-rate-12m,omitempty"`                        // 12 Mbps data rate state (Live: IOS-XE 17.12.5)
+	DataRate18M                      string                `json:"data-rate-18m,omitempty"`                        // 18 Mbps data rate state (Live: IOS-XE 17.12.5)
+	DataRate24M                      string                `json:"data-rate-24m,omitempty"`                        // 24 Mbps data rate state (Live: IOS-XE 17.12.5)
+	DataRate36M                      string                `json:"data-rate-36m,omitempty"`                        // 36 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate48M                      string                `json:"data-rate-48m,omitempty"`                        // 48 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	CoverageDataPacketRssiThreshold  int                   `json:"coverage-data-packet-rssi-threshold,omitempty"`  // Data packet RSSI threshold dBm (YANG: IOS-XE 17.12.1)
+	CoverageVoicePacketRssiThreshold int                   `json:"coverage-voice-packet-rssi-threshold,omitempty"` // Voice packet RSSI threshold dBm (YANG: IOS-XE 17.12.1)
+	LoadBalancingWindow              int                   `json:"load-balancing-window,omitempty"`                // Load balancing window seconds (Live: IOS-XE 17.12.5)
+	LoadBalancingDenialCount         int                   `json:"load-balancing-denial-count,omitempty"`          // Load balancing denial count (Live: IOS-XE 17.12.5)
+	AtfOperMode                      string                `json:"atf-oper-mode,omitempty"`                        // ATF operation mode (YANG: IOS-XE 17.12.1)
+	AtfOptimization                  string                `json:"atf-optimization,omitempty"`                     // ATF optimization policy (YANG: IOS-XE 17.12.1)
+	RfMcsEntries                     *RfMcsEntries         `json:"rf-mcs-entries,omitempty"`                       // RF MCS entries data (YANG: IOS-XE 17.12.1)
+	RfdcaRemovedChannels             *RfdcaRemovedChannels `json:"rfdca-removed-channels,omitempty"`               // RF DCA removed channels data (Live: IOS-XE 17.12.5)
+	ChannelWidthMax                  string                `json:"channel-width-max,omitempty"`                    // Maximum channel width cap (Live: IOS-XE 17.12.5)
+	MinNumClients                    int                   `json:"min-num-clients,omitempty"`                      // Minimum client exception level (YANG: IOS-XE 17.12.1)
+	RxSenSopThreshold                string                `json:"rx-sen-sop-threshold,omitempty"`                 // RX SOP sensitivity threshold (YANG: IOS-XE 17.12.1)
+	BandSelectProbeResponse          bool                  `json:"band-select-probe-response,omitempty"`           // Band select probe response flag (YANG: IOS-XE 17.12.1)
+}
+
+// RfMcsEntries represents RF MCS entries collection.
+type RfMcsEntries struct {
+	RfMcsEntry []RfMcsEntry `json:"rf-mcs-entry"` // RF MCS entry configuration list (YANG: IOS-XE 17.12.1)
+}
+
+// RfMcsEntry represents RF MCS entry configuration.
+type RfMcsEntry struct {
+	RfIndex           int   `json:"rf-index"`                       // RF MCS index identifier (YANG: IOS-XE 17.12.1)
+	Rf80211NMcsEnable *bool `json:"rf-80211n-mcs-enable,omitempty"` // 802.11n MCS enable flag (YANG: IOS-XE 17.12.1)
+}
+
+// RfdcaRemovedChannels represents DCA removed channels collection.
+type RfdcaRemovedChannels struct {
+	RfdcaRemovedChannel []RfdcaRemovedChannel `json:"rfdca-removed-channel"` // DCA removed channel list (Live: IOS-XE 17.12.5)
+}
+
+// RfdcaRemovedChannel represents DCA removed channel configuration.
+type RfdcaRemovedChannel struct {
+	Channel int `json:"channel"` // Channel number to remove from DCA (Live: IOS-XE 17.12.5)
 }
 
 // RfProfileDefaultEntry represents RF profile default entry configuration.
 type RfProfileDefaultEntry struct {
-	Band                     string               `json:"band"`                                  // Radio frequency band
-	Name                     string               `json:"name"`                                  // RF profile default entry name
-	Description              string               `json:"description,omitempty"`                 // RF profile default entry description
-	DataRate1M               string               `json:"data-rate-1m,omitempty"`                // 1 Mbps data rate setting
-	DataRate2M               string               `json:"data-rate-2m,omitempty"`                // 2 Mbps data rate setting
-	DataRate5_5M             string               `json:"data-rate-5-5m,omitempty"`              // 5.5 Mbps data rate setting
-	DataRate11M              string               `json:"data-rate-11m,omitempty"`               // 11 Mbps data rate setting
-	DataRate6M               string               `json:"data-rate-6m,omitempty"`                // 6 Mbps data rate setting
-	DataRate9M               string               `json:"data-rate-9m,omitempty"`                // 9 Mbps data rate setting
-	DataRate12M              string               `json:"data-rate-12m,omitempty"`               // 12 Mbps data rate setting
-	DataRate18M              string               `json:"data-rate-18m,omitempty"`               // 18 Mbps data rate setting
-	DataRate24M              string               `json:"data-rate-24m,omitempty"`               // 24 Mbps data rate setting
-	BandSelectProbeResponse  bool                 `json:"band-select-probe-response,omitempty"`  // Band select probe response enable flag
-	LoadBalancingWindow      int                  `json:"load-balancing-window,omitempty"`       // Load balancing window in seconds
-	LoadBalancingDenialCount int                  `json:"load-balancing-denial-count,omitempty"` // Load balancing denial count threshold
-	AtfOperMode              string               `json:"atf-oper-mode,omitempty"`               // Airtime Fairness operation mode
-	AtfOptimization          string               `json:"atf-optimization,omitempty"`            // Airtime Fairness optimization setting
-	RfMcsDefaultEntries      *RfMcsDefaultEntries `json:"rf-mcs-default-entries,omitempty"`      // RF MCS default entries configuration
+	Band                     string               `json:"band"`                                  // Radio frequency band type (YANG: IOS-XE 17.12.1)
+	Name                     string               `json:"name"`                                  // RF profile default entry name (YANG: IOS-XE 17.12.1)
+	Description              string               `json:"description,omitempty"`                 // RF profile default description (YANG: IOS-XE 17.12.1)
+	DataRate1M               string               `json:"data-rate-1m,omitempty"`                // 1 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate2M               string               `json:"data-rate-2m,omitempty"`                // 2 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate5_5M             string               `json:"data-rate-5-5m,omitempty"`              // 5.5 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate11M              string               `json:"data-rate-11m,omitempty"`               // 11 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate6M               string               `json:"data-rate-6m,omitempty"`                // 6 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate9M               string               `json:"data-rate-9m,omitempty"`                // 9 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate12M              string               `json:"data-rate-12m,omitempty"`               // 12 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate18M              string               `json:"data-rate-18m,omitempty"`               // 18 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	DataRate24M              string               `json:"data-rate-24m,omitempty"`               // 24 Mbps data rate state (YANG: IOS-XE 17.12.1)
+	BandSelectProbeResponse  bool                 `json:"band-select-probe-response,omitempty"`  // Band select probe response flag (YANG: IOS-XE 17.12.1)
+	LoadBalancingWindow      int                  `json:"load-balancing-window,omitempty"`       // Load balancing window seconds (YANG: IOS-XE 17.12.1)
+	LoadBalancingDenialCount int                  `json:"load-balancing-denial-count,omitempty"` // Load balancing denial count (YANG: IOS-XE 17.12.1)
+	AtfOperMode              string               `json:"atf-oper-mode,omitempty"`               // ATF operation mode (YANG: IOS-XE 17.12.1)
+	AtfOptimization          string               `json:"atf-optimization,omitempty"`            // ATF optimization policy (YANG: IOS-XE 17.12.1)
+	RfMcsDefaultEntries      *RfMcsDefaultEntries `json:"rf-mcs-default-entries,omitempty"`      // RF MCS default entries data (YANG: IOS-XE 17.12.1)
 }
 
 // RfMcsDefaultEntries represents RF MCS default entries collection.
 type RfMcsDefaultEntries struct {
-	RfMcsDefaultEntry []RfMcsDefaultEntry `json:"rf-mcs-default-entry"`
+	RfMcsDefaultEntry []RfMcsDefaultEntry `json:"rf-mcs-default-entry"` // RF MCS default entry list (YANG: IOS-XE 17.12.1)
 }
 
 // RfMcsDefaultEntry represents RF MCS default entry configuration.
 type RfMcsDefaultEntry struct {
-	RfIndex     int `json:"rf-index"`      // RF MCS index identifier
-	McsDataRate int `json:"mcs-data-rate"` // MCS data rate value
+	RfIndex     int `json:"rf-index"`      // RF MCS index identifier (YANG: IOS-XE 17.12.1)
+	McsDataRate int `json:"mcs-data-rate"` // MCS data rate value (YANG: IOS-XE 17.12.1)
 }
