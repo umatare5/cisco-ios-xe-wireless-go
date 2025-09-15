@@ -12,7 +12,7 @@ type Config struct {
 	Controller          string
 	AccessToken         string
 	TestAPMac           string
-	TestClientMac       string
+	TestClientMAC       string
 	TestAPWlanBSSID     string
 	TestAPNeighborBSSID string
 }
@@ -24,7 +24,7 @@ func (c *Config) APMac() string {
 
 // ClientMac returns the test client MAC address.
 func (c *Config) ClientMac() string {
-	return c.TestClientMac
+	return c.TestClientMAC
 }
 
 // APWlanBSSID returns the test AP WLAN BSSID.
@@ -43,7 +43,7 @@ func LoadConfig() Config {
 		Controller:          os.Getenv("WNC_CONTROLLER"),
 		AccessToken:         os.Getenv("WNC_ACCESS_TOKEN"),
 		TestAPMac:           os.Getenv("WNC_AP_MAC_ADDR"),
-		TestClientMac:       os.Getenv("WNC_CLIENT_MAC_ADDR"),
+		TestClientMAC:       os.Getenv("WNC_CLIENT_MAC_ADDR"),
 		TestAPWlanBSSID:     os.Getenv("WNC_AP_WLAN_BSSID"),
 		TestAPNeighborBSSID: os.Getenv("WNC_AP_NEIGHBOR_BSSID"),
 	}
