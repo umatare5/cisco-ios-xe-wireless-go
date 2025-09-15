@@ -1,8 +1,8 @@
 package cts
 
-// CtsOper represents the structure for CTS SXP operational data.
-type CtsOper struct {
-	CiscoIOSXEWirelessCtsSxpOperData struct {
+// CTSOper represents the structure for CTS SXP operational data.
+type CTSOper struct {
+	CiscoIOSXEWirelessCTSSxpOperData struct {
 		FlexModeApSxpConnectionStatus []FlexModeApSxpConnectionStatus `json:"flex-mode-ap-sxp-connection-status,omitempty"` // FlexConnect AP SXP connection status list (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data"` // CTS SXP operational data (YANG: IOS-XE 17.12.1)
 }

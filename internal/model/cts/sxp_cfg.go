@@ -1,21 +1,21 @@
 package cts
 
-// CtsCfg represents the CTS SXP configuration data.
-type CtsCfg struct {
-	CiscoIOSXEWirelessCtsSxpCfgData struct {
-		CtsSxpConfiguration struct {
-			CtsSxpConfig []CtsSxpConfig `json:"cts-sxp-config,omitempty"` // CTS SXP configuration list (YANG: IOS-XE 17.12.1)
+// CTSCfg represents the CTS SXP configuration data.
+type CTSCfg struct {
+	CiscoIOSXEWirelessCTSSxpCfgData struct {
+		CTSSxpConfiguration struct {
+			CTSSxpConfig []CTSSxpConfig `json:"cts-sxp-config,omitempty"` // CTS SXP configuration list (YANG: IOS-XE 17.12.1)
 		} `json:"cts-sxp-configuration"` // CTS SXP configuration container (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"` // CTS SXP configuration data (YANG: IOS-XE 17.12.1)
 }
 
-// CtsCfgFilter represents the structure for filtered CTS SXP configuration data.
-type CtsCfgFilter struct {
-	CtsSxpConfig []CtsSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
+// CTSCfgFilter represents the structure for filtered CTS SXP configuration data.
+type CTSCfgFilter struct {
+	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
 }
 
-// CtsSxpConfig represents individual CTS SXP profile configuration.
-type CtsSxpConfig struct {
+// CTSSxpConfig represents individual CTS SXP profile configuration.
+type CTSSxpConfig struct {
 	SxpProfileName          string          `json:"sxp-profile-name"`                    // CTS SXP profile name (Live: IOS-XE 17.12.5)
 	Enable                  *bool           `json:"enable,omitempty"`                    // Enable CTS SXP configuration (YANG: IOS-XE 17.12.1)
 	ListenerMinimumHoldtime *int            `json:"listener-minimum-holdtime,omitempty"` // CTS SXP listener hold time minimum (YANG: IOS-XE 17.12.1)
