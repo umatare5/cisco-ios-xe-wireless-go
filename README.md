@@ -214,7 +214,7 @@ Runnable examples are available:
 <details><summary><u>Click to show example</u></summary><p>
 
 ```bash
-❯ go run -tags sample example/list_aps/main.go
+❯ go run example/list_aps/main.go
 
 Successfully connected! Found 2 APs
 
@@ -226,49 +226,7 @@ TEST-AP02         | aa:bb:ff:dd:ee:b0   | 192.168.255.12   | registered
 
 </p></details>
 
-#### Usecase 2: List WLANs and BSSIDs
-
-[`example/list_wlans/main.go`](./example/list_wlans/main.go) lists WLANs and their BSSIDs.
-
-<details><summary><u>Click to show example</u></summary><p>
-
-```bash
-❯ go run -tags sample example/list_wlans/main.go
-
-Successfully connected! Found 7 WLANs across all APs
-
-AP Name           | AP MAC Address    | Slot | WLAN | BSSID             | SSID
-------------------|-------------------|------|------|-------------------|-------------------------
-TEST-AP01         | aa:bb:ff:dd:ee:a0 |    0 |    1 | aa:bb:ff:dd:ee:a1 | labo-wlan
-TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    2 | aa:bb:ff:dd:ee:ad | labo-psk
-TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    4 | aa:bb:ff:dd:ee:af | labo-tls
-<snip>
-```
-
-</p></details>
-
-#### Usecase 3: List AP Neighbors
-
-[`example/list_neighbors/main.go`](./example/list_neighbors/main.go) lists neighboring APs detected by the APs.
-
-<details><summary><u>Click to show example</u></summary><p>
-
-```bash
-❯ go run -tags sample example/list_neighbors/main.go
-
-Successfully connected! Found 11 AP neighbors
-
-AP Name           | Slot | Neighbor BSSID    | Neighbor SSID          | RSSI  | Channel | Last Heard At
-------------------|------|-------------------|------------------------|-------|---------|--------------------------
-TEST-AP01         |    0 | d8:21:da:a2:30:f0 | Rogue-WiFi             |   -20 |      11 | 2025-09-12 20:24:57
-TEST-AP01         |    0 | 08:10:86:bf:07:e3 | rogue-abcdef123-g      |   -62 |       4 | 2025-09-13 06:49:59
-TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 |      36 | 2025-09-13 06:52:57
-<snip>
-```
-
-</p></details>
-
-#### Usecase 4: List Associating Clients
+#### Usecase 2: List Associating Clients
 
 [`example/list_clients/main.go`](./example/list_clients/main.go) lists clients associating to wireless networks.
 
@@ -287,6 +245,48 @@ MAC Address           | IP Address
 40:80:e1:6b:11:16     | 192.168.0.92
 <snip>
 ```
+
+#### Usecase 3: List WLANs and BSSIDs
+
+[`example/list_wlans/main.go`](./example/list_wlans/main.go) lists WLANs and their BSSIDs.
+
+<details><summary><u>Click to show example</u></summary><p>
+
+```bash
+❯ go run example/list_wlans/main.go
+
+Successfully connected! Found 7 WLANs across all APs
+
+AP Name           | AP MAC Address    | Slot | WLAN | BSSID             | SSID
+------------------|-------------------|------|------|-------------------|-------------------------
+TEST-AP01         | aa:bb:ff:dd:ee:a0 |    0 |    1 | aa:bb:ff:dd:ee:a1 | labo-wlan
+TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    2 | aa:bb:ff:dd:ee:ad | labo-psk
+TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    4 | aa:bb:ff:dd:ee:af | labo-tls
+<snip>
+```
+
+</p></details>
+
+#### Usecase 4: List AP Neighbors
+
+[`example/list_neighbors/main.go`](./example/list_neighbors/main.go) lists neighboring APs detected by the APs.
+
+<details><summary><u>Click to show example</u></summary><p>
+
+```bash
+❯ go run example/list_neighbors/main.go
+
+Successfully connected! Found 11 AP neighbors
+
+AP Name           | Slot | Neighbor BSSID    | Neighbor SSID          | RSSI  | Channel | Last Heard At
+------------------|------|-------------------|------------------------|-------|---------|--------------------------
+TEST-AP01         |    0 | d8:21:da:a2:30:f0 | Rogue-WiFi             |   -20 |      11 | 2025-09-12 20:24:57
+TEST-AP01         |    0 | 08:10:86:bf:07:e3 | rogue-abcdef123-g      |   -62 |       4 | 2025-09-13 06:49:59
+TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 |      36 | 2025-09-13 06:52:57
+<snip>
+```
+
+</p></details>
 
 </p></details>
 
