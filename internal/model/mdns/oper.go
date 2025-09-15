@@ -1,38 +1,38 @@
 package mdns
 
-// MdnsOper represents mDNS operational data container.
-type MdnsOper struct {
-	CiscoIOSXEWirelessMdnsOperMdnsOperData struct {
-		MdnsGlobalStats MdnsGlobalStatsData `json:"mdns-global-stats"` // mDNS global statistics (Live: IOS-XE 17.12.5)
-		MdnsWlanStats   []MdnsWlanStat      `json:"mdns-wlan-stats"`   // mDNS statistics per WLAN (Live: IOS-XE 17.12.5)
+// MDNSOper represents mDNS operational data container.
+type MDNSOper struct {
+	CiscoIOSXEWirelessMDNSOperMDNSOperData struct {
+		MDNSGlobalStats MDNSGlobalStatsData `json:"mdns-global-stats"` // mDNS global statistics (Live: IOS-XE 17.12.5)
+		MDNSWlanStats   []MDNSWlanStat      `json:"mdns-wlan-stats"`   // mDNS statistics per WLAN (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data"` // mDNS gateway operational data (Live: IOS-XE 17.12.5)
 }
 
-// MdnsGlobalStats represents mDNS global statistics response wrapper.
-type MdnsGlobalStats struct {
-	MdnsGlobalStats MdnsGlobalStatsData `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-global-stats"`
+// MDNSGlobalStats represents mDNS global statistics response wrapper.
+type MDNSGlobalStats struct {
+	MDNSGlobalStats MDNSGlobalStatsData `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-global-stats"`
 }
 
-// MdnsWlanStats represents mDNS WLAN statistics response wrapper.
-type MdnsWlanStats struct {
-	MdnsWlanStats []MdnsWlanStat `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-wlan-stats"`
+// MDNSWlanStats represents mDNS WLAN statistics response wrapper.
+type MDNSWlanStats struct {
+	MDNSWlanStats []MDNSWlanStat `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-wlan-stats"`
 }
 
-// MdnsGlobalStatsData represents global mDNS statistics container.
-type MdnsGlobalStatsData struct {
-	StatsGlobal   MdnsStats `json:"stats-global"`    // Global mDNS packet statistics (Live: IOS-XE 17.12.5)
+// MDNSGlobalStatsData represents global mDNS statistics container.
+type MDNSGlobalStatsData struct {
+	StatsGlobal   MDNSStats `json:"stats-global"`    // Global mDNS packet statistics (Live: IOS-XE 17.12.5)
 	LastClearTime string    `json:"last-clear-time"` // mDNS statistics reset timestamp (Live: IOS-XE 17.12.5)
 }
 
-// MdnsWlanStat represents per-WLAN mDNS statistics.
-type MdnsWlanStat struct {
+// MDNSWlanStat represents per-WLAN mDNS statistics.
+type MDNSWlanStat struct {
 	WlanID        int       `json:"wlan-id"`         // WLAN identifier (Live: IOS-XE 17.12.5)
-	StatsWlan     MdnsStats `json:"stats-wlan"`      // mDNS statistics for WLAN (Live: IOS-XE 17.12.5)
+	StatsWlan     MDNSStats `json:"stats-wlan"`      // mDNS statistics for WLAN (Live: IOS-XE 17.12.5)
 	LastClearTime string    `json:"last-clear-time"` // mDNS statistics reset timestamp (Live: IOS-XE 17.12.5)
 }
 
-// MdnsStats represents mDNS packet statistics.
-type MdnsStats struct {
+// MDNSStats represents mDNS packet statistics.
+type MDNSStats struct {
 	PakSent            string `json:"pak-sent"`              // Total number of mDNS packets sent (Live: IOS-XE 17.12.5)
 	PakSentV4          string `json:"pak-sent-v4"`           // Total number of IPv4 mDNS packets sent (Live: IOS-XE 17.12.5)
 	PakSentAdvtV4      string `json:"pak-sent-advt-v4"`      // Total number of IPv4 mDNS advertisement packets sent (Live: IOS-XE 17.12.5)
