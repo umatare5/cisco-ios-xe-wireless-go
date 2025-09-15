@@ -9,6 +9,8 @@ show_artifacts_banner() {
 
 # Clean up backup files from the repository
 clean_backup_files() {
+    find . -name "*.tmp*" -type f -print0 | xargs -0 rm -f
+    find . -name "*.temp*" -type f -print0 | xargs -0 rm -f
     find . -name "*.bak*" -type f -print0 | xargs -0 rm -f
     find . -name "*.backup*" -type f -print0 | xargs -0 rm -f
     return 0
