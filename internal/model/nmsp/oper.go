@@ -1,53 +1,53 @@
 package nmsp
 
-// NmspOper represents the NMSP operational data container.
-type NmspOper struct {
-	CiscoIOSXEWirelessNmspOperData struct {
+// NMSPOper represents the NMSP operational data container.
+type NMSPOper struct {
+	CiscoIOSXEWirelessNMSPOperData struct {
 		ClientRegistration []ClientRegistration `json:"client-registration"` // NMSP client applications providing services (Live: IOS-XE 17.12.5)
 		CmxConnection      []CmxConnection      `json:"cmx-connection"`      // CMX connection table (Live: IOS-XE 17.12.5)
 		CmxCloudInfo       CmxCloudInfo         `json:"cmx-cloud-info"`      // NMSP services over HTTPS transport info (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"` // Network Mobility Services Protocol (YANG: IOS-XE 17.12.1)
 }
 
-// NmspClientRegistration represents the NMSP client registration data container.
-type NmspClientRegistration struct {
+// NMSPClientRegistration represents the NMSP client registration data container.
+type NMSPClientRegistration struct {
 	ClientRegistration []ClientRegistration `json:"Cisco-IOS-XE-wireless-nmsp-oper:client-registration"`
 }
 
-// NmspCmxConnection represents the NMSP CMX connection data container.
-type NmspCmxConnection struct {
+// NMSPCmxConnection represents the NMSP CMX connection data container.
+type NMSPCmxConnection struct {
 	CmxConnection []CmxConnection `json:"Cisco-IOS-XE-wireless-nmsp-oper:cmx-connection"`
 }
 
-// NmspCmxCloudInfo represents the NMSP CMX cloud information data container.
-type NmspCmxCloudInfo struct {
+// NMSPCmxCloudInfo represents the NMSP CMX cloud information data container.
+type NMSPCmxCloudInfo struct {
 	CmxCloudInfo CmxCloudInfo `json:"Cisco-IOS-XE-wireless-nmsp-oper:cmx-cloud-info"`
 }
 
 // ClientRegistration represents individual NMSP client registration record.
 type ClientRegistration struct {
 	ClientID int          `json:"client-id"` // NMSP client identifier (Live: IOS-XE 17.12.5)
-	Services NmspServices `json:"services"`  // NMSP capabilities provided by EWLC app (Live: IOS-XE 17.12.5)
+	Services NMSPServices `json:"services"`  // NMSP capabilities provided by EWLC app (Live: IOS-XE 17.12.5)
 }
 
-// NmspServices represents NMSP service configuration and status.
-type NmspServices struct {
+// NMSPServices represents NMSP service configuration and status.
+type NMSPServices struct {
 	Mask                        string     `json:"mask"`                                    // NMSP subservice bitmask combination (Live: IOS-XE 17.12.5)
-	RssiMs                      *EmptyType `json:"rssi-ms,omitempty"`                       // RSSI Mobile Station capability (Live: IOS-XE 17.12.5)
-	RssiRfid                    *EmptyType `json:"rssi-rfid,omitempty"`                     // RSSI RFID Tag capability (Live: IOS-XE 17.12.5)
-	RssiRogue                   *EmptyType `json:"rssi-rogue,omitempty"`                    // RSSI Rogue capability (Live: IOS-XE 17.12.5)
-	RssiInterferer              *EmptyType `json:"rssi-interferer,omitempty"`               // RSSI Interferer capability (YANG: IOS-XE 17.12.1)
-	RssiHs                      *EmptyType `json:"rssi-hs,omitempty"`                       // RSSI Handover Client capability (YANG: IOS-XE 17.12.1)
-	RssiMsAssociatedOnly        *EmptyType `json:"rssi-ms-associated-only,omitempty"`       // RSSI Associated Mobile Station only capability (Live: IOS-XE 17.12.5)
+	RSSIMs                      *EmptyType `json:"rssi-ms,omitempty"`                       // RSSI Mobile Station capability (Live: IOS-XE 17.12.5)
+	RSSIRFID                    *EmptyType `json:"rssi-rfid,omitempty"`                     // RSSI RFID Tag capability (Live: IOS-XE 17.12.5)
+	RSSIRogue                   *EmptyType `json:"rssi-rogue,omitempty"`                    // RSSI Rogue capability (Live: IOS-XE 17.12.5)
+	RSSIInterferer              *EmptyType `json:"rssi-interferer,omitempty"`               // RSSI Interferer capability (YANG: IOS-XE 17.12.1)
+	RSSIHs                      *EmptyType `json:"rssi-hs,omitempty"`                       // RSSI Handover Client capability (YANG: IOS-XE 17.12.1)
+	RSSIMsAssociatedOnly        *EmptyType `json:"rssi-ms-associated-only,omitempty"`       // RSSI Associated Mobile Station only capability (Live: IOS-XE 17.12.5)
 	SpectrumInterferer          *EmptyType `json:"spectrum-interferer,omitempty"`           // Spectrum Interferer capability (Live: IOS-XE 17.12.5)
 	SpectrumAirQuality          *EmptyType `json:"spectrum-air-quality,omitempty"`          // Spectrum Air Quality capability (Live: IOS-XE 17.12.5)
 	SpectrumAggregateInterferer *EmptyType `json:"spectrum-aggregate-interferer,omitempty"` // Spectrum Aggregate Interferer capability (Live: IOS-XE 17.12.5)
 	InfoMs                      *EmptyType `json:"info-ms,omitempty"`                       // Information Mobile Station capability (Live: IOS-XE 17.12.5)
-	InfoRfid                    *EmptyType `json:"info-rfid,omitempty"`                     // Information RFID Tag capability (YANG: IOS-XE 17.12.1)
+	InfoRFID                    *EmptyType `json:"info-rfid,omitempty"`                     // Information RFID Tag capability (YANG: IOS-XE 17.12.1)
 	InfoRogue                   *EmptyType `json:"info-rogue,omitempty"`                    // Information Rogue capability (Live: IOS-XE 17.12.5)
 	InfoHs                      *EmptyType `json:"info-hs,omitempty"`                       // Information Handover Client capability (YANG: IOS-XE 17.12.1)
 	StatsMs                     *EmptyType `json:"stats-ms,omitempty"`                      // Statistics Mobile Station capability (Live: IOS-XE 17.12.5)
-	StatsRfid                   *EmptyType `json:"stats-rfid,omitempty"`                    // Statistics RFID Tag capability (Live: IOS-XE 17.12.5)
+	StatsRFID                   *EmptyType `json:"stats-rfid,omitempty"`                    // Statistics RFID Tag capability (Live: IOS-XE 17.12.5)
 	StatsRogue                  *EmptyType `json:"stats-rogue,omitempty"`                   // Statistics Rogue capability (Live: IOS-XE 17.12.5)
 	Attach                      *EmptyType `json:"attach,omitempty"`                        // Mobile Station Attachment capability (YANG: IOS-XE 17.12.1)
 	Location                    *EmptyType `json:"location,omitempty"`                      // Location Service capability (YANG: IOS-XE 17.12.1)
