@@ -1,17 +1,30 @@
 package core
 
 import (
-	"context"
 	"errors"
 	"net/http"
 	"testing"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
 // ========================================
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // ========================================
 
-// TestAPIErrorStructure tests the basic structure of APIError
+// TestCoreErrorsUnit_HTTPError_Success tests HTTPError methods.
+func TestCoreErrorsUnit_HTTPError_Success(t *testing.T) {
+	httpErr := &HTTPError{
+		Status: 404,
+		Body:   []byte("Not Found"),
+	}
+
+	expected := "HTTP 404: Not Found"
+	actual := httpErr.Error()
+	testutil.AssertStringEquals(t, actual, expected, "HTTPError.Error() output")
+}
+
+// TestAPIErrorStructure tests the basic structure of APIError.
 func TestAPIErrorStructure(t *testing.T) {
 	apiErr := &APIError{
 		StatusCode: 404,
@@ -20,66 +33,14 @@ func TestAPIErrorStructure(t *testing.T) {
 	}
 
 	expectedError := "API error (HTTP 404): Resource not found"
-	if apiErr.Error() != expectedError {
-		t.Errorf("Expected error message '%s', got '%s'", expectedError, apiErr.Error())
-	}
+	testutil.AssertStringEquals(t, apiErr.Error(), expectedError, "APIError.Error() should return expected format")
 
-	if apiErr.StatusCode != http.StatusNotFound {
-		t.Errorf("Expected status code 404, got %d", apiErr.StatusCode)
-	}
+	testutil.AssertIntEquals(t, apiErr.StatusCode, http.StatusNotFound, "APIError.StatusCode should be 404")
 
-	if apiErr.Message != "Resource not found" {
-		t.Errorf("Expected message 'Resource not found', got '%s'", apiErr.Message)
-	}
+	testutil.AssertStringEquals(t, apiErr.Message, "Resource not found", "APIError.Message should match expected value")
 }
 
-// ========================================
-// 2. TABLE-DRIVEN TEST PATTERNS
-// ========================================
-
-// TestStatusCodeCheckers tests HTTP status code validation functions
-func TestStatusCodeCheckers(t *testing.T) {
-	testCases := []struct {
-		name       string
-		statusCode int
-		checkFunc  func(int) bool
-		expected   bool
-	}{
-		// Success status codes
-		{"Success_200", StatusOK, isSuccessStatusCode, true},
-		{"Success_201", StatusCreated, isSuccessStatusCode, true},
-		{"Success_202", StatusAccepted, isSuccessStatusCode, true},
-		{"Success_204", StatusNoContent, isSuccessStatusCode, true},
-		{"NotSuccess_404", StatusNotFound, isSuccessStatusCode, false},
-		{"NotSuccess_401", StatusUnauthorized, isSuccessStatusCode, false},
-
-		// Authentication error status codes
-		{"Auth_401", StatusUnauthorized, isAuthenticationError, true},
-		{"NotAuth_200", StatusOK, isAuthenticationError, false},
-		{"NotAuth_403", StatusForbidden, isAuthenticationError, false},
-
-		// Access forbidden status codes
-		{"Forbidden_403", StatusForbidden, isAccessForbiddenError, true},
-		{"NotForbidden_200", StatusOK, isAccessForbiddenError, false},
-		{"NotForbidden_401", StatusUnauthorized, isAccessForbiddenError, false},
-
-		// Not found status codes
-		{"NotFound_404", StatusNotFound, isNotFoundError, true},
-		{"Found_200", StatusOK, isNotFoundError, false},
-		{"Found_403", StatusForbidden, isNotFoundError, false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := tt.checkFunc(tt.statusCode)
-			if result != tt.expected {
-				t.Errorf("Expected %v for status code %d, got %v", tt.expected, tt.statusCode, result)
-			}
-		})
-	}
-}
-
-// TestErrorConstants tests predefined error constants
+// TestErrorConstants tests predefined error constants.
 func TestErrorConstants(t *testing.T) {
 	testCases := []struct {
 		name     string
@@ -95,38 +56,12 @@ func TestErrorConstants(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.err.Error() != tt.expected {
-				t.Errorf("Expected error message '%s', got '%s'", tt.expected, tt.err.Error())
-			}
+			testutil.AssertStringEquals(t, tt.err.Error(), tt.expected, "Error constant should return expected message")
 		})
 	}
 }
 
-// ========================================
-// 3. FAIL-FAST ERROR DETECTION TESTS
-// ========================================
-
-// TestDeadlineExceededError tests context deadline exceeded detection
-func TestDeadlineExceededError(t *testing.T) {
-	// Test with context deadline exceeded error
-	deadlineErr := context.DeadlineExceeded
-	if !isDeadlineExceededError(deadlineErr) {
-		t.Error("Expected context.DeadlineExceeded to be detected as deadline exceeded")
-	}
-
-	// Test with regular error
-	regularErr := errors.New("regular error")
-	if isDeadlineExceededError(regularErr) {
-		t.Error("Expected regular error not to be detected as deadline exceeded")
-	}
-
-	// Test with nil error
-	if isDeadlineExceededError(nil) {
-		t.Error("Expected nil error not to be detected as deadline exceeded")
-	}
-}
-
-// TestAPIErrorEdgeCases tests edge cases for APIError
+// TestAPIErrorEdgeCases tests edge cases for APIError.
 func TestAPIErrorEdgeCases(t *testing.T) {
 	// Test with empty message
 	apiErr := &APIError{
@@ -136,9 +71,8 @@ func TestAPIErrorEdgeCases(t *testing.T) {
 	}
 
 	expectedError := "API error (HTTP 500): "
-	if apiErr.Error() != expectedError {
-		t.Errorf("Expected error message '%s', got '%s'", expectedError, apiErr.Error())
-	}
+	testutil.AssertStringEquals(t, apiErr.Error(), expectedError,
+		"APIError with empty message should return expected format")
 
 	// Test with zero status code
 	apiErr = &APIError{
@@ -148,12 +82,11 @@ func TestAPIErrorEdgeCases(t *testing.T) {
 	}
 
 	expectedError = "API error (HTTP 0): Zero status code"
-	if apiErr.Error() != expectedError {
-		t.Errorf("Expected error message '%s', got '%s'", expectedError, apiErr.Error())
-	}
+	testutil.AssertStringEquals(t, apiErr.Error(), expectedError,
+		"APIError with zero status code should return expected format")
 }
 
-// TestHTTPStatusConstants tests HTTP status code constants
+// TestHTTPStatusConstants tests HTTP status code constants.
 func TestHTTPStatusConstants(t *testing.T) {
 	testCases := []struct {
 		name     string
@@ -176,9 +109,86 @@ func TestHTTPStatusConstants(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.constant != tt.expected {
-				t.Errorf("Expected %s to be %d, got %d", tt.name, tt.expected, tt.constant)
-			}
+			testutil.AssertIntEquals(t, tt.constant, tt.expected, "HTTP status constant should match expected value")
+		})
+	}
+}
+
+// TestIsNotFoundError tests the IsNotFoundError function.
+func TestIsNotFoundError(t *testing.T) {
+	testCases := []struct {
+		name     string
+		err      error
+		expected bool
+	}{
+		{
+			name:     "nil_error",
+			err:      nil,
+			expected: false,
+		},
+		{
+			name: "http_error_404",
+			err: &HTTPError{
+				Status: http.StatusNotFound,
+				Body:   []byte("Not Found"),
+			},
+			expected: true,
+		},
+		{
+			name: "http_error_500",
+			err: &HTTPError{
+				Status: http.StatusInternalServerError,
+				Body:   []byte("Internal Server Error"),
+			},
+			expected: false,
+		},
+		{
+			name: "api_error_404",
+			err: &APIError{
+				StatusCode: http.StatusNotFound,
+				Message:    "Resource not found",
+			},
+			expected: true,
+		},
+		{
+			name: "api_error_403",
+			err: &APIError{
+				StatusCode: http.StatusForbidden,
+				Message:    "Access forbidden",
+			},
+			expected: false,
+		},
+		{
+			name:     "string_error_with_404",
+			err:      errors.New("API error (HTTP 404): resource not found"),
+			expected: true,
+		},
+		{
+			name:     "string_error_with_not_found",
+			err:      errors.New("resource not found"),
+			expected: true,
+		},
+		{
+			name:     "string_error_with_not_found_uppercase",
+			err:      errors.New("API error: Not Found"),
+			expected: true,
+		},
+		{
+			name:     "string_error_without_404",
+			err:      errors.New("internal server error"),
+			expected: false,
+		},
+		{
+			name:     "generic_error",
+			err:      errors.New("some other error"),
+			expected: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := IsNotFoundError(tc.err)
+			testutil.AssertBoolEquals(t, result, tc.expected, "IsNotFoundError should return expected boolean value")
 		})
 	}
 }

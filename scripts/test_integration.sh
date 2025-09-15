@@ -7,8 +7,6 @@
 # @option -p --project <DIR>           Project root directory [default: .]
 # @flag   -v --verbose                Enable verbose test output
 # @flag      --race                   Enable race detection [default: true]
-# @flag   -c --coverage               Generate coverage data
-# @option -o --output <FILE>          Coverage output file [default: ./tmp/coverage.out]
 # @option -t --timeout <DURATION>     Test timeout [default: 10m]
 # @option    --package <PATTERN>      Package pattern to test [default: ./...]
 # @flag      --check-env-only         Only check environment without running tests
@@ -28,17 +26,10 @@ init_wnc_libraries "${SCRIPT_DIR}/lib/test_integration"
 # Validate required CLI tools
 validate_required_cli_tools "standard"
 
-# Entrypoint: run integration tests (or coverage when enabled)
+# Entrypoint: run integration tests
 main() {
     local project_root="${argc_project:-.}"
     local timeout="${argc_timeout:-10m}"
-
-    if [[ "${argc_coverage:-0}" == "1" ]]; then
-        # If coverage is requested, use coverage test operation
-        local coverage_file="${argc_output:-./tmp/coverage.out}"
-        run_coverage_test_operation "$project_root" "$coverage_file"
-        return
-    fi
 
     run_integration_test_operation "$project_root" "$timeout"
 }

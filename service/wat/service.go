@@ -1,0 +1,27 @@
+package wat
+
+import (
+	"context"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wat"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+)
+
+// Service provides Wireless Application Templates (WAT) operations for Cisco IOS-XE Wireless LAN Controller.
+type Service struct {
+	service.BaseService
+}
+
+// NewService creates a new WAT service instance with the provided client.
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func NewService(client *core.Client) Service {
+	return Service{BaseService: service.NewBaseService(client)}
+}
+
+// GetConfig retrieves the complete WAT configuration from the controller.
+// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+func (s Service) GetConfig(ctx context.Context) (*model.WATCfg, error) {
+	return core.Get[model.WATCfg](ctx, s.Client(), routes.WATCfgPath)
+}

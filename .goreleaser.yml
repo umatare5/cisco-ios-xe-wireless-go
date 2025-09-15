@@ -1,4 +1,4 @@
-# .goreleaser.yml for cisco-ios-xe-wireless-go library package
+# .goreleaser.yml for cisco-ios-xe-wireless-go SDK package
 
 project_name: cisco-ios-xe-wireless-go
 version: 2
@@ -40,7 +40,7 @@ release:
   header: |
     ## {{ .ProjectName }} v{{ .Version }}
 
-    This release contains the Go library for interacting with Cisco Catalyst 9800 Wireless Network Controller.
+    This release contains the Go SDK for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
     ###.  �Installation
 

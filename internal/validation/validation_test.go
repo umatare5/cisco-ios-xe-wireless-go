@@ -3,195 +3,209 @@ package validation
 import (
 	"testing"
 	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
-// ========================================
-// 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
-// ========================================
+// TestValidationUnit_Constructor_Success tests validation function availability.
+func TestValidationUnit_Constructor_Success(t *testing.T) {
+	// Test constants are accessible
+	testutil.AssertIntEquals(t, MinEndpointLength, 10, "MinEndpointLength constant")
+	testutil.AssertIntEquals(t, MinTokenLength, 8, "MinTokenLength constant")
+	testutil.AssertIntEquals(t, ValidationTimeoutThreshold, 1, "ValidationTimeoutThreshold constant")
 
-// TestValidationConstants tests validation constants
-func TestValidationConstants(t *testing.T) {
-	testCases := []struct {
-		name     string
-		value    int
-		expected int
-	}{
-		{"MinEndpointLengthChars", MinEndpointLengthChars, 10},
-		{"MinTokenLengthChars", MinTokenLengthChars, 8},
-		{"MinEndpointLength", MinEndpointLength, 10},
-		{"MinTokenLength", MinTokenLength, 8},
-		{"ZeroTimeoutSeconds", ZeroTimeoutSeconds, 0},
-		{"ValidationTimeoutThreshold", ValidationTimeoutThreshold, 1},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.value != tt.expected {
-				t.Errorf("Expected %s to be %d, got %d", tt.name, tt.expected, tt.value)
-			}
-		})
-	}
+	// Test default tags are accessible
+	testutil.AssertStringEquals(t, DefaultSiteTag, "default-site-tag", "DefaultSiteTag constant")
+	testutil.AssertStringEquals(t, DefaultPolicyTag, "default-policy-tag", "DefaultPolicyTag constant")
+	testutil.AssertStringEquals(t, DefaultRFTag, "default-rf-tag", "DefaultRFTag constant")
 }
 
-// ========================================
-// 2. TABLE-DRIVEN TEST PATTERNS
-// ========================================
+// TestValidationUnit_GetOperations_Success tests basic validation functions.
+func TestValidationUnit_GetOperations_Success(t *testing.T) {
+	// Controller validation
+	testutil.AssertBoolEquals(t, IsValidController("core.example.com"), true, "valid controller")
+	testutil.AssertBoolEquals(t, IsValidController(""), false, "empty controller")
+	testutil.AssertBoolEquals(t, IsValidController("192.168.1.100"), true, "IP controller")
 
-// TestIsValidController tests controller validation
-func TestIsValidController(t *testing.T) {
-	testCases := []struct {
-		name       string
-		controller string
-		expected   bool
-	}{
-		{"ValidController", "core.example.com", true},
-		{"ValidIP", "192.168.1.100", true},
-		{"ValidLocalhost", "localhost", true},
-		{"EmptyController", "", false},
-		{"ValidWithPort", "core.example.com:443", true},
-		{"ValidHostname", "test.local", true},
-	}
+	// Token validation
+	testutil.AssertBoolEquals(t, IsValidAccessToken("valid-token"), true, "valid token")
+	testutil.AssertBoolEquals(t, IsValidAccessToken(""), false, "empty token")
+	testutil.AssertBoolEquals(t, IsValidAccessToken("short"), true, "short token is valid (only checks non-empty)")
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := IsValidController(tt.controller)
-			if result != tt.expected {
-				t.Errorf("Expected IsValidController('%s') to be %v, got %v", tt.controller, tt.expected, result)
-			}
-		})
-	}
+	// MAC validation
+	testutil.AssertBoolEquals(t, IsValidMACAddr("00:11:22:33:44:55"), true, "valid colon MAC")
+	testutil.AssertBoolEquals(t, IsValidMACAddr("00-11-22-33-44-55"), true, "valid hyphen MAC")
+	testutil.AssertBoolEquals(t, IsValidMACAddr("001122334455"), true, "valid no-separator MAC")
+	testutil.AssertBoolEquals(t, IsValidMACAddr("invalid"), false, "invalid MAC")
+	testutil.AssertBoolEquals(t, IsValidMACAddr(""), false, "empty MAC")
+
+	// Timeout validation
+	testutil.AssertBoolEquals(t, IsValidTimeout(30*time.Second), true, "valid timeout")
+	testutil.AssertBoolEquals(t, IsValidTimeout(0), false, "zero timeout")
+	testutil.AssertBoolEquals(t, IsValidTimeout(-1*time.Second), false, "negative timeout")
+	testutil.AssertBoolEquals(t, IsPositiveTimeout(30*time.Second), true, "positive timeout")
+	testutil.AssertBoolEquals(t, IsPositiveTimeout(0), false, "zero positive timeout")
+
+	// String validation
+	testutil.AssertBoolEquals(t, IsNonEmptyString("test"), true, "valid string")
+	testutil.AssertBoolEquals(t, IsNonEmptyString(""), false, "empty string")
+	testutil.AssertBoolEquals(t, IsNonEmptyString("   "), false, "whitespace string")
 }
 
-// TestIsValidAccessToken tests access token validation
-func TestIsValidAccessToken(t *testing.T) {
-	testCases := []struct {
-		name     string
-		token    string
-		expected bool
-	}{
-		{"ValidToken", "dGVzdDp0ZXN0", true},
-		{"ValidLongToken", "YWRtaW46cGFzc3dvcmQxMjM0NTY3ODkw", true},
-		{"ValidShortToken", "dGVzdA==", true},
-		{"EmptyToken", "", false},
-		{"SpaceOnlyToken", " ", true}, // Non-empty string is valid
-		{"TabToken", "\t", true},      // Non-empty string is valid
-	}
+// TestValidationUnit_SetOperations_Success tests MAC normalization and validation functions.
+func TestValidationUnit_SetOperations_Success(t *testing.T) {
+	// MAC normalization
+	normalized, err := NormalizeMACAddress("00:11:22:33:44:55")
+	testutil.AssertNoError(t, err, "colon format normalization should not error")
+	testutil.AssertStringEquals(t, normalized, "00:11:22:33:44:55", "colon format normalization")
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := IsValidAccessToken(tt.token)
-			if result != tt.expected {
-				t.Errorf("Expected IsValidAccessToken('%s') to be %v, got %v", tt.token, tt.expected, result)
-			}
-		})
-	}
+	normalized, err = NormalizeMACAddress("00-11-22-33-44-55")
+	testutil.AssertNoError(t, err, "hyphen format normalization should not error")
+	testutil.AssertStringEquals(t, normalized, "00:11:22:33:44:55", "hyphen format normalization")
+
+	normalized, err = NormalizeMACAddress("001122334455")
+	testutil.AssertNoError(t, err, "no-separator format normalization should not error")
+	testutil.AssertStringEquals(t, normalized, "00:11:22:33:44:55", "no-separator format normalization")
+
+	// MAC validation with error
+	err = ValidateMACAddress("00:11:22:33:44:55")
+	testutil.AssertNoError(t, err, "valid MAC validation")
+
+	err = ValidateMACAddress("")
+	testutil.AssertError(t, err, "empty MAC validation should error")
+
+	err = ValidateMACAddress("invalid")
+	testutil.AssertError(t, err, "invalid MAC validation should error")
 }
 
-// TestIsPositiveTimeout tests timeout validation
-func TestIsPositiveTimeout(t *testing.T) {
-	testCases := []struct {
-		name     string
-		timeout  time.Duration
-		expected bool
-	}{
-		{"ValidTimeout", 30 * time.Second, true},
-		{"MinimumValidTimeout", 2 * time.Second, true},
-		{"ZeroTimeout", 0, false},
-		{"NegativeTimeout", -1 * time.Second, false},
-		{"VeryShortTimeout", 500 * time.Millisecond, false},  // Less than 1 second
-		{"ExactlyOneSecond", 1 * time.Second, false},         // Equal to threshold
-		{"JustOverOneSecond", 1001 * time.Millisecond, true}, // Just over threshold
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := IsPositiveTimeout(tt.timeout)
-			if result != tt.expected {
-				t.Errorf("Expected IsPositiveTimeout(%v) to be %v, got %v", tt.timeout, tt.expected, result)
-			}
-		})
-	}
+// TestValidationUnit_ErrorHandling_Success tests error template functions.
+func TestValidationUnit_ErrorHandling_Success(t *testing.T) {
+	// Test error templates are available
+	testutil.AssertStringEquals(
+		t,
+		EndpointMismatchErrorTemplate,
+		"Expected %s = %s, got %s",
+		"endpoint mismatch template",
+	)
+	testutil.AssertStringEquals(
+		t,
+		EmptyEndpointErrorTemplate,
+		"%s endpoint is empty",
+		"empty endpoint template",
+	)
+	testutil.AssertStringEquals(
+		t,
+		ShortEndpointErrorTemplate,
+		"%s endpoint is too short: %s",
+		"short endpoint template",
+	)
+	testutil.AssertStringEquals(
+		t,
+		InvalidEndpointErrorTemplate,
+		"%s endpoint has invalid format: %s",
+		"invalid endpoint template",
+	)
 }
 
-// ========================================
-// 3. FAIL-FAST ERROR DETECTION TESTS
-// ========================================
+// TestValidationUnit_ValidationErrors_Success tests boundary conditions and edge cases.
+func TestValidationUnit_ValidationErrors_Success(t *testing.T) {
+	// Boundary timeout testing
+	threshold := time.Duration(ValidationTimeoutThreshold) * time.Second
+	testutil.AssertBoolEquals(
+		t,
+		IsPositiveTimeout(threshold),
+		false,
+		"timeout at threshold should be invalid",
+	)
 
-// TestValidationErrorTemplates tests error message templates
-func TestValidationErrorTemplates(t *testing.T) {
-	testCases := []struct {
-		name     string
-		template string
-		expected string
-	}{
-		{"EndpointMismatchErrorTemplate", EndpointMismatchErrorTemplate, "Expected %s = %s, got %s"},
-		{"EmptyEndpointErrorTemplate", EmptyEndpointErrorTemplate, "%s endpoint is empty"},
-		{"ShortEndpointErrorTemplate", ShortEndpointErrorTemplate, "%s endpoint is too short: %s"},
-		{"InvalidEndpointErrorTemplate", InvalidEndpointErrorTemplate, "%s endpoint has invalid format: %s"},
-	}
+	justAbove := threshold + time.Nanosecond
+	testutil.AssertBoolEquals(
+		t,
+		IsPositiveTimeout(justAbove),
+		true,
+		"timeout just above threshold should be valid",
+	)
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.template != tt.expected {
-				t.Errorf("Expected %s to be '%s', got '%s'", tt.name, tt.expected, tt.template)
-			}
-		})
-	}
-}
+	// Single character validation
+	testutil.AssertBoolEquals(t, IsValidController("a"), true, "single character controller should be valid")
+	testutil.AssertBoolEquals(
+		t,
+		IsValidAccessToken("a"),
+		true,
+		"single character token is valid (only checks non-empty)",
+	)
 
-// TestValidationFunctionsBoundaryConditions tests boundary conditions
-func TestValidationFunctionsBoundaryConditions(t *testing.T) {
-	t.Run("ControllerValidation", func(t *testing.T) {
-		// Test empty string
-		if IsValidController("") {
-			t.Error("Expected empty controller to be invalid")
-		}
+	// Composite validation scenarios
+	controller := "test.cisco.com"
+	token := "test-token"
+	testutil.AssertBoolEquals(
+		t,
+		IsValidController(controller) && IsValidAccessToken(token),
+		true,
+		"valid controller and token",
+	)
 
-		// Test single character
-		if !IsValidController("a") {
-			t.Error("Expected single character controller to be valid")
-		}
+	emptyController := ""
+	testutil.AssertBoolEquals(
+		t,
+		IsValidController(emptyController) && IsValidAccessToken(token),
+		false,
+		"empty controller fails composite",
+	)
 
-		// Test with spaces
-		if !IsValidController("test host") {
-			t.Error("Expected controller with spaces to be valid")
-		}
-	})
+	// Additional function coverage
+	testutil.AssertBoolEquals(t, IsStringEmpty(""), true, "empty string is empty")
+	testutil.AssertBoolEquals(t, IsStringEmpty("test"), false, "non-empty string is not empty")
 
-	t.Run("AccessTokenValidation", func(t *testing.T) {
-		// Test empty string
-		if IsValidAccessToken("") {
-			t.Error("Expected empty token to be invalid")
-		}
+	// Tag validation (HasValidTags checks if at least one tag is provided)
+	testutil.AssertBoolEquals(t, HasValidTags("site", "policy", "rf"), true, "all valid tags")
+	testutil.AssertBoolEquals(t, HasValidTags("", "policy", "rf"), true, "empty site tag but others valid")
+	testutil.AssertBoolEquals(t, HasValidTags("", "", ""), false, "all empty tags")
 
-		// Test single character
-		if !IsValidAccessToken("a") {
-			t.Error("Expected single character token to be valid")
-		}
+	// MAC or name validation (HasValidMACOrName requires exactly one, not both)
+	testutil.AssertBoolEquals(t, HasValidMACOrName("00:11:22:33:44:55", ""), true, "valid MAC only")
+	testutil.AssertBoolEquals(t, HasValidMACOrName("", "ap1"), true, "valid name only")
+	testutil.AssertBoolEquals(t, HasValidMACOrName("00:11:22:33:44:55", "ap1"), false, "both MAC and name not allowed")
+	testutil.AssertBoolEquals(t, HasValidMACOrName("", ""), false, "empty MAC and name")
+	testutil.AssertBoolEquals(t, HasEitherMACOrName("00:11:22:33:44:55", ""), true, "has MAC")
+	testutil.AssertBoolEquals(t, HasEitherMACOrName("", "ap1"), true, "has name")
 
-		// Test unicode
-		if !IsValidAccessToken("ユーザー") {
-			t.Error("Expected unicode token to be valid")
-		}
-	})
+	// Value selection
+	testutil.AssertStringEquals(t, SelectNonEmptyValue("primary", "default"), "primary", "primary value selected")
+	testutil.AssertStringEquals(t, SelectNonEmptyValue("", "default"), "default", "default value selected")
 
-	t.Run("TimeoutValidation", func(t *testing.T) {
-		// Test exactly at threshold
-		threshold := time.Duration(ValidationTimeoutThreshold) * time.Second
-		if IsPositiveTimeout(threshold) {
-			t.Error("Expected timeout at threshold to be invalid")
-		}
+	// Tag assignment validation
+	testutil.AssertBoolEquals(t, IsValidTagAssignment("tag1", "site"), true, "valid site tag assignment")
+	testutil.AssertBoolEquals(t, IsValidTagAssignment("tag1", "policy"), true, "valid policy tag assignment")
+	testutil.AssertBoolEquals(t, IsValidTagAssignment("tag1", "rf"), true, "valid rf tag assignment")
+	testutil.AssertBoolEquals(t, IsValidTagAssignment("", "site"), false, "empty tag assignment")
+	testutil.AssertBoolEquals(t, IsValidTagAssignment("tag1", "invalid"), false, "invalid tag type")
 
-		// Test just above threshold
-		justAbove := threshold + time.Nanosecond
-		if !IsPositiveTimeout(justAbove) {
-			t.Error("Expected timeout just above threshold to be valid")
-		}
+	// String validation with field name
+	err := ValidateNonEmptyString("test", "testField")
+	testutil.AssertNoError(t, err, "valid string validation with field name")
 
-		// Test very large timeout
-		largeTimeout := 24 * time.Hour
-		if !IsPositiveTimeout(largeTimeout) {
-			t.Error("Expected very large timeout to be valid")
-		}
-	})
+	err = ValidateNonEmptyString("", "testField")
+	testutil.AssertError(t, err, "empty string validation with field name should error")
+
+	// Slot ID validation
+	err = ValidateSlotID(1)
+	testutil.AssertNoError(t, err, "valid slot ID")
+
+	err = ValidateSlotID(-1)
+	testutil.AssertError(t, err, "invalid slot ID should error")
+
+	// Spatial stream validation
+	err = ValidateSpatialStream(2)
+	testutil.AssertNoError(t, err, "valid spatial stream")
+
+	err = ValidateSpatialStream(-1)
+	testutil.AssertError(t, err, "invalid spatial stream should error")
+
+	// WLAN ID validation
+	err = ValidateWlanID("1")
+	testutil.AssertNoError(t, err, "valid WLAN ID")
+
+	err = ValidateWlanID("")
+	testutil.AssertError(t, err, "empty WLAN ID should error")
 }

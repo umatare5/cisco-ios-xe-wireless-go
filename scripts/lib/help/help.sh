@@ -19,7 +19,6 @@ COMMON DEVELOPMENT TARGETS:
     test-unit           Run unit tests only
     test-integration    Run integration tests (requires environment)
     test-coverage       Run tests with coverage analysis
-    test-coverage-report Generate HTML coverage report
 
 YANG MODEL DEVELOPMENT:
     yang-list           List all available YANG models
@@ -37,11 +36,6 @@ EXAMPLES:
     make test-unit          # Run unit tests
     make test-unit-coverage # Run unit tests with coverage
     make build              # Verify compilation
-
-    # Coverage testing
-    make test-unit-coverage        # Unit tests with coverage
-    make test-integration-coverage # Integration tests with coverage
-    make test-coverage-report      # Generate HTML coverage report
 
     # YANG development
     make yang-list                                    # List models
@@ -62,8 +56,8 @@ SCRIPT DETAILS:
     - install_dependencies.sh Install Go dependencies
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)
-    - test_integration.sh    Run integration tests (supports --coverage)
-    - generate_coverage_report.sh Generate HTML coverage
+    - test_integration.sh    Run integration tests
+    - pre_commit_hook.sh     Pre-commit validation hook
     - get_yang_models.sh     List YANG models
     - get_yang_model_details.sh Get model details
     - get_yang_statement_details.sh Get statement details

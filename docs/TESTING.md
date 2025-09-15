@@ -1,154 +1,261 @@
 # 🧪 Testing
 
-This guide explains how to run unit and integration tests, manage test data, and generate coverage reports.
+This guide explains the testing strategy, conventions, and execution procedures for the Cisco IOS-XE Wireless Go SDK.
 
 > [!NOTE]
-> Integration tests require an accessible Cisco C9800 and these variables: `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN`.
+> Integration tests require an accessible Cisco C9800 and these variables: See [Prerequisites](#-prerequisites)
 
-## 🎯 Scopes
+## 🎯 Testing Strategy
 
-There are four main layers of tests:
+### Test Categories
 
-- **Unit tests**: These tests validate serialization and deserialization between JSON and Go structs.
-- **Table-driven tests**: Multiple test cases are efficiently executed using a table-driven approach.
-- **Fail-fast error detection tests**: These tests fail immediately if an unexpected error occurs during execution.
-- **Integration tests**: These tests interact with multiple API endpoints to verify API communication and overall functionality.
+The SDK implements **standardized test patterns** using the unified `pkg/testutil` API:
+
+| Category             | Purpose                   | Implementation Pattern        | Coverage Target |
+| -------------------- | ------------------------- | ----------------------------- | --------------- |
+| **1. Service Tests** | Service construction      | Direct service instantiation  | 100%            |
+| **2. Get Tests**     | Mock-based GET operations | `testutil.NewMockServer()`    | Get/List: 100%  |
+| **3. Set Tests**     | Mock-based RPC operations | `testutil.NewMockServer()`    | Set/Admin: 90%+ |
+| **4. Integration**   | Live WNC GET operations   | Integration test suites       | N/A             |
+| **5. Scenario/E2E**  | Live WNC RPC operations   | Scenario-based test workflows | N/A             |
+
+### IOS-XE Version Support
+
+| IOS-XE Version | Service Support                            | Test Strategy                                 |
+| -------------- | ------------------------------------------ | --------------------------------------------- |
+| **17.12.x**    | Core services (AP, WLAN, Client, RF, etc.) | Full mock + integration testing               |
+| **17.18.x**    | Advanced services (WAT, URWB, Spaces)      | 404 error expectation tests + real data mocks |
+
+> [!NOTE]
+> WAT (Wireless Assurance Testing), URWB (Ultra-Reliable Wireless Backhaul), and Spaces services require IOS-XE 17.18.1+. Tests expect 404 responses when services are not configured and use real WNC data structure for mock responses.
+
+### Coverage Requirements
+
+- **Repository overall**: **80% minimum**
+- **Service package** (`service/`): **90% minimum**
+
+## 📂 Test Organization
+
+### Directory Structure
+
+```text
+cisco-ios-xe-wireless-go/
+├── service/
+│   └── {service}/
+│       ├── service_test.go         # Direct service tests using pkg/testutil
+│       ├── service.go              # Service implementation
+│       ├── errors.go              # Service-specific error constants
+│       └── doc.go                 # Package documentation
+├── tests/
+│   ├── integration/
+│   │   ├── {service}_service_test.go  # Live WNC integration tests per service
+│   │   └── ...                       # Additional integration tests
+│   └── scenario/                     # E2E scenario tests
+│       ├── ap/                       # AP scenario tests
+│       ├── rf/                       # RF scenario tests
+│       ├── site/                     # Site scenario tests
+│       └── wlan/                     # WLAN scenario tests
+└── pkg/
+    └── testutil/
+        ├── testing.go              # Main testing utilities and mock server
+        ├── context.go              # Test context management
+        └── doc.go                  # Package documentation
+```
+
+### Naming Conventions
+
+**Test Functions (New Unified Naming Convention):**
+
+```go
+// Unit tests (service/ directory)
+TestXServiceUnit_Constructor_Success            // Service construction tests
+TestXServiceUnit_GetOperations_MockSuccess     // GET operations with mock server
+TestXServiceUnit_GetOperations_ErrorHandling   // GET error scenarios and edge cases
+TestXServiceUnit_SetOperations_MockSuccess     // SET/RPC operations with mock server
+TestXServiceUnit_SetOperations_ValidationErrors // SET validation and edge cases
+TestXServiceUnit_GetOperations_FilteredSuccess // Filtered GET operations
+TestXServiceUnit_ValidationErrors              // Input validation tests
+TestXServiceUnit_EdgeCases_MockSuccess         // Edge cases and error branches
+
+// Integration tests (tests/integration/ directory)
+TestXServiceIntegration_GetOperationalOperations_Success // Live WNC GET operations
+TestXServiceIntegration_GetConfigurationOperations_Success // Live WNC configuration retrieval
+```
+
+**Examples:**
+
+- `TestApServiceUnit_Constructor_Success` - AP service construction using direct instantiation
+- `TestApServiceUnit_GetOperations_MockSuccess` - AP GET operations with mock server
+- `TestApServiceUnit_SetOperations_ValidationErrors` - AP SET validation and edge cases
+- `TestClientServiceIntegration_GetOperationalOperations_Success` - Client operational data retrieval with live controller
 
 ## 🧰 Prerequisites
 
-Tools and environment required to run unit and integration tests.
-
-### For Unit / Table / Fail-fast Tests
+### For Unit Tests (Layers 1-3)
 
 Unit tests require no special configuration and can be run in any Go development environment.
 
-| Requirement | Version | Notes                    |
-| ----------- | ------- | ------------------------ |
-| Go          | 1.24+   | Uses only stdlib testing |
-| make        | Latest  | Convenience targets      |
+| Requirement | Version | Notes                              |
+| ----------- | ------- | ---------------------------------- |
+| Go          | 1.25+   | Uses stdlib testing + pkg/testutil |
+| make        | Latest  | Convenience targets                |
 
-### For Integration Tests
+### For Integration/E2E Tests (Layers 4-5)
 
 #### 1. Cisco Catalyst 9800 Wireless Network Controller
 
-Integration tests require a real Cisco Catalyst 9800 WNC. Please refer to [#References](#references).
+Integration and E2E tests require a real Cisco Catalyst 9800 WNC. Please refer to [References](#references).
 
 #### 2. Environment Variables
 
-Integration tests also require the following environment variables:
-
-| Variable           | Description        | Example                 |
-| ------------------ | ------------------ | ----------------------- |
-| `WNC_CONTROLLER`   | Controller host/IP | `wnc1.example.internal` |
-| `WNC_ACCESS_TOKEN` | Base64 `user:pass` | `YWRtaW46cGFzc3dvcmQ=`  |
+| Variable                | Description            | Example                 |
+| ----------------------- | ---------------------- | ----------------------- |
+| `WNC_CONTROLLER`        | Controller host/IP     | `wnc1.example.internal` |
+| `WNC_ACCESS_TOKEN`      | Base64 `user:pass`     | `YWRtaW46cGFzc3dvcmQ=`  |
+| `WNC_AP_MAC_ADDR`       | Test AP's Radio MAC    | `aa:bb:cc:dd:ee:f0`     |
+| `WNC_CLIENT_MAC_ADDR`   | Test Client MAC        | `11:22:33:aa:bb:cc`     |
+| `WNC_AP_WLAN_BSSID`     | Test AP WLAN BSSID     | `aa:bb:cc:dd:ee:f1`     |
+| `WNC_AP_NEIGHBOR_BSSID` | Test AP Neighbor BSSID | `11:22:33:dd:ee:ff`     |
 
 <details><summary>Environment setup</summary>
 
 ```bash
 export WNC_CONTROLLER="<controller-host-or-ip>"
 export WNC_ACCESS_TOKEN="<base64-username:password>"
+export WNC_AP_MAC_ADDR="<test-ap-radio-mac-address>"
+export WNC_CLIENT_MAC_ADDR="<test-client-mac-address>"
+export WNC_AP_WLAN_BSSID="<test-ap-wlan-bssid>"
+export WNC_AP_NEIGHBOR_BSSID="<test-ap-neighbor-bssid>"
 ```
 
 </details>
+
+> [!TIP]
+> Environment variables such as `WNC_AP_MAC_ADDR` and `WNC_CLIENT_MAC_ADDR` can be discovered by running the example commands listed in the [README.md - Usecases](../README.md?#-usecases) section.
 
 > [!CAUTION]
 > Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
 
-## 🚀 Running tests
+## 🚀 Running Tests
 
-Run unit and integration suites via Make targets for consistent, reproducible results.
+### Quick Start
 
-Primary Make targets:
+```bash
+# Run all unit tests
+make test-unit
 
-| Command                          | Description                           |
-| -------------------------------- | ------------------------------------- |
-| `make test-unit`                 | Run unit + table + fail-fast suites   |
-| `make test-integration`          | Run integration (skips if env unset)  |
-| `make test-unit-coverage`        | Run unit tests with coverage analysis |
-| `make test-integration-coverage` | Run integration tests with coverage   |
-| `make test-coverage-report`      | Generate HTML coverage report         |
-
-> [!NOTE]
-> Lint runs automatically where configured; see Make and Scripts references.
-
-## 📊 Test Data Collection
-
-Integration tests persist controller responses to support regression and offline inspection.
-
-| Aspect   | Detail                                 |
-| -------- | -------------------------------------- |
-| Location | `*/test_data/*.json`                   |
-| Format   | Raw controller JSON (pretty if stable) |
-| Use      | Schema drift and offline analysis      |
-
-<details><summary>Example layout</summary>
-
-```text
-test_data/
-├── ap_oper_response.json
-├── client_oper_response.json
-├── general_cfg_response.json
-└── rrm_global_oper_response.json
+# Run integration tests (requires WNC)
+make test-integration
 ```
 
-</details>
+### Detailed Test Execution
+
+#### Layer 1: Service Construction Tests
+
+Tests service construction and lifecycle using direct service instantiation.
+
+```bash
+go test ./service/ap -run "TestApServiceUnit_Constructor" -v
+```
+
+**Example:**
+
+- [`service/ap/service_test.go`](../service/ap/service_test.go)
+
+#### Layer 2 and 3: Mock-based Method Tests
+
+Tests all operations with **unified mock server API** using functional options.
+
+```bash
+go test ./service/ap -run "TestApServiceUnit_GetOperations_Mock" -v
+```
+
+**Examples:**
+
+- [`service/ap/service_test.go`](../service/ap/service_test.go)
+- [`service/wat/service_test.go`](../service/wat/service_test.go)
+
+#### Layer 3: Integration Tests
+
+Tests only GET operations with **live WNC**.
+
+```bash
+go test ./tests/integration -tags=integration -v
+```
+
+**Example:**
+
+- [`tests/integration/client_service_test.go`](../tests/integration/client_service_test.go)
+- [`tests/integration/ap_service_test.go`](../tests/integration/ap_service_test.go)
+- [`tests/integration/rrm_service_test.go`](../tests/integration/rrm_service_test.go)
+
+#### Layer 4: E2E Scenario Tests
+
+Non-disruptive CRUD operations with **live WNC**.
+
+```bash
+go test ./tests/scenario/ap/ -tags=scenario -v
+go test ./tests/scenario/rf/ -tags=scenario -v
+go test ./tests/scenario/site/ -tags=scenario -v
+go test ./tests/scenario/wlan/ -tags=scenario -v
+```
+
+**Example:**
+
+- [`tests/scenario/ap/service_test.go`](../tests/scenario/ap/service_test.go) - AP admin, and radio operations
+- [`tests/scenario/site/tag_service_test.go`](../tests/scenario/site/tag_service_test.go) - Site tag operations
+- [`tests/scenario/rf/service_test.go`](../tests/scenario/rf/service_test.go) - RF tag operations
+- [`tests/scenario/wlan/service_test.go`](../tests/scenario/wlan/service_test.go) - Poliy tag operations
+
+> [!NOTE]
+> Tag operations in scenario tests **MUST** use newly created tags to avoid communication impact.
 
 ## 📈 Coverage Reports
 
-Generate coverage summaries and an HTML report to assess tested code paths.
+### Coverage Analysis
 
-| Command                          | Notes                                                         |
-| -------------------------------- | ------------------------------------------------------------- |
-| `make test-unit-coverage`        | Writes `./tmp/coverage.out` from unit tests.                  |
-| `make test-integration-coverage` | Writes `./tmp/coverage.out` from integration tests.           |
-| `make test-coverage-report`      | Generates `report.out` and `report.html` under `./coverage/.` |
+Generates coverage reports for unit tests.
 
-> [!NOTE]
-> CI publish a coverage badge from `coverage/report.out` when present.
+```bash
+make test-unit-coverage
+```
 
-## 📚️ Appendix
+### Coverage Requirements Validation
+
+```bash
+# Check service package coverage (must be ≥90%)
+go test -cover ./service/...
+
+# Check repository coverage (must be ≥80%)
+go test -cover ./...
+```
+
+## 📚 Appendix
 
 ### Testing Tips
 
-For efficient testing workflow, start with unit tests and gradually move to integration tests.
-
-1. **Install Dependencies**: `make deps` - Install gotestsum and other development tools.
-2. **Unit Tests First**: `make test-unit` - Ensure basic functionality with enhanced output.
-3. **Environment Setup**: Configure environment variables for integration tests.
-4. **Environment Verification**: Check controller access to verify connectivity and credentials.
-5. **Coverage Analysis**: `make test-unit-coverage` or `make test-integration-coverage` - Run tests with coverage analysis.
-6. **HTML Coverage Report**: `make test-coverage-report` - Generate detailed HTML coverage report.
-7. **Test Data Review**: Examine generated JSON files to understand API response structures for debugging.
-8. **Incremental Testing**: Test individual modules to target specific functionality when debugging.
-9. **Run Integration Tests**: `make test-integration` - Ensure all functionality works as expected.
-
-> [!TIP]
-> For comprehensive testing, run both `make test-unit` and `make test-integration` sequentially to validate all functionality.
-
-### Development Dependencies
-
-The project uses several tools to enhance the testing experience. Install all dependencies with: `make deps`
+1. **Start with unit tests** - Validate basic functionality first using unified MockServer API
+2. **Use real WNC data** - Base mock responses on actual controller data from IOS-XE 17.12.x
+3. **Test error scenarios** - IOS-XE 17.18.1+ services may return 404 when not configured
+4. **Follow naming conventions** - Use standardized test function names (e.g., `TestXServiceUnit_*`)
+5. **Use unified API** - Use `testutil.NewMockServer()` with functional options.
+6. **Leverage options** - Combine multiple `MockServerOption`s for complex test scenarios
+7. **Coverage-driven development** - Write comprehensive tests to meet coverage targets
+8. **Parallel-safe integration** - Mark integration tests with `t.Parallel()` for GET-only operations
+9. **Scenario isolation** - Use newly created resources in E2E scenarios to avoid impact
 
 ### Troubleshooting
 
-Common issues and concise fixes for failed or flaky test runs.
-
-- Missing env vars: set `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN` for integration.
-- Unreachable controller: verify DNS or use `wnc1.example.internal` or an IP.
-- TLS errors: see Security → TLS Verification and avoid disabling checks in prod.
-- Auth failures: ensure the token is Base64 of `user:pass` and not expired.
-- Flaky tests: re-run with verbose logs; isolate by package using `go test ./pkg`.
+| Issue                  | Solution                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| Missing env vars       | Ensure all required `WNC_*` variables are set                                            |
+| Unreachable controller | Verify DNS/IP connectivity                                                               |
+| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only                |
+| Auth failures          | Ensure token is Base64 of `user:pass`                                                    |
+| TestClient creation    | Use `testutil.NewTestClient(mockServer)` to create test clients for service construction |
 
 ### References
 
-These references provide additional information on Cisco Catalyst 9800 WNC and related technologies:
-
 - 📖 [Cisco Catalyst 9800-CL Wireless Controller for Cloud Deployment Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/c9800-cl-dg.html)
-  - A comprehensive guide for deploying Cisco Catalyst 9800-CL WNC in cloud environments.
-  - This includes setup instructions, configuration examples, and best practices.
 - 📖 [Cisco Catalyst 9800 Series Wireless Controller Programmability Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/programmability-guide/b_c9800_programmability_cg/cisco-catalyst-9800-series-wireless-controller-programmability-guide.html)
-  - A guide for programming and automating Cisco Catalyst 9800 WNC.
-  - This includes information on RESTCONF APIs, YANG models, and more.
 - 📖 [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme)
-  - A repository containing YANG models and platform capabilities for Cisco IOS XE 17.12.1.
-  - This is useful for understanding the data structures used in the API.

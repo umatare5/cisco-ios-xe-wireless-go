@@ -4,7 +4,7 @@
 # @meta author "@umatare5"
 # @describe Cisco WNC Artifacts Cleanup - Clean build artifacts, temporary files, and caches
 
-# @option -p --project <DIR>           Project root directory [default: .]
+# @option -p --project <DIR>          Project root directory [default: .]
 # @flag   -v --verbose                Enable verbose output
 # @flag   -f --force                  Force removal without confirmation
 # @flag      --go-cache               Clean Go build cache

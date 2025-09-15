@@ -3,33 +3,28 @@
 This document provides an overview of Make targets used in this repository.
 
 > [!NOTE]
-> Some scripts require an accessible Cisco C9800 and the following variables:
->
-> - `WNC_CONTROLLER`
-> - `WNC_ACCESS_TOKEN`
+> Integration tests require an accessible Cisco C9800 and these variables: See [TESTING.md - Prerequisites](./TESTING.md#-prerequisites)
 
 ## 🧰 Commands
 
 Following is a summary of available Make targets:
 
-| Make Target                 | Purpose                                 | Underlying Script                        |
-| --------------------------- | --------------------------------------- | ---------------------------------------- |
-| `help`                      | Show command help overview              | `scripts/help.sh`                        |
-| `deps`                      | Install / update dev tools              | `scripts/install_dependencies.sh`        |
-| `clean`                     | Remove caches / temp / coverage files   | `scripts/clean_artifacts.sh`             |
-| `lint`                      | Run golangci-lint                       | `scripts/lint.sh`                        |
-| `build`                     | Verify build (`go build ./...`)         | (inline)                                 |
-| `test-unit`                 | Unit + table + fail-fast                | `scripts/test_unit.sh`                   |
-| `test-integration`          | Integration against live controller     | `scripts/test_integration.sh`            |
-| `test-unit-coverage`        | Unit tests with coverage analysis       | `scripts/test_unit.sh --coverage`        |
-| `test-integration-coverage` | Integration tests with coverage         | `scripts/test_integration.sh --coverage` |
-| `test-coverage-report`      | Generate HTML coverage report           | `scripts/generate_coverage_report.sh`    |
-| `yang-list`                 | List available YANG models              | `scripts/get_yang_models.sh`             |
-| `yang-model`                | Fetch a YANG module definition          | `scripts/get_yang_model_details.sh`      |
-| `yang-statement`            | Fetch a YANG subtree (RESTCONF)         | `scripts/get_yang_statement_details.sh`  |
-| `pre-commit-install`        | Install pre-commit hook with symlink    | (inline)                                 |
-| `pre-commit-test`           | Test pre-commit hook without installing | `scripts/pre_commit_hook.sh`             |
-| `pre-commit-uninstall`      | Remove a symlink to pre-commit hook     | (inline)                                 |
+| Make Target            | Purpose                                    | Underlying Script                       |
+| ---------------------- | ------------------------------------------ | --------------------------------------- |
+| `help`                 | Show command help overview                 | `scripts/help.sh`                       |
+| `deps`                 | Install / update dev tools                 | `scripts/install_dependencies.sh`       |
+| `clean`                | Remove caches / temp / coverage files      | `scripts/clean_artifacts.sh`            |
+| `lint`                 | Run golangci-lint                          | `scripts/lint.sh`                       |
+| `build`                | Verify build (`go build ./...`)            | (inline)                                |
+| `test-unit`            | Unit + table + fail-fast                   | `scripts/test_unit.sh`                  |
+| `test-integration`     | Integration tests (tests/integration only) | `scripts/test_integration.sh`           |
+| `test-unit-coverage`   | Unit tests with coverage analysis          | `scripts/test_unit.sh --coverage`       |
+| `yang-list`            | List available YANG models                 | `scripts/get_yang_models.sh`            |
+| `yang-model`           | Fetch a YANG module definition             | `scripts/get_yang_model_details.sh`     |
+| `yang-statement`       | Fetch a YANG subtree (RESTCONF)            | `scripts/get_yang_statement_details.sh` |
+| `pre-commit-install`   | Install pre-commit hook with symlink       | (inline)                                |
+| `pre-commit-test`      | Test pre-commit hook without installing    | `scripts/pre_commit_hook.sh`            |
+| `pre-commit-uninstall` | Remove a symlink to pre-commit hook        | (inline)                                |
 
 > [!TIP]
 > YANG targets accept variables: `make yang-model MODEL=<name>` and `make yang-statement MODEL=<name> STATEMENT=<stmt>`.
@@ -51,11 +46,9 @@ make deps && make lint && make build
 Execute unit/integration tests and generate coverage plus an HTML report.
 
 ```bash
-make test-unit                 # unit + table + fail-fast after lint
-make test-integration          # live controller tests (env required)
-make test-unit-coverage        # unit tests with coverage analysis
-make test-integration-coverage # integration tests with coverage analysis
-make test-coverage-report      # HTML coverage export
+make test-unit            # unit + table + fail-fast after lint
+make test-unit-coverage   # unit tests with coverage analysis
+make test-integration     # integration tests (tests/integration only)
 ```
 
 ### YANG Exploration

@@ -61,6 +61,10 @@ execute_cleanup_operations() {
     if [[ "$ARTIFACTS_ALL" == "true" || "$ARTIFACTS_TEST_FILES" == "true" ]]; then
         clean_test_files || return 1
     fi
+
+    if [[ "$ARTIFACTS_ALL" == "true" ]]; then
+        clean_backup_files || return 1
+    fi
 }
 
 # Display completion message based on dry-run flag

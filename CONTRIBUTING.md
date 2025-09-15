@@ -1,7 +1,9 @@
 # 🤝 Contribution Guide
 
-Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go library**!
-This document explains how you can get involved, the development workflow, and our release process.
+Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go SDK**! This document explains how you can get involved, the development workflow, and our release process.
+
+> [!WARNING]
+> This SDK is under **active development**. I'll make the breaking changes until `v1.0.0`. If you give the contribution to this repo, please create an issue before to avoid duplicate work. The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
 
 ## 💡 How to Contribute
 
@@ -22,19 +24,15 @@ I welcome all kinds of contributions, including:
 
 ## 🛠️ Development
 
-I provide `make` commands and helper scripts for building, testing, and debugging this library.
-The helper scripts use `curl` to access WNC directly, so they have **no dependency on Go**.
-
-> **Note:** Integration tests require access to a live Cisco Catalyst 9800 WNC instance.
-> Set `WNC_ACCESS_TOKEN` and `WNC_CONTROLLER` before running them.
+I provide `make` commands and helper scripts for building, testing, and debugging this SDK.
 
 ### Prerequisites
 
 Before running the build and test commands, you must install dependencies and set up pre-commit hooks:
 
 ```bash
-make deps              # Install build and test dependencies
-make pre-commit-install # Set up pre-commit hooks for code quality
+make deps                # Install build and test dependencies
+make pre-commit-install  # Set up pre-commit hooks for code quality
 ```
 
 ### Quick Build & Tests
@@ -42,20 +40,24 @@ make pre-commit-install # Set up pre-commit hooks for code quality
 ```bash
 export WNC_CONTROLLER="<controller-host-or-ip>"
 export WNC_ACCESS_TOKEN="<base64-username:password>"
+export WNC_AP_MAC_ADDR="<test-ap-radio-mac-address>"     # Pick a MAC Address from ./examples/list_ap.go result.
+export WNC_CLIENT_MAC_ADDR="<test-client-mac-address>"   # Pick a MAC Address from ./examples/list_clients.go result.
+export WNC_AP_WLAN_BSSID="<test-ap-wlan-bssid>"          # Pick a BSSID from ./examples/list_wlan.go result.
+export WNC_AP_NEIGHBOR_BSSID="<test-ap-neighbor-bssid>"  # Pick a BSSID from ./examples/list_neighbors.go result.
 
-make lint                    # Static analysis
-make test-unit               # Run unit tests (runs lint first)
-make test-integration        # Test live connection to WNC
-make test-unit-coverage      # Check unit test coverage
-make test-integration-coverage # Check integration test coverage
+make lint                # Static analysis
+make test-unit           # Run unit tests
+make test-unit-coverage  # Check unit test coverage
+make test-integration    # Run integration test using live WNC
 ```
 
 ## 🧪 Testing
 
-This library includes **comprehensive unit and integration tests** to ensure reliability and compatibility with Cisco Catalyst 9800 controllers.
+This SDK includes **unit, integration and scenario tests** to ensure reliability and compatibility with Cisco Catalyst 9800 controllers.
 
 - **Unit tests** run without any external dependencies.
 - **Integration tests** require a live WNC instance and valid credentials.
+- **Scenario tests** perform end-to-end operations on a live WNC and may modify its state.
 
 For detailed testing instructions, see **[TESTING.md](./docs/TESTING.md)**.
 
@@ -63,56 +65,83 @@ For detailed testing instructions, see **[TESTING.md](./docs/TESTING.md)**.
 
 This repository contains useful debugging and development scripts in the `scripts/` directory.
 
-These scripts are particularly helpful for:
+They use `curl` to access WNC, so they are independent of Go. For detailed usage, see **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
 
-- Exploring new API endpoints quickly
-- Debugging API responses without building the Go library
+## ♻️ Change Review Process: For Maintainers
 
-They use `curl` to access WNC, so they are independent of Go.
-For detailed usage, see **[MAKE_REFERENCE.md](./docs/MAKE_REFERENCE.md)**.
+> [!Note]
+>
+> This section is for maintainers. Contributors do not need to perform these steps.
 
----
+GitHub Actions cannot access a live WNC. Reviewers therefore must have a functional WNC development environment to complete reviews.
 
-## Review Process _(Maintainers Only)_
+### Verify the Changes using a Live WNC
 
-Because the WNC may not be reachable from CI, automated pipelines cannot run integration tests.
-PR reviewers are responsible for executing integration tests if contributors request it on their PR.
+Ensure you have access to a development Cisco C9800 WNC that enabled RESTCONF and export the required env vars.
 
-Reviewer checklist:
+#### 1. Run the Unit Tests
 
-- Ensure you have access to a development Cisco C9800 WNC (RESTCONF enabled) and export the required env vars:
+Run unit tests as follows:
 
 ```bash
-export WNC_CONTROLLER="<controller-host-or-ip>"
-export WNC_ACCESS_TOKEN="<base64-username:password>"
+make test-unit
 ```
 
-- Run tests and generate coverage outputs:
+#### 2. Run the Integration Tests
+
+Run integration tests as follows:
 
 ```bash
-make test-unit-coverage        # produces unit test coverage in tmp/coverage.out
-make test-integration-coverage # produces integration test coverage in tmp/coverage.out
-make test-coverage-report      # writes coverage/report.html and coverage/report.out
+make test-integration
+```
+
+#### 3. Run the Scenario Tests
+
+Run scenario tests as follows:
+
+```bash
+# Run AP Admin State Change and AP Radio State Change Test
+go test ./tests/scenario/ap/ -tags=scenario -run AdminStateManagement -v
+go test ./tests/scenario/ap/ -tags=scenario -run RadioStateManagement -v
+
+# Run RF Tag, Site Tag and Policy Tag Test
+go test ./tests/scenario/rf/ -tags=scenario -run TagLifecycleManagement -v
+go test ./tests/scenario/site/ -tags=scenario -run TagLifecycleManagement -v
+go test ./tests/scenario/wlan/ -tags=scenario -run TagLifecycleManagement -v
+```
+
+#### 4. Run the Example Application
+
+Run the example application listed in the [README.md](../README.md#-usecases) **Usecases** section.
+
+> [!Warning]
+>
+> `example/reload_ap` and `example/reload_controller` will reboot the AP and controller. This causes downtime.
+
+#### 5. Generate Coverage Reports and Badge
+
+Generate and commit coverage reports:
+
+```bash
+make test-unit-coverage # writes coverage/report.html and coverage/report.out
 octocov badge coverage --out docs/assets/coverage.svg # generates coverage badge
 ```
 
-- Commit coverage artifacts (CI will build the badge):
+Commit coverage artifacts and badge:
 
-  - Commit the updated files:
-    - `coverage/report.out` (coverprofile for CI)
-    - `coverage/report.html` (human-readable report)
-    - `docs/assets/coverage.svg` (coverage badge)
+- `coverage/report.out` - coverprofile for CI
+- `coverage/report.html` - human-readable report
+- `docs/assets/coverage.svg` - coverage badge
 
-- In the PR description, mention the resulting total coverage and, if helpful, link to `coverage/report.html`.
+#### 6. Push the Changes
 
-Notes:
+Push the coverage artifacts and badge to the PR.
 
-- CI cannot access a WNC instance; manual execution is required to validate integration behavior.
-- Reviewers therefore must have a functional WNC development environment to complete reviews.
+## 🚀 Release Process: For Maintainers
 
-## 🚀 Release Process _(Maintainers Only)_
-
-_This section is for maintainers. Contributors do not need to perform these steps._
+> [!Note]
+>
+> This section is for maintainers. Contributors do not need to perform these steps.
 
 To release a new version:
 
@@ -120,3 +149,13 @@ To release a new version:
 - **Submit a pull request** with the updated `VERSION` file.
 
 Once merged, GitHub Actions will automatically release the new version using [Release Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-release.yml).
+
+## 📖 Reference
+
+### Adding New Service
+
+- N/A
+
+### Adding New Function to an Existing Service
+
+- [f595bb: feat/ap: add IoT firmware information support](https://github.com/umatare5/cisco-ios-xe-wireless-go/pull/27/commits/f595bbf830802703dce950ba42df3ee411d00b9a).

@@ -2,28 +2,24 @@ package restconf
 
 import (
 	"testing"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
 
-func TestNewBuilder(t *testing.T) {
+func TestRESTCONFBuilderUnit_NewBuilder_Success(t *testing.T) {
 	protocol := "https"
 	controller := "192.168.1.100"
 
 	builder := NewBuilder(protocol, controller)
 
-	if builder == nil {
-		t.Fatal("NewBuilder returned nil")
-	}
+	testutil.AssertNotNil(t, builder, "NewBuilder result")
 
-	if builder.protocol != protocol {
-		t.Errorf("protocol = %q, want %q", builder.protocol, protocol)
-	}
-
-	if builder.controller != controller {
-		t.Errorf("controller = %q, want %q", builder.controller, controller)
-	}
+	testutil.AssertStringEquals(t, builder.protocol, protocol, "protocol")
+	testutil.AssertStringEquals(t, builder.controller, controller, "controller")
 }
 
-func TestBuildBaseURL(t *testing.T) {
+func TestRESTCONFBuilderUnit_buildBaseURL_Success(t *testing.T) {
 	testCases := []struct {
 		name       string
 		protocol   string
@@ -38,16 +34,13 @@ func TestBuildBaseURL(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			builder := NewBuilder(tt.protocol, tt.controller)
-			baseURL := builder.BuildBaseURL()
-
-			if baseURL != tt.expected {
-				t.Errorf("BuildBaseURL() = %q, want %q", baseURL, tt.expected)
-			}
+			baseURL := builder.buildBaseURL()
+			testutil.AssertStringEquals(t, baseURL, tt.expected, "buildBaseURL()")
 		})
 	}
 }
 
-func TestBuildRESTCONFURL(t *testing.T) {
+func TestRESTCONFBuilderUnit_BuildDataURL_Success(t *testing.T) {
 	builder := NewBuilder("https", "192.168.1.100")
 
 	testCases := []struct {
@@ -75,20 +68,22 @@ func TestBuildRESTCONFURL(t *testing.T) {
 			"/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces",
 			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-general-oper:general-oper-data/interfaces",
 		},
+		{
+			"endpoint already with restconf data path",
+			"/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data",
+			"https://192.168.1.100/restconf/data/Cisco-IOS-XE-wireless-ap-oper:ap-oper-data",
+		},
 	}
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			url := builder.BuildRESTCONFURL(tt.endpointPath)
-
-			if url != tt.expected {
-				t.Errorf("BuildRESTCONFURL(%q) = %q, want %q", tt.endpointPath, url, tt.expected)
-			}
+			url := builder.BuildDataURL(tt.endpointPath)
+			testutil.AssertStringEquals(t, url, tt.expected, "BuildDataURL()")
 		})
 	}
 }
 
-func TestNormalizeEndpointPath(t *testing.T) {
+func TestRESTCONFBuilderUnit_NormalizeEndpointPath_Success(t *testing.T) {
 	builder := NewBuilder("https", "192.168.1.100")
 
 	testCases := []struct {
@@ -106,71 +101,12 @@ func TestNormalizeEndpointPath(t *testing.T) {
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
 			normalized := builder.normalizeEndpointPath(tt.path)
-
-			if normalized != tt.expected {
-				t.Errorf("normalizeEndpointPath(%q) = %q, want %q", tt.path, normalized, tt.expected)
-			}
+			testutil.AssertStringEquals(t, normalized, tt.expected, "normalizeEndpointPath()")
 		})
 	}
 }
 
-func TestBuildYANGLibraryURL(t *testing.T) {
-	builder := NewBuilder("https", "core.example.com")
-	url := builder.BuildYANGLibraryURL()
-
-	expected := "https://core.example.com/restconf/data?fields=ietf-yang-library:modules-state/module"
-	if url != expected {
-		t.Errorf("BuildYANGLibraryURL() = %q, want %q", url, expected)
-	}
-}
-
-func TestBuildYANGModuleURL(t *testing.T) {
-	builder := NewBuilder("https", "core.example.com")
-
-	testCases := []struct {
-		name      string
-		yangModel string
-		revision  string
-		expected  string
-	}{
-		{
-			"standard module",
-			"Cisco-IOS-XE-wireless-afc-oper",
-			"2021-07-01",
-			"https://core.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-afc-oper/2021-07-01",
-		},
-		{
-			"config module",
-			"Cisco-IOS-XE-wireless-ap-cfg",
-			"2022-03-15",
-			"https://core.example.com/restconf/tailf/modules/Cisco-IOS-XE-wireless-ap-cfg/2022-03-15",
-		},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			url := builder.BuildYANGModuleURL(tt.yangModel, tt.revision)
-
-			if url != tt.expected {
-				t.Errorf("BuildYANGModuleURL(%q, %q) = %q, want %q", tt.yangModel, tt.revision, url, tt.expected)
-			}
-		})
-	}
-}
-
-func TestBuildEndpointURL(t *testing.T) {
-	builder := NewBuilder("https", "core.example.com")
-	endpoint := "/Cisco-IOS-XE-wireless-general-oper:general-oper-data"
-
-	endpointURL := builder.BuildEndpointURL(endpoint)
-	restconfURL := builder.BuildRESTCONFURL(endpoint)
-
-	if endpointURL != restconfURL {
-		t.Errorf("BuildEndpointURL() = %q, BuildRESTCONFURL() = %q, should be equal", endpointURL, restconfURL)
-	}
-}
-
-func TestIsValidProtocol(t *testing.T) {
+func TestRESTCONFBuilderUnit_isValidProtocol_Success(t *testing.T) {
 	testCases := []struct {
 		protocol string
 		expected bool
@@ -186,231 +122,165 @@ func TestIsValidProtocol(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.protocol, func(t *testing.T) {
-			result := IsValidProtocol(tt.protocol)
-
-			if result != tt.expected {
-				t.Errorf("IsValidProtocol(%q) = %v, want %v", tt.protocol, result, tt.expected)
-			}
+			result := isValidProtocol(tt.protocol)
+			testutil.AssertBoolEquals(t, result, tt.expected, "isValidProtocol()")
 		})
 	}
 }
 
-func TestIsValidYANGModel(t *testing.T) {
-	testCases := []struct {
-		name      string
-		yangModel string
-		expected  bool
-	}{
-		{"valid operational model", "Cisco-IOS-XE-wireless-afc-oper", true},
-		{"valid config model", "Cisco-IOS-XE-wireless-ap-cfg", true},
-		{"invalid prefix", "Invalid-wireless-afc-oper", false},
-		{"invalid suffix", "Cisco-IOS-XE-wireless-afc", false},
-		{"empty string", "", false},
-		{"just prefix", "Cisco-IOS-XE-wireless-", false},
-		{"just suffix", "-oper", false},
-		{"wrong prefix case", "cisco-ios-xe-wireless-afc-oper", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := IsValidYANGModel(tt.yangModel)
-
-			if result != tt.expected {
-				t.Errorf("IsValidYANGModel(%q) = %v, want %v", tt.yangModel, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestHasValidYANGPrefix(t *testing.T) {
-	testCases := []struct {
-		name     string
-		model    string
-		expected bool
-	}{
-		{"valid prefix", "Cisco-IOS-XE-wireless-afc-oper", true},
-		{"invalid prefix", "Invalid-IOS-XE-wireless-afc-oper", false},
-		{"empty string", "", false},
-		{"just prefix", "Cisco-IOS-XE-wireless-", true},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := hasValidYANGPrefix(tt.model)
-
-			if result != tt.expected {
-				t.Errorf("hasValidYANGPrefix(%q) = %v, want %v", tt.model, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestHasValidYANGSuffix(t *testing.T) {
-	testCases := []struct {
-		name     string
-		model    string
-		expected bool
-	}{
-		{"valid oper suffix", "Cisco-IOS-XE-wireless-afc-oper", true},
-		{"valid cfg suffix", "Cisco-IOS-XE-wireless-ap-cfg", true},
-		{"invalid suffix", "Cisco-IOS-XE-wireless-afc", false},
-		{"empty string", "", false},
-		{"just oper suffix", "-oper", true},
-		{"just cfg suffix", "-cfg", true},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := hasValidYANGSuffix(tt.model)
-
-			if result != tt.expected {
-				t.Errorf("hasValidYANGSuffix(%q) = %v, want %v", tt.model, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestIsValidRevision(t *testing.T) {
-	testCases := []struct {
-		name     string
-		revision string
-		expected bool
-	}{
-		{"valid revision", "2021-07-01", true},
-		{"valid revision 2", "2022-12-31", true},
-		{"invalid format - too short", "2021-7-1", false},
-		{"invalid format - too long", "2021-07-011", false},
-		{"invalid separators", "2021/07/01", false},
-		{"invalid month", "2021-13-01", true}, // Note: This only checks format (digits), not actual date validity
-		{"invalid day", "2021-07-32", true},   // Note: This only checks format (digits), not actual date validity
-		{"non-numeric year", "abcd-07-01", false},
-		{"non-numeric month", "2021-ab-01", false},
-		{"non-numeric day", "2021-07-ab", false},
-		{"empty string", "", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := IsValidRevision(tt.revision)
-
-			if result != tt.expected {
-				t.Errorf("IsValidRevision(%q) = %v, want %v", tt.revision, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestHasValidDateFormat(t *testing.T) {
-	testCases := []struct {
-		name     string
-		revision string
-		expected bool
-	}{
-		{"valid format", "2021-07-01", true},
-		{"invalid separators", "2021/07/01", false},
-		{"no separators", "20210701", false},
-		{"wrong separator positions", "21-07-011", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := hasValidDateFormat(tt.revision)
-
-			if result != tt.expected {
-				t.Errorf("hasValidDateFormat(%q) = %v, want %v", tt.revision, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestHasValidDateComponents(t *testing.T) {
-	testCases := []struct {
-		name     string
-		revision string
-		expected bool
-	}{
-		{"all numeric", "2021-07-01", true},
-		{"non-numeric year", "abcd-07-01", false},
-		{"non-numeric month", "2021-ab-01", false},
-		{"non-numeric day", "2021-07-ab", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := hasValidDateComponents(tt.revision)
-
-			if result != tt.expected {
-				t.Errorf("hasValidDateComponents(%q) = %v, want %v", tt.revision, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestIsDigits(t *testing.T) {
-	testCases := []struct {
-		name     string
-		input    string
-		expected bool
-	}{
-		{"all digits", "1234", true},
-		{"single digit", "5", true},
-		{"contains letters", "12a4", false},
-		{"contains symbols", "12-4", false},
-		{"empty string", "", true}, // Empty string has no non-digits
-		{"zero", "0", true},
-		{"leading zero", "0123", true},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			result := isDigits(tt.input)
-
-			if result != tt.expected {
-				t.Errorf("isDigits(%q) = %v, want %v", tt.input, result, tt.expected)
-			}
-		})
-	}
-}
-
-func TestConstants(t *testing.T) {
+func TestRESTCONFBuilderUnit_Constants_Success(t *testing.T) {
 	// Test RESTCONF constants
-	if RESTCONFPathPrefix != "/restconf/data" {
-		t.Errorf("RESTCONFPathPrefix = %q, want %q", RESTCONFPathPrefix, "/restconf/data")
-	}
-
-	if RESTCONFModulesPathPrefix != "/restconf/tailf/modules" {
-		t.Errorf("RESTCONFModulesPathPrefix = %q, want %q", RESTCONFModulesPathPrefix, "/restconf/tailf/modules")
-	}
-
-	expectedLibraryQuery := "?fields=ietf-yang-library:modules-state/module"
-	if RESTCONFLibraryQuery != expectedLibraryQuery {
-		t.Errorf("RESTCONFLibraryQuery = %q, want %q", RESTCONFLibraryQuery, expectedLibraryQuery)
-	}
+	testutil.AssertStringEquals(t, routes.RESTCONFDataPath, "/restconf/data", "RESTCONFDataPath")
 
 	// Test protocol constants
-	if ProtocolHTTP != "http" {
-		t.Errorf("ProtocolHTTP = %q, want %q", ProtocolHTTP, "http")
+	testutil.AssertStringEquals(t, ProtocolHTTP, "http", "ProtocolHTTP")
+
+	testutil.AssertStringEquals(t, ProtocolHTTPS, "https", "ProtocolHTTPS")
+
+	testutil.AssertStringEquals(t, DefaultProtocol, ProtocolHTTPS, "DefaultProtocol")
+}
+
+// TestBuildOperationsURL tests RPC URL construction.
+func TestRESTCONFBuilderUnit_BuildOperationsURL_Success(t *testing.T) {
+	builder := NewBuilder("https", "192.168.1.1")
+
+	tests := []struct {
+		name     string
+		rpcPath  string
+		expected string
+	}{
+		{
+			name:     "RPC path with operations prefix",
+			rpcPath:  "/restconf/operations/cisco-wireless:ap-join",
+			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-join",
+		},
+		{
+			name:     "RPC path without operations prefix",
+			rpcPath:  "cisco-wireless:ap-join",
+			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-join",
+		},
+		{
+			name:     "RPC path without leading slash",
+			rpcPath:  "cisco-wireless:ap-reload",
+			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-reload",
+		},
+		{
+			name:     "RPC path with leading slash",
+			rpcPath:  "/cisco-wireless:ap-reload",
+			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-reload",
+		},
 	}
 
-	if ProtocolHTTPS != "https" {
-		t.Errorf("ProtocolHTTPS = %q, want %q", ProtocolHTTPS, "https")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := builder.BuildOperationsURL(tt.rpcPath)
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildOperationsURL()")
+		})
+	}
+}
+
+// TestBuildQueryURL tests query URL construction.
+func TestRESTCONFBuilderUnit_BuildQueryURL_Success(t *testing.T) {
+	builder := NewBuilder("https", "192.168.1.1")
+
+	tests := []struct {
+		name       string
+		endpoint   string
+		identifier string
+		expected   string
+	}{
+		{
+			name:       "Simple query",
+			endpoint:   "ap-name",
+			identifier: "TEST-AP",
+			expected:   "ap-name=TEST-AP",
+		},
+		{
+			name:       "MAC query",
+			endpoint:   "wtp-mac",
+			identifier: "aa:bb:cc:dd:ee:ff",
+			expected:   "wtp-mac=aa:bb:cc:dd:ee:ff",
+		},
+		{
+			name:       "Empty identifier",
+			endpoint:   "test",
+			identifier: "",
+			expected:   "test=",
+		},
 	}
 
-	if DefaultProtocol != ProtocolHTTPS {
-		t.Errorf("DefaultProtocol = %q, want %q", DefaultProtocol, ProtocolHTTPS)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := builder.BuildQueryURL(tt.endpoint, tt.identifier)
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildQueryURL()")
+		})
+	}
+}
+
+// TestBuildQueryCompositeURL tests composite query URL construction.
+func TestRESTCONFBuilderUnit_BuildQueryCompositeURL_Success(t *testing.T) {
+	builder := NewBuilder("https", "192.168.1.1")
+
+	tests := []struct {
+		name     string
+		endpoint string
+		values   []interface{}
+		expected string
+	}{
+		{
+			name:     "String values",
+			endpoint: "composite-key",
+			values:   []interface{}{"mac", "slot"},
+			expected: "composite-key=mac,slot",
+		},
+		{
+			name:     "Mixed types",
+			endpoint: "query",
+			values:   []interface{}{"aa:bb:cc:dd:ee:ff", 0, true},
+			expected: "query=aa:bb:cc:dd:ee:ff,0,true",
+		},
+		{
+			name:     "Single value",
+			endpoint: "single",
+			values:   []interface{}{"value"},
+			expected: "single=value",
+		},
+		{
+			name:     "Empty values",
+			endpoint: "empty",
+			values:   []interface{}{},
+			expected: "empty=",
+		},
+		{
+			name:     "Int64 values",
+			endpoint: "int64-test",
+			values:   []interface{}{int64(123456789)},
+			expected: "int64-test=123456789",
+		},
+		{
+			name:     "Float64 values",
+			endpoint: "float64-test",
+			values:   []interface{}{float64(123.456)},
+			expected: "float64-test=123.456",
+		},
+		{
+			name:     "Bool values",
+			endpoint: "bool-test",
+			values:   []interface{}{true, false},
+			expected: "bool-test=true,false",
+		},
+		{
+			name:     "Custom type fallback",
+			endpoint: "custom-test",
+			values:   []interface{}{struct{ Name string }{"test"}},
+			expected: "custom-test={test}",
+		},
 	}
 
-	// Test YANG model constants
-	expectedPrefix := "Cisco-IOS-XE-wireless-"
-	if RestconfYANGModelPrefix != expectedPrefix {
-		t.Errorf("RestconfYANGModelPrefix = %q, want %q", RestconfYANGModelPrefix, expectedPrefix)
-	}
-
-	if RestconfYANGModelOperSuffix != "-oper" {
-		t.Errorf("RestconfYANGModelOperSuffix = %q, want %q", RestconfYANGModelOperSuffix, "-oper")
-	}
-
-	if RestconfYANGModelCfgSuffix != "-cfg" {
-		t.Errorf("RestconfYANGModelCfgSuffix = %q, want %q", RestconfYANGModelCfgSuffix, "-cfg")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := builder.BuildQueryCompositeURL(tt.endpoint, tt.values...)
+			testutil.AssertStringEquals(t, result, tt.expected, "BuildQueryCompositeURL()")
+		})
 	}
 }

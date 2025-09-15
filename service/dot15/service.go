@@ -1,0 +1,25 @@
+package dot15
+
+import (
+	"context"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/dot15"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+)
+
+// Service provides IEEE 802.15 Bluetooth configuration operations for Cisco IOS-XE Wireless LAN Controller.
+type Service struct {
+	service.BaseService
+}
+
+// NewService creates a new 802.15 service instance with the provided client.
+func NewService(client *core.Client) Service {
+	return Service{BaseService: service.NewBaseService(client)}
+}
+
+// GetConfig retrieves dot15.4 configuration data from the controller.
+func (s Service) GetConfig(ctx context.Context) (*model.Dot15Cfg, error) {
+	return core.Get[model.Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
+}

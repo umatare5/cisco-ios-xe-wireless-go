@@ -1,14 +1,12 @@
 package wnc
 
 import (
-	"context"
-	"io"
 	"log/slog"
 	"testing"
 	"time"
 )
 
-// TestNewClient tests the creation of a new unified client
+// TestNewClient tests the creation of a new unified client.
 func TestNewClient(t *testing.T) {
 	testCases := []struct {
 		name        string
@@ -19,22 +17,29 @@ func TestNewClient(t *testing.T) {
 	}{
 		{
 			name:        "ValidClient",
-			host:        "controller.example.com",
-			token:       "dGVzdDp0ZXN0", // base64 encoded "test:test"
+			host:        "192.168.1.100",
+			token:       "YWRtaW46cGFzc3dvcmQ=", // base64 encoded "admin:password"
 			opts:        nil,
 			expectError: false,
 		},
 		{
 			name:        "ValidClientWithOptions",
-			host:        "192.168.1.100",
-			token:       "YWRtaW46cGFzc3dvcmQ=", // base64 encoded "admin:password"
+			host:        "wnc.example.internal",
+			token:       "YWRtaW46cGFzc3dvcmQ=",
 			opts:        []Option{WithTimeout(30 * time.Second), WithInsecureSkipVerify(true)},
+			expectError: false,
+		},
+		{
+			name:        "ValidClientWithLoggerAndUserAgent",
+			host:        "controller.example.internal",
+			token:       "YWRtaW46cGFzc3dvcmQ=",
+			opts:        []Option{WithLogger(slog.New(slog.DiscardHandler)), WithUserAgent("custom-agent/1.0")},
 			expectError: false,
 		},
 		{
 			name:        "InvalidHost",
 			host:        "",
-			token:       "dGVzdDp0ZXN0",
+			token:       "YWRtaW46cGFzc3dvcmQ=",
 			opts:        nil,
 			expectError: true,
 		},
@@ -70,11 +75,17 @@ func TestNewClient(t *testing.T) {
 	}
 }
 
-// TestClientServiceAccessors tests that all service accessors return non-nil services
+// TestClientServiceAccessors tests that all service accessors return non-nil services.
 func TestClientServiceAccessors(t *testing.T) {
 	client, err := NewClient("controller.example.com", "dGVzdDp0ZXN0")
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	// Test Core() method
+	coreClient := client.Core()
+	if coreClient == nil {
+		t.Error("Core() returned nil")
 	}
 
 	// Test all service accessors - verify they don't panic and return valid structs
@@ -91,6 +102,7 @@ func TestClientServiceAccessors(t *testing.T) {
 	_ = client.AWIPS()         // Should not panic
 	_ = client.BLE()           // Should not panic
 	_ = client.Client()        // Should not panic
+	_ = client.Controller()    // Should not panic
 	_ = client.CTS()           // Should not panic
 	_ = client.Dot11()         // Should not panic
 	_ = client.Dot15()         // Should not panic
@@ -112,66 +124,13 @@ func TestClientServiceAccessors(t *testing.T) {
 	_ = client.Rogue()         // Should not panic
 	_ = client.RRM()           // Should not panic
 	_ = client.Site()          // Should not panic
+	_ = client.Spaces()        // Should not panic
+	_ = client.URWB()          // Should not panic
+	_ = client.WAT()           // Should not panic
 	_ = client.WLAN()          // Should not panic
-}
 
-// TestClientCore tests the Core() method
-func TestClientCore(t *testing.T) {
-	client, err := NewClient("controller.example.com", "dGVzdDp0ZXN0")
-	if err != nil {
-		t.Fatalf("Failed to create client: %v", err)
-	}
-
-	coreClient := client.Core()
-	if coreClient == nil {
-		t.Error("Core() returned nil")
-	}
-}
-
-// TestUnifiedClientUsage demonstrates the unified client usage pattern
-func TestUnifiedClientUsage(t *testing.T) {
-	// This test demonstrates the usage pattern without making real API calls
-	client, err := NewClient("controller.example.com", "dGVzdDp0ZXN0",
-		WithTimeout(30*time.Second),
-		WithInsecureSkipVerify(true))
-	if err != nil {
-		t.Fatalf("Failed to create client: %v", err)
-	}
-
-	// Demonstrate that services can be accessed
-	ctx := context.Background()
-
-	// These would normally make actual API calls, but we're just testing the interface
-	afcService := client.AFC()
-	generalService := client.General()
-	apService := client.AP()
-
-	// Verify services are accessible (struct values, not pointers for some services)
-	_ = afcService     // Should not panic accessing AFC service
-	_ = generalService // Should not panic accessing General service
-	_ = apService      // Should not panic accessing AP service
-
-	// For testing purposes, we won't make actual API calls
-	// But this demonstrates the intended usage pattern:
-	// afcData, err := afcService.GetOper(ctx)
-	// generalData, err := generalService.GetOper(ctx)
-	// apData, err := apService.GetOper(ctx)
-
-	_ = ctx // Use ctx to avoid unused variable warning
-}
-
-// TestOptionWrappers ensures wrapper options (WithLogger, WithUserAgent) apply without error.
-func TestOptionWrappers(t *testing.T) {
-	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	c, err := NewClient("controller.example.com", "dGVzdDp0ZXN0",
-		WithLogger(logger),
-		WithUserAgent("custom-agent/1.0"),
-	)
-	if err != nil {
-		// If underlying validation changes, this should still expose root cause.
-		t.Fatalf("unexpected error applying wrapper options: %v", err)
-	}
-	if c == nil {
-		t.Fatal("expected non-nil client")
-	}
+	// Test tag service accessors
+	_ = client.PolicyTag() // Should not panic
+	_ = client.RFTag()     // Should not panic
+	_ = client.SiteTag()   // Should not panic
 }

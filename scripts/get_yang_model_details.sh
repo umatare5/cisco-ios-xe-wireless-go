@@ -4,7 +4,7 @@
 # @meta author "@umatare5"
 # @describe Get detailed information about a specific YANG model
 
-# @option -c --controller <HOST>       WNC controller hostname or IP (required unless WNC_CONTROLLER set)
+# @option -c --controller <HOST>      WNC controller hostname or IP (required unless WNC_CONTROLLER set)
 # @option -t --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
 # @option -p --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
 # @option -f --format <FORMAT>        Output format: json or xml [default: json] [choices: json,xml]

@@ -1,4 +1,4 @@
-# Makefile for cisco-ios-xe-wireless-go Go library package
+# Makefile for cisco-ios-xe-wireless-go SDK package
 #
 # This Makefile provides direct access to specialized build and test scripts
 # located in the scripts/ directory for focused development tasks.
@@ -6,12 +6,9 @@
 # For comprehensive help, use: make help
 # For specific script options, use: ./scripts/<script_name>.sh --help
 
-.PHONY: help clean deps lint test-unit test-unit-coverage test-integration test-integration-coverage \
-	test-coverage-report build yang-list yang-model yang-statement \
+.PHONY: help clean deps lint test-unit test-unit-coverage test-integration \
+	build yang-list yang-model yang-statement \
         pre-commit-install pre-commit-test pre-commit-uninstall
-
-# Default args (can be overridden: make test-integration INTEGRATION_ARGS="")
-INTEGRATION_ARGS ?= --check-env-only
 
 # Default target
 help:
@@ -35,19 +32,11 @@ test-unit:
 
 # Run unit tests with coverage analysis
 test-unit-coverage:
-	@./scripts/test_unit.sh --coverage
+	@./scripts/test_unit.sh --coverage --report
 
 # Run integration tests (requires environment variables)
 test-integration:
-	@./scripts/test_integration.sh $(INTEGRATION_ARGS)
-
-# Run integration tests with coverage analysis (requires environment variables)
-test-integration-coverage:
-	@./scripts/test_integration.sh --coverage
-
-# Generate HTML coverage report
-test-coverage-report:
-	@./scripts/generate_coverage_report.sh
+	@./scripts/test_integration.sh
 
 # Verify build compilation
 build:
@@ -62,15 +51,12 @@ yang-list:
 # Get YANG model details from controller
 # (usage: make yang-model MODEL=model-name)
 yang-model:
-	@[ -n "$(MODEL)" ] || { echo "ℹ YANG model skipped (MODEL not set)"; exit 0; }
 	@./scripts/get_yang_model_details.sh $(ARGS) --model $(MODEL) || { \
 		echo "ℹ YANG model skipped (offline or unreachable controller)"; true; }
 
 # Get YANG statement details from controller
 # (usage: make yang-statement MODEL=model-name STATEMENT=statement-name)
 yang-statement:
-	@[ -n "$(MODEL)" ] && [ -n "$(STATEMENT)" ] || { \
-		echo "ℹ YANG statement skipped (MODEL and/or STATEMENT not set)"; exit 0; }
 	@./scripts/get_yang_statement_details.sh $(ARGS) --model $(MODEL) --statement $(STATEMENT) || { \
 		echo "ℹ YANG statement skipped (offline or unreachable controller)"; true; }
 

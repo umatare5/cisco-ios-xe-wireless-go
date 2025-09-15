@@ -37,7 +37,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/help.sh"
 
 # Check if required integration environment variables are present
 _has_required_integration_env() {
-    [[ -n "${WNC_CONTROLLER:-}" && -n "${WNC_ACCESS_TOKEN:-}" ]]
+    [[ -n "${WNC_CONTROLLER:-}" && -n "${WNC_ACCESS_TOKEN:-}" && -n "${WNC_AP_MAC_ADDR:-}" ]]
 }
 
 # Check if test type is integration test
@@ -94,7 +94,8 @@ validate_test_environment() {
     if _should_validate_integration_env "$test_type"; then
         if ! _has_required_integration_env; then
             error "Integration tests require WNC environment variables"
-            info "Set WNC_CONTROLLER and WNC_ACCESS_TOKEN environment variables"
+            info "Set WNC_CONTROLLER, WNC_ACCESS_TOKEN, and WNC_AP_MAC_ADDR environment variables"
+            info "Optionally set WNC_CLIENT_MAC_ADDR for enhanced client testing"
             return 1
         fi
     fi
@@ -195,8 +196,8 @@ execute_test_command() {
             eval "gotestsum --format testname -- $test_args ./..." || exit_code=$?
             ;;
         "integration")
-            # Integration tests with special tags
-            eval "gotestsum --format testname -- $test_args -tags=integration ./..." || exit_code=$?
+            # Integration tests - only run tests in dedicated test directories
+            eval "gotestsum --format testname -- $test_args -tags=integration ./tests/integration/..." || exit_code=$?
             ;;
     esac
 

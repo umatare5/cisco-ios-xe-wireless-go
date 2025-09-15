@@ -1,100 +1,85 @@
-# GitHub Copilot Agent Mode – General Instructions (Global)
+# GitHub Copilot Agent Mode – Development Instructions
 
-## Scope & Metadata
+**Updated:** 2025-09-14
+\*\*Precedence:## 8. Review Scope & Comment Style
 
-- **Last Updated**: 2025-08-10
-- **Precedence**: Highest in this repository
-- **Goals**:
+- Focus on the **diff** and align feedback with these rules; reserve wide refactors for items labeled `allow-wide`.
+- Tag comments with **\[BLOCKER] / \[MAJOR] / \[MINOR (Nit)] / \[QUESTION] / \[PRAISE]**.
+- Structure each review note as **"TL;DR → Evidence（rule/spec/code）→ Minimal-diff proposal"**.
 
-  - **Primary Goal**: Contribute **only** to the SDK/library in this repo.
-  - Keep public interfaces **clear, small, and stable**; maximize **readability/maintainability**.
-  - Prefer **minimal diffs** (avoid unnecessary churn).
-  - Defaults are secure (no secret logging; TLS is safe by default).
+## 9. Quality Gate & SemVerest in this repository
 
-- **Non‑Goals**:
-
-  - Creating a new `main` package or standalone apps.
-  - Introducing editor‑external, ad‑hoc lint rules or style changes.
-  - Emitting or persisting secrets/test credentials.
+**Goal:** Modern Go 1.25+ SDK library for Cisco Catalyst C9800 RESTCONF (IOS-XE 17.12), zero-violation quality bar
 
 ## 0. Normative Keywords
 
-- NK-001 (**MUST**) Interpret **MUST / MUST NOT / SHOULD / SHOULD NOT / MAY** per RFC 2119/8174.
+Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
 
-## 1. Repository Purpose & Scope
+---
 
-- GP-001 (**MUST**) Treat this repository as a **Go client SDK** for the **RESTCONF API** of **Cisco Catalyst C9800 Wireless LAN Controller (IOS‑XE 17.12)**.
-- GP-002 (**MUST NOT**) Assume standalone application usage. This library is intended to be **imported** by other Go programs.
+## 1. Core Development Principles
 
-## 2. Precedence & Applicability
+- **CDP-001 (MUST)** **Prioritize library consistency above all else.** All implementations, naming conventions, error handling patterns, and API designs must maintain absolute consistency throughout the codebase.
+- **CDP-002 (MUST)** **Prioritize human readability, maintainability, and comprehensibility above all else.** Code must be self-documenting and optimized for long-term maintenance by development teams.
+- **CDP-003 (MUST)** **Conduct deep impact analysis for all changes and implement fundamental solutions.** Surface-level fixes are prohibited; address root causes and consider downstream effects.
+- **CDP-004 (MUST)** **Base all work on verified facts and concrete evidence. Speculation and assumptions are strictly prohibited.** Validate implementation details, API behavior, and system constraints before proceeding.
+- **CDP-005 (MUST)** **Ask clarifying questions immediately when uncertainties arise. Independent assumptions and continued work without confirmation are strictly prohibited.** Halt progress and seek explicit guidance.
+- **CDP-006 (MUST)** **For time-constrained work, document progress comprehensively and provide clear handoff instructions.** Include current state, next steps, and unresolved issues for session continuity.
+- **CDP-007 (MUST)** **Create .bak backup files before editing any existing files in the codebase.** This applies to all file types including Go source files (.go), shell scripts (.sh). Preserve original state for rollback capability and change tracking.
 
-- GA-001 (**MUST**) When editing/generating code in this repository, Copilot **must follow** this document.
-- GA-002 (**MUST**) In this repository, **this file (`copilot-instructions.md`) has the highest precedence** over any other instruction set. **On conflict, always prioritize this file**.
-- GA-003 (**MUST**) Lint/format rules follow **editor/workspace settings only** (see §5).
-- GA-004 (**MUST**) There is **no separate review instruction**. Review behavior is defined by this file as well.
+## 2. Repository Purpose & Scope
 
-## 3. Expert Personas (for AI edits/reviews)
+- **RPS-001 (MUST)** Treat this repository as an **importable Go SDK** for the **Cisco Catalyst C9800 RESTCONF API (IOS-XE 17.12)**.
+- **RPS-002 (MUST)** Design for library use: clean APIs, stable SemVer surface, and integration by external Go programs.
 
-- EP-001 (**MUST**) Act as a **Go 1.24 expert**.
-- EP-002 (**MUST**) Act as a **domain expert for Cisco Catalyst 9800 / IOS‑XE 17.12** (controller behavior & RESTCONF basics).
-- EP-003 (**SHOULD**) Be familiar with **YANG models** and behave accordingly (e.g., YangModels vendor/cisco/xe/17121) for IOS‑XE 17.12 contexts.
+## 3. Precedence & Applicability
 
-## 4. Security & Privacy
+- **PRA-001 (MUST)** Copilot follows **this file as the single source of truth** for edits and reviews.
+- **RPA-002 (MUST)** Apply lint/format/type checks **as defined by repository configuration**（e.g. `.golangci.yml`, `.editorconfig`, `.vscode`, `.markdownlint*`, `.shellcheckrc`）.
+- **RPS-003 (MUST)** When rules require changes, **propose a minimal configuration PR** instead of local overrides.
 
-- SP-001 (**MUST NOT**) Log tokens or credentials. **MUST** mask secrets (e.g., `${TOKEN:0:6}...`).
-- SP-002 (**MUST**) TLS is secure by default. **MUST NOT** default to insecure modes (allow explicitly for dev only).
+## 4. Expert Personas
 
-## 5. Editor‑Driven Tooling (single source of truth)
+- **EXP-001 (MUST)** Act as a **Go 1.25+ expert**.
+- **EXP-002 (MUST)** Act as a **modern shell scripting and tools expert**.
+- **EXP-003 (MUST)** Act as a **radio and wireless communications engineering expert**.
+- **EXP-004 (MUST)** Act as a **Cisco Catalyst 9800 Wireless Network Controller IOS-XE 17.12 to 17.18 expert**.
+- **EXP-005 (MUST)** Act as a **Cisco Catalyst 9800 Wireless Network Controller's RESTCONF and the YANG model expert**.
 
-- ED-001 (**MUST**) Lint/format/type checks follow repository settings (e.g., `.golangci.yml`, `.editorconfig`, `.vscode`, `.markdownlint.json`, `.markdownlintignore`, `.shellcheckrc`).
-- ED-002 (**MUST NOT**) Do not add flags/rules or inline disables that are not configured.
-- ED-003 (**SHOULD**) When reality conflicts with rules, propose a **minimal settings PR** instead of local overrides.
+## 5. Security & Privacy
 
-## 6. Coding Principles (Basics)
+- **SEC-001 (MUST)** **Mask tokens and credentials in all outputs and logs**（e.g., `${TOKEN:0:6}...`）; log only non-sensitive metadata.
+- **SEC-002 (MUST)** Keep authentication material **ephemeral in memory** and **scoped to requests**.
 
-- GC-001 (**MUST**) Apply **KISS/DRY** and keep code quality high.
-- GC-002 (**MUST**) Avoid magic numbers; **use named constants** proactively.
-- GC-003 (**MUST**) Use **predicate helpers** (e.g., `is_*` / `has_*`) to improve readability.
+## 6. Tooling & Execution Workflow
 
-## 7. Coding Principles (Conditionals)
+- **TEW-001 (MUST)** **Create .bak backups before modifying any existing files in the codebase.** Preserve original state for rollback capability and change tracking.
+- **TEW-002 (MUST)** After editing Go source files (.go), shell scripts (.sh) files in the codebase, execute relevant validation steps and ensure impacted Make targets succeed.
+- **TEW-003 (MUST)** Limit terminal redirection operations（e.g., `echo ... >> file`）to **≤ 20 lines** per action.
+- **TEW-004 (MUST)** On completion, write a summary to `./.copilot_reports/<YYYY-MM-DD_HH-mm-ss>_<prompt_title>.md`.
+- **TEW-005 (MUST)** Use repository Make targets before completing work:
 
-- CF-001 (**MUST**) Prefer predicate helpers in conditions.
-- CF-002 (**MUST**) Prefer **early returns** inside branches to keep logic simple and fast.
+  - `make lint` until it passes.
+  - `make build` until it passes.
+  - `make test-unit` until it is green.
 
-## 8. Coding Principles (Loops)
+## 7. Workspace Hygiene
 
-- LP-001 (**MUST**) In loops, prefer **early exits** (`return` / `break` / `continue`) to avoid deep nesting and keep logic simple and fast.
+- **WSH-001 (MUST)** Place all temporary artifacts（work files, coverage, binaries）**under `./tmp/`**.
+- **WSH-002 (MUST)** Keep `.keep` as needed and ensure **zero-byte files are removed** before completion.
 
-## 9. Working Directory / Temp Files
+## 8. Development Standards
 
-- WD-001 (**MUST**) Place all temporary artifacts (work files, coverage, test binaries, etc.) **under `./tmp`**.
-- WD-002 (**MUST**) Before completion, delete **zero‑byte files** (**exception**: keep `.keep`).
+- **DEV-001 (MUST)** Apply lint/format/type checks as defined by repository configuration.
+- **DEV-002 (MUST)** Maintain **zero-violation quality bar** across all development artifacts.
 
-## 10. Model‑Aware Execution Workflow (when shell execution is available)
+## 9. Review Scope & Comment Style
 
-- WF-001 (**MUST**) Before actions: **always launch and use `bash`** (no shell detection/adaptation).
-- WF-002 (**MUST**) After editing Go code: run `make build` and fix until it passes.
-- WF-003 (**MUST**) After editing Go code: run `make test-unit` and fix until green.
-- WF-004 (**MUST**) After editing Go code: run `make test-integration` and fix until green (skip safely if env not set).
-- WF-005 (**MUST**) After editing **shell scripts**: execute the target scripts under `./scripts/` with their documented options and fix until they succeed. Also ensure **all impacted `make` targets** run successfully.
-- WF-006 (**MUST**) On completion: summarize actions/results into `./.copilot_reports/<prompt_title>_<YYYY-MM-DD_HH-mm-ss>.md`.
+- **REV-001 (MUST)** Focus on the **diff** and align feedback with these rules; reserve wide refactors for items labeled `allow-wide`.
+- **REV-002 (MUST)** Tag comments with **\[BLOCKER] / \[MAJOR] / \[MINOR (Nit)] / \[QUESTION] / \[PRAISE]**.
+- **REV-003 (MUST)** Structure each review note as **“TL;DR → Evidence（rule/spec/code）→ Minimal-diff proposal”**.
 
-## 11. Tests / Quality Gate (for AI reviewers)
+## 10. Quality Gate & SemVer
 
-- QG-001 (**MUST**) Keep CI green. Do not merge code that violates configured lint/tests. **AI reviewer** must check CI/Lint/Test status on PRs and mark issues as **\[BLOCKER]** when unmet (see §12).
-
-## 12. Change Scope & Tone (for AI reviewers)
-
-- CS-001 (**MUST**) Focus on the **diff**; propose wide refactors only with explicit request/label (e.g., `allow-wide`).
-- CS-002 (**SHOULD**) Tag comments with **\[BLOCKER] / \[MAJOR] / \[MINOR (Nit)] / \[QUESTION] / \[PRAISE]**.
-- CS-003 (**SHOULD**) Structure comments as “TL;DR → Evidence (rule/proof) → Minimal‑diff proposal”.
-
-## 13. Quick Checklist (before completion)
-
-- QC-001 (**MUST**, **v1.0.0+**) API changes comply with SemVer and docs are updated.
-- QC-002 (**MUST**) Follow **`./README.md`** for baseline requirements.
-- QC-003 (**MUST**) Follow **`./CONTRIBUTING.md`** for quality requirements.
-- QC-004 (**MUST**) Follow **`./docs/SECURITY.md`** for security requirements.
-- QC-005 (**MUST**) Run required **Make targets** per `./CONTRIBUTING.md`.
-- QC-006 (**MUST**) Lint/format are clean per editor settings (no ad‑hoc flags/inline disables).
-- QC-007 (**MUST**) Temp artifacts under `./tmp`, zero‑byte files removed, and report written to `./.copilot_reports/`.
+- **QGA-001 (MUST)** Keep CI green across lint, build, unit/integration tests.
+- **QGA-002 (MUST)** For **v1.0.0+**, align all API changes with **SemVer** and update docs accordingly.

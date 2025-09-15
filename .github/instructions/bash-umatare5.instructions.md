@@ -5,6 +5,8 @@ applyTo: "**/*.sh"
 
 # Bash Shell **Scripts** & Bootstrap System Instructions
 
+GitHub Copilot **MUST** follow these instructions when generating or modifying Bash scripts in this repository.
+
 ## Scope & Metadata
 
 - **Last Updated**: 2025-08-11
@@ -171,7 +173,7 @@ is_html_enabled() {
 - **UX-005 (SHOULD)** Symbols assume UTF-8; provide ASCII fallbacks when colorless.
 - **UX-006 (SHOULD)** Provide `show_*_banner` and `show_*_help`; do not fail if helpers are absent.
 - **UX-007 (SHOULD)** Provide `show_status <context>` and gate details with `is_verbose_enabled`.
-- **UX-008 (MUST NOT)** Do not hardcode ANSI codes outside helpers.
+- **UX-008 (MUST NOT)** Do not hardcode ANSI codes outside helper.
 - **UX-009 (SHOULD)** For generated artifacts, include OS-specific open tips (macOS: `open`; Linux: `xdg-open`).
 
 **Sample**
@@ -188,7 +190,7 @@ log_info() {
 
 ## 8. Conditionals
 
-- **PR-001 (MUST)** Do not reference `argc_*` directly in conditionals; wrap them with predicate helpers.
+- **PR-001 (MUST)** Do not reference `argc_*` directly in conditionals; wrap them with predicate helper.
 - **PR-002 (MUST)** Prefer early returns.
 
 ## 8a. Conditional Statement Style
