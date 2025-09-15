@@ -25,7 +25,7 @@ type EwlcHyperlocationProfile struct {
 // HyperlocationData represents the hyperlocation configuration data.
 type HyperlocationData struct {
 	HyperlocationEnable       bool `json:"hyperlocation-enable"`         // Enable hyperlocation (Live: IOS-XE 17.12.5)
-	PakRssiThresholdDetection int  `json:"pak-rssi-threshold-detection"` // Pak rssi threshold detection (Live: IOS-XE 17.12.5)
-	PakRssiThresholdTrigger   int  `json:"pak-rssi-threshold-trigger"`   // Pak rssi threshold trigger (Live: IOS-XE 17.12.5)
-	PakRssiThresholdReset     int  `json:"pak-rssi-threshold-reset"`     // Pak rssi threshold reset (Live: IOS-XE 17.12.5)
+	PakRSSIThresholdDetection int  `json:"pak-rssi-threshold-detection"` // Pak rssi threshold detection (Live: IOS-XE 17.12.5)
+	PakRSSIThresholdTrigger   int  `json:"pak-rssi-threshold-trigger"`   // Pak rssi threshold trigger (Live: IOS-XE 17.12.5)
+	PakRSSIThresholdReset     int  `json:"pak-rssi-threshold-reset"`     // Pak rssi threshold reset (Live: IOS-XE 17.12.5)
 }
