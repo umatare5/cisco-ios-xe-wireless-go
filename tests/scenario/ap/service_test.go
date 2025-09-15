@@ -162,26 +162,26 @@ func getRadioBandForSlot(slotID int) core.RadioBand {
 }
 
 // logAPCapwapStatus logs the AP CAPWAP status information with admin state.
-func logAPCapwapStatus(t *testing.T, phase, apMac string, status *model.ApOperCapwapData) {
+func logAPCapwapStatus(t *testing.T, phase, apMac string, status *model.ApOperCAPWAPData) {
 	if status == nil {
 		t.Logf("%s Status: No CAPWAP data available for AP %s", phase, apMac)
 		return
 	}
 
 	t.Logf("%s Status for AP %s:", phase, apMac)
-	if capwapData := findCapwapDataByMAC(status.CapwapData, apMac); capwapData != nil {
-		t.Logf("  WTP MAC: %s", capwapData.WtpMac)
+	if capwapData := findCAPWAPDataByMAC(status.CAPWAPData, apMac); capwapData != nil {
+		t.Logf("  WTP MAC: %s", capwapData.WtpMAC)
 		t.Logf("  IP Address: %s", capwapData.IPAddr)
 		t.Logf("  Name: %s", capwapData.Name)
 		t.Logf("  AP Admin State: %s", capwapData.ApState.ApAdminState)
 		t.Logf("  AP Operation State: %s", capwapData.ApState.ApOperationState)
 	} else {
 		t.Logf("  CAPWAP data not found for AP %s", apMac)
-		if status.CapwapData != nil {
+		if status.CAPWAPData != nil {
 			t.Logf("  Available CAPWAP data for other APs:")
-			for i, capwapData := range status.CapwapData {
+			for i, capwapData := range status.CAPWAPData {
 				t.Logf("    [%d] WTP MAC: %s, Name: %s, Admin State: %s",
-					i, capwapData.WtpMac, capwapData.Name, capwapData.ApState.ApAdminState)
+					i, capwapData.WtpMAC, capwapData.Name, capwapData.ApState.ApAdminState)
 			}
 		}
 	}
@@ -196,7 +196,7 @@ func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *model
 
 	t.Logf("%s Status for AP %s Slot %d:", phase, apMac, slotID)
 	if radioData := findRadioDataByMACAndSlot(status.RadioOperData, apMac, slotID); radioData != nil {
-		t.Logf("  WTP MAC: %s", radioData.WtpMac)
+		t.Logf("  WTP MAC: %s", radioData.WtpMAC)
 		t.Logf("  Radio Slot %d:", slotID)
 		t.Logf("    Admin State: %s", radioData.AdminState)
 		t.Logf("    Oper State: %s", radioData.OperState)
@@ -210,20 +210,20 @@ func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *model
 			t.Logf("  Available radio data for other APs/slots:")
 			for i, radioData := range status.RadioOperData {
 				t.Logf("    [%d] WTP MAC: %s, Slot: %d, Admin: %s, Oper: %s",
-					i, radioData.WtpMac, radioData.SlotID, radioData.AdminState, radioData.OperState)
+					i, radioData.WtpMAC, radioData.SlotID, radioData.AdminState, radioData.OperState)
 			}
 		}
 	}
 }
 
 // validateAPCapwapEnabled validates that the AP is in enabled admin state.
-func validateAPCapwapEnabled(t *testing.T, apMac string, status *model.ApOperCapwapData) {
+func validateAPCapwapEnabled(t *testing.T, apMac string, status *model.ApOperCAPWAPData) {
 	if status == nil {
 		t.Logf("Warning: Cannot validate AP state - no CAPWAP data")
 		return
 	}
 
-	if capwapData := findCapwapDataByMAC(status.CapwapData, apMac); capwapData != nil {
+	if capwapData := findCAPWAPDataByMAC(status.CAPWAPData, apMac); capwapData != nil {
 		expectedAdminState := "adminstate-enabled"
 		if capwapData.ApState.ApAdminState == expectedAdminState {
 			t.Logf("✅ AP Admin State correctly shows '%s'", expectedAdminState)
@@ -265,10 +265,10 @@ func validateRadioEnabled(t *testing.T, apMac string, slotID int, status *model.
 	}
 }
 
-// findCapwapDataByMAC finds CAPWAP data for a specific AP MAC address.
-func findCapwapDataByMAC(capwapDataList []model.CapwapData, apMac string) *model.CapwapData {
+// findCAPWAPDataByMAC finds CAPWAP data for a specific AP MAC address.
+func findCAPWAPDataByMAC(capwapDataList []model.CAPWAPData, apMac string) *model.CAPWAPData {
 	for _, capwapData := range capwapDataList {
-		if capwapData.WtpMac == apMac {
+		if capwapData.WtpMAC == apMac {
 			return &capwapData
 		}
 	}
@@ -278,7 +278,7 @@ func findCapwapDataByMAC(capwapDataList []model.CapwapData, apMac string) *model
 // findRadioDataByMACAndSlot finds radio data for a specific AP MAC and slot ID.
 func findRadioDataByMACAndSlot(radioDataList []model.RadioOperData, apMac string, slotID int) *model.RadioOperData {
 	for _, radioData := range radioDataList {
-		if radioData.WtpMac == apMac && radioData.SlotID == slotID {
+		if radioData.WtpMAC == apMac && radioData.SlotID == slotID {
 			return &radioData
 		}
 	}

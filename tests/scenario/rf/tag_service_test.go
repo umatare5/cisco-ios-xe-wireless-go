@@ -51,7 +51,7 @@ func executeStandardRFTagWorkflow(t *testing.T, tsc *scenario.TagContext, servic
 
 	// Step 2: Create test tag
 	t.Logf("Step 2: Creating test RF tag: %s", tsc.TestTagName)
-	if err := service.CreateRFTag(tsc.Ctx, &model.RfTag{
+	if err := service.CreateRFTag(tsc.Ctx, &model.RFTag{
 		TagName:     tsc.TestTagName,
 		Description: expectedRFTagDescription,
 	}); err != nil {
@@ -109,7 +109,7 @@ func configureRFTagProfiles(t *testing.T, tsc *scenario.TagContext, service *rf.
 	}
 
 	// Configure 6GHz profile (may fail in some environments)
-	if err := service.SetDot116GhzRfProfile(tsc.Ctx, tsc.TestTagName, testRF6GHzProfile); err != nil {
+	if err := service.SetDot116GhzRFProfile(tsc.Ctx, tsc.TestTagName, testRF6GHzProfile); err != nil {
 		t.Logf("Warning: Failed to set 6GHz profile (this might be expected): %v", err)
 	}
 
@@ -117,7 +117,7 @@ func configureRFTagProfiles(t *testing.T, tsc *scenario.TagContext, service *rf.
 }
 
 // validateRFTagConfig validates the retrieved RF tag configuration
-func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *model.RfTag) {
+func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *model.RFTag) {
 	if config == nil {
 		t.Fatalf("Expected RF tag configuration for %s, but got nil", tsc.TestTagName)
 	}
@@ -141,14 +141,14 @@ func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *model.R
 	}
 
 	// Validate 6GHz profile (may be empty in some environments)
-	if config.Dot116GhzRfProfName != testRF6GHzProfile {
+	if config.Dot116GhzRFProfName != testRF6GHzProfile {
 		t.Logf("Warning: Expected 6GHz profile '%s', got '%s' (this might be expected in some environments due to the default profile doesn't show in the response)",
-			testRF6GHzProfile, config.Dot116GhzRfProfName)
+			testRF6GHzProfile, config.Dot116GhzRFProfName)
 	}
 }
 
 // validateRFTagDeletion ensures the test tag was properly deleted
-func validateRFTagDeletion(t *testing.T, testTagName string, finalTags []model.RfTag) {
+func validateRFTagDeletion(t *testing.T, testTagName string, finalTags []model.RFTag) {
 	for _, tag := range finalTags {
 		if tag.TagName == testTagName {
 			t.Errorf("Test tag %s should have been deleted but still exists", testTagName)
