@@ -354,14 +354,14 @@ type CAPWAPData struct {
 	WlcImageSizePercentage uint32 `json:"wlc-image-size-percentage"` // WLC image download progress percentage (Live: IOS-XE 17.12.5)
 
 	// Local DHCP Configuration
-	Ipv4Pool              Ipv4Pool          `json:"ipv4-pool"`                // Local DHCP IPv4 pool configuration (Live: IOS-XE 17.12.5)
-	DisconnectDetail      DisconnectDetail  `json:"disconnect-detail"`        // AP disconnection analysis (Live: IOS-XE 17.12.5)
-	StatsMonitor          StatsMonitor      `json:"stats-monitor"`            // AP statistics monitoring configuration (Live: IOS-XE 17.12.5)
-	LscStatusPldSupported []interface{}     `json:"lsc-status-pld-supported"` // LSC status payload support capability (Live: IOS-XE 17.12.5)
-	ApLscStatus           ApLscStatus       `json:"ap-lsc-status"`            // LSC authentication status (Live: IOS-XE 17.12.5)
-	RadioStatsMonitor     RadioStatsMonitor `json:"radio-stats-monitor"`      // Radio statistics monitoring (Live: IOS-XE 17.12.5)
-	ZeroWtDFS             ZeroWtDFS         `json:"zero-wt-dfs"`              // Zero Wait DFS configuration (Live: IOS-XE 17.12.5)
-	GnssInfo              GnssInfo          `json:"gnss-info"`                // GNSS positioning data (Live: IOS-XE 17.12.5)
+	Ipv4Pool              Ipv4Pool            `json:"ipv4-pool"`                // Local DHCP IPv4 pool configuration (Live: IOS-XE 17.12.5)
+	DisconnectDetail      DisconnectDetail    `json:"disconnect-detail"`        // AP disconnection analysis (Live: IOS-XE 17.12.5)
+	StatsMonitor          StatsMonitor        `json:"stats-monitor"`            // AP statistics monitoring configuration (Live: IOS-XE 17.12.5)
+	LscStatusPldSupported *[]LscStatusPayload `json:"lsc-status-pld-supported"` // LSC status payload support capability (Live: IOS-XE 17.12.5)
+	ApLscStatus           ApLscStatus         `json:"ap-lsc-status"`            // LSC authentication status (Live: IOS-XE 17.12.5)
+	RadioStatsMonitor     RadioStatsMonitor   `json:"radio-stats-monitor"`      // Radio statistics monitoring (Live: IOS-XE 17.12.5)
+	ZeroWtDFS             ZeroWtDFS           `json:"zero-wt-dfs"`              // Zero Wait DFS configuration (Live: IOS-XE 17.12.5)
+	GnssInfo              GnssInfo            `json:"gnss-info"`                // GNSS positioning data (Live: IOS-XE 17.12.5)
 
 	// Basic Configuration Fields
 	ApLagEnabled    bool   `json:"ap-lag-enabled"`    // LAG configuration status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
@@ -473,10 +473,10 @@ type ApLscStatus struct {
 
 // RadioStatsMonitor represents AP radio statistics monitoring configuration.
 type RadioStatsMonitor struct {
-	Enable       bool          `json:"enable"`        // Radio statistics collection enable (Live: IOS-XE 17.12.5)
-	SampleIntvl  uint16        `json:"sample-intvl"`  // Sampling interval in seconds (Live: IOS-XE 17.12.5)
-	AlarmsEnable []interface{} `json:"alarms-enable"` // Statistics alarm enablement (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
-	RadioReset   bool          `json:"radio-reset"`   // Auto radio reset on stuck condition (Live: IOS-XE 17.12.5)
+	Enable       bool               `json:"enable"`        // Radio statistics collection enable (Live: IOS-XE 17.12.5)
+	SampleIntvl  uint16             `json:"sample-intvl"`  // Sampling interval in seconds (Live: IOS-XE 17.12.5)
+	AlarmsEnable *[]AlarmEnableType `json:"alarms-enable"` // Statistics alarm enablement (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	RadioReset   bool               `json:"radio-reset"`   // Auto radio reset on stuck condition (Live: IOS-XE 17.12.5)
 }
 
 // ZeroWtDFS represents Zero wait DFS information of the AP.
@@ -1028,51 +1028,51 @@ type QosGlobalStats struct {
 
 // ApOperInternalData represents internal AP operational data.
 type ApOperInternalData struct {
-	WtpMAC                 string         `json:"wtp-mac"`                             // MAC Address of the AP Radio (Live: IOS-XE 17.12.5)
-	RadioID                int            `json:"radio-id"`                            // AP radio identifier (Live: IOS-XE 17.12.5)
-	ApAntennaBandMode      string         `json:"ap-antenna-band-mode"`                // AP antenna band mode configuration (Live: IOS-XE 17.12.5)
-	LinkEncryptionEnabled  bool           `json:"link-encryption-enabled"`             // Controller-AP link encryption status (Live: IOS-XE 17.12.5)
-	ApRemoteDebugMode      bool           `json:"ap-remote-debug-mode"`                // Remote debugging status for the AP (Live: IOS-XE 17.12.5)
-	ApRole                 string         `json:"ap-role"`                             // AP role in PMK push (Live: IOS-XE 17.12.5)
-	ApIndoorMode           bool           `json:"ap-indoor-mode"`                      // Identifier for indoor AP mode (Live: IOS-XE 17.12.5)
-	MaxClientsAllowed      int            `json:"max-clients-allowed"`                 // Maximum clients allowed on an AP (Live: IOS-XE 17.12.5)
-	IsLocalNet             bool           `json:"is-local-net"`                        // Identifier for local access in OEAP AP (Live: IOS-XE 17.12.5)
-	Ipv4TcpMss             TCPMssConfig   `json:"ipv4-tcp-mss"`                        // Configured IPv4 TCP MSS value for client (Live: IOS-XE 17.12.5)
-	Ipv6TcpMss             TCPMssConfig   `json:"ipv6-tcp-mss"`                        // Configured IPv6 TCP MSS value for client (Live: IOS-XE 17.12.5)
-	RangingMode            string         `json:"ranging-mode"`                        // Ranging mode - normal or accurate (Live: IOS-XE 17.12.5)
-	PowerProfile           string         `json:"power-profile"`                       // Power profile applied to the AP (Live: IOS-XE 17.12.5)
-	PwrProfType            string         `json:"pwr-prof-type"`                       // Power profile type (Live: IOS-XE 17.12.5)
-	PwrCalProfile          string         `json:"pwr-cal-profile"`                     // Calendar profile associated to power profile (Live: IOS-XE 17.12.5)
-	PersistentSsid         PersistentSsid `json:"persistent-ssid"`                     // Persistent SSID broadcast operation information (Live: IOS-XE 17.12.5)
-	ProvSsid               bool           `json:"prov-ssid"`                           // Office Extended AP Provisional SSID status (Live: IOS-XE 17.12.5)
-	PrimingProfile         string         `json:"priming-profile"`                     // Applied AP priming profile name (Live: IOS-XE 17.12.5)
-	PrimingProfileSrc      string         `json:"priming-profile-src"`                 // AP priming profile configuration source (Live: IOS-XE 17.12.5)
-	PrimingFilter          string         `json:"priming-filter"`                      // AP priming filter name (Live: IOS-XE 17.12.5)
-	PmkBsSenderAddr        string         `json:"pmk-bs-sender-addr"`                  // PMK bulk sync sender AP MAC address (Live: IOS-XE 17.12.5)
-	PmkBsReceiverAddr      string         `json:"pmk-bs-receiver-addr"`                // PMK bulk sync receiver AP MAC address (Live: IOS-XE 17.12.5)
-	Accounting             interface{}    `json:"accounting,omitempty"`                // Accounting info to be sent to radius server (Live: IOS-XE 17.12.5)
-	ApDnaData              interface{}    `json:"ap-dna-data,omitempty"`               // Cisco-DNA related data (Live: IOS-XE 17.12.5)
-	ApGasRateLimitCfg      interface{}    `json:"ap-gas-rate-limit-cfg,omitempty"`     // Cisco AP Generic Advertisement Services (GAS) rate configuration (Live: IOS-XE 17.12.5)
-	ApIPData               interface{}    `json:"ap-ip-data,omitempty"`                // AP IP address configuration (Live: IOS-XE 17.12.5)
-	ApLoginCredentials     interface{}    `json:"ap-login-credentials,omitempty"`      // Login credentials configured on an AP (Live: IOS-XE 17.12.5)
-	ApMgmt                 interface{}    `json:"ap-mgmt,omitempty"`                   // AP management data (Live: IOS-XE 17.12.5)
-	ApNtpServerInfoCfg     interface{}    `json:"ap-ntp-server-info-cfg,omitempty"`    // NTP server information to be used by AP (Live: IOS-XE 17.12.5)
-	ApNtpSyncStatus        interface{}    `json:"ap-ntp-sync-status,omitempty"`        // AP NTP synchronization status (Live: IOS-XE 17.12.5)
-	ApPmkPropagationStatus interface{}    `json:"ap-pmk-propagation-status,omitempty"` // AP PMK push propagation status (Live: IOS-XE 17.12.5)
-	ApPow                  interface{}    `json:"ap-pow,omitempty"`                    // AP power related data (Live: IOS-XE 17.12.5)
-	ApPrimeInfo            interface{}    `json:"ap-prime-info,omitempty"`             // Controller configuration for the AP (Live: IOS-XE 17.12.5)
-	ApPrimingOverride      interface{}    `json:"ap-priming-override,omitempty"`       // AP priming override flag status (Live: IOS-XE 17.12.5)
-	ApSysStats             interface{}    `json:"ap-sys-stats,omitempty"`              // AP system statistics (Live: IOS-XE 17.12.5)
-	ApTzConfig             interface{}    `json:"ap-tz-config,omitempty"`              // AP timezone configuration (Live: IOS-XE 17.12.5)
-	ApUdpliteInfo          interface{}    `json:"ap-udplite-info,omitempty"`           // UDP-Lite operational information (Live: IOS-XE 17.12.5)
-	AuxClientInterfaceData interface{}    `json:"aux-client-interface-data,omitempty"` // Auxiliary Client Interface data (Live: IOS-XE 17.12.5)
-	InfrastructureMfp      interface{}    `json:"infrastructure-mfp,omitempty"`        // Cisco AP Management Frame Protection (Live: IOS-XE 17.12.5)
-	KernelCoredump         interface{}    `json:"kernel-coredump,omitempty"`           // Kernel coredump configuration (Live: IOS-XE 17.12.5)
-	LinkAudit              interface{}    `json:"link-audit,omitempty"`                // Link audit data (Live: IOS-XE 17.12.5)
-	OeapAudit              interface{}    `json:"oeap-audit,omitempty"`                // On-demand Office Extended AP link test data (Live: IOS-XE 17.12.5)
-	Retransmit             interface{}    `json:"retransmit,omitempty"`                // AP retransmission parameters (Live: IOS-XE 17.12.5)
-	Syslog                 interface{}    `json:"syslog,omitempty"`                    // Cisco AP System Logging (Live: IOS-XE 17.12.5)
-	Timer                  interface{}    `json:"timer,omitempty"`                     // Cisco access point timer data (Live: IOS-XE 17.12.5)
+	WtpMAC                 string                  `json:"wtp-mac"`                             // MAC Address of the AP Radio (Live: IOS-XE 17.12.5)
+	RadioID                int                     `json:"radio-id"`                            // AP radio identifier (Live: IOS-XE 17.12.5)
+	ApAntennaBandMode      string                  `json:"ap-antenna-band-mode"`                // AP antenna band mode configuration (Live: IOS-XE 17.12.5)
+	LinkEncryptionEnabled  bool                    `json:"link-encryption-enabled"`             // Controller-AP link encryption status (Live: IOS-XE 17.12.5)
+	ApRemoteDebugMode      bool                    `json:"ap-remote-debug-mode"`                // Remote debugging status for the AP (Live: IOS-XE 17.12.5)
+	ApRole                 string                  `json:"ap-role"`                             // AP role in PMK push (Live: IOS-XE 17.12.5)
+	ApIndoorMode           bool                    `json:"ap-indoor-mode"`                      // Identifier for indoor AP mode (Live: IOS-XE 17.12.5)
+	MaxClientsAllowed      int                     `json:"max-clients-allowed"`                 // Maximum clients allowed on an AP (Live: IOS-XE 17.12.5)
+	IsLocalNet             bool                    `json:"is-local-net"`                        // Identifier for local access in OEAP AP (Live: IOS-XE 17.12.5)
+	Ipv4TcpMss             TCPMssConfig            `json:"ipv4-tcp-mss"`                        // Configured IPv4 TCP MSS value for client (Live: IOS-XE 17.12.5)
+	Ipv6TcpMss             TCPMssConfig            `json:"ipv6-tcp-mss"`                        // Configured IPv6 TCP MSS value for client (Live: IOS-XE 17.12.5)
+	RangingMode            string                  `json:"ranging-mode"`                        // Ranging mode - normal or accurate (Live: IOS-XE 17.12.5)
+	PowerProfile           string                  `json:"power-profile"`                       // Power profile applied to the AP (Live: IOS-XE 17.12.5)
+	PwrProfType            string                  `json:"pwr-prof-type"`                       // Power profile type (Live: IOS-XE 17.12.5)
+	PwrCalProfile          string                  `json:"pwr-cal-profile"`                     // Calendar profile associated to power profile (Live: IOS-XE 17.12.5)
+	PersistentSsid         PersistentSsid          `json:"persistent-ssid"`                     // Persistent SSID broadcast operation information (Live: IOS-XE 17.12.5)
+	ProvSsid               bool                    `json:"prov-ssid"`                           // Office Extended AP Provisional SSID status (Live: IOS-XE 17.12.5)
+	PrimingProfile         string                  `json:"priming-profile"`                     // Applied AP priming profile name (Live: IOS-XE 17.12.5)
+	PrimingProfileSrc      string                  `json:"priming-profile-src"`                 // AP priming profile configuration source (Live: IOS-XE 17.12.5)
+	PrimingFilter          string                  `json:"priming-filter"`                      // AP priming filter name (Live: IOS-XE 17.12.5)
+	PmkBsSenderAddr        string                  `json:"pmk-bs-sender-addr"`                  // PMK bulk sync sender AP MAC address (Live: IOS-XE 17.12.5)
+	PmkBsReceiverAddr      string                  `json:"pmk-bs-receiver-addr"`                // PMK bulk sync receiver AP MAC address (Live: IOS-XE 17.12.5)
+	Accounting             *AccountingInfo         `json:"accounting,omitempty"`                // Accounting info to be sent to radius server (Live: IOS-XE 17.12.5)
+	ApDnaData              *ApDnaData              `json:"ap-dna-data,omitempty"`               // Cisco-DNA related data (Live: IOS-XE 17.12.5)
+	ApGasRateLimitCfg      *ApGasRateLimitConfig   `json:"ap-gas-rate-limit-cfg,omitempty"`     // Cisco AP Generic Advertisement Services (GAS) rate configuration (Live: IOS-XE 17.12.5)
+	ApIPData               *ApIPData               `json:"ap-ip-data,omitempty"`                // AP IP address configuration (Live: IOS-XE 17.12.5)
+	ApLoginCredentials     *ApLoginCredentials     `json:"ap-login-credentials,omitempty"`      // Login credentials configured on an AP (Live: IOS-XE 17.12.5)
+	ApMgmt                 *ApManagement           `json:"ap-mgmt,omitempty"`                   // AP management data (Live: IOS-XE 17.12.5)
+	ApNtpServerInfoCfg     *ApNtpServerInfo        `json:"ap-ntp-server-info-cfg,omitempty"`    // NTP server information to be used by AP (Live: IOS-XE 17.12.5)
+	ApNtpSyncStatus        *ApNtpSyncStatus        `json:"ap-ntp-sync-status,omitempty"`        // AP NTP synchronization status (Live: IOS-XE 17.12.5)
+	ApPmkPropagationStatus *bool                   `json:"ap-pmk-propagation-status,omitempty"` // AP PMK push propagation status (Live: IOS-XE 17.12.5)
+	ApPow                  *ApPowData              `json:"ap-pow,omitempty"`                    // AP power related data (Live: IOS-XE 17.12.5)
+	ApPrimeInfo            *ApPrimeInfo            `json:"ap-prime-info,omitempty"`             // Controller configuration for the AP (Live: IOS-XE 17.12.5)
+	ApPrimingOverride      *bool                   `json:"ap-priming-override,omitempty"`       // AP priming override flag status (Live: IOS-XE 17.12.5)
+	ApSysStats             *ApSystemStats          `json:"ap-sys-stats,omitempty"`              // AP system statistics (Live: IOS-XE 17.12.5)
+	ApTzConfig             *ApTimezoneConfig       `json:"ap-tz-config,omitempty"`              // AP timezone configuration (Live: IOS-XE 17.12.5)
+	ApUdpliteInfo          *string                 `json:"ap-udplite-info,omitempty"`           // UDP-Lite operational information (Live: IOS-XE 17.12.5)
+	AuxClientInterfaceData *AuxClientInterfaceData `json:"aux-client-interface-data,omitempty"` // Auxiliary Client Interface data (Live: IOS-XE 17.12.5)
+	InfrastructureMfp      *InfrastructureMfp      `json:"infrastructure-mfp,omitempty"`        // Cisco AP Management Frame Protection (Live: IOS-XE 17.12.5)
+	KernelCoredump         *KernelCoredumpConfig   `json:"kernel-coredump,omitempty"`           // Kernel coredump configuration (Live: IOS-XE 17.12.5)
+	LinkAudit              *LinkAuditData          `json:"link-audit,omitempty"`                // Link audit data (Live: IOS-XE 17.12.5)
+	OeapAudit              *OeapAuditData          `json:"oeap-audit,omitempty"`                // On-demand Office Extended AP link test data (Live: IOS-XE 17.12.5)
+	Retransmit             *RetransmitConfig       `json:"retransmit,omitempty"`                // AP retransmission parameters (Live: IOS-XE 17.12.5)
+	Syslog                 *SyslogConfig           `json:"syslog,omitempty"`                    // Cisco AP System Logging (Live: IOS-XE 17.12.5)
+	Timer                  *ApTimerConfig          `json:"timer,omitempty"`                     // Cisco access point timer data (Live: IOS-XE 17.12.5)
 }
 
 // RlanOper represents RLAN operational data.
@@ -1173,37 +1173,37 @@ type CAPWAPPkts struct {
 
 // CountryOper represents country operational data.
 type CountryOper struct {
-	CountryCode         string      `json:"country-code"`                 // Country code for regulatory compliance (Live: IOS-XE 17.12.5)
-	CountryString       string      `json:"country-string"`               // Country string representation (Live: IOS-XE 17.12.5)
-	RegDomainStr80211Bg string      `json:"reg-domain-str-80211bg"`       // Regulatory domain string for 802.11bg (Live: IOS-XE 17.12.5)
-	RegDomainStr80211A  string      `json:"reg-domain-str-80211a"`        // Regulatory domain string for 802.11a (Live: IOS-XE 17.12.5)
-	CountrySupported    bool        `json:"country-supported"`            // Country support status in regulatory database (Live: IOS-XE 17.12.5)
-	Channels11a         interface{} `json:"channels-11a,omitempty"`       // Available channels for 802.11a operation (Live: IOS-XE 17.12.5)
-	Channels11bg        interface{} `json:"channels-11bg,omitempty"`      // Available channels for 802.11bg operation (Live: IOS-XE 17.12.5)
-	ChannelsString11a   string      `json:"channels-string-11a"`          // Channel string representation for 802.11a (Live: IOS-XE 17.12.5)
-	ChannelsString11bg  string      `json:"channels-string-11bg"`         // Channel string representation for 802.11bg (Live: IOS-XE 17.12.5)
-	DCAChannels11a      interface{} `json:"dca-channels-11a,omitempty"`   // DCA channels for 802.11a band (Live: IOS-XE 17.12.5)
-	DCAChannels11bg     interface{} `json:"dca-channels-11bg,omitempty"`  // DCA channels for 802.11bg band (Live: IOS-XE 17.12.5)
-	RadarChannels11a    interface{} `json:"radar-channels-11a,omitempty"` // Radar-affected channels for 802.11a (Live: IOS-XE 17.12.5)
-	RegDom6ghz          interface{} `json:"reg-dom-6ghz,omitempty"`       // Regulatory domain information for 6GHz (Live: IOS-XE 17.12.5)
-	ChanInfo6ghz        interface{} `json:"chan-info-6ghz,omitempty"`     // Channel information for 6GHz band (Live: IOS-XE 17.12.5)
+	CountryCode         string  `json:"country-code"`                 // Country code for regulatory compliance (Live: IOS-XE 17.12.5)
+	CountryString       string  `json:"country-string"`               // Country string representation (Live: IOS-XE 17.12.5)
+	RegDomainStr80211Bg string  `json:"reg-domain-str-80211bg"`       // Regulatory domain string for 802.11bg (Live: IOS-XE 17.12.5)
+	RegDomainStr80211A  string  `json:"reg-domain-str-80211a"`        // Regulatory domain string for 802.11a (Live: IOS-XE 17.12.5)
+	CountrySupported    bool    `json:"country-supported"`            // Country support status in regulatory database (Live: IOS-XE 17.12.5)
+	Channels11a         *string `json:"channels-11a,omitempty"`       // Available channels for 802.11a operation (Live: IOS-XE 17.12.5)
+	Channels11bg        *string `json:"channels-11bg,omitempty"`      // Available channels for 802.11bg operation (Live: IOS-XE 17.12.5)
+	ChannelsString11a   string  `json:"channels-string-11a"`          // Channel string representation for 802.11a (Live: IOS-XE 17.12.5)
+	ChannelsString11bg  string  `json:"channels-string-11bg"`         // Channel string representation for 802.11bg (Live: IOS-XE 17.12.5)
+	DCAChannels11a      *string `json:"dca-channels-11a,omitempty"`   // DCA channels for 802.11a band (Live: IOS-XE 17.12.5)
+	DCAChannels11bg     *string `json:"dca-channels-11bg,omitempty"`  // DCA channels for 802.11bg band (Live: IOS-XE 17.12.5)
+	RadarChannels11a    *string `json:"radar-channels-11a,omitempty"` // Radar-affected channels for 802.11a (Live: IOS-XE 17.12.5)
+	RegDom6ghz          *string `json:"reg-dom-6ghz,omitempty"`       // Regulatory domain information for 6GHz (Live: IOS-XE 17.12.5)
+	ChanInfo6ghz        *string `json:"chan-info-6ghz,omitempty"`     // Channel information for 6GHz band (Live: IOS-XE 17.12.5)
 }
 
 // SuppCountryOper represents supported country operational data.
 type SuppCountryOper struct {
-	CountryCode      string      `json:"country-code"`                  // Supported country code for regulatory compliance (Live: IOS-XE 17.12.5)
-	CountryString    string      `json:"country-string"`                // Supported country string representation (Live: IOS-XE 17.12.5)
-	CountryCodeIso   string      `json:"country-code-iso"`              // ISO standard country code (Live: IOS-XE 17.12.5)
-	ChanList24ghz    interface{} `json:"chan-list-24ghz,omitempty"`     // Channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
-	ChanList5ghz     interface{} `json:"chan-list-5ghz,omitempty"`      // Channel list for 5GHz band (Live: IOS-XE 17.12.5)
-	ChanList6ghz     interface{} `json:"chan-list-6ghz,omitempty"`      // Channel list for 6GHz band (Live: IOS-XE 17.12.5)
-	ChanListDCA24ghz interface{} `json:"chan-list-dca-24ghz,omitempty"` // DCA channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
-	ChanListDCA5ghz  interface{} `json:"chan-list-dca-5ghz,omitempty"`  // DCA channel list for 5GHz band (Live: IOS-XE 17.12.5)
-	ChanListDCA6ghz  interface{} `json:"chan-list-dca-6ghz,omitempty"`  // DCA channel list for 6GHz band (Live: IOS-XE 17.12.5)
-	ChanListPsc6ghz  interface{} `json:"chan-list-psc-6ghz,omitempty"`  // PSC channel list for 6GHz band (Live: IOS-XE 17.12.5)
-	RegDom24ghz      interface{} `json:"reg-dom-24ghz,omitempty"`       // Regulatory domain for 2.4GHz band (Live: IOS-XE 17.12.5)
-	RegDom5ghz       interface{} `json:"reg-dom-5ghz,omitempty"`        // Regulatory domain for 5GHz band (Live: IOS-XE 17.12.5)
-	RegDom6ghz       interface{} `json:"reg-dom-6ghz,omitempty"`        // Regulatory domain for 6GHz band (Live: IOS-XE 17.12.5)
+	CountryCode      string          `json:"country-code"`                  // Supported country code for regulatory compliance (Live: IOS-XE 17.12.5)
+	CountryString    string          `json:"country-string"`                // Supported country string representation (Live: IOS-XE 17.12.5)
+	CountryCodeIso   string          `json:"country-code-iso"`              // ISO standard country code (Live: IOS-XE 17.12.5)
+	ChanList24ghz    *ChannelList    `json:"chan-list-24ghz,omitempty"`     // Channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
+	ChanList5ghz     *ChannelList    `json:"chan-list-5ghz,omitempty"`      // Channel list for 5GHz band (Live: IOS-XE 17.12.5)
+	ChanList6ghz     *ChannelList    `json:"chan-list-6ghz,omitempty"`      // Channel list for 6GHz band (Live: IOS-XE 17.12.5)
+	ChanListDCA24ghz *ChannelList    `json:"chan-list-dca-24ghz,omitempty"` // DCA channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
+	ChanListDCA5ghz  *ChannelList    `json:"chan-list-dca-5ghz,omitempty"`  // DCA channel list for 5GHz band (Live: IOS-XE 17.12.5)
+	ChanListDCA6ghz  *ChannelList    `json:"chan-list-dca-6ghz,omitempty"`  // DCA channel list for 6GHz band (Live: IOS-XE 17.12.5)
+	ChanListPsc6ghz  *ChannelList    `json:"chan-list-psc-6ghz,omitempty"`  // PSC channel list for 6GHz band (Live: IOS-XE 17.12.5)
+	RegDom24ghz      *RegDomainCodes `json:"reg-dom-24ghz,omitempty"`       // Regulatory domain for 2.4GHz band (Live: IOS-XE 17.12.5)
+	RegDom5ghz       *RegDomainCodes `json:"reg-dom-5ghz,omitempty"`        // Regulatory domain for 5GHz band (Live: IOS-XE 17.12.5)
+	RegDom6ghz       *RegDomainCodes `json:"reg-dom-6ghz,omitempty"`        // Regulatory domain for 6GHz band (Live: IOS-XE 17.12.5)
 }
 
 // ApNhGlobalData represents AP neighborhood global data.
@@ -1263,36 +1263,36 @@ type CdpIPAddress struct {
 
 // RadioOperStats represents radio operational statistics.
 type RadioOperStats struct {
-	ApMAC                 string      `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
-	SlotID                int         `json:"slot-id"`                   // Radio slot identifier (Live: IOS-XE 17.12.5)
-	AidUserList           interface{} `json:"aid-user-list"`             // Association ID user list for this radio (Live: IOS-XE 17.12.5)
-	TxFragmentCount       int         `json:"tx-fragment-count"`         // Number of transmitted frame fragments (Live: IOS-XE 17.12.5)
-	MultipleRetryCount    int         `json:"multiple-retry-count"`      // Multi-retry frame count (Live: IOS-XE 17.12.5)
-	MulticastTxFrameCnt   int         `json:"multicast-tx-frame-cnt"`    // Number of multicast frames transmitted (Live: IOS-XE 17.12.5)
-	FailedCount           int         `json:"failed-count"`              // Number of failed transmission attempts (Live: IOS-XE 17.12.5)
-	RetryCount            int         `json:"retry-count"`               // Number of frame retransmission attempts (Live: IOS-XE 17.12.5)
-	FrameDuplicateCount   int         `json:"frame-duplicate-count"`     // Number of duplicate frames received (Live: IOS-XE 17.12.5)
-	AckFailureCount       int         `json:"ack-failure-count"`         // Number of acknowledgment failures (Live: IOS-XE 17.12.5)
-	FcsErrorCount         int         `json:"fcs-error-count"`           // Number of frames with frame check sequence errors (Live: IOS-XE 17.12.5)
-	MACDecryErrFrameCount int         `json:"mac-decry-err-frame-count"` // Number of frames with MAC decryption errors (Live: IOS-XE 17.12.5)
-	MACMicErrFrameCount   int         `json:"mac-mic-err-frame-count"`   // MAC MIC error frame count (Live: IOS-XE 17.12.5)
-	MulticastRxFrameCnt   int         `json:"multicast-rx-frame-cnt"`    // Number of multicast frames received (Live: IOS-XE 17.12.5)
-	NoiseFloor            int         `json:"noise-floor"`               // Current noise floor level in dBm (Live: IOS-XE 17.12.5)
-	RtsFailureCount       int         `json:"rts-failure-count"`         // Number of Request to Send (RTS) failures (Live: IOS-XE 17.12.5)
-	RtsSuccessCount       int         `json:"rts-success-count"`         // Number of successful Request to Send (RTS) transmissions (Live: IOS-XE 17.12.5)
-	RxCtrlFrameCount      int         `json:"rx-ctrl-frame-count"`       // Number of control frames received (Live: IOS-XE 17.12.5)
-	RxDataFrameCount      int         `json:"rx-data-frame-count"`       // Number of data frames received (Live: IOS-XE 17.12.5)
-	RxDataPktCount        int         `json:"rx-data-pkt-count"`         // Number of data packets received (Live: IOS-XE 17.12.5)
-	RxErrorFrameCount     int         `json:"rx-error-frame-count"`      // Number of frames received with errors (Live: IOS-XE 17.12.5)
-	RxFragmentCount       int         `json:"rx-fragment-count"`         // Number of frame fragments received (Live: IOS-XE 17.12.5)
-	RxMgmtFrameCount      int         `json:"rx-mgmt-frame-count"`       // Number of management frames received (Live: IOS-XE 17.12.5)
-	TxCtrlFrameCount      int         `json:"tx-ctrl-frame-count"`       // Number of control frames transmitted (Live: IOS-XE 17.12.5)
-	TxDataFrameCount      int         `json:"tx-data-frame-count"`       // Number of data frames transmitted (Live: IOS-XE 17.12.5)
-	TxDataPktCount        int         `json:"tx-data-pkt-count"`         // Number of data packets transmitted (Live: IOS-XE 17.12.5)
-	TxFrameCount          int         `json:"tx-frame-count"`            // Total number of frames transmitted (Live: IOS-XE 17.12.5)
-	TxMgmtFrameCount      int         `json:"tx-mgmt-frame-count"`       // Number of management frames transmitted (Live: IOS-XE 17.12.5)
-	WepUndecryptableCount int         `json:"wep-undecryptable-count"`   // Number of WEP frames that could not be decrypted (Live: IOS-XE 17.12.5)
-	ApRadioStats          interface{} `json:"ap-radio-stats,omitempty"`  // Additional access point radio statistics (Live: IOS-XE 17.12.5)
+	ApMAC                 string        `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
+	SlotID                int           `json:"slot-id"`                   // Radio slot identifier (Live: IOS-XE 17.12.5)
+	AidUserList           *int          `json:"aid-user-list,omitempty"`   // Association ID user list for this radio (Live: IOS-XE 17.12.5)
+	TxFragmentCount       int           `json:"tx-fragment-count"`         // Number of transmitted frame fragments (Live: IOS-XE 17.12.5)
+	MultipleRetryCount    int           `json:"multiple-retry-count"`      // Multi-retry frame count (Live: IOS-XE 17.12.5)
+	MulticastTxFrameCnt   int           `json:"multicast-tx-frame-cnt"`    // Number of multicast frames transmitted (Live: IOS-XE 17.12.5)
+	FailedCount           int           `json:"failed-count"`              // Number of failed transmission attempts (Live: IOS-XE 17.12.5)
+	RetryCount            int           `json:"retry-count"`               // Number of frame retransmission attempts (Live: IOS-XE 17.12.5)
+	FrameDuplicateCount   int           `json:"frame-duplicate-count"`     // Number of duplicate frames received (Live: IOS-XE 17.12.5)
+	AckFailureCount       int           `json:"ack-failure-count"`         // Number of acknowledgment failures (Live: IOS-XE 17.12.5)
+	FcsErrorCount         int           `json:"fcs-error-count"`           // Number of frames with frame check sequence errors (Live: IOS-XE 17.12.5)
+	MACDecryErrFrameCount int           `json:"mac-decry-err-frame-count"` // Number of frames with MAC decryption errors (Live: IOS-XE 17.12.5)
+	MACMicErrFrameCount   int           `json:"mac-mic-err-frame-count"`   // MAC MIC error frame count (Live: IOS-XE 17.12.5)
+	MulticastRxFrameCnt   int           `json:"multicast-rx-frame-cnt"`    // Number of multicast frames received (Live: IOS-XE 17.12.5)
+	NoiseFloor            int           `json:"noise-floor"`               // Current noise floor level in dBm (Live: IOS-XE 17.12.5)
+	RtsFailureCount       int           `json:"rts-failure-count"`         // Number of Request to Send (RTS) failures (Live: IOS-XE 17.12.5)
+	RtsSuccessCount       int           `json:"rts-success-count"`         // Number of successful Request to Send (RTS) transmissions (Live: IOS-XE 17.12.5)
+	RxCtrlFrameCount      int           `json:"rx-ctrl-frame-count"`       // Number of control frames received (Live: IOS-XE 17.12.5)
+	RxDataFrameCount      int           `json:"rx-data-frame-count"`       // Number of data frames received (Live: IOS-XE 17.12.5)
+	RxDataPktCount        int           `json:"rx-data-pkt-count"`         // Number of data packets received (Live: IOS-XE 17.12.5)
+	RxErrorFrameCount     int           `json:"rx-error-frame-count"`      // Number of frames received with errors (Live: IOS-XE 17.12.5)
+	RxFragmentCount       int           `json:"rx-fragment-count"`         // Number of frame fragments received (Live: IOS-XE 17.12.5)
+	RxMgmtFrameCount      int           `json:"rx-mgmt-frame-count"`       // Number of management frames received (Live: IOS-XE 17.12.5)
+	TxCtrlFrameCount      int           `json:"tx-ctrl-frame-count"`       // Number of control frames transmitted (Live: IOS-XE 17.12.5)
+	TxDataFrameCount      int           `json:"tx-data-frame-count"`       // Number of data frames transmitted (Live: IOS-XE 17.12.5)
+	TxDataPktCount        int           `json:"tx-data-pkt-count"`         // Number of data packets transmitted (Live: IOS-XE 17.12.5)
+	TxFrameCount          int           `json:"tx-frame-count"`            // Total number of frames transmitted (Live: IOS-XE 17.12.5)
+	TxMgmtFrameCount      int           `json:"tx-mgmt-frame-count"`       // Number of management frames transmitted (Live: IOS-XE 17.12.5)
+	WepUndecryptableCount int           `json:"wep-undecryptable-count"`   // Number of WEP frames that could not be decrypted (Live: IOS-XE 17.12.5)
+	ApRadioStats          *ApRadioStats `json:"ap-radio-stats,omitempty"`  // Additional access point radio statistics (Live: IOS-XE 17.12.5)
 }
 
 // EthernetIfStats represents Ethernet interface statistics.
@@ -1342,9 +1342,9 @@ type EwlcWncdStats struct {
 		IsPredownloadInProgress bool `json:"is-predownload-in-progress"` // Predownload operation active status (Live: IOS-XE 17.12.5)
 		NumTotal                int  `json:"num-total"`                  // Total number of predownload sessions attempted (Live: IOS-XE 17.12.5)
 	} `json:"predownload-stats"` // EWC predownload statistics (Live: IOS-XE 17.12.5)
-	DownloadsComplete   int         `json:"downloads-complete"`              // Total number of completed downloads (Live: IOS-XE 17.12.5)
-	DownloadsInProgress int         `json:"downloads-in-progress"`           // Number of downloads currently in progress (Live: IOS-XE 17.12.5)
-	WlcPredownloadStats interface{} `json:"wlc-predownload-stats,omitempty"` // Wireless LAN Controller predownload statistics (Live: IOS-XE 17.12.5)
+	DownloadsComplete   int                 `json:"downloads-complete"`              // Total number of completed downloads (Live: IOS-XE 17.12.5)
+	DownloadsInProgress int                 `json:"downloads-in-progress"`           // Number of downloads currently in progress (Live: IOS-XE 17.12.5)
+	WlcPredownloadStats *WlcPredownloadStat `json:"wlc-predownload-stats,omitempty"` // Wireless LAN Controller predownload statistics (Live: IOS-XE 17.12.5)
 }
 
 // IotFirmware represents IoT firmware information for access points.
@@ -1359,4 +1359,219 @@ type IotFirmware struct {
 }
 
 // EmptyType represents YANG empty type fields appearing as null arrays in RESTCONF JSON.
-type EmptyType []interface{} // appears as [null]
+// EmptyType represents fields that appear as [null] in RESTCONF responses.
+type EmptyType []string
+
+// AccountingInfo represents accounting information to be sent to RADIUS server.
+type AccountingInfo struct {
+	MethodList string `json:"method-list"` // Accounting method list (Live: IOS-XE 17.12.5)
+}
+
+// ApDnaData represents Cisco-DNA related data.
+type ApDnaData struct {
+	GrpcStatus        string `json:"grpc-status"`         // gRPC status for DNA connection (Live: IOS-XE 17.12.5)
+	PacketsTxAttempts string `json:"packets-tx-attempts"` // Number of transmission attempts (Live: IOS-XE 17.12.5)
+	PacketsTxFailures string `json:"packets-tx-failures"` // Number of transmission failures (Live: IOS-XE 17.12.5)
+	PacketsRx         string `json:"packets-rx"`          // Number of packets received (Live: IOS-XE 17.12.5)
+	PacketsRxFailures string `json:"packets-rx-failures"` // Number of receive failures (Live: IOS-XE 17.12.5)
+}
+
+// ApGasRateLimitConfig represents Generic Advertisement Service (GAS) rate limiting configuration.
+type ApGasRateLimitConfig struct {
+	IsGasRateLimitEnabled bool `json:"is-gas-rate-limit-enabled"` // GAS rate limiting status (Live: IOS-XE 17.12.5)
+	NumReqPerInterval     int  `json:"num-req-per-interval"`      // Number of requests per interval (Live: IOS-XE 17.12.5)
+	IntervalMsec          int  `json:"interval-msec"`             // Rate limiting interval in milliseconds (Live: IOS-XE 17.12.5)
+}
+
+// ApIPData represents AP IP address configuration.
+type ApIPData struct {
+	ApPrefix         int    `json:"ap-prefix"`           // AP IP prefix length (Live: IOS-XE 17.12.5)
+	Mtu              int    `json:"mtu"`                 // Maximum transmission unit (Live: IOS-XE 17.12.5)
+	IsStaticApIPAddr bool   `json:"is-static-ap-ipaddr"` // Static IP address configuration status (Live: IOS-XE 17.12.5)
+	DomainName       string `json:"domain-name"`         // Domain name configuration (Live: IOS-XE 17.12.5)
+	ApIPAddr         string `json:"ap-ip-addr"`          // AP IP address (Live: IOS-XE 17.12.5)
+	ApIPv6Addr       string `json:"ap-ipv6-addr"`        // AP IPv6 address (Live: IOS-XE 17.12.5)
+	ApIPNetmask      string `json:"ap-ip-netmask"`       // AP IP netmask (Live: IOS-XE 17.12.5)
+	ApIPGateway      string `json:"ap-ip-gateway"`       // AP IP gateway (Live: IOS-XE 17.12.5)
+	ApIPv6Gateway    string `json:"ap-ipv6-gateway"`     // AP IPv6 gateway (Live: IOS-XE 17.12.5)
+	ApNameServerType string `json:"ap-name-server-type"` // Name server type (Live: IOS-XE 17.12.5)
+	ApIPv6Method     string `json:"ap-ipv6-method"`      // IPv6 configuration method (Live: IOS-XE 17.12.5)
+	StaticIP         string `json:"static-ip"`           // Static IP address (Live: IOS-XE 17.12.5)
+	StaticGwIP       string `json:"static-gw-ip"`        // Static gateway IP address (Live: IOS-XE 17.12.5)
+	StaticNetmask    string `json:"static-netmask"`      // Static netmask (Live: IOS-XE 17.12.5)
+	StaticPrefix     int    `json:"static-prefix"`       // Static prefix length (Live: IOS-XE 17.12.5)
+}
+
+// ApLoginCredentials represents login credentials configured on an AP.
+type ApLoginCredentials struct {
+	Dot1xEapType  string `json:"dot1x-eap-type"` // 802.1X EAP type (Live: IOS-XE 17.12.5)
+	UserName      string `json:"user-name"`      // Username for AP login (Live: IOS-XE 17.12.5)
+	Dot1xUsername string `json:"dot1x-username"` // 802.1X username (Live: IOS-XE 17.12.5)
+}
+
+// ApManagement represents AP management configuration.
+type ApManagement struct {
+	IsTelnetEnabled  bool `json:"is-telnet-enabled"`  // Telnet access status (Live: IOS-XE 17.12.5)
+	IsSSHEnabled     bool `json:"is-ssh-enabled"`     // SSH access status (Live: IOS-XE 17.12.5)
+	IsConsoleEnabled bool `json:"is-console-enabled"` // Console access status (Live: IOS-XE 17.12.5)
+}
+
+// ApNtpServerInfo represents NTP server information for AP.
+type ApNtpServerInfo struct {
+	NtpServerAddress string `json:"ntp-server-address"` // NTP server IP address (Live: IOS-XE 17.12.5)
+	TrustKey         string `json:"trust-key"`          // NTP trust key (Live: IOS-XE 17.12.5)
+	KeyID            int    `json:"key-id"`             // NTP key identifier (Live: IOS-XE 17.12.5)
+	KeyType          string `json:"key-type"`           // NTP key type (Live: IOS-XE 17.12.5)
+	KeyFormat        string `json:"key-format"`         // NTP key format (Live: IOS-XE 17.12.5)
+	TrustKeyType     string `json:"trust-key-type"`     // NTP trust key type (Live: IOS-XE 17.12.5)
+}
+
+// ApNtpSyncStatus represents AP NTP synchronization status.
+type ApNtpSyncStatus struct {
+	Enabled          bool   `json:"enabled"`             // NTP synchronization enabled status (Live: IOS-XE 17.12.5)
+	Stratum          int    `json:"stratum"`             // NTP stratum level (Live: IOS-XE 17.12.5)
+	Status           string `json:"status"`              // NTP synchronization status (Live: IOS-XE 17.12.5)
+	SecSinceLastSync int    `json:"sec-since-last-sync"` // Seconds since last synchronization (Live: IOS-XE 17.12.5)
+	SyncOffset       int    `json:"sync-offset"`         // Synchronization offset (Live: IOS-XE 17.12.5)
+	RxTS             string `json:"rx-ts"`               // Last receive timestamp (Live: IOS-XE 17.12.5)
+}
+
+// ApPowData represents AP power related data.
+type ApPowData struct {
+	PowerInjectorSel     string `json:"power-injector-sel"`     // Power injector selection (Live: IOS-XE 17.12.5)
+	PowerInjectorMacaddr string `json:"power-injector-macaddr"` // Power injector MAC address (Live: IOS-XE 17.12.5)
+	PreStdSwitchEnabled  bool   `json:"pre-std-switch-enabled"` // Pre-standard switch enabled status (Live: IOS-XE 17.12.5)
+	PowerInjectorEnabled bool   `json:"power-injector-enabled"` // Power injector enabled status (Live: IOS-XE 17.12.5)
+	PowerType            string `json:"power-type"`             // Power source type (Live: IOS-XE 17.12.5)
+	PowerMode            string `json:"power-mode"`             // Power mode configuration (Live: IOS-XE 17.12.5)
+}
+
+// ApPrimeInfo represents controller configuration for the AP.
+type ApPrimeInfo struct {
+	PrimaryControllerName     string `json:"primary-controller-name"`      // Primary controller name (Live: IOS-XE 17.12.5)
+	SecondaryControllerName   string `json:"secondary-controller-name"`    // Secondary controller name (Live: IOS-XE 17.12.5)
+	PrimaryControllerIPAddr   string `json:"primary-controller-ip-addr"`   // Primary controller IP address (Live: IOS-XE 17.12.5)
+	SecondaryControllerIPAddr string `json:"secondary-controller-ip-addr"` // Secondary controller IP address (Live: IOS-XE 17.12.5)
+	TertiaryControllerName    string `json:"tertiary-controller-name"`     // Tertiary controller name (Live: IOS-XE 17.12.5)
+	TertiaryControllerIPAddr  string `json:"tertiary-controller-ip-addr"`  // Tertiary controller IP address (Live: IOS-XE 17.12.5)
+	ApFallbackIP              string `json:"ap-fallback-ip"`               // AP fallback IP address (Live: IOS-XE 17.12.5)
+	FallbackEnabled           bool   `json:"fallback-enabled"`             // Fallback enabled status (Live: IOS-XE 17.12.5)
+}
+
+// ApSystemStats represents AP system statistics.
+type ApSystemStats struct {
+	CPUUsage       int              `json:"cpu-usage"`        // Current CPU usage percentage (Live: IOS-XE 17.12.5)
+	MemoryUsage    int              `json:"memory-usage"`     // Current memory usage percentage (Live: IOS-XE 17.12.5)
+	AvgCPUUsage    int              `json:"avg-cpu-usage"`    // Average CPU usage percentage (Live: IOS-XE 17.12.5)
+	AvgMemoryUsage int              `json:"avg-memory-usage"` // Average memory usage percentage (Live: IOS-XE 17.12.5)
+	WindowSize     int              `json:"window-size"`      // Statistics window size (Live: IOS-XE 17.12.5)
+	LastTS         string           `json:"last-ts"`          // Last timestamp (Live: IOS-XE 17.12.5)
+	Memory         ApAlarmThreshold `json:"memory"`           // Memory alarm configuration (Live: IOS-XE 17.12.5)
+	CPU            ApAlarmThreshold `json:"cpu"`              // CPU alarm configuration (Live: IOS-XE 17.12.5)
+}
+
+// ApAlarmThreshold represents alarm threshold configuration.
+type ApAlarmThreshold struct {
+	AlarmStatus   string `json:"alarm-status"`    // Alarm status (Live: IOS-XE 17.12.5)
+	RaiseTicks    string `json:"raise-ticks"`     // Alarm raise timestamp (Live: IOS-XE 17.12.5)
+	ClearTicks    string `json:"clear-ticks"`     // Alarm clear timestamp (Live: IOS-XE 17.12.5)
+	LastSendTicks string `json:"last-send-ticks"` // Last send timestamp (Live: IOS-XE 17.12.5)
+	Type          string `json:"type"`            // Alarm type (Live: IOS-XE 17.12.5)
+}
+
+// ApTimezoneConfig represents AP timezone configuration.
+type ApTimezoneConfig struct {
+	TzEnabled  bool   `json:"tz-enabled"`  // Timezone configuration enabled status (Live: IOS-XE 17.12.5)
+	OffsetHour int    `json:"offset-hour"` // Timezone offset hours (Live: IOS-XE 17.12.5)
+	OffsetMin  int    `json:"offset-min"`  // Timezone offset minutes (Live: IOS-XE 17.12.5)
+	Mode       string `json:"mode"`        // Timezone mode (Live: IOS-XE 17.12.5)
+}
+
+// AuxClientInterfaceData represents auxiliary client interface data.
+type AuxClientInterfaceData struct {
+	IsEnabled bool `json:"is-enabled"` // Auxiliary client interface enabled status (Live: IOS-XE 17.12.5)
+}
+
+// InfrastructureMfp represents AP Management Frame Protection configuration.
+type InfrastructureMfp struct {
+	MfpValidation bool `json:"mfp-validation"` // MFP validation enabled status (Live: IOS-XE 17.12.5)
+	MfpProtection bool `json:"mfp-protection"` // MFP protection enabled status (Live: IOS-XE 17.12.5)
+}
+
+// KernelCoredumpConfig represents kernel coredump configuration.
+type KernelCoredumpConfig struct {
+	KernelCoredumpLimit int `json:"kernel-coredump-limit"` // Kernel coredump limit (Live: IOS-XE 17.12.5)
+}
+
+// LinkAuditData represents link audit configuration and data.
+type LinkAuditData struct {
+	LinkauditFlag      string `json:"linkaudit-flag"`       // Link audit flag status (Live: IOS-XE 17.12.5)
+	LinkauditDelayTime int    `json:"linkaudit-delay-time"` // Link audit delay time (Live: IOS-XE 17.12.5)
+	LinkauditMaxTime   int    `json:"linkaudit-max-time"`   // Link audit maximum time (Live: IOS-XE 17.12.5)
+	LinkauditMinTime   int    `json:"linkaudit-min-time"`   // Link audit minimum time (Live: IOS-XE 17.12.5)
+	LinkauditRcvTime   int    `json:"linkaudit-rcv-time"`   // Link audit receive time (Live: IOS-XE 17.12.5)
+}
+
+// OeapAuditData represents Office Extended AP audit data.
+type OeapAuditData struct {
+	LastRun    string `json:"last-run"`    // Last audit run timestamp (Live: IOS-XE 17.12.5)
+	State      string `json:"state"`       // Audit state (Live: IOS-XE 17.12.5)
+	DTLSUpload string `json:"dtls-upload"` // DTLS upload information (Live: IOS-XE 17.12.5)
+	Latency    int    `json:"latency"`     // Network latency (Live: IOS-XE 17.12.5)
+	Jitter     int    `json:"jitter"`      // Network jitter (Live: IOS-XE 17.12.5)
+}
+
+// RetransmitConfig represents AP retransmission parameters.
+type RetransmitConfig struct {
+	Count    int `json:"count"`    // Retransmission count (Live: IOS-XE 17.12.5)
+	Interval int `json:"interval"` // Retransmission interval in seconds (Live: IOS-XE 17.12.5)
+}
+
+// SyslogConfig represents AP system logging configuration.
+type SyslogConfig struct {
+	LogHostIPAddr    string `json:"log-host-ipaddr"`    // Syslog host IP address (Live: IOS-XE 17.12.5)
+	LogTrapLevel     string `json:"log-trap-level"`     // Syslog trap level (Live: IOS-XE 17.12.5)
+	LogTLSMode       bool   `json:"log-tls-mode"`       // TLS mode enabled status (Live: IOS-XE 17.12.5)
+	LogFacilityLevel string `json:"log-facility-level"` // Syslog facility level (Live: IOS-XE 17.12.5)
+}
+
+// ApTimerConfig represents AP timer configuration.
+type ApTimerConfig struct {
+	StatsTimer ApStatsTimer `json:"stats-timer"` // Statistics timer configuration (Live: IOS-XE 17.12.5)
+}
+
+// ApStatsTimer represents AP statistics timer.
+type ApStatsTimer struct {
+	StatTmr int `json:"stat-tmr"` // Statistics timer value (Live: IOS-XE 17.12.5)
+}
+
+// ChannelList represents a list of wireless channels.
+type ChannelList struct {
+	Channel []int `json:"channel"` // List of supported channels (Live: IOS-XE 17.12.5)
+}
+
+// RegDomainCodes represents regulatory domain codes.
+type RegDomainCodes struct {
+	RegDomainCode []string `json:"reg-domain-code"` // List of regulatory domain codes (Live: IOS-XE 17.12.5)
+}
+
+// ApRadioStats represents additional AP radio statistics.
+type ApRadioStats struct {
+	StuckTS            string `json:"stuck-ts"`              // Last stuck timestamp (Live: IOS-XE 17.12.5)
+	LastTS             string `json:"last-ts"`               // Last update timestamp (Live: IOS-XE 17.12.5)
+	NumRadioStuckReset int    `json:"num-radio-stuck-reset"` // Number of radio stuck resets (Live: IOS-XE 17.12.5)
+}
+
+// LscStatusPayload represents LSC status payload support types.
+type LscStatusPayload string
+
+// AlarmEnableType represents alarm enablement settings for radio statistics.
+type AlarmEnableType bool
+
+// WlcPredownloadStat represents Wireless LAN Controller predownload statistics.
+type WlcPredownloadStat struct {
+	CompletedCount    *int    `json:"completed-count,omitempty"`     // Number of completed predownload operations
+	InProgressCount   *int    `json:"in-progress-count,omitempty"`   // Number of predownload operations in progress
+	ErrorCount        *int    `json:"error-count,omitempty"`         // Number of failed predownload operations
+	LastOperationTime *string `json:"last-operation-time,omitempty"` // Timestamp of last predownload operation
+}
