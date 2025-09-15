@@ -43,7 +43,7 @@ type McastOperMulticastOperData struct {
 
 // FlexMediastreamClientSummary represents FlexConnect mediastream client information.
 type FlexMediastreamClientSummary struct {
-	ClientMac            string                 `json:"client-mac"`              // Multicast flex client MAC address (Live: IOS-XE 17.12.5)
+	ClientMAC            string                 `json:"client-mac"`              // Multicast flex client MAC address (Live: IOS-XE 17.12.5)
 	VlanID               int                    `json:"vlan-id"`                 // Multicast client's VLAN (Live: IOS-XE 17.12.5)
 	FlexMcastClientGroup []FlexMcastClientGroup `json:"flex-mcast-client-group"` // Flex multicast client group (Live: IOS-XE 17.12.5)
 }
@@ -52,7 +52,7 @@ type FlexMediastreamClientSummary struct {
 type FlexMcastClientGroup struct {
 	McastIP    string `json:"mcast-ip"`    // Multicast group IP (Live: IOS-XE 17.12.5)
 	StreamName string `json:"stream-name"` // Stream name associated with multicast group (Live: IOS-XE 17.12.5)
-	ApMac      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.5)
+	ApMAC      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.5)
 	IsDirect   bool   `json:"is-direct"`   // Stream is Multicast-Direct or Multicast (Live: IOS-XE 17.12.5)
 }
 
@@ -65,7 +65,7 @@ type VlanL2MgidOp struct {
 
 // FabricMediaStreamClientSummary represents fabric mediastream client summary.
 type FabricMediaStreamClientSummary struct {
-	ClientMac              string                   `json:"client-mac"`                          // Multicast fabric client MAC address (Live: IOS-XE 17.12.5)
+	ClientMAC              string                   `json:"client-mac"`                          // Multicast fabric client MAC address (Live: IOS-XE 17.12.5)
 	VlanID                 int                      `json:"vlan-id"`                             // Multicast client's VLAN (Live: IOS-XE 17.12.5)
 	FabricMcastClientGroup []FabricMcastClientGroup `json:"fabric-mcast-client-group,omitempty"` // Fabric multicast client group (Live: IOS-XE 17.12.5)
 }
@@ -74,7 +74,7 @@ type FabricMediaStreamClientSummary struct {
 type FabricMcastClientGroup struct {
 	McastIP    string `json:"mcast-ip"`    // Multicast IP (Live: IOS-XE 17.12.5)
 	StreamName string `json:"stream-name"` // Stream name (Live: IOS-XE 17.12.5)
-	ApMac      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.5)
+	ApMAC      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.5)
 	IsDirect   bool   `json:"is-direct"`   // Stream is Multicast-Direct or Multicast (Live: IOS-XE 17.12.5)
 }
 
@@ -92,18 +92,18 @@ type McastMgidInfo struct {
 
 // McastMgidClientEntry represents multicast MGID client entry.
 type McastMgidClientEntry struct {
-	ClientMacAddr string `json:"client-mac-addr"` // client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMACAddr string `json:"client-mac-addr"` // client MAC address (YANG: IOS-XE 17.12.1)
 	ClientIPAddr  string `json:"client-ip-addr"`  // Client IPv4 address (YANG: IOS-XE 17.12.1)
 	ClientStatus  string `json:"client-status"`   // Client's multicast status (YANG: IOS-XE 17.12.1)
 }
 
 // MulticastOperData represents multicast operational data.
 type MulticastOperData struct {
-	MsMacAddress string             `json:"ms-mac-address"`          // Client MAC address (YANG: IOS-XE 17.12.1)
+	MsMACAddress string             `json:"ms-mac-address"`          // Client MAC address (YANG: IOS-XE 17.12.1)
 	NumEntries   int                `json:"num-entries"`             // Number of currently filled entries (YANG: IOS-XE 17.12.1)
 	Entry        []McastClientEntry `json:"entry,omitempty"`         // Multicast client entry (YANG: IOS-XE 17.12.1)
 	ClientIPv6   string             `json:"client-ipv6,omitempty"`   // Multicast client IPv6 address (YANG: IOS-XE 17.12.1)
-	CapwapIifID  int                `json:"capwap-iif-id,omitempty"` // Client capwap IIF ID (YANG: IOS-XE 17.12.1)
+	CAPWAPIifID  int                `json:"capwap-iif-id,omitempty"` // Client capwap IIF ID (YANG: IOS-XE 17.12.1)
 	ClientIP     string             `json:"client-ip,omitempty"`     // Client IPv4 address (YANG: IOS-XE 17.12.1)
 }
 
@@ -120,11 +120,11 @@ type McastClientEntry struct {
 // RrcHistoryClientRecordData represents RRC history client record data.
 type RrcHistoryClientRecordData struct {
 	UserTimeStamp        string `json:"user-time-stamp"`         // RRC history client user timestamp (YANG: IOS-XE 17.12.1)
-	ClientMac            string `json:"client-mac"`              // RRC history client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC            string `json:"client-mac"`              // RRC history client MAC address (YANG: IOS-XE 17.12.1)
 	Qos                  int    `json:"qos"`                     // QOS for the streaming (YANG: IOS-XE 17.12.1)
 	Decision             string `json:"decision"`                // RRC history Video-streaming decision (YANG: IOS-XE 17.12.1)
 	ReasonCode           int    `json:"reason-code"`             // RRC decision's reason code (YANG: IOS-XE 17.12.1)
-	ApMac                string `json:"ap-mac"`                  // AP's MAC address to which client was connected (YANG: IOS-XE 17.12.1)
+	ApMAC                string `json:"ap-mac"`                  // AP's MAC address to which client was connected (YANG: IOS-XE 17.12.1)
 	VapID                int    `json:"vap-id"`                  // Client's VAP ID (YANG: IOS-XE 17.12.1)
 	SlotID               int    `json:"slot-id"`                 // AP's Slot ID to which client was connected (YANG: IOS-XE 17.12.1)
 	CacEnabled           int    `json:"cac-enabled"`             // RRC CAC is enabled or not (YANG: IOS-XE 17.12.1)
@@ -146,7 +146,7 @@ type RrcHistoryClientRecordData struct {
 
 // RrcSrRadioRecord represents RRC stream radio record.
 type RrcSrRadioRecord struct {
-	ApMac               string          `json:"ap-mac"`                        // AP MAC on which Multicast group is reported (YANG: IOS-XE 17.12.1)
+	ApMAC               string          `json:"ap-mac"`                        // AP MAC on which Multicast group is reported (YANG: IOS-XE 17.12.1)
 	SlotID              int             `json:"slot-id"`                       // Radio Slot ID (YANG: IOS-XE 17.12.1)
 	RadioType           int             `json:"radio-type"`                    // Radio type of the stream (YANG: IOS-XE 17.12.1)
 	DuplicatedBandWidth int             `json:"duplicated-band-width"`         // Duplicated bandwidth on this radio (YANG: IOS-XE 17.12.1)
@@ -165,8 +165,8 @@ type RrcGroupsInfo struct {
 type RrcStreamRecord struct {
 	StreamNameStr  string             `json:"stream-name-str"`            // Name of the Media-stream (YANG: IOS-XE 17.12.1)
 	GroupIP        string             `json:"group-ip"`                   // Multicast group IP address for this stream (YANG: IOS-XE 17.12.1)
-	ClMac          string             `json:"cl-mac"`                     // Media-stream client MAC address (YANG: IOS-XE 17.12.1)
-	ClientMac      string             `json:"client-mac"`                 // Client MAC address (YANG: IOS-XE 17.12.1)
+	ClMAC          string             `json:"cl-mac"`                     // Media-stream client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC      string             `json:"client-mac"`                 // Client MAC address (YANG: IOS-XE 17.12.1)
 	DestIP         string             `json:"dest-ip"`                    // Multicast group destination IP address (YANG: IOS-XE 17.12.1)
 	VapID          int                `json:"vap-id"`                     // VAP ID associated with stream (YANG: IOS-XE 17.12.1)
 	Vlan           int                `json:"vlan"`                       // VLAN ID associated with stream (YANG: IOS-XE 17.12.1)
@@ -188,20 +188,20 @@ type RrcStreamRecord struct {
 
 // RrcRadioRecordKey represents RRC radio record key.
 type RrcRadioRecordKey struct {
-	ApMac  string `json:"ap-mac"`  // AP MAC on which Multicast group is reported (YANG: IOS-XE 17.12.1)
+	ApMAC  string `json:"ap-mac"`  // AP MAC on which Multicast group is reported (YANG: IOS-XE 17.12.1)
 	SlotID int    `json:"slot-id"` // Radio Slot ID (YANG: IOS-XE 17.12.1)
 }
 
 // RrcStreamAdmitRecord represents RRC stream admit record.
 type RrcStreamAdmitRecord struct {
 	LastUpdated string `json:"last-updated"` // Stream last updated by RRC (YANG: IOS-XE 17.12.1)
-	ClientMac   string `json:"client-mac"`   // Client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC   string `json:"client-mac"`   // Client MAC address (YANG: IOS-XE 17.12.1)
 	DestIP      string `json:"dest-ip"`      // Multicast group destination IP address (YANG: IOS-XE 17.12.1)
 }
 
 // RrcStreamDenyRecord represents RRC stream deny record.
 type RrcStreamDenyRecord struct {
 	LastUpdated string `json:"last-updated"` // Stream last updated by RRC (YANG: IOS-XE 17.12.1)
-	ClientMac   string `json:"client-mac"`   // Client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC   string `json:"client-mac"`   // Client MAC address (YANG: IOS-XE 17.12.1)
 	DestIP      string `json:"dest-ip"`      // Multicast group destination IP address (YANG: IOS-XE 17.12.1)
 }
