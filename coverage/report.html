@@ -427,8 +427,8 @@ func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error <span c
         <span class="cov8" title="16">return nil</span>
 }
 
-// RestconfBuilder returns the RESTCONF URL builder for the client.
-func (c *Client) RestconfBuilder() *restconf.Builder <span class="cov2" title="2">{
+// RESTCONFBuilder returns the RESTCONF URL builder for the client.
+func (c *Client) RESTCONFBuilder() *restconf.Builder <span class="cov2" title="2">{
         if c == nil </span><span class="cov1" title="1">{
                 return nil
         }</span>
@@ -1624,14 +1624,14 @@ func HasValidTags(siteTag, policyTag, rfTag string) bool <span class="cov3" titl
 }</span>
 
 // HasValidMACOrName checks if either MAC address or AP name is provided (but not both).
-func HasValidMACOrName(apMac, apName string) bool <span class="cov3" title="4">{
-        return (IsNonEmptyString(apMac) &amp;&amp; IsStringEmpty(apName)) ||
-                (IsStringEmpty(apMac) &amp;&amp; IsNonEmptyString(apName))
+func HasValidMACOrName(apMAC, apName string) bool <span class="cov3" title="4">{
+        return (IsNonEmptyString(apMAC) &amp;&amp; IsStringEmpty(apName)) ||
+                (IsStringEmpty(apMAC) &amp;&amp; IsNonEmptyString(apName))
 }</span>
 
 // HasEitherMACOrName checks if at least one of MAC address or AP name is provided.
-func HasEitherMACOrName(apMac, apName string) bool <span class="cov2" title="2">{
-        return IsNonEmptyString(apMac) || IsNonEmptyString(apName)
+func HasEitherMACOrName(apMAC, apName string) bool <span class="cov2" title="2">{
+        return IsNonEmptyString(apMAC) || IsNonEmptyString(apName)
 }</span>
 
 // General utility predicates
@@ -2071,23 +2071,23 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves the complete AFC operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AfcOper, error) <span class="cov5" title="2">{
-        return core.Get[model.AfcOper](ctx, s.Client(), routes.AFCOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.AFCOper, error) <span class="cov5" title="2">{
+        return core.Get[model.AFCOper](ctx, s.Client(), routes.AFCOperPath)
 }</span>
 
 // ListAPResponses retrieves AFC AP response data.
-func (s Service) ListAPResponses(ctx context.Context) (*model.AfcOperEwlcAfcApResp, error) <span class="cov1" title="1">{
-        return core.Get[model.AfcOperEwlcAfcApResp](ctx, s.Client(), routes.AFCEwlcAfcApRespPath)
+func (s Service) ListAPResponses(ctx context.Context) (*model.AFCOperEwlcAFCApResp, error) <span class="cov1" title="1">{
+        return core.Get[model.AFCOperEwlcAFCApResp](ctx, s.Client(), routes.AFCEwlcAFCApRespPath)
 }</span>
 
 // GetCloudInfo retrieves AFC cloud operational data.
-func (s Service) GetCloudInfo(ctx context.Context) (*model.AfcCloudOper, error) <span class="cov1" title="1">{
-        return core.Get[model.AfcCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
+func (s Service) GetCloudInfo(ctx context.Context) (*model.AFCCloudOper, error) <span class="cov1" title="1">{
+        return core.Get[model.AFCCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
 }</span>
 
 // GetCloudStats retrieves AFC cloud statistics.
-func (s Service) GetCloudStats(ctx context.Context) (*model.AfcCloudOperAfcCloudStats, error) <span class="cov1" title="1">{
-        return core.Get[model.AfcCloudOperAfcCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
+func (s Service) GetCloudStats(ctx context.Context) (*model.AFCCloudOperAFCCloudStats, error) <span class="cov1" title="1">{
+        return core.Get[model.AFCCloudOperAFCCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
 }</span>
 </pre>
 		
@@ -2139,7 +2139,7 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
         }</span>
 
         // Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
         return core.Get[model.ApCfgApTag](ctx, s.Client(), url)</span>
 }
 
@@ -2153,7 +2153,7 @@ func (s Service) GetTagSourcePriorityConfigByPriority(
         ctx context.Context,
         priority int,
 ) (*model.ApCfgTagSourcePriorityConfigs, error) <span class="cov1" title="1">{
-        url := s.Client().RestconfBuilder().BuildQueryURL(
+        url := s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.APTagSourcePriorityConfigQueryPath,
                 strconv.Itoa(priority),
         )
@@ -2182,7 +2182,7 @@ func (s Service) ListAPHistoryByEthernetMAC(
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
         return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), url)</span>
 }
 
@@ -2203,7 +2203,7 @@ func (s Service) GetAPJoinStatsByWTPMAC(
         }</span>
 
         // Build URL with RESTCONF path for ap-join-stats filtered by wtp-mac
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.APJoinStatsPath,
                 normalizedMAC,
         )
@@ -2218,7 +2218,7 @@ func (s Service) GetWLANClientStatsByWLANID(
         if wlanID &lt;= 0 </span><span class="cov3" title="2">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.APWlanClientStatsQueryPath,
                 strconv.Itoa(wlanID),
         )
@@ -2248,27 +2248,27 @@ func (s Service) GetOperational(ctx context.Context) (*model.ApOper, error) <spa
 }</span>
 
 // ListCAPWAPData retrieves CAPWAP protocol data.
-func (s Service) ListCAPWAPData(ctx context.Context) (*model.ApOperCapwapData, error) <span class="cov7" title="6">{
-        return core.Get[model.ApOperCapwapData](ctx, s.Client(), routes.APCapwapDataPath)
+func (s Service) ListCAPWAPData(ctx context.Context) (*model.ApOperCAPWAPData, error) <span class="cov7" title="6">{
+        return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
 }</span>
 
 // GetCAPWAPDataByWTPMAC retrieves CAPWAP data for a specific WTP MAC.
-func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMac string) (*model.ApOperCapwapData, error) <span class="cov3" title="2">{
-        if wtpMac == "" || strings.TrimSpace(wtpMac) == "" </span><span class="cov1" title="1">{
+func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*model.ApOperCAPWAPData, error) <span class="cov3" title="2">{
+        if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMac)
-        return core.Get[model.ApOperCapwapData](ctx, s.Client(), url)</span>
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
+        return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), url)</span>
 }
 
 // ListNameMACMaps retrieves AP name-to-MAC mapping data.
-func (s Service) ListNameMACMaps(ctx context.Context) (*model.ApOperApNameMacMap, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApNameMacMap](ctx, s.Client(), routes.APApNameMacMapPath)
+func (s Service) ListNameMACMaps(ctx context.Context) (*model.ApOperApNameMACMap, error) <span class="cov1" title="1">{
+        return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
 }</span>
 
 // GetNameMACMapByWTPName retrieves AP name-to-MAC mapping filtered by WTP name.
-func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*model.ApOperApNameMacMap, error) <span class="cov4" title="3">{
+func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*model.ApOperApNameMACMap, error) <span class="cov4" title="3">{
         if wtpName == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
@@ -2276,8 +2276,8 @@ func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*m
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APApNameMacMapPath, wtpName)
-        return core.Get[model.ApOperApNameMacMap](ctx, s.Client(), url)</span>
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
+        return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), url)</span>
 }
 
 // ListRadioStatus retrieves radio operational status data.
@@ -2287,16 +2287,16 @@ func (s Service) ListRadioStatus(ctx context.Context) (*model.RadioOperData, err
 
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
 func (s Service) GetRadioStatusByWTPMACAndSlot(
-        ctx context.Context, wtpMac string, slotID int,
+        ctx context.Context, wtpMAC string, slotID int,
 ) (*model.ApOperRadioOperData, error) <span class="cov4" title="3">{
-        if wtpMac == "" </span><span class="cov1" title="1">{
+        if wtpMAC == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov3" title="2">if strings.TrimSpace(wtpMac) == "" </span><span class="cov1" title="1">{
+        <span class="cov3" title="2">if strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMac, slotID)
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
         return core.Get[model.ApOperRadioOperData](ctx, s.Client(), url)</span>
 }
 
@@ -2308,32 +2308,32 @@ func (s Service) ListRadioNeighbors(ctx context.Context) (*model.ApOperApRadioNe
 // GetRadioNeighborByAPMACSlotAndBSSID retrieves AP radio neighbor information for a specific AP MAC, slot ID and BSSID.
 // This follows the YANG model key structure: "ap-mac slot-id bssid".
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
-        ctx context.Context, apMac string, slotID int, bssid string,
+        ctx context.Context, apMAC string, slotID int, bssid string,
 ) (*model.ApOperApRadioNeighbor, error) <span class="cov5" title="4">{
-        if apMac == "" || strings.TrimSpace(apMac) == "" </span><span class="cov1" title="1">{
+        if apMAC == "" || strings.TrimSpace(apMAC) == "" </span><span class="cov1" title="1">{
                 return nil, errors.New("AP MAC address cannot be empty")
         }</span>
         <span class="cov4" title="3">if bssid == "" || strings.TrimSpace(bssid) == "" </span><span class="cov1" title="1">{
                 return nil, errors.New("BSSID cannot be empty")
         }</span>
 
-        <span class="cov3" title="2">if err := validation.ValidateMACAddress(apMac); err != nil </span><span class="cov1" title="1">{
+        <span class="cov3" title="2">if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf("invalid AP MAC address: %w", err)
         }</span>
         <span class="cov1" title="1">if err := validation.ValidateMACAddress(bssid); err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid BSSID: %w", err)
         }</span>
 
-        <span class="cov1" title="1">normalizedAPMAC, err := validation.NormalizeMACAddress(apMac)
+        <span class="cov1" title="1">normalizedAPMAC, err := validation.NormalizeMACAddress(apMAC)
         if err != nil </span><span class="cov0" title="0">{
-                return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+                return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
         }</span>
         <span class="cov1" title="1">normalizedBSSID, err := validation.NormalizeMACAddress(bssid)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid BSSID %s: %w", bssid, err)
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryCompositeURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
                 routes.APRadioNeighborPath,
                 normalizedAPMAC,
                 slotID,
@@ -2367,8 +2367,8 @@ func (s Service) ListSensorStatus(ctx context.Context) (*model.ApOperApSensorSta
 }</span>
 
 // ListCAPWAPPackets retrieves only CAPWAP packets data using fields parameter.
-func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCapwapPkts, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperCapwapPkts](ctx, s.Client(), routes.APCapwapPktsPath)
+func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCAPWAPPkts, error) <span class="cov1" title="1">{
+        return core.Get[model.ApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
 }</span>
 
 // ListIotFirmware retrieves IoT firmware information for all access points.
@@ -2387,52 +2387,52 @@ func (s Service) DisableAP(ctx context.Context, mac string) error <span class="c
 }</span>
 
 // EnableRadio enables a radio on an Access Point using MAC address.
-func (s Service) EnableRadio(ctx context.Context, apMac string, radioBand core.RadioBand) error <span class="cov5" title="4">{
-        if err := validation.ValidateMACAddress(apMac); err != nil </span><span class="cov1" title="1">{
+func (s Service) EnableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error <span class="cov5" title="4">{
+        if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
-        <span class="cov4" title="3">return s.updateRadioState(ctx, apMac, &amp;radioBand, true)</span>
+        <span class="cov4" title="3">return s.updateRadioState(ctx, apMAC, &amp;radioBand, true)</span>
 }
 
 // DisableRadio disables a radio on an Access Point using MAC address.
-func (s Service) DisableRadio(ctx context.Context, apMac string, radioBand core.RadioBand) error <span class="cov3" title="2">{
-        if err := validation.ValidateMACAddress(apMac); err != nil </span><span class="cov1" title="1">{
+func (s Service) DisableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error <span class="cov3" title="2">{
+        if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
-        <span class="cov1" title="1">return s.updateRadioState(ctx, apMac, &amp;radioBand, false)</span>
+        <span class="cov1" title="1">return s.updateRadioState(ctx, apMAC, &amp;radioBand, false)</span>
 }
 
 // AssignSiteTag assigns a site tag to an Access Point using MAC address.
-func (s Service) AssignSiteTag(ctx context.Context, apMac, siteTag string) error <span class="cov5" title="4">{
+func (s Service) AssignSiteTag(ctx context.Context, apMAC, siteTag string) error <span class="cov5" title="4">{
         if !validation.IsValidTagAssignment(siteTag, "site") </span><span class="cov1" title="1">{
                 return ierrors.RequiredParameterError("site tag")
         }</span>
         <span class="cov4" title="3">tags := model.ApTag{SiteTag: siteTag}
-        return s.assignTags(ctx, apMac, tags)</span>
+        return s.assignTags(ctx, apMAC, tags)</span>
 }
 
 // AssignPolicyTag assigns a policy tag to an Access Point using MAC address.
-func (s Service) AssignPolicyTag(ctx context.Context, apMac, policyTag string) error <span class="cov3" title="2">{
+func (s Service) AssignPolicyTag(ctx context.Context, apMAC, policyTag string) error <span class="cov3" title="2">{
         if !validation.IsValidTagAssignment(policyTag, "policy") </span><span class="cov1" title="1">{
                 return ierrors.RequiredParameterError("policy tag")
         }</span>
         <span class="cov1" title="1">tags := model.ApTag{PolicyTag: policyTag}
-        return s.assignTags(ctx, apMac, tags)</span>
+        return s.assignTags(ctx, apMAC, tags)</span>
 }
 
 // AssignRFTag assigns an RF tag to an Access Point using MAC address.
-func (s Service) AssignRFTag(ctx context.Context, apMac, rfTag string) error <span class="cov3" title="2">{
+func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error <span class="cov3" title="2">{
         if !validation.IsValidTagAssignment(rfTag, "rf") </span><span class="cov1" title="1">{
                 return ierrors.RequiredParameterError("RF tag")
         }</span>
         <span class="cov1" title="1">tags := model.ApTag{RFTag: rfTag}
-        return s.assignTags(ctx, apMac, tags)</span>
+        return s.assignTags(ctx, apMAC, tags)</span>
 }
 
 // Reload restarts an Access Point by MAC address causing temporary service interruption.
-func (s Service) Reload(ctx context.Context, apMac string) error <span class="cov7" title="6">{
-        if !validation.IsValidMACAddr(apMac) </span><span class="cov1" title="1">{
-                return fmt.Errorf(ErrInvalidAPMacFormat, apMac)
+func (s Service) Reload(ctx context.Context, apMAC string) error <span class="cov7" title="6">{
+        if !validation.IsValidMACAddr(apMAC) </span><span class="cov1" title="1">{
+                return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
         }</span>
 
         <span class="cov6" title="5">resp, err := s.ListCAPWAPData(ctx)
@@ -2443,9 +2443,9 @@ func (s Service) Reload(ctx context.Context, apMac string) error <span class="co
                 return errors.New(ErrCAPWAPDataUnavailable)
         }</span>
 
-        <span class="cov5" title="4">apName, found := findAPByMAC(resp, apMac)
+        <span class="cov5" title="4">apName, found := findAPByMAC(resp, apMAC)
         if !found </span><span class="cov3" title="2">{
-                return fmt.Errorf(ErrAPNotFoundByMAC, apMac)
+                return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
         }</span>
 
         <span class="cov3" title="2">return s.reload(ctx, apName)</span>
@@ -2477,14 +2477,14 @@ func (s Service) updateAPState(ctx context.Context, mac, mode string) error <spa
 }
 
 // updateRadioState handles radio-level state changes.
-func (s Service) updateRadioState(ctx context.Context, apMac string, radioBand *core.RadioBand, enabled bool) error <span class="cov5" title="4">{
+func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *core.RadioBand, enabled bool) error <span class="cov5" title="4">{
         if radioBand == nil </span><span class="cov0" title="0">{
                 return ierrors.RequiredParameterError("radio band")
         }</span>
 
-        <span class="cov5" title="4">normalizedMAC, err := validation.NormalizeMACAddress(apMac)
+        <span class="cov5" title="4">normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
         if err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+                return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
         }</span>
 
         <span class="cov5" title="4">radioBandInfo, err := core.GetRadioBandInfo(int(*radioBand))
@@ -2508,19 +2508,19 @@ func (s Service) updateRadioState(ctx context.Context, apMac string, radioBand *
 }
 
 // assignTags assigns multiple tags to an Access Point (internal implementation).
-func (s Service) assignTags(ctx context.Context, apMac string, tags model.ApTag) error <span class="cov6" title="5">{
-        if !validation.IsValidMACAddr(apMac) </span><span class="cov1" title="1">{
-                return ierrors.ValidationError("AP MAC address", apMac)
+func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag) error <span class="cov6" title="5">{
+        if !validation.IsValidMACAddr(apMAC) </span><span class="cov1" title="1">{
+                return ierrors.ValidationError("AP MAC address", apMAC)
         }</span>
         <span class="cov5" title="4">if !validation.HasValidTags(tags.SiteTag, tags.PolicyTag, tags.RFTag) </span><span class="cov0" title="0">{
                 return ierrors.RequiredParameterError("at least one tag")
         }</span>
 
-        <span class="cov5" title="4">normalizedMAC, err := validation.NormalizeMACAddress(apMac)
+        <span class="cov5" title="4">normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
         if err != nil </span><span class="cov0" title="0">{
-                return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+                return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
         }</span>
-        <span class="cov5" title="4">url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
+        <span class="cov5" title="4">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
         tagData := buildAPCfgApTagData(normalizedMAC, tags)
 
         // Execute operation with direct error propagation
@@ -2541,12 +2541,12 @@ func (s Service) reload(ctx context.Context, apName string) error <span class="c
 }</span>
 
 // findAPByMAC searches for an AP with the given MAC address in CAPWAP data.
-func findAPByMAC(capwapData *model.ApOperCapwapData, apMac string) (string, bool) <span class="cov5" title="4">{
+func findAPByMAC(capwapData *model.ApOperCAPWAPData, apMAC string) (string, bool) <span class="cov5" title="4">{
         if capwapData == nil </span><span class="cov0" title="0">{
                 return "", false
         }</span>
-        <span class="cov5" title="4">for _, data := range capwapData.CapwapData </span><span class="cov3" title="2">{
-                if data.WtpMac == apMac </span><span class="cov3" title="2">{
+        <span class="cov5" title="4">for _, data := range capwapData.CAPWAPData </span><span class="cov3" title="2">{
+                if data.WtpMAC == apMAC </span><span class="cov3" title="2">{
                         return data.Name, true
                 }</span>
         }
@@ -2586,8 +2586,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves the complete APF configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.ApfCfg, error) <span class="cov5" title="2">{
-        return core.Get[model.ApfCfg](ctx, s.Client(), routes.APFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.APFCfg, error) <span class="cov5" title="2">{
+        return core.Get[model.APFCfg](ctx, s.Client(), routes.APFCfgPath)
 }</span>
 </pre>
 		
@@ -2613,8 +2613,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves the complete AWIPS operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AwipsOper, error) <span class="cov5" title="2">{
-        return core.Get[model.AwipsOper](ctx, s.Client(), routes.AWIPSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.AWIPSOper, error) <span class="cov5" title="2">{
+        return core.Get[model.AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
 }</span>
 </pre>
 		
@@ -2640,8 +2640,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves BLE operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.BleLtxOper, error) <span class="cov5" title="2">{
-        return core.Get[model.BleLtxOper](ctx, s.Client(), routes.BLELtxOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.BLELtxOper, error) <span class="cov5" title="2">{
+        return core.Get[model.BLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
 }</span>
 </pre>
 		
@@ -2694,7 +2694,7 @@ func (s Service) GetCommonInfoByMAC(
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, mac)
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, mac)
         return core.Get[model.ClientOperCommonOperData](ctx, s.Client(), url)</span>
 }
 
@@ -2709,7 +2709,7 @@ func (s Service) GetDCInfoByMAC(ctx context.Context, clientMAC string) (*model.C
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientDcInfoPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDcInfoPath, clientMAC)
         return core.Get[model.ClientOperDcInfo](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2733,7 +2733,7 @@ func (s Service) GetDot11InfoByMAC(ctx context.Context, mac string) (*model.Clie
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov6" title="4">url := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, mac)
+        <span class="cov6" title="4">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, mac)
 
         result, err := core.Get[model.ClientOperDot11OperData](ctx, s.Client(), url)
         if err == nil </span><span class="cov1" title="1">{
@@ -2761,7 +2761,7 @@ func (s Service) GetMMIFClientHistoryByMAC(
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, clientMAC)
         return core.Get[model.ClientOperMmIfClientHistory](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2779,7 +2779,7 @@ func (s Service) GetMMIFClientStatsByMAC(
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, clientMAC)
         return core.Get[model.ClientOperMmIfClientStats](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2797,7 +2797,7 @@ func (s Service) GetMobilityInfoByMAC(
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, clientMAC)
         return core.Get[model.ClientOperMobilityOperData](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2812,7 +2812,7 @@ func (s Service) GetPolicyInfoByMAC(ctx context.Context, clientMAC string) (*mod
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientPolicyDataPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientPolicyDataPath, clientMAC)
         return core.Get[model.ClientOperPolicyData](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2827,7 +2827,7 @@ func (s Service) GetSISFDBByMAC(ctx context.Context, clientMAC string) (*model.C
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, clientMAC)
         return core.Get[model.ClientOperSisfDBMac](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2845,7 +2845,7 @@ func (s Service) GetTrafficStatsByMAC(
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov1" title="1">endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, clientMAC)
+        <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, clientMAC)
         return core.Get[model.ClientOperTrafficStats](ctx, s.Client(), endpoint)</span>
 }
 
@@ -2950,8 +2950,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves CTS configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.CtsCfg, error) <span class="cov5" title="2">{
-        return core.Get[model.CtsCfg](ctx, s.Client(), routes.CTSCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.CTSCfg, error) <span class="cov5" title="2">{
+        return core.Get[model.CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
 }</span>
 </pre>
 		
@@ -3252,19 +3252,19 @@ func NewService(client *core.Client) Service <span class="cov10" title="7">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
-// GetOperational retrieves LISP agent operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.LispAgentOper, error) <span class="cov6" title="3">{
-        return core.Get[model.LispAgentOper](ctx, s.Client(), routes.LispOperPath)
+// GetOperational retrieves LISP operational data from the wireless controller.
+func (s Service) GetOperational(ctx context.Context) (*model.LISPAgentOper, error) <span class="cov6" title="3">{
+        return core.Get[model.LISPAgentOper](ctx, s.Client(), routes.LISPOperPath)
 }</span>
 
 // GetMemoryStats retrieves LISP agent memory statistics from the wireless controller.
-func (s Service) GetMemoryStats(ctx context.Context) (*model.LispAgentOper, error) <span class="cov6" title="3">{
-        return core.Get[model.LispAgentOper](ctx, s.Client(), routes.LispMemoryStatsPath)
+func (s Service) GetMemoryStats(ctx context.Context) (*model.LISPAgentMemoryStats, error) <span class="cov6" title="3">{
+        return core.Get[model.LISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
 }</span>
 
 // GetCapabilities retrieves LISP WLC capabilities from the wireless controller.
-func (s Service) GetCapabilities(ctx context.Context) (*model.LispAgentOper, error) <span class="cov6" title="3">{
-        return core.Get[model.LispAgentOper](ctx, s.Client(), routes.LispCapabilitiesPath)
+func (s Service) GetCapabilities(ctx context.Context) (*model.LISPWLCCapabilities, error) <span class="cov6" title="3">{
+        return core.Get[model.LISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
 }</span>
 </pre>
 		
@@ -3299,9 +3299,9 @@ func (s Service) ListOperatorLocations(ctx context.Context) (*model.OperatorLoca
         return core.Get[model.OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath)
 }</span>
 
-// ListNmspConfig retrieves location NMSP configuration data from the wireless controller.
-func (s Service) ListNmspConfig(ctx context.Context) (*model.LocationCfgNmspConfig, error) <span class="cov4" title="2">{
-        return core.Get[model.LocationCfgNmspConfig](ctx, s.Client(), routes.LocationNmspConfigPath)
+// ListNMSPConfig retrieves location NMSP configuration data from the wireless controller.
+func (s Service) ListNMSPConfig(ctx context.Context) (*model.LocationCfgNMSPConfig, error) <span class="cov4" title="2">{
+        return core.Get[model.LocationCfgNMSPConfig](ctx, s.Client(), routes.LocationNMSPConfigPath)
 }</span>
 
 // GetLocation retrieves location settings configuration data from the wireless controller.
@@ -3314,9 +3314,9 @@ func (s Service) GetOperational(ctx context.Context) (*model.LocationOper, error
         return core.Get[model.LocationOper](ctx, s.Client(), routes.LocationOperPath)
 }</span>
 
-// LocationRssiMeasurements retrieves location statistics operational data from the wireless controller.
-func (s Service) LocationRssiMeasurements(ctx context.Context) (*model.LocationLocationRssiMeasurements, error) <span class="cov1" title="1">{
-        return core.Get[model.LocationLocationRssiMeasurements](ctx, s.Client(), routes.LocationRssiMeasurementsPath)
+// LocationRSSIMeasurements retrieves location statistics operational data from the wireless controller.
+func (s Service) LocationRSSIMeasurements(ctx context.Context) (*model.LocationLocationRSSIMeasurements, error) <span class="cov1" title="1">{
+        return core.Get[model.LocationLocationRSSIMeasurements](ctx, s.Client(), routes.LocationRSSIMeasurementsPath)
 }</span>
 </pre>
 		
@@ -3460,18 +3460,18 @@ func NewService(client *core.Client) Service <span class="cov10" title="7">{
 }</span>
 
 // GetOperational retrieves all mDNS operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*model.MdnsOper, error) <span class="cov6" title="3">{
-        return core.Get[model.MdnsOper](ctx, s.Client(), routes.MDNSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.MDNSOper, error) <span class="cov6" title="3">{
+        return core.Get[model.MDNSOper](ctx, s.Client(), routes.MDNSOperPath)
 }</span>
 
 // GetGlobalStats retrieves mDNS global statistics from the wireless controller.
-func (s Service) GetGlobalStats(ctx context.Context) (*model.MdnsGlobalStats, error) <span class="cov6" title="3">{
-        return core.Get[model.MdnsGlobalStats](ctx, s.Client(), routes.MDNSGlobalStatsPath)
+func (s Service) GetGlobalStats(ctx context.Context) (*model.MDNSGlobalStats, error) <span class="cov6" title="3">{
+        return core.Get[model.MDNSGlobalStats](ctx, s.Client(), routes.MDNSGlobalStatsPath)
 }</span>
 
 // ListWLANStats retrieves mDNS WLAN statistics from the wireless controller.
-func (s Service) ListWLANStats(ctx context.Context) (*model.MdnsWlanStats, error) <span class="cov6" title="3">{
-        return core.Get[model.MdnsWlanStats](ctx, s.Client(), routes.MDNSWlanStatsPath)
+func (s Service) ListWLANStats(ctx context.Context) (*model.MDNSWlanStats, error) <span class="cov6" title="3">{
+        return core.Get[model.MDNSWlanStats](ctx, s.Client(), routes.MDNSWlanStatsPath)
 }</span>
 </pre>
 		
@@ -3597,23 +3597,23 @@ func NewService(client *core.Client) Service <span class="cov10" title="3">{
 }</span>
 
 // GetOperational retrieves NMSP operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.NmspOper, error) <span class="cov1" title="1">{
-        return core.Get[model.NmspOper](ctx, s.Client(), routes.NMSPOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.NMSPOper, error) <span class="cov1" title="1">{
+        return core.Get[model.NMSPOper](ctx, s.Client(), routes.NMSPOperPath)
 }</span>
 
 // ListClientRegistrations retrieves NMSP client registration data.
-func (s Service) ListClientRegistrations(ctx context.Context) (*model.NmspClientRegistration, error) <span class="cov1" title="1">{
-        return core.Get[model.NmspClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
+func (s Service) ListClientRegistrations(ctx context.Context) (*model.NMSPClientRegistration, error) <span class="cov1" title="1">{
+        return core.Get[model.NMSPClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
 }</span>
 
 // GetCMXConnectionInfo retrieves NMSP CMX connection information.
-func (s Service) GetCMXConnectionInfo(ctx context.Context) (*model.NmspCmxConnection, error) <span class="cov1" title="1">{
-        return core.Get[model.NmspCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
+func (s Service) GetCMXConnectionInfo(ctx context.Context) (*model.NMSPCmxConnection, error) <span class="cov1" title="1">{
+        return core.Get[model.NMSPCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
 }</span>
 
 // GetCMXCloudInfo retrieves NMSP CMX cloud information.
-func (s Service) GetCMXCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfo, error) <span class="cov1" title="1">{
-        return core.Get[model.NmspCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
+func (s Service) GetCMXCloudInfo(ctx context.Context) (*model.NMSPCmxCloudInfo, error) <span class="cov1" title="1">{
+        return core.Get[model.NMSPCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
 }</span>
 </pre>
 		
@@ -3676,8 +3676,8 @@ func (s Service) RFTag() *RFTagService <span class="cov9" title="16">{
 }</span>
 
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
-func (s Service) GetConfig(ctx context.Context) (*model.RfCfg, error) <span class="cov3" title="2">{
-        return core.Get[model.RfCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.RFCfg, error) <span class="cov3" title="2">{
+        return core.Get[model.RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }</span>
 </pre>
 		
@@ -3708,48 +3708,48 @@ func NewRFTagService(client *core.Client) *RFTagService <span class="cov8" title
 }</span>
 
 // GetConfig retrieves the RF configuration.
-func (s *RFTagService) GetConfig(ctx context.Context) (*model.RfCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.RfCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s *RFTagService) GetConfig(ctx context.Context) (*model.RFCfg, error) <span class="cov1" title="1">{
+        return core.Get[model.RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }</span>
 
 // GetRFTag retrieves an RF tag configuration by name.
-func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RfTag, error) <span class="cov8" title="14">{
+func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RFTag, error) <span class="cov8" title="14">{
         if err := s.validateTagName(tagName); err != nil </span><span class="cov5" title="5">{
                 return nil, err
         }</span>
 
-        <span class="cov7" title="9">result, err := core.Get[model.RfCfgRfTag](ctx, s.Client(), s.buildTagURL(tagName))
+        <span class="cov7" title="9">result, err := core.Get[model.RFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
         if err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov6" title="7">if result == nil || result.RfTagList == nil || len(result.RfTagList) == 0 </span><span class="cov2" title="2">{
+        <span class="cov6" title="7">if result == nil || result.RFTagList == nil || len(result.RFTagList) == 0 </span><span class="cov2" title="2">{
                 return nil, nil
         }</span>
 
-        <span class="cov5" title="5">return &amp;result.RfTagList[0], nil</span>
+        <span class="cov5" title="5">return &amp;result.RFTagList[0], nil</span>
 }
 
 // ListRFTags retrieves all RF tag configurations.
-func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RfTag, error) <span class="cov5" title="5">{
-        result, err := core.Get[model.RfCfgRfTags](ctx, s.Client(), routes.RFTagsPath)
+func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RFTag, error) <span class="cov5" title="5">{
+        result, err := core.Get[model.RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
         if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
         <span class="cov4" title="4">if result == nil </span><span class="cov0" title="0">{
-                return []model.RfTag{}, nil
+                return []model.RFTag{}, nil
         }</span>
 
-        <span class="cov4" title="4">if len(result.RfTags.RfTagList) == 0 </span><span class="cov4" title="3">{
-                return []model.RfTag{}, nil
+        <span class="cov4" title="4">if len(result.RFTags.RFTagList) == 0 </span><span class="cov4" title="3">{
+                return []model.RFTag{}, nil
         }</span>
 
-        <span class="cov1" title="1">return result.RfTags.RfTagList, nil</span>
+        <span class="cov1" title="1">return result.RFTags.RFTagList, nil</span>
 }
 
 // CreateRFTag creates a new RF tag configuration.
-func (s *RFTagService) CreateRFTag(ctx context.Context, config *model.RfTag) error <span class="cov5" title="5">{
+func (s *RFTagService) CreateRFTag(ctx context.Context, config *model.RFTag) error <span class="cov5" title="5">{
         if config == nil </span><span class="cov1" title="1">{
                 return errors.New("RF tag config cannot be nil")
         }</span>
@@ -3776,7 +3776,7 @@ func (s *RFTagService) DeleteRFTag(ctx context.Context, tagName string) error <s
 
 // SetDot11ARfProfile sets the 5GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov4" title="3">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RfTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Dot11ARfProfileName = rfProfileName
                 }</span>
@@ -3785,25 +3785,25 @@ func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfil
 
 // SetDot11BRfProfile sets the 2.4GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov1" title="1">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RfTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Dot11BRfProfileName = rfProfileName
                 }</span>
         })
 }
 
-// SetDot116GhzRfProfile sets the 6GHz RF profile for an RF tag.
-func (s *RFTagService) SetDot116GhzRfProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov1" title="1">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RfTag) </span><span class="cov1" title="1">{
+// SetDot116GhzRFProfile sets the 6GHz RF profile for an RF tag.
+func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
-                        payload.Dot116GhzRfProfName = rfProfileName
+                        payload.Dot116GhzRFProfName = rfProfileName
                 }</span>
         })
 }
 
 // SetDescription sets the description for an RF tag.
 func (s *RFTagService) SetDescription(ctx context.Context, tagName, description string) error <span class="cov4" title="4">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RfTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Description = description
                 }</span>
@@ -3812,7 +3812,7 @@ func (s *RFTagService) SetDescription(ctx context.Context, tagName, description 
 
 // updateTagField updates a specific field of an RF tag using the provided update function.
 func (s *RFTagService) updateTagField(ctx context.Context, tagName string,
-        updateFunc func(*model.RfTag),
+        updateFunc func(*model.RFTag),
 ) error <span class="cov7" title="9">{
         if updateFunc == nil </span><span class="cov0" title="0">{
                 return errors.New("update function cannot be nil")
@@ -3833,7 +3833,7 @@ func (s *RFTagService) updateTagField(ctx context.Context, tagName string,
 }
 
 // setRFTag sets/updates an existing RF tag configuration.
-func (s *RFTagService) setRFTag(ctx context.Context, config *model.RfTag) error <span class="cov4" title="4">{
+func (s *RFTagService) setRFTag(ctx context.Context, config *model.RFTag) error <span class="cov4" title="4">{
         if config == nil </span><span class="cov0" title="0">{
                 return errors.New("RF tag config cannot be nil")
         }</span>
@@ -3868,7 +3868,7 @@ func (s *RFTagService) buildTagURL(tagName string) string <span class="cov8" tit
 }</span>
 
 // buildPayload builds the payload for POST/PUT operations.
-func (s *RFTagService) buildPayload(config *model.RfTag) map[string]any <span class="cov6" title="6">{
+func (s *RFTagService) buildPayload(config *model.RFTag) map[string]any <span class="cov6" title="6">{
         return map[string]any{
                 "Cisco-IOS-XE-wireless-rf-cfg:rf-tag": config,
         }
@@ -3898,69 +3898,69 @@ func NewService(client *core.Client) Service <span class="cov10" title="6">{
 }</span>
 
 // GetConfig retrieves RFID configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.RfidCfg, error) <span class="cov4" title="2">{
-        return core.Get[model.RfidCfg](ctx, s.Client(), routes.RFIDCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.RFIDCfg, error) <span class="cov4" title="2">{
+        return core.Get[model.RFIDCfg](ctx, s.Client(), routes.RFIDCfgPath)
 }</span>
 
 // GetConfigSettings retrieves the RFID configuration settings.
-func (s Service) GetConfigSettings(ctx context.Context) (*model.RfidConfig, error) <span class="cov1" title="1">{
+func (s Service) GetConfigSettings(ctx context.Context) (*model.RFIDConfig, error) <span class="cov1" title="1">{
         url := routes.RFIDCfgPath + "/rfid-config"
-        return core.Get[model.RfidConfig](ctx, s.Client(), url)
+        return core.Get[model.RFIDConfig](ctx, s.Client(), url)
 }</span>
 
 // GetGlobalInfo retrieves RFID global information.
-func (s Service) GetGlobalInfo(ctx context.Context) (*model.RfidGlobalOper, error) <span class="cov1" title="1">{
-        return core.Get[model.RfidGlobalOper](ctx, s.Client(), routes.RFIDGlobalOperPath)
+func (s Service) GetGlobalInfo(ctx context.Context) (*model.RFIDGlobalOper, error) <span class="cov1" title="1">{
+        return core.Get[model.RFIDGlobalOper](ctx, s.Client(), routes.RFIDGlobalOperPath)
 }</span>
 
 // GetGlobalDetailByMAC retrieves specific RFID data detail by MAC address.
 func (s Service) GetGlobalDetailByMAC(
         ctx context.Context,
         macAddr string,
-) (*model.RfidEmltdData, error) <span class="cov4" title="2">{
+) (*model.RFIDEmltdData, error) <span class="cov4" title="2">{
         if err := validation.ValidateMACAddress(macAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
-        return core.Get[model.RfidEmltdData](ctx, s.Client(), url)</span>
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
+        return core.Get[model.RFIDEmltdData](ctx, s.Client(), url)</span>
 }
 
 // GetRadioInfo retrieves RFID radio information by radio key combination.
 func (s Service) GetRadioInfo(
         ctx context.Context,
-        macAddr, apMacAddr string,
+        macAddr, apMACAddr string,
         slot int,
-) (*model.RfidRadioData, error) <span class="cov6" title="3">{
+) (*model.RFIDRadioData, error) <span class="cov6" title="3">{
         if err := validation.ValidateMACAddress(macAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
-        <span class="cov4" title="2">if err := validation.ValidateMACAddress(apMacAddr); err != nil </span><span class="cov1" title="1">{
+        <span class="cov4" title="2">if err := validation.ValidateMACAddress(apMACAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryCompositeURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
                 routes.RFIDRadioDataPath,
                 macAddr,
-                apMacAddr,
+                apMACAddr,
                 slot,
         )
-        return core.Get[model.RfidRadioData](ctx, s.Client(), url)</span>
+        return core.Get[model.RFIDRadioData](ctx, s.Client(), url)</span>
 }
 
 // GetOperational retrieves RFID operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.RfidOper, error) <span class="cov4" title="2">{
-        return core.Get[model.RfidOper](ctx, s.Client(), routes.RFIDOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.RFIDOper, error) <span class="cov4" title="2">{
+        return core.Get[model.RFIDOper](ctx, s.Client(), routes.RFIDOperPath)
 }</span>
 
 // GetDetailByMAC retrieves specific RFID data based on MAC address.
-func (s Service) GetDetailByMAC(ctx context.Context, macAddr string) (*model.RfidData, error) <span class="cov4" title="2">{
+func (s Service) GetDetailByMAC(ctx context.Context, macAddr string) (*model.RFIDData, error) <span class="cov4" title="2">{
         if err := validation.ValidateMACAddress(macAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RestconfBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
-        return core.Get[model.RfidData](ctx, s.Client(), url)</span>
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
+        return core.Get[model.RFIDData](ctx, s.Client(), url)</span>
 }
 </pre>
 		
@@ -4001,7 +4001,7 @@ func (s Service) GetRogueByMAC(ctx context.Context, mac string) (*model.RogueDat
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov5" title="3">url := s.Client().RestconfBuilder().BuildQueryURL(routes.RogueDataPath, mac)
+        <span class="cov5" title="3">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueDataPath, mac)
         return core.Get[model.RogueData](ctx, s.Client(), url)</span>
 }
 
@@ -4016,7 +4016,7 @@ func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*model.Ro
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
-        <span class="cov5" title="3">url := s.Client().RestconfBuilder().BuildQueryURL(routes.RogueClientDataPath, mac)
+        <span class="cov5" title="3">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueClientDataPath, mac)
         return core.Get[model.RogueClientData](ctx, s.Client(), url)</span>
 }
 
@@ -4081,23 +4081,23 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 }</span>
 
 // GetConfig retrieves complete RRM configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.RrmCfg, error) <span class="cov7" title="3">{
-        return core.Get[model.RrmCfg](ctx, s.Client(), routes.RRMCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.RRMCfg, error) <span class="cov7" title="3">{
+        return core.Get[model.RRMCfg](ctx, s.Client(), routes.RRMCfgPath)
 }</span>
 
 // GetOperational retrieves RRM operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.RrmOper, error) <span class="cov7" title="3">{
-        return core.Get[model.RrmOper](ctx, s.Client(), routes.RRMOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.RRMOper, error) <span class="cov7" title="3">{
+        return core.Get[model.RRMOper](ctx, s.Client(), routes.RRMOperPath)
 }</span>
 
-// GetGlobalInfo retrieves RRM global operational information.
-func (s Service) GetGlobalInfo(ctx context.Context) (*model.RrmGlobalOper, error) <span class="cov7" title="3">{
-        return core.Get[model.RrmGlobalOper](ctx, s.Client(), routes.RRMGlobalOperPath)
+// GetGlobalOperational retrieves RRM global operational information.
+func (s Service) GetGlobalOperational(ctx context.Context) (*model.RRMGlobalOper, error) <span class="cov7" title="3">{
+        return core.Get[model.RRMGlobalOper](ctx, s.Client(), routes.RRMGlobalOperPath)
 }</span>
 
-// GetEmulationInfo retrieves RRM emulation operational information.
-func (s Service) GetEmulationInfo(ctx context.Context) (*model.RrmEmulOper, error) <span class="cov7" title="3">{
-        return core.Get[model.RrmEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
+// GetEmulationOperational retrieves RRM emulation operational information.
+func (s Service) GetEmulationOperational(ctx context.Context) (*model.RRMEmulOper, error) <span class="cov7" title="3">{
+        return core.Get[model.RRMEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
 }</span>
 </pre>
 		
@@ -4338,7 +4338,7 @@ func (s *SiteTagService) validateTagName(tagName string) error <span class="cov1
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *SiteTagService) buildTagURL(tagName string) string <span class="cov9" title="30">{
-        return s.Client().RestconfBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
+        return s.Client().RESTCONFBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
 }</span>
 
 // buildPayload builds a payload for tag operations using the request model.
@@ -4408,14 +4408,14 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 
 // GetConfig retrieves the complete URWB configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.UrwbCfg, error) <span class="cov4" title="2">{
-        return core.Get[model.UrwbCfg](ctx, s.Client(), routes.URWBCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.URWBCfg, error) <span class="cov4" title="2">{
+        return core.Get[model.URWBCfg](ctx, s.Client(), routes.URWBCfgPath)
 }</span>
 
 // GetURWBNetOperational retrieves URWB network operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetURWBNetOperational(ctx context.Context) (*model.UrwbnetOper, error) <span class="cov1" title="1">{
-        return core.Get[model.UrwbnetOper](ctx, s.Client(), routes.URWBNetOperPath)
+func (s Service) GetURWBNetOperational(ctx context.Context) (*model.URWBnetOper, error) <span class="cov1" title="1">{
+        return core.Get[model.URWBnetOper](ctx, s.Client(), routes.URWBNetOperPath)
 }</span>
 </pre>
 		
@@ -4443,8 +4443,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 
 // GetConfig retrieves the complete WAT configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.WatCfg, error) <span class="cov7" title="3">{
-        return core.Get[model.WatCfg](ctx, s.Client(), routes.WATCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.WATCfg, error) <span class="cov7" title="3">{
+        return core.Get[model.WATCfg](ctx, s.Client(), routes.WATCfgPath)
 }</span>
 </pre>
 		
@@ -4482,7 +4482,7 @@ func (s Service) ListProfileConfigs(ctx context.Context) (*model.WlanCfgEntries,
 
 // GetProfileConfig retrieves a specific WLAN configuration entry by profile name.
 func (s Service) GetProfileConfig(ctx context.Context, profileName string) (*model.WlanCfgEntry, error) <span class="cov3" title="2">{
-        url := s.Client().RestconfBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
+        url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
         return core.Get[model.WlanCfgEntry](ctx, s.Client(), url)
 }</span>
 
@@ -4702,7 +4702,7 @@ func (s *PolicyTagService) validateTagName(tagName string) error <span class="co
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *PolicyTagService) buildTagURL(tagName string) string <span class="cov6" title="7">{
-        return s.Client().RestconfBuilder().BuildQueryURL(
+        return s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.WLANPolicyListEntryQueryPath,
                 tagName,
         )
