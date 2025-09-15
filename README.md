@@ -246,6 +246,8 @@ MAC Address           | IP Address
 <snip>
 ```
 
+</p></details>
+
 #### Usecase 3: List WLANs and BSSIDs
 
 [`example/list_wlans/main.go`](./example/list_wlans/main.go) lists WLANs and their BSSIDs.
