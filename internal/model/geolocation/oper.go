@@ -23,7 +23,7 @@ type ApGeoLocStats struct {
 
 // ApGeoLocData represents wireless AP geolocation data.
 type ApGeoLocData struct {
-	ApMac     string           `json:"ap-mac"`              // AP MAC address (YANG: IOS-XE 17.12.1)
+	ApMAC     string           `json:"ap-mac"`              // AP MAC address (YANG: IOS-XE 17.12.1)
 	Loc       *GeoLocInfo      `json:"loc,omitempty"`       // AP geolocation information (YANG: IOS-XE 17.12.1)
 	Elevation *GeoLocElevation `json:"elevation,omitempty"` // AP elevation information (YANG: IOS-XE 17.12.1)
 }
