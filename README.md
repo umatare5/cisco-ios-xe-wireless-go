@@ -207,7 +207,7 @@ Runnable examples are available:
 
 #### Usecase 1: List Associating APs
 
-[`example/list_aps/main.go`](./example/list_aps/main.go) lists the number of APs managed by the controller.
+[`example/list_aps/main.go`](./example/list_aps/main.go) lists APs managed by the controller.
 
 <details><summary><u>Click to show example</u></summary><p>
 
@@ -226,7 +226,7 @@ TEST-AP02         | aa:bb:ff:dd:ee:b0   | 192.168.255.12   | registered
 
 #### Usecase 2: List WLANs and BSSIDs
 
-[`example/list_wlans/main.go`](./example/list_wlans/main.go) lists comprehensive WLAN information including Radio, WLAN, and BSSID details.
+[`example/list_wlans/main.go`](./example/list_wlans/main.go) lists WLANs and their BSSIDs.
 
 <details><summary><u>Click to show example</u></summary><p>
 
@@ -247,7 +247,7 @@ TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    4 | aa:bb:ff:dd:ee:af | labo-t
 
 #### Usecase 3: List AP Neighbors
 
-[`example/list_neighbors/main.go`](./example/list_neighbors/main.go) lists AP radio neighbors detected by the controller.
+[`example/list_neighbors/main.go`](./example/list_neighbors/main.go) lists neighboring APs detected by the APs.
 
 <details><summary><u>Click to show example</u></summary><p>
 
@@ -268,7 +268,7 @@ TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 | 
 
 #### Usecase 4: List Associating Clients
 
-[`example/list_clients/main.go`](./example/list_clients/main.go) lists wireless client MAC addresses and IP addresses.
+[`example/list_clients/main.go`](./example/list_clients/main.go) lists clients associating to wireless networks.
 
 <details><summary><u>Click to show example</u></summary><p>
 
@@ -292,7 +292,7 @@ MAC Address           | IP Address
 
 #### Usecase 1: Reload an AP
 
-[`example/reload_ap/main.go`](./example/reload_ap/main.go) reloads an AP by its hostname.
+[`example/reload_ap/main.go`](./example/reload_ap/main.go) reloads a specified AP by its MAC address.
 
 <details><summary><u>Click to show example</u></summary><p>
 
@@ -321,7 +321,7 @@ Clients will need to reconnect after AP restart completes
 
 #### Usecase 2: Reload a Controller
 
-[`example/reload_controller/main.go`](./example/reload_controller/main.go) reloads the entire controller.
+[`example/reload_controller/main.go`](./example/reload_controller/main.go) reloads the entire wireless controller.
 
 <details><summary><u>Click to show example</u></summary><p>
 
