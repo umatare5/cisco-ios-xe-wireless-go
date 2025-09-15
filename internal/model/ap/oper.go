@@ -9,10 +9,10 @@ type ApOper struct {
 		RadioOperData           []RadioOperData          `json:"radio-oper-data"`            // Radio operational data corresponding to a radio of the 802.11 LWAPP AP (Live: IOS-XE 17.12.5)
 		RadioResetStats         []RadioResetStats        `json:"radio-reset-stats"`          // Radio reset stats (Live: IOS-XE 17.12.5)
 		QosClientData           []QosClientData          `json:"qos-client-data,omitempty"`  // QoS client data (YANG: IOS-XE 17.12.1)
-		CapwapData              []CapwapData             `json:"capwap-data"`                // Information about the 802.11 LWAPP AP that has joined the controller (Live: IOS-XE 17.12.5)
-		ApNameMacMap            []ApNameMacMap           `json:"ap-name-mac-map"`            // Mapping between AP name and radio MAC of AP (Live: IOS-XE 17.12.5)
+		CAPWAPData              []CAPWAPData             `json:"capwap-data"`                // Information about the 802.11 LWAPP AP that has joined the controller (Live: IOS-XE 17.12.5)
+		ApNameMACMap            []ApNameMACMap           `json:"ap-name-mac-map"`            // Mapping between AP name and radio MAC of AP (Live: IOS-XE 17.12.5)
 		WtpSlotWlanStats        []WtpSlotWlanStats       `json:"wtp-slot-wlan-stats"`        // AP slot and WLAN stats (Live: IOS-XE 17.12.5)
-		EthernetMacWtpMacMap    []EthernetMacWtpMacMap   `json:"ethernet-mac-wtp-mac-map"`   // Mapping between AP ethernet MAC and base radio MAC (Live: IOS-XE 17.12.5)
+		EthernetMACWtpMACMap    []EthernetMACWtpMACMap   `json:"ethernet-mac-wtp-mac-map"`   // Mapping between AP ethernet MAC and base radio MAC (Live: IOS-XE 17.12.5)
 		RadioOperStats          []RadioOperStats         `json:"radio-oper-stats"`           // Operational statistics for a particular radio (Live: IOS-XE 17.12.5)
 		EthernetIfStats         []EthernetIfStats        `json:"ethernet-if-stats"`          // Ethernet interface statistics (Live: IOS-XE 17.12.5)
 		EwlcWncdStats           EwlcWncdStats            `json:"ewlc-wncd-stats"`            // AP image download and predownload statistics for EWC on AP platforms (Live: IOS-XE 17.12.5)
@@ -25,7 +25,7 @@ type ApOper struct {
 		LldpNeigh               []LldpNeigh              `json:"lldp-neigh"`                 // Cached neighbor information via LLDP messages on APs (Live: IOS-XE 17.12.5)
 		TpCertInfo              TpCertInfo               `json:"tp-cert-info"`               // Trustpoint Certificate information (Live: IOS-XE 17.12.5)
 		DiscData                []DiscData               `json:"disc-data"`                  // Discovery packet counters (Live: IOS-XE 17.12.5)
-		CapwapPkts              []CapwapPkts             `json:"capwap-pkts"`                // CAPWAP packet counters (Live: IOS-XE 17.12.5)
+		CAPWAPPkts              []CAPWAPPkts             `json:"capwap-pkts"`                // CAPWAP packet counters (Live: IOS-XE 17.12.5)
 		CountryOper             []CountryOper            `json:"country-oper"`               // Regulatory Domain country details (Live: IOS-XE 17.12.5)
 		SuppCountryOper         []SuppCountryOper        `json:"supp-country-oper"`          // Supported Regulatory Domain country details (Live: IOS-XE 17.12.5)
 		ApNhGlobalData          ApNhGlobalData           `json:"ap-nh-global-data"`          // Information about the RRM based AP clustering algorithm stats (Live: IOS-XE 17.12.5)
@@ -55,14 +55,14 @@ type ApOperQosClientData struct {
 	QosClientData []QosClientData `json:"Cisco-IOS-XE-wireless-access-point-oper:qos-client-data"`
 }
 
-// ApOperCapwapData represents the CAPWAP data response.
-type ApOperCapwapData struct {
-	CapwapData []CapwapData `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-data"`
+// ApOperCAPWAPData represents the CAPWAP data response.
+type ApOperCAPWAPData struct {
+	CAPWAPData []CAPWAPData `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-data"`
 }
 
-// ApOperApNameMacMap represents the AP name to MAC mapping response.
-type ApOperApNameMacMap struct {
-	ApNameMacMap []ApNameMacMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map"`
+// ApOperApNameMACMap represents the AP name to MAC mapping response.
+type ApOperApNameMACMap struct {
+	ApNameMACMap []ApNameMACMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map"`
 }
 
 // ApOperWtpSlotWlanStats represents the WTP slot WLAN statistics response.
@@ -70,9 +70,9 @@ type ApOperWtpSlotWlanStats struct {
 	WtpSlotWlanStats []WtpSlotWlanStats `json:"Cisco-IOS-XE-wireless-access-point-oper:wtp-slot-wlan-stats"`
 }
 
-// ApOperEthernetMacWtpMacMap represents the Ethernet MAC to WTP MAC mapping response.
-type ApOperEthernetMacWtpMacMap struct {
-	EthernetMacWtpMacMap []EthernetMacWtpMacMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ethernet-mac-wtp-mac-map"`
+// ApOperEthernetMACWtpMACMap represents the Ethernet MAC to WTP MAC mapping response.
+type ApOperEthernetMACWtpMACMap struct {
+	EthernetMACWtpMACMap []EthernetMACWtpMACMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ethernet-mac-wtp-mac-map"`
 }
 
 // ApOperRadioOperStats represents the radio operational statistics response.
@@ -135,9 +135,9 @@ type ApOperDiscData struct {
 	DiscData []DiscData `json:"Cisco-IOS-XE-wireless-access-point-oper:disc-data"`
 }
 
-// ApOperCapwapPkts represents the CAPWAP packets response.
-type ApOperCapwapPkts struct {
-	CapwapPkts []CapwapPkts `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-pkts"`
+// ApOperCAPWAPPkts represents the CAPWAP packets response.
+type ApOperCAPWAPPkts struct {
+	CAPWAPPkts []CAPWAPPkts `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-pkts"`
 }
 
 // ApOperCountryOper represents the country operational data response.
@@ -182,7 +182,7 @@ type ApOperIotFirmware struct {
 
 // ApPwrInfo represents AP power information.
 type ApPwrInfo struct {
-	WtpMac  string    `json:"wtp-mac"`  // AP Radio MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC  string    `json:"wtp-mac"`  // AP Radio MAC address (Live: IOS-XE 17.12.5)
 	Status  string    `json:"status"`   // Power status (Live: IOS-XE 17.12.5)
 	PpeInfo []PpeInfo `json:"ppe-info"` // Power policy entries (Live: IOS-XE 17.12.5)
 }
@@ -208,7 +208,7 @@ type PpeInfo struct {
 
 // ApSensorStatus represents AP sensor status information.
 type ApSensorStatus struct {
-	ApMac       string `json:"ap-mac"`       // AP MAC address (Live: IOS-XE 17.12.5)
+	ApMAC       string `json:"ap-mac"`       // AP MAC address (Live: IOS-XE 17.12.5)
 	SensorType  string `json:"sensor-type"`  // Sensor type ID (Live: IOS-XE 17.12.5)
 	ConfigState string `json:"config-state"` // Sensor config state (Live: IOS-XE 17.12.5)
 	AdminState  string `json:"admin-state"`  // Admin state (Live: IOS-XE 17.12.5)
@@ -216,11 +216,11 @@ type ApSensorStatus struct {
 
 // ApRadioNeighbor represents AP radio neighbor information.
 type ApRadioNeighbor struct {
-	ApMac          string    `json:"ap-mac"`           // Access point MAC address (Live: IOS-XE 17.12.5)
+	ApMAC          string    `json:"ap-mac"`           // Access point MAC address (Live: IOS-XE 17.12.5)
 	SlotID         int       `json:"slot-id"`          // Radio slot identifier (Live: IOS-XE 17.12.5)
 	Bssid          string    `json:"bssid"`            // Basic Service Set Identifier (Live: IOS-XE 17.12.5)
 	Ssid           string    `json:"ssid"`             // Service Set Identifier (Live: IOS-XE 17.12.5)
-	Rssi           int       `json:"rssi"`             // Received Signal Strength Indicator (Live: IOS-XE 17.12.5)
+	RSSI           int       `json:"rssi"`             // Received Signal Strength Indicator (Live: IOS-XE 17.12.5)
 	Channel        int       `json:"channel"`          // Operating channel number (Live: IOS-XE 17.12.5)
 	PrimaryChannel int       `json:"primary-channel"`  // Primary channel number (Live: IOS-XE 17.12.5)
 	LastUpdateRcvd time.Time `json:"last-update-rcvd"` // Last neighbor update timestamp (Live: IOS-XE 17.12.5)
@@ -228,7 +228,7 @@ type ApRadioNeighbor struct {
 
 // RadioOperData represents radio operational data.
 type RadioOperData struct {
-	WtpMac       string `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC       string `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.5)
 	RadioSlotID  int    `json:"radio-slot-id"`            // Radio slot identifier (Live: IOS-XE 17.12.5)
 	SlotID       int    `json:"slot-id,omitempty"`        // Physical slot identifier (Live: IOS-XE 17.12.5)
 	RadioType    string `json:"radio-type,omitempty"`     // Radio hardware type (Live: IOS-XE 17.12.5)
@@ -291,14 +291,14 @@ type RadioOperData struct {
 	Ap6GhzPwrModeCap *string `json:"ap-6ghz-pwr-mode-cap,omitempty"` // 6GHz power mode capability (YANG: IOS-XE 17.12.1)
 
 	// AFC related
-	AfcBelowTxmin    bool `json:"afc-below-txmin,omitempty"`    // AFC below minimum transmission power (YANG: IOS-XE 17.12.1)
-	AfcLicenseNeeded bool `json:"afc-license-needed,omitempty"` // AFC license requirement status (YANG: IOS-XE 17.12.1)
-	PushAfcRespDone  bool `json:"push-afc-resp-done,omitempty"` // AFC response push completion status (YANG: IOS-XE 17.12.1)
+	AFCBelowTxmin    bool `json:"afc-below-txmin,omitempty"`    // AFC below minimum transmission power (YANG: IOS-XE 17.12.1)
+	AFCLicenseNeeded bool `json:"afc-license-needed,omitempty"` // AFC license requirement status (YANG: IOS-XE 17.12.1)
+	PushAFCRespDone  bool `json:"push-afc-resp-done,omitempty"` // AFC response push completion status (YANG: IOS-XE 17.12.1)
 }
 
 // RadioResetStats represents radio reset statistics.
 type RadioResetStats struct {
-	ApMac       string `json:"ap-mac"`       // Access point MAC address (Live: IOS-XE 17.12.5)
+	ApMAC       string `json:"ap-mac"`       // Access point MAC address (Live: IOS-XE 17.12.5)
 	RadioID     int    `json:"radio-id"`     // Radio interface identifier (Live: IOS-XE 17.12.5)
 	Cause       string `json:"cause"`        // Reset cause description (Live: IOS-XE 17.12.5)
 	DetailCause string `json:"detail-cause"` // Detailed reset cause information (Live: IOS-XE 17.12.5)
@@ -307,7 +307,7 @@ type RadioResetStats struct {
 
 // QosClientData represents QoS client data.
 type QosClientData struct {
-	ClientMac    string `json:"client-mac"` // Client MAC address (Live: IOS-XE 17.12.5)
+	ClientMAC    string `json:"client-mac"` // Client MAC address (Live: IOS-XE 17.12.5)
 	AaaQosParams struct {
 		AaaAvgdtus   int `json:"aaa-avgdtus"`   // AAA average downstream utilization (Live: IOS-XE 17.12.5)
 		AaaAvgrtdtus int `json:"aaa-avgrtdtus"` // AAA average real-time downstream utilization (Live: IOS-XE 17.12.5)
@@ -320,9 +320,9 @@ type QosClientData struct {
 	} `json:"aaa-qos-params"` // AAA QoS parameters (Live: IOS-XE 17.12.5)
 }
 
-// CapwapData represents CAPWAP data.
-type CapwapData struct {
-	WtpMac       string       `json:"wtp-mac"`       // WTP MAC address for CAPWAP session (Live: IOS-XE 17.12.5)
+// CAPWAPData represents CAPWAP data.
+type CAPWAPData struct {
+	WtpMAC       string       `json:"wtp-mac"`       // WTP MAC address for CAPWAP session (Live: IOS-XE 17.12.5)
 	IPAddr       string       `json:"ip-addr"`       // AP management IP address (Live: IOS-XE 17.12.5)
 	Name         string       `json:"name"`          // AP hostname identifier (Live: IOS-XE 17.12.5)
 	DeviceDetail DeviceDetail `json:"device-detail"` // Hardware device specifications (Live: IOS-XE 17.12.5)
@@ -360,7 +360,7 @@ type CapwapData struct {
 	LscStatusPldSupported []interface{}     `json:"lsc-status-pld-supported"` // LSC status payload support capability (Live: IOS-XE 17.12.5)
 	ApLscStatus           ApLscStatus       `json:"ap-lsc-status"`            // LSC authentication status (Live: IOS-XE 17.12.5)
 	RadioStatsMonitor     RadioStatsMonitor `json:"radio-stats-monitor"`      // Radio statistics monitoring (Live: IOS-XE 17.12.5)
-	ZeroWtDfs             ZeroWtDfs         `json:"zero-wt-dfs"`              // Zero Wait DFS configuration (Live: IOS-XE 17.12.5)
+	ZeroWtDFS             ZeroWtDFS         `json:"zero-wt-dfs"`              // Zero Wait DFS configuration (Live: IOS-XE 17.12.5)
 	GnssInfo              GnssInfo          `json:"gnss-info"`                // GNSS positioning data (Live: IOS-XE 17.12.5)
 
 	// Basic Configuration Fields
@@ -372,22 +372,22 @@ type CapwapData struct {
 	IsMaster        bool   `json:"is-master"`         // Master AP designation (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	CdpEnable       bool   `json:"cdp-enable"`        // CDP enablement (Live: IOS-XE 17.12.5)
 	GrpcEnabled     bool   `json:"grpc-enabled"`      // gRPC streaming enablement (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
-	LocalDhcp       bool   `json:"local-dhcp"`        // Local DHCP server status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	LocalDHCP       bool   `json:"local-dhcp"`        // Local DHCP server status (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 
 	// Status and operational fields
 	ApStationType        string `json:"ap-stationing-type,omitempty"`      // AP stationing type configuration (Live: IOS-XE 17.12.5)
 	ApKeepAliveState     bool   `json:"ap-keepalive-state,omitempty"`      // CAPWAP keep-alive state (Live: IOS-XE 17.12.5)
 	MaxClientsSupported  uint16 `json:"max-clients-supported,omitempty"`   // Maximum clients supported (Live: IOS-XE 17.12.5)
-	MdnsGroupID          uint32 `json:"mdns-group-id,omitempty"`           // mDNS group identifier (Live: IOS-XE 17.12.5)
-	MdnsRuleName         string `json:"mdns-rule-name,omitempty"`          // Applied mDNS filtering rule name (Live: IOS-XE 17.12.5)
-	MdnsGroupMethod      string `json:"mdns-group-method,omitempty"`       // mDNS group assignment method (Live: IOS-XE 17.12.5)
+	MDNSGroupID          uint32 `json:"mdns-group-id,omitempty"`           // mDNS group identifier (Live: IOS-XE 17.12.5)
+	MDNSRuleName         string `json:"mdns-rule-name,omitempty"`          // Applied mDNS filtering rule name (Live: IOS-XE 17.12.5)
+	MDNSGroupMethod      string `json:"mdns-group-method,omitempty"`       // mDNS group assignment method (Live: IOS-XE 17.12.5)
 	MerakiCapable        bool   `json:"meraki-capable,omitempty"`          // Meraki cloud capability (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	MerakiConnectStatus  string `json:"meraki-connect-status,omitempty"`   // Meraki cloud connection status (Live: IOS-XE 17.12.5)
 	MerakiMonitorCapable bool   `json:"meraki-monitor-capable,omitempty"`  // Meraki monitoring capability (YANG: IOS-XE 17.18.1) (Live: IOS-XE 17.12.5)
 	KernelCoredumpCount  uint16 `json:"kernel-coredump-count,omitempty"`   // Kernel coredump count (Live: IOS-XE 17.12.5)
 	RegDomain            string `json:"reg-domain,omitempty"`              // Regulatory domain configuration (Live: IOS-XE 17.12.5)
 	DartConStatus        string `json:"dart-con-status,omitempty"`         // DART connection status (Live: IOS-XE 17.12.5)
-	ApAfcPreNotification bool   `json:"ap-afc-pre-notification,omitempty"` // AFC pre-notification capability (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
+	ApAFCPreNotification bool   `json:"ap-afc-pre-notification,omitempty"` // AFC pre-notification capability (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 	OobImgDwldMethod     string `json:"oob-img-dwld-method,omitempty"`     // Out-of-band image download method (Live: IOS-XE 17.12.5)
 	WtpIP                string `json:"wtp-ip,omitempty"`                  // WTP IP address (YANG: IOS-XE 17.12.1) (Live: IOS-XE 17.12.5)
 }
@@ -463,12 +463,12 @@ type StatsMonitor struct {
 
 // ApLscStatus represents AP LSC (Local Significant Certificate) status information.
 type ApLscStatus struct {
-	IsDtlsLscEnabled      bool   `json:"is-dtls-lsc-enabled"`                 // LSC enablement for CAPWAP DTLS (Live: IOS-XE 17.12.5)
+	IsDTLSLscEnabled      bool   `json:"is-dtls-lsc-enabled"`                 // LSC enablement for CAPWAP DTLS (Live: IOS-XE 17.12.5)
 	IsDot1xLscEnabled     bool   `json:"is-dot1x-lsc-enabled"`                // LSC enablement for 802.1X (Live: IOS-XE 17.12.5)
-	IsDtlsLscFallback     bool   `json:"is-dtls-lsc-fallback"`                // AP fallback to default certificate (Live: IOS-XE 17.12.5)
-	DtlsLscIssuerHash     string `json:"dtls-lsc-issuer-hash,omitempty"`      // CA hash for CAPWAP DTLS (Live: IOS-XE 17.12.5)
+	IsDTLSLscFallback     bool   `json:"is-dtls-lsc-fallback"`                // AP fallback to default certificate (Live: IOS-XE 17.12.5)
+	DTLSLscIssuerHash     string `json:"dtls-lsc-issuer-hash,omitempty"`      // CA hash for CAPWAP DTLS (Live: IOS-XE 17.12.5)
 	Dot1xLscIssuerHash    string `json:"dot1x-lsc-issuer-hash,omitempty"`     // CA hash for 802.1X authentication (Live: IOS-XE 17.12.5)
-	DtlsLscCertExpiryTime string `json:"dtls-lsc-cert-expiry-time,omitempty"` // DTLS LSC certificate expiration (Live: IOS-XE 17.12.5)
+	DTLSLscCertExpiryTime string `json:"dtls-lsc-cert-expiry-time,omitempty"` // DTLS LSC certificate expiration (Live: IOS-XE 17.12.5)
 }
 
 // RadioStatsMonitor represents AP radio statistics monitoring configuration.
@@ -479,8 +479,8 @@ type RadioStatsMonitor struct {
 	RadioReset   bool          `json:"radio-reset"`   // Auto radio reset on stuck condition (Live: IOS-XE 17.12.5)
 }
 
-// ZeroWtDfs represents Zero wait DFS information of the AP.
-type ZeroWtDfs struct {
+// ZeroWtDFS represents Zero wait DFS information of the AP.
+type ZeroWtDFS struct {
 	ReserveChannel ReserveChannel `json:"reserve-channel"` // DFS channel reservation data (Live: IOS-XE 17.12.5)
 	Type           string         `json:"type"`            // CAC domain type classification (Live: IOS-XE 17.12.5)
 	// DfsChanInclList and DfsChanExclList would be added if present in JSON
@@ -541,13 +541,13 @@ type AaaLocation struct {
 // ApServices represents AP services information.
 type ApServices struct {
 	MonitorModeOptType string       `json:"monitor-mode-opt-type"` // Monitor mode optimization type (Live: IOS-XE 17.12.5)
-	ApDhcpServer       ApDhcpServer `json:"ap-dhcp-server"`        // Local DHCP server configuration (Live: IOS-XE 17.12.5)
+	ApDHCPServer       ApDHCPServer `json:"ap-dhcp-server"`        // Local DHCP server configuration (Live: IOS-XE 17.12.5)
 	TotSnifferRadio    int          `json:"tot-sniffer-radio"`     // Total sniffer radio interfaces (Live: IOS-XE 17.12.5)
 }
 
-// ApDhcpServer represents AP DHCP server configuration.
-type ApDhcpServer struct {
-	IsDhcpServerEnabled bool `json:"is-dhcp-server-enabled"` // Local DHCP service enablement (Live: IOS-XE 17.12.5)
+// ApDHCPServer represents AP DHCP server configuration.
+type ApDHCPServer struct {
+	IsDHCPServerEnabled bool `json:"is-dhcp-server-enabled"` // Local DHCP service enablement (Live: IOS-XE 17.12.5)
 }
 
 // XorPhyHtCap represents XOR PHY HT capabilities.
@@ -619,7 +619,7 @@ type PhyHtCfgData struct {
 	ExtChan                int    `json:"ext-chan"`                  // Extension channel for 40MHz bonding (Live: IOS-XE 17.12.5)
 	VhtEnable              bool   `json:"vht-enable"`                // 802.11ac Very High Throughput protocol enablement (Live: IOS-XE 17.12.5)
 	LegTxBfEnabled         int    `json:"leg-tx-bf-enabled"`         // Legacy TX beamforming enablement (Live: IOS-XE 17.12.5)
-	RrmChannelChangeReason string `json:"rrm-channel-change-reason"` // RRM channel change reason (Live: IOS-XE 17.12.5)
+	RRMChannelChangeReason string `json:"rrm-channel-change-reason"` // RRM channel change reason (Live: IOS-XE 17.12.5)
 	FreqString             string `json:"freq-string"`               // Frequency designation string (Live: IOS-XE 17.12.5)
 }
 
@@ -683,7 +683,7 @@ type RadioBandInfo struct {
 	BandID                 uint8          `json:"band-id"`                      // RF band identifier (2.4/5/6GHz) (Live: IOS-XE 17.12.5)
 	RegDomainCode          uint16         `json:"reg-domain-code"`              // Regulatory domain code (Live: IOS-XE 17.12.5)
 	RegulatoryDomain       string         `json:"regulatory-domain"`            // Regulatory domain name (Live: IOS-XE 17.12.5)
-	MacOperCfg             MacOperCfg     `json:"mac-oper-cfg,omitempty"`       // MAC layer operational configuration (Live: IOS-XE 17.12.5)
+	MACOperCfg             MACOperCfg     `json:"mac-oper-cfg,omitempty"`       // MAC layer operational configuration (Live: IOS-XE 17.12.5)
 	PhyTxPwrCfg            PhyTxPwrCfg    `json:"phy-tx-pwr-cfg,omitempty"`     // PHY layer TX power configuration (Live: IOS-XE 17.12.5)
 	PhyTxPwrLvlCfg         PhyTxPwrLvlCfg `json:"phy-tx-pwr-lvl-cfg,omitempty"` // Multi-level TX power configuration (Live: IOS-XE 17.12.5)
 	AntennaCfg             AntennaCfg     `json:"antenna-cfg,omitempty"`        // Antenna system configuration (Live: IOS-XE 17.12.5)
@@ -692,14 +692,14 @@ type RadioBandInfo struct {
 	SiaParams              SiaParams      `json:"sia-params,omitempty"`         // Self-Identifying Antenna parameters (Live: IOS-XE 17.12.5)
 }
 
-// MacOperCfg represents MAC operation configuration.
-type MacOperCfg struct {
-	CfgData MacOperCfgData `json:"cfg-data"` // MAC layer operational data (Live: IOS-XE 17.12.5)
+// MACOperCfg represents MAC operation configuration.
+type MACOperCfg struct {
+	CfgData MACOperCfgData `json:"cfg-data"` // MAC layer operational data (Live: IOS-XE 17.12.5)
 }
 
-// MacOperCfgData represents MAC operation configuration data.
-type MacOperCfgData struct {
-	MacOperationConfigType string `json:"mac-operation-config-type"` // MAC operation configuration type (Live: IOS-XE 17.12.5)
+// MACOperCfgData represents MAC operation configuration data.
+type MACOperCfgData struct {
+	MACOperationConfigType string `json:"mac-operation-config-type"` // MAC operation configuration type (Live: IOS-XE 17.12.5)
 	RtsThreshold           uint16 `json:"rts-threshold"`             // RTS threshold in bytes (Live: IOS-XE 17.12.5)
 	ShortRetryLimit        uint8  `json:"short-retry-limit"`         // Max retry attempts for short frames (Live: IOS-XE 17.12.5)
 	LongRetryLimit         uint8  `json:"long-retry-limit"`          // Max retry attempts for long frames (Live: IOS-XE 17.12.5)
@@ -764,8 +764,8 @@ type SiaParams struct {
 type VapOperConfig struct {
 	ApVapID         uint8  `json:"ap-vap-id"`         // Virtual Access Point identifier (Live: IOS-XE 17.12.5)
 	WlanID          uint8  `json:"wlan-id"`           // Wireless LAN identifier (Live: IOS-XE 17.12.5)
-	BssidMac        string `json:"bssid-mac"`         // BSS Identifier MAC address (Live: IOS-XE 17.12.5)
-	WtpMac          string `json:"wtp-mac"`           // Wireless Termination Point MAC address (Live: IOS-XE 17.12.5)
+	BssidMAC        string `json:"bssid-mac"`         // BSS Identifier MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC          string `json:"wtp-mac"`           // Wireless Termination Point MAC address (Live: IOS-XE 17.12.5)
 	WlanProfileName string `json:"wlan-profile-name"` // WLAN profile name (Live: IOS-XE 17.12.5)
 	SSID            string `json:"ssid"`              // Service Set Identifier (Live: IOS-XE 17.12.5)
 }
@@ -820,16 +820,16 @@ type TagInfo struct {
 	ResolvedTagInfo   ResolvedTagInfo `json:"resolved-tag-info"`   // Final resolved tag assignments (Live: IOS-XE 17.12.5)
 	PolicyTagInfo     PolicyTagInfo   `json:"policy-tag-info"`     // Policy tag configuration (Live: IOS-XE 17.12.5)
 	SiteTag           SiteTag         `json:"site-tag"`            // Site tag information (Live: IOS-XE 17.12.5)
-	RfTag             RfTag           `json:"rf-tag"`              // RF tag configuration (Live: IOS-XE 17.12.5)
+	RFTag             RFTag           `json:"rf-tag"`              // RF tag configuration (Live: IOS-XE 17.12.5)
 	FilterInfo        FilterInfo      `json:"filter-info"`         // Access control filter information (Live: IOS-XE 17.12.5)
-	IsDtlsLscFbkAp    bool            `json:"is-dtls-lsc-fbk-ap"`  // DTLS LSC fallback AP designation (Live: IOS-XE 17.12.5)
+	IsDTLSLscFbkAp    bool            `json:"is-dtls-lsc-fbk-ap"`  // DTLS LSC fallback AP designation (Live: IOS-XE 17.12.5)
 }
 
 // ResolvedTagInfo represents resolved tag information.
 type ResolvedTagInfo struct {
 	ResolvedPolicyTag string `json:"resolved-policy-tag"` // Final resolved policy tag name (Live: IOS-XE 17.12.5)
 	ResolvedSiteTag   string `json:"resolved-site-tag"`   // Final resolved site tag name (Live: IOS-XE 17.12.5)
-	ResolvedRfTag     string `json:"resolved-rf-tag"`     // Final resolved RF tag name (Live: IOS-XE 17.12.5)
+	ResolvedRFTag     string `json:"resolved-rf-tag"`     // Final resolved RF tag name (Live: IOS-XE 17.12.5)
 }
 
 // PolicyTagInfo represents policy tag information.
@@ -844,9 +844,9 @@ type SiteTag struct {
 	FlexProfile string `json:"flex-profile"`  // FlexConnect profile name (Live: IOS-XE 17.12.5)
 }
 
-// RfTag represents RF tag information.
-type RfTag struct {
-	RfTagName string `json:"rf-tag-name"` // RF tag name identifier (Live: IOS-XE 17.12.5)
+// RFTag represents RF tag information.
+type RFTag struct {
+	RFTagName string `json:"rf-tag-name"` // RF tag name identifier (Live: IOS-XE 17.12.5)
 }
 
 // FilterInfo represents filter information.
@@ -901,7 +901,7 @@ type DeviceDetail struct {
 type StaticInfo struct {
 	BoardData struct {
 		WtpSerialNum string `json:"wtp-serial-num"` // AP serial number (Live: IOS-XE 17.12.5)
-		WtpEnetMac   string `json:"wtp-enet-mac"`   // AP Ethernet MAC address (Live: IOS-XE 17.12.5)
+		WtpEnetMAC   string `json:"wtp-enet-mac"`   // AP Ethernet MAC address (Live: IOS-XE 17.12.5)
 		ApSysInfo    struct {
 			MemType string `json:"mem-type"` // AP memory type (Live: IOS-XE 17.12.5)
 			CPUType string `json:"cpu-type"` // AP CPU type (Live: IOS-XE 17.12.5)
@@ -966,19 +966,19 @@ type WtpVersion struct {
 	SwVersion string `json:"sw-version,omitempty"` // Cisco AP software version details (Live: IOS-XE 17.12.5)
 }
 
-// ApNameMacMap represents AP name to MAC address mapping.
-type ApNameMacMap struct {
+// ApNameMACMap represents AP name to MAC address mapping.
+type ApNameMACMap struct {
 	WtpName string `json:"wtp-name"` // WTP administrative name (Live: IOS-XE 17.12.5)
-	WtpMac  string `json:"wtp-mac"`  // WTP radio interface MAC address (Live: IOS-XE 17.12.5)
-	EthMac  string `json:"eth-mac"`  // Ethernet interface MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC  string `json:"wtp-mac"`  // WTP radio interface MAC address (Live: IOS-XE 17.12.5)
+	EthMAC  string `json:"eth-mac"`  // Ethernet interface MAC address (Live: IOS-XE 17.12.5)
 }
 
 // WtpSlotWlanStats represents WTP slot WLAN statistics.
 type WtpSlotWlanStats struct {
-	WtpMac      string `json:"wtp-mac"`      // WTP MAC address for radio interface (Live: IOS-XE 17.12.5)
+	WtpMAC      string `json:"wtp-mac"`      // WTP MAC address for radio interface (Live: IOS-XE 17.12.5)
 	SlotID      int    `json:"slot-id"`      // Radio slot identifier (Live: IOS-XE 17.12.5)
 	WlanID      int    `json:"wlan-id"`      // WLAN identifier (Live: IOS-XE 17.12.5)
-	BssidMac    string `json:"bssid-mac"`    // BSS Identifier MAC address (Live: IOS-XE 17.12.5)
+	BssidMAC    string `json:"bssid-mac"`    // BSS Identifier MAC address (Live: IOS-XE 17.12.5)
 	Ssid        string `json:"ssid"`         // Service Set Identifier name (Live: IOS-XE 17.12.5)
 	BytesRx     string `json:"bytes-rx"`     // Total bytes received on WLAN interface (Live: IOS-XE 17.12.5)
 	BytesTx     string `json:"bytes-tx"`     // Total bytes transmitted on WLAN interface (Live: IOS-XE 17.12.5)
@@ -987,15 +987,15 @@ type WtpSlotWlanStats struct {
 	DataRetries string `json:"data-retries"` // Data frame retransmission count (Live: IOS-XE 17.12.5)
 }
 
-// EthernetMacWtpMacMap represents Ethernet MAC to WTP MAC mapping.
-type EthernetMacWtpMacMap struct {
-	EthernetMac string `json:"ethernet-mac"` // Ethernet interface MAC address (Live: IOS-XE 17.12.5)
-	WtpMac      string `json:"wtp-mac"`      // WTP MAC address for radio interface (Live: IOS-XE 17.12.5)
+// EthernetMACWtpMACMap represents Ethernet MAC to WTP MAC mapping.
+type EthernetMACWtpMACMap struct {
+	EthernetMAC string `json:"ethernet-mac"` // Ethernet interface MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC      string `json:"wtp-mac"`      // WTP MAC address for radio interface (Live: IOS-XE 17.12.5)
 }
 
 // ApIoxOperData represents AP IOx operational data.
 type ApIoxOperData struct {
-	ApMac        string `json:"ap-mac"`        // Access point MAC address (Live: IOS-XE 17.12.5)
+	ApMAC        string `json:"ap-mac"`        // Access point MAC address (Live: IOS-XE 17.12.5)
 	ApphostState string `json:"apphost-state"` // Application hosting service state (Live: IOS-XE 17.12.5)
 	CafToken     string `json:"caf-token"`     // CAF authentication token (Live: IOS-XE 17.12.5)
 	CafPort      int    `json:"caf-port"`      // CAF service communication port (Live: IOS-XE 17.12.5)
@@ -1028,7 +1028,7 @@ type QosGlobalStats struct {
 
 // ApOperInternalData represents internal AP operational data.
 type ApOperInternalData struct {
-	WtpMac                 string         `json:"wtp-mac"`                             // MAC Address of the AP Radio (Live: IOS-XE 17.12.5)
+	WtpMAC                 string         `json:"wtp-mac"`                             // MAC Address of the AP Radio (Live: IOS-XE 17.12.5)
 	RadioID                int            `json:"radio-id"`                            // AP radio identifier (Live: IOS-XE 17.12.5)
 	ApAntennaBandMode      string         `json:"ap-antenna-band-mode"`                // AP antenna band mode configuration (Live: IOS-XE 17.12.5)
 	LinkEncryptionEnabled  bool           `json:"link-encryption-enabled"`             // Controller-AP link encryption status (Live: IOS-XE 17.12.5)
@@ -1077,7 +1077,7 @@ type ApOperInternalData struct {
 
 // RlanOper represents RLAN operational data.
 type RlanOper struct {
-	WtpMac         string `json:"wtp-mac"`          // Radio MAC address of the AP (Live: IOS-XE 17.12.5)
+	WtpMAC         string `json:"wtp-mac"`          // Radio MAC address of the AP (Live: IOS-XE 17.12.5)
 	RlanPortID     int    `json:"rlan-port-id"`     // RLAN port identifier (Live: IOS-XE 17.12.5)
 	RlanOperState  bool   `json:"rlan-oper-state"`  // Status of the LAN port (Live: IOS-XE 17.12.5)
 	RlanPortStatus bool   `json:"rlan-port-status"` // Remote LAN status of the LAN port (Live: IOS-XE 17.12.5)
@@ -1096,12 +1096,12 @@ type EwlcMewlcPredownloadRec struct {
 
 // CdpCacheData represents CDP cache data.
 type CdpCacheData struct {
-	MacAddr                string       `json:"mac-addr"`                   // MAC address (Live: IOS-XE 17.12.5)
+	MACAddr                string       `json:"mac-addr"`                   // MAC address (Live: IOS-XE 17.12.5)
 	CdpCacheDeviceID       string       `json:"cdp-cache-device-id"`        // CDP device identifier (Live: IOS-XE 17.12.5)
 	ApName                 string       `json:"ap-name"`                    // AP Name (Live: IOS-XE 17.12.5)
 	LastUpdatedTime        time.Time    `json:"last-updated-time"`          // Last updated time (Live: IOS-XE 17.12.5)
 	Version                int          `json:"version"`                    // Cisco Discovery Protocol version (Live: IOS-XE 17.12.5)
-	WtpMacAddr             string       `json:"wtp-mac-addr"`               // WTP MAC address (Live: IOS-XE 17.12.5)
+	WtpMACAddr             string       `json:"wtp-mac-addr"`               // WTP MAC address (Live: IOS-XE 17.12.5)
 	DeviceIndex            int          `json:"device-index"`               // Device index (Live: IOS-XE 17.12.5)
 	IPAddress              CdpIPAddress `json:"ip-address"`                 // Device network addresses from CDP message (Live: IOS-XE 17.12.5)
 	CdpAddrCount           int          `json:"cdp-addr-count"`             // Neighbor IP count (Live: IOS-XE 17.12.5)
@@ -1119,8 +1119,8 @@ type CdpCacheData struct {
 
 // LldpNeigh represents LLDP neighbor information.
 type LldpNeigh struct {
-	WtpMac          string `json:"wtp-mac"`          // Radio MAC address of the AP (Live: IOS-XE 17.12.5)
-	NeighMac        string `json:"neigh-mac"`        // MAC address of the LLDP neighbor device (Live: IOS-XE 17.12.5)
+	WtpMAC          string `json:"wtp-mac"`          // Radio MAC address of the AP (Live: IOS-XE 17.12.5)
+	NeighMAC        string `json:"neigh-mac"`        // MAC address of the LLDP neighbor device (Live: IOS-XE 17.12.5)
 	PortID          string `json:"port-id"`          // LLDP neighbor port name or ID (Live: IOS-XE 17.12.5)
 	LocalPort       string `json:"local-port"`       // AP interface sending/receiving LLDP PDUs (Live: IOS-XE 17.12.5)
 	SystemName      string `json:"system-name"`      // LLDP neighbor name (Live: IOS-XE 17.12.5)
@@ -1147,19 +1147,19 @@ type Trustpoint struct {
 
 // DiscData represents discovery data.
 type DiscData struct {
-	WtpMac           string `json:"wtp-mac"`            // Wireless termination point MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC           string `json:"wtp-mac"`            // Wireless termination point MAC address (Live: IOS-XE 17.12.5)
 	DiscoveryPkts    string `json:"discovery-pkts"`     // Discovery packet count (Live: IOS-XE 17.12.5)
 	DiscoveryErrPkts string `json:"discovery-err-pkts"` // Discovery error packet count (Live: IOS-XE 17.12.5)
 }
 
-// CapwapPkts represents CAPWAP packet statistics.
-type CapwapPkts struct {
-	WtpMac            string `json:"wtp-mac"`              // Wireless termination point MAC address (Live: IOS-XE 17.12.5)
+// CAPWAPPkts represents CAPWAP packet statistics.
+type CAPWAPPkts struct {
+	WtpMAC            string `json:"wtp-mac"`              // Wireless termination point MAC address (Live: IOS-XE 17.12.5)
 	CntrlPkts         string `json:"cntrl-pkts"`           // Control packet count (Live: IOS-XE 17.12.5)
 	DataKeepAlivePkts string `json:"data-keep-alive-pkts"` // Data keep-alive packet count (Live: IOS-XE 17.12.5)
-	CapwapErrorPkts   string `json:"capwap-error-pkts"`    // CAPWAP error packet count (Live: IOS-XE 17.12.5)
+	CAPWAPErrorPkts   string `json:"capwap-error-pkts"`    // CAPWAP error packet count (Live: IOS-XE 17.12.5)
 	ArpPkts           string `json:"arp-pkts"`             // ARP packet count (Live: IOS-XE 17.12.5)
-	DhcpPkts          string `json:"dhcp-pkts"`            // DHCP packet count (Live: IOS-XE 17.12.5)
+	DHCPPkts          string `json:"dhcp-pkts"`            // DHCP packet count (Live: IOS-XE 17.12.5)
 	Dot1xCtrlPkts     string `json:"dot1x-ctrl-pkts"`      // 802.1X control packet count (Live: IOS-XE 17.12.5)
 	Dot1xEapPkts      string `json:"dot1x-eap-pkts"`       // 802.1X EAP packet count (Live: IOS-XE 17.12.5)
 	Dot1xKeyTypePkts  string `json:"dot1x-key-type-pkts"`  // 802.1X key type packet count (Live: IOS-XE 17.12.5)
@@ -1167,8 +1167,8 @@ type CapwapPkts struct {
 	IappPkts          string `json:"iapp-pkts"`            // IAPP packet count (Live: IOS-XE 17.12.5)
 	IPPkts            string `json:"ip-pkts"`              // IP packet count (Live: IOS-XE 17.12.5)
 	Ipv6Pkts          string `json:"ipv6-pkts"`            // IPv6 packet count (Live: IOS-XE 17.12.5)
-	RfidPkts          string `json:"rfid-pkts"`            // RFID packet count (Live: IOS-XE 17.12.5)
-	RrmPkts           string `json:"rrm-pkts"`             // Radio resource management packet count (Live: IOS-XE 17.12.5)
+	RFIDPkts          string `json:"rfid-pkts"`            // RFID packet count (Live: IOS-XE 17.12.5)
+	RRMPkts           string `json:"rrm-pkts"`             // Radio resource management packet count (Live: IOS-XE 17.12.5)
 }
 
 // CountryOper represents country operational data.
@@ -1182,8 +1182,8 @@ type CountryOper struct {
 	Channels11bg        interface{} `json:"channels-11bg,omitempty"`      // Available channels for 802.11bg operation (Live: IOS-XE 17.12.5)
 	ChannelsString11a   string      `json:"channels-string-11a"`          // Channel string representation for 802.11a (Live: IOS-XE 17.12.5)
 	ChannelsString11bg  string      `json:"channels-string-11bg"`         // Channel string representation for 802.11bg (Live: IOS-XE 17.12.5)
-	DcaChannels11a      interface{} `json:"dca-channels-11a,omitempty"`   // DCA channels for 802.11a band (Live: IOS-XE 17.12.5)
-	DcaChannels11bg     interface{} `json:"dca-channels-11bg,omitempty"`  // DCA channels for 802.11bg band (Live: IOS-XE 17.12.5)
+	DCAChannels11a      interface{} `json:"dca-channels-11a,omitempty"`   // DCA channels for 802.11a band (Live: IOS-XE 17.12.5)
+	DCAChannels11bg     interface{} `json:"dca-channels-11bg,omitempty"`  // DCA channels for 802.11bg band (Live: IOS-XE 17.12.5)
 	RadarChannels11a    interface{} `json:"radar-channels-11a,omitempty"` // Radar-affected channels for 802.11a (Live: IOS-XE 17.12.5)
 	RegDom6ghz          interface{} `json:"reg-dom-6ghz,omitempty"`       // Regulatory domain information for 6GHz (Live: IOS-XE 17.12.5)
 	ChanInfo6ghz        interface{} `json:"chan-info-6ghz,omitempty"`     // Channel information for 6GHz band (Live: IOS-XE 17.12.5)
@@ -1197,9 +1197,9 @@ type SuppCountryOper struct {
 	ChanList24ghz    interface{} `json:"chan-list-24ghz,omitempty"`     // Channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
 	ChanList5ghz     interface{} `json:"chan-list-5ghz,omitempty"`      // Channel list for 5GHz band (Live: IOS-XE 17.12.5)
 	ChanList6ghz     interface{} `json:"chan-list-6ghz,omitempty"`      // Channel list for 6GHz band (Live: IOS-XE 17.12.5)
-	ChanListDca24ghz interface{} `json:"chan-list-dca-24ghz,omitempty"` // DCA channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
-	ChanListDca5ghz  interface{} `json:"chan-list-dca-5ghz,omitempty"`  // DCA channel list for 5GHz band (Live: IOS-XE 17.12.5)
-	ChanListDca6ghz  interface{} `json:"chan-list-dca-6ghz,omitempty"`  // DCA channel list for 6GHz band (Live: IOS-XE 17.12.5)
+	ChanListDCA24ghz interface{} `json:"chan-list-dca-24ghz,omitempty"` // DCA channel list for 2.4GHz band (Live: IOS-XE 17.12.5)
+	ChanListDCA5ghz  interface{} `json:"chan-list-dca-5ghz,omitempty"`  // DCA channel list for 5GHz band (Live: IOS-XE 17.12.5)
+	ChanListDCA6ghz  interface{} `json:"chan-list-dca-6ghz,omitempty"`  // DCA channel list for 6GHz band (Live: IOS-XE 17.12.5)
 	ChanListPsc6ghz  interface{} `json:"chan-list-psc-6ghz,omitempty"`  // PSC channel list for 6GHz band (Live: IOS-XE 17.12.5)
 	RegDom24ghz      interface{} `json:"reg-dom-24ghz,omitempty"`       // Regulatory domain for 2.4GHz band (Live: IOS-XE 17.12.5)
 	RegDom5ghz       interface{} `json:"reg-dom-5ghz,omitempty"`        // Regulatory domain for 5GHz band (Live: IOS-XE 17.12.5)
@@ -1263,7 +1263,7 @@ type CdpIPAddress struct {
 
 // RadioOperStats represents radio operational statistics.
 type RadioOperStats struct {
-	ApMac                 string      `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
+	ApMAC                 string      `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
 	SlotID                int         `json:"slot-id"`                   // Radio slot identifier (Live: IOS-XE 17.12.5)
 	AidUserList           interface{} `json:"aid-user-list"`             // Association ID user list for this radio (Live: IOS-XE 17.12.5)
 	TxFragmentCount       int         `json:"tx-fragment-count"`         // Number of transmitted frame fragments (Live: IOS-XE 17.12.5)
@@ -1274,8 +1274,8 @@ type RadioOperStats struct {
 	FrameDuplicateCount   int         `json:"frame-duplicate-count"`     // Number of duplicate frames received (Live: IOS-XE 17.12.5)
 	AckFailureCount       int         `json:"ack-failure-count"`         // Number of acknowledgment failures (Live: IOS-XE 17.12.5)
 	FcsErrorCount         int         `json:"fcs-error-count"`           // Number of frames with frame check sequence errors (Live: IOS-XE 17.12.5)
-	MacDecryErrFrameCount int         `json:"mac-decry-err-frame-count"` // Number of frames with MAC decryption errors (Live: IOS-XE 17.12.5)
-	MacMicErrFrameCount   int         `json:"mac-mic-err-frame-count"`   // MAC MIC error frame count (Live: IOS-XE 17.12.5)
+	MACDecryErrFrameCount int         `json:"mac-decry-err-frame-count"` // Number of frames with MAC decryption errors (Live: IOS-XE 17.12.5)
+	MACMicErrFrameCount   int         `json:"mac-mic-err-frame-count"`   // MAC MIC error frame count (Live: IOS-XE 17.12.5)
 	MulticastRxFrameCnt   int         `json:"multicast-rx-frame-cnt"`    // Number of multicast frames received (Live: IOS-XE 17.12.5)
 	NoiseFloor            int         `json:"noise-floor"`               // Current noise floor level in dBm (Live: IOS-XE 17.12.5)
 	RtsFailureCount       int         `json:"rts-failure-count"`         // Number of Request to Send (RTS) failures (Live: IOS-XE 17.12.5)
@@ -1297,7 +1297,7 @@ type RadioOperStats struct {
 
 // EthernetIfStats represents Ethernet interface statistics.
 type EthernetIfStats struct {
-	WtpMac           string `json:"wtp-mac"`            // Wireless termination point MAC address (Live: IOS-XE 17.12.5)
+	WtpMAC           string `json:"wtp-mac"`            // Wireless termination point MAC address (Live: IOS-XE 17.12.5)
 	IfIndex          int    `json:"if-index"`           // Interface index identifier (Live: IOS-XE 17.12.5)
 	IfName           string `json:"if-name"`            // Interface name identifier (Live: IOS-XE 17.12.5)
 	RxPkts           int    `json:"rx-pkts"`            // Total packets received on interface (Live: IOS-XE 17.12.5)
@@ -1349,7 +1349,7 @@ type EwlcWncdStats struct {
 
 // IotFirmware represents IoT firmware information for access points.
 type IotFirmware struct {
-	ApMac      string    `json:"ap-mac"`      // Access point MAC address (Live: IOS-XE 17.12.5)
+	ApMAC      string    `json:"ap-mac"`      // Access point MAC address (Live: IOS-XE 17.12.5)
 	IfName     string    `json:"if-name"`     // Interface name for IoT radio (Live: IOS-XE 17.12.5)
 	IsDefault  EmptyType `json:"is-default"`  // Default firmware status (Live: IOS-XE 17.12.5)
 	Version    string    `json:"version"`     // Firmware version string (Live: IOS-XE 17.12.5)
