@@ -11,7 +11,7 @@ type MobilityOper struct {
 		MmIfGlobalStats         MmIfGlobalStats         `json:"mm-if-global-stats"`         // Global mobility interface event stats (Live: IOS-XE 17.12.5)
 		MobilityClientData      []MobilityClientData    `json:"mobility-client-data"`       // 802.11 LWAPP Mobility Clients info (YANG: IOS-XE 17.12.1)
 		MobilityClientStats     []MobilityClientStats   `json:"mobility-client-stats"`      // Client mobility event and message stats (YANG: IOS-XE 17.12.1)
-		MobilityGlobalDtlsStats MobilityGlobalDtlsStats `json:"mobility-global-dtls-stats"` // Global mobility DTLS tunnel stats (YANG: IOS-XE 17.12.1)
+		MobilityGlobalDTLSStats MobilityGlobalDTLSStats `json:"mobility-global-dtls-stats"` // Global mobility DTLS tunnel stats (YANG: IOS-XE 17.12.1)
 		MobilityGlobalMsgStats  MobilityGlobalMsgStats  `json:"mobility-global-msg-stats"`  // Global mobility message exchange stats (YANG: IOS-XE 17.12.1)
 		MobilityGlobalStats     MobilityGlobalStats     `json:"mobility-global-stats"`      // Global mobility event and tunnel stats (YANG: IOS-XE 17.12.1)
 		WlanClientLimit         []WlanClientLimit       `json:"wlan-client-limit"`          // WLAN client limit configuration data (YANG: IOS-XE 17.12.1)
@@ -53,9 +53,9 @@ type MobilityOperMobilityClientStats struct {
 	MobilityClientStats MobilityClientStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats"`
 }
 
-// MobilityOperMobilityGlobalDtlsStats represents the structure for mobility global DTLS statistics.
-type MobilityOperMobilityGlobalDtlsStats struct {
-	MobilityGlobalDtlsStats MobilityGlobalDtlsStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-dtls-stats"`
+// MobilityOperMobilityGlobalDTLSStats represents the structure for mobility global DTLS statistics.
+type MobilityOperMobilityGlobalDTLSStats struct {
+	MobilityGlobalDTLSStats MobilityGlobalDTLSStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-dtls-stats"`
 }
 
 // MobilityOperMobilityGlobalMsgStats represents the structure for mobility global message statistics.
@@ -86,7 +86,7 @@ type ApPeerList struct {
 
 // MmGlobalData represents mobility manager global configuration data.
 type MmGlobalData struct {
-	MmMacAddr string `json:"mm-mac-addr"` // MAC address being used by mobility module (Live: IOS-XE 17.12.5)
+	MmMACAddr string `json:"mm-mac-addr"` // MAC address being used by mobility module (Live: IOS-XE 17.12.5)
 }
 
 // MmIfGlobalMsgStats represents mobility manager interface global message statistics.
@@ -166,7 +166,7 @@ type MbltyStats struct {
 
 // MobilityClientData represents mobility client data.
 type MobilityClientData struct {
-	ClientMac           string `json:"client-mac"`             // Client MAC address (Live: IOS-XE 17.12.5)
+	ClientMAC           string `json:"client-mac"`             // Client MAC address (Live: IOS-XE 17.12.5)
 	ClientIfid          int64  `json:"client-ifid"`            // Client IFID (Live: IOS-XE 17.12.5)
 	OwnerInstance       int    `json:"owner-instance"`         // Owner instance for mobility client (Live: IOS-XE 17.12.5)
 	AssocTimeStamp      string `json:"assoc-time-stamp"`       // Client association timestamp (Live: IOS-XE 17.12.5)
@@ -201,14 +201,14 @@ type DgramStatsDbgCounters struct {
 	DgramSwitchTxTimeout int `json:"dgram-switch-tx-timeout"` // Datagram switch transmission timeout count (YANG: IOS-XE 17.12.1)
 }
 
-// MobilityGlobalDtlsStats represents mobility global DTLS statistics.
-type MobilityGlobalDtlsStats struct {
-	EventStats []DtlsEventStats `json:"event-stats"` // DTLS event statistics (YANG: IOS-XE 17.12.1)
-	MsgStats   []DtlsMsgStats   `json:"msg-stats"`   // DTLS message statistics (YANG: IOS-XE 17.12.1)
+// MobilityGlobalDTLSStats represents mobility global DTLS statistics.
+type MobilityGlobalDTLSStats struct {
+	EventStats []DTLSEventStats `json:"event-stats"` // DTLS event statistics (YANG: IOS-XE 17.12.1)
+	MsgStats   []DTLSMsgStats   `json:"msg-stats"`   // DTLS message statistics (YANG: IOS-XE 17.12.1)
 }
 
-// DtlsEventStats represents DTLS event statistics.
-type DtlsEventStats struct {
+// DTLSEventStats represents DTLS event statistics.
+type DTLSEventStats struct {
 	ConnectStart       int    `json:"connect-start"`       // Connections attempted (YANG: IOS-XE 17.12.1)
 	ConnectEstablished int    `json:"connect-established"` // Connections established (YANG: IOS-XE 17.12.1)
 	Close              int    `json:"close"`               // Connections closed (YANG: IOS-XE 17.12.1)
@@ -217,8 +217,8 @@ type DtlsEventStats struct {
 	TunnelType         string `json:"tunnel-type"`         // CAPWAP mobility tunnel type (YANG: IOS-XE 17.12.1)
 }
 
-// DtlsMsgStats represents DTLS message statistics.
-type DtlsMsgStats struct {
+// DTLSMsgStats represents DTLS message statistics.
+type DTLSMsgStats struct {
 	HandshakeMsgTX int    `json:"handshake-msg-tx"` // Handshake messages sent (YANG: IOS-XE 17.12.1)
 	HandshakeMsgRX int    `json:"handshake-msg-rx"` // Handshake messages received (YANG: IOS-XE 17.12.1)
 	EncryptedMsgTX int    `json:"encrypted-msg-tx"` // Encrypted messages sent (YANG: IOS-XE 17.12.1)
