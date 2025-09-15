@@ -35,9 +35,9 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 				ExpectNotFound: true, // Location services may not be configured
 			},
 			{
-				Name: "LocationRssiMeasurements",
+				Name: "LocationRSSIMeasurements",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(location.Service).LocationRssiMeasurements(ctx)
+					return service.(location.Service).LocationRSSIMeasurements(ctx)
 				},
 				LogResult:      true,
 				ExpectNotFound: true, // Should return empty response for HTTP 204
@@ -61,7 +61,7 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 			{
 				Name: "ListServerConfigs",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(location.Service).ListNmspConfig(ctx)
+					return service.(location.Service).ListNMSPConfig(ctx)
 				},
 				LogResult:      true,
 				ExpectNotFound: false, // Should return empty response for HTTP 204

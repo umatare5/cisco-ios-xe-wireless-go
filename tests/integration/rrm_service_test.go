@@ -62,16 +62,16 @@ func TestRRMServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
-				Name: "GetGlobalInfo",
+				Name: "GetGlobalOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rrm.Service).GetGlobalInfo(ctx)
+					return service.(rrm.Service).GetGlobalOperational(ctx)
 				},
 				LogResult: true,
 			},
 			{
-				Name: "GetEmulationInfo",
+				Name: "GetEmulationOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rrm.Service).GetEmulationInfo(ctx)
+					return service.(rrm.Service).GetEmulationOperational(ctx)
 				},
 				LogResult: true,
 			},
