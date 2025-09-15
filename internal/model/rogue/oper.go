@@ -113,10 +113,10 @@ type RogueStatsData struct {
 		} `json:"event-history"` // Event history entries (Live: IOS-XE 17.12.5)
 	} `json:"global-history"` // Global Event History (Live: IOS-XE 17.12.5)
 
-	TblApfVapCacheReloadCount     int    `json:"tbl-apf-vap-cache-reload-count"`    // Count of APF VAP SSID cache reloads (Live: IOS-XE 17.12.5)
+	TblAPFVapCacheReloadCount     int    `json:"tbl-apf-vap-cache-reload-count"`    // Count of APF VAP SSID cache reloads (Live: IOS-XE 17.12.5)
 	NewLradCount                  string `json:"new-lrad-count"`                    // Number of times a new LRAD has been added (Live: IOS-XE 17.12.5)
 	LradPurgeCount                string `json:"lrad-purge-count"`                  // Number of LRAD purge events (Live: IOS-XE 17.12.5)
-	RssiChangeCount               string `json:"rssi-change-count"`                 // Number of RSSI change events (Live: IOS-XE 17.12.5)
+	RSSIChangeCount               string `json:"rssi-change-count"`                 // Number of RSSI change events (Live: IOS-XE 17.12.5)
 	FinalStateChangeCount         string `json:"final-state-change-count"`          // Number of times the final state has changed (Live: IOS-XE 17.12.5)
 	ContainLevelChangeCount       string `json:"contain-level-change-count"`        // Number of times the containment level has changed (Live: IOS-XE 17.12.5)
 	ClassChangeCount              string `json:"class-change-count"`                // Number of Classification Type changes (Live: IOS-XE 17.12.5)
@@ -125,7 +125,7 @@ type RogueStatsData struct {
 	NClientsChangedCount          string `json:"n-clients-changed-count"`           // Number of times the client-number has changed (Live: IOS-XE 17.12.5)
 	ClientNewLradCount            string `json:"client-new-lrad-count"`             // Number of times a new client LRAD has been added (Live: IOS-XE 17.12.5)
 	ClientLradPurgeCount          string `json:"client-lrad-purge-count"`           // Number of client LRAD purge events (Live: IOS-XE 17.12.5)
-	ClientRssiChangeCount         string `json:"client-rssi-change-count"`          // Number of client RSSI change events (Live: IOS-XE 17.12.5)
+	ClientRSSIChangeCount         string `json:"client-rssi-change-count"`          // Number of client RSSI change events (Live: IOS-XE 17.12.5)
 	ClientFinalStateChangeCount   string `json:"client-final-state-change-count"`   // Number of times the final client state has changed (Live: IOS-XE 17.12.5)
 	ClientContainLevelChangeCount string `json:"client-contain-level-change-count"` // Number of times the client containment level has changed (Live: IOS-XE 17.12.5)
 	ClientChannelChangeCount      string `json:"client-channel-change-count"`       // Number of channel change events (Live: IOS-XE 17.12.5)
@@ -197,7 +197,7 @@ type RogueStatsData struct {
 	UnconnectedClientReport uint64 `json:"unconnected-client-report"` // Number of IAPP Client reports received (YANG: IOS-XE 17.18.1)
 	UnconnectedClientCount  uint64 `json:"unconnected-client-count"`  // Number of unconnected client in total (YANG: IOS-XE 17.18.1)
 	UnconnectedReportsDrop  uint64 `json:"unconnected-reports-drop"`  // Number of unconnected clients dropped due to max. scale reached (YANG: IOS-XE 17.18.1)
-	ApDropUrwbLink          uint64 `json:"ap-drop-urwb-link"`         // Total number of rogue AP reports dropped due to URWB link address reported as rogue AP (YANG: IOS-XE 17.18.1)
+	ApDropURWBLink          uint64 `json:"ap-drop-urwb-link"`         // Total number of rogue AP reports dropped due to URWB link address reported as rogue AP (YANG: IOS-XE 17.18.1)
 }
 
 // RLDPStats represents Rogue Location Discovery Protocol statistics.
@@ -256,38 +256,38 @@ type RogueDataDetail struct {
 
 	RldpLastResult              string `json:"rldp-last-result"`                          // RLDP Last Result (Live: IOS-XE 17.12.5)
 	RldpInProgress              bool   `json:"rldp-in-progress"`                          // RLDP in progress (Live: IOS-XE 17.12.5)
-	MaxDetectedRssi             int    `json:"max-detected-rssi"`                         // Max RSSI value of all detecting APs (Live: IOS-XE 17.12.5)
-	SsidMaxRssi                 string `json:"ssid-max-rssi"`                             // SSID of rogue detected by AP with max RSSI (Live: IOS-XE 17.12.5)
-	ApNameMaxRssi               string `json:"ap-name-max-rssi"`                          // AP name of detecting AP with max RSSI (Live: IOS-XE 17.12.5)
+	MaxDetectedRSSI             int    `json:"max-detected-rssi"`                         // Max RSSI value of all detecting APs (Live: IOS-XE 17.12.5)
+	SsidMaxRSSI                 string `json:"ssid-max-rssi"`                             // SSID of rogue detected by AP with max RSSI (Live: IOS-XE 17.12.5)
+	ApNameMaxRSSI               string `json:"ap-name-max-rssi"`                          // AP name of detecting AP with max RSSI (Live: IOS-XE 17.12.5)
 	DetectingRadioType80211n25g []any  `json:"detecting-radio-type-80211n-24g,omitempty"` // Radio type detecting APs. 802.11n 2.4GHz (Live: IOS-XE 17.12.5)
 	DetectingRadioType80211g    []any  `json:"detecting-radio-type-80211g,omitempty"`     // Radio type detecting APs. 802.11g (Live: IOS-XE 17.12.5)
 	DetectingRadioType80211bg   []any  `json:"detecting-radio-type-802-11bg,omitempty"`   // Radio type detecting APs. 802.11bg (Live: IOS-XE 17.12.5)
 	DRadioType80211ax24g        []any  `json:"d-radio-type-802-11ax24g,omitempty"`        // Radio type detecting APs. 802.11ax 2.4GHz (Live: IOS-XE 17.12.5)
 	DRadioType80211ax5g         []any  `json:"d-radio-type-802-11ax5g,omitempty"`         // Radio type detecting APs. 802.11ax 5GHz (Live: IOS-XE 17.12.5)
-	LradMacMaxRssi              string `json:"lrad-mac-max-rssi"`                         // MAC Address of detecting AP with max RSSI (Live: IOS-XE 17.12.5)
-	RogueRadioTypeMaxRssi       string `json:"rogue-radio-type-max-rssi"`                 // Radio type of detecting AP with max RSSI (Live: IOS-XE 17.12.5)
+	LradMACMaxRSSI              string `json:"lrad-mac-max-rssi"`                         // MAC Address of detecting AP with max RSSI (Live: IOS-XE 17.12.5)
+	RogueRadioTypeMaxRSSI       string `json:"rogue-radio-type-max-rssi"`                 // Radio type of detecting AP with max RSSI (Live: IOS-XE 17.12.5)
 	LastChannel                 int    `json:"last-channel"`                              // Channel number of last detecting APs (Live: IOS-XE 17.12.5)
 	RadioTypeCount              []int  `json:"radio-type-count"`                          // Number of radio type count (Live: IOS-XE 17.12.5)
 
 	LastHeardLradKey struct {
-		LradMacAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (Live: IOS-XE 17.12.5)
+		LradMACAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (Live: IOS-XE 17.12.5)
 		SlotID      int    `json:"slot-id"`       // Slot identifier (Live: IOS-XE 17.12.5)
 	} `json:"last-heard-lrad-key"` // Last Local Radio Key (Live: IOS-XE 17.12.5)
 
 	NLrads int `json:"n-lrads"` // Total number of APs that detected this rogue (Live: IOS-XE 17.12.5)
 
 	RogueLrad []struct {
-		LradMacAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (Live: IOS-XE 17.12.5)
+		LradMACAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (Live: IOS-XE 17.12.5)
 		SlotID      int    `json:"slot-id"`       // Slot identifier (Live: IOS-XE 17.12.5)
 		Ssid        string `json:"ssid"`          // SSID Advertised by Rogue Station (Live: IOS-XE 17.12.5)
 		HiddenSsid  bool   `json:"hidden-ssid"`   // Hidden ssid indication on detecting AP (Live: IOS-XE 17.12.5)
 		Name        string `json:"name"`          // Name of Detecting AP Interface (Live: IOS-XE 17.12.5)
-		Rssi        struct {
+		RSSI        struct {
 			Val int `json:"val"` // Value (Live: IOS-XE 17.12.5)
 			Num int `json:"num"` // Numerator (Live: IOS-XE 17.12.5)
 			Den int `json:"den"` // Denominator (Live: IOS-XE 17.12.5)
 		} `json:"rssi"` // Rogue RSSI as seen by Detecting AP Interface (Live: IOS-XE 17.12.5)
-		Snr struct {
+		SNR struct {
 			Val int `json:"val"` // Value (Live: IOS-XE 17.12.5)
 			Num int `json:"num"` // Numerator (Live: IOS-XE 17.12.5)
 			Den int `json:"den"` // Denominator (Live: IOS-XE 17.12.5)
@@ -332,10 +332,10 @@ type RogueDataDetail struct {
 
 	LastHeardSsid     string `json:"last-heard-ssid"`      // Last detected SSID advertised by Rogue station (Live: IOS-XE 17.12.5)
 	MfpRequired       bool   `json:"mfp-required"`         // This rogue requires 802.11w PMF (Live: IOS-XE 17.12.5)
-	ChannelMaxRssi    int    `json:"channel-max-rssi"`     // Channel reported by the maximum RSSI LRAD (Live: IOS-XE 17.12.5)
-	WpaSupportMaxRssi string `json:"wpa-support-max-rssi"` // WPA encryption reported by maximum RSSI LRAD (Live: IOS-XE 17.12.5)
-	EncryptedMaxRssi  string `json:"encrypted-max-rssi"`   // Encryption reported by the maximum RSSI LRAD (Live: IOS-XE 17.12.5)
-	SnrMaxRssi        int    `json:"snr-max-rssi"`         // Signal-to-noise ratio of maximum RSSI LRAD (Live: IOS-XE 17.12.5)
+	ChannelMaxRSSI    int    `json:"channel-max-rssi"`     // Channel reported by the maximum RSSI LRAD (Live: IOS-XE 17.12.5)
+	WpaSupportMaxRSSI string `json:"wpa-support-max-rssi"` // WPA encryption reported by maximum RSSI LRAD (Live: IOS-XE 17.12.5)
+	EncryptedMaxRSSI  string `json:"encrypted-max-rssi"`   // Encryption reported by the maximum RSSI LRAD (Live: IOS-XE 17.12.5)
+	SNRMaxRSSI        int    `json:"snr-max-rssi"`         // Signal-to-noise ratio of maximum RSSI LRAD (Live: IOS-XE 17.12.5)
 	Properties        string `json:"properties"`           // Rogue AP properties (Live: IOS-XE 17.12.5)
 
 	BandData2dot4g struct {
@@ -374,7 +374,7 @@ type RogueClientDetail struct {
 	RogueClientLastTimestamp    string `json:"rogue-client-last-timestamp"`    // Time Stamp when this Rogue was Last Detected (YANG: IOS-XE 17.12.1)
 
 	LastHeardLradKey struct {
-		LradMacAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (YANG: IOS-XE 17.12.1)
+		LradMACAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (YANG: IOS-XE 17.12.1)
 		SlotID      int    `json:"slot-id"`       // Slot identifier (YANG: IOS-XE 17.12.1)
 	} `json:"last-heard-lrad-key"` // Last Local Radio Key (YANG: IOS-XE 17.12.1)
 
@@ -394,16 +394,16 @@ type RogueClientDetail struct {
 	ParentRogueDataAddress string `json:"parent-rogue-data-address"` // MAC Address of the rogue AP this client is connected to (YANG: IOS-XE 17.12.1)
 
 	RogueClientLrad []struct {
-		LradMacAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (YANG: IOS-XE 17.12.1)
+		LradMACAddr string `json:"lrad-mac-addr"` // MAC Address of AP interface that detected (YANG: IOS-XE 17.12.1)
 		SlotID      int    `json:"slot-id"`       // Slot identifier (YANG: IOS-XE 17.12.1)
 		LastHeard   string `json:"last-heard"`    // No of seconds ago when this Rogue was last heard by this AP (YANG: IOS-XE 17.12.1)
 		Name        string `json:"name"`          // Name of Airespace AP Interface that detected the Rogue (YANG: IOS-XE 17.12.1)
-		Rssi        struct {
+		RSSI        struct {
 			Val int `json:"val"` // Value (Live: IOS-XE 17.12.5)
 			Num int `json:"num"` // Numerator (Live: IOS-XE 17.12.5)
 			Den int `json:"den"` // Denominator (Live: IOS-XE 17.12.5)
 		} `json:"rssi"` // RSSI seen by Airespace AP Interface from the Rogue (YANG: IOS-XE 17.12.1)
-		Snr struct {
+		SNR struct {
 			Val int `json:"val"` // Value (Live: IOS-XE 17.12.5)
 			Num int `json:"num"` // Numerator (Live: IOS-XE 17.12.5)
 			Den int `json:"den"` // Denominator (Live: IOS-XE 17.12.5)
