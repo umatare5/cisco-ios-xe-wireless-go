@@ -52,8 +52,8 @@ const (
 	// APCapwapDataPath retrieves CAPWAP data for access points.
 	APCapwapDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data"
 
-	// APApNameMacMapPath retrieves AP name to MAC address mapping.
-	APApNameMacMapPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-name-mac-map"
+	// APApNameMACMapPath retrieves AP name to MAC address mapping.
+	APApNameMACMapPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-name-mac-map"
 
 	// APRadioNeighborPath retrieves AP radio neighbor information.
 	APRadioNeighborPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-radio-neighbor"

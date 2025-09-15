@@ -13,8 +13,8 @@ const (
 	// LocationOperatorLocationsPath provides the path for retrieving location profiles.
 	LocationOperatorLocationsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/operator-locations"
 
-	// LocationNmspConfigPath provides the path for retrieving location servers.
-	LocationNmspConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/nmsp-config"
+	// LocationNMSPConfigPath provides the path for retrieving location servers.
+	LocationNMSPConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/nmsp-config"
 
 	// LocationPath provides the path for retrieving location settings (not supported).
 	LocationPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/location"
@@ -26,5 +26,5 @@ const (
 	LocationOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-oper:location-oper-data"
 
 	// LocationRssiMeasurementsPath provides the path for retrieving location statistics (not supported).
-	LocationRssiMeasurementsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-oper:location-oper-data/location-rssi-measurements"
+	LocationRSSIMeasurementsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-location-oper:location-oper-data/location-rssi-measurements"
 )
