@@ -88,9 +88,3 @@ validate_staged_changes() {
 
     return 0
 }
-
-# Clean up backup files from the repository
-cleanup_backup_files() {
-    find . -name "*.bak*" -type f -print0 | xargs -0 rm -f
-    return 0
-}
