@@ -29,7 +29,7 @@ const (
 	// RadioSlot5GHz represents the slot ID for 5 GHz radio.
 	RadioSlot5GHz = 1
 
-	// RadioSlot6GHz represents the slot ID for 5 GHz radio.
+	// RadioSlot6GHz represents the slot ID for 6 GHz radio.
 	RadioSlot6GHz = 2
 
 	// AdminStateEnabled represents the enabled admin state.
