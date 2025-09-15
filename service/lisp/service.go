@@ -19,17 +19,17 @@ func NewService(client *core.Client) Service {
 	return Service{BaseService: service.NewBaseService(client)}
 }
 
-// GetOperational retrieves LISP agent operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.LispAgentOper, error) {
-	return core.Get[model.LispAgentOper](ctx, s.Client(), routes.LispOperPath)
+// GetOperational retrieves LISP operational data from the wireless controller.
+func (s Service) GetOperational(ctx context.Context) (*model.LISPAgentOper, error) {
+	return core.Get[model.LISPAgentOper](ctx, s.Client(), routes.LISPOperPath)
 }
 
 // GetMemoryStats retrieves LISP agent memory statistics from the wireless controller.
-func (s Service) GetMemoryStats(ctx context.Context) (*model.LispAgentOper, error) {
-	return core.Get[model.LispAgentOper](ctx, s.Client(), routes.LispMemoryStatsPath)
+func (s Service) GetMemoryStats(ctx context.Context) (*model.LISPAgentMemoryStats, error) {
+	return core.Get[model.LISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
 }
 
 // GetCapabilities retrieves LISP WLC capabilities from the wireless controller.
-func (s Service) GetCapabilities(ctx context.Context) (*model.LispAgentOper, error) {
-	return core.Get[model.LispAgentOper](ctx, s.Client(), routes.LispCapabilitiesPath)
+func (s Service) GetCapabilities(ctx context.Context) (*model.LISPWLCCapabilities, error) {
+	return core.Get[model.LISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
 }

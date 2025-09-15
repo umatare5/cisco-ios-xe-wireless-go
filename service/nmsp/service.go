@@ -20,21 +20,21 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves NMSP operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.NmspOper, error) {
-	return core.Get[model.NmspOper](ctx, s.Client(), routes.NMSPOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.NMSPOper, error) {
+	return core.Get[model.NMSPOper](ctx, s.Client(), routes.NMSPOperPath)
 }
 
 // ListClientRegistrations retrieves NMSP client registration data.
-func (s Service) ListClientRegistrations(ctx context.Context) (*model.NmspClientRegistration, error) {
-	return core.Get[model.NmspClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
+func (s Service) ListClientRegistrations(ctx context.Context) (*model.NMSPClientRegistration, error) {
+	return core.Get[model.NMSPClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
 }
 
 // GetCMXConnectionInfo retrieves NMSP CMX connection information.
-func (s Service) GetCMXConnectionInfo(ctx context.Context) (*model.NmspCmxConnection, error) {
-	return core.Get[model.NmspCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
+func (s Service) GetCMXConnectionInfo(ctx context.Context) (*model.NMSPCmxConnection, error) {
+	return core.Get[model.NMSPCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
 }
 
 // GetCMXCloudInfo retrieves NMSP CMX cloud information.
-func (s Service) GetCMXCloudInfo(ctx context.Context) (*model.NmspCmxCloudInfo, error) {
-	return core.Get[model.NmspCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
+func (s Service) GetCMXCloudInfo(ctx context.Context) (*model.NMSPCmxCloudInfo, error) {
+	return core.Get[model.NMSPCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
 }

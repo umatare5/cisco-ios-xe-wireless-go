@@ -25,6 +25,6 @@ func (s Service) RFTag() *RFTagService {
 }
 
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
-func (s Service) GetConfig(ctx context.Context) (*model.RfCfg, error) {
-	return core.Get[model.RfCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.RFCfg, error) {
+	return core.Get[model.RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }

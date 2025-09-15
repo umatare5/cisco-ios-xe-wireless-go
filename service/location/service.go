@@ -29,9 +29,9 @@ func (s Service) ListOperatorLocations(ctx context.Context) (*model.OperatorLoca
 	return core.Get[model.OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath)
 }
 
-// ListNmspConfig retrieves location NMSP configuration data from the wireless controller.
-func (s Service) ListNmspConfig(ctx context.Context) (*model.LocationCfgNmspConfig, error) {
-	return core.Get[model.LocationCfgNmspConfig](ctx, s.Client(), routes.LocationNmspConfigPath)
+// ListNMSPConfig retrieves location NMSP configuration data from the wireless controller.
+func (s Service) ListNMSPConfig(ctx context.Context) (*model.LocationCfgNMSPConfig, error) {
+	return core.Get[model.LocationCfgNMSPConfig](ctx, s.Client(), routes.LocationNMSPConfigPath)
 }
 
 // GetLocation retrieves location settings configuration data from the wireless controller.
@@ -44,7 +44,7 @@ func (s Service) GetOperational(ctx context.Context) (*model.LocationOper, error
 	return core.Get[model.LocationOper](ctx, s.Client(), routes.LocationOperPath)
 }
 
-// LocationRssiMeasurements retrieves location statistics operational data from the wireless controller.
-func (s Service) LocationRssiMeasurements(ctx context.Context) (*model.LocationLocationRssiMeasurements, error) {
-	return core.Get[model.LocationLocationRssiMeasurements](ctx, s.Client(), routes.LocationRssiMeasurementsPath)
+// LocationRSSIMeasurements retrieves location statistics operational data from the wireless controller.
+func (s Service) LocationRSSIMeasurements(ctx context.Context) (*model.LocationLocationRSSIMeasurements, error) {
+	return core.Get[model.LocationLocationRSSIMeasurements](ctx, s.Client(), routes.LocationRSSIMeasurementsPath)
 }
