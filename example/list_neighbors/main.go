@@ -54,8 +54,8 @@ func run(controller, token string, logger *slog.Logger) ([]NeighborInfo, error) 
 
 	// Create map for AP MAC to Name lookup
 	nameMap := make(map[string]string)
-	for _, nameMapping := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.ApNameMacMap {
-		nameMap[nameMapping.WtpMac] = nameMapping.WtpName
+	for _, nameMapping := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.ApNameMACMap {
+		nameMap[nameMapping.WtpMAC] = nameMapping.WtpName
 	}
 
 	var neighbors []NeighborInfo
@@ -63,17 +63,17 @@ func run(controller, token string, logger *slog.Logger) ([]NeighborInfo, error) 
 	// Process all neighbor entries
 	for _, neighbor := range neighborData.ApRadioNeighbor {
 		neighborInfo := NeighborInfo{
-			DetectingAPMAC:  neighbor.ApMac,
+			DetectingAPMAC:  neighbor.ApMAC,
 			DetectingSlotID: neighbor.SlotID,
 			NeighborBSSID:   neighbor.Bssid,
 			NeighborSSID:    neighbor.Ssid,
-			RSSI:            neighbor.Rssi,
+			RSSI:            neighbor.RSSI,
 			PrimaryChannel:  neighbor.PrimaryChannel,
 			LastUpdateRcvd:  neighbor.LastUpdateRcvd,
 		}
 
 		// Get AP name from the name map
-		neighborInfo.DetectingAPName = nameMap[neighbor.ApMac]
+		neighborInfo.DetectingAPName = nameMap[neighbor.ApMAC]
 
 		neighbors = append(neighbors, neighborInfo)
 	}

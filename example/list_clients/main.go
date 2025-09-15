@@ -42,7 +42,7 @@ func run(controller, token string, logger *slog.Logger) ([]ClientInfo, error) {
 	var clients []ClientInfo
 	for _, sisfData := range clientData.CiscoIOSXEWirelessClientOperClientOperData.SisfDBMac {
 		clientInfo := ClientInfo{
-			MAC: sisfData.MacAddr,
+			MAC: sisfData.MACAddr,
 		}
 
 		// Extract IPv4 address if available
