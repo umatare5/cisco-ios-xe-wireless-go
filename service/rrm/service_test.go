@@ -142,23 +142,23 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("GetGlobalInfo", func(t *testing.T) {
-		result, err := service.GetGlobalInfo(ctx)
+	t.Run("GetGlobalOperational", func(t *testing.T) {
+		result, err := service.GetGlobalOperational(ctx)
 		if err != nil {
-			t.Errorf("GetGlobalInfo returned unexpected error: %v", err)
+			t.Errorf("GetGlobalOperational returned unexpected error: %v", err)
 		}
 		if result == nil {
-			t.Error("GetGlobalInfo returned nil result")
+			t.Error("GetGlobalOperational returned nil result")
 		}
 	})
 
-	t.Run("GetEmulationInfo", func(t *testing.T) {
-		result, err := service.GetEmulationInfo(ctx)
+	t.Run("GetEmulationOperational", func(t *testing.T) {
+		result, err := service.GetEmulationOperational(ctx)
 		if err != nil {
-			t.Errorf("GetEmulationInfo returned unexpected error: %v", err)
+			t.Errorf("GetEmulationOperational returned unexpected error: %v", err)
 		}
 		if result == nil {
-			t.Error("GetEmulationInfo returned nil result")
+			t.Error("GetEmulationOperational returned nil result")
 		}
 	})
 }
@@ -196,20 +196,20 @@ func TestRrmServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		}
 	})
 
-	t.Run("GetGlobalInfo_404Error", func(t *testing.T) {
-		result, err := service.GetGlobalInfo(ctx)
+	t.Run("GetGlobalOperational_404Error", func(t *testing.T) {
+		result, err := service.GetGlobalOperational(ctx)
 		if err == nil {
-			t.Error("Expected error for GetGlobalInfo, got nil")
+			t.Error("Expected error for GetGlobalOperational, got nil")
 		}
 		if result != nil {
 			t.Error("Expected nil result on error, got non-nil result")
 		}
 	})
 
-	t.Run("GetEmulationInfo_404Error", func(t *testing.T) {
-		result, err := service.GetEmulationInfo(ctx)
+	t.Run("GetEmulationOperational_404Error", func(t *testing.T) {
+		result, err := service.GetEmulationOperational(ctx)
 		if err == nil {
-			t.Error("Expected error for GetEmulationInfo, got nil")
+			t.Error("Expected error for GetEmulationOperational, got nil")
 		}
 		if result != nil {
 			t.Error("Expected nil result on error, got non-nil result")
@@ -244,8 +244,8 @@ func TestRrmServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		}
 	})
 
-	t.Run("GetGlobalInfo_NilClient", func(t *testing.T) {
-		result, err := service.GetGlobalInfo(ctx)
+	t.Run("GetGlobalOperational_NilClient", func(t *testing.T) {
+		result, err := service.GetGlobalOperational(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}
@@ -254,8 +254,8 @@ func TestRrmServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		}
 	})
 
-	t.Run("GetEmulationInfo_NilClient", func(t *testing.T) {
-		result, err := service.GetEmulationInfo(ctx)
+	t.Run("GetEmulationOperational_NilClient", func(t *testing.T) {
+		result, err := service.GetEmulationOperational(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

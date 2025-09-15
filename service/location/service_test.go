@@ -86,7 +86,7 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	})
 
 	t.Run("ListServerConfigs", func(t *testing.T) {
-		result, err := service.ListNmspConfig(ctx)
+		result, err := service.ListNMSPConfig(ctx)
 		if err != nil {
 			t.Errorf("ListServerConfigs returned unexpected error: %v", err)
 		}
@@ -151,15 +151,15 @@ func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing
 		}
 	})
 
-	t.Run("LocationRssiMeasurements_NoContent", func(t *testing.T) {
-		result, err := serviceNoContent.LocationRssiMeasurements(ctx)
+	t.Run("LocationRSSIMeasurements_NoContent", func(t *testing.T) {
+		result, err := serviceNoContent.LocationRSSIMeasurements(ctx)
 		if err != nil {
-			t.Errorf("Expected no error for LocationRssiMeasurements, got: %v", err)
+			t.Errorf("Expected no error for LocationRSSIMeasurements, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected non-nil result for LocationRssiMeasurements")
-		} else if len(result.LocationRssiMeasurements) > 0 {
-			t.Error("Expected empty LocationRssiMeasurements for HTTP 204 response")
+			t.Error("Expected non-nil result for LocationRSSIMeasurements")
+		} else if len(result.LocationRSSIMeasurements) > 0 {
+			t.Error("Expected empty LocationRSSIMeasurements for HTTP 204 response")
 		}
 	})
 }
@@ -209,11 +209,11 @@ func TestLocationServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		}
 	})
 
-	t.Run("ListNmspConfig_NilClient", func(t *testing.T) {
+	t.Run("ListNMSPConfig_NilClient", func(t *testing.T) {
 		service := location.NewService(nil)
 		ctx := testutil.TestContext(t)
 
-		result, err := service.ListNmspConfig(ctx)
+		result, err := service.ListNMSPConfig(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}
