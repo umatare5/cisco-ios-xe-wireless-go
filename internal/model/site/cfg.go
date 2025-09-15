@@ -42,8 +42,8 @@ type SiteListEntries struct {
 type ApCfgProfile struct {
 	ProfileName        string            `json:"profile-name"`                  // AP config profile name (Live: IOS-XE 17.12.5)
 	Description        *string           `json:"description,omitempty"`         // Profile description (Live: IOS-XE 17.12.5)
-	BleBeaconInterval  *int              `json:"ble-beacon-interval,omitempty"` // BLE beacon interval (YANG: IOS-XE 17.12.1)
-	BleBeaconAdvpwr    *int              `json:"ble-beacon-advpwr,omitempty"`   // BLE beacon advertising power (YANG: IOS-XE 17.12.1)
+	BLEBeaconInterval  *int              `json:"ble-beacon-interval,omitempty"` // BLE beacon interval (YANG: IOS-XE 17.12.1)
+	BLEBeaconAdvpwr    *int              `json:"ble-beacon-advpwr,omitempty"`   // BLE beacon advertising power (YANG: IOS-XE 17.12.1)
 	DataEncryptionFlag bool              `json:"data-encryption-flag"`          // Data encryption status of AP (Live: IOS-XE 17.12.5)
 	StatsTimer         StatsTimer        `json:"stats-timer"`                   // Stats timer for the AP (Live: IOS-XE 17.12.5)
 	LedState           *LedState         `json:"led-state,omitempty"`           // LED state configuration (YANG: IOS-XE 17.12.1)
@@ -54,7 +54,7 @@ type ApCfgProfile struct {
 	DeviceMgmt         DeviceMgmt        `json:"device-mgmt"`                   // Device management related config (Live: IOS-XE 17.12.5)
 	UserMgmt           UserMgmt          `json:"user-mgmt"`                     // User management related config (Live: IOS-XE 17.12.5)
 	Tunnel             Tunnel            `json:"tunnel"`                        // Global capwap prefer-mode (Live: IOS-XE 17.12.5)
-	CapwapTimer        CapwapTimer       `json:"capwap-timer"`                  // CAPWAP timer related config (Live: IOS-XE 17.12.5)
+	CAPWAPTimer        CAPWAPTimer       `json:"capwap-timer"`                  // CAPWAP timer related config (Live: IOS-XE 17.12.5)
 	Syslog             Syslog            `json:"syslog"`                        // AP sys log related config (Live: IOS-XE 17.12.5)
 	Hyperlocation      Hyperlocation     `json:"hyperlocation"`                 // Hyperlocation config for the AP (Live: IOS-XE 17.12.5)
 	RogueDetection     RogueDetection    `json:"rogue-detection"`               // Rogue detection related params (Live: IOS-XE 17.12.5)
@@ -113,8 +113,8 @@ type Tunnel struct {
 	PreferredMode string `json:"preferred-mode"` // Tunnel preferred mode (Live: IOS-XE 17.12.5)
 }
 
-// CapwapTimer represents CAPWAP timer config (Live: IOS-XE 17.12.5).
-type CapwapTimer struct {
+// CAPWAPTimer represents CAPWAP timer config (Live: IOS-XE 17.12.5).
+type CAPWAPTimer struct {
 	FastHeartBeatTimeout int `json:"fast-heart-beat-timeout"` // Fast heartbeat timeout in seconds (Live: IOS-XE 17.12.5)
 }
 
@@ -134,7 +134,7 @@ type Hyperlocation struct {
 // RogueDetection represents rogue detection config (Live: IOS-XE 17.12.5).
 type RogueDetection struct {
 	RogueDetectionMonitorModeReportInterval int `json:"rogue-detection-monitor-mode-report-interval"` // Rogue detection report interval seconds (Live: IOS-XE 17.12.5)
-	ApRogueDetectionMinRssi                 int `json:"ap-rogue-detection-min-rssi"`                  // Minimum RSSI threshold for rogue detect (Live: IOS-XE 17.12.5)
+	ApRogueDetectionMinRSSI                 int `json:"ap-rogue-detection-min-rssi"`                  // Minimum RSSI threshold for rogue detect (Live: IOS-XE 17.12.5)
 	ApRogueDetectionTransientInterval       int `json:"ap-rogue-detection-transient-interval"`        // Transient interval for rogue detect seconds (Live: IOS-XE 17.12.5)
 }
 

@@ -1,20 +1,20 @@
 package model
 
-// WatCfg represents the complete WAT configuration from YANG 17.18.1+.
-type WatCfg struct {
-	CiscoIOSXEWirelessWatCfgData struct {
-		WatConfig *WatConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
+// WATCfg represents the complete WAT configuration from YANG 17.18.1+.
+type WATCfg struct {
+	CiscoIOSXEWirelessWATCfgData struct {
+		WATConfig *WATConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
 	} `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data"`
 }
 
-// WatCfgWatConfig represents the WAT configuration container from YANG 17.18.1+.
-type WatCfgWatConfig struct {
-	WatConfig *WatConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
+// WATCfgWATConfig represents the WAT configuration container from YANG 17.18.1+.
+type WATCfgWATConfig struct {
+	WATConfig *WATConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
 }
 
-// WatConfig represents Wireless Active Testing (WAT) ThousandEyes configurations from YANG 17.18.1+.
-type WatConfig struct {
-	WatEnabled         bool   `json:"wat-enable,omitempty"`           // Enable WAT at global level
+// WATConfig represents Wireless Active Testing (WAT) ThousandEyes configurations from YANG 17.18.1+.
+type WATConfig struct {
+	WATEnabled         bool   `json:"wat-enable,omitempty"`           // Enable WAT at global level
 	TeConnectionString string `json:"te-conn-str,omitempty"`          // ThousandEyes connection string
 	TeDownloadURL      string `json:"te-download-url,omitempty"`      // ThousandEyes download URL
 	TeAgentVersion     string `json:"te-agent-version,omitempty"`     // ThousandEyes agent version
@@ -27,8 +27,8 @@ type WatConfig struct {
 	TeAnalyticsEnabled bool   `json:"te-analytics-enabled,omitempty"` // Enable analytics
 }
 
-// WatTestProfile represents a WAT test profile configuration from YANG 17.18.1+.
-type WatTestProfile struct {
+// WATTestProfile represents a WAT test profile configuration from YANG 17.18.1+.
+type WATTestProfile struct {
 	ProfileName      string             `json:"profile-name"`                // Test profile name
 	Description      string             `json:"description,omitempty"`       // Profile description
 	Enabled          bool               `json:"enabled,omitempty"`           // Profile enabled state
@@ -39,11 +39,11 @@ type WatTestProfile struct {
 	SuccessThreshold int                `json:"success-threshold,omitempty"` // Success threshold percentage
 	FailureThreshold int                `json:"failure-threshold,omitempty"` // Failure threshold percentage
 	AlertingEnabled  bool               `json:"alerting-enabled,omitempty"`  // Enable alerting
-	TestParameters   *WatTestParameters `json:"test-parameters,omitempty"`   // Test-specific parameters
+	TestParameters   *WATTestParameters `json:"test-parameters,omitempty"`   // Test-specific parameters
 }
 
-// WatTestParameters represents test-specific parameters from YANG 17.18.1+.
-type WatTestParameters struct {
+// WATTestParameters represents test-specific parameters from YANG 17.18.1+.
+type WATTestParameters struct {
 	HTTPMethod           string            `json:"http-method,omitempty"`            // HTTP method (GET, POST, etc.)
 	HTTPHeaders          map[string]string `json:"http-headers,omitempty"`           // HTTP headers
 	HTTPBody             string            `json:"http-body,omitempty"`              // HTTP request body
@@ -56,8 +56,8 @@ type WatTestParameters struct {
 	FollowRedirects      bool              `json:"follow-redirects,omitempty"`       // Follow HTTP redirects
 }
 
-// WatSchedule represents WAT test scheduling configuration from YANG 17.18.1+.
-type WatSchedule struct {
+// WATSchedule represents WAT test scheduling configuration from YANG 17.18.1+.
+type WATSchedule struct {
 	ScheduleName       string   `json:"schedule-name"`                  // Schedule name
 	Description        string   `json:"description,omitempty"`          // Schedule description
 	Enabled            bool     `json:"enabled,omitempty"`              // Schedule enabled state
@@ -70,8 +70,8 @@ type WatSchedule struct {
 	RetryFailedTests   bool     `json:"retry-failed-tests,omitempty"`   // Retry failed tests
 }
 
-// WatReport represents WAT test reporting configuration from YANG 17.18.1+.
-type WatReport struct {
+// WATReport represents WAT test reporting configuration from YANG 17.18.1+.
+type WATReport struct {
 	ReportName         string   `json:"report-name"`                   // Report name
 	Description        string   `json:"description,omitempty"`         // Report description
 	Enabled            bool     `json:"enabled,omitempty"`             // Report enabled state

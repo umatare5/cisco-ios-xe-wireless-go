@@ -65,22 +65,22 @@ type WlanCfgEntry struct {
 	AuthenticationList     string             `json:"authentication-list,omitempty"`        // Enter the Authentication list name (Live: IOS-XE 17.12.5)
 	Wlan11kNeighList       bool               `json:"wlan-11k-neigh-list,omitempty"`        // Indicates 11k Neighbor List enabled (YANG: IOS-XE 17.12.1)
 	MulticastBufferValue   int                `json:"multicast-buffer-value,omitempty"`     // Configure Multicast Buffer Tuning (YANG: IOS-XE 17.12.1)
-	ApfVapIDData           *ApfVapIDData      `json:"apf-vap-id-data,omitempty"`            // Virtual AP interface data (Live: IOS-XE 17.12.5)
-	ApfVap80211vData       *ApfVap80211vData  `json:"apf-vap-802-11v-data,omitempty"`       // 802.11v wireless management configuration (Live: IOS-XE 17.12.5)
-	MdnsSDMode             string             `json:"mdns-sd-mode,omitempty"`               // MDNS operational mode on WLAN (Live: IOS-XE 17.12.5)
+	APFVapIDData           *APFVapIDData      `json:"apf-vap-id-data,omitempty"`            // Virtual AP interface data (Live: IOS-XE 17.12.5)
+	APFVap80211vData       *APFVap80211vData  `json:"apf-vap-802-11v-data,omitempty"`       // 802.11v wireless management configuration (Live: IOS-XE 17.12.5)
+	MDNSSDMode             string             `json:"mdns-sd-mode,omitempty"`               // MDNS operational mode on WLAN (Live: IOS-XE 17.12.5)
 	WlanRadioPolicies      *WlanRadioPolicies `json:"wlan-radio-policies,omitempty"`        // WLAN radio policy (Live: IOS-XE 17.12.5)
 	ClientSteering         bool               `json:"client-steering,omitempty"`            // Enable/disable 6Ghz client steering (YANG: IOS-XE 17.12.1)
 	WepKeyIndex            int                `json:"wep-key-index,omitempty"`              // WEP key index for Static WEP Authentication (Live: IOS-XE 17.12.5)
 }
 
-// ApfVapIDData represents virtual AP interface identification data.
-type ApfVapIDData struct {
+// APFVapIDData represents virtual AP interface identification data.
+type APFVapIDData struct {
 	SSID       string `json:"ssid"`        // Service Set Identifier (Live: IOS-XE 17.12.5)
 	WlanStatus bool   `json:"wlan-status"` // WLAN administrative status (Live: IOS-XE 17.12.5)
 }
 
-// ApfVap80211vData represents 802.11v wireless management configuration.
-type ApfVap80211vData struct {
+// APFVap80211vData represents 802.11v wireless management configuration.
+type APFVap80211vData struct {
 	Dot11vDms bool `json:"dot11v-dms"` // 802.11v Directed Multicast Service enabled (Live: IOS-XE 17.12.5)
 }
 
@@ -103,7 +103,7 @@ type WlanPolicy struct {
 	WlanSwitchingPolicy     *WlanSwitchingPolicy     `json:"wlan-switching-policy,omitempty"`       // Switching policy configuration
 	WlanTimeout             *WlanTimeout             `json:"wlan-timeout,omitempty"`                // Timeout policy configuration
 	PerSsidQos              *PerSsidQos              `json:"per-ssid-qos,omitempty"`                // Quality of Service configuration
-	DhcpParams              *DhcpParams              `json:"dhcp-params,omitempty"`                 // DHCP parameters configuration
+	DHCPParams              *DHCPParams              `json:"dhcp-params,omitempty"`                 // DHCP parameters configuration
 	UmbrellaFlexParams      *UmbrellaFlexParams      `json:"umbrella-flex-params,omitempty"`        // Umbrella Flex parameters
 	AtfPolicyMapEntries     *AtfPolicyMapEntries     `json:"atf-policy-map-entries,omitempty"`      // Airtime Fairness policy entries
 	AvcIPv4FmIngressEntries *AvcIPv4FmIngressEntries `json:"avc-ipv4-fm-ingress-entries,omitempty"` // AVC IPv4 ingress flow monitor entries
@@ -116,7 +116,7 @@ type WlanPolicy struct {
 type WlanSwitchingPolicy struct {
 	CentralSwitching      bool `json:"central-switching,omitempty"`      // Central switching enabled (Live: IOS-XE 17.12.5)
 	CentralAuthentication bool `json:"central-authentication,omitempty"` // Central authentication enabled (Live: IOS-XE 17.12.5)
-	CentralDhcp           bool `json:"central-dhcp,omitempty"`           // Central dhcp for locally switched clients (Live: IOS-XE 17.12.5)
+	CentralDHCP           bool `json:"central-dhcp,omitempty"`           // Central dhcp for locally switched clients (Live: IOS-XE 17.12.5)
 	CentralAssocEnable    bool `json:"central-assoc-enable,omitempty"`   // Central association enabled (Live: IOS-XE 17.12.5)
 }
 
@@ -131,14 +131,14 @@ type PerSsidQos struct {
 	EgressServiceName  string `json:"egress-service-name,omitempty"`  // Egress QoS service name (Live: IOS-XE 17.12.5)
 }
 
-// DhcpParams represents DHCP parameters configuration.
-type DhcpParams struct {
-	IsDhcpEnabled bool `json:"is-dhcp-enabled,omitempty"` // Whether DHCP is enabled (Live: IOS-XE 17.12.5)
+// DHCPParams represents DHCP parameters configuration.
+type DHCPParams struct {
+	IsDHCPEnabled bool `json:"is-dhcp-enabled,omitempty"` // Whether DHCP is enabled (Live: IOS-XE 17.12.5)
 }
 
 // UmbrellaFlexParams represents Umbrella Flex parameters configuration.
 type UmbrellaFlexParams struct {
-	DhcpDNSOptionEnable bool `json:"dhcp-dns-option-enable,omitempty"` // DHCP DNS option for Umbrella enabled (Live: IOS-XE 17.12.5)
+	DHCPDNSOptionEnable bool `json:"dhcp-dns-option-enable,omitempty"` // DHCP DNS option for Umbrella enabled (Live: IOS-XE 17.12.5)
 }
 
 // AtfPolicyMapEntries represents ATF (Airtime Fairness) policy map entries from live WNC 17.12.1.
