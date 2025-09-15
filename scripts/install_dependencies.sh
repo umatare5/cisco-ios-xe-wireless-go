@@ -7,13 +7,13 @@
 # @option -p --project <DIR>           Project root directory [default: .]
 # @option    --golangci-lint <VERSION> golangci-lint version [default: latest]
 # @option    --gotestsum <VERSION>     gotestsum version [default: latest]
-# @flag   -v --verbose                Enable verbose output
-# @flag   -c --clean                  Clean module cache before installing
-# @flag   -u --update                 Update all dependencies to latest versions
-# @flag      --force                  Force reinstall even if exists
-# @flag      --download-only          Download dependencies without installing
-# @flag      --verify                 Verify dependencies after installation
-# @flag      --no-color               Disable colored output
+# @flag   -v --verbose                 Enable verbose output
+# @flag   -c --clean                   Clean module cache before installing
+# @flag   -u --update                  Update all dependencies to latest versions
+# @flag      --force                   Force reinstall even if exists
+# @flag      --download-only           Download dependencies without installing
+# @flag      --verify                  Verify dependencies after installation
+# @flag      --no-color                Disable colored output
 
 set -euo pipefail
 
