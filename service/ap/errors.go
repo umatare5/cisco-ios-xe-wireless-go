@@ -40,8 +40,8 @@ const (
 	// ErrCAPWAPDataUnavailable is the error message when CAPWAP data is not available.
 	ErrCAPWAPDataUnavailable = "no control protocol data available" // nosec: G101 - This is not a credential
 
-	// ErrNameMacMapDataUnavailable is the error message when name-MAC mapping data is not available.
-	ErrNameMacMapDataUnavailable = "no name-MAC mapping data available"
+	// ErrNameMACMapDataUnavailable is the error message when name-MAC mapping data is not available.
+	ErrNameMACMapDataUnavailable = "no name-MAC mapping data available"
 
 	// ErrAPNotFoundByName is the error message when AP is not found by name.
 	ErrAPNotFoundByName = "AP with name %q not found"
@@ -52,8 +52,8 @@ const (
 	// ErrFailedGetCAPWAPData is the error message when getting CAPWAP data fails.
 	ErrFailedGetCAPWAPData = "failed to get CAPWAP data: %w"
 
-	// ErrFailedGetNameMacMapData is the error message when getting name-MAC mapping data fails.
-	ErrFailedGetNameMacMapData = "failed to get name-MAC mapping data: %w"
+	// ErrFailedGetNameMACMapData is the error message when getting name-MAC mapping data fails.
+	ErrFailedGetNameMACMapData = "failed to get name-MAC mapping data: %w"
 
 	// ErrInvalidAPMac is the error message for invalid MAC address format.
 	ErrInvalidAPMac = "invalid AP MAC address %s"

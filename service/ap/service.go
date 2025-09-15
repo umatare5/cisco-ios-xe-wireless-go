@@ -155,27 +155,27 @@ func (s Service) GetOperational(ctx context.Context) (*model.ApOper, error) {
 }
 
 // ListCAPWAPData retrieves CAPWAP protocol data.
-func (s Service) ListCAPWAPData(ctx context.Context) (*model.ApOperCapwapData, error) {
-	return core.Get[model.ApOperCapwapData](ctx, s.Client(), routes.APCapwapDataPath)
+func (s Service) ListCAPWAPData(ctx context.Context) (*model.ApOperCAPWAPData, error) {
+	return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
 }
 
 // GetCAPWAPDataByWTPMAC retrieves CAPWAP data for a specific WTP MAC.
-func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMac string) (*model.ApOperCapwapData, error) {
-	if wtpMac == "" || strings.TrimSpace(wtpMac) == "" {
+func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*model.ApOperCAPWAPData, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMac)
-	return core.Get[model.ApOperCapwapData](ctx, s.Client(), url)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
+	return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), url)
 }
 
 // ListNameMACMaps retrieves AP name-to-MAC mapping data.
-func (s Service) ListNameMACMaps(ctx context.Context) (*model.ApOperApNameMacMap, error) {
-	return core.Get[model.ApOperApNameMacMap](ctx, s.Client(), routes.APApNameMacMapPath)
+func (s Service) ListNameMACMaps(ctx context.Context) (*model.ApOperApNameMACMap, error) {
+	return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
 }
 
 // GetNameMACMapByWTPName retrieves AP name-to-MAC mapping filtered by WTP name.
-func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*model.ApOperApNameMacMap, error) {
+func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*model.ApOperApNameMACMap, error) {
 	if wtpName == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -183,8 +183,8 @@ func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*m
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMacMapPath, wtpName)
-	return core.Get[model.ApOperApNameMacMap](ctx, s.Client(), url)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
+	return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), url)
 }
 
 // ListRadioStatus retrieves radio operational status data.
@@ -194,16 +194,16 @@ func (s Service) ListRadioStatus(ctx context.Context) (*model.RadioOperData, err
 
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
 func (s Service) GetRadioStatusByWTPMACAndSlot(
-	ctx context.Context, wtpMac string, slotID int,
+	ctx context.Context, wtpMAC string, slotID int,
 ) (*model.ApOperRadioOperData, error) {
-	if wtpMac == "" {
+	if wtpMAC == "" {
 		return nil, core.ErrResourceNotFound
 	}
-	if strings.TrimSpace(wtpMac) == "" {
+	if strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMac, slotID)
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
 	return core.Get[model.ApOperRadioOperData](ctx, s.Client(), url)
 }
 
@@ -215,25 +215,25 @@ func (s Service) ListRadioNeighbors(ctx context.Context) (*model.ApOperApRadioNe
 // GetRadioNeighborByAPMACSlotAndBSSID retrieves AP radio neighbor information for a specific AP MAC, slot ID and BSSID.
 // This follows the YANG model key structure: "ap-mac slot-id bssid".
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
-	ctx context.Context, apMac string, slotID int, bssid string,
+	ctx context.Context, apMAC string, slotID int, bssid string,
 ) (*model.ApOperApRadioNeighbor, error) {
-	if apMac == "" || strings.TrimSpace(apMac) == "" {
+	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, errors.New("AP MAC address cannot be empty")
 	}
 	if bssid == "" || strings.TrimSpace(bssid) == "" {
 		return nil, errors.New("BSSID cannot be empty")
 	}
 
-	if err := validation.ValidateMACAddress(apMac); err != nil {
+	if err := validation.ValidateMACAddress(apMAC); err != nil {
 		return nil, fmt.Errorf("invalid AP MAC address: %w", err)
 	}
 	if err := validation.ValidateMACAddress(bssid); err != nil {
 		return nil, fmt.Errorf("invalid BSSID: %w", err)
 	}
 
-	normalizedAPMAC, err := validation.NormalizeMACAddress(apMac)
+	normalizedAPMAC, err := validation.NormalizeMACAddress(apMAC)
 	if err != nil {
-		return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+		return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
 	}
 	normalizedBSSID, err := validation.NormalizeMACAddress(bssid)
 	if err != nil {
@@ -274,8 +274,8 @@ func (s Service) ListSensorStatus(ctx context.Context) (*model.ApOperApSensorSta
 }
 
 // ListCAPWAPPackets retrieves only CAPWAP packets data using fields parameter.
-func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCapwapPkts, error) {
-	return core.Get[model.ApOperCapwapPkts](ctx, s.Client(), routes.APCapwapPktsPath)
+func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCAPWAPPkts, error) {
+	return core.Get[model.ApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
 }
 
 // ListIotFirmware retrieves IoT firmware information for all access points.
@@ -294,52 +294,52 @@ func (s Service) DisableAP(ctx context.Context, mac string) error {
 }
 
 // EnableRadio enables a radio on an Access Point using MAC address.
-func (s Service) EnableRadio(ctx context.Context, apMac string, radioBand core.RadioBand) error {
-	if err := validation.ValidateMACAddress(apMac); err != nil {
+func (s Service) EnableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error {
+	if err := validation.ValidateMACAddress(apMAC); err != nil {
 		return err
 	}
-	return s.updateRadioState(ctx, apMac, &radioBand, true)
+	return s.updateRadioState(ctx, apMAC, &radioBand, true)
 }
 
 // DisableRadio disables a radio on an Access Point using MAC address.
-func (s Service) DisableRadio(ctx context.Context, apMac string, radioBand core.RadioBand) error {
-	if err := validation.ValidateMACAddress(apMac); err != nil {
+func (s Service) DisableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error {
+	if err := validation.ValidateMACAddress(apMAC); err != nil {
 		return err
 	}
-	return s.updateRadioState(ctx, apMac, &radioBand, false)
+	return s.updateRadioState(ctx, apMAC, &radioBand, false)
 }
 
 // AssignSiteTag assigns a site tag to an Access Point using MAC address.
-func (s Service) AssignSiteTag(ctx context.Context, apMac, siteTag string) error {
+func (s Service) AssignSiteTag(ctx context.Context, apMAC, siteTag string) error {
 	if !validation.IsValidTagAssignment(siteTag, "site") {
 		return ierrors.RequiredParameterError("site tag")
 	}
 	tags := model.ApTag{SiteTag: siteTag}
-	return s.assignTags(ctx, apMac, tags)
+	return s.assignTags(ctx, apMAC, tags)
 }
 
 // AssignPolicyTag assigns a policy tag to an Access Point using MAC address.
-func (s Service) AssignPolicyTag(ctx context.Context, apMac, policyTag string) error {
+func (s Service) AssignPolicyTag(ctx context.Context, apMAC, policyTag string) error {
 	if !validation.IsValidTagAssignment(policyTag, "policy") {
 		return ierrors.RequiredParameterError("policy tag")
 	}
 	tags := model.ApTag{PolicyTag: policyTag}
-	return s.assignTags(ctx, apMac, tags)
+	return s.assignTags(ctx, apMAC, tags)
 }
 
 // AssignRFTag assigns an RF tag to an Access Point using MAC address.
-func (s Service) AssignRFTag(ctx context.Context, apMac, rfTag string) error {
+func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error {
 	if !validation.IsValidTagAssignment(rfTag, "rf") {
 		return ierrors.RequiredParameterError("RF tag")
 	}
 	tags := model.ApTag{RFTag: rfTag}
-	return s.assignTags(ctx, apMac, tags)
+	return s.assignTags(ctx, apMAC, tags)
 }
 
 // Reload restarts an Access Point by MAC address causing temporary service interruption.
-func (s Service) Reload(ctx context.Context, apMac string) error {
-	if !validation.IsValidMACAddr(apMac) {
-		return fmt.Errorf(ErrInvalidAPMacFormat, apMac)
+func (s Service) Reload(ctx context.Context, apMAC string) error {
+	if !validation.IsValidMACAddr(apMAC) {
+		return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
 	}
 
 	resp, err := s.ListCAPWAPData(ctx)
@@ -350,9 +350,9 @@ func (s Service) Reload(ctx context.Context, apMac string) error {
 		return errors.New(ErrCAPWAPDataUnavailable)
 	}
 
-	apName, found := findAPByMAC(resp, apMac)
+	apName, found := findAPByMAC(resp, apMAC)
 	if !found {
-		return fmt.Errorf(ErrAPNotFoundByMAC, apMac)
+		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
 	}
 
 	return s.reload(ctx, apName)
@@ -384,14 +384,14 @@ func (s Service) updateAPState(ctx context.Context, mac, mode string) error {
 }
 
 // updateRadioState handles radio-level state changes.
-func (s Service) updateRadioState(ctx context.Context, apMac string, radioBand *core.RadioBand, enabled bool) error {
+func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *core.RadioBand, enabled bool) error {
 	if radioBand == nil {
 		return ierrors.RequiredParameterError("radio band")
 	}
 
-	normalizedMAC, err := validation.NormalizeMACAddress(apMac)
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
 	if err != nil {
-		return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+		return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
 	}
 
 	radioBandInfo, err := core.GetRadioBandInfo(int(*radioBand))
@@ -415,17 +415,17 @@ func (s Service) updateRadioState(ctx context.Context, apMac string, radioBand *
 }
 
 // assignTags assigns multiple tags to an Access Point (internal implementation).
-func (s Service) assignTags(ctx context.Context, apMac string, tags model.ApTag) error {
-	if !validation.IsValidMACAddr(apMac) {
-		return ierrors.ValidationError("AP MAC address", apMac)
+func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag) error {
+	if !validation.IsValidMACAddr(apMAC) {
+		return ierrors.ValidationError("AP MAC address", apMAC)
 	}
 	if !validation.HasValidTags(tags.SiteTag, tags.PolicyTag, tags.RFTag) {
 		return ierrors.RequiredParameterError("at least one tag")
 	}
 
-	normalizedMAC, err := validation.NormalizeMACAddress(apMac)
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
 	if err != nil {
-		return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
+		return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
 	}
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
 	tagData := buildAPCfgApTagData(normalizedMAC, tags)
@@ -448,12 +448,12 @@ func (s Service) reload(ctx context.Context, apName string) error {
 }
 
 // findAPByMAC searches for an AP with the given MAC address in CAPWAP data.
-func findAPByMAC(capwapData *model.ApOperCapwapData, apMac string) (string, bool) {
+func findAPByMAC(capwapData *model.ApOperCAPWAPData, apMAC string) (string, bool) {
 	if capwapData == nil {
 		return "", false
 	}
-	for _, data := range capwapData.CapwapData {
-		if data.WtpMac == apMac {
+	for _, data := range capwapData.CAPWAPData {
+		if data.WtpMAC == apMAC {
 			return data.Name, true
 		}
 	}
