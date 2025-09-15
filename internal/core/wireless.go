@@ -50,7 +50,7 @@ const (
 	RadioBand24GHz RadioBand = RadioBand24GHzEnum
 	// RadioBand5GHz represents 5GHz band (slot 1).
 	RadioBand5GHz RadioBand = RadioBand5GHzEnum
-	// RadioBand5GHz represents 5GHz band (slot 1).
+	// RadioBand6GHz represents 6GHz band (slot 2).
 	RadioBand6GHz RadioBand = RadioBand6GHzEnum
 )
 
