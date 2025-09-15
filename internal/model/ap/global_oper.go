@@ -64,9 +64,9 @@ type ApLocationStats struct {
 
 // ApHistory represents AP historical state information.
 type ApHistory struct {
-	EthernetMac    string              `json:"ethernet-mac"`      // Ethernet MAC address (YANG: IOS-XE 17.12.1)
+	EthernetMAC    string              `json:"ethernet-mac"`      // Ethernet MAC address (YANG: IOS-XE 17.12.1)
 	ApName         string              `json:"ap-name"`           // AP name (YANG: IOS-XE 17.12.1)
-	WtpMac         string              `json:"wtp-mac"`           // AP WTP mac (YANG: IOS-XE 17.12.1)
+	WtpMAC         string              `json:"wtp-mac"`           // AP WTP mac (YANG: IOS-XE 17.12.1)
 	EwlcApStatePtr []EwlcApStateRecord `json:"ewlc-ap-state-ptr"` // AP state (YANG: IOS-XE 17.12.1)
 }
 
@@ -96,7 +96,7 @@ type EwlcApStats struct {
 	Stats80211BgRadMonMode RadioStats `json:"stats-80211bg-rad-mon-mode"` // 802.11 2.4 GHz monitor radio stats (Live: IOS-XE 17.12.5)
 	Stats80211ARadMonMode  RadioStats `json:"stats-80211a-rad-mon-mode"`  // 802.11 5 GHz monitor radio stats (Live: IOS-XE 17.12.5)
 	RadMonMode802116Ghz    RadioStats `json:"rad-mon-mode-80211-6ghz"`    // 802.11 6 GHz monitor radio stats (Live: IOS-XE 17.12.5)
-	StatsDtlsLscFbkAps     int        `json:"stats-dtls-lsc-fbk-aps"`     // Total number of DTLS LSC fallback APs (Live: IOS-XE 17.12.5)
+	StatsDTLSLscFbkAps     int        `json:"stats-dtls-lsc-fbk-aps"`     // Total number of DTLS LSC fallback APs (Live: IOS-XE 17.12.5)
 	TotalHighCPUReload     int        `json:"total-high-cpu-reload"`      // Total number of AP reloads due to high CPU (Live: IOS-XE 17.12.5)
 	TotalHighMemReload     int        `json:"total-high-mem-reload"`      // Total number of AP reloads due to high memory (Live: IOS-XE 17.12.5)
 	TotalRadioStuckReset   int        `json:"total-radio-stuck-reset"`    // Total number of radio stuck resets (Live: IOS-XE 17.12.5)
@@ -141,10 +141,10 @@ type ApImgPredownloadStats struct {
 
 // ApJoinStats represents AP join statistics data.
 type ApJoinStats struct {
-	WtpMac             string          `json:"wtp-mac"`              // AP radio MAC address for CAPWAP session identification (Live: IOS-XE 17.12.5)
+	WtpMAC             string          `json:"wtp-mac"`              // AP radio MAC address for CAPWAP session identification (Live: IOS-XE 17.12.5)
 	ApJoinInfo         ApJoinInfo      `json:"ap-join-info"`         // AP join information for connection status tracking (Live: IOS-XE 17.12.5)
 	ApDiscoveryInfo    ApDiscoveryInfo `json:"ap-discovery-info"`    // AP discovery information for controller identification (Live: IOS-XE 17.12.5)
-	DtlsSessInfo       DtlsSessInfo    `json:"dtls-sess-info"`       // Data and Control DTLS phase statistics for secure tunnel (Live: IOS-XE 17.12.5)
+	DTLSSessInfo       DTLSSessInfo    `json:"dtls-sess-info"`       // Data and Control DTLS phase statistics for secure tunnel (Live: IOS-XE 17.12.5)
 	ApDisconnectReason string          `json:"ap-disconnect-reason"` // Last disconnect reason of AP for troubleshooting (Live: IOS-XE 17.12.5)
 	RebootReason       string          `json:"reboot-reason"`        // Reboot reason from AP for system stability analysis (Live: IOS-XE 17.12.5)
 	DisconnectReason   string          `json:"disconnect-reason"`    // Disconnect reason from AP for failure diagnosis (Live: IOS-XE 17.12.5)
@@ -153,7 +153,7 @@ type ApJoinStats struct {
 // ApJoinInfo represents AP join process information.
 type ApJoinInfo struct {
 	ApIPAddr              string    `json:"ap-ip-addr"`                // IP address of the AP for network connectivity (Live: IOS-XE 17.12.5)
-	ApEthernetMac         string    `json:"ap-ethernet-mac"`           // AP ethernet MAC address for identification (Live: IOS-XE 17.12.5)
+	ApEthernetMAC         string    `json:"ap-ethernet-mac"`           // AP ethernet MAC address for identification (Live: IOS-XE 17.12.5)
 	ApName                string    `json:"ap-name"`                   // Name of the AP for administrative identification (Live: IOS-XE 17.12.5)
 	IsJoined              bool      `json:"is-joined"`                 // AP join status flag indicating controller association (Live: IOS-XE 17.12.5)
 	NumJoinReqRecvd       int       `json:"num-join-req-recvd"`        // Total number of join requests received from AP (Live: IOS-XE 17.12.5)
@@ -175,8 +175,8 @@ type ApJoinInfo struct {
 
 // ApDiscoveryInfo represents AP discovery process information.
 type ApDiscoveryInfo struct {
-	WtpMac               string    `json:"wtp-mac"`                 // AP radio MAC address for CAPWAP discovery session (Live: IOS-XE 17.12.5)
-	EthernetMac          string    `json:"ethernet-mac"`            // AP ethernet MAC address for network layer discovery (Live: IOS-XE 17.12.5)
+	WtpMAC               string    `json:"wtp-mac"`                 // AP radio MAC address for CAPWAP discovery session (Live: IOS-XE 17.12.5)
+	EthernetMAC          string    `json:"ethernet-mac"`            // AP ethernet MAC address for network layer discovery (Live: IOS-XE 17.12.5)
 	ApIPAddress          string    `json:"ap-ip-address"`           // AP IP address used during CAPWAP discovery process (Live: IOS-XE 17.12.5)
 	NumDiscoveryReqRecvd int       `json:"num-discovery-req-recvd"` // Total number of discovery request received (Live: IOS-XE 17.12.5)
 	NumSuccDiscRespSent  int       `json:"num-succ-disc-resp-sent"` // Total number of successful discovery response sent (Live: IOS-XE 17.12.5)
@@ -186,25 +186,25 @@ type ApDiscoveryInfo struct {
 	LastFailedDiscTime   time.Time `json:"last-failed-disc-time"`   // Last failed discovery attempt time for tracking (Live: IOS-XE 17.12.5)
 }
 
-// DtlsSessInfo represents DTLS session information.
-type DtlsSessInfo struct {
-	MacAddr               string    `json:"mac-addr"`                  // AP MAC address for DTLS session correlation (Live: IOS-XE 17.12.5)
-	DataDtlsSetupReq      int       `json:"data-dtls-setup-req"`       // DTLS session requests received for data channel (Live: IOS-XE 17.12.5)
-	DataDtlsSuccess       int       `json:"data-dtls-success"`         // Established DTLS session for data channel (Live: IOS-XE 17.12.5)
-	DataDtlsFailure       int       `json:"data-dtls-failure"`         // Unsuccessful DTLS session for data channel (Live: IOS-XE 17.12.5)
-	CtrlDtlsSetupReq      int       `json:"ctrl-dtls-setup-req"`       // DTLS session requests received for control channel (Live: IOS-XE 17.12.5)
-	CtrlDtlsSuccess       int       `json:"ctrl-dtls-success"`         // Established Dtls session for control channel (Live: IOS-XE 17.12.5)
-	CtrlDtlsFailure       int       `json:"ctrl-dtls-failure"`         // Unsuccessful Dtls session for control channel (Live: IOS-XE 17.12.5)
-	DataDtlsFailureType   string    `json:"data-dtls-failure-type"`    // Reason for last unsuccessful DTLS session on data (Live: IOS-XE 17.12.5)
-	CtrlDtlsFailureType   string    `json:"ctrl-dtls-failure-type"`    // Reason for last unsuccessful DTLS session on control (Live: IOS-XE 17.12.5)
-	CtrlDtlsDecryptErr    int       `json:"ctrl-dtls-decrypt-err"`     // SSL decrypt errors for control channel (Live: IOS-XE 17.12.5)
-	CtrlDtlsAntiReplayErr int       `json:"ctrl-dtls-anti-replay-err"` // SSL anti replay errors for control channel (Live: IOS-XE 17.12.5)
-	DataDtlsDecryptErr    int       `json:"data-dtls-decrypt-err"`     // SSL decrypt errors for data channel (Live: IOS-XE 17.12.5)
-	DataDtlsAntiReplayErr int       `json:"data-dtls-anti-replay-err"` // SSL anti replay errors for data channel (Live: IOS-XE 17.12.5)
-	DataDtlsFailureTime   time.Time `json:"data-dtls-failure-time"`    // Last unsuccessful data dtls session time (Live: IOS-XE 17.12.5)
-	DataDtlsSuccessTime   time.Time `json:"data-dtls-success-time"`    // Last successful data dtls session time (Live: IOS-XE 17.12.5)
-	CtrlDtlsFailureTime   time.Time `json:"ctrl-dtls-failure-time"`    // Last unsuccessful control dtls session time (Live: IOS-XE 17.12.5)
-	CtrlDtlsSuccessTime   time.Time `json:"ctrl-dtls-success-time"`    // Last successful control dtls session time (Live: IOS-XE 17.12.5)
+// DTLSSessInfo represents DTLS session information.
+type DTLSSessInfo struct {
+	MACAddr               string    `json:"mac-addr"`                  // AP MAC address for DTLS session correlation (Live: IOS-XE 17.12.5)
+	DataDTLSSetupReq      int       `json:"data-dtls-setup-req"`       // DTLS session requests received for data channel (Live: IOS-XE 17.12.5)
+	DataDTLSSuccess       int       `json:"data-dtls-success"`         // Established DTLS session for data channel (Live: IOS-XE 17.12.5)
+	DataDTLSFailure       int       `json:"data-dtls-failure"`         // Unsuccessful DTLS session for data channel (Live: IOS-XE 17.12.5)
+	CtrlDTLSSetupReq      int       `json:"ctrl-dtls-setup-req"`       // DTLS session requests received for control channel (Live: IOS-XE 17.12.5)
+	CtrlDTLSSuccess       int       `json:"ctrl-dtls-success"`         // Established Dtls session for control channel (Live: IOS-XE 17.12.5)
+	CtrlDTLSFailure       int       `json:"ctrl-dtls-failure"`         // Unsuccessful Dtls session for control channel (Live: IOS-XE 17.12.5)
+	DataDTLSFailureType   string    `json:"data-dtls-failure-type"`    // Reason for last unsuccessful DTLS session on data (Live: IOS-XE 17.12.5)
+	CtrlDTLSFailureType   string    `json:"ctrl-dtls-failure-type"`    // Reason for last unsuccessful DTLS session on control (Live: IOS-XE 17.12.5)
+	CtrlDTLSDecryptErr    int       `json:"ctrl-dtls-decrypt-err"`     // SSL decrypt errors for control channel (Live: IOS-XE 17.12.5)
+	CtrlDTLSAntiReplayErr int       `json:"ctrl-dtls-anti-replay-err"` // SSL anti replay errors for control channel (Live: IOS-XE 17.12.5)
+	DataDTLSDecryptErr    int       `json:"data-dtls-decrypt-err"`     // SSL decrypt errors for data channel (Live: IOS-XE 17.12.5)
+	DataDTLSAntiReplayErr int       `json:"data-dtls-anti-replay-err"` // SSL anti replay errors for data channel (Live: IOS-XE 17.12.5)
+	DataDTLSFailureTime   time.Time `json:"data-dtls-failure-time"`    // Last unsuccessful data dtls session time (Live: IOS-XE 17.12.5)
+	DataDTLSSuccessTime   time.Time `json:"data-dtls-success-time"`    // Last successful data dtls session time (Live: IOS-XE 17.12.5)
+	CtrlDTLSFailureTime   time.Time `json:"ctrl-dtls-failure-time"`    // Last unsuccessful control dtls session time (Live: IOS-XE 17.12.5)
+	CtrlDTLSSuccessTime   time.Time `json:"ctrl-dtls-success-time"`    // Last successful control dtls session time (Live: IOS-XE 17.12.5)
 }
 
 // WlanClientStats represents WLAN client statistics data.
@@ -212,7 +212,7 @@ type WlanClientStats struct {
 	WlanID                  int    `json:"wlan-id"`                    // WLAN identifier for service-specific client tracking (Live: IOS-XE 17.12.5)
 	WlanProfileName         string `json:"wlan-profile-name"`          // WLAN profile name for administrative identification (Live: IOS-XE 17.12.5)
 	DataUsage               string `json:"data-usage"`                 // Data usage statistics for bandwidth monitoring (Live: IOS-XE 17.12.5)
-	TotalRandomMacClients   int    `json:"total-random-mac-clients"`   // Total random MAC clients for privacy protection tracking (Live: IOS-XE 17.12.5)
+	TotalRandomMACClients   int    `json:"total-random-mac-clients"`   // Total random MAC clients for privacy protection tracking (Live: IOS-XE 17.12.5)
 	ClientCurrStateL2Auth   int    `json:"client-curr-state-l2auth"`   // Total number of clients in L2-authenticating state (Live: IOS-XE 17.12.5)
 	ClientCurrStateMobility int    `json:"client-curr-state-mobility"` // Total number of clients in mobility state (Live: IOS-XE 17.12.5)
 	ClientCurrStateIplearn  int    `json:"client-curr-state-iplearn"`  // Total number of clients in iplearn state (Live: IOS-XE 17.12.5)

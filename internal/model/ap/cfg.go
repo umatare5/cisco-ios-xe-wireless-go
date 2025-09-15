@@ -74,7 +74,7 @@ type LocationEntry struct {
 type LocationTagInfo struct {
 	PolicyTag string `json:"policy-tag,omitempty"` // Policy tag for AP location (YANG: IOS-XE 17.12.1)
 	SiteTag   string `json:"site-tag,omitempty"`   // Site tag for AP location (YANG: IOS-XE 17.12.1)
-	RfTag     string `json:"rf-tag,omitempty"`     // RF tag for AP location (YANG: IOS-XE 17.12.1)
+	RFTag     string `json:"rf-tag,omitempty"`     // RF tag for AP location (YANG: IOS-XE 17.12.1)
 }
 
 // AssociatedAps represents the container of associated APs.
@@ -84,7 +84,7 @@ type AssociatedAps struct {
 
 // AssociatedAp represents a single associated AP.
 type AssociatedAp struct {
-	ApMac string `json:"ap-mac"` // AP MAC address (YANG: IOS-XE 17.12.1)
+	ApMAC string `json:"ap-mac"` // AP MAC address (YANG: IOS-XE 17.12.1)
 }
 
 // LocationAttributes represents location attributes for APs (YANG: IOS-XE 17.12.1).
@@ -106,7 +106,7 @@ type ApFilterConfig struct {
 type ApplyTagList struct {
 	PolicyTag string `json:"policy-tag,omitempty"` // Policy tag (YANG: IOS-XE 17.12.1)
 	SiteTag   string `json:"site-tag,omitempty"`   // Site tag (YANG: IOS-XE 17.12.1)
-	RfTag     string `json:"rf-tag,omitempty"`     // RF tag (YANG: IOS-XE 17.12.1)
+	RFTag     string `json:"rf-tag,omitempty"`     // RF tag (YANG: IOS-XE 17.12.1)
 }
 
 // ApRulePriorityConfig represents a single AP rule priority configuration.
@@ -128,7 +128,7 @@ type TagSourcePriorityConfig struct {
 
 // ApTag represents AP tag assignment configuration.
 type ApTag struct {
-	ApMac          string `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
+	ApMAC          string `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
 	PolicyTag      string `json:"policy-tag,omitempty"`      // Policy tag assigned to the AP (Live: IOS-XE 17.12.5)
 	SiteTag        string `json:"site-tag,omitempty"`        // Site tag assigned to the AP (Live: IOS-XE 17.12.5)
 	RFTag          string `json:"rf-tag,omitempty"`          // RF tag assigned to the AP (Live: IOS-XE 17.12.5)
