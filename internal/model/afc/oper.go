@@ -50,7 +50,6 @@ type AFCCertID struct {
 }
 
 // AFCLocation represents AFC device location information.
-// AFCLocation represents AFC device location information.
 type AFCLocation struct {
 	LocType           string            `json:"loc-type,omitempty"`            // Location type (YANG: IOS-XE 17.18.1)
 	Ellipse           *AFCEllipse       `json:"ellipse,omitempty"`             // Ellipse location data (YANG: IOS-XE 17.18.1)
