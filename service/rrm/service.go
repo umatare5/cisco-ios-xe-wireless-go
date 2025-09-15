@@ -20,21 +20,21 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves complete RRM configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.RrmCfg, error) {
-	return core.Get[model.RrmCfg](ctx, s.Client(), routes.RRMCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.RRMCfg, error) {
+	return core.Get[model.RRMCfg](ctx, s.Client(), routes.RRMCfgPath)
 }
 
 // GetOperational retrieves RRM operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.RrmOper, error) {
-	return core.Get[model.RrmOper](ctx, s.Client(), routes.RRMOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.RRMOper, error) {
+	return core.Get[model.RRMOper](ctx, s.Client(), routes.RRMOperPath)
 }
 
-// GetGlobalInfo retrieves RRM global operational information.
-func (s Service) GetGlobalInfo(ctx context.Context) (*model.RrmGlobalOper, error) {
-	return core.Get[model.RrmGlobalOper](ctx, s.Client(), routes.RRMGlobalOperPath)
+// GetGlobalOperational retrieves RRM global operational information.
+func (s Service) GetGlobalOperational(ctx context.Context) (*model.RRMGlobalOper, error) {
+	return core.Get[model.RRMGlobalOper](ctx, s.Client(), routes.RRMGlobalOperPath)
 }
 
-// GetEmulationInfo retrieves RRM emulation operational information.
-func (s Service) GetEmulationInfo(ctx context.Context) (*model.RrmEmulOper, error) {
-	return core.Get[model.RrmEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
+// GetEmulationOperational retrieves RRM emulation operational information.
+func (s Service) GetEmulationOperational(ctx context.Context) (*model.RRMEmulOper, error) {
+	return core.Get[model.RRMEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
 }
