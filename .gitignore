@@ -31,3 +31,7 @@ coverage/*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Example binaries
+example/*/list_*
+example/*/reload_*

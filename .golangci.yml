@@ -1,7 +1,7 @@
 version: "2"
 
 ########################
-# 1) Execution settings
+# 1. Execution settings
 ########################
 run:
   timeout: 5m                      # Keep the original timeout
@@ -10,14 +10,14 @@ run:
   go: "1.25"                       # Ensure 1.22+ analyses (intrange, copyloopvar) run with new semantics
 
 ########################
-# 2) Issues quota
+# 2. Issues quota
 ########################
 issues:
   max-issues-per-linter: 0         # Do not cap issues per linter
   max-same-issues: 0               # Do not deduplicate identical issues
 
 ########################
-# 3) Enabled linters
+# 3. Enabled linters
 ########################
 linters:
   default: none
@@ -60,7 +60,8 @@ linters:
     - depguard               # Belt-and-suspenders dependency rules
 
   ########################
-  # 4) Per-linter settings
+  # 4. Per-linter settings
+  # https://golangci-lint.run/docs/linters/configuration/
   ########################
   settings:
     errcheck:
@@ -88,6 +89,30 @@ linters:
         - name: error-strings
         - name: error-naming
         - name: var-naming
+          arguments:
+          # White List to preserve readability. I maintain these words by hands.
+          - [
+              # Networking Protocols
+              "ARP", "CDP", "LLDP", "LACP", "VLAN", "EAP", "EAPOL", "PEAP", "EAPTLS", "TTLS",
+              # IEEE 802.11 Standards
+              "WTP", "STA", "CLIENT",
+              # Cisco WNC Feature Name
+              "AP", "WLAN", "WLC", "WNC", "SSID"
+            ]
+          # Black List to avoid confusion with common initialisms.
+          - [
+              # Cisco WNC Service Name
+              "AFC", "APF", "AWIPS", "BLE", "CTS", "LISP", "MDNS", "NMSP", "RF", "RFID", "RRM", "URWB", "WAT",
+              # Networking Protocols
+              "MAC", "IPv4", "IPv6", "DHCP", "RADIUS", "RADSEC",
+              # IEEE 802.11 Standards
+              "RSSI", "SNR",
+              # Cisco WNC Specific Protocols
+              "CAPWAP", "DTLS",
+              # Cisco WNC Specific Features
+              "RRM", "DCA", "TPC", "DFS"
+            ]
+          - - skip-initialism-name-checks: false
 
     misspell:
       locale: US
@@ -134,7 +159,7 @@ linters:
               desc: "Use `math/rand/v2` on Go 1.22+"
 
   ########################
-  # 5) Exclusions
+  # 5. Exclusions
   ########################
   exclusions:
     generated: lax
@@ -156,7 +181,7 @@ linters:
           - unused
 
 ########################
-# 6) Code formatters
+# 6. Code formatters
 ########################
 formatters:
   enable:
@@ -179,7 +204,7 @@ formatters:
       max-len: 120
 
 ########################
-# 7) Output settings
+# 7. Output settings
 ########################
 output:
   show-stats: false
