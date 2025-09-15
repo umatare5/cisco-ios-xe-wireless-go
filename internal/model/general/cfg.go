@@ -175,8 +175,8 @@ type MfpData struct {
 
 // FipsCfgData represents FIPS configuration data structure.
 type FipsCfgData struct {
-	DtlsVersion     *string `json:"dtls-version,omitempty"`     // DTLS version used for AP join (Live: IOS-XE 17.12.5)
-	DtlsCiphersuite *string `json:"dtls-ciphersuite,omitempty"` // Configure DTLS ciphersuite (Live: IOS-XE 17.12.5)
+	DTLSVersion     *string `json:"dtls-version,omitempty"`     // DTLS version used for AP join (Live: IOS-XE 17.12.5)
+	DTLSCiphersuite *string `json:"dtls-ciphersuite,omitempty"` // Configure DTLS ciphersuite (Live: IOS-XE 17.12.5)
 }
 
 // WsaApClientEventData represents WSA AP client event data structure.
@@ -206,7 +206,7 @@ type LaginfoData struct {
 
 // MulticastConfigData represents multicast configuration data structure.
 type MulticastConfigData struct {
-	IsMdnsEnabled                  bool    `json:"is-mdns-enabled"`                              // Flag to enable or disable mdns (Live: IOS-XE 17.12.5)
+	IsMDNSEnabled                  bool    `json:"is-mdns-enabled"`                              // Flag to enable or disable mdns (Live: IOS-XE 17.12.5)
 	MulticastOverMulticastIPv4Addr *string `json:"multicast-over-multicast-ipv4-addr,omitempty"` // IPv4 multicast group address for CAPWAP used by APs (Live: IOS-XE 17.12.5)
 	MulticastOverMulticastIPv6Addr *string `json:"multicast-over-multicast-ipv6-addr,omitempty"` // IPv6 multicast group address for CAPWAP used by APs (Live: IOS-XE 17.12.5)
 	IsMcastEnabled                 *bool   `json:"is-mcast-enabled,omitempty"`                   // Multicast enable/disable (Live: IOS-XE 17.12.5)
