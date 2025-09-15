@@ -1,24 +1,24 @@
 package rf
 
-// RfCfg represents RF configuration data response structure.
-type RfCfg struct {
-	RfCfgData struct {
+// RFCfg represents RF configuration data response structure.
+type RFCfg struct {
+	RFCfgData struct {
 		MultiBssidProfiles      *MultiBssidProfiles      `json:"multi-bssid-profiles,omitempty"`       // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.5)
 		AtfPolicies             *AtfPolicies             `json:"atf-policies,omitempty"`               // Air Time Fairness policy configurations (Live: IOS-XE 17.12.5)
-		RfTags                  *RfTags                  `json:"rf-tags,omitempty"`                    // RF tag configuration data (Live: IOS-XE 17.12.5)
-		RfProfiles              *RfProfiles              `json:"rf-profiles,omitempty"`                // RF profile configuration data (Live: IOS-XE 17.12.5)
-		RfProfileDefaultEntries *RfProfileDefaultEntries `json:"rf-profile-default-entries,omitempty"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
+		RFTags                  *RFTags                  `json:"rf-tags,omitempty"`                    // RF tag configuration data (Live: IOS-XE 17.12.5)
+		RFProfiles              *RFProfiles              `json:"rf-profiles,omitempty"`                // RF profile configuration data (Live: IOS-XE 17.12.5)
+		RFProfileDefaultEntries *RFProfileDefaultEntries `json:"rf-profile-default-entries,omitempty"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"` // RF configuration data (Live: IOS-XE 17.12.5)
 }
 
-// RfCfgRfTags represents RF tags list response structure.
-type RfCfgRfTags struct {
-	RfTags RfTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
+// RFCfgRFTags represents RF tags list response structure.
+type RFCfgRFTags struct {
+	RFTags RFTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
 }
 
-// RfCfgRfTag represents individual RF tag response structure.
-type RfCfgRfTag struct {
-	RfTagList []RfTag `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tag"`
+// RFCfgRFTag represents individual RF tag response structure.
+type RFCfgRFTag struct {
+	RFTagList []RFTag `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tag"`
 }
 
 // MultiBssidProfiles represents Multi-BSSID profiles collection.
@@ -31,19 +31,19 @@ type AtfPolicies struct {
 	AtfPolicyList []AtfPolicyDetail `json:"atf-policy"` // Air Time Fairness policy list (Live: IOS-XE 17.12.5)
 }
 
-// RfTags represents RF tags collection.
-type RfTags struct {
-	RfTagList []RfTag `json:"rf-tag"` // RF tag configuration list (Live: IOS-XE 17.12.5)
+// RFTags represents RF tags collection.
+type RFTags struct {
+	RFTagList []RFTag `json:"rf-tag"` // RF tag configuration list (Live: IOS-XE 17.12.5)
 }
 
-// RfProfiles represents RF profiles collection.
-type RfProfiles struct {
-	RfProfileList []RfProfileDetail `json:"rf-profile"` // Radio-Frequency profile list (Live: IOS-XE 17.12.5)
+// RFProfiles represents RF profiles collection.
+type RFProfiles struct {
+	RFProfileList []RFProfileDetail `json:"rf-profile"` // Radio-Frequency profile list (Live: IOS-XE 17.12.5)
 }
 
-// RfProfileDefaultEntries represents RF profile default entries collection.
-type RfProfileDefaultEntries struct {
-	RfProfileDefaultEntryList []RfProfileDefaultEntry `json:"rf-profile-default-entry"` // Default RF profile entry list (Live: IOS-XE 17.12.5)
+// RFProfileDefaultEntries represents RF profile default entries collection.
+type RFProfileDefaultEntries struct {
+	RFProfileDefaultEntryList []RFProfileDefaultEntry `json:"rf-profile-default-entry"` // Default RF profile entry list (Live: IOS-XE 17.12.5)
 }
 
 // MultiBssidProfile represents Multi-BSSID profile configuration.
@@ -65,29 +65,29 @@ type AtfPolicyDetail struct {
 	ClientSharing bool   `json:"client-sharing,omitempty"` // ATF client fair sharing flag (Live: IOS-XE 17.12.5)
 }
 
-// RfTag represents RF tag configuration.
-type RfTag struct {
+// RFTag represents RF tag configuration.
+type RFTag struct {
 	TagName             string              `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.5)
 	Description         string              `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.5)
 	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.5)
 	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.5)
-	Dot116GhzRfProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.5)
-	RfTagRadioProfiles  *RfTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.5)
+	Dot116GhzRFProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.5)
+	RFTagRadioProfiles  *RFTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.5)
 }
 
-// RfTagRadioProfiles represents RF tag radio profiles collection.
-type RfTagRadioProfiles struct {
-	RfTagRadioProfile []RfTagRadioProfile `json:"rf-tag-radio-profile"` // Slot specific radio profile list (Live: IOS-XE 17.12.5)
+// RFTagRadioProfiles represents RF tag radio profiles collection.
+type RFTagRadioProfiles struct {
+	RFTagRadioProfile []RFTagRadioProfile `json:"rf-tag-radio-profile"` // Slot specific radio profile list (Live: IOS-XE 17.12.5)
 }
 
-// RfTagRadioProfile represents RF tag radio profile configuration.
-type RfTagRadioProfile struct {
+// RFTagRadioProfile represents RF tag radio profile configuration.
+type RFTagRadioProfile struct {
 	SlotID string `json:"slot-id"` // Radio slot identifier (Live: IOS-XE 17.12.5)
 	BandID string `json:"band-id"` // Radio band identifier (Live: IOS-XE 17.12.5)
 }
 
-// RfProfileDetail represents RF profile configuration details.
-type RfProfileDetail struct {
+// RFProfileDetail represents RF profile configuration details.
+type RFProfileDetail struct {
 	Name                             string                `json:"name"`                                           // RF profile name identifier (Live: IOS-XE 17.12.5)
 	Description                      string                `json:"description,omitempty"`                          // RF profile description (YANG: IOS-XE 17.12.1)
 	TxPowerMin                       int                   `json:"tx-power-min,omitempty"`                         // Minimum transmit power in dBm (Live: IOS-XE 17.12.5)
@@ -107,13 +107,13 @@ type RfProfileDetail struct {
 	DataRate24M                      string                `json:"data-rate-24m,omitempty"`                        // 24 Mbps data rate state (Live: IOS-XE 17.12.5)
 	DataRate36M                      string                `json:"data-rate-36m,omitempty"`                        // 36 Mbps data rate state (YANG: IOS-XE 17.12.1)
 	DataRate48M                      string                `json:"data-rate-48m,omitempty"`                        // 48 Mbps data rate state (YANG: IOS-XE 17.12.1)
-	CoverageDataPacketRssiThreshold  int                   `json:"coverage-data-packet-rssi-threshold,omitempty"`  // Data packet RSSI threshold dBm (YANG: IOS-XE 17.12.1)
-	CoverageVoicePacketRssiThreshold int                   `json:"coverage-voice-packet-rssi-threshold,omitempty"` // Voice packet RSSI threshold dBm (YANG: IOS-XE 17.12.1)
+	CoverageDataPacketRSSIThreshold  int                   `json:"coverage-data-packet-rssi-threshold,omitempty"`  // Data packet RSSI threshold dBm (YANG: IOS-XE 17.12.1)
+	CoverageVoicePacketRSSIThreshold int                   `json:"coverage-voice-packet-rssi-threshold,omitempty"` // Voice packet RSSI threshold dBm (YANG: IOS-XE 17.12.1)
 	LoadBalancingWindow              int                   `json:"load-balancing-window,omitempty"`                // Load balancing window seconds (Live: IOS-XE 17.12.5)
 	LoadBalancingDenialCount         int                   `json:"load-balancing-denial-count,omitempty"`          // Load balancing denial count (Live: IOS-XE 17.12.5)
 	AtfOperMode                      string                `json:"atf-oper-mode,omitempty"`                        // ATF operation mode (YANG: IOS-XE 17.12.1)
 	AtfOptimization                  string                `json:"atf-optimization,omitempty"`                     // ATF optimization policy (YANG: IOS-XE 17.12.1)
-	RfMcsEntries                     *RfMcsEntries         `json:"rf-mcs-entries,omitempty"`                       // RF MCS entries data (YANG: IOS-XE 17.12.1)
+	RFMcsEntries                     *RFMcsEntries         `json:"rf-mcs-entries,omitempty"`                       // RF MCS entries data (YANG: IOS-XE 17.12.1)
 	RfdcaRemovedChannels             *RfdcaRemovedChannels `json:"rfdca-removed-channels,omitempty"`               // RF DCA removed channels data (Live: IOS-XE 17.12.5)
 	ChannelWidthMax                  string                `json:"channel-width-max,omitempty"`                    // Maximum channel width cap (Live: IOS-XE 17.12.5)
 	MinNumClients                    int                   `json:"min-num-clients,omitempty"`                      // Minimum client exception level (YANG: IOS-XE 17.12.1)
@@ -121,15 +121,15 @@ type RfProfileDetail struct {
 	BandSelectProbeResponse          bool                  `json:"band-select-probe-response,omitempty"`           // Band select probe response flag (YANG: IOS-XE 17.12.1)
 }
 
-// RfMcsEntries represents RF MCS entries collection.
-type RfMcsEntries struct {
-	RfMcsEntry []RfMcsEntry `json:"rf-mcs-entry"` // RF MCS entry configuration list (YANG: IOS-XE 17.12.1)
+// RFMcsEntries represents RF MCS entries collection.
+type RFMcsEntries struct {
+	RFMcsEntry []RFMcsEntry `json:"rf-mcs-entry"` // RF MCS entry configuration list (YANG: IOS-XE 17.12.1)
 }
 
-// RfMcsEntry represents RF MCS entry configuration.
-type RfMcsEntry struct {
-	RfIndex           int   `json:"rf-index"`                       // RF MCS index identifier (YANG: IOS-XE 17.12.1)
-	Rf80211NMcsEnable *bool `json:"rf-80211n-mcs-enable,omitempty"` // 802.11n MCS enable flag (YANG: IOS-XE 17.12.1)
+// RFMcsEntry represents RF MCS entry configuration.
+type RFMcsEntry struct {
+	RFIndex           int   `json:"rf-index"`                       // RF MCS index identifier (YANG: IOS-XE 17.12.1)
+	RF80211NMcsEnable *bool `json:"rf-80211n-mcs-enable,omitempty"` // 802.11n MCS enable flag (YANG: IOS-XE 17.12.1)
 }
 
 // RfdcaRemovedChannels represents DCA removed channels collection.
@@ -142,8 +142,8 @@ type RfdcaRemovedChannel struct {
 	Channel int `json:"channel"` // Channel number to remove from DCA (Live: IOS-XE 17.12.5)
 }
 
-// RfProfileDefaultEntry represents RF profile default entry configuration.
-type RfProfileDefaultEntry struct {
+// RFProfileDefaultEntry represents RF profile default entry configuration.
+type RFProfileDefaultEntry struct {
 	Band                     string               `json:"band"`                                  // Radio frequency band type (YANG: IOS-XE 17.12.1)
 	Name                     string               `json:"name"`                                  // RF profile default entry name (YANG: IOS-XE 17.12.1)
 	Description              string               `json:"description,omitempty"`                 // RF profile default description (YANG: IOS-XE 17.12.1)
@@ -161,16 +161,16 @@ type RfProfileDefaultEntry struct {
 	LoadBalancingDenialCount int                  `json:"load-balancing-denial-count,omitempty"` // Load balancing denial count (YANG: IOS-XE 17.12.1)
 	AtfOperMode              string               `json:"atf-oper-mode,omitempty"`               // ATF operation mode (YANG: IOS-XE 17.12.1)
 	AtfOptimization          string               `json:"atf-optimization,omitempty"`            // ATF optimization policy (YANG: IOS-XE 17.12.1)
-	RfMcsDefaultEntries      *RfMcsDefaultEntries `json:"rf-mcs-default-entries,omitempty"`      // RF MCS default entries data (YANG: IOS-XE 17.12.1)
+	RFMcsDefaultEntries      *RFMcsDefaultEntries `json:"rf-mcs-default-entries,omitempty"`      // RF MCS default entries data (YANG: IOS-XE 17.12.1)
 }
 
-// RfMcsDefaultEntries represents RF MCS default entries collection.
-type RfMcsDefaultEntries struct {
-	RfMcsDefaultEntry []RfMcsDefaultEntry `json:"rf-mcs-default-entry"` // RF MCS default entry list (YANG: IOS-XE 17.12.1)
+// RFMcsDefaultEntries represents RF MCS default entries collection.
+type RFMcsDefaultEntries struct {
+	RFMcsDefaultEntry []RFMcsDefaultEntry `json:"rf-mcs-default-entry"` // RF MCS default entry list (YANG: IOS-XE 17.12.1)
 }
 
-// RfMcsDefaultEntry represents RF MCS default entry configuration.
-type RfMcsDefaultEntry struct {
-	RfIndex     int `json:"rf-index"`      // RF MCS index identifier (YANG: IOS-XE 17.12.1)
+// RFMcsDefaultEntry represents RF MCS default entry configuration.
+type RFMcsDefaultEntry struct {
+	RFIndex     int `json:"rf-index"`      // RF MCS index identifier (YANG: IOS-XE 17.12.1)
 	McsDataRate int `json:"mcs-data-rate"` // MCS data rate value (YANG: IOS-XE 17.12.1)
 }
