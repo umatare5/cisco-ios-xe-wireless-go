@@ -174,11 +174,11 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	t.Run("CreateRFTag", func(t *testing.T) {
-		newTag := &model.RfTag{
+		newTag := &model.RFTag{
 			TagName:             "new-rf-tag",
 			Dot11ARfProfileName: "5ghz-profile",
 			Dot11BRfProfileName: "24ghz-profile",
-			Dot116GhzRfProfName: "6ghz-profile",
+			Dot116GhzRFProfName: "6ghz-profile",
 			Description:         "New test RF tag",
 		}
 
@@ -202,10 +202,10 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("SetDot116GhzRfProfile", func(t *testing.T) {
-		err := rfTagService.SetDot116GhzRfProfile(ctx, "test-rf-tag", "updated-6ghz-profile")
+	t.Run("SetDot116GhzRFProfile", func(t *testing.T) {
+		err := rfTagService.SetDot116GhzRFProfile(ctx, "test-rf-tag", "updated-6ghz-profile")
 		if err != nil {
-			t.Errorf("SetDot116GhzRfProfile returned unexpected error: %v", err)
+			t.Errorf("SetDot116GhzRFProfile returned unexpected error: %v", err)
 		}
 	})
 
@@ -265,7 +265,7 @@ func TestRfTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	})
 
 	t.Run("CreateRFTag_EmptyTagName", func(t *testing.T) {
-		emptyTag := &model.RfTag{TagName: ""}
+		emptyTag := &model.RFTag{TagName: ""}
 		err := rfTagService.CreateRFTag(ctx, emptyTag)
 		if err == nil {
 			t.Error("Expected error for empty tag name")
@@ -276,7 +276,7 @@ func TestRfTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	})
 
 	t.Run("CreateRFTag_WhitespaceTagName", func(t *testing.T) {
-		whitespaceTag := &model.RfTag{TagName: "   "}
+		whitespaceTag := &model.RFTag{TagName: "   "}
 		err := rfTagService.CreateRFTag(ctx, whitespaceTag)
 		if err == nil {
 			t.Error("Expected error for whitespace tag name")
@@ -339,7 +339,7 @@ func TestRfTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		rfTagService := service.RFTag()
 		ctx := testutil.TestContext(t)
 
-		newTag := &model.RfTag{
+		newTag := &model.RFTag{
 			TagName: "valid-tag",
 		}
 		err := rfTagService.CreateRFTag(ctx, newTag)

@@ -25,48 +25,48 @@ func NewRFTagService(client *core.Client) *RFTagService {
 }
 
 // GetConfig retrieves the RF configuration.
-func (s *RFTagService) GetConfig(ctx context.Context) (*model.RfCfg, error) {
-	return core.Get[model.RfCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s *RFTagService) GetConfig(ctx context.Context) (*model.RFCfg, error) {
+	return core.Get[model.RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }
 
 // GetRFTag retrieves an RF tag configuration by name.
-func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RfTag, error) {
+func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RFTag, error) {
 	if err := s.validateTagName(tagName); err != nil {
 		return nil, err
 	}
 
-	result, err := core.Get[model.RfCfgRfTag](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[model.RFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
 
-	if result == nil || result.RfTagList == nil || len(result.RfTagList) == 0 {
+	if result == nil || result.RFTagList == nil || len(result.RFTagList) == 0 {
 		return nil, nil
 	}
 
-	return &result.RfTagList[0], nil
+	return &result.RFTagList[0], nil
 }
 
 // ListRFTags retrieves all RF tag configurations.
-func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RfTag, error) {
-	result, err := core.Get[model.RfCfgRfTags](ctx, s.Client(), routes.RFTagsPath)
+func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RFTag, error) {
+	result, err := core.Get[model.RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
 	if err != nil {
 		return nil, err
 	}
 
 	if result == nil {
-		return []model.RfTag{}, nil
+		return []model.RFTag{}, nil
 	}
 
-	if len(result.RfTags.RfTagList) == 0 {
-		return []model.RfTag{}, nil
+	if len(result.RFTags.RFTagList) == 0 {
+		return []model.RFTag{}, nil
 	}
 
-	return result.RfTags.RfTagList, nil
+	return result.RFTags.RFTagList, nil
 }
 
 // CreateRFTag creates a new RF tag configuration.
-func (s *RFTagService) CreateRFTag(ctx context.Context, config *model.RfTag) error {
+func (s *RFTagService) CreateRFTag(ctx context.Context, config *model.RFTag) error {
 	if config == nil {
 		return errors.New("RF tag config cannot be nil")
 	}
@@ -93,7 +93,7 @@ func (s *RFTagService) DeleteRFTag(ctx context.Context, tagName string) error {
 
 // SetDot11ARfProfile sets the 5GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfileName string) error {
-	return s.updateTagField(ctx, tagName, func(payload *model.RfTag) {
+	return s.updateTagField(ctx, tagName, func(payload *model.RFTag) {
 		if payload != nil {
 			payload.Dot11ARfProfileName = rfProfileName
 		}
@@ -102,25 +102,25 @@ func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfil
 
 // SetDot11BRfProfile sets the 2.4GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfileName string) error {
-	return s.updateTagField(ctx, tagName, func(payload *model.RfTag) {
+	return s.updateTagField(ctx, tagName, func(payload *model.RFTag) {
 		if payload != nil {
 			payload.Dot11BRfProfileName = rfProfileName
 		}
 	})
 }
 
-// SetDot116GhzRfProfile sets the 6GHz RF profile for an RF tag.
-func (s *RFTagService) SetDot116GhzRfProfile(ctx context.Context, tagName, rfProfileName string) error {
-	return s.updateTagField(ctx, tagName, func(payload *model.RfTag) {
+// SetDot116GhzRFProfile sets the 6GHz RF profile for an RF tag.
+func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfProfileName string) error {
+	return s.updateTagField(ctx, tagName, func(payload *model.RFTag) {
 		if payload != nil {
-			payload.Dot116GhzRfProfName = rfProfileName
+			payload.Dot116GhzRFProfName = rfProfileName
 		}
 	})
 }
 
 // SetDescription sets the description for an RF tag.
 func (s *RFTagService) SetDescription(ctx context.Context, tagName, description string) error {
-	return s.updateTagField(ctx, tagName, func(payload *model.RfTag) {
+	return s.updateTagField(ctx, tagName, func(payload *model.RFTag) {
 		if payload != nil {
 			payload.Description = description
 		}
@@ -129,7 +129,7 @@ func (s *RFTagService) SetDescription(ctx context.Context, tagName, description 
 
 // updateTagField updates a specific field of an RF tag using the provided update function.
 func (s *RFTagService) updateTagField(ctx context.Context, tagName string,
-	updateFunc func(*model.RfTag),
+	updateFunc func(*model.RFTag),
 ) error {
 	if updateFunc == nil {
 		return errors.New("update function cannot be nil")
@@ -150,7 +150,7 @@ func (s *RFTagService) updateTagField(ctx context.Context, tagName string,
 }
 
 // setRFTag sets/updates an existing RF tag configuration.
-func (s *RFTagService) setRFTag(ctx context.Context, config *model.RfTag) error {
+func (s *RFTagService) setRFTag(ctx context.Context, config *model.RFTag) error {
 	if config == nil {
 		return errors.New("RF tag config cannot be nil")
 	}
@@ -185,7 +185,7 @@ func (s *RFTagService) buildTagURL(tagName string) string {
 }
 
 // buildPayload builds the payload for POST/PUT operations.
-func (s *RFTagService) buildPayload(config *model.RfTag) map[string]any {
+func (s *RFTagService) buildPayload(config *model.RFTag) map[string]any {
 	return map[string]any{
 		"Cisco-IOS-XE-wireless-rf-cfg:rf-tag": config,
 	}
