@@ -1,3 +1,5 @@
+// Package client provides Cisco WNC client operational data models.
+// Contains complete client operational data structure definitions for RESTCONF API.
 package client
 
 import "time"
@@ -64,7 +66,7 @@ type ClientOperDcInfo struct {
 
 // CommonOperData represents common client operational data.
 type CommonOperData struct {
-	ClientMac             string `json:"client-mac"`              // MAC address used as network address for wireless stations (Live: IOS-XE 17.12.5)
+	ClientMAC             string `json:"client-mac"`              // MAC address used as network address for wireless stations (Live: IOS-XE 17.12.5)
 	ApName                string `json:"ap-name"`                 // Access Point name client is connected to (Live: IOS-XE 17.12.5)
 	MsApSlotID            int    `json:"ms-ap-slot-id"`           // Radio slot on AP client is connected to (Live: IOS-XE 17.12.5)
 	MsRadioType           string `json:"ms-radio-type"`           // Wireless Radio type client connected with (Live: IOS-XE 17.12.5)
@@ -77,7 +79,7 @@ type CommonOperData struct {
 		CurrentSwitchingMode  string `json:"current-switching-mode"` // Current traffic switching mode for client (Live: IOS-XE 17.12.5)
 		WlanSwitchingMode     string `json:"wlan-switching-mode"`    // WLAN traffic switching mode based on properties (Live: IOS-XE 17.12.5)
 		CentralAuthentication string `json:"central-authentication"` // Central or local authentication mode (Live: IOS-XE 17.12.5)
-		CentralDhcp           bool   `json:"central-dhcp"`           // Central or local DHCP mode (Live: IOS-XE 17.12.5)
+		CentralDHCP           bool   `json:"central-dhcp"`           // Central or local DHCP mode (Live: IOS-XE 17.12.5)
 		CentralAssocEnable    bool   `json:"central-assoc-enable"`   // Central or local association mode (Live: IOS-XE 17.12.5)
 		VlanCentralSwitching  bool   `json:"vlan-central-switching"` // VLAN-based central switching mode (Live: IOS-XE 17.12.5)
 		IsFabricClient        bool   `json:"is-fabric-client"`       // Client associated to Fabric WLAN (Live: IOS-XE 17.12.5)
@@ -93,7 +95,7 @@ type CommonOperData struct {
 	MethodID                 string    `json:"method-id"`                   // Method Identifier (Live: IOS-XE 17.12.5)
 	L3VlanOverrideReceived   bool      `json:"l3-vlan-override-received"`   // VLAN Override received after L3 authentication (Live: IOS-XE 17.12.5)
 	UpnID                    int       `json:"upn-id"`                      // User Defined Network Identity (Live: IOS-XE 17.12.5)
-	IsLocallyAdministeredMac bool      `json:"is-locally-administered-mac"` // Client MAC address locally administered status (Live: IOS-XE 17.12.5)
+	IsLocallyAdministeredMAC bool      `json:"is-locally-administered-mac"` // Client MAC address locally administered status (Live: IOS-XE 17.12.5)
 	IdleTimeout              int       `json:"idle-timeout"`                // Client idle timeout before deletion (Live: IOS-XE 17.12.5)
 	IdleTimestamp            time.Time `json:"idle-timestamp"`              // Timestamp when client moved to idle state (Live: IOS-XE 17.12.5)
 	ClientDuid               string    `json:"client-duid"`                 // Client device user identity (Live: IOS-XE 17.12.5)
@@ -106,10 +108,10 @@ type CommonOperData struct {
 
 // Dot11OperData represents 802.11 operational data.
 type Dot11OperData struct {
-	MsMacAddress        string    `json:"ms-mac-address"`         // Mac Address of the Client (Live: IOS-XE 17.12.5)
+	MsMACAddress        string    `json:"ms-mac-address"`         // Mac Address of the Client (Live: IOS-XE 17.12.5)
 	Dot11State          string    `json:"dot11-state"`            // DOT11 status for Client (Live: IOS-XE 17.12.5)
 	MsBssid             string    `json:"ms-bssid"`               // Basic Service Set Identifier client connected to (Live: IOS-XE 17.12.5)
-	ApMacAddress        string    `json:"ap-mac-address"`         // MAC Address of AP client has joined (Live: IOS-XE 17.12.5)
+	ApMACAddress        string    `json:"ap-mac-address"`         // MAC Address of AP client has joined (Live: IOS-XE 17.12.5)
 	CurrentChannel      int       `json:"current-channel"`        // Current Channel client communicating on (Live: IOS-XE 17.12.5)
 	MsWlanID            int       `json:"ms-wlan-id"`             // Wireless LAN ID client connected to (Live: IOS-XE 17.12.5)
 	VapSsid             string    `json:"vap-ssid"`               // Service Set Identifier of Wireless LAN (Live: IOS-XE 17.12.5)
@@ -213,20 +215,20 @@ type Dot11OperData struct {
 // LinkInfo represents multi-link information for Wi-Fi 7 clients.
 type LinkInfo struct {
 	Band       string `json:"band"`         // Frequency band identifier (YANG: IOS-XE 17.18.1)
-	BssMacAddr string `json:"bss-mac-addr"` // BSS MAC address (YANG: IOS-XE 17.18.1)
+	BssMACAddr string `json:"bss-mac-addr"` // BSS MAC address (YANG: IOS-XE 17.18.1)
 	SlotID     int    `json:"slot-id"`      // Slot identifier (YANG: IOS-XE 17.18.1)
 	RadioType  string `json:"radio-type"`   // Radio type identifier (YANG: IOS-XE 17.18.1)
 }
 
 // LinkInfoMin represents minimal multi-link information for Wi-Fi 7 clients.
 type LinkInfoMin struct {
-	StaMac string `json:"sta-mac"` // Station MAC address (YANG: IOS-XE 17.18.1)
+	StaMAC string `json:"sta-mac"` // Station MAC address (YANG: IOS-XE 17.18.1)
 	Band   string `json:"band"`    // Frequency band identifier (YANG: IOS-XE 17.18.1)
 }
 
 // MobilityOperData represents client mobility operational data.
 type MobilityOperData struct {
-	MsMacAddr           string    `json:"ms-mac-addr"`             // MAC address of wireless mobile station (Live: IOS-XE 17.12.5)
+	MsMACAddr           string    `json:"ms-mac-addr"`             // MAC address of wireless mobile station (Live: IOS-XE 17.12.5)
 	MmClientRole        string    `json:"mm-client-role"`          // Mobility role on Wireless LAN Controller (Live: IOS-XE 17.12.5)
 	MmClientRoamType    string    `json:"mm-client-roam-type"`     // Layer 2 or Layer 3 mobility roam type (Live: IOS-XE 17.12.5)
 	MmInstance          int       `json:"mm-instance"`             // Inter-controller roam count performed by client (Live: IOS-XE 17.12.5)
@@ -244,7 +246,7 @@ type MobilityOperData struct {
 
 // MmIfClientStats represents mobility manager interface client statistics.
 type MmIfClientStats struct {
-	ClientMac  string `json:"client-mac"` // Client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC  string `json:"client-mac"` // Client MAC address (YANG: IOS-XE 17.12.1)
 	MbltyStats struct {
 		EventDataAllocs               int `json:"event-data-allocs"`                 // Event data allocations count (YANG: IOS-XE 17.12.1)
 		EventDataFrees                int `json:"event-data-frees"`                  // Event data deallocations count (YANG: IOS-XE 17.12.1)
@@ -304,7 +306,7 @@ type MmIfClientStats struct {
 
 // MmIfClientHistory represents mobility manager interface client history.
 type MmIfClientHistory struct {
-	ClientMac       string `json:"client-mac"` // Client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC       string `json:"client-mac"` // Client MAC address (YANG: IOS-XE 17.12.1)
 	MobilityHistory struct {
 		Entry []struct {
 			InstanceID    int       `json:"instance-id"`     // Mobility instance identifier (YANG: IOS-XE 17.12.1)
@@ -321,7 +323,7 @@ type MmIfClientHistory struct {
 
 // TrafficStats represents client traffic statistics.
 type TrafficStats struct {
-	MsMacAddress             string    `json:"ms-mac-address"`              // MAC address used as network address for mobile station (Live: IOS-XE 17.12.5)
+	MsMACAddress             string    `json:"ms-mac-address"`              // MAC address used as network address for mobile station (Live: IOS-XE 17.12.5)
 	BytesRx                  string    `json:"bytes-rx"`                    // Bytes of wireless data traffic received (Live: IOS-XE 17.12.5)
 	BytesTx                  string    `json:"bytes-tx"`                    // Bytes of wireless data traffic transmitted (Live: IOS-XE 17.12.5)
 	PolicyErrs               string    `json:"policy-errs"`                 // Mobile station policy errors (Live: IOS-XE 17.12.5)
@@ -333,8 +335,8 @@ type TrafficStats struct {
 	DecryptFailed            string    `json:"decrypt-failed"`              // Decrypt failed packets (Live: IOS-XE 17.12.5)
 	MicMismatch              string    `json:"mic-mismatch"`                // Packets with Message Integrity Check mismatch (Live: IOS-XE 17.12.5)
 	MicMissing               string    `json:"mic-missing"`                 // Packets with Message Integrity Check missing (Live: IOS-XE 17.12.5)
-	MostRecentRssi           int       `json:"most-recent-rssi"`            // Last updated Radio Signal Strength indicator (Live: IOS-XE 17.12.5)
-	MostRecentSnr            int       `json:"most-recent-snr"`             // Last updated Signal To Noise Ratio (Live: IOS-XE 17.12.5)
+	MostRecentRSSI           int       `json:"most-recent-rssi"`            // Last updated Radio Signal Strength indicator (Live: IOS-XE 17.12.5)
+	MostRecentSNR            int       `json:"most-recent-snr"`             // Last updated Signal To Noise Ratio (Live: IOS-XE 17.12.5)
 	TxExcessiveRetries       string    `json:"tx-excessive-retries"`        // Mobile station excessive retries (Live: IOS-XE 17.12.5)
 	TxRetries                string    `json:"tx-retries"`                  // Frames transmitted with Retry bit set (Live: IOS-XE 17.12.5)
 	PowerSaveState           int       `json:"power-save-state"`            // Power save state (Live: IOS-XE 17.12.5)
@@ -350,14 +352,14 @@ type TrafficStats struct {
 
 // PolicyData represents client policy data.
 type PolicyData struct {
-	Mac         string `json:"mac"`           // Client MAC address (Live: IOS-XE 17.12.5)
+	MAC         string `json:"mac"`           // Client MAC address (Live: IOS-XE 17.12.5)
 	ResVlanID   int    `json:"res-vlan-id"`   // Resolved VLAN ID (Live: IOS-XE 17.12.5)
 	ResVlanName string `json:"res-vlan-name"` // Resolved VLAN name (Live: IOS-XE 17.12.5)
 }
 
 // SisfDBMac represents SISF database MAC information.
 type SisfDBMac struct {
-	MacAddr     string `json:"mac-addr"` // MAC address (YANG: IOS-XE 17.12.1)
+	MACAddr     string `json:"mac-addr"` // MAC address (YANG: IOS-XE 17.12.1)
 	Ipv4Binding struct {
 		IPKey struct {
 			ZoneID int    `json:"zone-id"` // Zone identifier (YANG: IOS-XE 17.12.1)
@@ -374,7 +376,7 @@ type SisfDBMac struct {
 
 // DcInfo represents device classification information.
 type DcInfo struct {
-	ClientMac        string    `json:"client-mac"`                   // Client MAC address (YANG: IOS-XE 17.12.1)
+	ClientMAC        string    `json:"client-mac"`                   // Client MAC address (YANG: IOS-XE 17.12.1)
 	DeviceType       string    `json:"device-type"`                  // Device type (YANG: IOS-XE 17.12.1)
 	ProtocolMap      string    `json:"protocol-map"`                 // Protocol map (YANG: IOS-XE 17.12.1)
 	ConfidenceLevel  int       `json:"confidence-level"`             // Confidence level (YANG: IOS-XE 17.12.1)
