@@ -11,13 +11,13 @@ This guide explains the testing strategy, conventions, and execution procedures 
 
 The SDK implements **standardized test patterns** using the unified `pkg/testutil` API:
 
-| Category             | Purpose                                   | Implementation Pattern                                  | Coverage Target |
-| -------------------- | ----------------------------------------- | ------------------------------------------------------- | --------------- |
-| **1. Service Tests** | Service construction and lifecycle        | Direct service instantiation                            | 100%            |
-| **2. Get Tests**     | Mock-based GET operations with validation | `testutil.NewMockServer(testutil.WithSuccessResponses)` | Get/List: 100%  |
-| **3. Set Tests**     | Mock-based SET/RPC operations             | `testutil.NewMockServer(testutil.WithErrorResponses)`   | Set/Admin: 90%+ |
-| **4. Integration**   | Live WNC operations (GET only)            | Integration test suites                                 | N/A             |
-| **5. Scenario/E2E**  | Non-disruptive CRUD against live WNC      | Scenario-based test workflows                           | N/A             |
+| Category             | Purpose                   | Implementation Pattern                                  | Coverage Target |
+| -------------------- | ------------------------- | ------------------------------------------------------- | --------------- |
+| **1. Service Tests** | Service construction      | Direct service instantiation                            | 100%            |
+| **2. Get Tests**     | Mock-based GET operations | `testutil.NewMockServer(testutil.WithSuccessResponses)` | Get/List: 100%  |
+| **3. Set Tests**     | Mock-based RPC operations | `testutil.NewMockServer(testutil.WithErrorResponses)`   | Set/Admin: 90%+ |
+| **4. Integration**   | Live WNC GET operations   | Integration test suites                                 | N/A             |
+| **5. Scenario/E2E**  | Live WNC RPC operations   | Scenario-based test workflows                           | N/A             |
 
 ### IOS-XE Version Support
 
@@ -160,7 +160,7 @@ go test ./service/ap -run "TestApServiceUnit_Constructor" -v
 
 **Example:**
 
-- [`service/ap/service_test.go`](../service/ap/service_test.go) - See `TestApServiceUnit_Constructor_Success`
+- [`service/ap/service_test.go`](../service/ap/service_test.go)
 
 #### Layer 2 and 3: Mock-based Method Tests
 
@@ -172,38 +172,8 @@ go test ./service/ap -run "TestApServiceUnit_GetOperations_Mock" -v
 
 **Examples:**
 
-```go
-// Success response testing
-mockServer := testutil.NewMockServer(
-    testutil.WithSuccessResponses(map[string]string{
-        "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": `{"status": "success"}`,
-    }),
-)
-defer mockServer.Close()
-
-// Error response testing
-mockServer := testutil.NewMockServer(
-    testutil.WithErrorResponses([]string{
-        "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data",
-    }, 404),
-)
-defer mockServer.Close()
-
-// Custom response testing
-mockServer := testutil.NewMockServer(
-    testutil.WithCustomResponse("custom-endpoint", testutil.ResponseConfig{
-        StatusCode: 202,
-        Body:       `{"custom": "response"}`,
-        Method:     "POST",
-    }),
-)
-defer mockServer.Close()
-```
-
-**Test Files:**
-
-- [`service/ap/service_test.go`](../service/ap/service_test.go) - See `TestApServiceUnit_GetOperations_MockSuccess`
-- [`service/wat/service_test.go`](../service/wat/service_test.go) - See `TestWatServiceUnit_GetOperations_ErrorExpected`
+- [`service/ap/service_test.go`](../service/ap/service_test.go)
+- [`service/wat/service_test.go`](../service/wat/service_test.go)
 
 #### Layer 3: Integration Tests
 
@@ -232,10 +202,10 @@ go test ./tests/scenario/wlan/ -tags=scenario -v
 
 **Example:**
 
-- [`tests/scenario/ap/service_test.go`](../tests/scenario/ap/service_test.go) - AP admin state management workflow
+- [`tests/scenario/ap/service_test.go`](../tests/scenario/ap/service_test.go) - AP admin, and radio operations
 - [`tests/scenario/site/tag_service_test.go`](../tests/scenario/site/tag_service_test.go) - Site tag operations
-- [`tests/scenario/rf/service_test.go`](../tests/scenario/rf/service_test.go) - RF profile management
-- [`tests/scenario/wlan/service_test.go`](../tests/scenario/wlan/service_test.go) - WLAN configuration scenarios
+- [`tests/scenario/rf/service_test.go`](../tests/scenario/rf/service_test.go) - RF tag operations
+- [`tests/scenario/wlan/service_test.go`](../tests/scenario/wlan/service_test.go) - Poliy tag operations
 
 > [!NOTE]
 > Tag operations in scenario tests **MUST** use newly created tags to avoid communication impact.
@@ -260,38 +230,6 @@ go test -cover ./service/...
 go test -cover ./...
 ```
 
-## 📊 Test Data Management
-
-### Test Fixtures
-
-Tests use real WNC data for accurate mock responses. Mock data is embedded directly in test files based on actual controller responses, using the unified MockServer API.
-
-| Location             | Purpose                                          |
-| -------------------- | ------------------------------------------------ |
-| Service test files   | Inline real WNC data with functional options API |
-| `pkg/testutil/`      | Unified MockServer API with functional options   |
-| `internal/testutil/` | Internal testing utilities                       |
-| `tests/integration/` | Integration test implementations                 |
-| `tests/scenario/`    | E2E scenario test suites                         |
-
-**Examples:**
-
-```go
-// Real WNC data in service tests using unified API
-responses := map[string]string{
-    "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": `{
-        "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data": {
-            "ap-tags": {
-                "ap-tag": [/* real WNC data */]
-            }
-        }
-    }`,
-}
-mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
-```
-
-- [`service/ap/service_test.go`](../service/ap/service_test.go) - Real WNC data with unified MockServer API
-
 ## 📚 Appendix
 
 ### Testing Tips
@@ -300,7 +238,7 @@ mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 2. **Use real WNC data** - Base mock responses on actual controller data from IOS-XE 17.12.x
 3. **Test error scenarios** - IOS-XE 17.18.1+ services may return 404 when not configured
 4. **Follow naming conventions** - Use standardized test function names (e.g., `TestXServiceUnit_*`)
-5. **Use unified API** - Use `testutil.NewMockServer()` with functional options (`WithSuccessResponses`, `WithErrorResponses`, `WithCustomResponse`)
+5. **Use unified API** - Use `testutil.NewMockServer()` with functional options.
 6. **Leverage options** - Combine multiple `MockServerOption`s for complex test scenarios
 7. **Coverage-driven development** - Write comprehensive tests to meet coverage targets
 8. **Parallel-safe integration** - Mark integration tests with `t.Parallel()` for GET-only operations
@@ -308,12 +246,13 @@ mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 
 ### Troubleshooting
 
-| Issue                  | Solution                                                                                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Missing env vars       | Set `WNC_CONTROLLER`, `WNC_ACCESS_TOKEN` and `WNC_AP_MAC_ADDR`; optionally set `WNC_CLIENT_MAC_ADDR` for better client integration testing |
-| Unreachable controller | Verify DNS/IP connectivity                                                                                                                 |
-| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only                                                                  |
-| Auth failures          | Ensure token is Base64 of `user:pass`                                                                                                      |
+| Issue                  | Solution                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| Missing env vars       | Ensure all required `WNC_*` variables are set                                            |
+| Unreachable controller | Verify DNS/IP connectivity                                                               |
+| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only                |
+| Auth failures          | Ensure token is Base64 of `user:pass`                                                    |
+| TestClient creation    | Use `testutil.NewTestClient(mockServer)` to create test clients for service construction |
 
 ### References
 
