@@ -73,7 +73,7 @@ type AmpduEntries struct {
 // AmpduEntry represents individual AMPDU configuration entry.
 type AmpduEntry struct {
 	Index                    int    `json:"index"`                        // AMPDU entry index identifier (Live: IOS-XE 17.12.5)
-	Apf80211nAmpduTxPriority string `json:"apf-80211n-ampdu-tx-priority"` // AMPDU transmission priority setting (Live: IOS-XE 17.12.5)
+	APF80211nAmpduTxPriority string `json:"apf-80211n-ampdu-tx-priority"` // AMPDU transmission priority setting (Live: IOS-XE 17.12.5)
 }
 
 // AmpduTxScheduler represents AMPDU transmission scheduler configuration.
@@ -87,7 +87,7 @@ type AmsduEntries struct {
 // AmsduEntry represents individual AMSDU configuration entry.
 type AmsduEntry struct {
 	Index                    int    `json:"index"`                        // AMSDU entry index identifier (Live: IOS-XE 17.12.5)
-	Apf80211nAmsduTxPriority string `json:"apf-80211n-amsdu-tx-priority"` // AMSDU transmission priority setting (Live: IOS-XE 17.12.5)
+	APF80211nAmsduTxPriority string `json:"apf-80211n-amsdu-tx-priority"` // AMSDU transmission priority setting (Live: IOS-XE 17.12.5)
 }
 
 // MediaStreamBandInfoCfg represents media stream band information configuration.
@@ -95,7 +95,7 @@ type MediaStreamBandInfoCfg struct{} // Media stream band info config (Live: IOS
 
 // SpectrumCfg represents radio spectrum configuration.
 type SpectrumCfg struct {
-	RrmEdEnable *bool `json:"rrm-ed-enable,omitempty"` // Radio resource management energy detection enable (Live: IOS-XE 17.12.5)
+	RRMEdEnable *bool `json:"rrm-ed-enable,omitempty"` // Radio resource management energy detection enable (Live: IOS-XE 17.12.5)
 }
 
 // Dot11axMcsEntries represents 802.11ax MCS entries container.
