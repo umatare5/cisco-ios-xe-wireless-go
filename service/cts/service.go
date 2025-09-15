@@ -20,6 +20,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves CTS configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.CtsCfg, error) {
-	return core.Get[model.CtsCfg](ctx, s.Client(), routes.CTSCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.CTSCfg, error) {
+	return core.Get[model.CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
 }

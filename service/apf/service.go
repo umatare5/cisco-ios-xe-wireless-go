@@ -20,6 +20,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves the complete APF configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.ApfCfg, error) {
-	return core.Get[model.ApfCfg](ctx, s.Client(), routes.APFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*model.APFCfg, error) {
+	return core.Get[model.APFCfg](ctx, s.Client(), routes.APFCfgPath)
 }

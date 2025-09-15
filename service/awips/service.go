@@ -20,6 +20,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves the complete AWIPS operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AwipsOper, error) {
-	return core.Get[model.AwipsOper](ctx, s.Client(), routes.AWIPSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.AWIPSOper, error) {
+	return core.Get[model.AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
 }

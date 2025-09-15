@@ -20,21 +20,21 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves the complete AFC operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AfcOper, error) {
-	return core.Get[model.AfcOper](ctx, s.Client(), routes.AFCOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.AFCOper, error) {
+	return core.Get[model.AFCOper](ctx, s.Client(), routes.AFCOperPath)
 }
 
 // ListAPResponses retrieves AFC AP response data.
-func (s Service) ListAPResponses(ctx context.Context) (*model.AfcOperEwlcAfcApResp, error) {
-	return core.Get[model.AfcOperEwlcAfcApResp](ctx, s.Client(), routes.AFCEwlcAfcApRespPath)
+func (s Service) ListAPResponses(ctx context.Context) (*model.AFCOperEwlcAFCApResp, error) {
+	return core.Get[model.AFCOperEwlcAFCApResp](ctx, s.Client(), routes.AFCEwlcAFCApRespPath)
 }
 
 // GetCloudInfo retrieves AFC cloud operational data.
-func (s Service) GetCloudInfo(ctx context.Context) (*model.AfcCloudOper, error) {
-	return core.Get[model.AfcCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
+func (s Service) GetCloudInfo(ctx context.Context) (*model.AFCCloudOper, error) {
+	return core.Get[model.AFCCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
 }
 
 // GetCloudStats retrieves AFC cloud statistics.
-func (s Service) GetCloudStats(ctx context.Context) (*model.AfcCloudOperAfcCloudStats, error) {
-	return core.Get[model.AfcCloudOperAfcCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
+func (s Service) GetCloudStats(ctx context.Context) (*model.AFCCloudOperAFCCloudStats, error) {
+	return core.Get[model.AFCCloudOperAFCCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
 }

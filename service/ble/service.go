@@ -20,6 +20,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves BLE operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.BleLtxOper, error) {
-	return core.Get[model.BleLtxOper](ctx, s.Client(), routes.BLELtxOperPath)
+func (s Service) GetOperational(ctx context.Context) (*model.BLELtxOper, error) {
+	return core.Get[model.BLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
 }
