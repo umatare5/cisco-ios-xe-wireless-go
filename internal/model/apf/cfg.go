@@ -1,19 +1,19 @@
 package apf
 
-// ApfCfg represents APF configuration data container.
-type ApfCfg struct {
-	CiscoIOSXEWirelessApfCfgData struct {
-		Apf Apf `json:"apf"` // APF configuration parameters (Live: IOS-XE 17.12.5)
+// APFCfg represents APF configuration data container.
+type APFCfg struct {
+	CiscoIOSXEWirelessAPFCfgData struct {
+		APF APF `json:"apf"` // APF configuration parameters (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"` // APF configuration data (Live: IOS-XE 17.12.5)
 }
 
-// ApfCfgApf represents APF configuration wrapper.
-type ApfCfgApf struct {
-	Apf Apf `json:"Cisco-IOS-XE-wireless-apf-cfg:apf"`
+// APFCfgAPF represents APF configuration wrapper.
+type APFCfgAPF struct {
+	APF APF `json:"Cisco-IOS-XE-wireless-apf-cfg:apf"`
 }
 
-// Apf represents Access Point Filter configuration parameters.
-type Apf struct {
+// APF represents Access Point Filter configuration parameters.
+type APF struct {
 	NetworkName       string `json:"network-name"`        // RF network name identifier (Live: IOS-XE 17.12.5)
 	ProbeLimit        int    `json:"probe-limit"`         // Maximum probe request limit (Live: IOS-XE 17.12.5)
 	ProbeInterval     int    `json:"probe-interval"`      // Probe request interval in milliseconds (Live: IOS-XE 17.12.5)
