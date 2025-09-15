@@ -173,14 +173,14 @@ func HasValidTags(siteTag, policyTag, rfTag string) bool {
 }
 
 // HasValidMACOrName checks if either MAC address or AP name is provided (but not both).
-func HasValidMACOrName(apMac, apName string) bool {
-	return (IsNonEmptyString(apMac) && IsStringEmpty(apName)) ||
-		(IsStringEmpty(apMac) && IsNonEmptyString(apName))
+func HasValidMACOrName(apMAC, apName string) bool {
+	return (IsNonEmptyString(apMAC) && IsStringEmpty(apName)) ||
+		(IsStringEmpty(apMAC) && IsNonEmptyString(apName))
 }
 
 // HasEitherMACOrName checks if at least one of MAC address or AP name is provided.
-func HasEitherMACOrName(apMac, apName string) bool {
-	return IsNonEmptyString(apMac) || IsNonEmptyString(apName)
+func HasEitherMACOrName(apMAC, apName string) bool {
+	return IsNonEmptyString(apMAC) || IsNonEmptyString(apName)
 }
 
 // General utility predicates
