@@ -11,13 +11,13 @@ This guide explains the testing strategy, conventions, and execution procedures 
 
 The SDK implements **standardized test patterns** using the unified `pkg/testutil` API:
 
-| Category             | Purpose                   | Implementation Pattern                                  | Coverage Target |
-| -------------------- | ------------------------- | ------------------------------------------------------- | --------------- |
-| **1. Service Tests** | Service construction      | Direct service instantiation                            | 100%            |
-| **2. Get Tests**     | Mock-based GET operations | `testutil.NewMockServer(testutil.WithSuccessResponses)` | Get/List: 100%  |
-| **3. Set Tests**     | Mock-based RPC operations | `testutil.NewMockServer(testutil.WithErrorResponses)`   | Set/Admin: 90%+ |
-| **4. Integration**   | Live WNC GET operations   | Integration test suites                                 | N/A             |
-| **5. Scenario/E2E**  | Live WNC RPC operations   | Scenario-based test workflows                           | N/A             |
+| Category             | Purpose                   | Implementation Pattern        | Coverage Target |
+| -------------------- | ------------------------- | ----------------------------- | --------------- |
+| **1. Service Tests** | Service construction      | Direct service instantiation  | 100%            |
+| **2. Get Tests**     | Mock-based GET operations | `testutil.NewMockServer()`    | Get/List: 100%  |
+| **3. Set Tests**     | Mock-based RPC operations | `testutil.NewMockServer()`    | Set/Admin: 90%+ |
+| **4. Integration**   | Live WNC GET operations   | Integration test suites       | N/A             |
+| **5. Scenario/E2E**  | Live WNC RPC operations   | Scenario-based test workflows | N/A             |
 
 ### IOS-XE Version Support
 
