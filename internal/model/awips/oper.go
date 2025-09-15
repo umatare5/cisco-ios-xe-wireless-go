@@ -1,37 +1,37 @@
 package awips
 
-// AwipsOper represents the AWIPS operational data.
-type AwipsOper struct {
-	CiscoIOSXEWirelessAwipsOperData struct {
-		AwipsPerApInfo      []AwipsPerApInfo     `json:"awips-per-ap-info"`                // Per AP AWIPS information (Live: IOS-XE 17.12.5)
-		AwipsDwldStatus     AwipsDwldStatus      `json:"awips-dwld-status"`                // AWIPS file download status (Live: IOS-XE 17.12.5)
-		AwipsApDwldStatus   []AwipsApDwldStatus  `json:"awips-ap-dwld-status"`             // Per AP AWIPS file download status (Live: IOS-XE 17.12.5)
-		AwipsPerSignStats   []AwipsPerSignStats  `json:"awips-per-sign-stats,omitempty"`   // AWIPS statistics per signature (YANG: IOS-XE 17.18.1)
-		AwipsGlobStats      *AwipsGlobStats      `json:"awips-glob-stats,omitempty"`       // AWIPS global statistics (YANG: IOS-XE 17.18.1)
-		AwipsDwldStatusWncd *AwipsDwldStatusWncd `json:"awips-dwld-status-wncd,omitempty"` // AWIPS internal bookkeeping (YANG: IOS-XE 17.18.1)
+// AWIPSOper represents the AWIPS operational data.
+type AWIPSOper struct {
+	CiscoIOSXEWirelessAWIPSOperData struct {
+		AWIPSPerApInfo      []AWIPSPerApInfo     `json:"awips-per-ap-info"`                // Per AP AWIPS information (Live: IOS-XE 17.12.5)
+		AWIPSDwldStatus     AWIPSDwldStatus      `json:"awips-dwld-status"`                // AWIPS file download status (Live: IOS-XE 17.12.5)
+		AWIPSApDwldStatus   []AWIPSApDwldStatus  `json:"awips-ap-dwld-status"`             // Per AP AWIPS file download status (Live: IOS-XE 17.12.5)
+		AWIPSPerSignStats   []AWIPSPerSignStats  `json:"awips-per-sign-stats,omitempty"`   // AWIPS statistics per signature (YANG: IOS-XE 17.18.1)
+		AWIPSGlobStats      *AWIPSGlobStats      `json:"awips-glob-stats,omitempty"`       // AWIPS global statistics (YANG: IOS-XE 17.18.1)
+		AWIPSDwldStatusWncd *AWIPSDwldStatusWncd `json:"awips-dwld-status-wncd,omitempty"` // AWIPS internal bookkeeping (YANG: IOS-XE 17.18.1)
 	} `json:"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"` // AWIPS operational data (Live: IOS-XE 17.12.5)
 }
 
-// AwipsOperAwipsPerApInfo represents the AWIPS per AP information.
-type AwipsOperAwipsPerApInfo struct {
-	AwipsPerApInfo []AwipsPerApInfo `json:"Cisco-IOS-XE-wireless-awips-oper:awips-per-ap-info"`
+// AWIPSOperAWIPSPerApInfo represents the AWIPS per AP information.
+type AWIPSOperAWIPSPerApInfo struct {
+	AWIPSPerApInfo []AWIPSPerApInfo `json:"Cisco-IOS-XE-wireless-awips-oper:awips-per-ap-info"`
 }
 
-// AwipsOperAwipsDwldStatus represents the AWIPS download status.
-type AwipsOperAwipsDwldStatus struct {
-	AwipsDwldStatus AwipsDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status"`
+// AWIPSOperAWIPSDwldStatus represents the AWIPS download status.
+type AWIPSOperAWIPSDwldStatus struct {
+	AWIPSDwldStatus AWIPSDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status"`
 }
 
-// AwipsPerApInfo represents AWIPS status and per AP alarm statistics.
-type AwipsPerApInfo struct {
-	ApMac                 string `json:"ap-mac"`                  // AP MAC address (Live: IOS-XE 17.12.5)
-	AwipsStatus           string `json:"awips-status"`            // AWIPS status (Live: IOS-XE 17.12.5)
+// AWIPSPerApInfo represents AWIPS status and per AP alarm statistics.
+type AWIPSPerApInfo struct {
+	ApMAC                 string `json:"ap-mac"`                  // AP MAC address (Live: IOS-XE 17.12.5)
+	AWIPSStatus           string `json:"awips-status"`            // AWIPS status (Live: IOS-XE 17.12.5)
 	AlarmCount            string `json:"alarm-count"`             // Alarm counter (Live: IOS-XE 17.12.5)
 	ForensicCaptureStatus string `json:"forensic-capture-status"` // AWIPS forensic capture status (Live: IOS-XE 17.12.5)
 }
 
-// AwipsDwldStatus represents AWIPS file download status.
-type AwipsDwldStatus struct {
+// AWIPSDwldStatus represents AWIPS file download status.
+type AWIPSDwldStatus struct {
 	LastSuccessTimestamp string `json:"last-success-timestamp"`  // Last file download success timestamp (Live: IOS-XE 17.12.5)
 	LastFailedTimestamp  string `json:"last-failed-timestamp"`   // Last file download failure timestamp (Live: IOS-XE 17.12.5)
 	NumOfFailureAttempts int    `json:"num-of-failure-attempts"` // Number of times file download failed (Live: IOS-XE 17.12.5)
@@ -43,31 +43,31 @@ type AwipsDwldStatus struct {
 	FileHash             string `json:"file-hash"`               // File content hash value (Live: IOS-XE 17.12.5)
 }
 
-// AwipsApDwldStatus represents AWIPS per AP file download status.
-type AwipsApDwldStatus struct {
-	ApMac       string `json:"ap-mac"`       // AP MAC address (Live: IOS-XE 17.12.5)
+// AWIPSApDwldStatus represents AWIPS per AP file download status.
+type AWIPSApDwldStatus struct {
+	ApMAC       string `json:"ap-mac"`       // AP MAC address (Live: IOS-XE 17.12.5)
 	DwldStatus  string `json:"dwld-status"`  // File download status (Live: IOS-XE 17.12.5)
 	FileVersion int    `json:"file-version"` // File version at AP (Live: IOS-XE 17.12.5)
 	FileHash    string `json:"file-hash"`    // File content hash value (Live: IOS-XE 17.12.5)
 }
 
-// AwipsPerSignStats represents AWIPS statistics per signature.
-type AwipsPerSignStats struct {
+// AWIPSPerSignStats represents AWIPS statistics per signature.
+type AWIPSPerSignStats struct {
 	SignatureID     int    `json:"signature-id"`     // Signature ID (YANG: IOS-XE 17.18.1)
 	SignatureString string `json:"signature-string"` // Signature description (YANG: IOS-XE 17.18.1)
 	AlarmCounter    int    `json:"alarm-counter"`    // Number of alarms (YANG: IOS-XE 17.18.1)
 }
 
-// AwipsGlobStats represents AWIPS global statistics.
-type AwipsGlobStats struct {
+// AWIPSGlobStats represents AWIPS global statistics.
+type AWIPSGlobStats struct {
 	TimeoutInSeconds   int    `json:"timeout-in-seconds"`    // Stats timeout interval in seconds (YANG: IOS-XE 17.18.1)
 	CurrHourTimestamp  string `json:"curr-hour-timestamp"`   // Timestamp of current hour (YANG: IOS-XE 17.18.1)
 	LastClearTimestamp string `json:"last-clear-timestamp"`  // Timestamp of last clear (YANG: IOS-XE 17.18.1)
 	CurrHourAlarmCount int    `json:"curr-hour-alarm-count"` // Number of alarms in current hour (YANG: IOS-XE 17.18.1)
 }
 
-// AwipsDwldStatusWncd represents AWIPS internal bookkeeping of file download status.
-type AwipsDwldStatusWncd struct {
+// AWIPSDwldStatusWncd represents AWIPS internal bookkeeping of file download status.
+type AWIPSDwldStatusWncd struct {
 	WlcVersion        string `json:"wlc-version"`         // File version at WLC (YANG: IOS-XE 17.18.1)
 	LatestFileVersion int    `json:"latest-file-version"` // File version of the latest download (YANG: IOS-XE 17.18.1)
 	DownloadStatus    bool   `json:"download-status"`     // File download status (YANG: IOS-XE 17.18.1)
