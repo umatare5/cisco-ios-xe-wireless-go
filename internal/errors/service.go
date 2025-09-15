@@ -21,7 +21,7 @@ import "fmt"
 //	err := ServiceOperationError("get", "AWIPS", "operational data", originalErr)
 //	// Result: "failed to get AWIPS operational data: original error"
 func ServiceOperationError(action, serviceType, entity string, err error) error {
-	return fmt.Errorf("failed to %s %s %s: %w", action, serviceType, entity, err)
+	return fmt.Errorf(ErrOperationFailedTemplate, action, serviceType, entity, err)
 }
 
 // SimpleServiceError creates a simplified service error without entity specification.
