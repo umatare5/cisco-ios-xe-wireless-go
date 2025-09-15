@@ -47,7 +47,7 @@ func (s Service) GetCommonInfoByMAC(
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, mac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, mac)
 	return core.Get[model.ClientOperCommonOperData](ctx, s.Client(), url)
 }
 
@@ -62,7 +62,7 @@ func (s Service) GetDCInfoByMAC(ctx context.Context, clientMAC string) (*model.C
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientDcInfoPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDcInfoPath, clientMAC)
 	return core.Get[model.ClientOperDcInfo](ctx, s.Client(), endpoint)
 }
 
@@ -86,7 +86,7 @@ func (s Service) GetDot11InfoByMAC(ctx context.Context, mac string) (*model.Clie
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, mac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, mac)
 
 	result, err := core.Get[model.ClientOperDot11OperData](ctx, s.Client(), url)
 	if err == nil {
@@ -114,7 +114,7 @@ func (s Service) GetMMIFClientHistoryByMAC(
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, clientMAC)
 	return core.Get[model.ClientOperMmIfClientHistory](ctx, s.Client(), endpoint)
 }
 
@@ -132,7 +132,7 @@ func (s Service) GetMMIFClientStatsByMAC(
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, clientMAC)
 	return core.Get[model.ClientOperMmIfClientStats](ctx, s.Client(), endpoint)
 }
 
@@ -150,7 +150,7 @@ func (s Service) GetMobilityInfoByMAC(
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, clientMAC)
 	return core.Get[model.ClientOperMobilityOperData](ctx, s.Client(), endpoint)
 }
 
@@ -165,7 +165,7 @@ func (s Service) GetPolicyInfoByMAC(ctx context.Context, clientMAC string) (*mod
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientPolicyDataPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientPolicyDataPath, clientMAC)
 	return core.Get[model.ClientOperPolicyData](ctx, s.Client(), endpoint)
 }
 
@@ -180,7 +180,7 @@ func (s Service) GetSISFDBByMAC(ctx context.Context, clientMAC string) (*model.C
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, clientMAC)
 	return core.Get[model.ClientOperSisfDBMac](ctx, s.Client(), endpoint)
 }
 
@@ -198,7 +198,7 @@ func (s Service) GetTrafficStatsByMAC(
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	endpoint := s.Client().RestconfBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, clientMAC)
+	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, clientMAC)
 	return core.Get[model.ClientOperTrafficStats](ctx, s.Client(), endpoint)
 }
 

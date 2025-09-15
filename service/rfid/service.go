@@ -45,7 +45,7 @@ func (s Service) GetGlobalDetailByMAC(
 		return nil, err
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
 	return core.Get[model.RfidEmltdData](ctx, s.Client(), url)
 }
 
@@ -62,7 +62,7 @@ func (s Service) GetRadioInfo(
 		return nil, err
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryCompositeURL(
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
 		routes.RFIDRadioDataPath,
 		macAddr,
 		apMacAddr,
@@ -82,6 +82,6 @@ func (s Service) GetDetailByMAC(ctx context.Context, macAddr string) (*model.Rfi
 		return nil, err
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
 	return core.Get[model.RfidData](ctx, s.Client(), url)
 }

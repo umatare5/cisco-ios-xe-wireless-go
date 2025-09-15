@@ -46,7 +46,7 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
 	}
 
 	// Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
 	return core.Get[model.ApCfgApTag](ctx, s.Client(), url)
 }
 
@@ -60,7 +60,7 @@ func (s Service) GetTagSourcePriorityConfigByPriority(
 	ctx context.Context,
 	priority int,
 ) (*model.ApCfgTagSourcePriorityConfigs, error) {
-	url := s.Client().RestconfBuilder().BuildQueryURL(
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(
 		routes.APTagSourcePriorityConfigQueryPath,
 		strconv.Itoa(priority),
 	)
@@ -89,7 +89,7 @@ func (s Service) ListAPHistoryByEthernetMAC(
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
 	return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), url)
 }
 
@@ -110,7 +110,7 @@ func (s Service) GetAPJoinStatsByWTPMAC(
 	}
 
 	// Build URL with RESTCONF path for ap-join-stats filtered by wtp-mac
-	url := s.Client().RestconfBuilder().BuildQueryURL(
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(
 		routes.APJoinStatsPath,
 		normalizedMAC,
 	)
@@ -125,7 +125,7 @@ func (s Service) GetWLANClientStatsByWLANID(
 	if wlanID <= 0 {
 		return nil, core.ErrResourceNotFound
 	}
-	url := s.Client().RestconfBuilder().BuildQueryURL(
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(
 		routes.APWlanClientStatsQueryPath,
 		strconv.Itoa(wlanID),
 	)
@@ -165,7 +165,7 @@ func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMac string) (*mod
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMac)
 	return core.Get[model.ApOperCapwapData](ctx, s.Client(), url)
 }
 
@@ -183,7 +183,7 @@ func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*m
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APApNameMacMapPath, wtpName)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMacMapPath, wtpName)
 	return core.Get[model.ApOperApNameMacMap](ctx, s.Client(), url)
 }
 
@@ -203,7 +203,7 @@ func (s Service) GetRadioStatusByWTPMACAndSlot(
 		return nil, core.ErrResourceNotFound
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMac, slotID)
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMac, slotID)
 	return core.Get[model.ApOperRadioOperData](ctx, s.Client(), url)
 }
 
@@ -240,7 +240,7 @@ func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
 		return nil, fmt.Errorf("invalid BSSID %s: %w", bssid, err)
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryCompositeURL(
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
 		routes.APRadioNeighborPath,
 		normalizedAPMAC,
 		slotID,
@@ -427,7 +427,7 @@ func (s Service) assignTags(ctx context.Context, apMac string, tags model.ApTag)
 	if err != nil {
 		return fmt.Errorf("invalid AP MAC address %s: %w", apMac, err)
 	}
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
 	tagData := buildAPCfgApTagData(normalizedMAC, tags)
 
 	// Execute operation with direct error propagation

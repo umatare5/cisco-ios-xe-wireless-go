@@ -249,8 +249,8 @@ func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error {
 	return nil
 }
 
-// RestconfBuilder returns the RESTCONF URL builder for the client.
-func (c *Client) RestconfBuilder() *restconf.Builder {
+// RESTCONFBuilder returns the RESTCONF URL builder for the client.
+func (c *Client) RESTCONFBuilder() *restconf.Builder {
 	if c == nil {
 		return nil
 	}

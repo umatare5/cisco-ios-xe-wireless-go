@@ -333,8 +333,8 @@ func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 	})
 }
 
-// TestCoreClientUnit_RestconfBuilder tests RestconfBuilder method.
-func TestCoreClientUnit_RestconfBuilder(t *testing.T) {
+// TestCoreClientUnit_RESTCONFBuilder tests RESTCONFBuilder method.
+func TestCoreClientUnit_RESTCONFBuilder(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		controller := "test.example.com"
 		token := "test-token"
@@ -342,14 +342,14 @@ func TestCoreClientUnit_RestconfBuilder(t *testing.T) {
 
 		testutil.AssertNoError(t, err, "Client creation should succeed")
 
-		builder := client.RestconfBuilder()
-		testutil.AssertTrue(t, builder != nil, "RestconfBuilder should return non-nil builder")
+		builder := client.RESTCONFBuilder()
+		testutil.AssertTrue(t, builder != nil, "RESTCONFBuilder should return non-nil builder")
 	})
 
 	t.Run("NilClient", func(t *testing.T) {
 		var client *Client
-		builder := client.RestconfBuilder()
-		testutil.AssertTrue(t, builder == nil, "RestconfBuilder should return nil for nil client")
+		builder := client.RESTCONFBuilder()
+		testutil.AssertTrue(t, builder == nil, "RESTCONFBuilder should return nil for nil client")
 	})
 }
 

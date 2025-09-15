@@ -32,7 +32,7 @@ func (s Service) ListProfileConfigs(ctx context.Context) (*model.WlanCfgEntries,
 
 // GetProfileConfig retrieves a specific WLAN configuration entry by profile name.
 func (s Service) GetProfileConfig(ctx context.Context, profileName string) (*model.WlanCfgEntry, error) {
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
 	return core.Get[model.WlanCfgEntry](ctx, s.Client(), url)
 }
 

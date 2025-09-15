@@ -35,7 +35,7 @@ func (s Service) GetRogueByMAC(ctx context.Context, mac string) (*model.RogueDat
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.RogueDataPath, mac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueDataPath, mac)
 	return core.Get[model.RogueData](ctx, s.Client(), url)
 }
 
@@ -50,7 +50,7 @@ func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*model.Ro
 		return nil, core.ErrInvalidConfiguration
 	}
 
-	url := s.Client().RestconfBuilder().BuildQueryURL(routes.RogueClientDataPath, mac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueClientDataPath, mac)
 	return core.Get[model.RogueClientData](ctx, s.Client(), url)
 }
 

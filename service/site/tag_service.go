@@ -193,7 +193,7 @@ func (s *SiteTagService) validateTagName(tagName string) error {
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *SiteTagService) buildTagURL(tagName string) string {
-	return s.Client().RestconfBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
+	return s.Client().RESTCONFBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
 }
 
 // buildPayload builds a payload for tag operations using the request model.
