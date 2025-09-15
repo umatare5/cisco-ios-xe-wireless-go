@@ -115,6 +115,8 @@ export WNC_ACCESS_TOKEN="YWRtaW46eW91ci1wYXNzd29yZA=="
 
 # Run the application
 go run main.go
+
+# result: Successfully connected! Found 2 APs
 ```
 
 ## 🌐 API Reference
