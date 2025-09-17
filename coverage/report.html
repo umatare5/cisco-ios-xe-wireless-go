@@ -700,7 +700,7 @@ const (
         // RadioSlot5GHz represents the slot ID for 5 GHz radio.
         RadioSlot5GHz = 1
 
-        // RadioSlot6GHz represents the slot ID for 5 GHz radio.
+        // RadioSlot6GHz represents the slot ID for 6 GHz radio.
         RadioSlot6GHz = 2
 
         // AdminStateEnabled represents the enabled admin state.
@@ -721,7 +721,7 @@ const (
         RadioBand24GHz RadioBand = RadioBand24GHzEnum
         // RadioBand5GHz represents 5GHz band (slot 1).
         RadioBand5GHz RadioBand = RadioBand5GHzEnum
-        // RadioBand5GHz represents 5GHz band (slot 1).
+        // RadioBand6GHz represents 6GHz band (slot 2).
         RadioBand6GHz RadioBand = RadioBand6GHzEnum
 )
 
@@ -788,7 +788,7 @@ import "fmt"
 //        err := ServiceOperationError("get", "AWIPS", "operational data", originalErr)
 //        // Result: "failed to get AWIPS operational data: original error"
 func ServiceOperationError(action, serviceType, entity string, err error) error <span class="cov10" title="3">{
-        return fmt.Errorf("failed to %s %s %s: %w", action, serviceType, entity, err)
+        return fmt.Errorf(ErrOperationFailedTemplate, action, serviceType, entity, err)
 }</span>
 
 // SimpleServiceError creates a simplified service error without entity specification.
