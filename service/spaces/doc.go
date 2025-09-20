@@ -4,4 +4,10 @@
 // It provides methods for connection monitoring, tenant management, and analytics integration.
 //
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+
+//
+// RESTCONF Endpoints:
+// - Operational: /restconf/data/Cisco-IOS-XE-wireless-cisco-spaces-oper:cisco-spaces-oper-data
+//
+// YANG References:
+// - Cisco-IOS-XE-wireless-cisco-spaces-oper.yang (17.18.1)
 package spaces
