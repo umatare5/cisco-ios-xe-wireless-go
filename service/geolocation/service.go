@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/geolocation"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,11 +19,11 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves geolocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.GeolocationOper, error) {
-	return core.Get[model.GeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
+func (s Service) GetOperational(ctx context.Context) (*GeolocationOper, error) {
+	return core.Get[GeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
 }
 
 // ListAPGeolocationStats retrieves AP geolocation statistics.
-func (s Service) ListAPGeolocationStats(ctx context.Context) (*model.GeolocationOperApGeoLocStats, error) {
-	return core.Get[model.GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
+func (s Service) ListAPGeolocationStats(ctx context.Context) (*GeolocationOperApGeoLocStats, error) {
+	return core.Get[GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
 }

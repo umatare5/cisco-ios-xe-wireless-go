@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
@@ -162,7 +161,7 @@ func getRadioBandForSlot(slotID int) core.RadioBand {
 }
 
 // logAPCapwapStatus logs the AP CAPWAP status information with admin state.
-func logAPCapwapStatus(t *testing.T, phase, apMac string, status *model.ApOperCAPWAPData) {
+func logAPCapwapStatus(t *testing.T, phase, apMac string, status *ap.ApOperCAPWAPData) {
 	if status == nil {
 		t.Logf("%s Status: No CAPWAP data available for AP %s", phase, apMac)
 		return
@@ -188,7 +187,7 @@ func logAPCapwapStatus(t *testing.T, phase, apMac string, status *model.ApOperCA
 }
 
 // logRadioStatus logs the radio operational status information.
-func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *model.ApOperRadioOperData) {
+func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *ap.ApOperRadioOperData) {
 	if status == nil {
 		t.Logf("%s Status: No data available for AP %s Slot %d", phase, apMac, slotID)
 		return
@@ -217,7 +216,7 @@ func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *model
 }
 
 // validateAPCapwapEnabled validates that the AP is in enabled admin state.
-func validateAPCapwapEnabled(t *testing.T, apMac string, status *model.ApOperCAPWAPData) {
+func validateAPCapwapEnabled(t *testing.T, apMac string, status *ap.ApOperCAPWAPData) {
 	if status == nil {
 		t.Logf("Warning: Cannot validate AP state - no CAPWAP data")
 		return
@@ -237,7 +236,7 @@ func validateAPCapwapEnabled(t *testing.T, apMac string, status *model.ApOperCAP
 }
 
 // validateRadioEnabled validates that the radio is in enabled state.
-func validateRadioEnabled(t *testing.T, apMac string, slotID int, status *model.ApOperRadioOperData) {
+func validateRadioEnabled(t *testing.T, apMac string, slotID int, status *ap.ApOperRadioOperData) {
 	if status == nil {
 		t.Logf("Warning: Cannot validate radio state - no operational data")
 		return
@@ -266,7 +265,7 @@ func validateRadioEnabled(t *testing.T, apMac string, slotID int, status *model.
 }
 
 // findCAPWAPDataByMAC finds CAPWAP data for a specific AP MAC address.
-func findCAPWAPDataByMAC(capwapDataList []model.CAPWAPData, apMac string) *model.CAPWAPData {
+func findCAPWAPDataByMAC(capwapDataList []ap.CAPWAPData, apMac string) *ap.CAPWAPData {
 	for _, capwapData := range capwapDataList {
 		if capwapData.WtpMAC == apMac {
 			return &capwapData
@@ -276,7 +275,7 @@ func findCAPWAPDataByMAC(capwapDataList []model.CAPWAPData, apMac string) *model
 }
 
 // findRadioDataByMACAndSlot finds radio data for a specific AP MAC and slot ID.
-func findRadioDataByMACAndSlot(radioDataList []model.RadioOperData, apMac string, slotID int) *model.RadioOperData {
+func findRadioDataByMACAndSlot(radioDataList []ap.RadioOperData, apMac string, slotID int) *ap.RadioOperData {
 	for _, radioData := range radioDataList {
 		if radioData.WtpMAC == apMac && radioData.SlotID == slotID {
 			return &radioData

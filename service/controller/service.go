@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/controller"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -42,8 +41,8 @@ func (s Service) ReloadWithReason(ctx context.Context, reason string) error {
 
 // reload is the internal helper function for WNC controller reload operations.
 func (s Service) reload(ctx context.Context, reason string, force *bool) error {
-	requestBody := model.WNCReloadRPCPayload{
-		Input: model.WNCReloadRPCInput{
+	requestBody := WNCReloadRPCPayload{
+		Input: WNCReloadRPCInput{
 			Reason: reason,
 			Force:  force,
 		},

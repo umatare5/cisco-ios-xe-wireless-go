@@ -9,7 +9,6 @@ import (
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	ierrors "github.com/umatare5/cisco-ios-xe-wireless-go/internal/errors"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
@@ -26,17 +25,17 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves the complete AP configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.ApCfg, error) {
-	return core.Get[model.ApCfg](ctx, s.Client(), routes.APCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*ApCfg, error) {
+	return core.Get[ApCfg](ctx, s.Client(), routes.APCfgPath)
 }
 
 // ListTagConfigs retrieves access point tag configurations.
-func (s Service) ListTagConfigs(ctx context.Context) (*model.ApCfgApTag, error) {
-	return core.Get[model.ApCfgApTag](ctx, s.Client(), routes.APTagsPath)
+func (s Service) ListTagConfigs(ctx context.Context) (*ApCfgApTag, error) {
+	return core.Get[ApCfgApTag](ctx, s.Client(), routes.APTagsPath)
 }
 
 // GetTagConfigByMAC retrieves AP tag configuration filtered by AP MAC address.
-func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCfgApTag, error) {
+func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*ApCfgApTag, error) {
 	if err := validation.ValidateMACAddress(mac); err != nil {
 		return nil, fmt.Errorf(ErrInvalidAPMacFormat, mac)
 	}
@@ -47,41 +46,41 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
 
 	// Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
-	return core.Get[model.ApCfgApTag](ctx, s.Client(), url)
+	return core.Get[ApCfgApTag](ctx, s.Client(), url)
 }
 
 // ListTagSourcePriorityConfigs retrieves tag source priority configurations.
-func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*model.TagSourcePriorityConfigs, error) {
-	return core.Get[model.TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
+func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*TagSourcePriorityConfigs, error) {
+	return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
 }
 
 // GetTagSourcePriorityConfigByPriority retrieves tag source priority configuration filtered by priority.
 func (s Service) GetTagSourcePriorityConfigByPriority(
 	ctx context.Context,
 	priority int,
-) (*model.ApCfgTagSourcePriorityConfigs, error) {
+) (*ApCfgTagSourcePriorityConfigs, error) {
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(
 		routes.APTagSourcePriorityConfigQueryPath,
 		strconv.Itoa(priority),
 	)
-	return core.Get[model.ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
+	return core.Get[ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
 }
 
 // GetGlobalInfo retrieves the complete AP global operational data.
-func (s Service) GetGlobalInfo(ctx context.Context) (*model.ApGlobalOper, error) {
-	return core.Get[model.ApGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)
+func (s Service) GetGlobalInfo(ctx context.Context) (*ApGlobalOper, error) {
+	return core.Get[ApGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)
 }
 
 // GetEWLCAPStats retrieves EWLC AP statistics.
-func (s Service) GetEWLCAPStats(ctx context.Context) (*model.ApGlobalOperEwlcApStats, error) {
-	return core.Get[model.ApGlobalOperEwlcApStats](ctx, s.Client(), routes.APEwlcApStatsPath)
+func (s Service) GetEWLCAPStats(ctx context.Context) (*ApGlobalOperEwlcApStats, error) {
+	return core.Get[ApGlobalOperEwlcApStats](ctx, s.Client(), routes.APEwlcApStatsPath)
 }
 
 // ListAPHistoryByEthernetMAC retrieves AP history data filtered by ethernet MAC address.
 func (s Service) ListAPHistoryByEthernetMAC(
 	ctx context.Context,
 	ethernetMAC string,
-) (*model.ApGlobalOperApHistory, error) {
+) (*ApGlobalOperApHistory, error) {
 	if ethernetMAC == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -90,13 +89,13 @@ func (s Service) ListAPHistoryByEthernetMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
-	return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), url)
+	return core.Get[ApGlobalOperApHistory](ctx, s.Client(), url)
 }
 
 // GetAPJoinStatsByWTPMAC retrieves AP join statistics filtered by WTP MAC address.
 func (s Service) GetAPJoinStatsByWTPMAC(
 	ctx context.Context, mac string,
-) (*model.ApGlobalOperApJoinStats, error) {
+) (*ApGlobalOperApJoinStats, error) {
 	if mac == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -114,14 +113,14 @@ func (s Service) GetAPJoinStatsByWTPMAC(
 		routes.APJoinStatsPath,
 		normalizedMAC,
 	)
-	return core.Get[model.ApGlobalOperApJoinStats](ctx, s.Client(), url)
+	return core.Get[ApGlobalOperApJoinStats](ctx, s.Client(), url)
 }
 
 // GetWLANClientStatsByWLANID retrieves WLAN client statistics filtered by WLAN ID.
 func (s Service) GetWLANClientStatsByWLANID(
 	ctx context.Context,
 	wlanID int,
-) (*model.ApGlobalOperWlanClientStats, error) {
+) (*ApGlobalOperWlanClientStats, error) {
 	if wlanID <= 0 {
 		return nil, core.ErrResourceNotFound
 	}
@@ -129,53 +128,53 @@ func (s Service) GetWLANClientStatsByWLANID(
 		routes.APWlanClientStatsQueryPath,
 		strconv.Itoa(wlanID),
 	)
-	return core.Get[model.ApGlobalOperWlanClientStats](ctx, s.Client(), url)
+	return core.Get[ApGlobalOperWlanClientStats](ctx, s.Client(), url)
 }
 
 // ListAPHistory retrieves only AP history data using fields parameter.
-func (s Service) ListAPHistory(ctx context.Context) (*model.ApGlobalOperApHistory, error) {
-	return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), routes.APHistoryPath)
+func (s Service) ListAPHistory(ctx context.Context) (*ApGlobalOperApHistory, error) {
+	return core.Get[ApGlobalOperApHistory](ctx, s.Client(), routes.APHistoryPath)
 }
 
 // ListAPJoinStats retrieves only AP join statistics using fields parameter.
-func (s Service) ListAPJoinStats(ctx context.Context) (*model.ApGlobalOperApJoinStats, error) {
-	return core.Get[model.ApGlobalOperApJoinStats](ctx, s.Client(), routes.APJoinStatsPath)
+func (s Service) ListAPJoinStats(ctx context.Context) (*ApGlobalOperApJoinStats, error) {
+	return core.Get[ApGlobalOperApJoinStats](ctx, s.Client(), routes.APJoinStatsPath)
 }
 
 // ListWLANClientStats retrieves only WLAN client statistics using fields parameter.
 func (s Service) ListWLANClientStats(
 	ctx context.Context,
-) (*model.ApGlobalOperWlanClientStats, error) {
-	return core.Get[model.ApGlobalOperWlanClientStats](ctx, s.Client(), routes.APWlanClientStatsPath)
+) (*ApGlobalOperWlanClientStats, error) {
+	return core.Get[ApGlobalOperWlanClientStats](ctx, s.Client(), routes.APWlanClientStatsPath)
 }
 
 // GetOperational retrieves the complete AP operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.ApOper, error) {
-	return core.Get[model.ApOper](ctx, s.Client(), routes.APOperPath)
+func (s Service) GetOperational(ctx context.Context) (*ApOper, error) {
+	return core.Get[ApOper](ctx, s.Client(), routes.APOperPath)
 }
 
 // ListCAPWAPData retrieves CAPWAP protocol data.
-func (s Service) ListCAPWAPData(ctx context.Context) (*model.ApOperCAPWAPData, error) {
-	return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
+func (s Service) ListCAPWAPData(ctx context.Context) (*ApOperCAPWAPData, error) {
+	return core.Get[ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
 }
 
 // GetCAPWAPDataByWTPMAC retrieves CAPWAP data for a specific WTP MAC.
-func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*model.ApOperCAPWAPData, error) {
+func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*ApOperCAPWAPData, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
-	return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), url)
+	return core.Get[ApOperCAPWAPData](ctx, s.Client(), url)
 }
 
 // ListNameMACMaps retrieves AP name-to-MAC mapping data.
-func (s Service) ListNameMACMaps(ctx context.Context) (*model.ApOperApNameMACMap, error) {
-	return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
+func (s Service) ListNameMACMaps(ctx context.Context) (*ApOperApNameMACMap, error) {
+	return core.Get[ApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
 }
 
 // GetNameMACMapByWTPName retrieves AP name-to-MAC mapping filtered by WTP name.
-func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*model.ApOperApNameMACMap, error) {
+func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*ApOperApNameMACMap, error) {
 	if wtpName == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -184,18 +183,18 @@ func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*m
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
-	return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), url)
+	return core.Get[ApOperApNameMACMap](ctx, s.Client(), url)
 }
 
 // ListRadioStatus retrieves radio operational status data.
-func (s Service) ListRadioStatus(ctx context.Context) (*model.RadioOperData, error) {
-	return core.Get[model.RadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
+func (s Service) ListRadioStatus(ctx context.Context) (*RadioOperData, error) {
+	return core.Get[RadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
 }
 
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
 func (s Service) GetRadioStatusByWTPMACAndSlot(
 	ctx context.Context, wtpMAC string, slotID int,
-) (*model.ApOperRadioOperData, error) {
+) (*ApOperRadioOperData, error) {
 	if wtpMAC == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -204,19 +203,19 @@ func (s Service) GetRadioStatusByWTPMACAndSlot(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
-	return core.Get[model.ApOperRadioOperData](ctx, s.Client(), url)
+	return core.Get[ApOperRadioOperData](ctx, s.Client(), url)
 }
 
 // ListRadioNeighbors retrieves all AP radio neighbor information.
-func (s Service) ListRadioNeighbors(ctx context.Context) (*model.ApOperApRadioNeighbor, error) {
-	return core.Get[model.ApOperApRadioNeighbor](ctx, s.Client(), routes.APRadioNeighborPath)
+func (s Service) ListRadioNeighbors(ctx context.Context) (*ApOperApRadioNeighbor, error) {
+	return core.Get[ApOperApRadioNeighbor](ctx, s.Client(), routes.APRadioNeighborPath)
 }
 
 // GetRadioNeighborByAPMACSlotAndBSSID retrieves AP radio neighbor information for a specific AP MAC, slot ID and BSSID.
 // This follows the YANG model key structure: "ap-mac slot-id bssid".
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
 	ctx context.Context, apMAC string, slotID int, bssid string,
-) (*model.ApOperApRadioNeighbor, error) {
+) (*ApOperApRadioNeighbor, error) {
 	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, errors.New("AP MAC address cannot be empty")
 	}
@@ -246,41 +245,41 @@ func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
 		slotID,
 		normalizedBSSID,
 	)
-	return core.Get[model.ApOperApRadioNeighbor](ctx, s.Client(), url)
+	return core.Get[ApOperApRadioNeighbor](ctx, s.Client(), url)
 }
 
 // ListActiveImageLocations retrieves active image location information using fields parameter.
 func (s Service) ListActiveImageLocations(
 	ctx context.Context,
-) (*model.ApOperApImageActiveLocation, error) {
-	return core.Get[model.ApOperApImageActiveLocation](ctx, s.Client(), routes.APImageActiveLocationPath)
+) (*ApOperApImageActiveLocation, error) {
+	return core.Get[ApOperApImageActiveLocation](ctx, s.Client(), routes.APImageActiveLocationPath)
 }
 
 // ListPreparedImageLocations retrieves only AP image prepare location data using fields parameter.
 func (s Service) ListPreparedImageLocations(
 	ctx context.Context,
-) (*model.ApOperApImagePrepareLocation, error) {
-	return core.Get[model.ApOperApImagePrepareLocation](ctx, s.Client(), routes.APImagePrepareLocationPath)
+) (*ApOperApImagePrepareLocation, error) {
+	return core.Get[ApOperApImagePrepareLocation](ctx, s.Client(), routes.APImagePrepareLocationPath)
 }
 
 // ListPowerInfo retrieves only AP power information using fields parameter.
-func (s Service) ListPowerInfo(ctx context.Context) (*model.ApOperApPwrInfo, error) {
-	return core.Get[model.ApOperApPwrInfo](ctx, s.Client(), routes.APPwrInfoPath)
+func (s Service) ListPowerInfo(ctx context.Context) (*ApOperApPwrInfo, error) {
+	return core.Get[ApOperApPwrInfo](ctx, s.Client(), routes.APPwrInfoPath)
 }
 
 // ListSensorStatus retrieves only AP sensor status using fields parameter.
-func (s Service) ListSensorStatus(ctx context.Context) (*model.ApOperApSensorStatus, error) {
-	return core.Get[model.ApOperApSensorStatus](ctx, s.Client(), routes.APSensorStatusPath)
+func (s Service) ListSensorStatus(ctx context.Context) (*ApOperApSensorStatus, error) {
+	return core.Get[ApOperApSensorStatus](ctx, s.Client(), routes.APSensorStatusPath)
 }
 
 // ListCAPWAPPackets retrieves only CAPWAP packets data using fields parameter.
-func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCAPWAPPkts, error) {
-	return core.Get[model.ApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
+func (s Service) ListCAPWAPPackets(ctx context.Context) (*ApOperCAPWAPPkts, error) {
+	return core.Get[ApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
 }
 
 // ListIotFirmware retrieves IoT firmware information for all access points.
-func (s Service) ListIotFirmware(ctx context.Context) (*model.ApOperIotFirmware, error) {
-	return core.Get[model.ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
+func (s Service) ListIotFirmware(ctx context.Context) (*ApOperIotFirmware, error) {
+	return core.Get[ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
 }
 
 // EnableAP enables the administrative state of an access point.
@@ -314,7 +313,7 @@ func (s Service) AssignSiteTag(ctx context.Context, apMAC, siteTag string) error
 	if !validation.IsValidTagAssignment(siteTag, "site") {
 		return ierrors.RequiredParameterError("site tag")
 	}
-	tags := model.ApTag{SiteTag: siteTag}
+	tags := ApTag{SiteTag: siteTag}
 	return s.assignTags(ctx, apMAC, tags)
 }
 
@@ -323,7 +322,7 @@ func (s Service) AssignPolicyTag(ctx context.Context, apMAC, policyTag string) e
 	if !validation.IsValidTagAssignment(policyTag, "policy") {
 		return ierrors.RequiredParameterError("policy tag")
 	}
-	tags := model.ApTag{PolicyTag: policyTag}
+	tags := ApTag{PolicyTag: policyTag}
 	return s.assignTags(ctx, apMAC, tags)
 }
 
@@ -332,7 +331,7 @@ func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error {
 	if !validation.IsValidTagAssignment(rfTag, "rf") {
 		return ierrors.RequiredParameterError("RF tag")
 	}
-	tags := model.ApTag{RFTag: rfTag}
+	tags := ApTag{RFTag: rfTag}
 	return s.assignTags(ctx, apMAC, tags)
 }
 
@@ -369,8 +368,8 @@ func (s Service) updateAPState(ctx context.Context, mac, mode string) error {
 		return fmt.Errorf("invalid AP MAC address: %s", mac)
 	}
 
-	payload := model.APConfigRPCPayload{
-		Input: model.APConfigRPCInput{
+	payload := APConfigRPCPayload{
+		Input: APConfigRPCInput{
 			Mode:    mode,
 			MACAddr: normalizedMAC,
 		},
@@ -399,8 +398,8 @@ func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *
 		return err
 	}
 
-	payload := model.APSlotConfigRPCPayload{
-		Input: model.APSlotConfigRPCInput{
+	payload := APSlotConfigRPCPayload{
+		Input: APSlotConfigRPCInput{
 			Mode:    core.GetAdminStateMode(enabled),
 			SlotID:  int(radioBandInfo.SlotID),
 			Band:    strconv.Itoa(int(radioBandInfo.Band)),
@@ -415,7 +414,7 @@ func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *
 }
 
 // assignTags assigns multiple tags to an Access Point (internal implementation).
-func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag) error {
+func (s Service) assignTags(ctx context.Context, apMAC string, tags ApTag) error {
 	if !validation.IsValidMACAddr(apMAC) {
 		return ierrors.ValidationError("AP MAC address", apMAC)
 	}
@@ -431,7 +430,7 @@ func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag)
 	tagData := buildAPCfgApTagData(normalizedMAC, tags)
 
 	// Execute operation with direct error propagation
-	if err := core.PutVoid(ctx, s.Client(), url, model.APTagPayload{ApTag: tagData}); err != nil {
+	if err := core.PutVoid(ctx, s.Client(), url, APTagPayload{ApTag: tagData}); err != nil {
 		return ierrors.ServiceOperationError("assign", "AP", "tags", err)
 	}
 	return nil
@@ -439,8 +438,8 @@ func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag)
 
 // reload is the internal helper function for AP reload operations.
 func (s Service) reload(ctx context.Context, apName string) error {
-	requestBody := model.APReloadRPCPayload{
-		Input: model.APReloadRPCInput{
+	requestBody := APReloadRPCPayload{
+		Input: APReloadRPCInput{
 			APName: apName,
 		},
 	}
@@ -448,7 +447,7 @@ func (s Service) reload(ctx context.Context, apName string) error {
 }
 
 // findAPByMAC searches for an AP with the given MAC address in CAPWAP data.
-func findAPByMAC(capwapData *model.ApOperCAPWAPData, apMAC string) (string, bool) {
+func findAPByMAC(capwapData *ApOperCAPWAPData, apMAC string) (string, bool) {
 	if capwapData == nil {
 		return "", false
 	}
@@ -461,8 +460,8 @@ func findAPByMAC(capwapData *model.ApOperCAPWAPData, apMAC string) (string, bool
 }
 
 // buildAPCfgApTagData constructs the payload for tag assignment requests.
-func buildAPCfgApTagData(normalizedMAC string, tags model.ApTag) model.APCfgApTagData {
-	return model.APCfgApTagData{
+func buildAPCfgApTagData(normalizedMAC string, tags ApTag) APCfgApTagData {
+	return APCfgApTagData{
 		APMac:     normalizedMAC,
 		SiteTag:   validation.SelectNonEmptyValue(tags.SiteTag, validation.DefaultSiteTag),
 		PolicyTag: validation.SelectNonEmptyValue(tags.PolicyTag, validation.DefaultPolicyTag),

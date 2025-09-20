@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/dot11"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves dot11 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.Dot11Cfg, error) {
-	return core.Get[model.Dot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
+func (s Service) GetConfig(ctx context.Context) (*Dot11Cfg, error) {
+	return core.Get[Dot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
 }

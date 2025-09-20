@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wlan"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil"
 )
 
@@ -173,7 +172,7 @@ func TestWlanPolicyTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test CreatePolicyTag with valid config using proper model
-	config := &model.PolicyListEntry{
+	config := &PolicyListEntry{
 		TagName:     "new-tag",
 		Description: "New policy tag",
 	}
@@ -185,7 +184,7 @@ func TestWlanPolicyTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	}
 
 	// Test SetPolicyTag with valid config using proper model
-	updateConfig := &model.PolicyListEntry{
+	updateConfig := &PolicyListEntry{
 		TagName:     "updated-tag",
 		Description: "Updated description",
 	}
@@ -226,7 +225,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_EmptyTagName(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test CreatePolicyTag with empty tag name config using proper model
-	configEmptyName := &model.PolicyListEntry{
+	configEmptyName := &PolicyListEntry{
 		TagName:     "",
 		Description: "Test description",
 	}
@@ -243,7 +242,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_EmptyTagName(t *testing.T) {
 	}
 
 	// Test CreatePolicyTag with long tag name config using proper model
-	configLongName := &model.PolicyListEntry{
+	configLongName := &PolicyListEntry{
 		TagName:     "this-is-a-very-long-tag-name-that-exceeds-thirty-two-characters",
 		Description: "Test description",
 	}

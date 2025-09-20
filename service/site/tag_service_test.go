@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/site"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil"
 )
 
@@ -107,7 +106,7 @@ func TestSiteTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	t.Run("CreateSiteTag", func(t *testing.T) {
-		newSiteTag := &model.SiteListEntry{
+		newSiteTag := &SiteListEntry{
 			SiteTagName:   "new-site-tag",
 			Description:   strPtr("New Site Tag"),
 			ApJoinProfile: strPtr("test-ap-policy-profile"),
@@ -182,7 +181,7 @@ func TestSiteTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	})
 
 	t.Run("CreateSiteTag_EmptyTagName", func(t *testing.T) {
-		config := &model.SiteListEntry{SiteTagName: ""}
+		config := &SiteListEntry{SiteTagName: ""}
 		err := siteTagService.CreateSiteTag(ctx, config)
 		if err == nil {
 			t.Error("Expected validation error for empty tag name")
@@ -219,7 +218,7 @@ func TestSiteTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	})
 
 	t.Run("CreateSiteTag_NilClient", func(t *testing.T) {
-		config := &model.SiteListEntry{
+		config := &SiteListEntry{
 			SiteTagName: "test-site",
 		}
 		err := siteTagService.CreateSiteTag(ctx, config)

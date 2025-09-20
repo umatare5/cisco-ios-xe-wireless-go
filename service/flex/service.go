@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/flex"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves FlexConnect configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.FlexCfg, error) {
-	return core.Get[model.FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*FlexCfg, error) {
+	return core.Get[FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
 }
