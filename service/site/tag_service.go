@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/site"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -25,12 +24,12 @@ func NewSiteTagService(client *core.Client) *SiteTagService {
 }
 
 // GetSiteTag retrieves a specific site tag configuration.
-func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model.SiteListEntry, error) {
+func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*SiteListEntry, error) {
 	if err := s.validateTagName(tagName); err != nil {
 		return nil, err
 	}
 
-	result, err := core.Get[model.SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +44,9 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model
 }
 
 // ListSiteTags retrieves all site tag configurations.
-func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntry, error) {
+func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]SiteListEntry, error) {
 	type siteTagsResponse struct {
-		SiteTagConfigs model.SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
+		SiteTagConfigs SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
 	}
 
 	result, err := core.Get[siteTagsResponse](ctx, s.Client(), routes.SiteTagConfigsPath)
@@ -55,17 +54,17 @@ func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntr
 		return nil, err
 	}
 	if result == nil {
-		return []model.SiteListEntry{}, nil
+		return []SiteListEntry{}, nil
 	}
 	if len(result.SiteTagConfigs.SiteTagConfig) == 0 {
-		return []model.SiteListEntry{}, nil
+		return []SiteListEntry{}, nil
 	}
 
 	return result.SiteTagConfigs.SiteTagConfig, nil
 }
 
 // CreateSiteTag creates a new site tag configuration.
-func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *model.SiteListEntry) error {
+func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *SiteListEntry) error {
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
@@ -163,7 +162,7 @@ func (s *SiteTagService) DeleteSiteTag(ctx context.Context, siteTagName string) 
 }
 
 // setSiteTag sets/updates an existing site tag configuration.
-func (s *SiteTagService) setSiteTag(ctx context.Context, config *model.SiteListEntry) error {
+func (s *SiteTagService) setSiteTag(ctx context.Context, config *SiteListEntry) error {
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
@@ -196,9 +195,9 @@ func (s *SiteTagService) buildTagURL(tagName string) string {
 	return s.Client().RESTCONFBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
 }
 
-// buildPayload builds a payload for tag operations using the request model.
-func (s *SiteTagService) buildPayload(config model.SiteListEntry) model.SiteTagConfigsPayload {
-	return model.SiteTagConfigsPayload{
+// buildPayload builds a payload for tag operations using the request.
+func (s *SiteTagService) buildPayload(config SiteListEntry) SiteTagConfigsPayload {
+	return SiteTagConfigsPayload{
 		SiteListEntry: config,
 	}
 }

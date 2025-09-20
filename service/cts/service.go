@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/cts"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves CTS configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.CTSCfg, error) {
-	return core.Get[model.CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CTSCfg, error) {
+	return core.Get[CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
 }

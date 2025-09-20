@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/site"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/site"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/scenario"
 )
@@ -51,7 +50,7 @@ func executeStandardSiteTagWorkflow(t *testing.T, tsc *scenario.TagContext, serv
 	// Step 2: Create test tag
 	t.Logf("Step 2: Creating test site tag: %s", tsc.TestTagName)
 	description := expectedSiteTagDescription
-	if err := service.CreateSiteTag(tsc.Ctx, &model.SiteListEntry{
+	if err := service.CreateSiteTag(tsc.Ctx, &site.SiteListEntry{
 		SiteTagName: tsc.TestTagName,
 		Description: &description,
 	}); err != nil {
@@ -125,7 +124,7 @@ func configureSiteTagProfiles(t *testing.T, tsc *scenario.TagContext, service *s
 }
 
 // validateSiteTagConfiguration validates the retrieved site tag configuration
-func validateSiteTagConfiguration(t *testing.T, tsc *scenario.TagContext, config *model.SiteListEntry) {
+func validateSiteTagConfiguration(t *testing.T, tsc *scenario.TagContext, config *site.SiteListEntry) {
 	if config == nil {
 		t.Fatalf("Expected site tag configuration for %s, but got nil", tsc.TestTagName)
 	}
@@ -164,7 +163,7 @@ func validateSiteTagConfiguration(t *testing.T, tsc *scenario.TagContext, config
 }
 
 // validateSiteTagDeletion ensures the test tag was properly deleted
-func validateSiteTagDeletion(t *testing.T, testTagName string, finalTags []model.SiteListEntry) {
+func validateSiteTagDeletion(t *testing.T, testTagName string, finalTags []site.SiteListEntry) {
 	for _, tag := range finalTags {
 		if tag.SiteTagName == testTagName {
 			t.Errorf("Test tag %s should have been deleted but still exists", testTagName)

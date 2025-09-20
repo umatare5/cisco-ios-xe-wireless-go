@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wat"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -22,6 +21,6 @@ func NewService(client *core.Client) Service {
 
 // GetConfig retrieves the complete WAT configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.WATCfg, error) {
-	return core.Get[model.WATCfg](ctx, s.Client(), routes.WATCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*WATCfg, error) {
+	return core.Get[WATCfg](ctx, s.Client(), routes.WATCfgPath)
 }

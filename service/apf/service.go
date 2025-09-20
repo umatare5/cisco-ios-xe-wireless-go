@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/apf"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves the complete APF configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.APFCfg, error) {
-	return core.Get[model.APFCfg](ctx, s.Client(), routes.APFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*APFCfg, error) {
+	return core.Get[APFCfg](ctx, s.Client(), routes.APFCfgPath)
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/awips"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves the complete AWIPS operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AWIPSOper, error) {
-	return core.Get[model.AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*AWIPSOper, error) {
+	return core.Get[AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
 }

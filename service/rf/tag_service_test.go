@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rf"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil"
 )
 
@@ -174,7 +173,7 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	t.Run("CreateRFTag", func(t *testing.T) {
-		newTag := &model.RFTag{
+		newTag := &RFTag{
 			TagName:             "new-rf-tag",
 			Dot11ARfProfileName: "5ghz-profile",
 			Dot11BRfProfileName: "24ghz-profile",
@@ -265,7 +264,7 @@ func TestRfTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	})
 
 	t.Run("CreateRFTag_EmptyTagName", func(t *testing.T) {
-		emptyTag := &model.RFTag{TagName: ""}
+		emptyTag := &RFTag{TagName: ""}
 		err := rfTagService.CreateRFTag(ctx, emptyTag)
 		if err == nil {
 			t.Error("Expected error for empty tag name")
@@ -276,7 +275,7 @@ func TestRfTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 	})
 
 	t.Run("CreateRFTag_WhitespaceTagName", func(t *testing.T) {
-		whitespaceTag := &model.RFTag{TagName: "   "}
+		whitespaceTag := &RFTag{TagName: "   "}
 		err := rfTagService.CreateRFTag(ctx, whitespaceTag)
 		if err == nil {
 			t.Error("Expected error for whitespace tag name")
@@ -339,7 +338,7 @@ func TestRfTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		rfTagService := service.RFTag()
 		ctx := testutil.TestContext(t)
 
-		newTag := &model.RFTag{
+		newTag := &RFTag{
 			TagName: "valid-tag",
 		}
 		err := rfTagService.CreateRFTag(ctx, newTag)

@@ -2,4 +2,14 @@
 //
 // This package allows you to monitor and retrieve BLE Location Transmit (LTX) data from a Cisco Catalyst 9800 Wireless LAN Controller.
 // It provides methods for BLE beacon monitoring, antenna management, and proximity analytics.
+//
+// RESTCONF Endpoints:
+// - Configuration: /restconf/data/Cisco-IOS-XE-wireless-ble-cfg:ble-cfg-data
+// - Operational: /restconf/data/Cisco-IOS-XE-wireless-ble-oper:ble-oper-data
+//
+// YANG References:
+// - Cisco-IOS-XE-wireless-ble-cfg.yang (17.12.1)
+// - Cisco-IOS-XE-wireless-ble-oper.yang (17.12.1)
+// - Cisco-IOS-XE-wireless-ble-cfg.yang (17.18.1)
+// - Cisco-IOS-XE-wireless-ble-oper.yang (17.18.1)
 package ble

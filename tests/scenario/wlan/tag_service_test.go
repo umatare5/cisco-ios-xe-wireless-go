@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wlan"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/scenario"
 )
@@ -50,7 +49,7 @@ func executeStandardPolicyTagWorkflow(t *testing.T, tsc *scenario.TagContext, se
 
 	// Step 2: Create test tag
 	t.Logf("Step 2: Creating test policy tag: %s", tsc.TestTagName)
-	if err := service.CreatePolicyTag(tsc.Ctx, &model.PolicyListEntry{
+	if err := service.CreatePolicyTag(tsc.Ctx, &wlan.PolicyListEntry{
 		TagName:     tsc.TestTagName,
 		Description: expectedPolicyTagDescription,
 	}); err != nil {
@@ -60,10 +59,10 @@ func executeStandardPolicyTagWorkflow(t *testing.T, tsc *scenario.TagContext, se
 
 	// Step 3: Configure WLAN policies
 	t.Logf("Step 3: Setting WLAN policy for test tag: %s", tsc.TestTagName)
-	if err := service.SetPolicyTag(tsc.Ctx, &model.PolicyListEntry{
+	if err := service.SetPolicyTag(tsc.Ctx, &wlan.PolicyListEntry{
 		TagName: tsc.TestTagName,
-		WLANPolicies: &model.WLANPolicies{
-			WLANPolicy: []model.WLANPolicyMap{
+		WLANPolicies: &wlan.WLANPolicies{
+			WLANPolicy: []wlan.WLANPolicyMap{
 				{
 					WLANProfileName:   testWLANProfileName,
 					PolicyProfileName: testPolicyProfileName,
@@ -107,7 +106,7 @@ func executeStandardPolicyTagWorkflow(t *testing.T, tsc *scenario.TagContext, se
 }
 
 // validatePolicyTagConfiguration validates the retrieved policy tag configuration
-func validatePolicyTagConfiguration(t *testing.T, tsc *scenario.TagContext, config *model.PolicyListEntry) {
+func validatePolicyTagConfiguration(t *testing.T, tsc *scenario.TagContext, config *wlan.PolicyListEntry) {
 	if config == nil {
 		t.Errorf("Tag '%s' configuration should not be nil", tsc.TestTagName)
 		return

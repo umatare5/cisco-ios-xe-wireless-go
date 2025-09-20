@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rf"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/rf"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/scenario"
 )
@@ -51,7 +50,7 @@ func executeStandardRFTagWorkflow(t *testing.T, tsc *scenario.TagContext, servic
 
 	// Step 2: Create test tag
 	t.Logf("Step 2: Creating test RF tag: %s", tsc.TestTagName)
-	if err := service.CreateRFTag(tsc.Ctx, &model.RFTag{
+	if err := service.CreateRFTag(tsc.Ctx, &rf.RFTag{
 		TagName:     tsc.TestTagName,
 		Description: expectedRFTagDescription,
 	}); err != nil {
@@ -117,7 +116,7 @@ func configureRFTagProfiles(t *testing.T, tsc *scenario.TagContext, service *rf.
 }
 
 // validateRFTagConfig validates the retrieved RF tag configuration
-func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *model.RFTag) {
+func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *rf.RFTag) {
 	if config == nil {
 		t.Fatalf("Expected RF tag configuration for %s, but got nil", tsc.TestTagName)
 	}
@@ -148,7 +147,7 @@ func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *model.R
 }
 
 // validateRFTagDeletion ensures the test tag was properly deleted
-func validateRFTagDeletion(t *testing.T, testTagName string, finalTags []model.RFTag) {
+func validateRFTagDeletion(t *testing.T, testTagName string, finalTags []rf.RFTag) {
 	for _, tag := range finalTags {
 		if tag.TagName == testTagName {
 			t.Errorf("Test tag %s should have been deleted but still exists", testTagName)

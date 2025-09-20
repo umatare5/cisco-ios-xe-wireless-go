@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wlan"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -24,7 +23,7 @@ func NewPolicyTagService(c *core.Client) *PolicyTagService {
 }
 
 // GetPolicyTag retrieves a specific policy tag configuration.
-func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*model.PolicyListEntry, error) {
+func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*PolicyListEntry, error) {
 	if err := s.validateTagName(tagName); err != nil {
 		return nil, err
 	}
@@ -47,29 +46,29 @@ func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*m
 }
 
 // ListPolicyTags retrieves all policy tag configurations.
-func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]model.PolicyListEntry, error) {
-	result, err := core.Get[model.WlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntry, error) {
+	result, err := core.Get[WlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
 	if err != nil {
 		return nil, err
 	}
 
 	if result == nil {
-		return []model.PolicyListEntry{}, nil
+		return []PolicyListEntry{}, nil
 	}
 
 	if result.PolicyListEntries == nil {
-		return []model.PolicyListEntry{}, nil
+		return []PolicyListEntry{}, nil
 	}
 
 	if result.PolicyListEntries.PolicyListEntry == nil {
-		return []model.PolicyListEntry{}, nil
+		return []PolicyListEntry{}, nil
 	}
 
 	return result.PolicyListEntries.PolicyListEntry, nil
 }
 
 // CreatePolicyTag creates a new policy tag configuration.
-func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *model.PolicyListEntry) error {
+func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *PolicyListEntry) error {
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
@@ -87,7 +86,7 @@ func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *model.Po
 }
 
 // SetPolicyTag configures a policy tag on the wireless controller using PUT operation.
-func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *model.PolicyListEntry) error {
+func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *PolicyListEntry) error {
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
@@ -123,8 +122,8 @@ func (s *PolicyTagService) SetPolicyProfile(
 
 	// Initialize WLANPolicies if nil
 	if config.WLANPolicies == nil {
-		config.WLANPolicies = &model.WLANPolicies{
-			WLANPolicy: []model.WLANPolicyMap{},
+		config.WLANPolicies = &WLANPolicies{
+			WLANPolicy: []WLANPolicyMap{},
 		}
 	}
 
@@ -139,7 +138,7 @@ func (s *PolicyTagService) SetPolicyProfile(
 	}
 
 	if !found {
-		config.WLANPolicies.WLANPolicy = append(config.WLANPolicies.WLANPolicy, model.WLANPolicyMap{
+		config.WLANPolicies.WLANPolicy = append(config.WLANPolicies.WLANPolicy, WLANPolicyMap{
 			WLANProfileName:   wlanProfileName,
 			PolicyProfileName: policyProfileName,
 		})
@@ -195,7 +194,7 @@ func (s *PolicyTagService) buildTagURL(tagName string) string {
 }
 
 // buildPayload builds a payload for tag operations directly.
-func (s *PolicyTagService) buildPayload(config model.PolicyListEntry) map[string]interface{} {
+func (s *PolicyTagService) buildPayload(config PolicyListEntry) map[string]interface{} {
 	return map[string]interface{}{
 		"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entry": config,
 	}

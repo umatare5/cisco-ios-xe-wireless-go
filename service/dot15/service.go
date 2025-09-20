@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/dot15"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves dot15.4 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.Dot15Cfg, error) {
-	return core.Get[model.Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
+func (s Service) GetConfig(ctx context.Context) (*Dot15Cfg, error) {
+	return core.Get[Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
 }

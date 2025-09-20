@@ -1,4 +1,4 @@
-package model
+package wat
 
 // WATCfg represents the complete WAT configuration from YANG 17.18.1+.
 type WATCfg struct {

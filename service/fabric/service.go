@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-	model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/fabric"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -20,6 +19,6 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves Fabric configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.FabricCfg, error) {
-	return core.Get[model.FabricCfg](ctx, s.Client(), routes.FabricCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*FabricCfg, error) {
+	return core.Get[FabricCfg](ctx, s.Client(), routes.FabricCfgPath)
 }

@@ -2055,7 +2055,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/afc"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2071,23 +2070,23 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves the complete AFC operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AFCOper, error) <span class="cov5" title="2">{
-        return core.Get[model.AFCOper](ctx, s.Client(), routes.AFCOperPath)
+func (s Service) GetOperational(ctx context.Context) (*AFCOper, error) <span class="cov5" title="2">{
+        return core.Get[AFCOper](ctx, s.Client(), routes.AFCOperPath)
 }</span>
 
 // ListAPResponses retrieves AFC AP response data.
-func (s Service) ListAPResponses(ctx context.Context) (*model.AFCOperEwlcAFCApResp, error) <span class="cov1" title="1">{
-        return core.Get[model.AFCOperEwlcAFCApResp](ctx, s.Client(), routes.AFCEwlcAFCApRespPath)
+func (s Service) ListAPResponses(ctx context.Context) (*AFCOperEwlcAFCApResp, error) <span class="cov1" title="1">{
+        return core.Get[AFCOperEwlcAFCApResp](ctx, s.Client(), routes.AFCEwlcAFCApRespPath)
 }</span>
 
 // GetCloudInfo retrieves AFC cloud operational data.
-func (s Service) GetCloudInfo(ctx context.Context) (*model.AFCCloudOper, error) <span class="cov1" title="1">{
-        return core.Get[model.AFCCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
+func (s Service) GetCloudInfo(ctx context.Context) (*AFCCloudOper, error) <span class="cov1" title="1">{
+        return core.Get[AFCCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
 }</span>
 
 // GetCloudStats retrieves AFC cloud statistics.
-func (s Service) GetCloudStats(ctx context.Context) (*model.AFCCloudOperAFCCloudStats, error) <span class="cov1" title="1">{
-        return core.Get[model.AFCCloudOperAFCCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
+func (s Service) GetCloudStats(ctx context.Context) (*AFCCloudOperAFCCloudStats, error) <span class="cov1" title="1">{
+        return core.Get[AFCCloudOperAFCCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
 }</span>
 </pre>
 		
@@ -2102,7 +2101,6 @@ import (
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
         ierrors "github.com/umatare5/cisco-ios-xe-wireless-go/internal/errors"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/ap"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
@@ -2119,17 +2117,17 @@ func NewService(client *core.Client) Service <span class="cov10" title="14">{
 }</span>
 
 // GetConfig retrieves the complete AP configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.ApCfg, error) <span class="cov3" title="2">{
-        return core.Get[model.ApCfg](ctx, s.Client(), routes.APCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*ApCfg, error) <span class="cov3" title="2">{
+        return core.Get[ApCfg](ctx, s.Client(), routes.APCfgPath)
 }</span>
 
 // ListTagConfigs retrieves access point tag configurations.
-func (s Service) ListTagConfigs(ctx context.Context) (*model.ApCfgApTag, error) <span class="cov1" title="1">{
-        return core.Get[model.ApCfgApTag](ctx, s.Client(), routes.APTagsPath)
+func (s Service) ListTagConfigs(ctx context.Context) (*ApCfgApTag, error) <span class="cov1" title="1">{
+        return core.Get[ApCfgApTag](ctx, s.Client(), routes.APTagsPath)
 }</span>
 
 // GetTagConfigByMAC retrieves AP tag configuration filtered by AP MAC address.
-func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCfgApTag, error) <span class="cov3" title="2">{
+func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*ApCfgApTag, error) <span class="cov3" title="2">{
         if err := validation.ValidateMACAddress(mac); err != nil </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf(ErrInvalidAPMacFormat, mac)
         }</span>
@@ -2140,41 +2138,41 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*model.ApCf
 
         // Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
-        return core.Get[model.ApCfgApTag](ctx, s.Client(), url)</span>
+        return core.Get[ApCfgApTag](ctx, s.Client(), url)</span>
 }
 
 // ListTagSourcePriorityConfigs retrieves tag source priority configurations.
-func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*model.TagSourcePriorityConfigs, error) <span class="cov1" title="1">{
-        return core.Get[model.TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
+func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*TagSourcePriorityConfigs, error) <span class="cov1" title="1">{
+        return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
 }</span>
 
 // GetTagSourcePriorityConfigByPriority retrieves tag source priority configuration filtered by priority.
 func (s Service) GetTagSourcePriorityConfigByPriority(
         ctx context.Context,
         priority int,
-) (*model.ApCfgTagSourcePriorityConfigs, error) <span class="cov1" title="1">{
+) (*ApCfgTagSourcePriorityConfigs, error) <span class="cov1" title="1">{
         url := s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.APTagSourcePriorityConfigQueryPath,
                 strconv.Itoa(priority),
         )
-        return core.Get[model.ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
+        return core.Get[ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
 }</span>
 
 // GetGlobalInfo retrieves the complete AP global operational data.
-func (s Service) GetGlobalInfo(ctx context.Context) (*model.ApGlobalOper, error) <span class="cov1" title="1">{
-        return core.Get[model.ApGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)
+func (s Service) GetGlobalInfo(ctx context.Context) (*ApGlobalOper, error) <span class="cov1" title="1">{
+        return core.Get[ApGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)
 }</span>
 
 // GetEWLCAPStats retrieves EWLC AP statistics.
-func (s Service) GetEWLCAPStats(ctx context.Context) (*model.ApGlobalOperEwlcApStats, error) <span class="cov1" title="1">{
-        return core.Get[model.ApGlobalOperEwlcApStats](ctx, s.Client(), routes.APEwlcApStatsPath)
+func (s Service) GetEWLCAPStats(ctx context.Context) (*ApGlobalOperEwlcApStats, error) <span class="cov1" title="1">{
+        return core.Get[ApGlobalOperEwlcApStats](ctx, s.Client(), routes.APEwlcApStatsPath)
 }</span>
 
 // ListAPHistoryByEthernetMAC retrieves AP history data filtered by ethernet MAC address.
 func (s Service) ListAPHistoryByEthernetMAC(
         ctx context.Context,
         ethernetMAC string,
-) (*model.ApGlobalOperApHistory, error) <span class="cov4" title="3">{
+) (*ApGlobalOperApHistory, error) <span class="cov4" title="3">{
         if ethernetMAC == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
@@ -2183,13 +2181,13 @@ func (s Service) ListAPHistoryByEthernetMAC(
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
-        return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), url)</span>
+        return core.Get[ApGlobalOperApHistory](ctx, s.Client(), url)</span>
 }
 
 // GetAPJoinStatsByWTPMAC retrieves AP join statistics filtered by WTP MAC address.
 func (s Service) GetAPJoinStatsByWTPMAC(
         ctx context.Context, mac string,
-) (*model.ApGlobalOperApJoinStats, error) <span class="cov4" title="3">{
+) (*ApGlobalOperApJoinStats, error) <span class="cov4" title="3">{
         if mac == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
@@ -2207,14 +2205,14 @@ func (s Service) GetAPJoinStatsByWTPMAC(
                 routes.APJoinStatsPath,
                 normalizedMAC,
         )
-        return core.Get[model.ApGlobalOperApJoinStats](ctx, s.Client(), url)</span>
+        return core.Get[ApGlobalOperApJoinStats](ctx, s.Client(), url)</span>
 }
 
 // GetWLANClientStatsByWLANID retrieves WLAN client statistics filtered by WLAN ID.
 func (s Service) GetWLANClientStatsByWLANID(
         ctx context.Context,
         wlanID int,
-) (*model.ApGlobalOperWlanClientStats, error) <span class="cov4" title="3">{
+) (*ApGlobalOperWlanClientStats, error) <span class="cov4" title="3">{
         if wlanID &lt;= 0 </span><span class="cov3" title="2">{
                 return nil, core.ErrResourceNotFound
         }</span>
@@ -2222,53 +2220,53 @@ func (s Service) GetWLANClientStatsByWLANID(
                 routes.APWlanClientStatsQueryPath,
                 strconv.Itoa(wlanID),
         )
-        return core.Get[model.ApGlobalOperWlanClientStats](ctx, s.Client(), url)</span>
+        return core.Get[ApGlobalOperWlanClientStats](ctx, s.Client(), url)</span>
 }
 
 // ListAPHistory retrieves only AP history data using fields parameter.
-func (s Service) ListAPHistory(ctx context.Context) (*model.ApGlobalOperApHistory, error) <span class="cov1" title="1">{
-        return core.Get[model.ApGlobalOperApHistory](ctx, s.Client(), routes.APHistoryPath)
+func (s Service) ListAPHistory(ctx context.Context) (*ApGlobalOperApHistory, error) <span class="cov1" title="1">{
+        return core.Get[ApGlobalOperApHistory](ctx, s.Client(), routes.APHistoryPath)
 }</span>
 
 // ListAPJoinStats retrieves only AP join statistics using fields parameter.
-func (s Service) ListAPJoinStats(ctx context.Context) (*model.ApGlobalOperApJoinStats, error) <span class="cov1" title="1">{
-        return core.Get[model.ApGlobalOperApJoinStats](ctx, s.Client(), routes.APJoinStatsPath)
+func (s Service) ListAPJoinStats(ctx context.Context) (*ApGlobalOperApJoinStats, error) <span class="cov1" title="1">{
+        return core.Get[ApGlobalOperApJoinStats](ctx, s.Client(), routes.APJoinStatsPath)
 }</span>
 
 // ListWLANClientStats retrieves only WLAN client statistics using fields parameter.
 func (s Service) ListWLANClientStats(
         ctx context.Context,
-) (*model.ApGlobalOperWlanClientStats, error) <span class="cov1" title="1">{
-        return core.Get[model.ApGlobalOperWlanClientStats](ctx, s.Client(), routes.APWlanClientStatsPath)
+) (*ApGlobalOperWlanClientStats, error) <span class="cov1" title="1">{
+        return core.Get[ApGlobalOperWlanClientStats](ctx, s.Client(), routes.APWlanClientStatsPath)
 }</span>
 
 // GetOperational retrieves the complete AP operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.ApOper, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOper](ctx, s.Client(), routes.APOperPath)
+func (s Service) GetOperational(ctx context.Context) (*ApOper, error) <span class="cov1" title="1">{
+        return core.Get[ApOper](ctx, s.Client(), routes.APOperPath)
 }</span>
 
 // ListCAPWAPData retrieves CAPWAP protocol data.
-func (s Service) ListCAPWAPData(ctx context.Context) (*model.ApOperCAPWAPData, error) <span class="cov7" title="6">{
-        return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
+func (s Service) ListCAPWAPData(ctx context.Context) (*ApOperCAPWAPData, error) <span class="cov7" title="6">{
+        return core.Get[ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
 }</span>
 
 // GetCAPWAPDataByWTPMAC retrieves CAPWAP data for a specific WTP MAC.
-func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*model.ApOperCAPWAPData, error) <span class="cov3" title="2">{
+func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*ApOperCAPWAPData, error) <span class="cov3" title="2">{
         if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
-        return core.Get[model.ApOperCAPWAPData](ctx, s.Client(), url)</span>
+        return core.Get[ApOperCAPWAPData](ctx, s.Client(), url)</span>
 }
 
 // ListNameMACMaps retrieves AP name-to-MAC mapping data.
-func (s Service) ListNameMACMaps(ctx context.Context) (*model.ApOperApNameMACMap, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
+func (s Service) ListNameMACMaps(ctx context.Context) (*ApOperApNameMACMap, error) <span class="cov1" title="1">{
+        return core.Get[ApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
 }</span>
 
 // GetNameMACMapByWTPName retrieves AP name-to-MAC mapping filtered by WTP name.
-func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*model.ApOperApNameMACMap, error) <span class="cov4" title="3">{
+func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*ApOperApNameMACMap, error) <span class="cov4" title="3">{
         if wtpName == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
@@ -2277,18 +2275,18 @@ func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*m
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
-        return core.Get[model.ApOperApNameMACMap](ctx, s.Client(), url)</span>
+        return core.Get[ApOperApNameMACMap](ctx, s.Client(), url)</span>
 }
 
 // ListRadioStatus retrieves radio operational status data.
-func (s Service) ListRadioStatus(ctx context.Context) (*model.RadioOperData, error) <span class="cov1" title="1">{
-        return core.Get[model.RadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
+func (s Service) ListRadioStatus(ctx context.Context) (*RadioOperData, error) <span class="cov1" title="1">{
+        return core.Get[RadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
 }</span>
 
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
 func (s Service) GetRadioStatusByWTPMACAndSlot(
         ctx context.Context, wtpMAC string, slotID int,
-) (*model.ApOperRadioOperData, error) <span class="cov4" title="3">{
+) (*ApOperRadioOperData, error) <span class="cov4" title="3">{
         if wtpMAC == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
@@ -2297,19 +2295,19 @@ func (s Service) GetRadioStatusByWTPMACAndSlot(
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
-        return core.Get[model.ApOperRadioOperData](ctx, s.Client(), url)</span>
+        return core.Get[ApOperRadioOperData](ctx, s.Client(), url)</span>
 }
 
 // ListRadioNeighbors retrieves all AP radio neighbor information.
-func (s Service) ListRadioNeighbors(ctx context.Context) (*model.ApOperApRadioNeighbor, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApRadioNeighbor](ctx, s.Client(), routes.APRadioNeighborPath)
+func (s Service) ListRadioNeighbors(ctx context.Context) (*ApOperApRadioNeighbor, error) <span class="cov1" title="1">{
+        return core.Get[ApOperApRadioNeighbor](ctx, s.Client(), routes.APRadioNeighborPath)
 }</span>
 
 // GetRadioNeighborByAPMACSlotAndBSSID retrieves AP radio neighbor information for a specific AP MAC, slot ID and BSSID.
 // This follows the YANG model key structure: "ap-mac slot-id bssid".
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
         ctx context.Context, apMAC string, slotID int, bssid string,
-) (*model.ApOperApRadioNeighbor, error) <span class="cov5" title="4">{
+) (*ApOperApRadioNeighbor, error) <span class="cov5" title="4">{
         if apMAC == "" || strings.TrimSpace(apMAC) == "" </span><span class="cov1" title="1">{
                 return nil, errors.New("AP MAC address cannot be empty")
         }</span>
@@ -2339,41 +2337,41 @@ func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
                 slotID,
                 normalizedBSSID,
         )
-        return core.Get[model.ApOperApRadioNeighbor](ctx, s.Client(), url)</span>
+        return core.Get[ApOperApRadioNeighbor](ctx, s.Client(), url)</span>
 }
 
 // ListActiveImageLocations retrieves active image location information using fields parameter.
 func (s Service) ListActiveImageLocations(
         ctx context.Context,
-) (*model.ApOperApImageActiveLocation, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApImageActiveLocation](ctx, s.Client(), routes.APImageActiveLocationPath)
+) (*ApOperApImageActiveLocation, error) <span class="cov1" title="1">{
+        return core.Get[ApOperApImageActiveLocation](ctx, s.Client(), routes.APImageActiveLocationPath)
 }</span>
 
 // ListPreparedImageLocations retrieves only AP image prepare location data using fields parameter.
 func (s Service) ListPreparedImageLocations(
         ctx context.Context,
-) (*model.ApOperApImagePrepareLocation, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApImagePrepareLocation](ctx, s.Client(), routes.APImagePrepareLocationPath)
+) (*ApOperApImagePrepareLocation, error) <span class="cov1" title="1">{
+        return core.Get[ApOperApImagePrepareLocation](ctx, s.Client(), routes.APImagePrepareLocationPath)
 }</span>
 
 // ListPowerInfo retrieves only AP power information using fields parameter.
-func (s Service) ListPowerInfo(ctx context.Context) (*model.ApOperApPwrInfo, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApPwrInfo](ctx, s.Client(), routes.APPwrInfoPath)
+func (s Service) ListPowerInfo(ctx context.Context) (*ApOperApPwrInfo, error) <span class="cov1" title="1">{
+        return core.Get[ApOperApPwrInfo](ctx, s.Client(), routes.APPwrInfoPath)
 }</span>
 
 // ListSensorStatus retrieves only AP sensor status using fields parameter.
-func (s Service) ListSensorStatus(ctx context.Context) (*model.ApOperApSensorStatus, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperApSensorStatus](ctx, s.Client(), routes.APSensorStatusPath)
+func (s Service) ListSensorStatus(ctx context.Context) (*ApOperApSensorStatus, error) <span class="cov1" title="1">{
+        return core.Get[ApOperApSensorStatus](ctx, s.Client(), routes.APSensorStatusPath)
 }</span>
 
 // ListCAPWAPPackets retrieves only CAPWAP packets data using fields parameter.
-func (s Service) ListCAPWAPPackets(ctx context.Context) (*model.ApOperCAPWAPPkts, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
+func (s Service) ListCAPWAPPackets(ctx context.Context) (*ApOperCAPWAPPkts, error) <span class="cov1" title="1">{
+        return core.Get[ApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
 }</span>
 
 // ListIotFirmware retrieves IoT firmware information for all access points.
-func (s Service) ListIotFirmware(ctx context.Context) (*model.ApOperIotFirmware, error) <span class="cov1" title="1">{
-        return core.Get[model.ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
+func (s Service) ListIotFirmware(ctx context.Context) (*ApOperIotFirmware, error) <span class="cov1" title="1">{
+        return core.Get[ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
 }</span>
 
 // EnableAP enables the administrative state of an access point.
@@ -2407,7 +2405,7 @@ func (s Service) AssignSiteTag(ctx context.Context, apMAC, siteTag string) error
         if !validation.IsValidTagAssignment(siteTag, "site") </span><span class="cov1" title="1">{
                 return ierrors.RequiredParameterError("site tag")
         }</span>
-        <span class="cov4" title="3">tags := model.ApTag{SiteTag: siteTag}
+        <span class="cov4" title="3">tags := ApTag{SiteTag: siteTag}
         return s.assignTags(ctx, apMAC, tags)</span>
 }
 
@@ -2416,7 +2414,7 @@ func (s Service) AssignPolicyTag(ctx context.Context, apMAC, policyTag string) e
         if !validation.IsValidTagAssignment(policyTag, "policy") </span><span class="cov1" title="1">{
                 return ierrors.RequiredParameterError("policy tag")
         }</span>
-        <span class="cov1" title="1">tags := model.ApTag{PolicyTag: policyTag}
+        <span class="cov1" title="1">tags := ApTag{PolicyTag: policyTag}
         return s.assignTags(ctx, apMAC, tags)</span>
 }
 
@@ -2425,7 +2423,7 @@ func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error <sp
         if !validation.IsValidTagAssignment(rfTag, "rf") </span><span class="cov1" title="1">{
                 return ierrors.RequiredParameterError("RF tag")
         }</span>
-        <span class="cov1" title="1">tags := model.ApTag{RFTag: rfTag}
+        <span class="cov1" title="1">tags := ApTag{RFTag: rfTag}
         return s.assignTags(ctx, apMAC, tags)</span>
 }
 
@@ -2462,8 +2460,8 @@ func (s Service) updateAPState(ctx context.Context, mac, mode string) error <spa
                 return fmt.Errorf("invalid AP MAC address: %s", mac)
         }</span>
 
-        <span class="cov4" title="3">payload := model.APConfigRPCPayload{
-                Input: model.APConfigRPCInput{
+        <span class="cov4" title="3">payload := APConfigRPCPayload{
+                Input: APConfigRPCInput{
                         Mode:    mode,
                         MACAddr: normalizedMAC,
                 },
@@ -2492,8 +2490,8 @@ func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *
                 return err
         }</span>
 
-        <span class="cov4" title="3">payload := model.APSlotConfigRPCPayload{
-                Input: model.APSlotConfigRPCInput{
+        <span class="cov4" title="3">payload := APSlotConfigRPCPayload{
+                Input: APSlotConfigRPCInput{
                         Mode:    core.GetAdminStateMode(enabled),
                         SlotID:  int(radioBandInfo.SlotID),
                         Band:    strconv.Itoa(int(radioBandInfo.Band)),
@@ -2508,7 +2506,7 @@ func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *
 }
 
 // assignTags assigns multiple tags to an Access Point (internal implementation).
-func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag) error <span class="cov6" title="5">{
+func (s Service) assignTags(ctx context.Context, apMAC string, tags ApTag) error <span class="cov6" title="5">{
         if !validation.IsValidMACAddr(apMAC) </span><span class="cov1" title="1">{
                 return ierrors.ValidationError("AP MAC address", apMAC)
         }</span>
@@ -2524,7 +2522,7 @@ func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag)
         tagData := buildAPCfgApTagData(normalizedMAC, tags)
 
         // Execute operation with direct error propagation
-        if err := core.PutVoid(ctx, s.Client(), url, model.APTagPayload{ApTag: tagData}); err != nil </span><span class="cov1" title="1">{
+        if err := core.PutVoid(ctx, s.Client(), url, APTagPayload{ApTag: tagData}); err != nil </span><span class="cov1" title="1">{
                 return ierrors.ServiceOperationError("assign", "AP", "tags", err)
         }</span>
         <span class="cov4" title="3">return nil</span>
@@ -2532,8 +2530,8 @@ func (s Service) assignTags(ctx context.Context, apMAC string, tags model.ApTag)
 
 // reload is the internal helper function for AP reload operations.
 func (s Service) reload(ctx context.Context, apName string) error <span class="cov3" title="2">{
-        requestBody := model.APReloadRPCPayload{
-                Input: model.APReloadRPCInput{
+        requestBody := APReloadRPCPayload{
+                Input: APReloadRPCInput{
                         APName: apName,
                 },
         }
@@ -2541,7 +2539,7 @@ func (s Service) reload(ctx context.Context, apName string) error <span class="c
 }</span>
 
 // findAPByMAC searches for an AP with the given MAC address in CAPWAP data.
-func findAPByMAC(capwapData *model.ApOperCAPWAPData, apMAC string) (string, bool) <span class="cov5" title="4">{
+func findAPByMAC(capwapData *ApOperCAPWAPData, apMAC string) (string, bool) <span class="cov5" title="4">{
         if capwapData == nil </span><span class="cov0" title="0">{
                 return "", false
         }</span>
@@ -2554,8 +2552,8 @@ func findAPByMAC(capwapData *model.ApOperCAPWAPData, apMAC string) (string, bool
 }
 
 // buildAPCfgApTagData constructs the payload for tag assignment requests.
-func buildAPCfgApTagData(normalizedMAC string, tags model.ApTag) model.APCfgApTagData <span class="cov5" title="4">{
-        return model.APCfgApTagData{
+func buildAPCfgApTagData(normalizedMAC string, tags ApTag) APCfgApTagData <span class="cov5" title="4">{
+        return APCfgApTagData{
                 APMac:     normalizedMAC,
                 SiteTag:   validation.SelectNonEmptyValue(tags.SiteTag, validation.DefaultSiteTag),
                 PolicyTag: validation.SelectNonEmptyValue(tags.PolicyTag, validation.DefaultPolicyTag),
@@ -2570,7 +2568,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/apf"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2586,8 +2583,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves the complete APF configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.APFCfg, error) <span class="cov5" title="2">{
-        return core.Get[model.APFCfg](ctx, s.Client(), routes.APFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*APFCfg, error) <span class="cov5" title="2">{
+        return core.Get[APFCfg](ctx, s.Client(), routes.APFCfgPath)
 }</span>
 </pre>
 		
@@ -2597,7 +2594,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/awips"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2613,8 +2609,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves the complete AWIPS operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.AWIPSOper, error) <span class="cov5" title="2">{
-        return core.Get[model.AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*AWIPSOper, error) <span class="cov5" title="2">{
+        return core.Get[AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
 }</span>
 </pre>
 		
@@ -2624,7 +2620,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/ble"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2640,8 +2635,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves BLE operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.BLELtxOper, error) <span class="cov5" title="2">{
-        return core.Get[model.BLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
+func (s Service) GetOperational(ctx context.Context) (*BLELtxOper, error) <span class="cov5" title="2">{
+        return core.Get[BLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
 }</span>
 </pre>
 		
@@ -2652,7 +2647,6 @@ import (
         "strings"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/client"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2668,185 +2662,185 @@ func NewService(client *core.Client) Service <span class="cov10" title="11">{
 }</span>
 
 // GetOperational retrieves the complete client operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.ClientOper, error) <span class="cov6" title="4">{
-        result, err := core.Get[model.ClientOper](ctx, s.Client(), routes.ClientOperPath)
+func (s Service) GetOperational(ctx context.Context) (*ClientOper, error) <span class="cov6" title="4">{
+        result, err := core.Get[ClientOper](ctx, s.Client(), routes.ClientOperPath)
         if err == nil </span><span class="cov1" title="1">{
                 return result, nil
         }</span>
         <span class="cov5" title="3">if isKnownGetOperationalIssue(err) </span><span class="cov1" title="1">{
                 // Return empty result for IOS-XE 17.18.1 compatibility
                 // Known issue: main endpoint may fail intermittently on certain firmware versions
-                return &amp;model.ClientOper{}, nil
+                return &amp;ClientOper{}, nil
         }</span>
         <span class="cov3" title="2">return nil, err</span>
 }
 
 // ListCommonInfo retrieves common operational data for clients.
-func (s Service) ListCommonInfo(ctx context.Context) (*model.ClientOperCommonOperData, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperCommonOperData](ctx, s.Client(), routes.ClientCommonOperDataPath)
+func (s Service) ListCommonInfo(ctx context.Context) (*ClientOperCommonOperData, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperCommonOperData](ctx, s.Client(), routes.ClientCommonOperDataPath)
 }</span>
 
 // GetCommonInfoByMAC retrieves client operational data filtered by MAC address.
 func (s Service) GetCommonInfoByMAC(
         ctx context.Context, mac string,
-) (*model.ClientOperCommonOperData, error) <span class="cov3" title="2">{
+) (*ClientOperCommonOperData, error) <span class="cov3" title="2">{
         if mac == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, mac)
-        return core.Get[model.ClientOperCommonOperData](ctx, s.Client(), url)</span>
+        return core.Get[ClientOperCommonOperData](ctx, s.Client(), url)</span>
 }
 
 // ListDCInfo retrieves discovery client information.
-func (s Service) ListDCInfo(ctx context.Context) (*model.ClientOperDcInfo, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperDcInfo](ctx, s.Client(), routes.ClientDcInfoPath)
+func (s Service) ListDCInfo(ctx context.Context) (*ClientOperDcInfo, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperDcInfo](ctx, s.Client(), routes.ClientDcInfoPath)
 }</span>
 
 // GetDCInfoByMAC retrieves dc-info for a specific client by MAC address.
-func (s Service) GetDCInfoByMAC(ctx context.Context, clientMAC string) (*model.ClientOperDcInfo, error) <span class="cov3" title="2">{
+func (s Service) GetDCInfoByMAC(ctx context.Context, clientMAC string) (*ClientOperDcInfo, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDcInfoPath, clientMAC)
-        return core.Get[model.ClientOperDcInfo](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperDcInfo](ctx, s.Client(), endpoint)</span>
 }
 
 // ListDot11Info returns 802.11 operational data for clients.
-func (s Service) ListDot11Info(ctx context.Context) (*model.ClientOperDot11OperData, error) <span class="cov7" title="5">{
-        result, err := core.Get[model.ClientOperDot11OperData](ctx, s.Client(), routes.ClientDot11OperDataPath)
+func (s Service) ListDot11Info(ctx context.Context) (*ClientOperDot11OperData, error) <span class="cov7" title="5">{
+        result, err := core.Get[ClientOperDot11OperData](ctx, s.Client(), routes.ClientDot11OperDataPath)
         if err == nil </span><span class="cov3" title="2">{
                 return result, nil
         }</span>
         <span class="cov5" title="3">if isKnownDot11OperationalDataIssue(err) </span><span class="cov3" title="2">{
                 // Return empty result for IOS-XE 17.18.1 compatibility
                 // Known issue: endpoint may fail even after client connections and 90-second wait period
-                return &amp;model.ClientOperDot11OperData{Dot11OperData: []model.Dot11OperData{}}, nil
+                return &amp;ClientOperDot11OperData{Dot11OperData: []Dot11OperData{}}, nil
         }</span>
         <span class="cov1" title="1">return nil, err</span>
 }
 
 // GetDot11InfoByMAC retrieves 802.11 operational data filtered by MAC address.
-func (s Service) GetDot11InfoByMAC(ctx context.Context, mac string) (*model.ClientOperDot11OperData, error) <span class="cov7" title="5">{
+func (s Service) GetDot11InfoByMAC(ctx context.Context, mac string) (*ClientOperDot11OperData, error) <span class="cov7" title="5">{
         if mac == "" || strings.TrimSpace(mac) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov6" title="4">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, mac)
 
-        result, err := core.Get[model.ClientOperDot11OperData](ctx, s.Client(), url)
+        result, err := core.Get[ClientOperDot11OperData](ctx, s.Client(), url)
         if err == nil </span><span class="cov1" title="1">{
                 return result, nil
         }</span>
         <span class="cov5" title="3">if isKnownDot11OperationalDataIssue(err) </span><span class="cov3" title="2">{
                 // Return empty result for IOS-XE 17.18.1 compatibility
                 // Known issue: endpoint may fail even after client connections and 90-second wait period
-                return &amp;model.ClientOperDot11OperData{Dot11OperData: []model.Dot11OperData{}}, nil
+                return &amp;ClientOperDot11OperData{Dot11OperData: []Dot11OperData{}}, nil
         }</span>
         <span class="cov1" title="1">return nil, err</span>
 }
 
 // ListMMIFClientHistory retrieves mobility manager interface client history.
-func (s Service) ListMMIFClientHistory(ctx context.Context) (*model.ClientOperMmIfClientHistory, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperMmIfClientHistory](ctx, s.Client(), routes.ClientMmIfClientHistoryPath)
+func (s Service) ListMMIFClientHistory(ctx context.Context) (*ClientOperMmIfClientHistory, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperMmIfClientHistory](ctx, s.Client(), routes.ClientMmIfClientHistoryPath)
 }</span>
 
 // GetMMIFClientHistoryByMAC retrieves mm-if-client-history for a specific client by MAC address.
 func (s Service) GetMMIFClientHistoryByMAC(
         ctx context.Context,
         clientMAC string,
-) (*model.ClientOperMmIfClientHistory, error) <span class="cov3" title="2">{
+) (*ClientOperMmIfClientHistory, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, clientMAC)
-        return core.Get[model.ClientOperMmIfClientHistory](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperMmIfClientHistory](ctx, s.Client(), endpoint)</span>
 }
 
 // ListMMIFClientStats retrieves mobility manager interface client statistics.
-func (s Service) ListMMIFClientStats(ctx context.Context) (*model.ClientOperMmIfClientStats, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperMmIfClientStats](ctx, s.Client(), routes.ClientMmIfClientStatsPath)
+func (s Service) ListMMIFClientStats(ctx context.Context) (*ClientOperMmIfClientStats, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperMmIfClientStats](ctx, s.Client(), routes.ClientMmIfClientStatsPath)
 }</span>
 
 // GetMMIFClientStatsByMAC retrieves mm-if-client-stats for a specific client by MAC address.
 func (s Service) GetMMIFClientStatsByMAC(
         ctx context.Context,
         clientMAC string,
-) (*model.ClientOperMmIfClientStats, error) <span class="cov3" title="2">{
+) (*ClientOperMmIfClientStats, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, clientMAC)
-        return core.Get[model.ClientOperMmIfClientStats](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperMmIfClientStats](ctx, s.Client(), endpoint)</span>
 }
 
 // ListMobilityInfo retrieves mobility operational data for clients.
-func (s Service) ListMobilityInfo(ctx context.Context) (*model.ClientOperMobilityOperData, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperMobilityOperData](ctx, s.Client(), routes.ClientMobilityOperDataPath)
+func (s Service) ListMobilityInfo(ctx context.Context) (*ClientOperMobilityOperData, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperMobilityOperData](ctx, s.Client(), routes.ClientMobilityOperDataPath)
 }</span>
 
 // GetMobilityInfoByMAC retrieves mobility-oper-data for a specific client by MAC address.
 func (s Service) GetMobilityInfoByMAC(
         ctx context.Context,
         clientMAC string,
-) (*model.ClientOperMobilityOperData, error) <span class="cov3" title="2">{
+) (*ClientOperMobilityOperData, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, clientMAC)
-        return core.Get[model.ClientOperMobilityOperData](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperMobilityOperData](ctx, s.Client(), endpoint)</span>
 }
 
 // ListPolicyInfo retrieves client policy data.
-func (s Service) ListPolicyInfo(ctx context.Context) (*model.ClientOperPolicyData, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperPolicyData](ctx, s.Client(), routes.ClientPolicyDataPath)
+func (s Service) ListPolicyInfo(ctx context.Context) (*ClientOperPolicyData, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperPolicyData](ctx, s.Client(), routes.ClientPolicyDataPath)
 }</span>
 
 // GetPolicyInfoByMAC retrieves policy-data for a specific client by MAC address.
-func (s Service) GetPolicyInfoByMAC(ctx context.Context, clientMAC string) (*model.ClientOperPolicyData, error) <span class="cov3" title="2">{
+func (s Service) GetPolicyInfoByMAC(ctx context.Context, clientMAC string) (*ClientOperPolicyData, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientPolicyDataPath, clientMAC)
-        return core.Get[model.ClientOperPolicyData](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperPolicyData](ctx, s.Client(), endpoint)</span>
 }
 
 // ListSISFDB retrieves SISF database MAC information.
-func (s Service) ListSISFDB(ctx context.Context) (*model.ClientOperSisfDBMac, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperSisfDBMac](ctx, s.Client(), routes.ClientSisfDBMacPath)
+func (s Service) ListSISFDB(ctx context.Context) (*ClientOperSisfDBMac, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperSisfDBMac](ctx, s.Client(), routes.ClientSisfDBMacPath)
 }</span>
 
 // GetSISFDBByMAC retrieves sisf-db-mac for a specific client by MAC address.
-func (s Service) GetSISFDBByMAC(ctx context.Context, clientMAC string) (*model.ClientOperSisfDBMac, error) <span class="cov3" title="2">{
+func (s Service) GetSISFDBByMAC(ctx context.Context, clientMAC string) (*ClientOperSisfDBMac, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, clientMAC)
-        return core.Get[model.ClientOperSisfDBMac](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperSisfDBMac](ctx, s.Client(), endpoint)</span>
 }
 
 // ListTrafficStats retrieves client traffic statistics.
-func (s Service) ListTrafficStats(ctx context.Context) (*model.ClientOperTrafficStats, error) <span class="cov1" title="1">{
-        return core.Get[model.ClientOperTrafficStats](ctx, s.Client(), routes.ClientTrafficStatsPath)
+func (s Service) ListTrafficStats(ctx context.Context) (*ClientOperTrafficStats, error) <span class="cov1" title="1">{
+        return core.Get[ClientOperTrafficStats](ctx, s.Client(), routes.ClientTrafficStatsPath)
 }</span>
 
 // GetTrafficStatsByMAC retrieves traffic-stats for a specific client by MAC address.
 func (s Service) GetTrafficStatsByMAC(
         ctx context.Context,
         clientMAC string,
-) (*model.ClientOperTrafficStats, error) <span class="cov3" title="2">{
+) (*ClientOperTrafficStats, error) <span class="cov3" title="2">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov1" title="1">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, clientMAC)
-        return core.Get[model.ClientOperTrafficStats](ctx, s.Client(), endpoint)</span>
+        return core.Get[ClientOperTrafficStats](ctx, s.Client(), endpoint)</span>
 }
 
 // isKnownGetOperationalIssue checks if the error is a known IOS-XE 17.18.1 compatibility issue
@@ -2876,7 +2870,6 @@ import (
         "strings"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/controller"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2911,8 +2904,8 @@ func (s Service) ReloadWithReason(ctx context.Context, reason string) error <spa
 
 // reload is the internal helper function for WNC controller reload operations.
 func (s Service) reload(ctx context.Context, reason string, force *bool) error <span class="cov8" title="4">{
-        requestBody := model.WNCReloadRPCPayload{
-                Input: model.WNCReloadRPCInput{
+        requestBody := WNCReloadRPCPayload{
+                Input: WNCReloadRPCInput{
                         Reason: reason,
                         Force:  force,
                 },
@@ -2934,7 +2927,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/cts"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2950,8 +2942,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves CTS configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.CTSCfg, error) <span class="cov5" title="2">{
-        return core.Get[model.CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CTSCfg, error) <span class="cov5" title="2">{
+        return core.Get[CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
 }</span>
 </pre>
 		
@@ -2961,7 +2953,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/dot11"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -2977,8 +2968,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves dot11 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.Dot11Cfg, error) <span class="cov5" title="2">{
-        return core.Get[model.Dot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
+func (s Service) GetConfig(ctx context.Context) (*Dot11Cfg, error) <span class="cov5" title="2">{
+        return core.Get[Dot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
 }</span>
 </pre>
 		
@@ -2988,7 +2979,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/dot15"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3004,8 +2994,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves dot15.4 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.Dot15Cfg, error) <span class="cov5" title="2">{
-        return core.Get[model.Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
+func (s Service) GetConfig(ctx context.Context) (*Dot15Cfg, error) <span class="cov5" title="2">{
+        return core.Get[Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
 }</span>
 </pre>
 		
@@ -3015,7 +3005,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/fabric"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3031,8 +3020,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves Fabric configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.FabricCfg, error) <span class="cov5" title="2">{
-        return core.Get[model.FabricCfg](ctx, s.Client(), routes.FabricCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*FabricCfg, error) <span class="cov5" title="2">{
+        return core.Get[FabricCfg](ctx, s.Client(), routes.FabricCfgPath)
 }</span>
 </pre>
 		
@@ -3042,7 +3031,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/flex"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3058,8 +3046,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetConfig retrieves FlexConnect configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.FlexCfg, error) <span class="cov5" title="2">{
-        return core.Get[model.FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*FlexCfg, error) <span class="cov5" title="2">{
+        return core.Get[FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
 }</span>
 </pre>
 		
@@ -3069,7 +3057,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/general"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3085,85 +3072,85 @@ func NewService(client *core.Client) Service <span class="cov10" title="9">{
 }</span>
 
 // GetOperational retrieves general operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.GeneralOper, error) <span class="cov3" title="2">{
-        return core.Get[model.GeneralOper](ctx, s.Client(), routes.GeneralOperPath)
+func (s Service) GetOperational(ctx context.Context) (*GeneralOper, error) <span class="cov3" title="2">{
+        return core.Get[GeneralOper](ctx, s.Client(), routes.GeneralOperPath)
 }</span>
 
 // GetManagementInterfaceState retrieves management interface operational data.
-func (s Service) GetManagementInterfaceState(ctx context.Context) (*model.GeneralOperMgmtIntfData, error) <span class="cov3" title="2">{
-        return core.Get[model.GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
+func (s Service) GetManagementInterfaceState(ctx context.Context) (*GeneralOperMgmtIntfData, error) <span class="cov3" title="2">{
+        return core.Get[GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
 }</span>
 
 // GetConfig retrieves complete general configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.GeneralCfg, error) <span class="cov3" title="2">{
-        return core.Get[model.GeneralCfg](ctx, s.Client(), routes.GeneralCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*GeneralCfg, error) <span class="cov3" title="2">{
+        return core.Get[GeneralCfg](ctx, s.Client(), routes.GeneralCfgPath)
 }</span>
 
 // Configuration data retrieval methods
 
 // GetAPLocationRangingConfig retrieves AP location ranging configuration data.
-func (s Service) GetAPLocationRangingConfig(ctx context.Context) (*model.ApLocRangingCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.ApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
+func (s Service) GetAPLocationRangingConfig(ctx context.Context) (*ApLocRangingCfg, error) <span class="cov1" title="1">{
+        return core.Get[ApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
 }</span>
 
 // GetCACConfig retrieves CAC configuration data.
-func (s Service) GetCACConfig(ctx context.Context) (*model.CacConfig, error) <span class="cov1" title="1">{
-        return core.Get[model.CacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
+func (s Service) GetCACConfig(ctx context.Context) (*CacConfig, error) <span class="cov1" title="1">{
+        return core.Get[CacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
 }</span>
 
 // GetFeatureUsageConfig retrieves feature usage configuration data.
-func (s Service) GetFeatureUsageConfig(ctx context.Context) (*model.FeatureUsageCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.FeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
+func (s Service) GetFeatureUsageConfig(ctx context.Context) (*FeatureUsageCfg, error) <span class="cov1" title="1">{
+        return core.Get[FeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
 }</span>
 
 // GetFIPSConfig retrieves FIPS configuration data.
-func (s Service) GetFIPSConfig(ctx context.Context) (*model.FipsCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.FipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
+func (s Service) GetFIPSConfig(ctx context.Context) (*FipsCfg, error) <span class="cov1" title="1">{
+        return core.Get[FipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
 }</span>
 
 // GetGeolocationConfig retrieves geolocation configuration data.
-func (s Service) GetGeolocationConfig(ctx context.Context) (*model.GeolocationCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.GeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
+func (s Service) GetGeolocationConfig(ctx context.Context) (*GeolocationCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
 }</span>
 
 // GetLAGInfo retrieves LAG (Link Aggregation) information.
-func (s Service) GetLAGInfo(ctx context.Context) (*model.Laginfo, error) <span class="cov3" title="2">{
-        return core.Get[model.Laginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
+func (s Service) GetLAGInfo(ctx context.Context) (*Laginfo, error) <span class="cov3" title="2">{
+        return core.Get[Laginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
 }</span>
 
 // GetMEWLCConfig retrieves MEWLC configuration data.
-func (s Service) GetMEWLCConfig(ctx context.Context) (*model.MewlcConfig, error) <span class="cov1" title="1">{
-        return core.Get[model.MewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
+func (s Service) GetMEWLCConfig(ctx context.Context) (*MewlcConfig, error) <span class="cov1" title="1">{
+        return core.Get[MewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
 }</span>
 
 // GetMFPConfig retrieves MFP (Management Frame Protection) configuration data.
-func (s Service) GetMFPConfig(ctx context.Context) (*model.Mfp, error) <span class="cov3" title="2">{
-        return core.Get[model.Mfp](ctx, s.Client(), routes.GeneralMfpPath)
+func (s Service) GetMFPConfig(ctx context.Context) (*Mfp, error) <span class="cov3" title="2">{
+        return core.Get[Mfp](ctx, s.Client(), routes.GeneralMfpPath)
 }</span>
 
 // GetMulticastConfig retrieves multicast configuration data.
-func (s Service) GetMulticastConfig(ctx context.Context) (*model.MulticastConfig, error) <span class="cov1" title="1">{
-        return core.Get[model.MulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
+func (s Service) GetMulticastConfig(ctx context.Context) (*MulticastConfig, error) <span class="cov1" title="1">{
+        return core.Get[MulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
 }</span>
 
 // ListSIML3InterfaceCache returns SIM L3 interface cache data.
-func (s Service) ListSIML3InterfaceCache(ctx context.Context) (*model.SimL3InterfaceCacheData, error) <span class="cov1" title="1">{
-        return core.Get[model.SimL3InterfaceCacheData](ctx, s.Client(), routes.GeneralSimL3InterfaceCacheDataPath)
+func (s Service) ListSIML3InterfaceCache(ctx context.Context) (*SimL3InterfaceCacheData, error) <span class="cov1" title="1">{
+        return core.Get[SimL3InterfaceCacheData](ctx, s.Client(), routes.GeneralSimL3InterfaceCacheDataPath)
 }</span>
 
 // GetThresholdWarningConfig retrieves threshold warning configuration data.
-func (s Service) GetThresholdWarningConfig(ctx context.Context) (*model.ThresholdWarnCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.ThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
+func (s Service) GetThresholdWarningConfig(ctx context.Context) (*ThresholdWarnCfg, error) <span class="cov1" title="1">{
+        return core.Get[ThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
 }</span>
 
 // GetWLCManagementInfo retrieves WLC management data.
-func (s Service) GetWLCManagementInfo(ctx context.Context) (*model.WlcManagementData, error) <span class="cov1" title="1">{
-        return core.Get[model.WlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
+func (s Service) GetWLCManagementInfo(ctx context.Context) (*WlcManagementData, error) <span class="cov1" title="1">{
+        return core.Get[WlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
 }</span>
 
 // GetWSAAPClientEventConfig retrieves WSA AP client event configuration data.
-func (s Service) GetWSAAPClientEventConfig(ctx context.Context) (*model.WsaApClientEvent, error) <span class="cov1" title="1">{
-        return core.Get[model.WsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
+func (s Service) GetWSAAPClientEventConfig(ctx context.Context) (*WsaApClientEvent, error) <span class="cov1" title="1">{
+        return core.Get[WsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
 }</span>
 </pre>
 		
@@ -3173,7 +3160,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/geolocation"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3189,13 +3175,13 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves geolocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.GeolocationOper, error) <span class="cov5" title="2">{
-        return core.Get[model.GeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
+func (s Service) GetOperational(ctx context.Context) (*GeolocationOper, error) <span class="cov5" title="2">{
+        return core.Get[GeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
 }</span>
 
 // ListAPGeolocationStats retrieves AP geolocation statistics.
-func (s Service) ListAPGeolocationStats(ctx context.Context) (*model.GeolocationOperApGeoLocStats, error) <span class="cov1" title="1">{
-        return core.Get[model.GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
+func (s Service) ListAPGeolocationStats(ctx context.Context) (*GeolocationOperApGeoLocStats, error) <span class="cov1" title="1">{
+        return core.Get[GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
 }</span>
 </pre>
 		
@@ -3205,7 +3191,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/hyperlocation"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3221,13 +3206,13 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 }</span>
 
 // GetOperational retrieves hyperlocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.HyperlocationOper, error) <span class="cov5" title="2">{
-        return core.Get[model.HyperlocationOper](ctx, s.Client(), routes.HyperlocationOperPath)
+func (s Service) GetOperational(ctx context.Context) (*HyperlocationOper, error) <span class="cov5" title="2">{
+        return core.Get[HyperlocationOper](ctx, s.Client(), routes.HyperlocationOperPath)
 }</span>
 
 // ListProfiles retrieves hyperlocation profiles.
-func (s Service) ListProfiles(ctx context.Context) (*model.HyperlocationProfiles, error) <span class="cov5" title="2">{
-        return core.Get[model.HyperlocationProfiles](ctx, s.Client(), routes.HyperlocationProfilesPath)
+func (s Service) ListProfiles(ctx context.Context) (*HyperlocationProfiles, error) <span class="cov5" title="2">{
+        return core.Get[HyperlocationProfiles](ctx, s.Client(), routes.HyperlocationProfilesPath)
 }</span>
 </pre>
 		
@@ -3237,7 +3222,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/lisp"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3253,18 +3237,18 @@ func NewService(client *core.Client) Service <span class="cov10" title="7">{
 }</span>
 
 // GetOperational retrieves LISP operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*model.LISPAgentOper, error) <span class="cov6" title="3">{
-        return core.Get[model.LISPAgentOper](ctx, s.Client(), routes.LISPOperPath)
+func (s Service) GetOperational(ctx context.Context) (*LISPAgentOper, error) <span class="cov6" title="3">{
+        return core.Get[LISPAgentOper](ctx, s.Client(), routes.LISPOperPath)
 }</span>
 
 // GetMemoryStats retrieves LISP agent memory statistics from the wireless controller.
-func (s Service) GetMemoryStats(ctx context.Context) (*model.LISPAgentMemoryStats, error) <span class="cov6" title="3">{
-        return core.Get[model.LISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
+func (s Service) GetMemoryStats(ctx context.Context) (*LISPAgentMemoryStats, error) <span class="cov6" title="3">{
+        return core.Get[LISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
 }</span>
 
 // GetCapabilities retrieves LISP WLC capabilities from the wireless controller.
-func (s Service) GetCapabilities(ctx context.Context) (*model.LISPWLCCapabilities, error) <span class="cov6" title="3">{
-        return core.Get[model.LISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
+func (s Service) GetCapabilities(ctx context.Context) (*LISPWLCCapabilities, error) <span class="cov6" title="3">{
+        return core.Get[LISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
 }</span>
 </pre>
 		
@@ -3274,7 +3258,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/location"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3290,33 +3273,33 @@ func NewService(client *core.Client) Service <span class="cov10" title="8">{
 }</span>
 
 // GetConfig retrieves complete location configuration data from the wireless controller.
-func (s Service) GetConfig(ctx context.Context) (*model.LocationCfg, error) <span class="cov5" title="3">{
-        return core.Get[model.LocationCfg](ctx, s.Client(), routes.LocationCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*LocationCfg, error) <span class="cov5" title="3">{
+        return core.Get[LocationCfg](ctx, s.Client(), routes.LocationCfgPath)
 }</span>
 
 // ListOperatorLocations retrieves location profile configuration data from the wireless controller.
-func (s Service) ListOperatorLocations(ctx context.Context) (*model.OperatorLocations, error) <span class="cov4" title="2">{
-        return core.Get[model.OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath)
+func (s Service) ListOperatorLocations(ctx context.Context) (*OperatorLocations, error) <span class="cov4" title="2">{
+        return core.Get[OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath)
 }</span>
 
 // ListNMSPConfig retrieves location NMSP configuration data from the wireless controller.
-func (s Service) ListNMSPConfig(ctx context.Context) (*model.LocationCfgNMSPConfig, error) <span class="cov4" title="2">{
-        return core.Get[model.LocationCfgNMSPConfig](ctx, s.Client(), routes.LocationNMSPConfigPath)
+func (s Service) ListNMSPConfig(ctx context.Context) (*LocationCfgNMSPConfig, error) <span class="cov4" title="2">{
+        return core.Get[LocationCfgNMSPConfig](ctx, s.Client(), routes.LocationNMSPConfigPath)
 }</span>
 
 // GetLocation retrieves location settings configuration data from the wireless controller.
-func (s Service) GetLocation(ctx context.Context) (*model.LocationSettings, error) <span class="cov1" title="1">{
-        return core.Get[model.LocationSettings](ctx, s.Client(), routes.LocationPath)
+func (s Service) GetLocation(ctx context.Context) (*LocationSettings, error) <span class="cov1" title="1">{
+        return core.Get[LocationSettings](ctx, s.Client(), routes.LocationPath)
 }</span>
 
 // GetOperational retrieves all location operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*model.LocationOper, error) <span class="cov1" title="1">{
-        return core.Get[model.LocationOper](ctx, s.Client(), routes.LocationOperPath)
+func (s Service) GetOperational(ctx context.Context) (*LocationOper, error) <span class="cov1" title="1">{
+        return core.Get[LocationOper](ctx, s.Client(), routes.LocationOperPath)
 }</span>
 
 // LocationRSSIMeasurements retrieves location statistics operational data from the wireless controller.
-func (s Service) LocationRSSIMeasurements(ctx context.Context) (*model.LocationLocationRSSIMeasurements, error) <span class="cov1" title="1">{
-        return core.Get[model.LocationLocationRSSIMeasurements](ctx, s.Client(), routes.LocationRSSIMeasurementsPath)
+func (s Service) LocationRSSIMeasurements(ctx context.Context) (*LocationLocationRSSIMeasurements, error) <span class="cov1" title="1">{
+        return core.Get[LocationLocationRSSIMeasurements](ctx, s.Client(), routes.LocationRSSIMeasurementsPath)
 }</span>
 </pre>
 		
@@ -3326,7 +3309,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/mcast"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3342,8 +3324,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 }</span>
 
 // GetOperational retrieves multicast operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.McastOper, error) <span class="cov7" title="3">{
-        return core.Get[model.McastOper](ctx, s.Client(), routes.McastOperPath)
+func (s Service) GetOperational(ctx context.Context) (*McastOper, error) <span class="cov7" title="3">{
+        return core.Get[McastOper](ctx, s.Client(), routes.McastOperPath)
 }</span>
 
 // GetFlexConnectMediastreamClientSummary retrieves FlexConnect mediastream client summary data from the wireless controller.
@@ -3353,7 +3335,7 @@ func (s Service) GetOperational(ctx context.Context) (*model.McastOper, error) <
 //   - ctx: Context for request timeout and cancellation control
 //
 // Returns:
-//   - *model.McastOperFlexMediastreamClientSummary: FlexConnect mediastream data
+//   - *McastOperFlexMediastreamClientSummary: FlexConnect mediastream data
 //   - error: Error if the operation fails
 //
 // Example:
@@ -3366,8 +3348,8 @@ func (s Service) GetOperational(ctx context.Context) (*model.McastOper, error) <
 //        fmt.Printf("FlexConnect mediastream data: %+v\n", data)
 func (s Service) GetFlexConnectMediastreamClientSummary(
         ctx context.Context,
-) (*model.McastOperFlexMediastreamClientSummary, error) <span class="cov7" title="3">{
-        return core.Get[model.McastOperFlexMediastreamClientSummary](
+) (*McastOperFlexMediastreamClientSummary, error) <span class="cov7" title="3">{
+        return core.Get[McastOperFlexMediastreamClientSummary](
                 ctx, s.Client(), routes.McastFlexMediastreamPath,
         )
 }</span>
@@ -3379,7 +3361,7 @@ func (s Service) GetFlexConnectMediastreamClientSummary(
 //   - ctx: Context for request timeout and cancellation control
 //
 // Returns:
-//   - *model.McastOperVlanL2MgidOp: VLAN Layer 2 multicast group data
+//   - *McastOperVlanL2MgidOp: VLAN Layer 2 multicast group data
 //   - error: Error if the operation fails
 //
 // Example:
@@ -3390,8 +3372,8 @@ func (s Service) GetFlexConnectMediastreamClientSummary(
 //            log.Fatal(err)
 //        }
 //        fmt.Printf("VLAN L2 multicast group data: %+v\n", data)
-func (s Service) ListVLANL2MGIDs(ctx context.Context) (*model.McastOperVlanL2MgidOp, error) <span class="cov7" title="3">{
-        return core.Get[model.McastOperVlanL2MgidOp](ctx, s.Client(), routes.McastVlanL2MgidPath)
+func (s Service) ListVLANL2MGIDs(ctx context.Context) (*McastOperVlanL2MgidOp, error) <span class="cov7" title="3">{
+        return core.Get[McastOperVlanL2MgidOp](ctx, s.Client(), routes.McastVlanL2MgidPath)
 }</span>
 
 // GetFabricMediastreamClientSummary retrieves fabric mediastream client summary data from the wireless controller.
@@ -3401,12 +3383,12 @@ func (s Service) ListVLANL2MGIDs(ctx context.Context) (*model.McastOperVlanL2Mgi
 //   - ctx: Context for request timeout and cancellation control
 //
 // Returns:
-//   - *model.McastOperFabricMediaStreamClientSummary: Fabric mediastream data
+//   - *McastOperFabricMediaStreamClientSummary: Fabric mediastream data
 //   - error: Error if the operation fails
 func (s Service) GetFabricMediastreamClientSummary(
         ctx context.Context,
-) (*model.McastOperFabricMediaStreamClientSummary, error) <span class="cov7" title="3">{
-        return core.Get[model.McastOperFabricMediaStreamClientSummary](
+) (*McastOperFabricMediaStreamClientSummary, error) <span class="cov7" title="3">{
+        return core.Get[McastOperFabricMediaStreamClientSummary](
                 ctx, s.Client(), routes.McastFabricMediastreamPath,
         )
 }</span>
@@ -3418,10 +3400,10 @@ func (s Service) GetFabricMediastreamClientSummary(
 //   - ctx: Context for request timeout and cancellation control
 //
 // Returns:
-//   - *model.McastOperMcastMgidInfo: Multicast MGID information
+//   - *McastOperMcastMgidInfo: Multicast MGID information
 //   - error: Error if the operation fails
-func (s Service) GetMcastMgidInfo(ctx context.Context) (*model.McastOperMcastMgidInfo, error) <span class="cov7" title="3">{
-        return core.Get[model.McastOperMcastMgidInfo](ctx, s.Client(), routes.McastMgidInfoPath)
+func (s Service) GetMcastMgidInfo(ctx context.Context) (*McastOperMcastMgidInfo, error) <span class="cov7" title="3">{
+        return core.Get[McastOperMcastMgidInfo](ctx, s.Client(), routes.McastMgidInfoPath)
 }</span>
 
 // GetMulticastOperData retrieves multicast operational data from the wireless controller.
@@ -3431,10 +3413,10 @@ func (s Service) GetMcastMgidInfo(ctx context.Context) (*model.McastOperMcastMgi
 //   - ctx: Context for request timeout and cancellation control
 //
 // Returns:
-//   - *model.McastOperMulticastOperData: Multicast operational data
+//   - *McastOperMulticastOperData: Multicast operational data
 //   - error: Error if the operation fails
-func (s Service) GetMulticastOperData(ctx context.Context) (*model.McastOperMulticastOperData, error) <span class="cov7" title="3">{
-        return core.Get[model.McastOperMulticastOperData](ctx, s.Client(), routes.McastMulticastOperDataPath)
+func (s Service) GetMulticastOperData(ctx context.Context) (*McastOperMulticastOperData, error) <span class="cov7" title="3">{
+        return core.Get[McastOperMulticastOperData](ctx, s.Client(), routes.McastMulticastOperDataPath)
 }</span>
 </pre>
 		
@@ -3444,7 +3426,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/mdns"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3460,18 +3441,18 @@ func NewService(client *core.Client) Service <span class="cov10" title="7">{
 }</span>
 
 // GetOperational retrieves all mDNS operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*model.MDNSOper, error) <span class="cov6" title="3">{
-        return core.Get[model.MDNSOper](ctx, s.Client(), routes.MDNSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*MDNSOper, error) <span class="cov6" title="3">{
+        return core.Get[MDNSOper](ctx, s.Client(), routes.MDNSOperPath)
 }</span>
 
 // GetGlobalStats retrieves mDNS global statistics from the wireless controller.
-func (s Service) GetGlobalStats(ctx context.Context) (*model.MDNSGlobalStats, error) <span class="cov6" title="3">{
-        return core.Get[model.MDNSGlobalStats](ctx, s.Client(), routes.MDNSGlobalStatsPath)
+func (s Service) GetGlobalStats(ctx context.Context) (*MDNSGlobalStats, error) <span class="cov6" title="3">{
+        return core.Get[MDNSGlobalStats](ctx, s.Client(), routes.MDNSGlobalStatsPath)
 }</span>
 
 // ListWLANStats retrieves mDNS WLAN statistics from the wireless controller.
-func (s Service) ListWLANStats(ctx context.Context) (*model.MDNSWlanStats, error) <span class="cov6" title="3">{
-        return core.Get[model.MDNSWlanStats](ctx, s.Client(), routes.MDNSWlanStatsPath)
+func (s Service) ListWLANStats(ctx context.Context) (*MDNSWlanStats, error) <span class="cov6" title="3">{
+        return core.Get[MDNSWlanStats](ctx, s.Client(), routes.MDNSWlanStatsPath)
 }</span>
 </pre>
 		
@@ -3481,7 +3462,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/mesh"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3497,18 +3477,18 @@ func NewService(client *core.Client) Service <span class="cov10" title="7">{
 }</span>
 
 // GetConfig retrieves all mesh configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.MeshCfg, error) <span class="cov6" title="3">{
-        return core.Get[model.MeshCfg](ctx, s.Client(), routes.MeshCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*MeshCfg, error) <span class="cov6" title="3">{
+        return core.Get[MeshCfg](ctx, s.Client(), routes.MeshCfgPath)
 }</span>
 
 // GetOperational retrieves all mesh operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.MeshOper, error) <span class="cov6" title="3">{
-        return core.Get[model.MeshOper](ctx, s.Client(), routes.MeshOperPath)
+func (s Service) GetOperational(ctx context.Context) (*MeshOper, error) <span class="cov6" title="3">{
+        return core.Get[MeshOper](ctx, s.Client(), routes.MeshOperPath)
 }</span>
 
 // GetOperationalData retrieves mesh operational data including queue stats, data rate stats, security stats, and operational data.
-func (s Service) GetOperationalData(ctx context.Context) (*model.MeshOper, error) <span class="cov6" title="3">{
-        return core.Get[model.MeshOper](ctx, s.Client(), routes.MeshGlobalStatsPath)
+func (s Service) GetOperationalData(ctx context.Context) (*MeshOper, error) <span class="cov6" title="3">{
+        return core.Get[MeshOper](ctx, s.Client(), routes.MeshGlobalStatsPath)
 }</span>
 </pre>
 		
@@ -3518,7 +3498,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/mobility"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3534,42 +3513,42 @@ func NewService(client *core.Client) Service <span class="cov10" title="8">{
 }</span>
 
 // GetOperational retrieves mobility operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.MobilityOper, error) <span class="cov4" title="2">{
-        return core.Get[model.MobilityOper](ctx, s.Client(), routes.MobilityOperPath)
+func (s Service) GetOperational(ctx context.Context) (*MobilityOper, error) <span class="cov4" title="2">{
+        return core.Get[MobilityOper](ctx, s.Client(), routes.MobilityOperPath)
 }</span>
 
 // ListAPCache retrieves AP cache data.
-func (s Service) ListAPCache(ctx context.Context) (*model.MobilityOperApCache, error) <span class="cov4" title="2">{
-        return core.Get[model.MobilityOperApCache](ctx, s.Client(), routes.MobilityApCachePath)
+func (s Service) ListAPCache(ctx context.Context) (*MobilityOperApCache, error) <span class="cov4" title="2">{
+        return core.Get[MobilityOperApCache](ctx, s.Client(), routes.MobilityApCachePath)
 }</span>
 
 // ListAPPeers retrieves AP peer list data.
-func (s Service) ListAPPeers(ctx context.Context) (*model.MobilityOperApPeerList, error) <span class="cov1" title="1">{
-        return core.Get[model.MobilityOperApPeerList](ctx, s.Client(), routes.MobilityApPeerListPath)
+func (s Service) ListAPPeers(ctx context.Context) (*MobilityOperApPeerList, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperApPeerList](ctx, s.Client(), routes.MobilityApPeerListPath)
 }</span>
 
 // GetMMGlobalInfo retrieves MM global information.
-func (s Service) GetMMGlobalInfo(ctx context.Context) (*model.MobilityOperMmGlobalData, error) <span class="cov4" title="2">{
-        return core.Get[model.MobilityOperMmGlobalData](ctx, s.Client(), routes.MobilityMmGlobalDataPath)
+func (s Service) GetMMGlobalInfo(ctx context.Context) (*MobilityOperMmGlobalData, error) <span class="cov4" title="2">{
+        return core.Get[MobilityOperMmGlobalData](ctx, s.Client(), routes.MobilityMmGlobalDataPath)
 }</span>
 
 // GetMMIFGlobalStats retrieves MM interface global statistics.
-func (s Service) GetMMIFGlobalStats(ctx context.Context) (*model.MobilityOperMmIfGlobalStats, error) <span class="cov1" title="1">{
-        return core.Get[model.MobilityOperMmIfGlobalStats](
+func (s Service) GetMMIFGlobalStats(ctx context.Context) (*MobilityOperMmIfGlobalStats, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperMmIfGlobalStats](
                 ctx, s.Client(), routes.MobilityMmIfGlobalStatsPath)
 }</span>
 
 // ListClients retrieves mobility client data.
-func (s Service) ListClients(ctx context.Context) (*model.MobilityOperMobilityClientData, error) <span class="cov1" title="1">{
-        return core.Get[model.MobilityOperMobilityClientData](
+func (s Service) ListClients(ctx context.Context) (*MobilityOperMobilityClientData, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperMobilityClientData](
                 ctx, s.Client(), routes.MobilityClientDataPath)
 }</span>
 
 // GetGlobalStats retrieves mobility global statistics.
 func (s Service) GetGlobalStats(
         ctx context.Context,
-) (*model.MobilityOperMobilityGlobalStats, error) <span class="cov4" title="2">{
-        return core.Get[model.MobilityOperMobilityGlobalStats](
+) (*MobilityOperMobilityGlobalStats, error) <span class="cov4" title="2">{
+        return core.Get[MobilityOperMobilityGlobalStats](
                 ctx, s.Client(), routes.MobilityGlobalStatsPath,
         )
 }</span>
@@ -3581,7 +3560,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/nmsp"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3597,23 +3575,23 @@ func NewService(client *core.Client) Service <span class="cov10" title="3">{
 }</span>
 
 // GetOperational retrieves NMSP operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.NMSPOper, error) <span class="cov1" title="1">{
-        return core.Get[model.NMSPOper](ctx, s.Client(), routes.NMSPOperPath)
+func (s Service) GetOperational(ctx context.Context) (*NMSPOper, error) <span class="cov1" title="1">{
+        return core.Get[NMSPOper](ctx, s.Client(), routes.NMSPOperPath)
 }</span>
 
 // ListClientRegistrations retrieves NMSP client registration data.
-func (s Service) ListClientRegistrations(ctx context.Context) (*model.NMSPClientRegistration, error) <span class="cov1" title="1">{
-        return core.Get[model.NMSPClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
+func (s Service) ListClientRegistrations(ctx context.Context) (*NMSPClientRegistration, error) <span class="cov1" title="1">{
+        return core.Get[NMSPClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
 }</span>
 
 // GetCMXConnectionInfo retrieves NMSP CMX connection information.
-func (s Service) GetCMXConnectionInfo(ctx context.Context) (*model.NMSPCmxConnection, error) <span class="cov1" title="1">{
-        return core.Get[model.NMSPCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
+func (s Service) GetCMXConnectionInfo(ctx context.Context) (*NMSPCmxConnection, error) <span class="cov1" title="1">{
+        return core.Get[NMSPCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
 }</span>
 
 // GetCMXCloudInfo retrieves NMSP CMX cloud information.
-func (s Service) GetCMXCloudInfo(ctx context.Context) (*model.NMSPCmxCloudInfo, error) <span class="cov1" title="1">{
-        return core.Get[model.NMSPCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
+func (s Service) GetCMXCloudInfo(ctx context.Context) (*NMSPCmxCloudInfo, error) <span class="cov1" title="1">{
+        return core.Get[NMSPCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
 }</span>
 </pre>
 		
@@ -3623,7 +3601,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/radio"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3639,13 +3616,13 @@ func NewService(client *core.Client) Service <span class="cov10" title="6">{
 }</span>
 
 // GetConfig retrieves radio configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.RadioCfg, error) <span class="cov6" title="3">{
-        return core.Get[model.RadioCfg](ctx, s.Client(), routes.RadioCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*RadioCfg, error) <span class="cov6" title="3">{
+        return core.Get[RadioCfg](ctx, s.Client(), routes.RadioCfgPath)
 }</span>
 
 // ListProfileConfigs retrieves radio profiles configuration data.
-func (s Service) ListProfileConfigs(ctx context.Context) (*model.RadioProfiles, error) <span class="cov6" title="3">{
-        return core.Get[model.RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles")
+func (s Service) ListProfileConfigs(ctx context.Context) (*RadioProfiles, error) <span class="cov6" title="3">{
+        return core.Get[RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles")
 }</span>
 </pre>
 		
@@ -3655,7 +3632,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rf"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3676,8 +3652,8 @@ func (s Service) RFTag() *RFTagService <span class="cov9" title="16">{
 }</span>
 
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
-func (s Service) GetConfig(ctx context.Context) (*model.RFCfg, error) <span class="cov3" title="2">{
-        return core.Get[model.RFCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*RFCfg, error) <span class="cov3" title="2">{
+        return core.Get[RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }</span>
 </pre>
 		
@@ -3690,7 +3666,6 @@ import (
         "strings"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rf"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3708,17 +3683,17 @@ func NewRFTagService(client *core.Client) *RFTagService <span class="cov8" title
 }</span>
 
 // GetConfig retrieves the RF configuration.
-func (s *RFTagService) GetConfig(ctx context.Context) (*model.RFCfg, error) <span class="cov1" title="1">{
-        return core.Get[model.RFCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s *RFTagService) GetConfig(ctx context.Context) (*RFCfg, error) <span class="cov1" title="1">{
+        return core.Get[RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }</span>
 
 // GetRFTag retrieves an RF tag configuration by name.
-func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RFTag, error) <span class="cov8" title="14">{
+func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*RFTag, error) <span class="cov8" title="14">{
         if err := s.validateTagName(tagName); err != nil </span><span class="cov5" title="5">{
                 return nil, err
         }</span>
 
-        <span class="cov7" title="9">result, err := core.Get[model.RFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
+        <span class="cov7" title="9">result, err := core.Get[RFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
         if err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
@@ -3731,25 +3706,25 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*model.RFT
 }
 
 // ListRFTags retrieves all RF tag configurations.
-func (s *RFTagService) ListRFTags(ctx context.Context) ([]model.RFTag, error) <span class="cov5" title="5">{
-        result, err := core.Get[model.RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+func (s *RFTagService) ListRFTags(ctx context.Context) ([]RFTag, error) <span class="cov5" title="5">{
+        result, err := core.Get[RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
         if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
         <span class="cov4" title="4">if result == nil </span><span class="cov0" title="0">{
-                return []model.RFTag{}, nil
+                return []RFTag{}, nil
         }</span>
 
         <span class="cov4" title="4">if len(result.RFTags.RFTagList) == 0 </span><span class="cov4" title="3">{
-                return []model.RFTag{}, nil
+                return []RFTag{}, nil
         }</span>
 
         <span class="cov1" title="1">return result.RFTags.RFTagList, nil</span>
 }
 
 // CreateRFTag creates a new RF tag configuration.
-func (s *RFTagService) CreateRFTag(ctx context.Context, config *model.RFTag) error <span class="cov5" title="5">{
+func (s *RFTagService) CreateRFTag(ctx context.Context, config *RFTag) error <span class="cov5" title="5">{
         if config == nil </span><span class="cov1" title="1">{
                 return errors.New("RF tag config cannot be nil")
         }</span>
@@ -3776,7 +3751,7 @@ func (s *RFTagService) DeleteRFTag(ctx context.Context, tagName string) error <s
 
 // SetDot11ARfProfile sets the 5GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov4" title="3">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Dot11ARfProfileName = rfProfileName
                 }</span>
@@ -3785,7 +3760,7 @@ func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfil
 
 // SetDot11BRfProfile sets the 2.4GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov1" title="1">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Dot11BRfProfileName = rfProfileName
                 }</span>
@@ -3794,7 +3769,7 @@ func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfil
 
 // SetDot116GhzRFProfile sets the 6GHz RF profile for an RF tag.
 func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfProfileName string) error <span class="cov1" title="1">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Dot116GhzRFProfName = rfProfileName
                 }</span>
@@ -3803,7 +3778,7 @@ func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfPro
 
 // SetDescription sets the description for an RF tag.
 func (s *RFTagService) SetDescription(ctx context.Context, tagName, description string) error <span class="cov4" title="4">{
-        return s.updateTagField(ctx, tagName, func(payload *model.RFTag) </span><span class="cov1" title="1">{
+        return s.updateTagField(ctx, tagName, func(payload *RFTag) </span><span class="cov1" title="1">{
                 if payload != nil </span><span class="cov1" title="1">{
                         payload.Description = description
                 }</span>
@@ -3812,7 +3787,7 @@ func (s *RFTagService) SetDescription(ctx context.Context, tagName, description 
 
 // updateTagField updates a specific field of an RF tag using the provided update function.
 func (s *RFTagService) updateTagField(ctx context.Context, tagName string,
-        updateFunc func(*model.RFTag),
+        updateFunc func(*RFTag),
 ) error <span class="cov7" title="9">{
         if updateFunc == nil </span><span class="cov0" title="0">{
                 return errors.New("update function cannot be nil")
@@ -3833,7 +3808,7 @@ func (s *RFTagService) updateTagField(ctx context.Context, tagName string,
 }
 
 // setRFTag sets/updates an existing RF tag configuration.
-func (s *RFTagService) setRFTag(ctx context.Context, config *model.RFTag) error <span class="cov4" title="4">{
+func (s *RFTagService) setRFTag(ctx context.Context, config *RFTag) error <span class="cov4" title="4">{
         if config == nil </span><span class="cov0" title="0">{
                 return errors.New("RF tag config cannot be nil")
         }</span>
@@ -3868,7 +3843,7 @@ func (s *RFTagService) buildTagURL(tagName string) string <span class="cov8" tit
 }</span>
 
 // buildPayload builds the payload for POST/PUT operations.
-func (s *RFTagService) buildPayload(config *model.RFTag) map[string]any <span class="cov6" title="6">{
+func (s *RFTagService) buildPayload(config *RFTag) map[string]any <span class="cov6" title="6">{
         return map[string]any{
                 "Cisco-IOS-XE-wireless-rf-cfg:rf-tag": config,
         }
@@ -3881,7 +3856,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rfid"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
@@ -3898,32 +3872,32 @@ func NewService(client *core.Client) Service <span class="cov10" title="6">{
 }</span>
 
 // GetConfig retrieves RFID configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.RFIDCfg, error) <span class="cov4" title="2">{
-        return core.Get[model.RFIDCfg](ctx, s.Client(), routes.RFIDCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*RFIDCfg, error) <span class="cov4" title="2">{
+        return core.Get[RFIDCfg](ctx, s.Client(), routes.RFIDCfgPath)
 }</span>
 
 // GetConfigSettings retrieves the RFID configuration settings.
-func (s Service) GetConfigSettings(ctx context.Context) (*model.RFIDConfig, error) <span class="cov1" title="1">{
+func (s Service) GetConfigSettings(ctx context.Context) (*RFIDConfig, error) <span class="cov1" title="1">{
         url := routes.RFIDCfgPath + "/rfid-config"
-        return core.Get[model.RFIDConfig](ctx, s.Client(), url)
+        return core.Get[RFIDConfig](ctx, s.Client(), url)
 }</span>
 
 // GetGlobalInfo retrieves RFID global information.
-func (s Service) GetGlobalInfo(ctx context.Context) (*model.RFIDGlobalOper, error) <span class="cov1" title="1">{
-        return core.Get[model.RFIDGlobalOper](ctx, s.Client(), routes.RFIDGlobalOperPath)
+func (s Service) GetGlobalInfo(ctx context.Context) (*RFIDGlobalOper, error) <span class="cov1" title="1">{
+        return core.Get[RFIDGlobalOper](ctx, s.Client(), routes.RFIDGlobalOperPath)
 }</span>
 
 // GetGlobalDetailByMAC retrieves specific RFID data detail by MAC address.
 func (s Service) GetGlobalDetailByMAC(
         ctx context.Context,
         macAddr string,
-) (*model.RFIDEmltdData, error) <span class="cov4" title="2">{
+) (*RFIDEmltdData, error) <span class="cov4" title="2">{
         if err := validation.ValidateMACAddress(macAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
-        return core.Get[model.RFIDEmltdData](ctx, s.Client(), url)</span>
+        return core.Get[RFIDEmltdData](ctx, s.Client(), url)</span>
 }
 
 // GetRadioInfo retrieves RFID radio information by radio key combination.
@@ -3931,7 +3905,7 @@ func (s Service) GetRadioInfo(
         ctx context.Context,
         macAddr, apMACAddr string,
         slot int,
-) (*model.RFIDRadioData, error) <span class="cov6" title="3">{
+) (*RFIDRadioData, error) <span class="cov6" title="3">{
         if err := validation.ValidateMACAddress(macAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
@@ -3945,22 +3919,22 @@ func (s Service) GetRadioInfo(
                 apMACAddr,
                 slot,
         )
-        return core.Get[model.RFIDRadioData](ctx, s.Client(), url)</span>
+        return core.Get[RFIDRadioData](ctx, s.Client(), url)</span>
 }
 
 // GetOperational retrieves RFID operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.RFIDOper, error) <span class="cov4" title="2">{
-        return core.Get[model.RFIDOper](ctx, s.Client(), routes.RFIDOperPath)
+func (s Service) GetOperational(ctx context.Context) (*RFIDOper, error) <span class="cov4" title="2">{
+        return core.Get[RFIDOper](ctx, s.Client(), routes.RFIDOperPath)
 }</span>
 
 // GetDetailByMAC retrieves specific RFID data based on MAC address.
-func (s Service) GetDetailByMAC(ctx context.Context, macAddr string) (*model.RFIDData, error) <span class="cov4" title="2">{
+func (s Service) GetDetailByMAC(ctx context.Context, macAddr string) (*RFIDData, error) <span class="cov4" title="2">{
         if err := validation.ValidateMACAddress(macAddr); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
         <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
-        return core.Get[model.RFIDData](ctx, s.Client(), url)</span>
+        return core.Get[RFIDData](ctx, s.Client(), url)</span>
 }
 </pre>
 		
@@ -3970,7 +3944,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rogue"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -3986,75 +3959,75 @@ func NewService(client *core.Client) Service <span class="cov10" title="8">{
 }</span>
 
 // GetOperational retrieves rogue detection operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.RogueOper, error) <span class="cov4" title="2">{
-        return core.Get[model.RogueOper](ctx, s.Client(), routes.RogueOperPath)
+func (s Service) GetOperational(ctx context.Context) (*RogueOper, error) <span class="cov4" title="2">{
+        return core.Get[RogueOper](ctx, s.Client(), routes.RogueOperPath)
 }</span>
 
 // ListRogues retrieves rogue client data.
-func (s Service) ListRogues(ctx context.Context) (*model.RogueData, error) <span class="cov5" title="3">{
-        return core.Get[model.RogueData](ctx, s.Client(), routes.RogueDataPath)
+func (s Service) ListRogues(ctx context.Context) (*RogueData, error) <span class="cov5" title="3">{
+        return core.Get[RogueData](ctx, s.Client(), routes.RogueDataPath)
 }</span>
 
 // GetRogueByMAC retrieves rogue data filtered by rogue address.
-func (s Service) GetRogueByMAC(ctx context.Context, mac string) (*model.RogueData, error) <span class="cov7" title="4">{
+func (s Service) GetRogueByMAC(ctx context.Context, mac string) (*RogueData, error) <span class="cov7" title="4">{
         if mac == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov5" title="3">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueDataPath, mac)
-        return core.Get[model.RogueData](ctx, s.Client(), url)</span>
+        return core.Get[RogueData](ctx, s.Client(), url)</span>
 }
 
 // ListRogueClients retrieves rogue client data.
-func (s Service) ListRogueClients(ctx context.Context) (*model.RogueClientData, error) <span class="cov5" title="3">{
-        return core.Get[model.RogueClientData](ctx, s.Client(), routes.RogueClientDataPath)
+func (s Service) ListRogueClients(ctx context.Context) (*RogueClientData, error) <span class="cov5" title="3">{
+        return core.Get[RogueClientData](ctx, s.Client(), routes.RogueClientDataPath)
 }</span>
 
 // GetRogueClientByMAC retrieves rogue data filtered by rogue address.
-func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*model.RogueClientData, error) <span class="cov7" title="4">{
+func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*RogueClientData, error) <span class="cov7" title="4">{
         if mac == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrInvalidConfiguration
         }</span>
 
         <span class="cov5" title="3">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueClientDataPath, mac)
-        return core.Get[model.RogueClientData](ctx, s.Client(), url)</span>
+        return core.Get[RogueClientData](ctx, s.Client(), url)</span>
 }
 
 // GetStats retrieves rogue statistics.
-func (s Service) GetStats(ctx context.Context) (*model.RogueStatsData, error) <span class="cov7" title="4">{
-        return core.Get[model.RogueStatsData](ctx, s.Client(), routes.RogueStatsPath)
+func (s Service) GetStats(ctx context.Context) (*RogueStatsData, error) <span class="cov7" title="4">{
+        return core.Get[RogueStatsData](ctx, s.Client(), routes.RogueStatsPath)
 }</span>
 
 // Alias methods for integration test compatibility
 
 // GetOperClientData is an alias for ListRogueClients.
-func (s Service) GetOperClientData(ctx context.Context) (*model.RogueClientData, error) <span class="cov1" title="1">{
+func (s Service) GetOperClientData(ctx context.Context) (*RogueClientData, error) <span class="cov1" title="1">{
         return s.ListRogueClients(ctx)
 }</span>
 
 // GetOperData is an alias for ListRogues.
-func (s Service) GetOperData(ctx context.Context) (*model.RogueData, error) <span class="cov1" title="1">{
+func (s Service) GetOperData(ctx context.Context) (*RogueData, error) <span class="cov1" title="1">{
         return s.ListRogues(ctx)
 }</span>
 
 // GetOperStats is an alias for GetStats.
-func (s Service) GetOperStats(ctx context.Context) (*model.RogueStatsData, error) <span class="cov1" title="1">{
+func (s Service) GetOperStats(ctx context.Context) (*RogueStatsData, error) <span class="cov1" title="1">{
         return s.GetStats(ctx)
 }</span>
 
 // GetRLDPStats retrieves RLDP (Rogue Location Discovery Protocol) statistics.
-func (s Service) GetRLDPStats(ctx context.Context) (*model.RogueStatsData, error) <span class="cov1" title="1">{
+func (s Service) GetRLDPStats(ctx context.Context) (*RogueStatsData, error) <span class="cov1" title="1">{
         // For now, return the same as rogue stats since RLDP is part of rogue detection
         return s.GetStats(ctx)
 }</span>
 
 // GetOperByRogueAddress is an alias for GetRogueByMAC.
-func (s Service) GetOperByRogueAddress(ctx context.Context, mac string) (*model.RogueData, error) <span class="cov1" title="1">{
+func (s Service) GetOperByRogueAddress(ctx context.Context, mac string) (*RogueData, error) <span class="cov1" title="1">{
         return s.GetRogueByMAC(ctx, mac)
 }</span>
 
 // GetOperByRogueClientAddress is an alias for GetRogueClientByMAC.
-func (s Service) GetOperByRogueClientAddress(ctx context.Context, mac string) (*model.RogueClientData, error) <span class="cov1" title="1">{
+func (s Service) GetOperByRogueClientAddress(ctx context.Context, mac string) (*RogueClientData, error) <span class="cov1" title="1">{
         return s.GetRogueClientByMAC(ctx, mac)
 }</span>
 </pre>
@@ -4065,7 +4038,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/rrm"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4081,23 +4053,23 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 }</span>
 
 // GetConfig retrieves complete RRM configuration data.
-func (s Service) GetConfig(ctx context.Context) (*model.RRMCfg, error) <span class="cov7" title="3">{
-        return core.Get[model.RRMCfg](ctx, s.Client(), routes.RRMCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*RRMCfg, error) <span class="cov7" title="3">{
+        return core.Get[RRMCfg](ctx, s.Client(), routes.RRMCfgPath)
 }</span>
 
 // GetOperational retrieves RRM operational data.
-func (s Service) GetOperational(ctx context.Context) (*model.RRMOper, error) <span class="cov7" title="3">{
-        return core.Get[model.RRMOper](ctx, s.Client(), routes.RRMOperPath)
+func (s Service) GetOperational(ctx context.Context) (*RRMOper, error) <span class="cov7" title="3">{
+        return core.Get[RRMOper](ctx, s.Client(), routes.RRMOperPath)
 }</span>
 
 // GetGlobalOperational retrieves RRM global operational information.
-func (s Service) GetGlobalOperational(ctx context.Context) (*model.RRMGlobalOper, error) <span class="cov7" title="3">{
-        return core.Get[model.RRMGlobalOper](ctx, s.Client(), routes.RRMGlobalOperPath)
+func (s Service) GetGlobalOperational(ctx context.Context) (*RRMGlobalOper, error) <span class="cov7" title="3">{
+        return core.Get[RRMGlobalOper](ctx, s.Client(), routes.RRMGlobalOperPath)
 }</span>
 
 // GetEmulationOperational retrieves RRM emulation operational information.
-func (s Service) GetEmulationOperational(ctx context.Context) (*model.RRMEmulOper, error) <span class="cov7" title="3">{
-        return core.Get[model.RRMEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
+func (s Service) GetEmulationOperational(ctx context.Context) (*RRMEmulOper, error) <span class="cov7" title="3">{
+        return core.Get[RRMEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
 }</span>
 </pre>
 		
@@ -4107,7 +4079,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/site"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4128,18 +4099,18 @@ func (s Service) SiteTag() *SiteTagService <span class="cov9" title="14">{
 }</span>
 
 // GetConfig retrieves site configuration data including AP configuration profiles and site tag configurations.
-func (s Service) GetConfig(ctx context.Context) (*model.SiteCfg, error) <span class="cov3" title="2">{
-        return core.Get[model.SiteCfg](ctx, s.Client(), routes.SiteCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*SiteCfg, error) <span class="cov3" title="2">{
+        return core.Get[SiteCfg](ctx, s.Client(), routes.SiteCfgPath)
 }</span>
 
 // ListAPProfileConfigs retrieves all AP configuration profiles from the site configuration.
-func (s Service) ListAPProfileConfigs(ctx context.Context) (*model.SiteCfgApCfgProfiles, error) <span class="cov3" title="2">{
-        return core.Get[model.SiteCfgApCfgProfiles](ctx, s.Client(), routes.APProfilesPath)
+func (s Service) ListAPProfileConfigs(ctx context.Context) (*SiteCfgApCfgProfiles, error) <span class="cov3" title="2">{
+        return core.Get[SiteCfgApCfgProfiles](ctx, s.Client(), routes.APProfilesPath)
 }</span>
 
 // ListSiteTagConfigs retrieves all site tag configurations from the site configuration.
-func (s Service) ListSiteTagConfigs(ctx context.Context) (*model.SiteCfgSiteTagConfigs, error) <span class="cov3" title="2">{
-        return core.Get[model.SiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath)
+func (s Service) ListSiteTagConfigs(ctx context.Context) (*SiteCfgSiteTagConfigs, error) <span class="cov3" title="2">{
+        return core.Get[SiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath)
 }</span>
 </pre>
 		
@@ -4152,7 +4123,6 @@ import (
         "strings"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/site"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4170,12 +4140,12 @@ func NewSiteTagService(client *core.Client) *SiteTagService <span class="cov7" t
 }</span>
 
 // GetSiteTag retrieves a specific site tag configuration.
-func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model.SiteListEntry, error) <span class="cov8" title="23">{
+func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*SiteListEntry, error) <span class="cov8" title="23">{
         if err := s.validateTagName(tagName); err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov8" title="21">result, err := core.Get[model.SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
+        <span class="cov8" title="21">result, err := core.Get[SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
         if err != nil </span><span class="cov5" title="5">{
                 return nil, err
         }</span>
@@ -4190,9 +4160,9 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*model
 }
 
 // ListSiteTags retrieves all site tag configurations.
-func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntry, error) <span class="cov5" title="6">{
+func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]SiteListEntry, error) <span class="cov5" title="6">{
         type siteTagsResponse struct {
-                SiteTagConfigs model.SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
+                SiteTagConfigs SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
         }
 
         result, err := core.Get[siteTagsResponse](ctx, s.Client(), routes.SiteTagConfigsPath)
@@ -4200,17 +4170,17 @@ func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]model.SiteListEntr
                 return nil, err
         }</span>
         <span class="cov5" title="5">if result == nil </span><span class="cov0" title="0">{
-                return []model.SiteListEntry{}, nil
+                return []SiteListEntry{}, nil
         }</span>
         <span class="cov5" title="5">if len(result.SiteTagConfigs.SiteTagConfig) == 0 </span><span class="cov3" title="3">{
-                return []model.SiteListEntry{}, nil
+                return []SiteListEntry{}, nil
         }</span>
 
         <span class="cov2" title="2">return result.SiteTagConfigs.SiteTagConfig, nil</span>
 }
 
 // CreateSiteTag creates a new site tag configuration.
-func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *model.SiteListEntry) error <span class="cov4" title="4">{
+func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *SiteListEntry) error <span class="cov4" title="4">{
         if config == nil </span><span class="cov1" title="1">{
                 return errors.New("config cannot be nil")
         }</span>
@@ -4308,7 +4278,7 @@ func (s *SiteTagService) DeleteSiteTag(ctx context.Context, siteTagName string) 
 }
 
 // setSiteTag sets/updates an existing site tag configuration.
-func (s *SiteTagService) setSiteTag(ctx context.Context, config *model.SiteListEntry) error <span class="cov6" title="8">{
+func (s *SiteTagService) setSiteTag(ctx context.Context, config *SiteListEntry) error <span class="cov6" title="8">{
         if config == nil </span><span class="cov0" title="0">{
                 return errors.New("config cannot be nil")
         }</span>
@@ -4341,9 +4311,9 @@ func (s *SiteTagService) buildTagURL(tagName string) string <span class="cov9" t
         return s.Client().RESTCONFBuilder().BuildQueryURL(routes.SiteTagConfigQueryPath, tagName)
 }</span>
 
-// buildPayload builds a payload for tag operations using the request model.
-func (s *SiteTagService) buildPayload(config model.SiteListEntry) model.SiteTagConfigsPayload <span class="cov6" title="10">{
-        return model.SiteTagConfigsPayload{
+// buildPayload builds a payload for tag operations using the request.
+func (s *SiteTagService) buildPayload(config SiteListEntry) SiteTagConfigsPayload <span class="cov6" title="10">{
+        return SiteTagConfigsPayload{
                 SiteListEntry: config,
         }
 }</span>
@@ -4355,7 +4325,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/spaces"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4373,14 +4342,14 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 
 // GetOperational retrieves all Cisco Spaces operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetOperational(ctx context.Context) (*model.CiscoSpacesOper, error) <span class="cov5" title="2">{
-        return core.Get[model.CiscoSpacesOper](ctx, s.Client(), routes.SpacesOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoSpacesOper, error) <span class="cov5" title="2">{
+        return core.Get[CiscoSpacesOper](ctx, s.Client(), routes.SpacesOperPath)
 }</span>
 
 // GetConnectionDetails retrieves detailed connection information for Cisco Spaces integration.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConnectionDetails(ctx context.Context) (*model.SpacesConnectionDetail, error) <span class="cov5" title="2">{
-        return core.Get[model.SpacesConnectionDetail](ctx, s.Client(), routes.SpacesConnectionDetailPath)
+func (s Service) GetConnectionDetails(ctx context.Context) (*SpacesConnectionDetail, error) <span class="cov5" title="2">{
+        return core.Get[SpacesConnectionDetail](ctx, s.Client(), routes.SpacesConnectionDetailPath)
 }</span>
 </pre>
 		
@@ -4390,7 +4359,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/urwb"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4408,14 +4376,14 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 
 // GetConfig retrieves the complete URWB configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.URWBCfg, error) <span class="cov4" title="2">{
-        return core.Get[model.URWBCfg](ctx, s.Client(), routes.URWBCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*URWBCfg, error) <span class="cov4" title="2">{
+        return core.Get[URWBCfg](ctx, s.Client(), routes.URWBCfgPath)
 }</span>
 
 // GetURWBNetOperational retrieves URWB network operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetURWBNetOperational(ctx context.Context) (*model.URWBnetOper, error) <span class="cov1" title="1">{
-        return core.Get[model.URWBnetOper](ctx, s.Client(), routes.URWBNetOperPath)
+func (s Service) GetURWBNetOperational(ctx context.Context) (*URWBnetOper, error) <span class="cov1" title="1">{
+        return core.Get[URWBnetOper](ctx, s.Client(), routes.URWBNetOperPath)
 }</span>
 </pre>
 		
@@ -4425,7 +4393,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wat"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4443,8 +4410,8 @@ func NewService(client *core.Client) Service <span class="cov10" title="5">{
 
 // GetConfig retrieves the complete WAT configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*model.WATCfg, error) <span class="cov7" title="3">{
-        return core.Get[model.WATCfg](ctx, s.Client(), routes.WATCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*WATCfg, error) <span class="cov7" title="3">{
+        return core.Get[WATCfg](ctx, s.Client(), routes.WATCfgPath)
 }</span>
 </pre>
 		
@@ -4455,7 +4422,6 @@ import (
         "context"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wlan"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4476,39 +4442,39 @@ func (s Service) PolicyTag() *PolicyTagService <span class="cov9" title="18">{
 }</span>
 
 // ListProfileConfigs retrieves WLAN configuration entries.
-func (s Service) ListProfileConfigs(ctx context.Context) (*model.WlanCfgEntries, error) <span class="cov3" title="2">{
-        return core.Get[model.WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
+func (s Service) ListProfileConfigs(ctx context.Context) (*WlanCfgEntries, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
 }</span>
 
 // GetProfileConfig retrieves a specific WLAN configuration entry by profile name.
-func (s Service) GetProfileConfig(ctx context.Context, profileName string) (*model.WlanCfgEntry, error) <span class="cov3" title="2">{
+func (s Service) GetProfileConfig(ctx context.Context, profileName string) (*WlanCfgEntry, error) <span class="cov3" title="2">{
         url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
-        return core.Get[model.WlanCfgEntry](ctx, s.Client(), url)
+        return core.Get[WlanCfgEntry](ctx, s.Client(), url)
 }</span>
 
 // ListPolicies retrieves WLAN policies.
-func (s Service) ListPolicies(ctx context.Context) (*model.WlanPolicies, error) <span class="cov3" title="2">{
-        return core.Get[model.WlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
+func (s Service) ListPolicies(ctx context.Context) (*WlanPolicies, error) <span class="cov3" title="2">{
+        return core.Get[WlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
 }</span>
 
 // ListPolicyListEntries retrieves all policy list entries.
-func (s Service) ListPolicyListEntries(ctx context.Context) (*model.PolicyListEntries, error) <span class="cov3" title="2">{
-        return core.Get[model.PolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+func (s Service) ListPolicyListEntries(ctx context.Context) (*PolicyListEntries, error) <span class="cov3" title="2">{
+        return core.Get[PolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
 }</span>
 
 // ListWirelessAAAPolicyConfigs retrieves wireless AAA policy configurations.
-func (s Service) ListWirelessAAAPolicyConfigs(ctx context.Context) (*model.WirelessAaaPolicyConfigs, error) <span class="cov3" title="2">{
-        return core.Get[model.WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath)
+func (s Service) ListWirelessAAAPolicyConfigs(ctx context.Context) (*WirelessAaaPolicyConfigs, error) <span class="cov3" title="2">{
+        return core.Get[WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath)
 }</span>
 
 // GetConfig retrieves WLAN configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*model.WlanCfg, error) <span class="cov3" title="2">{
-        return core.Get[model.WlanCfg](ctx, s.Client(), routes.WLANCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*WlanCfg, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfg](ctx, s.Client(), routes.WLANCfgPath)
 }</span>
 
 // GetOperational retrieves WLAN operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*model.WlanGlobalOper, error) <span class="cov3" title="2">{
-        return core.Get[model.WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath)
+func (s Service) GetOperational(ctx context.Context) (*WlanGlobalOper, error) <span class="cov3" title="2">{
+        return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath)
 }</span>
 </pre>
 		
@@ -4520,7 +4486,6 @@ import (
         "fmt"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
-        model "github.com/umatare5/cisco-ios-xe-wireless-go/internal/model/wlan"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
 )
@@ -4538,7 +4503,7 @@ func NewPolicyTagService(c *core.Client) *PolicyTagService <span class="cov9" ti
 }</span>
 
 // GetPolicyTag retrieves a specific policy tag configuration.
-func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*model.PolicyListEntry, error) <span class="cov8" title="13">{
+func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*PolicyListEntry, error) <span class="cov8" title="13">{
         if err := s.validateTagName(tagName); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -4561,29 +4526,29 @@ func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*m
 }
 
 // ListPolicyTags retrieves all policy tag configurations.
-func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]model.PolicyListEntry, error) <span class="cov9" title="21">{
-        result, err := core.Get[model.WlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntry, error) <span class="cov9" title="21">{
+        result, err := core.Get[WlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
         if err != nil </span><span class="cov6" title="6">{
                 return nil, err
         }</span>
 
         <span class="cov8" title="15">if result == nil </span><span class="cov0" title="0">{
-                return []model.PolicyListEntry{}, nil
+                return []PolicyListEntry{}, nil
         }</span>
 
         <span class="cov8" title="15">if result.PolicyListEntries == nil </span><span class="cov4" title="3">{
-                return []model.PolicyListEntry{}, nil
+                return []PolicyListEntry{}, nil
         }</span>
 
         <span class="cov8" title="12">if result.PolicyListEntries.PolicyListEntry == nil </span><span class="cov1" title="1">{
-                return []model.PolicyListEntry{}, nil
+                return []PolicyListEntry{}, nil
         }</span>
 
         <span class="cov7" title="11">return result.PolicyListEntries.PolicyListEntry, nil</span>
 }
 
 // CreatePolicyTag creates a new policy tag configuration.
-func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *model.PolicyListEntry) error <span class="cov4" title="4">{
+func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *PolicyListEntry) error <span class="cov4" title="4">{
         if config == nil </span><span class="cov1" title="1">{
                 return errors.New("config cannot be nil")
         }</span>
@@ -4601,7 +4566,7 @@ func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *model.Po
 }
 
 // SetPolicyTag configures a policy tag on the wireless controller using PUT operation.
-func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *model.PolicyListEntry) error <span class="cov6" title="6">{
+func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *PolicyListEntry) error <span class="cov6" title="6">{
         if config == nil </span><span class="cov1" title="1">{
                 return errors.New("config cannot be nil")
         }</span>
@@ -4637,8 +4602,8 @@ func (s *PolicyTagService) SetPolicyProfile(
 
         // Initialize WLANPolicies if nil
         <span class="cov1" title="1">if config.WLANPolicies == nil </span><span class="cov0" title="0">{
-                config.WLANPolicies = &amp;model.WLANPolicies{
-                        WLANPolicy: []model.WLANPolicyMap{},
+                config.WLANPolicies = &amp;WLANPolicies{
+                        WLANPolicy: []WLANPolicyMap{},
                 }
         }</span>
 
@@ -4653,7 +4618,7 @@ func (s *PolicyTagService) SetPolicyProfile(
         }
 
         <span class="cov1" title="1">if !found </span><span class="cov1" title="1">{
-                config.WLANPolicies.WLANPolicy = append(config.WLANPolicies.WLANPolicy, model.WLANPolicyMap{
+                config.WLANPolicies.WLANPolicy = append(config.WLANPolicies.WLANPolicy, WLANPolicyMap{
                         WLANProfileName:   wlanProfileName,
                         PolicyProfileName: policyProfileName,
                 })
@@ -4709,7 +4674,7 @@ func (s *PolicyTagService) buildTagURL(tagName string) string <span class="cov6"
 }</span>
 
 // buildPayload builds a payload for tag operations directly.
-func (s *PolicyTagService) buildPayload(config model.PolicyListEntry) map[string]interface{} <span class="cov4" title="4">{
+func (s *PolicyTagService) buildPayload(config PolicyListEntry) map[string]interface{} <span class="cov4" title="4">{
         return map[string]interface{}{
                 "Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entry": config,
         }
