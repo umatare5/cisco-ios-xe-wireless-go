@@ -1,12 +1,5 @@
 # GitHub Copilot Agent Mode – Development Instructions
 
-**Updated:** 2025-09-14
-\*\*Precedence:## 8. Review Scope & Comment Style
-
-- Focus on the **diff** and align feedback with these rules; reserve wide refactors for items labeled `allow-wide`.
-- Tag comments with **\[BLOCKER] / \[MAJOR] / \[MINOR (Nit)] / \[QUESTION] / \[PRAISE]**.
-- Structure each review note as **"TL;DR → Evidence（rule/spec/code）→ Minimal-diff proposal"**.
-
 ## 0. Normative Keywords
 
 Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
