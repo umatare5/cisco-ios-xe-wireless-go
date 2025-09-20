@@ -1,11 +1,10 @@
 # GitHub Copilot Agent Mode – Development Instructions
 
-**Updated:** 2025-09-14
-\*\*Precedence:## 8. Review Scope & Comment Style
+## Scope & Metadata
 
-- Focus on the **diff** and align feedback with these rules; reserve wide refactors for items labeled `allow-wide`.
-- Tag comments with **\[BLOCKER] / \[MAJOR] / \[MINOR (Nit)] / \[QUESTION] / \[PRAISE]**.
-- Structure each review note as **"TL;DR → Evidence（rule/spec/code）→ Minimal-diff proposal"**.
+- **Last Updated**: 2025-09-20
+- **Precedence**: **Highest** in this repo. When instructions conflict, **this file wins**.
+- **Compatibility**: Go **1.25+** cross‑platform
 
 ## 0. Normative Keywords
 
