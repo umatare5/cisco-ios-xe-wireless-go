@@ -7,15 +7,9 @@
 - Tag comments with **\[BLOCKER] / \[MAJOR] / \[MINOR (Nit)] / \[QUESTION] / \[PRAISE]**.
 - Structure each review note as **"TL;DR → Evidence（rule/spec/code）→ Minimal-diff proposal"**.
 
-## 9. Quality Gate & SemVerest in this repository
-
-**Goal:** Modern Go 1.25+ SDK library for Cisco Catalyst C9800 RESTCONF (IOS-XE 17.12), zero-violation quality bar
-
 ## 0. Normative Keywords
 
 Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
-
----
 
 ## 1. Core Development Principles
 
