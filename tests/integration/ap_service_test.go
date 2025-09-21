@@ -118,9 +118,9 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
-				Name: "ListRadioStatus",
+				Name: "ListRadioData",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).ListRadioStatus(ctx)
+					return service.(ap.Service).ListRadioData(ctx)
 				},
 				LogResult: true,
 			},

@@ -191,9 +191,9 @@ func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*A
 	return core.Get[ApOperApNameMACMap](ctx, s.Client(), url)
 }
 
-// ListRadioStatus retrieves radio operational status data.
-func (s Service) ListRadioStatus(ctx context.Context) (*RadioOperData, error) {
-	return core.Get[RadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
+// ListRadioData retrieves radio operational data.
+func (s Service) ListRadioData(ctx context.Context) (*ApOperRadioOperData, error) {
+	return core.Get[ApOperRadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
 }
 
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
