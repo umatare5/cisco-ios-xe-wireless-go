@@ -153,6 +153,11 @@ func (s Service) GetOperational(ctx context.Context) (*ApOper, error) {
 	return core.Get[ApOper](ctx, s.Client(), routes.APOperPath)
 }
 
+// ListApOperData retrieves AP operational data.
+func (s Service) ListApOperData(ctx context.Context) (*ApOperData, error) {
+	return core.Get[ApOperData](ctx, s.Client(), routes.APOperDataPath)
+}
+
 // ListCAPWAPData retrieves CAPWAP protocol data.
 func (s Service) ListCAPWAPData(ctx context.Context) (*ApOperCAPWAPData, error) {
 	return core.Get[ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)

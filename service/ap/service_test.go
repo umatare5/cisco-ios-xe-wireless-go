@@ -143,6 +143,50 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": {
+				"oper-data": [{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"radio-id": 4,
+					"ap-antenna-band-mode": "ant-band-mode-unknown",
+					"link-encryption-enabled": false,
+					"ap-remote-debug-mode": false,
+					"ap-ip-data": {
+						"ap-prefix": 0,
+						"mtu": 1485,
+						"is-static-ap-ipaddr": true,
+						"domain-name": "",
+						"ap-ip-addr": "192.168.255.11",
+						"ap-ipv6-addr": "::",
+						"ap-ip-netmask": "255.255.255.0",
+						"ap-ip-gateway": "192.168.255.1",
+						"ap-ipv6-gateway": "::",
+						"ap-name-server-type": "unknown",
+						"ap-ipv6-method": "unknown-method",
+						"static-ip": "192.168.255.11",
+						"static-gw-ip": "192.168.255.1",
+						"static-netmask": "255.255.255.0",
+						"static-prefix": 0
+					},
+					"ap-prime-info": {
+						"primary-controller-name": "WNC1",
+						"secondary-controller-name": "",
+						"primary-controller-ip-addr": "192.168.255.1",
+						"secondary-controller-ip-addr": "0.0.0.0",
+						"tertiary-controller-name": "",
+						"tertiary-controller-ip-addr": "0.0.0.0",
+						"ap-fallback-ip": "0.0.0.0",
+						"fallback-enabled": true
+					},
+					"ap-pow": {
+						"power-injector-sel": "pwrinj-selection-unknown",
+						"power-injector-macaddr": "00:00:00:00:00:00",
+						"pre-std-switch-enabled": false,
+						"power-injector-enabled": false,
+						"power-type": "pwr-src-poe-plus",
+						"power-mode": "dot11-set-high-pwr"
+					},
+					"ap-indoor-mode": false,
+					"is-local-net": false
+				}],
 				"capwap-data": [{
 					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"ip-addr": "192.168.255.11",
@@ -196,6 +240,52 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"rx-pkts": 950
 				}]
 			}
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/oper-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:oper-data": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"radio-id": 4,
+				"ap-antenna-band-mode": "ant-band-mode-unknown",
+				"link-encryption-enabled": false,
+				"ap-remote-debug-mode": false,
+				"ap-ip-data": {
+					"ap-prefix": 0,
+					"mtu": 1485,
+					"is-static-ap-ipaddr": true,
+					"domain-name": "",
+					"ap-ip-addr": "192.168.255.11",
+					"ap-ipv6-addr": "::",
+					"ap-ip-netmask": "255.255.255.0",
+					"ap-ip-gateway": "192.168.255.1",
+					"ap-ipv6-gateway": "::",
+					"ap-name-server-type": "unknown",
+					"ap-ipv6-method": "unknown-method",
+					"static-ip": "192.168.255.11",
+					"static-gw-ip": "192.168.255.1",
+					"static-netmask": "255.255.255.0",
+					"static-prefix": 0
+				},
+				"ap-prime-info": {
+					"primary-controller-name": "WNC1",
+					"secondary-controller-name": "",
+					"primary-controller-ip-addr": "192.168.255.1",
+					"secondary-controller-ip-addr": "0.0.0.0",
+					"tertiary-controller-name": "",
+					"tertiary-controller-ip-addr": "0.0.0.0",
+					"ap-fallback-ip": "0.0.0.0",
+					"fallback-enabled": true
+				},
+				"ap-pow": {
+					"power-injector-sel": "pwrinj-selection-unknown",
+					"power-injector-macaddr": "00:00:00:00:00:00",
+					"pre-std-switch-enabled": false,
+					"power-injector-enabled": false,
+					"power-type": "pwr-src-poe-plus",
+					"power-mode": "dot11-set-high-pwr"
+				},
+				"ap-indoor-mode": false,
+				"is-local-net": false
+			}]
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
@@ -384,6 +474,16 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Error("Expected result for GetOperational, got nil")
+		}
+	})
+
+	t.Run("ListApOperData", func(t *testing.T) {
+		result, err := service.ListApOperData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListApOperData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListApOperData, got nil")
 		}
 	})
 

@@ -104,6 +104,13 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
+				Name: "ListApOperData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListApOperData(ctx)
+				},
+				LogResult: true,
+			},
+			{
 				Name: "ListCAPWAPData",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(ap.Service).ListCAPWAPData(ctx)
