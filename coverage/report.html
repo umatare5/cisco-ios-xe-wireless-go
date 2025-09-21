@@ -2245,6 +2245,11 @@ func (s Service) GetOperational(ctx context.Context) (*ApOper, error) <span clas
         return core.Get[ApOper](ctx, s.Client(), routes.APOperPath)
 }</span>
 
+// ListApOperData retrieves AP operational data.
+func (s Service) ListApOperData(ctx context.Context) (*ApOperData, error) <span class="cov1" title="1">{
+        return core.Get[ApOperData](ctx, s.Client(), routes.APOperDataPath)
+}</span>
+
 // ListCAPWAPData retrieves CAPWAP protocol data.
 func (s Service) ListCAPWAPData(ctx context.Context) (*ApOperCAPWAPData, error) <span class="cov7" title="6">{
         return core.Get[ApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
@@ -4070,6 +4075,16 @@ func (s Service) GetGlobalOperational(ctx context.Context) (*RRMGlobalOper, erro
 // GetEmulationOperational retrieves RRM emulation operational information.
 func (s Service) GetEmulationOperational(ctx context.Context) (*RRMEmulOper, error) <span class="cov7" title="3">{
         return core.Get[RRMEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
+}</span>
+
+// ListRrms retrieves RRM configuration data.
+func (s Service) ListRrms(ctx context.Context) (*RRMCfgRrms, error) <span class="cov7" title="3">{
+        return core.Get[RRMCfgRrms](ctx, s.Client(), routes.RRMCfgPath)
+}</span>
+
+// ListRRMMgrCfgEntries retrieves RRM manager configuration entries.
+func (s Service) ListRRMMgrCfgEntries(ctx context.Context) (*RRMCfgRRMMgrCfgEntries, error) <span class="cov7" title="3">{
+        return core.Get[RRMCfgRRMMgrCfgEntries](ctx, s.Client(), routes.RRMCfgPath)
 }</span>
 </pre>
 		

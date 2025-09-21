@@ -38,7 +38,7 @@ func TestRrmServiceUnit_Constructor_Success(t *testing.T) {
 func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	t.Parallel()
 
-	// Mock responses based on real WNC RRM data structure
+	// Mock responses based on real WNC RRM data structure (IOS-XE 17.12.5)
 	responses := map[string]string{
 		"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data": `{
 			"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data": {
@@ -57,6 +57,27 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 								"roaming-en": true,
 								"data-rate-threshold": "optroam-rate-24-m"
 							}
+						},
+						{
+							"band": "dot11-6-ghz-band",
+							"rrm": {
+								"roaming-en": true,
+								"data-rate-threshold": "optroam-rate-24-m",
+								"measurement-interval": 600
+							}
+						}
+					]
+				},
+				"rrm-mgr-cfg-entries": {
+					"rrm-mgr-cfg-entry": [
+						{
+							"band": "dot11-2-dot-4-ghz-band"
+						},
+						{
+							"band": "dot11-5-ghz-band"
+						},
+						{
+							"band": "dot11-6-ghz-band"
 						}
 					]
 				}
@@ -161,6 +182,27 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 			t.Error("GetEmulationOperational returned nil result")
 		}
 	})
+
+	// Test List operations
+	t.Run("ListRrms", func(t *testing.T) {
+		result, err := service.ListRrms(ctx)
+		if err != nil {
+			t.Errorf("ListRrms returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListRrms returned nil result")
+		}
+	})
+
+	t.Run("ListRRMMgrCfgEntries", func(t *testing.T) {
+		result, err := service.ListRRMMgrCfgEntries(ctx)
+		if err != nil {
+			t.Errorf("ListRRMMgrCfgEntries returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListRRMMgrCfgEntries returned nil result")
+		}
+	})
 }
 
 // TestRrmServiceUnit_GetOperations_ErrorHandling tests error scenarios for operations.
@@ -215,6 +257,26 @@ func TestRrmServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 			t.Error("Expected nil result on error, got non-nil result")
 		}
 	})
+
+	t.Run("ListRrms_404Error", func(t *testing.T) {
+		result, err := service.ListRrms(ctx)
+		if err == nil {
+			t.Error("Expected error for ListRrms, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListRRMMgrCfgEntries_404Error", func(t *testing.T) {
+		result, err := service.ListRRMMgrCfgEntries(ctx)
+		if err == nil {
+			t.Error("Expected error for ListRRMMgrCfgEntries, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
 }
 
 // TestRrmServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
@@ -256,6 +318,26 @@ func TestRrmServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 
 	t.Run("GetEmulationOperational_NilClient", func(t *testing.T) {
 		result, err := service.GetEmulationOperational(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListRrms_NilClient", func(t *testing.T) {
+		result, err := service.ListRrms(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListRRMMgrCfgEntries_NilClient", func(t *testing.T) {
+		result, err := service.ListRRMMgrCfgEntries(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

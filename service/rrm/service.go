@@ -37,3 +37,13 @@ func (s Service) GetGlobalOperational(ctx context.Context) (*RRMGlobalOper, erro
 func (s Service) GetEmulationOperational(ctx context.Context) (*RRMEmulOper, error) {
 	return core.Get[RRMEmulOper](ctx, s.Client(), routes.RRMEmulOperPath)
 }
+
+// ListRrms retrieves RRM configuration data.
+func (s Service) ListRrms(ctx context.Context) (*RRMCfgRrms, error) {
+	return core.Get[RRMCfgRrms](ctx, s.Client(), routes.RRMCfgPath)
+}
+
+// ListRRMMgrCfgEntries retrieves RRM manager configuration entries.
+func (s Service) ListRRMMgrCfgEntries(ctx context.Context) (*RRMCfgRRMMgrCfgEntries, error) {
+	return core.Get[RRMCfgRRMMgrCfgEntries](ctx, s.Client(), routes.RRMCfgPath)
+}

@@ -32,6 +32,20 @@ func TestRRMServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 					return service.(rrm.Service).GetConfig(ctx)
 				},
 			},
+			{
+				Name: "ListRrms",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rrm.Service).ListRrms(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRRMMgrCfgEntries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rrm.Service).ListRRMMgrCfgEntries(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{},
 	}
