@@ -507,13 +507,13 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("ListRadioStatus", func(t *testing.T) {
-		result, err := service.ListRadioStatus(ctx)
+	t.Run("ListRadioData", func(t *testing.T) {
+		result, err := service.ListRadioData(ctx)
 		if err != nil {
-			t.Errorf("Expected no error for ListRadioStatus, got: %v", err)
+			t.Errorf("Expected no error for ListRadioData, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected result for ListRadioStatus, got nil")
+			t.Error("Expected result for ListRadioData, got nil")
 		}
 	})
 
