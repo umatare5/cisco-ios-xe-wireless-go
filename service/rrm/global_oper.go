@@ -4,22 +4,74 @@ import "time"
 
 // RRMGlobalOper represents RRM global operational response data.
 type RRMGlobalOper struct {
-	RRMGlobalOperData RRMGlobalOperData `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data"` // RRM operational data (Live: IOS-XE 17.12.5)
+	RRMGlobalOperData struct {
+		RRMOneShotCounters     []RRMOneShotCounter      `json:"rrm-one-shot-counters,omitempty"`     // Transmit power and channel update count (Live: IOS-XE 17.12.5)
+		RRMChannelParams       []RRMChannelParam        `json:"rrm-channel-params,omitempty"`        // RRM channel parameter data (Live: IOS-XE 17.12.5)
+		RadioOperData24g       []RadioOperData24g       `json:"radio-oper-data-24g,omitempty"`       // 2.4 ghz radio oper data (Live: IOS-XE 17.12.5)
+		RadioOperData5g        []RadioOperData5g        `json:"radio-oper-data-5g,omitempty"`        // 5 ghz radio oper data (Live: IOS-XE 17.12.5)
+		RadioOperData6ghz      []RadioOperData6ghz      `json:"radio-oper-data-6ghz,omitempty"`      // 6 ghz radio oper data (Live: IOS-XE 17.12.5)
+		RadioOperDataDualband  []RadioOperDataDualband  `json:"radio-oper-data-dualband,omitempty"`  // Dual band radio oper data (Live: IOS-XE 17.12.5)
+		SpectrumBandConfigData []SpectrumBandConfigData `json:"spectrum-band-config-data,omitempty"` // AP spectrum config (Live: IOS-XE 17.12.5)
+		RRMClientData          []RRMClientData          `json:"rrm-client-data,omitempty"`           // RRM client data (Live: IOS-XE 17.12.5)
+		RRMFraStats            *RRMFraStats             `json:"rrm-fra-stats,omitempty"`             // RRM flexible radio statistics (Live: IOS-XE 17.12.5)
+		RRMCoverage            []RRMCoverage            `json:"rrm-coverage,omitempty"`              // Coverage information (Live: IOS-XE 17.12.5)
+		SpectrumAqWorstTable   []SpectrumAqWorstTable   `json:"spectrum-aq-worst-table,omitempty"`   // Air quality index data (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data"` // RRM operational data (Live: IOS-XE 17.12.5)
 }
 
-// RRMGlobalOperData represents RRM global operational data container.
-type RRMGlobalOperData struct {
-	RRMOneShotCounters     []RRMOneShotCounter      `json:"rrm-one-shot-counters,omitempty"`     // Transmit power and channel update count (Live: IOS-XE 17.12.5)
-	RRMChannelParams       []RRMChannelParam        `json:"rrm-channel-params,omitempty"`        // RRM channel parameter data (Live: IOS-XE 17.12.5)
-	RadioOperData24g       []RadioOperData24g       `json:"radio-oper-data-24g,omitempty"`       // 2.4 ghz radio oper data (Live: IOS-XE 17.12.5)
-	RadioOperData5g        []RadioOperData5g        `json:"radio-oper-data-5g,omitempty"`        // 5 ghz radio oper data (Live: IOS-XE 17.12.5)
-	RadioOperData6ghz      []RadioOperData6ghz      `json:"radio-oper-data-6ghz,omitempty"`      // 6 ghz radio oper data (Live: IOS-XE 17.12.5)
-	RadioOperDataDualband  []RadioOperDataDualband  `json:"radio-oper-data-dualband,omitempty"`  // Dual band radio oper data (Live: IOS-XE 17.12.5)
-	SpectrumBandConfigData []SpectrumBandConfigData `json:"spectrum-band-config-data,omitempty"` // AP spectrum config (Live: IOS-XE 17.12.5)
-	RRMClientData          []RRMClientData          `json:"rrm-client-data,omitempty"`           // RRM client data (Live: IOS-XE 17.12.5)
-	RRMFraStats            *RRMFraStats             `json:"rrm-fra-stats,omitempty"`             // RRM flexible radio statistics (Live: IOS-XE 17.12.5)
-	RRMCoverage            []RRMCoverage            `json:"rrm-coverage,omitempty"`              // Coverage information (Live: IOS-XE 17.12.5)
-	SpectrumAqWorstTable   []SpectrumAqWorstTable   `json:"spectrum-aq-worst-table,omitempty"`   // Air quality index data (Live: IOS-XE 17.12.5)
+// RRMGlobalOperRRMOneShotCounters represents the one-shot counter operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRRMOneShotCounters struct {
+	RRMOneShotCounters []RRMOneShotCounter `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-one-shot-counters"`
+}
+
+// RRMGlobalOperRRMChannelParams represents the channel parameter operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRRMChannelParams struct {
+	RRMChannelParams []RRMChannelParam `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-channel-params"`
+}
+
+// RRMGlobalOperRadioOperData24g represents the 2.4GHz radio operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRadioOperData24g struct {
+	RadioOperData24g []RadioOperData24g `json:"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-24g"`
+}
+
+// RRMGlobalOperRadioOperData5g represents the 5GHz radio operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRadioOperData5g struct {
+	RadioOperData5g []RadioOperData5g `json:"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-5g"`
+}
+
+// RRMGlobalOperRadioOperData6ghz represents the 6GHz radio operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRadioOperData6ghz struct {
+	RadioOperData6ghz []RadioOperData6ghz `json:"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-6ghz"`
+}
+
+// RRMGlobalOperRadioOperDataDualband represents the dual-band radio operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRadioOperDataDualband struct {
+	RadioOperDataDualband []RadioOperDataDualband `json:"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-dualband"`
+}
+
+// RRMGlobalOperSpectrumBandConfigData represents the spectrum band configuration data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperSpectrumBandConfigData struct {
+	SpectrumBandConfigData []SpectrumBandConfigData `json:"Cisco-IOS-XE-wireless-rrm-global-oper:spectrum-band-config-data"`
+}
+
+// RRMGlobalOperRRMClientData represents the RRM client operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRRMClientData struct {
+	RRMClientData []RRMClientData `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-client-data"`
+}
+
+// RRMGlobalOperRRMFraStats represents the RRM flexible radio assignment statistics (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRRMFraStats struct {
+	RRMFraStats *RRMFraStats `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-fra-stats"`
+}
+
+// RRMGlobalOperRRMCoverage represents the RRM coverage operational data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperRRMCoverage struct {
+	RRMCoverage []RRMCoverage `json:"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-coverage"`
+}
+
+// RRMGlobalOperSpectrumAqWorstTable represents the spectrum air quality worst table data (YANG: IOS-XE 17.12.1).
+type RRMGlobalOperSpectrumAqWorstTable struct {
+	SpectrumAqWorstTable []SpectrumAqWorstTable `json:"Cisco-IOS-XE-wireless-rrm-global-oper:spectrum-aq-worst-table"`
 }
 
 // RRMOneShotCounter represents one-shot counter data.
