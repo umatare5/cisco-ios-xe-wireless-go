@@ -180,6 +180,112 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			// Newly implemented List* functions
+			{
+				Name: "ListRadioResetStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListRadioResetStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListQosClientData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListQosClientData(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListWtpSlotWlanStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListWtpSlotWlanStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListEthernetMACWtpMACMaps",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListEthernetMACWtpMACMaps(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRadioOperStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListRadioOperStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListEthernetIfStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListEthernetIfStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListEwlcWncdStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListEwlcWncdStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListApIoxOperData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListApIoxOperData(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRlanOper",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListRlanOper(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCdpCacheData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListCdpCacheData(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListLldpNeigh",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListLldpNeigh(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListTpCertInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListTpCertInfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListDiscData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListDiscData(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCountryOper",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListCountryOper(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListSuppCountryOper",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListSuppCountryOper(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		FilterMethods: []integration.TestMethod{
 			{
@@ -226,6 +332,28 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult:      true,
 				ExpectNotFound: true, // May not have specific slot data available
+			},
+			// Newly implemented GetBy* functions - only those verified as working
+			{
+				Name: "GetWtpSlotWlanStatsByWTPMACSlotAndWLANID",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, integration.TestAPMac(), 0, 1)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetRadioOperStatsByWTPMACAndSlot",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).GetRadioOperStatsByWTPMACAndSlot(ctx, integration.TestAPMac(), 0)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetDiscDataByWTPMAC",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).GetDiscDataByWTPMAC(ctx, integration.TestAPMac())
+				},
+				LogResult: true,
 			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{
@@ -288,6 +416,28 @@ func TestAPServiceIntegration_GlobalOperations_Success(t *testing.T) {
 				Name: "ListWLANClientStats",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(ap.Service).ListWLANClientStats(ctx)
+				},
+				LogResult: true,
+			},
+			// Newly implemented global operational functions
+			{
+				Name: "ListQosGlobalStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListQosGlobalStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListEwlcMewlcPredownloadRec",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListEwlcMewlcPredownloadRec(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListApNhGlobalData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ap.Service).ListApNhGlobalData(ctx)
 				},
 				LogResult: true,
 			},
