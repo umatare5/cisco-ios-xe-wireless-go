@@ -146,12 +146,65 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			]
 		}`,
+
 		// GetFabricMediastreamClientSummary - Empty data (not available in test environment)
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/fabric-media-stream-client-summary": `{}`,
+
 		// GetMcastMgidInfo - Empty data (not available in test environment)
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/mcast-mgid-info": `{}`,
+
 		// GetMulticastOperData - Empty data (not available in test environment)
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/multicast-oper-data": `{}`,
+
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-history-client-record-data": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:rrc-history-client-record-data": [
+				{
+					"user-time-stamp": "2023-09-22T15:30:00Z",
+					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"decision": "admit",
+					"reason-code": 0,
+					"stream-name": "test-stream"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-sr-radio-record": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:rrc-sr-radio-record": [
+				{
+					"ap-mac": "11:22:33:44:55:66",
+					"slot-id": 0,
+					"radio-type": 1,
+					"number-of-admitted": 2
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-record": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-record": [
+				{
+					"stream-name-str": "test-stream",
+					"group-ip": "224.0.1.1",
+					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"decision": "admit"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-admit-record": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-admit-record": [
+				{
+					"last-updated": "2023-09-22T15:30:00Z",
+					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"dest-ip": "224.0.1.1"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-deny-record": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-deny-record": [
+				{
+					"last-updated": "2023-09-22T15:30:00Z",
+					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"dest-ip": "224.0.1.1"
+				}
+			]
+		}`,
 	}
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
@@ -223,6 +276,57 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			t.Error("Expected result for mock GetMulticastOperData, got nil")
 		}
 	})
+
+	// RRC (Resource Reservation Control) related functions
+	t.Run("ListRrcHistoryClientRecordData", func(t *testing.T) {
+		result, err := service.ListRrcHistoryClientRecordData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for mock ListRrcHistoryClientRecordData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for mock ListRrcHistoryClientRecordData, got nil")
+		}
+	})
+
+	t.Run("ListRrcSrRadioRecord", func(t *testing.T) {
+		result, err := service.ListRrcSrRadioRecord(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for mock ListRrcSrRadioRecord, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for mock ListRrcSrRadioRecord, got nil")
+		}
+	})
+
+	t.Run("ListRrcStreamRecord", func(t *testing.T) {
+		result, err := service.ListRrcStreamRecord(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for mock ListRrcStreamRecord, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for mock ListRrcStreamRecord, got nil")
+		}
+	})
+
+	t.Run("ListRrcStreamAdmitRecord", func(t *testing.T) {
+		result, err := service.ListRrcStreamAdmitRecord(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for mock ListRrcStreamAdmitRecord, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for mock ListRrcStreamAdmitRecord, got nil")
+		}
+	})
+
+	t.Run("ListRrcStreamDenyRecord", func(t *testing.T) {
+		result, err := service.ListRrcStreamDenyRecord(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for mock ListRrcStreamDenyRecord, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for mock ListRrcStreamDenyRecord, got nil")
+		}
+	})
 }
 
 // TestMcastServiceUnit_GetOperations_ErrorHandling tests error scenarios using mock server.
@@ -235,6 +339,13 @@ func TestMcastServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/fabric-media-stream-client-summary",
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/mcast-mgid-info",
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/multicast-oper-data",
+
+		// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-history-client-record-data",
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-sr-radio-record",
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-record",
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-admit-record",
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-deny-record",
 	}
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
@@ -302,6 +413,27 @@ func TestMcastServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 			t.Errorf("Expected NotFound error, got: %v", err)
 		}
 	})
+
+	// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+	t.Run("ListRrcHistoryClientRecordData_404Error", func(t *testing.T) {
+		_, err := service.ListRrcHistoryClientRecordData(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListRrcStreamRecord_404Error", func(t *testing.T) {
+		_, err := service.ListRrcStreamRecord(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
 }
 
 // TestMcastServiceUnit_GetOperations_NilClient tests operations with nil client.
@@ -346,6 +478,21 @@ func TestMcastServiceUnit_GetOperations_NilClient(t *testing.T) {
 
 	t.Run("GetMulticastOperData", func(t *testing.T) {
 		_, err := service.GetMulticastOperData(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client, got nil")
+		}
+	})
+
+	// Representative RRC function nil client tests
+	t.Run("ListRrcHistoryClientRecordData_NilClient", func(t *testing.T) {
+		_, err := service.ListRrcHistoryClientRecordData(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client, got nil")
+		}
+	})
+
+	t.Run("ListRrcStreamRecord_NilClient", func(t *testing.T) {
+		_, err := service.ListRrcStreamRecord(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client, got nil")
 		}
