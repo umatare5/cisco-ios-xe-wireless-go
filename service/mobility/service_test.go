@@ -39,7 +39,7 @@ func TestMobilityServiceUnit_Constructor_Success(t *testing.T) {
 
 // TestMobilityServiceUnit_GetOperations_MockSuccess tests Get operations using mock server.
 func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
-	// Create comprehensive mock responses for all mobility endpoints
+	// Create mock responses for a subset of mobility endpoints used in these tests
 	responses := map[string]string{
 		// Root configuration data
 		"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data": `{
