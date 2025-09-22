@@ -33,6 +33,13 @@ func TestFlexServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListFlexPolicyEntries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(flex.Service).ListFlexPolicyEntries(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		FilterMethods:   []integration.TestMethod{},
 		ValidationTests: []integration.ValidationTestMethod{},

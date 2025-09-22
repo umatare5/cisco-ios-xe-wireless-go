@@ -22,3 +22,8 @@ func NewService(client *core.Client) Service {
 func (s Service) GetConfig(ctx context.Context) (*FlexCfg, error) {
 	return core.Get[FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
 }
+
+// ListFlexPolicyEntries retrieves FlexConnect policy entries.
+func (s Service) ListFlexPolicyEntries(ctx context.Context) (*FlexCfgFlexPolicyEntries, error) {
+	return core.Get[FlexCfgFlexPolicyEntries](ctx, s.Client(), routes.FlexPolicyEntriesPath)
+}
