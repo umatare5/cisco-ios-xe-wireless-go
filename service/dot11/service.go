@@ -22,3 +22,33 @@ func NewService(client *core.Client) Service {
 func (s Service) GetConfig(ctx context.Context) (*Dot11Cfg, error) {
 	return core.Get[Dot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
 }
+
+// ListCfgFilters retrieves dot11 configuration filters.
+func (s Service) ListCfgFilters(ctx context.Context) (*Dot11CfgFilter, error) {
+	return core.Get[Dot11CfgFilter](ctx, s.Client(), routes.Dot11CfgPath)
+}
+
+// ListCfgConfiguredCountries retrieves dot11 configured countries wrapper data.
+func (s Service) ListCfgConfiguredCountries(ctx context.Context) (*Dot11CfgConfiguredCountries, error) {
+	return core.Get[Dot11CfgConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath)
+}
+
+// ListCfgDot11Entries retrieves dot11 entries wrapper data.
+func (s Service) ListCfgDot11Entries(ctx context.Context) (*Dot11CfgDot11Entries, error) {
+	return core.Get[Dot11CfgDot11Entries](ctx, s.Client(), routes.Dot11EntriesPath)
+}
+
+// ListCfgDot11acMcsEntries retrieves dot11ac MCS entries wrapper data.
+func (s Service) ListCfgDot11acMcsEntries(ctx context.Context) (*Dot11CfgDot11acMcsEntries, error) {
+	return core.Get[Dot11CfgDot11acMcsEntries](ctx, s.Client(), routes.Dot11AcMcsEntriesPath)
+}
+
+// ListConfiguredCountries retrieves configured countries data.
+func (s Service) ListConfiguredCountries(ctx context.Context) (*Dot11ConfiguredCountries, error) {
+	return core.Get[Dot11ConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath)
+}
+
+// ListDot11Entries retrieves 802.11 entries data.
+func (s Service) ListDot11Entries(ctx context.Context) (*Dot11Entries, error) {
+	return core.Get[Dot11Entries](ctx, s.Client(), routes.Dot11EntriesPath)
+}
