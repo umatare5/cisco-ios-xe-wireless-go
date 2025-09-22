@@ -12,7 +12,4 @@ const (
 
 	// RadioProfilesPath provides the path for retrieving radio profiles.
 	RadioProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data/radio-profiles"
-
-	// RadioProfileByNamePath provides the path for retrieving radio profile by name.
-	RadioProfileByNamePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data/radio-profiles/radio-profile"
 )

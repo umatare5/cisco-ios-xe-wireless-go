@@ -7,6 +7,11 @@ type RadioCfg struct {
 	} `json:"Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"` // Radio configuration data (Live: IOS-XE 17.12.5)
 }
 
+// RadioCfgRadioProfiles represents the radio profiles configuration wrapper structure.
+type RadioCfgRadioProfiles struct {
+	RadioProfiles RadioProfiles `json:"Cisco-IOS-XE-wireless-radio-cfg:radio-profiles"`
+}
+
 // RadioProfiles represents radio profiles container.
 type RadioProfiles struct {
 	RadioProfile []RadioProfile `json:"radio-profile"` // List of radio profile configurations (Live: IOS-XE 17.12.5)
