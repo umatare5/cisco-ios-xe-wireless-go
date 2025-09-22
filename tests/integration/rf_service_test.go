@@ -33,6 +33,41 @@ func TestRFServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListRFTags",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).ListRFTags(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRFProfiles",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).ListRFProfiles(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListMultiBssidProfiles",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).ListMultiBssidProfiles(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListAtfPolicies",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).ListAtfPolicies(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRFProfileDefaultEntries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).ListRFProfileDefaultEntries(ctx)
+				},
+				LogResult: true,
+			},
 		},
 	}
 
