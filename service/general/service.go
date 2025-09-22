@@ -99,3 +99,133 @@ func (s Service) GetWLCManagementInfo(ctx context.Context) (*WlcManagementData, 
 func (s Service) GetWSAAPClientEventConfig(ctx context.Context) (*WsaApClientEvent, error) {
 	return core.Get[WsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
 }
+
+// ListCfgMewlcConfig retrieves MEWLC configuration data wrapper.
+func (s Service) ListCfgMewlcConfig(ctx context.Context) (*GeneralCfgMewlcConfig, error) {
+	return core.Get[GeneralCfgMewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
+}
+
+// ListCfgCacConfig retrieves CAC configuration data wrapper.
+func (s Service) ListCfgCacConfig(ctx context.Context) (*GeneralCfgCacConfig, error) {
+	return core.Get[GeneralCfgCacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
+}
+
+// ListCfgMfp retrieves MFP configuration data wrapper.
+func (s Service) ListCfgMfp(ctx context.Context) (*GeneralCfgMfp, error) {
+	return core.Get[GeneralCfgMfp](ctx, s.Client(), routes.GeneralMfpPath)
+}
+
+// ListCfgFipsCfg retrieves FIPS configuration data wrapper.
+func (s Service) ListCfgFipsCfg(ctx context.Context) (*GeneralCfgFipsCfg, error) {
+	return core.Get[GeneralCfgFipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
+}
+
+// ListCfgWsaApClientEvent retrieves WSA AP client event configuration data wrapper.
+func (s Service) ListCfgWsaApClientEvent(ctx context.Context) (*GeneralCfgWsaApClientEvent, error) {
+	return core.Get[GeneralCfgWsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
+}
+
+// ListCfgSimL3InterfaceCacheData retrieves SIM L3 interface cache data wrapper.
+func (s Service) ListCfgSimL3InterfaceCacheData(ctx context.Context) (*GeneralCfgSimL3InterfaceCacheData, error) {
+	return core.Get[GeneralCfgSimL3InterfaceCacheData](ctx, s.Client(), routes.GeneralSimL3InterfaceCacheDataPath)
+}
+
+// ListCfgWlcManagementData retrieves WLC management data wrapper.
+func (s Service) ListCfgWlcManagementData(ctx context.Context) (*GeneralCfgWlcManagementData, error) {
+	return core.Get[GeneralCfgWlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
+}
+
+// ListCfgLaginfo retrieves LAG information wrapper.
+func (s Service) ListCfgLaginfo(ctx context.Context) (*GeneralCfgLaginfo, error) {
+	return core.Get[GeneralCfgLaginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
+}
+
+// ListCfgMulticastConfig retrieves multicast configuration data wrapper.
+func (s Service) ListCfgMulticastConfig(ctx context.Context) (*GeneralCfgMulticastConfig, error) {
+	return core.Get[GeneralCfgMulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
+}
+
+// ListCfgFeatureUsageCfg retrieves feature usage configuration data wrapper.
+func (s Service) ListCfgFeatureUsageCfg(ctx context.Context) (*GeneralCfgFeatureUsageCfg, error) {
+	return core.Get[GeneralCfgFeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
+}
+
+// ListCfgThresholdWarnCfg retrieves threshold warning configuration data wrapper.
+func (s Service) ListCfgThresholdWarnCfg(ctx context.Context) (*GeneralCfgThresholdWarnCfg, error) {
+	return core.Get[GeneralCfgThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
+}
+
+// ListCfgApLocRangingCfg retrieves AP location ranging configuration data wrapper.
+func (s Service) ListCfgApLocRangingCfg(ctx context.Context) (*GeneralCfgApLocRangingCfg, error) {
+	return core.Get[GeneralCfgApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
+}
+
+// ListCfgGeolocationCfg retrieves geolocation configuration data wrapper.
+func (s Service) ListCfgGeolocationCfg(ctx context.Context) (*GeneralCfgGeolocationCfg, error) {
+	return core.Get[GeneralCfgGeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
+}
+
+// ListOperMgmtIntfData retrieves management interface operational data wrapper.
+func (s Service) ListOperMgmtIntfData(ctx context.Context) (*GeneralOperMgmtIntfData, error) {
+	return core.Get[GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
+}
+
+// ListMewlcConfig retrieves MEWLC configuration data.
+func (s Service) ListMewlcConfig(ctx context.Context) (*MewlcConfig, error) {
+	return core.Get[MewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
+}
+
+// ListCacConfig retrieves CAC configuration data.
+func (s Service) ListCacConfig(ctx context.Context) (*CacConfig, error) {
+	return core.Get[CacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
+}
+
+// ListMfp retrieves MFP configuration data.
+func (s Service) ListMfp(ctx context.Context) (*Mfp, error) {
+	return core.Get[Mfp](ctx, s.Client(), routes.GeneralMfpPath)
+}
+
+// ListFipsCfg retrieves FIPS configuration data.
+func (s Service) ListFipsCfg(ctx context.Context) (*FipsCfg, error) {
+	return core.Get[FipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
+}
+
+// ListWsaApClientEvent retrieves WSA AP client event configuration data.
+func (s Service) ListWsaApClientEvent(ctx context.Context) (*WsaApClientEvent, error) {
+	return core.Get[WsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
+}
+
+// ListWlcManagementData retrieves WLC management data.
+func (s Service) ListWlcManagementData(ctx context.Context) (*WlcManagementData, error) {
+	return core.Get[WlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
+}
+
+// ListLaginfo retrieves LAG information.
+func (s Service) ListLaginfo(ctx context.Context) (*Laginfo, error) {
+	return core.Get[Laginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
+}
+
+// ListMulticastConfig retrieves multicast configuration data.
+func (s Service) ListMulticastConfig(ctx context.Context) (*MulticastConfig, error) {
+	return core.Get[MulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
+}
+
+// ListFeatureUsageCfg retrieves feature usage configuration data.
+func (s Service) ListFeatureUsageCfg(ctx context.Context) (*FeatureUsageCfg, error) {
+	return core.Get[FeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
+}
+
+// ListThresholdWarnCfg retrieves threshold warning configuration data.
+func (s Service) ListThresholdWarnCfg(ctx context.Context) (*ThresholdWarnCfg, error) {
+	return core.Get[ThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
+}
+
+// ListApLocRangingCfg retrieves AP location ranging configuration data.
+func (s Service) ListApLocRangingCfg(ctx context.Context) (*ApLocRangingCfg, error) {
+	return core.Get[ApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
+}
+
+// ListGeolocationCfg retrieves geolocation configuration data.
+func (s Service) ListGeolocationCfg(ctx context.Context) (*GeolocationCfg, error) {
+	return core.Get[GeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
+}

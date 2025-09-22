@@ -131,6 +131,69 @@ func TestGeneralServiceIntegration_GetOperationalOperations_Success(t *testing.T
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListCfgMewlcConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListCfgMewlcConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgMfp",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListCfgMfp(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgLaginfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListCfgLaginfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgMulticastConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListCfgMulticastConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListOperMgmtIntfData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListOperMgmtIntfData(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListMewlcConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListMewlcConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListMfp",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListMfp(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListLaginfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListLaginfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListMulticastConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(general.Service).ListMulticastConfig(ctx)
+				},
+				LogResult: true,
+			},
 		},
 	}
 
