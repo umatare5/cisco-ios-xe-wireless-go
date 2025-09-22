@@ -28,6 +28,12 @@ func (s Service) ListAPResponses(ctx context.Context) (*AFCOperEwlcAFCApResp, er
 	return core.Get[AFCOperEwlcAFCApResp](ctx, s.Client(), routes.AFCEwlcAFCApRespPath)
 }
 
+// ListAPRequests retrieves AFC AP request data.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAPRequests(ctx context.Context) (*AFCOperEwlcAFCApReq, error) {
+	return core.Get[AFCOperEwlcAFCApReq](ctx, s.Client(), routes.AFCEwlcAFCApReqPath)
+}
+
 // GetCloudInfo retrieves AFC cloud operational data.
 func (s Service) GetCloudInfo(ctx context.Context) (*AFCCloudOper, error) {
 	return core.Get[AFCCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)

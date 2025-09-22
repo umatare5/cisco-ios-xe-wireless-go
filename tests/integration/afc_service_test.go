@@ -40,6 +40,14 @@ func TestAFCServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
+				Name: "ListAPRequests",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(afc.Service).ListAPRequests(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // May return 404 on IOS-XE 17.12.5
+			},
+			{
 				Name: "GetCloudInfo",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(afc.Service).GetCloudInfo(ctx)

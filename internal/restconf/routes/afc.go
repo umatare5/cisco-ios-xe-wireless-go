@@ -12,6 +12,9 @@ const (
 
 	// AFCEwlcAFCApRespPath retrieves per-AP AFC response data.
 	AFCEwlcAFCApRespPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-resp"
+
+	// AFCEwlcAFCApReqPath retrieves per-AP AFC request data.
+	AFCEwlcAFCApReqPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-req"
 )
 
 // AFC Cloud Operational Paths.
