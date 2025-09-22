@@ -89,6 +89,35 @@ func TestRRMServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			// New functions from Phase 4 validation - verified working on IOS-XE 17.12.5
+			{
+				Name: "ListRRMOneShotCounters",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rrm.Service).ListRRMOneShotCounters(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRadioOperData5g",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rrm.Service).ListRadioOperData5g(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRRMChannelParams",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rrm.Service).ListRRMChannelParams(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListRadioOperData24g",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rrm.Service).ListRadioOperData24g(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{},
 	}
