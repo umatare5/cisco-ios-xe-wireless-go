@@ -54,18 +54,6 @@ func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*TagSourcePr
 	return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
 }
 
-// GetTagSourcePriorityConfigByPriority retrieves tag source priority configuration filtered by priority.
-func (s Service) GetTagSourcePriorityConfigByPriority(
-	ctx context.Context,
-	priority int,
-) (*ApCfgTagSourcePriorityConfigs, error) {
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(
-		routes.APTagSourcePriorityConfigQueryPath,
-		strconv.Itoa(priority),
-	)
-	return core.Get[ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
-}
-
 // GetGlobalInfo retrieves the complete AP global operational data.
 func (s Service) GetGlobalInfo(ctx context.Context) (*ApGlobalOper, error) {
 	return core.Get[ApGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)

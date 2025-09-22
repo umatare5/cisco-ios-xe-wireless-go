@@ -483,7 +483,6 @@ type RadioStatsMonitor struct {
 type ZeroWtDFS struct {
 	ReserveChannel ReserveChannel `json:"reserve-channel"` // DFS channel reservation data (Live: IOS-XE 17.12.5)
 	Type           string         `json:"type"`            // CAC domain type classification (Live: IOS-XE 17.12.5)
-	// DfsChanInclList and DfsChanExclList would be added if present in JSON
 }
 
 // ReserveChannel represents reserved CAC channel information.
@@ -514,7 +513,6 @@ type ApModeData struct {
 	ApSubMode     string       `json:"ap-sub-mode"`     // AP operational sub-mode (Live: IOS-XE 17.12.5)
 	WtpMode       string       `json:"wtp-mode"`        // WTP mode (local/flexconnect/monitor) (Live: IOS-XE 17.12.5)
 	ApFabricData  ApFabricData `json:"ap-fabric-data"`  // SDA fabric integration attributes (Live: IOS-XE 17.12.5)
-	// Ap6GhzData will be added for 17.18.1+ compatibility
 }
 
 // ApFabricData represents AP fabric related attributes.
@@ -1359,7 +1357,6 @@ type IotFirmware struct {
 }
 
 // EmptyType represents YANG empty type fields appearing as null arrays in RESTCONF JSON.
-// EmptyType represents fields that appear as [null] in RESTCONF responses.
 type EmptyType []string
 
 // AccountingInfo represents accounting information to be sent to RADIUS server.
