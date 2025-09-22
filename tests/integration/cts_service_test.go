@@ -32,7 +32,24 @@ func TestCTSServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 					return service.(cts.Service).GetConfig(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // CTS may not be configured
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+
+			{
+				Name: "GetOperational",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(cts.Service).GetOperational(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true,
+			},
+			{
+				Name: "ListFlexModeApSxpConnectionStatus",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(cts.Service).ListFlexModeApSxpConnectionStatus(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true,
 			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{},

@@ -7,6 +7,11 @@ type CTSOper struct {
 	} `json:"Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data"` // CTS SXP operational data (YANG: IOS-XE 17.12.1)
 }
 
+// CTSOperFlexModeApSxpConnectionStatus represents FlexConnect AP SXP connection status wrapper.
+type CTSOperFlexModeApSxpConnectionStatus struct {
+	FlexModeApSxpConnectionStatus []FlexModeApSxpConnectionStatus `json:"Cisco-IOS-XE-wireless-cts-sxp-oper:flex-mode-ap-sxp-connection-status"`
+}
+
 // FlexModeApSxpConnectionStatus represents SXP connection status for FlexConnect AP.
 type FlexModeApSxpConnectionStatus struct {
 	WtpMAC       string  `json:"wtp-mac"`                 // SXP connection status for a specific AP MAC (YANG: IOS-XE 17.12.1)
