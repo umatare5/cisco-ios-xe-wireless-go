@@ -375,6 +375,207 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			]
 		}`,
+		// New operational endpoints
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-reset-stats": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:radio-reset-stats": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"radio-id": 0,
+					"cause": "none",
+					"detail-cause": "none",
+					"count": 0
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:qos-client-data": [
+				{
+					"client-mac": "80:7d:3a:77:19:a9",
+					"aaa-qos-params": {
+						"aaa-avgdtus": 0,
+						"aaa-avgrtdtus": 0,
+						"aaa-bstdtus": 0,
+						"aaa-bstrtdtus": 0,
+						"aaa-avgdtds": 0,
+						"aaa-avgrtdtds": 0,
+						"aaa-bstdtds": 0,
+						"aaa-bstrtdtds": 0
+					}
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/wtp-slot-wlan-stats": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:wtp-slot-wlan-stats": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"slot-id": 0,
+					"wlan-id": 1,
+					"tx-bytes": 123456,
+					"rx-bytes": 654321
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-mac-wtp-mac-map": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ethernet-mac-wtp-mac-map": [
+				{
+					"ethernet-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "bb:cc:dd:ee:ff:aa"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-oper-stats": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:radio-oper-stats": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"slot-id": 0,
+					"tx-frames": 100,
+					"rx-frames": 200
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ethernet-if-stats": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"if-id": "GigabitEthernet0",
+					"tx-bytes": 987654,
+					"rx-bytes": 456789
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ewlc-wncd-stats": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ewlc-wncd-stats": {
+				"predownload-stats": {
+					"num-initiated": 0,
+					"num-in-progress": 0,
+					"num-complete": 0,
+					"num-unsupported": 0,
+					"num-failed": 0,
+					"is-predownload-in-progress": false,
+					"num-total": 0
+				},
+				"downloads-in-progress": 0,
+				"downloads-complete": 0
+			}
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-iox-oper-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ap-iox-oper-data": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"app-name": "test-app",
+					"state": "running"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-global-stats": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:qos-global-stats": {
+				"qos-client-voice-stats": {
+					"total-num-of-tspec-rcvd": 0,
+					"new-tspec-from-assoc-req": 0,
+					"tspec-renewal-from-assoc-req": 0,
+					"new-tspec-as-add-ts": 0,
+					"tspec-renewal-from-add-ts": 0,
+					"tspec-process-failed-get-rec": 0,
+					"total-sip-invite-on-caller": 0,
+					"total-sip-invite-on-callee": 0,
+					"total-num-of-call-report": 0,
+					"total-sip-failure-trap-send": 0,
+					"num-of-calls-accepted": 0,
+					"num-of-calls-rejected-insuf-bw": 0,
+					"num-of-calls-rejected-qos": 0,
+					"num-of-calls-rejected-phy-rate": 0,
+					"num-of-calls-rej-invalid-tspec": 0,
+					"num-of-roam-calls-accepted": 0,
+					"num-of-roam-calls-rejected": 0,
+					"num-of-active-sip-calls": 0,
+					"num-of-active-tspec-calls": 0
+				}
+			}
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:rlan-oper": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"rlan-port-id": 1,
+					"rlan-oper-state": true,
+					"rlan-port-status": true
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ewlc-mewlc-predownload-rec": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ewlc-mewlc-predownload-rec": {
+				"num-initiated": 0,
+				"num-in-progress": 0,
+				"num-complete": 0
+			}
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/cdp-cache-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:cdp-cache-data": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"local-intf-name": "GigabitEthernet0",
+					"device-id": "Switch1"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:lldp-neigh": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"local-intf-name": "GigabitEthernet0",
+					"device-id": "Switch1"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/tp-cert-info": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:tp-cert-info": {
+				"trustpoint": {
+					"trustpoint-name": "WNC1_WLC_TP",
+					"is-cert-available": true,
+					"is-privkey-available": true,
+					"cert-hash": "1d35399409f0dd2274c49bbec14142b67f8f9a96",
+					"cert-type": "trustpoint-ssc",
+					"fips-suitability": "fips-na"
+				}
+			}
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/disc-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:disc-data": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"disc-req": 10,
+					"disc-rsp": 10
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/country-oper": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:country-oper": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"radio-id": 0,
+					"country-code": "US",
+					"regulatory-domain": "FCC"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/supp-country-oper": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:supp-country-oper": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"radio-id": 0,
+					"country-code": "US",
+					"supported-channels": "1,6,11"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-nh-global-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ap-nh-global-data": {
+				"algorithm-running": false,
+				"algorithm-itr-count": 0,
+				"ideal-capacity-per-rg": 0,
+				"num-of-neighborhood": 0
+			}
+		}`,
 	}
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
@@ -586,6 +787,187 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			t.Error("Expected result for ListIotFirmware, got nil")
 		}
 	})
+
+	// Test newly added AP operational data operations
+	t.Run("ListRadioResetStats", func(t *testing.T) {
+		result, err := service.ListRadioResetStats(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListRadioResetStats, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListRadioResetStats, got nil")
+		}
+	})
+
+	t.Run("ListQosClientData", func(t *testing.T) {
+		result, err := service.ListQosClientData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListQosClientData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListQosClientData, got nil")
+		}
+	})
+
+	t.Run("ListWtpSlotWlanStats", func(t *testing.T) {
+		result, err := service.ListWtpSlotWlanStats(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListWtpSlotWlanStats, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListWtpSlotWlanStats, got nil")
+		}
+	})
+
+	t.Run("ListEthernetMACWtpMACMaps", func(t *testing.T) {
+		result, err := service.ListEthernetMACWtpMACMaps(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListEthernetMACWtpMACMaps, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListEthernetMACWtpMACMaps, got nil")
+		}
+	})
+
+	t.Run("ListRadioOperStats", func(t *testing.T) {
+		result, err := service.ListRadioOperStats(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListRadioOperStats, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListRadioOperStats, got nil")
+		}
+	})
+
+	t.Run("ListEthernetIfStats", func(t *testing.T) {
+		result, err := service.ListEthernetIfStats(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListEthernetIfStats, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListEthernetIfStats, got nil")
+		}
+	})
+
+	t.Run("ListEwlcWncdStats", func(t *testing.T) {
+		result, err := service.ListEwlcWncdStats(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListEwlcWncdStats, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListEwlcWncdStats, got nil")
+		}
+	})
+
+	t.Run("ListApIoxOperData", func(t *testing.T) {
+		result, err := service.ListApIoxOperData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListApIoxOperData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListApIoxOperData, got nil")
+		}
+	})
+
+	t.Run("ListQosGlobalStats", func(t *testing.T) {
+		result, err := service.ListQosGlobalStats(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListQosGlobalStats, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListQosGlobalStats, got nil")
+		}
+	})
+
+	t.Run("ListRlanOper", func(t *testing.T) {
+		result, err := service.ListRlanOper(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListRlanOper, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListRlanOper, got nil")
+		}
+	})
+
+	t.Run("ListEwlcMewlcPredownloadRec", func(t *testing.T) {
+		result, err := service.ListEwlcMewlcPredownloadRec(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListEwlcMewlcPredownloadRec, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListEwlcMewlcPredownloadRec, got nil")
+		}
+	})
+
+	t.Run("ListCdpCacheData", func(t *testing.T) {
+		result, err := service.ListCdpCacheData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListCdpCacheData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListCdpCacheData, got nil")
+		}
+	})
+
+	t.Run("ListLldpNeigh", func(t *testing.T) {
+		result, err := service.ListLldpNeigh(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListLldpNeigh, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListLldpNeigh, got nil")
+		}
+	})
+
+	t.Run("ListTpCertInfo", func(t *testing.T) {
+		result, err := service.ListTpCertInfo(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListTpCertInfo, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListTpCertInfo, got nil")
+		}
+	})
+
+	t.Run("ListDiscData", func(t *testing.T) {
+		result, err := service.ListDiscData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListDiscData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListDiscData, got nil")
+		}
+	})
+
+	t.Run("ListCountryOper", func(t *testing.T) {
+		result, err := service.ListCountryOper(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListCountryOper, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListCountryOper, got nil")
+		}
+	})
+
+	t.Run("ListSuppCountryOper", func(t *testing.T) {
+		result, err := service.ListSuppCountryOper(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListSuppCountryOper, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListSuppCountryOper, got nil")
+		}
+	})
+
+	t.Run("ListApNhGlobalData", func(t *testing.T) {
+		result, err := service.ListApNhGlobalData(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListApNhGlobalData, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListApNhGlobalData, got nil")
+		}
+	})
 }
 
 // TestApServiceUnit_GetOperations_ErrorHandling tests error scenarios using mock server.
@@ -594,6 +976,26 @@ func TestApServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	errorPaths := []string{
 		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data",
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data",
+		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data",
+		// New endpoint paths for error testing
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-reset-stats",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/wtp-slot-wlan-stats",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-mac-wtp-mac-map",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-oper-stats",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ewlc-wncd-stats",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-iox-oper-data",
+		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/qos-global-stats",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper",
+		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ewlc-mewlc-predownload-rec",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/cdp-cache-data",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/tp-cert-info",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/disc-data",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/country-oper",
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/supp-country-oper",
+		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-nh-global-data",
 	}
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
@@ -612,6 +1014,208 @@ func TestApServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	if !core.IsNotFoundError(err) {
 		t.Errorf("Expected NotFound error, got: %v", err)
 	}
+
+	// Test newly added List functions error handling
+	t.Run("ListRadioResetStats", func(t *testing.T) {
+		_, err := service.ListRadioResetStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListQosClientData", func(t *testing.T) {
+		_, err := service.ListQosClientData(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListWtpSlotWlanStats", func(t *testing.T) {
+		_, err := service.ListWtpSlotWlanStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListEthernetMACWtpMACMaps", func(t *testing.T) {
+		_, err := service.ListEthernetMACWtpMACMaps(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListRadioOperStats", func(t *testing.T) {
+		_, err := service.ListRadioOperStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListEthernetIfStats", func(t *testing.T) {
+		_, err := service.ListEthernetIfStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListEwlcWncdStats", func(t *testing.T) {
+		_, err := service.ListEwlcWncdStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListApIoxOperData", func(t *testing.T) {
+		_, err := service.ListApIoxOperData(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListQosGlobalStats", func(t *testing.T) {
+		_, err := service.ListQosGlobalStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListRlanOper", func(t *testing.T) {
+		_, err := service.ListRlanOper(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListEwlcMewlcPredownloadRec", func(t *testing.T) {
+		_, err := service.ListEwlcMewlcPredownloadRec(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListCdpCacheData", func(t *testing.T) {
+		_, err := service.ListCdpCacheData(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListLldpNeigh", func(t *testing.T) {
+		_, err := service.ListLldpNeigh(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListTpCertInfo", func(t *testing.T) {
+		_, err := service.ListTpCertInfo(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListDiscData", func(t *testing.T) {
+		_, err := service.ListDiscData(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListCountryOper", func(t *testing.T) {
+		_, err := service.ListCountryOper(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListSuppCountryOper", func(t *testing.T) {
+		_, err := service.ListSuppCountryOper(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("ListApNhGlobalData", func(t *testing.T) {
+		_, err := service.ListApNhGlobalData(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	// Test GetBy* filtered functions error handling
+	t.Run("GetRadioResetStatsByAPMACAndRadioID", func(t *testing.T) {
+		_, err := service.GetRadioResetStatsByAPMACAndRadioID(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
+
+	t.Run("GetQosClientDataByClientMAC", func(t *testing.T) {
+		_, err := service.GetQosClientDataByClientMAC(ctx, "80:7d:3a:77:19:a9")
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+		if !core.IsNotFoundError(err) {
+			t.Errorf("Expected NotFound error, got: %v", err)
+		}
+	})
 }
 
 // TestApServiceUnit_GetOperations_FilteredSuccess tests filtered Get operations.
@@ -769,6 +1373,114 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		}`,
 		// PUT/POST endpoints for tag assignment
 		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff": `{}`,
+		// New filtered endpoints
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-reset-stats=aa:bb:cc:dd:ee:ff,0": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:radio-reset-stats": [{
+				"ap-mac": "aa:bb:cc:dd:ee:ff",
+				"radio-id": 0,
+				"cause": "none",
+				"detail-cause": "none",
+				"count": 0
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data=80:7d:3a:77:19:a9": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:qos-client-data": [{
+				"client-mac": "80:7d:3a:77:19:a9",
+				"aaa-qos-params": {
+					"aaa-avgdtus": 0,
+					"aaa-avgrtdtus": 0,
+					"aaa-bstdtus": 0,
+					"aaa-bstrtdtus": 0,
+					"aaa-avgdtds": 0,
+					"aaa-avgrtdtds": 0,
+					"aaa-bstdtds": 0,
+					"aaa-bstrtdtds": 0
+				}
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/wtp-slot-wlan-stats=aa:bb:cc:dd:ee:ff,0,1": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:wtp-slot-wlan-stats": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"slot-id": 0,
+				"wlan-id": 1,
+				"tx-bytes": 123456,
+				"rx-bytes": 654321
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-mac-wtp-mac-map=aa:bb:cc:dd:ee:ff": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ethernet-mac-wtp-mac-map": [{
+				"ethernet-mac": "aa:bb:cc:dd:ee:ff",
+				"wtp-mac": "bb:cc:dd:ee:ff:aa"
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-oper-stats=aa:bb:cc:dd:ee:ff,0": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:radio-oper-stats": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"slot-id": 0,
+				"tx-frames": 100,
+				"rx-frames": 200
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats=aa:bb:cc:dd:ee:ff,GigabitEthernet0": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ethernet-if-stats": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"if-id": "GigabitEthernet0",
+				"tx-bytes": 987654,
+				"rx-bytes": 456789
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-iox-oper-data=aa:bb:cc:dd:ee:ff": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:ap-iox-oper-data": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"app-name": "test-app",
+				"state": "running"
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper=aa:bb:cc:dd:ee:ff,1": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:rlan-oper": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"rlan-port-id": 1,
+				"rlan-oper-state": true,
+				"rlan-port-status": true
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/cdp-cache-data=aa:bb:cc:dd:ee:ff": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:cdp-cache-data": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"local-intf-name": "GigabitEthernet0",
+				"device-id": "Switch1"
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh=aa:bb:cc:dd:ee:ff": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:lldp-neigh": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"local-intf-name": "GigabitEthernet0",
+				"device-id": "Switch1"
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/disc-data=aa:bb:cc:dd:ee:ff": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:disc-data": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"disc-req": 10,
+				"disc-rsp": 10
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/country-oper=aa:bb:cc:dd:ee:ff,0": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:country-oper": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"radio-id": 0,
+				"country-code": "US",
+				"regulatory-domain": "FCC"
+			}]
+		}`,
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/supp-country-oper=aa:bb:cc:dd:ee:ff,0": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:supp-country-oper": [{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"radio-id": 0,
+				"country-code": "US",
+				"supported-channels": "1,6,11"
+			}]
+		}`,
 	}
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
@@ -869,10 +1581,141 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 			t.Error("Expected result for GetRadioNeighborByAPMACSlotAndBSSID, got nil")
 		}
 	})
+
+	// Test newly added filtered operations
+	t.Run("GetRadioResetStatsByAPMACAndRadioID", func(t *testing.T) {
+		result, err := service.GetRadioResetStatsByAPMACAndRadioID(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err != nil {
+			t.Errorf("Expected no error for GetRadioResetStatsByAPMACAndRadioID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetRadioResetStatsByAPMACAndRadioID, got nil")
+		}
+	})
+
+	t.Run("GetQosClientDataByClientMAC", func(t *testing.T) {
+		result, err := service.GetQosClientDataByClientMAC(ctx, "80:7d:3a:77:19:a9")
+		if err != nil {
+			t.Errorf("Expected no error for GetQosClientDataByClientMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetQosClientDataByClientMAC, got nil")
+		}
+	})
+
+	t.Run("GetWtpSlotWlanStatsByWTPMACSlotAndWLANID", func(t *testing.T) {
+		result, err := service.GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, "aa:bb:cc:dd:ee:ff", 0, 1)
+		if err != nil {
+			t.Errorf("Expected no error for GetWtpSlotWlanStatsByWTPMACSlotAndWLANID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetWtpSlotWlanStatsByWTPMACSlotAndWLANID, got nil")
+		}
+	})
+
+	t.Run("GetEthernetMACWtpMACMapByEthernetMAC", func(t *testing.T) {
+		result, err := service.GetEthernetMACWtpMACMapByEthernetMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetEthernetMACWtpMACMapByEthernetMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetEthernetMACWtpMACMapByEthernetMAC, got nil")
+		}
+	})
+
+	t.Run("GetRadioOperStatsByWTPMACAndSlot", func(t *testing.T) {
+		result, err := service.GetRadioOperStatsByWTPMACAndSlot(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err != nil {
+			t.Errorf("Expected no error for GetRadioOperStatsByWTPMACAndSlot, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetRadioOperStatsByWTPMACAndSlot, got nil")
+		}
+	})
+
+	t.Run("GetEthernetIfStatsByWTPMACAndInterfaceID", func(t *testing.T) {
+		result, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "aa:bb:cc:dd:ee:ff", "GigabitEthernet0")
+		if err != nil {
+			t.Errorf("Expected no error for GetEthernetIfStatsByWTPMACAndInterfaceID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetEthernetIfStatsByWTPMACAndInterfaceID, got nil")
+		}
+	})
+
+	t.Run("GetApIoxOperDataByWTPMAC", func(t *testing.T) {
+		result, err := service.GetApIoxOperDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetApIoxOperDataByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetApIoxOperDataByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetRlanOperByWTPMACAndPortID", func(t *testing.T) {
+		result, err := service.GetRlanOperByWTPMACAndPortID(ctx, "aa:bb:cc:dd:ee:ff", 1)
+		if err != nil {
+			t.Errorf("Expected no error for GetRlanOperByWTPMACAndPortID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetRlanOperByWTPMACAndPortID, got nil")
+		}
+	})
+
+	t.Run("GetCdpCacheDataByWTPMAC", func(t *testing.T) {
+		result, err := service.GetCdpCacheDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetCdpCacheDataByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetCdpCacheDataByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetLldpNeighByWTPMAC", func(t *testing.T) {
+		result, err := service.GetLldpNeighByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetLldpNeighByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetLldpNeighByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetDiscDataByWTPMAC", func(t *testing.T) {
+		result, err := service.GetDiscDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetDiscDataByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetDiscDataByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetCountryOperByWTPMACAndRadioID", func(t *testing.T) {
+		result, err := service.GetCountryOperByWTPMACAndRadioID(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err != nil {
+			t.Errorf("Expected no error for GetCountryOperByWTPMACAndRadioID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetCountryOperByWTPMACAndRadioID, got nil")
+		}
+	})
+
+	t.Run("GetSuppCountryOperByWTPMACAndRadioID", func(t *testing.T) {
+		result, err := service.GetSuppCountryOperByWTPMACAndRadioID(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err != nil {
+			t.Errorf("Expected no error for GetSuppCountryOperByWTPMACAndRadioID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetSuppCountryOperByWTPMACAndRadioID, got nil")
+		}
+	})
 }
 
-// TestApServiceUnit_ValidationErrors tests input validation scenarios.
-func TestApServiceUnit_ValidationErrors(t *testing.T) {
+// TestApServiceUnit_GetOperations_ValidationErrors tests input validation scenarios.
+func TestApServiceUnit_GetOperations_ValidationErrors(t *testing.T) {
 	// Use minimal mock server since we're testing validation before network calls
 	responses := map[string]string{}
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
@@ -962,6 +1805,168 @@ func TestApServiceUnit_ValidationErrors(t *testing.T) {
 		_, err := service.GetRadioNeighborByAPMACSlotAndBSSID(ctx, "invalid-mac", 0, "bb:cc:dd:ee:ff:aa")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	// Test validation for newly added GetBy* functions
+	t.Run("GetRadioResetStatsByAPMACAndRadioID_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetRadioResetStatsByAPMACAndRadioID(ctx, "", 0)
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetRadioResetStatsByAPMACAndRadioID_InvalidMAC", func(t *testing.T) {
+		_, err := service.GetRadioResetStatsByAPMACAndRadioID(ctx, "invalid-mac", 0)
+		if err == nil {
+			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	t.Run("GetQosClientDataByClientMAC_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetQosClientDataByClientMAC(ctx, "")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetQosClientDataByClientMAC_InvalidMAC", func(t *testing.T) {
+		_, err := service.GetQosClientDataByClientMAC(ctx, "invalid-mac")
+		if err == nil {
+			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	t.Run("GetWtpSlotWlanStatsByWTPMACSlotAndWLANID_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, "", 0, 1)
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetWtpSlotWlanStatsByWTPMACSlotAndWLANID_InvalidWLANID", func(t *testing.T) {
+		_, err := service.GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, "aa:bb:cc:dd:ee:ff", 0, 0)
+		if err == nil {
+			t.Error("Expected error for invalid WLAN ID, got nil")
+		}
+	})
+
+	t.Run("GetEthernetMACWtpMACMapByEthernetMAC_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetEthernetMACWtpMACMapByEthernetMAC(ctx, "")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetRadioOperStatsByWTPMACAndSlot_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetRadioOperStatsByWTPMACAndSlot(ctx, "", 0)
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetEthernetIfStatsByWTPMACAndInterfaceID_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "", "GigabitEthernet0")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetEthernetIfStatsByWTPMACAndInterfaceID_EmptyInterfaceID", func(t *testing.T) {
+		_, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "aa:bb:cc:dd:ee:ff", "")
+		if err == nil {
+			t.Error("Expected error for empty interface ID, got nil")
+		}
+	})
+
+	t.Run("GetApIoxOperDataByWTPMAC_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetApIoxOperDataByWTPMAC(ctx, "")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetRlanOperByWTPMACAndPortID_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetRlanOperByWTPMACAndPortID(ctx, "", 1)
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetRlanOperByWTPMACAndPortID_InvalidPortID", func(t *testing.T) {
+		_, err := service.GetRlanOperByWTPMACAndPortID(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err == nil {
+			t.Error("Expected error for invalid port ID, got nil")
+		}
+	})
+
+	t.Run("GetCdpCacheDataByWTPMAC_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetCdpCacheDataByWTPMAC(ctx, "")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetLldpNeighByWTPMAC_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetLldpNeighByWTPMAC(ctx, "")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetDiscDataByWTPMAC_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetDiscDataByWTPMAC(ctx, "")
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetCountryOperByWTPMACAndRadioID_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetCountryOperByWTPMACAndRadioID(ctx, "", 0)
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetSuppCountryOperByWTPMACAndRadioID_EmptyMAC", func(t *testing.T) {
+		_, err := service.GetSuppCountryOperByWTPMACAndRadioID(ctx, "", 0)
+		if err == nil {
+			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+}
+
+// TestApServiceUnit_GetOperations_EdgeCaseValidation tests additional validation edge cases.
+func TestApServiceUnit_GetOperations_EdgeCaseValidation(t *testing.T) {
+	responses := map[string]string{}
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := ap.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	// Test GetAPJoinStatsByWTPMAC with whitespace MAC
+	t.Run("GetAPJoinStatsByWTPMAC_WhitespaceMAC", func(t *testing.T) {
+		_, err := service.GetAPJoinStatsByWTPMAC(ctx, "   ")
+		if err == nil {
+			t.Error("Expected error for whitespace-only MAC, got nil")
+		}
+	})
+
+	// Test GetNameMACMapByWTPName with whitespace name
+	t.Run("GetNameMACMapByWTPName_WhitespaceName", func(t *testing.T) {
+		_, err := service.GetNameMACMapByWTPName(ctx, "   ")
+		if err == nil {
+			t.Error("Expected error for whitespace-only name, got nil")
+		}
+	})
+
+	// Test GetRadioStatusByWTPMACAndSlot with whitespace MAC
+	t.Run("GetRadioStatusByWTPMACAndSlot_WhitespaceMAC", func(t *testing.T) {
+		_, err := service.GetRadioStatusByWTPMACAndSlot(ctx, "   ", 0)
+		if err == nil {
+			t.Error("Expected error for whitespace-only MAC, got nil")
 		}
 	})
 }
@@ -1128,8 +2133,8 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	})
 }
 
-// TestApServiceUnit_EdgeCases_MockSuccess tests edge cases and error branches.
-func TestApServiceUnit_EdgeCases_MockSuccess(t *testing.T) {
+// TestApServiceUnit_DoOperations_MockSuccess tests edge cases and error branches.
+func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 	// Create mock server with specific responses for edge cases
 	responses := map[string]string{
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
@@ -1153,8 +2158,8 @@ func TestApServiceUnit_EdgeCases_MockSuccess(t *testing.T) {
 	})
 }
 
-// TestApServiceUnit_NilCAPWAPData tests nil CAPWAP data handling.
-func TestApServiceUnit_NilCAPWAPData(t *testing.T) {
+// TestApServiceUnit_DoOperations_ErrorHandling tests nil CAPWAP data handling.
+func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(
 		[]string{"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data"},
 		500,
@@ -1174,8 +2179,52 @@ func TestApServiceUnit_NilCAPWAPData(t *testing.T) {
 	})
 }
 
-// TestApServiceUnit_AdditionalErrorCases tests additional error handling scenarios for 100% coverage.
-func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
+// TestApServiceUnit_Reload_EdgeCases tests specific edge cases for Reload function to achieve 100% coverage.
+func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
+	// Test Reload with nil CAPWAP data response
+	t.Run("Reload_NilCAPWAPResponse", func(t *testing.T) {
+		responses := map[string]string{
+			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `null`,
+		}
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+		defer mockServer.Close()
+
+		testClient := testutil.NewTestClient(mockServer)
+		service := ap.NewService(testClient.Core().(*core.Client))
+		ctx := testutil.TestContext(t)
+
+		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+		if err == nil {
+			t.Error("Expected error for nil CAPWAP response, got nil")
+		}
+	})
+
+	// Test Reload with AP not found in CAPWAP data
+	t.Run("Reload_APNotFoundInCAPWAP", func(t *testing.T) {
+		responses := map[string]string{
+			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+				"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"name": "Different-AP"
+				}]
+			}`,
+		}
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+		defer mockServer.Close()
+
+		testClient := testutil.NewTestClient(mockServer)
+		service := ap.NewService(testClient.Core().(*core.Client))
+		ctx := testutil.TestContext(t)
+
+		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+		if err == nil {
+			t.Error("Expected error for AP not found in CAPWAP data, got nil")
+		}
+	})
+}
+
+// TestApTagServiceUnit_SetOperations_ErrorHandling tests additional error handling scenarios for 100% coverage.
+func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 	// Mock server with specific error responses for edge cases
 	mockServer := testutil.NewMockServer(
 		testutil.WithTesting(t),
@@ -1230,85 +2279,6 @@ func TestApServiceUnit_AdditionalErrorCases(t *testing.T) {
 		err := service.AssignSiteTag(ctx, "aa:bb:cc:dd:ee:ff", "test-site")
 		if err == nil {
 			t.Error("Expected error for failed tag assignment RPC call, got nil")
-		}
-	})
-}
-
-// TestApServiceUnit_EdgeCaseValidation tests additional validation edge cases.
-func TestApServiceUnit_EdgeCaseValidation(t *testing.T) {
-	responses := map[string]string{}
-	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
-	defer mockServer.Close()
-
-	testClient := testutil.NewTestClient(mockServer)
-	service := ap.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
-
-	// Test GetAPJoinStatsByWTPMAC with whitespace MAC
-	t.Run("GetAPJoinStatsByWTPMAC_WhitespaceMAC", func(t *testing.T) {
-		_, err := service.GetAPJoinStatsByWTPMAC(ctx, "   ")
-		if err == nil {
-			t.Error("Expected error for whitespace-only MAC, got nil")
-		}
-	})
-
-	// Test GetNameMACMapByWTPName with whitespace name
-	t.Run("GetNameMACMapByWTPName_WhitespaceName", func(t *testing.T) {
-		_, err := service.GetNameMACMapByWTPName(ctx, "   ")
-		if err == nil {
-			t.Error("Expected error for whitespace-only name, got nil")
-		}
-	})
-
-	// Test GetRadioStatusByWTPMACAndSlot with whitespace MAC
-	t.Run("GetRadioStatusByWTPMACAndSlot_WhitespaceMAC", func(t *testing.T) {
-		_, err := service.GetRadioStatusByWTPMACAndSlot(ctx, "   ", 0)
-		if err == nil {
-			t.Error("Expected error for whitespace-only MAC, got nil")
-		}
-	})
-}
-
-// TestApServiceUnit_ReloadEdgeCases tests specific edge cases for Reload function to achieve 100% coverage.
-func TestApServiceUnit_ReloadEdgeCases(t *testing.T) {
-	// Test Reload with nil CAPWAP data response
-	t.Run("Reload_NilCAPWAPResponse", func(t *testing.T) {
-		responses := map[string]string{
-			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `null`,
-		}
-		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
-		defer mockServer.Close()
-
-		testClient := testutil.NewTestClient(mockServer)
-		service := ap.NewService(testClient.Core().(*core.Client))
-		ctx := testutil.TestContext(t)
-
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
-		if err == nil {
-			t.Error("Expected error for nil CAPWAP response, got nil")
-		}
-	})
-
-	// Test Reload with AP not found in CAPWAP data
-	t.Run("Reload_APNotFoundInCAPWAP", func(t *testing.T) {
-		responses := map[string]string{
-			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
-				"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
-					"name": "Different-AP"
-				}]
-			}`,
-		}
-		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
-		defer mockServer.Close()
-
-		testClient := testutil.NewTestClient(mockServer)
-		service := ap.NewService(testClient.Core().(*core.Client))
-		ctx := testutil.TestContext(t)
-
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
-		if err == nil {
-			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}
 	})
 }

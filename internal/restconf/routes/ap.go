@@ -75,6 +75,60 @@ const (
 
 	// APIotFirmwarePath retrieves IoT firmware information for access points.
 	APIotFirmwarePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/iot-firmware"
+
+	// APRadioResetStatsPath retrieves radio reset statistics information.
+	APRadioResetStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-reset-stats"
+
+	// APQosClientDataPath retrieves QoS client data information.
+	APQosClientDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-client-data"
+
+	// APWtpSlotWlanStatsPath retrieves WTP slot WLAN statistics information.
+	APWtpSlotWlanStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/wtp-slot-wlan-stats"
+
+	// APEthernetMACWtpMACMapPath retrieves Ethernet MAC to WTP MAC mapping information.
+	APEthernetMACWtpMACMapPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-mac-wtp-mac-map"
+
+	// APRadioOperStatsPath retrieves radio operational statistics information.
+	APRadioOperStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/radio-oper-stats"
+
+	// APEthernetIfStatsPath retrieves Ethernet interface statistics information.
+	APEthernetIfStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats"
+
+	// APEwlcWncdStatsPath retrieves EWLC WNCD statistics information.
+	APEwlcWncdStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ewlc-wncd-stats"
+
+	// APApIoxOperDataPath retrieves AP IOx operational data information.
+	APApIoxOperDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-iox-oper-data"
+
+	// APQosGlobalStatsPath retrieves QoS global statistics information.
+	APQosGlobalStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/qos-global-stats"
+
+	// APRlanOperPath retrieves RLAN operational data information.
+	APRlanOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/rlan-oper"
+
+	// APEwlcMewlcPredownloadRecPath retrieves EWLC MEWLC predownload record information.
+	APEwlcMewlcPredownloadRecPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ewlc-mewlc-predownload-rec"
+
+	// APCdpCacheDataPath retrieves CDP cache data information.
+	APCdpCacheDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/cdp-cache-data"
+
+	// APLldpNeighPath retrieves LLDP neighbor information.
+	APLldpNeighPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh"
+
+	// APTpCertInfoPath retrieves trustpoint certificate info information.
+	APTpCertInfoPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/tp-cert-info"
+
+	// APDiscDataPath retrieves discovery data information.
+	APDiscDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/disc-data"
+
+	// APCountryOperPath retrieves country operational data information.
+	APCountryOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/country-oper"
+
+	// APSuppCountryOperPath retrieves supported country operational data information.
+	APSuppCountryOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/supp-country-oper"
+
+	// APApNhGlobalDataPath retrieves AP neighborhood global data information.
+	APApNhGlobalDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ap-nh-global-data"
 )
 
 // AP RPC Operations
