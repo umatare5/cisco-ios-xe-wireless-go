@@ -64,7 +64,7 @@ func TestGeolocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data": `{
 			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 				{
-					"ap-mac": "28:ac:9e:bb:3c:80",
+					"ap-mac": "aa:bb:cc:dd:ee:f0",
 					"loc": {
 						"source": "manual",
 						"ellipse": {
@@ -114,7 +114,7 @@ func TestGeolocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	}
 
 	// Test GetAPGeolocationDataByMAC operation (may return 404 if not configured)
-	macResult, err := service.GetAPGeolocationDataByMAC(ctx, "28:ac:9e:bb:3c:80")
+	macResult, err := service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
 	if err != nil {
 		// Geolocation data endpoints may not be supported by all WNC configurations
 		t.Logf("GetAPGeolocationDataByMAC failed (expected for unconfigured geolocation): %v", err)
@@ -170,7 +170,7 @@ func TestGeolocationServiceUnit_GetOperations_IndividualEndpoints(t *testing.T) 
 			response: `{
 				"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 					{
-						"ap-mac": "28:ac:9e:bb:3c:80",
+						"ap-mac": "aa:bb:cc:dd:ee:f0",
 						"loc": {
 							"source": "manual",
 							"ellipse": {
@@ -241,7 +241,7 @@ func TestGeolocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	}
 
 	// Test that GetAPGeolocationDataByMAC properly handles 404 errors
-	_, err = service.GetAPGeolocationDataByMAC(ctx, "28:ac:9e:bb:3c:80")
+	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
 	if err == nil {
 		t.Error("Expected error for 404 response, got nil")
 	}
@@ -251,8 +251,8 @@ func TestGeolocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testing.T) {
 	responses := map[string]string{
 		// Exact path that BuildQueryURL will construct
-		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=28:ac:9e:bb:3c:80": `{
-			"ap-mac": "28:ac:9e:bb:3c:80",
+		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:f0": `{
+			"ap-mac": "aa:bb:cc:dd:ee:f0",
 			"loc": {
 				"source": "manual",
 				"ellipse": {
@@ -276,8 +276,8 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 			}
 		}`,
 		// Also support simplified paths for the mock server
-		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=28:ac:9e:bb:3c:80": `{
-			"ap-mac": "28:ac:9e:bb:3c:80",
+		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:f0": `{
+			"ap-mac": "aa:bb:cc:dd:ee:f0",
 			"loc": {
 				"source": "manual",
 				"ellipse": {
@@ -309,7 +309,7 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 	ctx := testutil.TestContext(t)
 
 	// Test successful GetAPGeolocationDataByMAC with colon format
-	result, err := service.GetAPGeolocationDataByMAC(ctx, "28:ac:9e:bb:3c:80")
+	result, err := service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
 	if err != nil {
 		t.Errorf("Expected success for valid MAC, got error: %v", err)
 	}
@@ -430,7 +430,7 @@ func TestGeolocationServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	}
 
 	// Test that GetAPGeolocationDataByMAC handles nil client
-	_, err = service.GetAPGeolocationDataByMAC(ctx, "28:ac:9e:bb:3c:80")
+	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
 	if err == nil {
 		t.Error("Expected error with nil client for GetAPGeolocationDataByMAC, got nil")
 	}
