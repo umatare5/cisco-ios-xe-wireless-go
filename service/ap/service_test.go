@@ -1582,7 +1582,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 	})
 
 	t.Run("GetEthernetIfStatsByWTPMACAndInterfaceID", func(t *testing.T) {
-		result, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "aa:bb:cc:dd:ee:ff", "0")
+		result, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "aa:bb:cc:dd:ee:ff", "GigabitEthernet0")
 		if err != nil {
 			t.Errorf("Expected no error for GetEthernetIfStatsByWTPMACAndInterfaceID, got: %v", err)
 		}
