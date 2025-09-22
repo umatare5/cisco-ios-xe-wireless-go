@@ -287,14 +287,426 @@ func (s Service) ListIotFirmware(ctx context.Context) (*ApOperIotFirmware, error
 	return core.Get[ApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
 }
 
-// EnableAP enables the administrative state of an access point.
-func (s Service) EnableAP(ctx context.Context, mac string) error {
-	return s.updateAPState(ctx, mac, "admin-state-enabled")
+// ListRadioResetStats retrieves radio reset statistics for all access points.
+func (s Service) ListRadioResetStats(ctx context.Context) (*ApOperRadioResetStats, error) {
+	return core.Get[ApOperRadioResetStats](ctx, s.Client(), routes.APRadioResetStatsPath)
+}
+
+// GetRadioResetStatsByAPMACAndRadioID retrieves radio reset statistics for a specific AP MAC and radio ID.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetRadioResetStatsByAPMACAndRadioID(
+	ctx context.Context, apMAC string, radioID int,
+) (*ApOperRadioResetStats, error) {
+	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(apMAC); err != nil {
+		return nil, fmt.Errorf("invalid AP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APRadioResetStatsPath,
+		normalizedMAC,
+		radioID,
+	)
+	return core.Get[ApOperRadioResetStats](ctx, s.Client(), url)
+}
+
+// ListQosClientData retrieves QoS client data for all access points.
+func (s Service) ListQosClientData(ctx context.Context) (*ApOperQosClientData, error) {
+	return core.Get[ApOperQosClientData](ctx, s.Client(), routes.APQosClientDataPath)
+}
+
+// GetQosClientDataByClientMAC retrieves QoS client data for a specific client MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetQosClientDataByClientMAC(
+	ctx context.Context, clientMAC string,
+) (*ApOperQosClientData, error) {
+	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(clientMAC); err != nil {
+		return nil, fmt.Errorf("invalid client MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(clientMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid client MAC address %s: %w", clientMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APQosClientDataPath, normalizedMAC)
+	return core.Get[ApOperQosClientData](ctx, s.Client(), url)
+}
+
+// ListWtpSlotWlanStats retrieves WTP slot WLAN statistics for all access points.
+func (s Service) ListWtpSlotWlanStats(ctx context.Context) (*ApOperWtpSlotWlanStats, error) {
+	return core.Get[ApOperWtpSlotWlanStats](ctx, s.Client(), routes.APWtpSlotWlanStatsPath)
+}
+
+// GetWtpSlotWlanStatsByWTPMACSlotAndWLANID retrieves WTP slot WLAN statistics for a specific WTP MAC, slot ID, and WLAN ID.
+func (s Service) GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(
+	ctx context.Context,
+	wtpMAC string,
+	slotID int,
+	wlanID int,
+) (*ApOperWtpSlotWlanStats, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APWtpSlotWlanStatsPath,
+		normalizedMAC,
+		slotID,
+		wlanID,
+	)
+	return core.Get[ApOperWtpSlotWlanStats](ctx, s.Client(), url)
+}
+
+// ListEthernetMACWtpMACMaps retrieves Ethernet MAC to WTP MAC mapping for all access points.
+func (s Service) ListEthernetMACWtpMACMaps(ctx context.Context) (*ApOperEthernetMACWtpMACMap, error) {
+	return core.Get[ApOperEthernetMACWtpMACMap](ctx, s.Client(), routes.APEthernetMACWtpMACMapPath)
+}
+
+// GetEthernetMACWtpMACMapByEthernetMAC retrieves Ethernet MAC to WTP MAC mapping for a specific Ethernet MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetEthernetMACWtpMACMapByEthernetMAC(
+	ctx context.Context, ethernetMAC string,
+) (*ApOperEthernetMACWtpMACMap, error) {
+	if ethernetMAC == "" || strings.TrimSpace(ethernetMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(ethernetMAC); err != nil {
+		return nil, fmt.Errorf("invalid Ethernet MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(ethernetMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid Ethernet MAC address %s: %w", ethernetMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APEthernetMACWtpMACMapPath, normalizedMAC)
+	return core.Get[ApOperEthernetMACWtpMACMap](ctx, s.Client(), url)
+}
+
+// ListRadioOperStats retrieves radio operational statistics for all access points.
+func (s Service) ListRadioOperStats(ctx context.Context) (*ApOperRadioOperStats, error) {
+	return core.Get[ApOperRadioOperStats](ctx, s.Client(), routes.APRadioOperStatsPath)
+}
+
+// GetRadioOperStatsByWTPMACAndSlot retrieves radio operational statistics for a specific WTP MAC and slot ID.
+func (s Service) GetRadioOperStatsByWTPMACAndSlot(
+	ctx context.Context,
+	wtpMAC string,
+	slotID int,
+) (*ApOperRadioOperStats, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APRadioOperStatsPath,
+		normalizedMAC,
+		slotID,
+	)
+	return core.Get[ApOperRadioOperStats](ctx, s.Client(), url)
+}
+
+// ListEthernetIfStats retrieves Ethernet interface statistics for all access points.
+func (s Service) ListEthernetIfStats(ctx context.Context) (*ApOperEthernetIfStats, error) {
+	return core.Get[ApOperEthernetIfStats](ctx, s.Client(), routes.APEthernetIfStatsPath)
+}
+
+// GetEthernetIfStatsByWTPMACAndInterfaceID retrieves Ethernet interface statistics for a specific WTP MAC and interface ID.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetEthernetIfStatsByWTPMACAndInterfaceID(
+	ctx context.Context,
+	wtpMAC string,
+	interfaceID string,
+) (*ApOperEthernetIfStats, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+	if interfaceID == "" || strings.TrimSpace(interfaceID) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APEthernetIfStatsPath,
+		normalizedMAC,
+		interfaceID,
+	)
+	return core.Get[ApOperEthernetIfStats](ctx, s.Client(), url)
+}
+
+// ListEwlcWncdStats retrieves EWLC WNCD statistics information.
+func (s Service) ListEwlcWncdStats(ctx context.Context) (*ApOperEwlcWncdStats, error) {
+	return core.Get[ApOperEwlcWncdStats](ctx, s.Client(), routes.APEwlcWncdStatsPath)
+}
+
+// ListApIoxOperData retrieves AP IOx operational data for all access points.
+func (s Service) ListApIoxOperData(ctx context.Context) (*ApOperApIoxOperData, error) {
+	return core.Get[ApOperApIoxOperData](ctx, s.Client(), routes.APApIoxOperDataPath)
+}
+
+// GetApIoxOperDataByWTPMAC retrieves AP IOx operational data for a specific WTP MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetApIoxOperDataByWTPMAC(
+	ctx context.Context, wtpMAC string,
+) (*ApOperApIoxOperData, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApIoxOperDataPath, normalizedMAC)
+	return core.Get[ApOperApIoxOperData](ctx, s.Client(), url)
+}
+
+// ListQosGlobalStats retrieves QoS global statistics information.
+func (s Service) ListQosGlobalStats(ctx context.Context) (*ApOperQosGlobalStats, error) {
+	return core.Get[ApOperQosGlobalStats](ctx, s.Client(), routes.APQosGlobalStatsPath)
+}
+
+// ListRlanOper retrieves RLAN operational data for all access points.
+func (s Service) ListRlanOper(ctx context.Context) (*ApOperRlanOper, error) {
+	return core.Get[ApOperRlanOper](ctx, s.Client(), routes.APRlanOperPath)
+}
+
+// GetRlanOperByWTPMACAndPortID retrieves RLAN operational data for a specific WTP MAC and port ID.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetRlanOperByWTPMACAndPortID(
+	ctx context.Context, wtpMAC string, portID int,
+) (*ApOperRlanOper, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APRlanOperPath,
+		normalizedMAC,
+		portID,
+	)
+	return core.Get[ApOperRlanOper](ctx, s.Client(), url)
+}
+
+// ListEwlcMewlcPredownloadRec retrieves EWLC MEWLC predownload record information.
+func (s Service) ListEwlcMewlcPredownloadRec(ctx context.Context) (*ApOperEwlcMewlcPredownloadRec, error) {
+	return core.Get[ApOperEwlcMewlcPredownloadRec](ctx, s.Client(), routes.APEwlcMewlcPredownloadRecPath)
+}
+
+// ListCdpCacheData retrieves CDP cache data for all access points.
+func (s Service) ListCdpCacheData(ctx context.Context) (*ApOperCdpCacheData, error) {
+	return core.Get[ApOperCdpCacheData](ctx, s.Client(), routes.APCdpCacheDataPath)
+}
+
+// GetCdpCacheDataByWTPMAC retrieves CDP cache data for a specific WTP MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetCdpCacheDataByWTPMAC(
+	ctx context.Context, wtpMAC string,
+) (*ApOperCdpCacheData, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCdpCacheDataPath, normalizedMAC)
+	return core.Get[ApOperCdpCacheData](ctx, s.Client(), url)
+}
+
+// ListLldpNeigh retrieves LLDP neighbor information for all access points.
+func (s Service) ListLldpNeigh(ctx context.Context) (*ApOperLldpNeigh, error) {
+	return core.Get[ApOperLldpNeigh](ctx, s.Client(), routes.APLldpNeighPath)
+}
+
+// GetLldpNeighByWTPMAC retrieves LLDP neighbor information for a specific WTP MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetLldpNeighByWTPMAC(
+	ctx context.Context, wtpMAC string,
+) (*ApOperLldpNeigh, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APLldpNeighPath, normalizedMAC)
+	return core.Get[ApOperLldpNeigh](ctx, s.Client(), url)
+}
+
+// ListTpCertInfo retrieves trustpoint certificate info information.
+func (s Service) ListTpCertInfo(ctx context.Context) (*ApOperTpCertInfo, error) {
+	return core.Get[ApOperTpCertInfo](ctx, s.Client(), routes.APTpCertInfoPath)
+}
+
+// ListDiscData retrieves discovery data for all access points.
+func (s Service) ListDiscData(ctx context.Context) (*ApOperDiscData, error) {
+	return core.Get[ApOperDiscData](ctx, s.Client(), routes.APDiscDataPath)
+}
+
+// GetDiscDataByWTPMAC retrieves discovery data for a specific WTP MAC address.
+func (s Service) GetDiscDataByWTPMAC(
+	ctx context.Context, wtpMAC string,
+) (*ApOperDiscData, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APDiscDataPath, normalizedMAC)
+	return core.Get[ApOperDiscData](ctx, s.Client(), url)
+}
+
+// ListCountryOper retrieves country operational data for all access points.
+func (s Service) ListCountryOper(ctx context.Context) (*ApOperCountryOper, error) {
+	return core.Get[ApOperCountryOper](ctx, s.Client(), routes.APCountryOperPath)
+}
+
+// GetCountryOperByWTPMACAndRadioID retrieves country operational data for a specific WTP MAC and radio ID.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetCountryOperByWTPMACAndRadioID(
+	ctx context.Context, wtpMAC string, radioID int,
+) (*ApOperCountryOper, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APCountryOperPath,
+		normalizedMAC,
+		radioID,
+	)
+	return core.Get[ApOperCountryOper](ctx, s.Client(), url)
+}
+
+// ListSuppCountryOper retrieves supported country operational data for all access points.
+func (s Service) ListSuppCountryOper(ctx context.Context) (*ApOperSuppCountryOper, error) {
+	return core.Get[ApOperSuppCountryOper](ctx, s.Client(), routes.APSuppCountryOperPath)
+}
+
+// GetSuppCountryOperByWTPMACAndRadioID retrieves supported country operational data for a specific WTP MAC and radio ID.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetSuppCountryOperByWTPMACAndRadioID(
+	ctx context.Context, wtpMAC string, radioID int,
+) (*ApOperSuppCountryOper, error) {
+	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	if err != nil {
+		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APSuppCountryOperPath,
+		normalizedMAC,
+		radioID,
+	)
+	return core.Get[ApOperSuppCountryOper](ctx, s.Client(), url)
+}
+
+// ListApNhGlobalData retrieves AP neighborhood global data.
+func (s Service) ListApNhGlobalData(ctx context.Context) (*ApOperApNhGlobalData, error) {
+	return core.Get[ApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath)
 }
 
 // DisableAP disables the administrative state of an access point.
 func (s Service) DisableAP(ctx context.Context, mac string) error {
 	return s.updateAPState(ctx, mac, "admin-state-disabled")
+}
+
+// EnableAP enables the administrative state of an access point.
+func (s Service) EnableAP(ctx context.Context, mac string) error {
+	return s.updateAPState(ctx, mac, "admin-state-enabled")
 }
 
 // EnableRadio enables a radio on an Access Point using MAC address.
