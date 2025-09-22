@@ -89,7 +89,6 @@ func TestRRMServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
-			// New functions from Phase 4 validation - verified working on IOS-XE 17.12.5
 			{
 				Name: "ListRRMOneShotCounters",
 				Method: func(ctx context.Context, service any) (any, error) {

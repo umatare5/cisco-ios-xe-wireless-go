@@ -358,7 +358,6 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	// === Operational Data Tests ===
 	t.Run("ListApAutoRFDot11Data", func(t *testing.T) {
 		result, err := service.ListApAutoRFDot11Data(ctx)
 		if err != nil {
@@ -449,7 +448,6 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	// === Global Operational Data Tests ===
 	t.Run("ListRRMOneShotCounters", func(t *testing.T) {
 		result, err := service.ListRRMOneShotCounters(ctx)
 		if err != nil {
@@ -560,7 +558,6 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	// === Emulation Operational Data Tests ===
 	t.Run("ListRRMFraStatsFromEmul", func(t *testing.T) {
 		result, err := service.ListRRMFraStatsFromEmul(ctx)
 		if err != nil {

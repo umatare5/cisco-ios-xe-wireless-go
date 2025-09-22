@@ -48,8 +48,6 @@ func (s Service) ListRRMMgrCfgEntries(ctx context.Context) (*RRMCfgRRMMgrCfgEntr
 	return core.Get[RRMCfgRRMMgrCfgEntries](ctx, s.Client(), routes.RRMCfgRRMMgrCfgEntriesPath)
 }
 
-// === RRM Operational Data Functions ===
-
 // ListApAutoRFDot11Data retrieves AP auto RF 802.11 data.
 func (s Service) ListApAutoRFDot11Data(ctx context.Context) (*RRMOperApAutoRFDot11Data, error) {
 	return core.Get[RRMOperApAutoRFDot11Data](ctx, s.Client(), routes.RRMOperApAutoRFDot11DataPath)
@@ -94,8 +92,6 @@ func (s Service) ListSpectrumDeviceTable(ctx context.Context) (*RRMOperSpectrumD
 func (s Service) ListSpectrumAqTable(ctx context.Context) (*RRMOperSpectrumAqTable, error) {
 	return core.Get[RRMOperSpectrumAqTable](ctx, s.Client(), routes.RRMOperSpectrumAqTablePath)
 }
-
-// === RRM Global Operational Data Functions ===
 
 // ListRRMOneShotCounters retrieves RRM one-shot counters.
 func (s Service) ListRRMOneShotCounters(ctx context.Context) (*RRMGlobalOperRRMOneShotCounters, error) {
@@ -157,8 +153,6 @@ func (s Service) ListRRMCoverage(ctx context.Context) (*RRMGlobalOperRRMCoverage
 func (s Service) ListSpectrumAqWorstTable(ctx context.Context) (*RRMGlobalOperSpectrumAqWorstTable, error) {
 	return core.Get[RRMGlobalOperSpectrumAqWorstTable](ctx, s.Client(), routes.RRMGlobalOperSpectrumAqWorstTablePath)
 }
-
-// === RRM Emulation Operational Data Functions ===
 
 // ListRRMFraStatsFromEmul retrieves RRM flexible radio assignment statistics from emulation operational data.
 func (s Service) ListRRMFraStatsFromEmul(ctx context.Context) (*RRMEmulOperRRMFraStats, error) {
