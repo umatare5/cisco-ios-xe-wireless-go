@@ -8,6 +8,16 @@ type BLEMgmtOper struct {
 	} `json:"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data"` // BLE management operational data (YANG: IOS-XE 17.12.1)
 }
 
+// BLEMgmtOperBLEMgmtAp represents BLE management AP data wrapper.
+type BLEMgmtOperBLEMgmtAp struct {
+	BLEMgmtAp []BLEMgmtAp `json:"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-ap"`
+}
+
+// BLEMgmtOperBLEMgmtCmx represents BLE management CMX data wrapper.
+type BLEMgmtOperBLEMgmtCmx struct {
+	BLEMgmtCmx []BLEMgmtCmx `json:"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-cmx"`
+}
+
 // BLEMgmtAp represents BLE management data for each AP.
 type BLEMgmtAp struct {
 	ApMAC        string  `json:"ap-mac"`                  // AP MAC address (YANG: IOS-XE 17.12.1)

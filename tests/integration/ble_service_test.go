@@ -33,6 +33,41 @@ func TestBLEServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListBLELtxAp",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ble.Service).ListBLELtxAp(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListBLELtxApAntenna",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ble.Service).ListBLELtxApAntenna(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetMgmtOperational",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ble.Service).GetMgmtOperational(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListBLEMgmtAp",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ble.Service).ListBLEMgmtAp(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListBLEMgmtCmx",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(ble.Service).ListBLEMgmtCmx(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		FilterMethods:   []integration.TestMethod{},
 		ValidationTests: []integration.ValidationTestMethod{},
