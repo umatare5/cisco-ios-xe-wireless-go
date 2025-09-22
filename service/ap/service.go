@@ -699,14 +699,14 @@ func (s Service) ListApNhGlobalData(ctx context.Context) (*ApOperApNhGlobalData,
 	return core.Get[ApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath)
 }
 
-// DisableAP disables the administrative state of an access point.
-func (s Service) DisableAP(ctx context.Context, mac string) error {
-	return s.updateAPState(ctx, mac, "admin-state-disabled")
-}
-
 // EnableAP enables the administrative state of an access point.
 func (s Service) EnableAP(ctx context.Context, mac string) error {
 	return s.updateAPState(ctx, mac, "admin-state-enabled")
+}
+
+// DisableAP disables the administrative state of an access point.
+func (s Service) DisableAP(ctx context.Context, mac string) error {
+	return s.updateAPState(ctx, mac, "admin-state-disabled")
 }
 
 // EnableRadio enables a radio on an Access Point using MAC address.
