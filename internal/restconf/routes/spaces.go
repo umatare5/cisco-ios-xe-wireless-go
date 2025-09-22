@@ -12,9 +12,6 @@ const (
 
 	// SpacesProfilesPath provides the path for Spaces profiles.
 	SpacesProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-spaces-cfg:spaces-cfg-data/spaces-profiles"
-
-	// SpacesProfileByNamePath provides the path for Spaces profile by name.
-	SpacesProfileByNamePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-spaces-cfg:spaces-cfg-data/spaces-profiles/spaces-profile"
 )
 
 // Spaces Operational Paths.

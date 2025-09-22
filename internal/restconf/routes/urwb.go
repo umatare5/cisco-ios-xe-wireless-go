@@ -12,9 +12,6 @@ const (
 
 	// URWBProfilesPath provides the path for URWB profiles.
 	URWBProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data/urwb-profiles"
-
-	// URWBProfileByNamePath provides the path template for URWB profile by name.
-	URWBProfileByNamePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data/urwb-profiles/urwb-profile=%s"
 )
 
 // URWB Operational Paths.
