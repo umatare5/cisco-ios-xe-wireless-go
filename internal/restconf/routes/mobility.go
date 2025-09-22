@@ -1,5 +1,19 @@
 package routes
 
+// Mobility Configuration and Operational Paths
+//
+// These constants define the RESTCONF API paths for mobility configuration
+// and operational data based on Cisco-IOS-XE-wireless-mobility YANG models.
+
+// Mobility Configuration Paths.
+const (
+	// MobilityCfgPath provides the path for retrieving all mobility configuration data.
+	MobilityCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data"
+
+	// MobilityConfigPath provides the path for retrieving mobility configuration.
+	MobilityConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data/mobility-config"
+)
+
 // Mobility Operational Paths
 //
 // These constants define the RESTCONF API paths for mobility operational
@@ -27,4 +41,19 @@ const (
 
 	// MobilityGlobalStatsPath provides the path for retrieving mobility global statistics.
 	MobilityGlobalStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-stats"
+
+	// MobilityMmIfGlobalMsgStatsPath provides the path for retrieving MM interface global message statistics.
+	MobilityMmIfGlobalMsgStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mm-if-global-msg-stats"
+
+	// MobilityClientStatsPath provides the path for retrieving mobility client statistics.
+	MobilityClientStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-client-stats"
+
+	// MobilityGlobalDTLSStatsPath provides the path for retrieving mobility global DTLS statistics.
+	MobilityGlobalDTLSStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-dtls-stats"
+
+	// MobilityGlobalMsgStatsPath provides the path for retrieving mobility global message statistics.
+	MobilityGlobalMsgStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-msg-stats"
+
+	// MobilityWlanClientLimitPath provides the path for retrieving WLAN client limit data.
+	MobilityWlanClientLimitPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/wlan-client-limit"
 )

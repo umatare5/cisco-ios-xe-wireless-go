@@ -18,6 +18,16 @@ func NewService(client *core.Client) Service {
 	return Service{BaseService: service.NewBaseService(client)}
 }
 
+// GetConfig retrieves complete mobility configuration data from the controller.
+func (s Service) GetConfig(ctx context.Context) (*MobilityCfg, error) {
+	return core.Get[MobilityCfg](ctx, s.Client(), routes.MobilityCfgPath)
+}
+
+// ListMobilityConfig retrieves mobility configuration data using wrapper structure.
+func (s Service) ListMobilityConfig(ctx context.Context) (*MobilityCfgMobilityConfig, error) {
+	return core.Get[MobilityCfgMobilityConfig](ctx, s.Client(), routes.MobilityConfigPath)
+}
+
 // GetOperational retrieves mobility operational data from the controller.
 func (s Service) GetOperational(ctx context.Context) (*MobilityOper, error) {
 	return core.Get[MobilityOper](ctx, s.Client(), routes.MobilityOperPath)
@@ -57,4 +67,29 @@ func (s Service) GetGlobalStats(
 	return core.Get[MobilityOperMobilityGlobalStats](
 		ctx, s.Client(), routes.MobilityGlobalStatsPath,
 	)
+}
+
+// ListMmIfGlobalMsgStats retrieves MM interface global message statistics.
+func (s Service) ListMmIfGlobalMsgStats(ctx context.Context) (*MobilityOperMmIfGlobalMsgStats, error) {
+	return core.Get[MobilityOperMmIfGlobalMsgStats](ctx, s.Client(), routes.MobilityMmIfGlobalMsgStatsPath)
+}
+
+// ListClientStats retrieves mobility client statistics.
+func (s Service) ListClientStats(ctx context.Context) (*MobilityOperMobilityClientStats, error) {
+	return core.Get[MobilityOperMobilityClientStats](ctx, s.Client(), routes.MobilityClientStatsPath)
+}
+
+// ListGlobalDTLSStats retrieves mobility global DTLS statistics.
+func (s Service) ListGlobalDTLSStats(ctx context.Context) (*MobilityOperMobilityGlobalDTLSStats, error) {
+	return core.Get[MobilityOperMobilityGlobalDTLSStats](ctx, s.Client(), routes.MobilityGlobalDTLSStatsPath)
+}
+
+// ListGlobalMsgStats retrieves mobility global message statistics.
+func (s Service) ListGlobalMsgStats(ctx context.Context) (*MobilityOperMobilityGlobalMsgStats, error) {
+	return core.Get[MobilityOperMobilityGlobalMsgStats](ctx, s.Client(), routes.MobilityGlobalMsgStatsPath)
+}
+
+// ListWlanClientLimit retrieves WLAN client limit data.
+func (s Service) ListWlanClientLimit(ctx context.Context) (*MobilityOperWlanClientLimit, error) {
+	return core.Get[MobilityOperWlanClientLimit](ctx, s.Client(), routes.MobilityWlanClientLimitPath)
 }

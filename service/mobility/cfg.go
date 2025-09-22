@@ -7,6 +7,11 @@ type MobilityCfg struct {
 	} `json:"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data"` // Mobility configuration data (Live: IOS-XE 17.12.5)
 }
 
+// MobilityCfgMobilityConfig represents the mobility configuration wrapper structure.
+type MobilityCfgMobilityConfig struct {
+	MobilityConfig MobilityConfig `json:"Cisco-IOS-XE-wireless-mobility-cfg:mobility-config"`
+}
+
 // MobilityConfig represents local mobility configuration.
 type MobilityConfig struct {
 	LocalGroup                string          `json:"local-group"`                             // Local mobility group name (Live: IOS-XE 17.12.5)
