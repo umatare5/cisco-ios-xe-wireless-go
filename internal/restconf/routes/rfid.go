@@ -9,6 +9,9 @@ package routes
 const (
 	// RFIDCfgPath provides the path for RFID configuration data.
 	RFIDCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
+
+	// RFIDCfgRFIDConfigPath provides the path for RFID configuration settings.
+	RFIDCfgRFIDConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data/rfid-config"
 )
 
 // RFID Operational Paths.
