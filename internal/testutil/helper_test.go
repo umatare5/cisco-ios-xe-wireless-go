@@ -79,3 +79,18 @@ func TestTestUtilHelperUnit_AssertError_Success(t *testing.T) {
 func TestTestUtilHelperUnit_AssertNoError_Success(t *testing.T) {
 	AssertNoError(t, nil, "test context")
 }
+
+func TestTestUtilHelperUnit_AssertPointerEquals_Success(t *testing.T) {
+	// Test with same pointers
+	ptr1 := &testing.T{}
+	ptr2 := ptr1
+	AssertPointerEquals(t, ptr2, ptr1, "test context")
+
+	// Test with both nil pointers
+	AssertPointerEquals(t, nil, nil, "test context")
+}
+
+func TestTestUtilHelperUnit_AssertStringContains_Success(t *testing.T) {
+	AssertStringContains(t, "hello world", "world", "test context")
+	AssertStringContains(t, "testing string", "test", "test context")
+}
