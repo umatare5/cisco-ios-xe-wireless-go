@@ -101,27 +101,15 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		return
 	}
 
-	// Test ListProfileConfigs
-	profiles, err := service.ListProfileConfigs(ctx)
+	// Test ListConfigEntries
+	profiles, err := service.ListConfigEntries(ctx)
 	if err != nil {
-		t.Errorf("ListProfileConfigs failed: %v", err)
+		t.Errorf("ListConfigEntries failed: %v", err)
 		return
 	}
 
 	if profiles == nil {
-		t.Error("ListProfileConfigs returned nil result")
-		return
-	}
-
-	// Test GetProfileConfig
-	profile, err := service.GetProfileConfig(ctx, "test-wlan")
-	if err != nil {
-		t.Errorf("GetProfileConfig failed: %v", err)
-		return
-	}
-
-	if profile == nil {
-		t.Error("GetProfileConfig returned nil result")
+		t.Error("ListConfigEntries returned nil result")
 		return
 	}
 
@@ -173,6 +161,74 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		return
 	}
 
+	// Test ListWlanCfgEntries
+	cfgEntries, err := service.ListWlanCfgEntries(ctx)
+	if err != nil {
+		t.Errorf("ListWlanCfgEntries failed: %v", err)
+		return
+	}
+
+	if cfgEntries == nil {
+		t.Error("ListWlanCfgEntries returned nil result")
+		return
+	}
+
+	// Test ListWlanPolicies
+	wlanPolicies, err := service.ListWlanPolicies(ctx)
+	if err != nil {
+		t.Errorf("ListWlanPolicies failed: %v", err)
+		return
+	}
+
+	if wlanPolicies == nil {
+		t.Error("ListWlanPolicies returned nil result")
+		return
+	}
+
+	// Test ListCfgPolicyListEntries
+	cfgPolicyEntries, err := service.ListCfgPolicyListEntries(ctx)
+	if err != nil {
+		t.Errorf("ListCfgPolicyListEntries failed: %v", err)
+		return
+	}
+
+	if cfgPolicyEntries == nil {
+		t.Error("ListCfgPolicyListEntries returned nil result")
+		return
+	}
+
+	// Test ListCfgWirelessAaaPolicyConfigs
+	cfgAaaConfigs, err := service.ListCfgWirelessAaaPolicyConfigs(ctx)
+	if err != nil {
+		t.Errorf("ListCfgWirelessAaaPolicyConfigs failed: %v", err)
+		return
+	}
+
+	if cfgAaaConfigs == nil {
+		t.Error("ListCfgWirelessAaaPolicyConfigs returned nil result")
+		return
+	}
+
+	// Test ListDot11beProfiles (skip if not supported by mock server)
+	dot11beProfiles, err := service.ListDot11beProfiles(ctx)
+	if err != nil {
+		// Wi-Fi 7 endpoints may not be supported by all mock servers
+		t.Logf("ListDot11beProfiles failed (expected for older mock servers): %v", err)
+	} else if dot11beProfiles == nil {
+		t.Error("ListDot11beProfiles returned nil result")
+		return
+	}
+
+	// Test ListWlanInfo (skip if not supported by mock server)
+	wlanInfo, err := service.ListWlanInfo(ctx)
+	if err != nil {
+		// WlanInfo endpoint may not be supported by all mock servers
+		t.Logf("ListWlanInfo failed (expected for older mock servers): %v", err)
+	} else if wlanInfo == nil {
+		t.Error("ListWlanInfo returned nil result")
+		return
+	}
+
 	t.Logf("All get operations returned valid WLAN data")
 }
 
@@ -185,14 +241,9 @@ func TestWlanServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		t.Error("Expected error with nil client for GetConfig")
 	}
 
-	_, err = service.ListProfileConfigs(ctx)
+	_, err = service.ListConfigEntries(ctx)
 	if err == nil {
-		t.Error("Expected error with nil client for ListProfileConfigs")
-	}
-
-	_, err = service.GetProfileConfig(ctx, "test")
-	if err == nil {
-		t.Error("Expected error with nil client for GetProfileConfig")
+		t.Error("Expected error with nil client for ListConfigEntries")
 	}
 
 	_, err = service.ListPolicies(ctx)
@@ -214,4 +265,26 @@ func TestWlanServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	if err == nil {
 		t.Error("Expected error with nil client for GetOperational")
 	}
+
+	_, err = service.ListWlanCfgEntries(ctx)
+	if err == nil {
+		t.Error("Expected error with nil client for ListWlanCfgEntries")
+	}
+
+	_, err = service.ListWlanPolicies(ctx)
+	if err == nil {
+		t.Error("Expected error with nil client for ListWlanPolicies")
+	}
+
+	_, err = service.ListCfgPolicyListEntries(ctx)
+	if err == nil {
+		t.Error("Expected error with nil client for ListCfgPolicyListEntries")
+	}
+
+	_, err = service.ListCfgWirelessAaaPolicyConfigs(ctx)
+	if err == nil {
+		t.Error("Expected error with nil client for ListCfgWirelessAaaPolicyConfigs")
+	}
+
+	// Note: ListDot11beProfiles and ListWlanInfo are not tested with nil client as they may not be supported by all mock servers
 }

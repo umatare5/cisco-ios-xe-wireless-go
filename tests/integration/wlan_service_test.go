@@ -35,9 +35,9 @@ func TestWLANServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
-				Name: "ListProfileConfigs",
+				Name: "ListConfigEntries",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(*wlan.Service).ListProfileConfigs(ctx)
+					return service.(*wlan.Service).ListConfigEntries(ctx)
 				},
 				LogResult: true,
 			},
@@ -61,6 +61,42 @@ func TestWLANServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 					return service.(*wlan.Service).ListWirelessAAAPolicyConfigs(ctx)
 				},
 				LogResult: true,
+			},
+			{
+				Name: "ListWlanCfgEntries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(*wlan.Service).ListWlanCfgEntries(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListWlanPolicies",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(*wlan.Service).ListWlanPolicies(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgPolicyListEntries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(*wlan.Service).ListCfgPolicyListEntries(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgWirelessAaaPolicyConfigs",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(*wlan.Service).ListCfgWirelessAaaPolicyConfigs(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListDot11beProfiles",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(*wlan.Service).ListDot11beProfiles(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
 			},
 		},
 		FilterMethods:   []integration.TestMethod{},
@@ -91,6 +127,15 @@ func TestWLANServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(*wlan.Service).GetOperational(ctx)
 				},
+				LogResult: true,
+			},
+			{
+				Name: "ListWlanInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(*wlan.Service).ListWlanInfo(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
 			},
 		},
 		FilterMethods:   []integration.TestMethod{},

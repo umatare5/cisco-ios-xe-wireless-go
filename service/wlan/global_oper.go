@@ -13,3 +13,10 @@ type WlanInfo struct {
 	CurrClientsCount       int    `json:"curr-clients-count"`         // Number of active clients for this WLAN (Live: IOS-XE 17.12.5)
 	PerWlanMaxClientSyslog bool   `json:"per-wlan-max-client-syslog"` // Syslog message enabled when max clients reached (Live: IOS-XE 17.12.5)
 }
+
+// WlanGlobalOperWlanInfo wraps the WlanInfo structure of the WLAN global operational data.
+type WlanGlobalOperWlanInfo struct {
+	CiscoIOSXEWirelessWlanGlobalOperData struct {
+		WlanInfo []WlanInfo `json:"wlan-info,omitempty"`
+	} `json:"Cisco-IOS-XE-wireless-wlan-global-oper:wlan-global-oper-data"`
+}
