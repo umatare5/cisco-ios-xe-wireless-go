@@ -32,7 +32,7 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 					return service.(location.Service).GetOperational(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // Location services may not be configured
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
 			},
 			{
 				Name: "LocationRSSIMeasurements",
@@ -51,7 +51,7 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 				ExpectNotFound: false, // GetConfig returns data
 			},
 			{
-				Name: "ListProfileConfigs",
+				Name: "ListOperatorLocations",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(location.Service).ListOperatorLocations(ctx)
 				},
@@ -59,7 +59,7 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 				ExpectNotFound: false, // Should return empty response for HTTP 204
 			},
 			{
-				Name: "ListServerConfigs",
+				Name: "ListNMSPConfig",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(location.Service).ListNMSPConfig(ctx)
 				},
