@@ -2,10 +2,12 @@ package geolocation
 
 import (
 	"context"
+	"strings"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // Service provides geolocation tracking operations for Cisco IOS-XE Wireless LAN Controller.
@@ -26,4 +28,31 @@ func (s Service) GetOperational(ctx context.Context) (*GeolocationOper, error) {
 // ListAPGeolocationStats retrieves AP geolocation statistics.
 func (s Service) ListAPGeolocationStats(ctx context.Context) (*GeolocationOperApGeoLocStats, error) {
 	return core.Get[GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
+}
+
+// ListAPGeolocationData retrieves AP geolocation data using GeolocationOperApGeoLocData wrapper.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAPGeolocationData(ctx context.Context) (*GeolocationOperApGeoLocData, error) {
+	return core.Get[GeolocationOperApGeoLocData](ctx, s.Client(), routes.GeolocationApGeoLocDataPath)
+}
+
+// GetAPGeolocationDataByMAC retrieves AP geolocation data for a specific AP by MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetAPGeolocationDataByMAC(ctx context.Context, apMAC string) (*ApGeoLocData, error) {
+	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
+		return nil, core.ErrResourceNotFound
+	}
+
+	// Validate and normalize MAC address
+	if err := validation.ValidateMACAddress(apMAC); err != nil {
+		return nil, err
+	}
+
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+	if err != nil {
+		return nil, err
+	}
+
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.GeolocationApGeoLocDataPath, normalizedMAC)
+	return core.Get[ApGeoLocData](ctx, s.Client(), url)
 }

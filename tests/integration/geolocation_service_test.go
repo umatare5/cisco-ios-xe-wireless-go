@@ -31,12 +31,22 @@ func TestGeolocationServiceIntegration_GetOperationalOperations_Success(t *testi
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(geolocation.Service).GetOperational(ctx)
 				},
+				LogResult: true,
 			},
 			{
 				Name: "ListAPGeolocationStats",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(geolocation.Service).ListAPGeolocationStats(ctx)
 				},
+				LogResult: true,
+			},
+			{
+				Name: "ListAPGeolocationData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(geolocation.Service).ListAPGeolocationData(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
 			},
 		},
 	}
