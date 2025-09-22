@@ -1424,7 +1424,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats=aa:bb:cc:dd:ee:ff,0": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:ethernet-if-stats": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
-				"if-id": "0",
+				"if-id": "GigabitEthernet0",
 				"tx-bytes": 987654,
 				"rx-bytes": 456789
 			}]
