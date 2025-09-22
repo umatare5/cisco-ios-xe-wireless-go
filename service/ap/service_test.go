@@ -1421,7 +1421,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 				"rx-frames": 200
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats=aa:bb:cc:dd:ee:ff,0": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/ethernet-if-stats=aa:bb:cc:dd:ee:ff,GigabitEthernet0": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:ethernet-if-stats": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"if-id": "GigabitEthernet0",
