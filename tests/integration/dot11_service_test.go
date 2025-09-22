@@ -6,9 +6,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/service/dot11"
-
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/service/dot11"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
 
