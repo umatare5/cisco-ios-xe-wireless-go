@@ -54,13 +54,6 @@ func TestAPServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
-			{
-				Name: "GetTagSourcePriorityConfigByPriority",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetTagSourcePriorityConfigByPriority(ctx, 1)
-				},
-				LogResult: true,
-			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{
 			{

@@ -22,6 +22,26 @@ type AWIPSOperAWIPSDwldStatus struct {
 	AWIPSDwldStatus AWIPSDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status"`
 }
 
+// AWIPSOperAWIPSApDwldStatus represents the AWIPS per AP download status.
+type AWIPSOperAWIPSApDwldStatus struct {
+	AWIPSApDwldStatus []AWIPSApDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-ap-dwld-status"`
+}
+
+// AWIPSOperAWIPSPerSignStats represents the AWIPS per signature statistics.
+type AWIPSOperAWIPSPerSignStats struct {
+	AWIPSPerSignStats []AWIPSPerSignStats `json:"Cisco-IOS-XE-wireless-awips-oper:awips-per-sign-stats"`
+}
+
+// AWIPSOperAWIPSGlobStats represents the AWIPS global statistics.
+type AWIPSOperAWIPSGlobStats struct {
+	AWIPSGlobStats *AWIPSGlobStats `json:"Cisco-IOS-XE-wireless-awips-oper:awips-glob-stats"`
+}
+
+// AWIPSOperAWIPSDwldStatusWncd represents the AWIPS download status for WNCD.
+type AWIPSOperAWIPSDwldStatusWncd struct {
+	AWIPSDwldStatusWncd *AWIPSDwldStatusWncd `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status-wncd"`
+}
+
 // AWIPSPerApInfo represents AWIPS status and per AP alarm statistics.
 type AWIPSPerApInfo struct {
 	ApMAC                 string `json:"ap-mac"`                  // AP MAC address (Live: IOS-XE 17.12.5)

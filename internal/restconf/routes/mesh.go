@@ -8,8 +8,21 @@ package routes
 // Mesh Operational Paths.
 const (
 	// MeshOperPath provides the path for retrieving all mesh operational data.
-	MeshOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data"
+	MeshOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data"
 
+	// MeshQueueStatsPath provides the path for retrieving mesh queue statistics.
+	MeshQueueStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-q-stats"
+
+	// MeshDataRateStatsPath provides the path for retrieving mesh data rate statistics.
+	MeshDataRateStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-dr-stats"
+
+	// MeshSecurityStatsPath provides the path for retrieving mesh security statistics.
+	MeshSecurityStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-sec-stats"
+
+	// MeshOperationalDataPath provides the path for retrieving mesh operational data.
+	MeshOperationalDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-oper-data"
+
+	// Legacy paths (compatibility with mesh-global-oper)
 	// MeshGlobalStatsPath provides the path for retrieving mesh nodes (using mesh-global-stats).
 	MeshGlobalStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-global-stats"
 
@@ -21,7 +34,4 @@ const (
 const (
 	// MeshCfgPath provides the path for retrieving mesh configuration.
 	MeshCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"
-
-	// MeshProfilesPath provides the path for retrieving mesh profiles.
-	MeshProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data/mesh-profiles/mesh-profile"
 )

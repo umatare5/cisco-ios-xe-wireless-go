@@ -27,3 +27,8 @@ func (s Service) GetConfig(ctx context.Context) (*RadioCfg, error) {
 func (s Service) ListProfileConfigs(ctx context.Context) (*RadioProfiles, error) {
 	return core.Get[RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles")
 }
+
+// ListRadioProfiles retrieves radio profiles configuration data using wrapper structure.
+func (s Service) ListRadioProfiles(ctx context.Context) (*RadioCfgRadioProfiles, error) {
+	return core.Get[RadioCfgRadioProfiles](ctx, s.Client(), routes.RadioProfilesPath)
+}

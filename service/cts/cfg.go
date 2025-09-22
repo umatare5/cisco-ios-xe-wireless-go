@@ -14,6 +14,11 @@ type CTSCfgFilter struct {
 	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
 }
 
+// CTSCfgCTSSxpConfig represents CTS SXP configuration wrapper.
+type CTSCfgCTSSxpConfig struct {
+	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
+}
+
 // CTSSxpConfig represents individual CTS SXP profile configuration.
 type CTSSxpConfig struct {
 	SxpProfileName          string          `json:"sxp-profile-name"`                    // CTS SXP profile name (Live: IOS-XE 17.12.5)

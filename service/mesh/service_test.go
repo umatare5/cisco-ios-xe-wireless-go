@@ -39,8 +39,8 @@ func TestMeshServiceUnit_Constructor_Success(t *testing.T) {
 	})
 }
 
-// TestMeshServiceUnit_GetConfigOperations_MockSuccess tests Get configuration operations using mock server.
-func TestMeshServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
+// TestMeshServiceUnit_GetOperations_MockSuccess tests Get configuration and operational operations using a mock server.
+func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	t.Parallel()
 
 	// Mock responses based on real WNC mesh data structure
@@ -58,13 +58,85 @@ func TestMeshServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 				}
 			}
 		}`,
-		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data": `{
-			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data": {
-				"mesh-stats": {
-					"total-packets": 0,
-					"total-bytes": 0
-				}
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data": `{
+			"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data": {
+				"mesh-q-stats": [
+					{
+						"wtp-mac": "00:11:22:33:44:55",
+						"q-type": "data",
+						"peak-length": 100,
+						"average-len": 50,
+						"overflows": 2
+					}
+				],
+				"mesh-dr-stats": [
+					{
+						"wtp-mac": "00:11:22:33:44:55",
+						"neigh-ap-mac": "00:66:77:88:99:aa",
+						"data-rate-index": 1,
+						"tx-success": 1000,
+						"tx-attempts": 1050
+					}
+				],
+				"mesh-sec-stats": [
+					{
+						"wtp-mac": "00:11:22:33:44:55",
+						"tx-pkts-total": 5000,
+						"rx-pkts-total": 4800,
+						"rx-pkts-error": 5
+					}
+				],
+				"mesh-oper-data": [
+					{
+						"wtp-mac": "00:11:22:33:44:55",
+						"bhaul-slot-id": 0,
+						"configured-role": "MAP",
+						"ap-mode": "bridge"
+					}
+				]
 			}
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-q-stats": `{
+			"Cisco-IOS-XE-wireless-mesh-oper:mesh-q-stats": [
+				{
+					"wtp-mac": "00:11:22:33:44:55",
+					"q-type": "data",
+					"peak-length": 100,
+					"average-len": 50,
+					"overflows": 2
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-dr-stats": `{
+			"Cisco-IOS-XE-wireless-mesh-oper:mesh-dr-stats": [
+				{
+					"wtp-mac": "00:11:22:33:44:55",
+					"neigh-ap-mac": "00:66:77:88:99:aa",
+					"data-rate-index": 1,
+					"tx-success": 1000,
+					"tx-attempts": 1050
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-sec-stats": `{
+			"Cisco-IOS-XE-wireless-mesh-oper:mesh-sec-stats": [
+				{
+					"wtp-mac": "00:11:22:33:44:55",
+					"tx-pkts-total": 5000,
+					"rx-pkts-total": 4800,
+					"rx-pkts-error": 5
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-oper-data": `{
+			"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data": [
+				{
+					"wtp-mac": "00:11:22:33:44:55",
+					"bhaul-slot-id": 0,
+					"configured-role": "MAP",
+					"ap-mode": "bridge"
+				}
+			]
 		}`,
 		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-global-stats": `{
 			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-stats": {
@@ -112,16 +184,66 @@ func TestMeshServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 			t.Error("GetOperationalData returned nil result")
 		}
 	})
+
+	t.Run("ListMeshQueueStats", func(t *testing.T) {
+		result, err := service.ListMeshQueueStats(ctx)
+		if err != nil {
+			t.Errorf("ListMeshQueueStats returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListMeshQueueStats returned nil result")
+		}
+	})
+
+	t.Run("ListMeshDataRateStats", func(t *testing.T) {
+		result, err := service.ListMeshDataRateStats(ctx)
+		if err != nil {
+			t.Errorf("ListMeshDataRateStats returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListMeshDataRateStats returned nil result")
+		}
+	})
+
+	t.Run("ListMeshSecurityStats", func(t *testing.T) {
+		result, err := service.ListMeshSecurityStats(ctx)
+		if err != nil {
+			t.Errorf("ListMeshSecurityStats returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListMeshSecurityStats returned nil result")
+		}
+	})
+
+	t.Run("ListMeshOperationalData", func(t *testing.T) {
+		result, err := service.ListMeshOperationalData(ctx)
+		if err != nil {
+			t.Errorf("ListMeshOperationalData returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListMeshOperationalData returned nil result")
+		}
+	})
 }
 
 // TestMeshServiceUnit_GetOperations_ErrorHandling tests error scenarios for operations.
 func TestMeshServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	t.Parallel()
 
-	// Create test server and service
-	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
-	defer server.Close() // Create test client configured for the mock server
-	testClient := testutil.NewTestClient(server)
+	// Create test server and service with error responses
+	errorPaths := []string{
+		"Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data",
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data",
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-global-stats",
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-q-stats",
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-dr-stats",
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-sec-stats",
+		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-oper-data",
+	}
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
 	service := mesh.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
@@ -154,16 +276,56 @@ func TestMeshServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 			t.Error("Expected nil result on error, got non-nil result")
 		}
 	})
+
+	t.Run("ListMeshQueueStats_404Error", func(t *testing.T) {
+		result, err := service.ListMeshQueueStats(ctx)
+		if err == nil {
+			t.Error("Expected error for ListMeshQueueStats, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListMeshDataRateStats_404Error", func(t *testing.T) {
+		result, err := service.ListMeshDataRateStats(ctx)
+		if err == nil {
+			t.Error("Expected error for ListMeshDataRateStats, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListMeshSecurityStats_404Error", func(t *testing.T) {
+		result, err := service.ListMeshSecurityStats(ctx)
+		if err == nil {
+			t.Error("Expected error for ListMeshSecurityStats, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListMeshOperationalData_404Error", func(t *testing.T) {
+		result, err := service.ListMeshOperationalData(ctx)
+		if err == nil {
+			t.Error("Expected error for ListMeshOperationalData, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
 }
 
 // TestMeshServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
 func TestMeshServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	t.Parallel()
 
-	t.Run("GetConfig_NilClient", func(t *testing.T) {
-		service := mesh.NewService(nil)
-		ctx := testutil.TestContext(t)
+	service := mesh.NewService(nil)
+	ctx := testutil.TestContext(t)
 
+	t.Run("GetConfig_NilClient", func(t *testing.T) {
 		result, err := service.GetConfig(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
@@ -174,9 +336,6 @@ func TestMeshServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	})
 
 	t.Run("GetOperational_NilClient", func(t *testing.T) {
-		service := mesh.NewService(nil)
-		ctx := testutil.TestContext(t)
-
 		result, err := service.GetOperational(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
@@ -187,10 +346,47 @@ func TestMeshServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	})
 
 	t.Run("GetOperationalData_NilClient", func(t *testing.T) {
-		service := mesh.NewService(nil)
-		ctx := testutil.TestContext(t)
-
 		result, err := service.GetOperationalData(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListMeshQueueStats_NilClient", func(t *testing.T) {
+		result, err := service.ListMeshQueueStats(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListMeshDataRateStats_NilClient", func(t *testing.T) {
+		result, err := service.ListMeshDataRateStats(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListMeshSecurityStats_NilClient", func(t *testing.T) {
+		result, err := service.ListMeshSecurityStats(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListMeshOperationalData_NilClient", func(t *testing.T) {
+		result, err := service.ListMeshOperationalData(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

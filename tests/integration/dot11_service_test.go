@@ -33,6 +33,49 @@ func TestDot11ServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListCfgConfiguredCountries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot11.Service).ListCfgConfiguredCountries(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgDot11Entries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot11.Service).ListCfgDot11Entries(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgDot11acMcsEntries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot11.Service).ListCfgDot11acMcsEntries(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListConfiguredCountries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot11.Service).ListConfiguredCountries(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListDot11Entries",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot11.Service).ListDot11Entries(ctx)
+				},
+				LogResult: true,
+			},
+
+			{
+				Name: "ListCfgFilters",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot11.Service).ListCfgFilters(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{},
 	}

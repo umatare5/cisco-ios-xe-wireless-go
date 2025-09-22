@@ -33,6 +33,34 @@ func TestFabricServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListCfgFabric",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(fabric.Service).ListCfgFabric(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListCfgFabricControlplaneNames",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(fabric.Service).ListCfgFabricControlplaneNames(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListFabricConfig",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(fabric.Service).ListFabricConfig(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListFabricControlplanes",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(fabric.Service).ListFabricControlplanes(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		ValidationTests: []integration.ValidationTestMethod{},
 	}

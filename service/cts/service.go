@@ -22,3 +22,13 @@ func NewService(client *core.Client) Service {
 func (s Service) GetConfig(ctx context.Context) (*CTSCfg, error) {
 	return core.Get[CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
 }
+
+// GetOperational retrieves CTS operational data from the controller.
+func (s Service) GetOperational(ctx context.Context) (*CTSOper, error) {
+	return core.Get[CTSOper](ctx, s.Client(), routes.CTSOperPath)
+}
+
+// ListFlexModeApSxpConnectionStatus retrieves FlexConnect AP SXP connection status.
+func (s Service) ListFlexModeApSxpConnectionStatus(ctx context.Context) (*CTSOperFlexModeApSxpConnectionStatus, error) {
+	return core.Get[CTSOperFlexModeApSxpConnectionStatus](ctx, s.Client(), routes.CTSFlexModeApSxpConnectionStatusPath)
+}

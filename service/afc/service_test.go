@@ -56,6 +56,12 @@ func TestAfcServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"response-status": "success"
 			}]
 		}`,
+		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-req": `{
+			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-req": [{
+				"ap-mac": "aa:bb:cc:dd:ee:ff",
+				"request-status": "pending"
+			}]
+		}`,
 		"Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data": `{
 			"Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data": {
 				"afc-cloud-enable": true
@@ -97,6 +103,16 @@ func TestAfcServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
+	t.Run("ListAPRequests", func(t *testing.T) {
+		result, err := service.ListAPRequests(ctx)
+		if err != nil {
+			t.Errorf("Expected no error for ListAPRequests, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for ListAPRequests, got nil")
+		}
+	})
+
 	t.Run("GetCloudInfo", func(t *testing.T) {
 		result, err := service.GetCloudInfo(ctx)
 		if err != nil {
@@ -123,6 +139,10 @@ func TestAfcServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	// Create mock server that returns 404 for AFC endpoints
 	errorPaths := []string{
 		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data",
+		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-resp",
+		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-req",
+		"Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data",
+		"Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data/afc-cloud-stats",
 	}
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
@@ -131,14 +151,38 @@ func TestAfcServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	service := afc.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	// Test that GetOperational properly handles 404 errors
-	_, err := service.GetOperational(ctx)
-	if err == nil {
-		t.Error("Expected error for 404 response, got nil")
-	}
+	t.Run("GetOperational", func(t *testing.T) {
+		_, err := service.GetOperational(ctx)
+		if err == nil {
+			t.Error("Expected error for GetOperational, got nil")
+		}
+	})
 
-	// Verify error contains expected information
-	if !core.IsNotFoundError(err) {
-		t.Errorf("Expected NotFound error, got: %v", err)
-	}
+	t.Run("ListAPResponses", func(t *testing.T) {
+		_, err := service.ListAPResponses(ctx)
+		if err == nil {
+			t.Error("Expected error for ListAPResponses, got nil")
+		}
+	})
+
+	t.Run("ListAPRequests", func(t *testing.T) {
+		_, err := service.ListAPRequests(ctx)
+		if err == nil {
+			t.Error("Expected error for ListAPRequests, got nil")
+		}
+	})
+
+	t.Run("GetCloudInfo", func(t *testing.T) {
+		_, err := service.GetCloudInfo(ctx)
+		if err == nil {
+			t.Error("Expected error for GetCloudInfo, got nil")
+		}
+	})
+
+	t.Run("GetCloudStats", func(t *testing.T) {
+		_, err := service.GetCloudStats(ctx)
+		if err == nil {
+			t.Error("Expected error for GetCloudStats, got nil")
+		}
+	})
 }

@@ -41,6 +41,31 @@ type McastOperMulticastOperData struct {
 	MulticastOperData []MulticastOperData `json:"Cisco-IOS-XE-wireless-mcast-oper:multicast-oper-data"`
 }
 
+// McastOperRrcHistoryClientRecordData represents RRC history client record data container.
+type McastOperRrcHistoryClientRecordData struct {
+	RrcHistoryClientRecordData []RrcHistoryClientRecordData `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-history-client-record-data"`
+}
+
+// McastOperRrcSrRadioRecord represents RRC stream radio record data container.
+type McastOperRrcSrRadioRecord struct {
+	RrcSrRadioRecord []RrcSrRadioRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-sr-radio-record"`
+}
+
+// McastOperRrcStreamRecord represents RRC stream record data container.
+type McastOperRrcStreamRecord struct {
+	RrcStreamRecord []RrcStreamRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-record"`
+}
+
+// McastOperRrcStreamAdmitRecord represents RRC stream admit record data container.
+type McastOperRrcStreamAdmitRecord struct {
+	RrcStreamAdmitRecord []RrcStreamAdmitRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-admit-record"`
+}
+
+// McastOperRrcStreamDenyRecord represents RRC stream deny record data container.
+type McastOperRrcStreamDenyRecord struct {
+	RrcStreamDenyRecord []RrcStreamDenyRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-deny-record"`
+}
+
 // FlexMediastreamClientSummary represents FlexConnect mediastream client information.
 type FlexMediastreamClientSummary struct {
 	ClientMAC            string                 `json:"client-mac"`              // Multicast flex client MAC address (Live: IOS-XE 17.12.5)

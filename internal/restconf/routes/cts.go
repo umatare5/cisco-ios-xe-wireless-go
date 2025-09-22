@@ -9,7 +9,13 @@ package routes
 const (
 	// CTSCfgPath retrieves complete CTS configuration data.
 	CTSCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"
+)
 
-	// CTSSxpConfigPath retrieves CTS SXP configuration entries.
-	CTSSxpConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data/cts-sxp-configuration/cts-sxp-config"
+// CTS Operational Paths.
+const (
+	// CTSOperPath retrieves complete CTS operational data.
+	CTSOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data"
+
+	// CTSFlexModeApSxpConnectionStatusPath retrieves FlexConnect AP SXP connection status.
+	CTSFlexModeApSxpConnectionStatusPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data/flex-mode-ap-sxp-connection-status"
 )

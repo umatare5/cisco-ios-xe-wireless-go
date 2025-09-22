@@ -32,3 +32,27 @@ func (s Service) GetOperational(ctx context.Context) (*MeshOper, error) {
 func (s Service) GetOperationalData(ctx context.Context) (*MeshOper, error) {
 	return core.Get[MeshOper](ctx, s.Client(), routes.MeshGlobalStatsPath)
 }
+
+// ListMeshQueueStats retrieves mesh packet queue statistics from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshQueueStats(ctx context.Context) (*MeshOperMeshQueueStats, error) {
+	return core.Get[MeshOperMeshQueueStats](ctx, s.Client(), routes.MeshQueueStatsPath)
+}
+
+// ListMeshDataRateStats retrieves mesh data rate statistics from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshDataRateStats(ctx context.Context) (*MeshOperMeshDataRateStats, error) {
+	return core.Get[MeshOperMeshDataRateStats](ctx, s.Client(), routes.MeshDataRateStatsPath)
+}
+
+// ListMeshSecurityStats retrieves mesh security statistics from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshSecurityStats(ctx context.Context) (*MeshOperMeshSecurityStats, error) {
+	return core.Get[MeshOperMeshSecurityStats](ctx, s.Client(), routes.MeshSecurityStatsPath)
+}
+
+// ListMeshOperationalData retrieves mesh operational data from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshOperationalData(ctx context.Context) (*MeshOperMeshOperational, error) {
+	return core.Get[MeshOperMeshOperational](ctx, s.Client(), routes.MeshOperationalDataPath)
+}

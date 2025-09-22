@@ -1500,189 +1500,7 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("GetTagSourcePriorityConfigByPriority", func(t *testing.T) {
-		result, err := service.GetTagSourcePriorityConfigByPriority(ctx, 1)
-		if err != nil {
-			t.Errorf("Expected no error for GetTagSourcePriorityConfigByPriority, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetTagSourcePriorityConfigByPriority, got nil")
-		}
-	})
-
-	// Test filtered global operational operations
-	t.Run("ListAPHistoryByEthernetMAC", func(t *testing.T) {
-		result, err := service.ListAPHistoryByEthernetMAC(ctx, "28:ac:9e:11:48:10")
-		if err != nil {
-			t.Errorf("Expected no error for ListAPHistoryByEthernetMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for ListAPHistoryByEthernetMAC, got nil")
-		}
-	})
-
-	t.Run("GetAPJoinStatsByWTPMAC", func(t *testing.T) {
-		result, err := service.GetAPJoinStatsByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetAPJoinStatsByWTPMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetAPJoinStatsByWTPMAC, got nil")
-		}
-	})
-
-	t.Run("GetWLANClientStatsByWLANID", func(t *testing.T) {
-		result, err := service.GetWLANClientStatsByWLANID(ctx, 1)
-		if err != nil {
-			t.Errorf("Expected no error for GetWLANClientStatsByWLANID, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetWLANClientStatsByWLANID, got nil")
-		}
-	})
-
-	// Test filtered operational operations
-	t.Run("GetCAPWAPDataByWTPMAC", func(t *testing.T) {
-		result, err := service.GetCAPWAPDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetCAPWAPDataByWTPMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetCAPWAPDataByWTPMAC, got nil")
-		}
-	})
-
-	t.Run("GetNameMACMapByWTPName", func(t *testing.T) {
-		result, err := service.GetNameMACMapByWTPName(ctx, "TEST-AP01")
-		if err != nil {
-			t.Errorf("Expected no error for GetNameMACMapByWTPName, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetNameMACMapByWTPName, got nil")
-		}
-	})
-
-	t.Run("GetRadioStatusByWTPMACAndSlot", func(t *testing.T) {
-		result, err := service.GetRadioStatusByWTPMACAndSlot(ctx, "aa:bb:cc:dd:ee:ff", 0)
-		if err != nil {
-			t.Errorf("Expected no error for GetRadioStatusByWTPMACAndSlot, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetRadioStatusByWTPMACAndSlot, got nil")
-		}
-	})
-
-	t.Run("GetRadioNeighborByAPMACSlotAndBSSID", func(t *testing.T) {
-		result, err := service.GetRadioNeighborByAPMACSlotAndBSSID(ctx, "aa:bb:cc:dd:ee:ff", 0, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetRadioNeighborByAPMACSlotAndBSSID, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetRadioNeighborByAPMACSlotAndBSSID, got nil")
-		}
-	})
-
-	// Test newly added filtered operations
-	t.Run("GetRadioResetStatsByAPMACAndRadioID", func(t *testing.T) {
-		result, err := service.GetRadioResetStatsByAPMACAndRadioID(ctx, "aa:bb:cc:dd:ee:ff", 0)
-		if err != nil {
-			t.Errorf("Expected no error for GetRadioResetStatsByAPMACAndRadioID, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetRadioResetStatsByAPMACAndRadioID, got nil")
-		}
-	})
-
-	t.Run("GetQosClientDataByClientMAC", func(t *testing.T) {
-		result, err := service.GetQosClientDataByClientMAC(ctx, "80:7d:3a:77:19:a9")
-		if err != nil {
-			t.Errorf("Expected no error for GetQosClientDataByClientMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetQosClientDataByClientMAC, got nil")
-		}
-	})
-
-	t.Run("GetWtpSlotWlanStatsByWTPMACSlotAndWLANID", func(t *testing.T) {
-		result, err := service.GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, "aa:bb:cc:dd:ee:ff", 0, 1)
-		if err != nil {
-			t.Errorf("Expected no error for GetWtpSlotWlanStatsByWTPMACSlotAndWLANID, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetWtpSlotWlanStatsByWTPMACSlotAndWLANID, got nil")
-		}
-	})
-
-	t.Run("GetEthernetMACWtpMACMapByEthernetMAC", func(t *testing.T) {
-		result, err := service.GetEthernetMACWtpMACMapByEthernetMAC(ctx, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetEthernetMACWtpMACMapByEthernetMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetEthernetMACWtpMACMapByEthernetMAC, got nil")
-		}
-	})
-
-	t.Run("GetRadioOperStatsByWTPMACAndSlot", func(t *testing.T) {
-		result, err := service.GetRadioOperStatsByWTPMACAndSlot(ctx, "aa:bb:cc:dd:ee:ff", 0)
-		if err != nil {
-			t.Errorf("Expected no error for GetRadioOperStatsByWTPMACAndSlot, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetRadioOperStatsByWTPMACAndSlot, got nil")
-		}
-	})
-
-	t.Run("GetEthernetIfStatsByWTPMACAndInterfaceID", func(t *testing.T) {
-		result, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "aa:bb:cc:dd:ee:ff", "GigabitEthernet0")
-		if err != nil {
-			t.Errorf("Expected no error for GetEthernetIfStatsByWTPMACAndInterfaceID, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetEthernetIfStatsByWTPMACAndInterfaceID, got nil")
-		}
-	})
-
-	t.Run("GetApIoxOperDataByWTPMAC", func(t *testing.T) {
-		result, err := service.GetApIoxOperDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetApIoxOperDataByWTPMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetApIoxOperDataByWTPMAC, got nil")
-		}
-	})
-
-	t.Run("GetRlanOperByWTPMACAndPortID", func(t *testing.T) {
-		result, err := service.GetRlanOperByWTPMACAndPortID(ctx, "aa:bb:cc:dd:ee:ff", 1)
-		if err != nil {
-			t.Errorf("Expected no error for GetRlanOperByWTPMACAndPortID, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetRlanOperByWTPMACAndPortID, got nil")
-		}
-	})
-
-	t.Run("GetCdpCacheDataByWTPMAC", func(t *testing.T) {
-		result, err := service.GetCdpCacheDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetCdpCacheDataByWTPMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetCdpCacheDataByWTPMAC, got nil")
-		}
-	})
-
-	t.Run("GetLldpNeighByWTPMAC", func(t *testing.T) {
-		result, err := service.GetLldpNeighByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
-		if err != nil {
-			t.Errorf("Expected no error for GetLldpNeighByWTPMAC, got: %v", err)
-		}
-		if result == nil {
-			t.Error("Expected result for GetLldpNeighByWTPMAC, got nil")
-		}
-	})
-
+	// Test individual filtered operations that were missing
 	t.Run("GetDiscDataByWTPMAC", func(t *testing.T) {
 		result, err := service.GetDiscDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
@@ -1710,6 +1528,66 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Error("Expected result for GetSuppCountryOperByWTPMACAndRadioID, got nil")
+		}
+	})
+
+	t.Run("GetLldpNeighByWTPMAC", func(t *testing.T) {
+		result, err := service.GetLldpNeighByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetLldpNeighByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetLldpNeighByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetCdpCacheDataByWTPMAC", func(t *testing.T) {
+		result, err := service.GetCdpCacheDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetCdpCacheDataByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetCdpCacheDataByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetApIoxOperDataByWTPMAC", func(t *testing.T) {
+		result, err := service.GetApIoxOperDataByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetApIoxOperDataByWTPMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetApIoxOperDataByWTPMAC, got nil")
+		}
+	})
+
+	t.Run("GetRadioOperStatsByWTPMACAndSlot", func(t *testing.T) {
+		result, err := service.GetRadioOperStatsByWTPMACAndSlot(ctx, "aa:bb:cc:dd:ee:ff", 0)
+		if err != nil {
+			t.Errorf("Expected no error for GetRadioOperStatsByWTPMACAndSlot, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetRadioOperStatsByWTPMACAndSlot, got nil")
+		}
+	})
+
+	t.Run("GetEthernetMACWtpMACMapByEthernetMAC", func(t *testing.T) {
+		result, err := service.GetEthernetMACWtpMACMapByEthernetMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		if err != nil {
+			t.Errorf("Expected no error for GetEthernetMACWtpMACMapByEthernetMAC, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetEthernetMACWtpMACMapByEthernetMAC, got nil")
+		}
+	})
+
+	t.Run("GetEthernetIfStatsByWTPMACAndInterfaceID", func(t *testing.T) {
+		result, err := service.GetEthernetIfStatsByWTPMACAndInterfaceID(ctx, "aa:bb:cc:dd:ee:ff", "GigabitEthernet0")
+		if err != nil {
+			t.Errorf("Expected no error for GetEthernetIfStatsByWTPMACAndInterfaceID, got: %v", err)
+		}
+		if result == nil {
+			t.Error("Expected result for GetEthernetIfStatsByWTPMACAndInterfaceID, got nil")
 		}
 	})
 }

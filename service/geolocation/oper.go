@@ -70,3 +70,8 @@ type GeoLocPoint struct {
 	Longitude *float64 `json:"longitude,omitempty"` // Geolocation longitude in WGS 84 format (YANG: IOS-XE 17.12.1)
 	Latitude  *float64 `json:"latitude,omitempty"`  // Geolocation latitude in WGS 84 format (YANG: IOS-XE 17.12.1)
 }
+
+// GeolocationOperApGeoLocData wraps the ApGeoLocData structure of the geolocation operational data.
+type GeolocationOperApGeoLocData struct {
+	ApGeoLocData []ApGeoLocData `json:"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data"`
+}

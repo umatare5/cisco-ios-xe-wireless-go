@@ -69,7 +69,7 @@
 				
 				<option value="file6">github.com/umatare5/cisco-ios-xe-wireless-go/internal/service/base.go (100.0%)</option>
 				
-				<option value="file7">github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper.go (60.9%)</option>
+				<option value="file7">github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil/helper.go (67.2%)</option>
 				
 				<option value="file8">github.com/umatare5/cisco-ios-xe-wireless-go/internal/transport/client.go (91.8%)</option>
 				
@@ -85,7 +85,7 @@
 				
 				<option value="file14">github.com/umatare5/cisco-ios-xe-wireless-go/service/afc/service.go (100.0%)</option>
 				
-				<option value="file15">github.com/umatare5/cisco-ios-xe-wireless-go/service/ap/service.go (87.6%)</option>
+				<option value="file15">github.com/umatare5/cisco-ios-xe-wireless-go/service/ap/service.go (80.3%)</option>
 				
 				<option value="file16">github.com/umatare5/cisco-ios-xe-wireless-go/service/apf/service.go (100.0%)</option>
 				
@@ -109,7 +109,7 @@
 				
 				<option value="file26">github.com/umatare5/cisco-ios-xe-wireless-go/service/general/service.go (100.0%)</option>
 				
-				<option value="file27">github.com/umatare5/cisco-ios-xe-wireless-go/service/geolocation/service.go (100.0%)</option>
+				<option value="file27">github.com/umatare5/cisco-ios-xe-wireless-go/service/geolocation/service.go (92.3%)</option>
 				
 				<option value="file28">github.com/umatare5/cisco-ios-xe-wireless-go/service/hyperlocation/service.go (100.0%)</option>
 				
@@ -1204,7 +1204,7 @@ func AssertIntEquals(t *testing.T, actual, expected int, context string) <span c
 }
 
 // AssertStringContains validates that a string contains specific text.
-func AssertStringContains(t *testing.T, text, expectedSubstring, context string) <span class="cov0" title="0">{
+func AssertStringContains(t *testing.T, text, expectedSubstring, context string) <span class="cov10" title="2">{
         t.Helper()
 
         if !strings.Contains(text, expectedSubstring) </span><span class="cov0" title="0">{
@@ -1222,7 +1222,7 @@ func AssertDurationEquals(t *testing.T, actual, expected time.Duration, context 
 }
 
 // AssertPointerEquals validates that two pointers are equal.
-func AssertPointerEquals(t *testing.T, actual, expected any, context string) <span class="cov0" title="0">{
+func AssertPointerEquals(t *testing.T, actual, expected any, context string) <span class="cov10" title="2">{
         t.Helper()
 
         if actual != expected </span><span class="cov0" title="0">{
@@ -2075,17 +2075,23 @@ func (s Service) GetOperational(ctx context.Context) (*AFCOper, error) <span cla
 }</span>
 
 // ListAPResponses retrieves AFC AP response data.
-func (s Service) ListAPResponses(ctx context.Context) (*AFCOperEwlcAFCApResp, error) <span class="cov1" title="1">{
+func (s Service) ListAPResponses(ctx context.Context) (*AFCOperEwlcAFCApResp, error) <span class="cov5" title="2">{
         return core.Get[AFCOperEwlcAFCApResp](ctx, s.Client(), routes.AFCEwlcAFCApRespPath)
 }</span>
 
+// ListAPRequests retrieves AFC AP request data.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAPRequests(ctx context.Context) (*AFCOperEwlcAFCApReq, error) <span class="cov5" title="2">{
+        return core.Get[AFCOperEwlcAFCApReq](ctx, s.Client(), routes.AFCEwlcAFCApReqPath)
+}</span>
+
 // GetCloudInfo retrieves AFC cloud operational data.
-func (s Service) GetCloudInfo(ctx context.Context) (*AFCCloudOper, error) <span class="cov1" title="1">{
+func (s Service) GetCloudInfo(ctx context.Context) (*AFCCloudOper, error) <span class="cov5" title="2">{
         return core.Get[AFCCloudOper](ctx, s.Client(), routes.AFCCloudOperPath)
 }</span>
 
 // GetCloudStats retrieves AFC cloud statistics.
-func (s Service) GetCloudStats(ctx context.Context) (*AFCCloudOperAFCCloudStats, error) <span class="cov1" title="1">{
+func (s Service) GetCloudStats(ctx context.Context) (*AFCCloudOperAFCCloudStats, error) <span class="cov5" title="2">{
         return core.Get[AFCCloudOperAFCCloudStats](ctx, s.Client(), routes.AFCAfcCloudStatsPath)
 }</span>
 </pre>
@@ -2146,18 +2152,6 @@ func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*TagSourcePr
         return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
 }</span>
 
-// GetTagSourcePriorityConfigByPriority retrieves tag source priority configuration filtered by priority.
-func (s Service) GetTagSourcePriorityConfigByPriority(
-        ctx context.Context,
-        priority int,
-) (*ApCfgTagSourcePriorityConfigs, error) <span class="cov1" title="1">{
-        url := s.Client().RESTCONFBuilder().BuildQueryURL(
-                routes.APTagSourcePriorityConfigQueryPath,
-                strconv.Itoa(priority),
-        )
-        return core.Get[ApCfgTagSourcePriorityConfigs](ctx, s.Client(), url)
-}</span>
-
 // GetGlobalInfo retrieves the complete AP global operational data.
 func (s Service) GetGlobalInfo(ctx context.Context) (*ApGlobalOper, error) <span class="cov1" title="1">{
         return core.Get[ApGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)
@@ -2172,36 +2166,36 @@ func (s Service) GetEWLCAPStats(ctx context.Context) (*ApGlobalOperEwlcApStats, 
 func (s Service) ListAPHistoryByEthernetMAC(
         ctx context.Context,
         ethernetMAC string,
-) (*ApGlobalOperApHistory, error) <span class="cov4" title="3">{
+) (*ApGlobalOperApHistory, error) <span class="cov3" title="2">{
         if ethernetMAC == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov3" title="2">if strings.TrimSpace(ethernetMAC) == "" </span><span class="cov1" title="1">{
+        <span class="cov1" title="1">if strings.TrimSpace(ethernetMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
         return core.Get[ApGlobalOperApHistory](ctx, s.Client(), url)</span>
 }
 
 // GetAPJoinStatsByWTPMAC retrieves AP join statistics filtered by WTP MAC address.
 func (s Service) GetAPJoinStatsByWTPMAC(
         ctx context.Context, mac string,
-) (*ApGlobalOperApJoinStats, error) <span class="cov4" title="3">{
+) (*ApGlobalOperApJoinStats, error) <span class="cov3" title="2">{
         if mac == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov3" title="2">if strings.TrimSpace(mac) == "" </span><span class="cov1" title="1">{
+        <span class="cov1" title="1">if strings.TrimSpace(mac) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">normalizedMAC, err := validation.NormalizeMACAddress(mac)
+        <span class="cov0" title="0">normalizedMAC, err := validation.NormalizeMACAddress(mac)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid MAC address %s: %w", mac, err)
         }</span>
 
         // Build URL with RESTCONF path for ap-join-stats filtered by wtp-mac
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.APJoinStatsPath,
                 normalizedMAC,
         )
@@ -2212,11 +2206,11 @@ func (s Service) GetAPJoinStatsByWTPMAC(
 func (s Service) GetWLANClientStatsByWLANID(
         ctx context.Context,
         wlanID int,
-) (*ApGlobalOperWlanClientStats, error) <span class="cov4" title="3">{
+) (*ApGlobalOperWlanClientStats, error) <span class="cov3" title="2">{
         if wlanID &lt;= 0 </span><span class="cov3" title="2">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryURL(
                 routes.APWlanClientStatsQueryPath,
                 strconv.Itoa(wlanID),
         )
@@ -2256,12 +2250,12 @@ func (s Service) ListCAPWAPData(ctx context.Context) (*ApOperCAPWAPData, error) 
 }</span>
 
 // GetCAPWAPDataByWTPMAC retrieves CAPWAP data for a specific WTP MAC.
-func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*ApOperCAPWAPData, error) <span class="cov3" title="2">{
+func (s Service) GetCAPWAPDataByWTPMAC(ctx context.Context, wtpMAC string) (*ApOperCAPWAPData, error) <span class="cov1" title="1">{
         if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
         return core.Get[ApOperCAPWAPData](ctx, s.Client(), url)</span>
 }
 
@@ -2271,15 +2265,15 @@ func (s Service) ListNameMACMaps(ctx context.Context) (*ApOperApNameMACMap, erro
 }</span>
 
 // GetNameMACMapByWTPName retrieves AP name-to-MAC mapping filtered by WTP name.
-func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*ApOperApNameMACMap, error) <span class="cov4" title="3">{
+func (s Service) GetNameMACMapByWTPName(ctx context.Context, wtpName string) (*ApOperApNameMACMap, error) <span class="cov3" title="2">{
         if wtpName == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov3" title="2">if strings.TrimSpace(wtpName) == "" </span><span class="cov1" title="1">{
+        <span class="cov1" title="1">if strings.TrimSpace(wtpName) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
         return core.Get[ApOperApNameMACMap](ctx, s.Client(), url)</span>
 }
 
@@ -2291,15 +2285,15 @@ func (s Service) ListRadioData(ctx context.Context) (*ApOperRadioOperData, error
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
 func (s Service) GetRadioStatusByWTPMACAndSlot(
         ctx context.Context, wtpMAC string, slotID int,
-) (*ApOperRadioOperData, error) <span class="cov4" title="3">{
+) (*ApOperRadioOperData, error) <span class="cov3" title="2">{
         if wtpMAC == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
-        <span class="cov3" title="2">if strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
+        <span class="cov1" title="1">if strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
         return core.Get[ApOperRadioOperData](ctx, s.Client(), url)</span>
 }
 
@@ -2312,31 +2306,31 @@ func (s Service) ListRadioNeighbors(ctx context.Context) (*ApOperApRadioNeighbor
 // This follows the YANG model key structure: "ap-mac slot-id bssid".
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
         ctx context.Context, apMAC string, slotID int, bssid string,
-) (*ApOperApRadioNeighbor, error) <span class="cov5" title="4">{
+) (*ApOperApRadioNeighbor, error) <span class="cov4" title="3">{
         if apMAC == "" || strings.TrimSpace(apMAC) == "" </span><span class="cov1" title="1">{
                 return nil, errors.New("AP MAC address cannot be empty")
         }</span>
-        <span class="cov4" title="3">if bssid == "" || strings.TrimSpace(bssid) == "" </span><span class="cov1" title="1">{
+        <span class="cov3" title="2">if bssid == "" || strings.TrimSpace(bssid) == "" </span><span class="cov1" title="1">{
                 return nil, errors.New("BSSID cannot be empty")
         }</span>
 
-        <span class="cov3" title="2">if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
+        <span class="cov1" title="1">if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf("invalid AP MAC address: %w", err)
         }</span>
-        <span class="cov1" title="1">if err := validation.ValidateMACAddress(bssid); err != nil </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">if err := validation.ValidateMACAddress(bssid); err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid BSSID: %w", err)
         }</span>
 
-        <span class="cov1" title="1">normalizedAPMAC, err := validation.NormalizeMACAddress(apMAC)
+        <span class="cov0" title="0">normalizedAPMAC, err := validation.NormalizeMACAddress(apMAC)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
         }</span>
-        <span class="cov1" title="1">normalizedBSSID, err := validation.NormalizeMACAddress(bssid)
+        <span class="cov0" title="0">normalizedBSSID, err := validation.NormalizeMACAddress(bssid)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid BSSID %s: %w", bssid, err)
         }</span>
 
-        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+        <span class="cov0" title="0">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
                 routes.APRadioNeighborPath,
                 normalizedAPMAC,
                 slotID,
@@ -2388,21 +2382,21 @@ func (s Service) ListRadioResetStats(ctx context.Context) (*ApOperRadioResetStat
 // Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetRadioResetStatsByAPMACAndRadioID(
         ctx context.Context, apMAC string, radioID int,
-) (*ApOperRadioResetStats, error) <span class="cov5" title="4">{
+) (*ApOperRadioResetStats, error) <span class="cov4" title="3">{
         if apMAC == "" || strings.TrimSpace(apMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov4" title="3">if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
+        <span class="cov3" title="2">if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf("invalid AP MAC address: %w", err)
         }</span>
 
-        <span class="cov3" title="2">normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+        <span class="cov1" title="1">normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
         }</span>
 
-        <span class="cov3" title="2">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
                 routes.APRadioResetStatsPath,
                 normalizedMAC,
                 radioID,
@@ -2419,21 +2413,21 @@ func (s Service) ListQosClientData(ctx context.Context) (*ApOperQosClientData, e
 // Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetQosClientDataByClientMAC(
         ctx context.Context, clientMAC string,
-) (*ApOperQosClientData, error) <span class="cov5" title="4">{
+) (*ApOperQosClientData, error) <span class="cov4" title="3">{
         if clientMAC == "" || strings.TrimSpace(clientMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov4" title="3">if err := validation.ValidateMACAddress(clientMAC); err != nil </span><span class="cov1" title="1">{
+        <span class="cov3" title="2">if err := validation.ValidateMACAddress(clientMAC); err != nil </span><span class="cov1" title="1">{
                 return nil, fmt.Errorf("invalid client MAC address: %w", err)
         }</span>
 
-        <span class="cov3" title="2">normalizedMAC, err := validation.NormalizeMACAddress(clientMAC)
+        <span class="cov1" title="1">normalizedMAC, err := validation.NormalizeMACAddress(clientMAC)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid client MAC address %s: %w", clientMAC, err)
         }</span>
 
-        <span class="cov3" title="2">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APQosClientDataPath, normalizedMAC)
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APQosClientDataPath, normalizedMAC)
         return core.Get[ApOperQosClientData](ctx, s.Client(), url)</span>
 }
 
@@ -2448,21 +2442,21 @@ func (s Service) GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(
         wtpMAC string,
         slotID int,
         wlanID int,
-) (*ApOperWtpSlotWlanStats, error) <span class="cov4" title="3">{
+) (*ApOperWtpSlotWlanStats, error) <span class="cov3" title="2">{
         if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov3" title="2">if err := validation.ValidateMACAddress(wtpMAC); err != nil </span><span class="cov0" title="0">{
+        <span class="cov1" title="1">if err := validation.ValidateMACAddress(wtpMAC); err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
         }</span>
 
-        <span class="cov3" title="2">normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+        <span class="cov1" title="1">normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
         }</span>
 
-        <span class="cov3" title="2">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
                 routes.APWtpSlotWlanStatsPath,
                 normalizedMAC,
                 slotID,
@@ -2612,21 +2606,21 @@ func (s Service) ListRlanOper(ctx context.Context) (*ApOperRlanOper, error) <spa
 // Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetRlanOperByWTPMACAndPortID(
         ctx context.Context, wtpMAC string, portID int,
-) (*ApOperRlanOper, error) <span class="cov4" title="3">{
+) (*ApOperRlanOper, error) <span class="cov3" title="2">{
         if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" </span><span class="cov1" title="1">{
                 return nil, core.ErrResourceNotFound
         }</span>
 
-        <span class="cov3" title="2">if err := validation.ValidateMACAddress(wtpMAC); err != nil </span><span class="cov0" title="0">{
+        <span class="cov1" title="1">if err := validation.ValidateMACAddress(wtpMAC); err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
         }</span>
 
-        <span class="cov3" title="2">normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+        <span class="cov1" title="1">normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
         }</span>
 
-        <span class="cov3" title="2">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+        <span class="cov1" title="1">url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
                 routes.APRlanOperPath,
                 normalizedMAC,
                 portID,
@@ -2791,14 +2785,14 @@ func (s Service) ListApNhGlobalData(ctx context.Context) (*ApOperApNhGlobalData,
         return core.Get[ApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath)
 }</span>
 
-// DisableAP disables the administrative state of an access point.
-func (s Service) DisableAP(ctx context.Context, mac string) error <span class="cov3" title="2">{
-        return s.updateAPState(ctx, mac, "admin-state-disabled")
-}</span>
-
 // EnableAP enables the administrative state of an access point.
 func (s Service) EnableAP(ctx context.Context, mac string) error <span class="cov4" title="3">{
         return s.updateAPState(ctx, mac, "admin-state-enabled")
+}</span>
+
+// DisableAP disables the administrative state of an access point.
+func (s Service) DisableAP(ctx context.Context, mac string) error <span class="cov3" title="2">{
+        return s.updateAPState(ctx, mac, "admin-state-disabled")
 }</span>
 
 // EnableRadio enables a radio on an Access Point using MAC address.
@@ -2995,13 +2989,18 @@ type Service struct {
 }
 
 // NewService creates a new APF service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves the complete APF configuration data.
-func (s Service) GetConfig(ctx context.Context) (*APFCfg, error) <span class="cov5" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*APFCfg, error) <span class="cov7" title="3">{
         return core.Get[APFCfg](ctx, s.Client(), routes.APFCfgPath)
+}</span>
+
+// ListAPFConfigs retrieves APF configuration parameters.
+func (s Service) ListAPFConfigs(ctx context.Context) (*APFCfgAPF, error) <span class="cov7" title="3">{
+        return core.Get[APFCfgAPF](ctx, s.Client(), routes.APFAPFPath)
 }</span>
 </pre>
 		
@@ -3021,13 +3020,46 @@ type Service struct {
 }
 
 // NewService creates a new AWIPS service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetOperational retrieves the complete AWIPS operational data.
-func (s Service) GetOperational(ctx context.Context) (*AWIPSOper, error) <span class="cov5" title="2">{
+func (s Service) GetOperational(ctx context.Context) (*AWIPSOper, error) <span class="cov7" title="3">{
         return core.Get[AWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
+}</span>
+
+// ListAWIPSPerApInfo retrieves AWIPS per AP information.
+func (s Service) ListAWIPSPerApInfo(ctx context.Context) (*AWIPSOperAWIPSPerApInfo, error) <span class="cov7" title="3">{
+        return core.Get[AWIPSOperAWIPSPerApInfo](ctx, s.Client(), routes.AWIPSPerApInfoPath)
+}</span>
+
+// ListAWIPSDwldStatus retrieves AWIPS download status.
+func (s Service) ListAWIPSDwldStatus(ctx context.Context) (*AWIPSOperAWIPSDwldStatus, error) <span class="cov1" title="1">{
+        return core.Get[AWIPSOperAWIPSDwldStatus](ctx, s.Client(), routes.AWIPSDwldStatusPath)
+}</span>
+
+// ListAWIPSApDwldStatus retrieves AWIPS per AP download status.
+func (s Service) ListAWIPSApDwldStatus(ctx context.Context) (*AWIPSOperAWIPSApDwldStatus, error) <span class="cov1" title="1">{
+        return core.Get[AWIPSOperAWIPSApDwldStatus](ctx, s.Client(), routes.AWIPSApDownloadStatusPath)
+}</span>
+
+// ListAWIPSPerSignStats retrieves AWIPS per signature statistics.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAWIPSPerSignStats(ctx context.Context) (*AWIPSOperAWIPSPerSignStats, error) <span class="cov1" title="1">{
+        return core.Get[AWIPSOperAWIPSPerSignStats](ctx, s.Client(), routes.AWIPSPerSignStatsPath)
+}</span>
+
+// ListAWIPSGlobStats retrieves AWIPS global statistics.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAWIPSGlobStats(ctx context.Context) (*AWIPSOperAWIPSGlobStats, error) <span class="cov7" title="3">{
+        return core.Get[AWIPSOperAWIPSGlobStats](ctx, s.Client(), routes.AWIPSGlobStatsPath)
+}</span>
+
+// ListAWIPSDwldStatusWncd retrieves AWIPS download status for WNCD.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAWIPSDwldStatusWncd(ctx context.Context) (*AWIPSOperAWIPSDwldStatusWncd, error) <span class="cov1" title="1">{
+        return core.Get[AWIPSOperAWIPSDwldStatusWncd](ctx, s.Client(), routes.AWIPSDwldStatusWncdPath)
 }</span>
 </pre>
 		
@@ -3047,13 +3079,38 @@ type Service struct {
 }
 
 // NewService creates a new BLE service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetOperational retrieves BLE operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*BLELtxOper, error) <span class="cov5" title="2">{
+func (s Service) GetOperational(ctx context.Context) (*BLELtxOper, error) <span class="cov7" title="3">{
         return core.Get[BLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
+}</span>
+
+// ListBLELtxAp retrieves BLE LTX AP operational data.
+func (s Service) ListBLELtxAp(ctx context.Context) (*BLELtxOperBLELtxAp, error) <span class="cov7" title="3">{
+        return core.Get[BLELtxOperBLELtxAp](ctx, s.Client(), routes.BLELtxApPath)
+}</span>
+
+// ListBLELtxApAntenna retrieves BLE LTX AP antenna operational data.
+func (s Service) ListBLELtxApAntenna(ctx context.Context) (*BLELtxOperBLELtxApAntenna, error) <span class="cov7" title="3">{
+        return core.Get[BLELtxOperBLELtxApAntenna](ctx, s.Client(), routes.BLELtxApAntennaPath)
+}</span>
+
+// GetMgmtOperational retrieves BLE management operational data from the controller.
+func (s Service) GetMgmtOperational(ctx context.Context) (*BLEMgmtOper, error) <span class="cov7" title="3">{
+        return core.Get[BLEMgmtOper](ctx, s.Client(), routes.BLEMgmtOperPath)
+}</span>
+
+// ListBLEMgmtAp retrieves BLE management AP operational data.
+func (s Service) ListBLEMgmtAp(ctx context.Context) (*BLEMgmtOperBLEMgmtAp, error) <span class="cov7" title="3">{
+        return core.Get[BLEMgmtOperBLEMgmtAp](ctx, s.Client(), routes.BLEMgmtApPath)
+}</span>
+
+// ListBLEMgmtCmx retrieves BLE management CMX operational data.
+func (s Service) ListBLEMgmtCmx(ctx context.Context) (*BLEMgmtOperBLEMgmtCmx, error) <span class="cov7" title="3">{
+        return core.Get[BLEMgmtOperBLEMgmtCmx](ctx, s.Client(), routes.BLEMgmtCmxPath)
 }</span>
 </pre>
 		
@@ -3354,13 +3411,23 @@ type Service struct {
 }
 
 // NewService creates a new CTS service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves CTS configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*CTSCfg, error) <span class="cov5" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*CTSCfg, error) <span class="cov7" title="3">{
         return core.Get[CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
+}</span>
+
+// GetOperational retrieves CTS operational data from the controller.
+func (s Service) GetOperational(ctx context.Context) (*CTSOper, error) <span class="cov7" title="3">{
+        return core.Get[CTSOper](ctx, s.Client(), routes.CTSOperPath)
+}</span>
+
+// ListFlexModeApSxpConnectionStatus retrieves FlexConnect AP SXP connection status.
+func (s Service) ListFlexModeApSxpConnectionStatus(ctx context.Context) (*CTSOperFlexModeApSxpConnectionStatus, error) <span class="cov7" title="3">{
+        return core.Get[CTSOperFlexModeApSxpConnectionStatus](ctx, s.Client(), routes.CTSFlexModeApSxpConnectionStatusPath)
 }</span>
 </pre>
 		
@@ -3380,13 +3447,43 @@ type Service struct {
 }
 
 // NewService creates a new 802.11 service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves dot11 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*Dot11Cfg, error) <span class="cov5" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*Dot11Cfg, error) <span class="cov7" title="3">{
         return core.Get[Dot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
+}</span>
+
+// ListCfgFilters retrieves dot11 configuration filters.
+func (s Service) ListCfgFilters(ctx context.Context) (*Dot11CfgFilter, error) <span class="cov7" title="3">{
+        return core.Get[Dot11CfgFilter](ctx, s.Client(), routes.Dot11CfgPath)
+}</span>
+
+// ListCfgConfiguredCountries retrieves dot11 configured countries wrapper data.
+func (s Service) ListCfgConfiguredCountries(ctx context.Context) (*Dot11CfgConfiguredCountries, error) <span class="cov4" title="2">{
+        return core.Get[Dot11CfgConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath)
+}</span>
+
+// ListCfgDot11Entries retrieves dot11 entries wrapper data.
+func (s Service) ListCfgDot11Entries(ctx context.Context) (*Dot11CfgDot11Entries, error) <span class="cov4" title="2">{
+        return core.Get[Dot11CfgDot11Entries](ctx, s.Client(), routes.Dot11EntriesPath)
+}</span>
+
+// ListCfgDot11acMcsEntries retrieves dot11ac MCS entries wrapper data.
+func (s Service) ListCfgDot11acMcsEntries(ctx context.Context) (*Dot11CfgDot11acMcsEntries, error) <span class="cov4" title="2">{
+        return core.Get[Dot11CfgDot11acMcsEntries](ctx, s.Client(), routes.Dot11AcMcsEntriesPath)
+}</span>
+
+// ListConfiguredCountries retrieves configured countries data.
+func (s Service) ListConfiguredCountries(ctx context.Context) (*Dot11ConfiguredCountries, error) <span class="cov4" title="2">{
+        return core.Get[Dot11ConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath)
+}</span>
+
+// ListDot11Entries retrieves 802.11 entries data.
+func (s Service) ListDot11Entries(ctx context.Context) (*Dot11Entries, error) <span class="cov7" title="3">{
+        return core.Get[Dot11Entries](ctx, s.Client(), routes.Dot11EntriesPath)
 }</span>
 </pre>
 		
@@ -3406,13 +3503,18 @@ type Service struct {
 }
 
 // NewService creates a new 802.15 service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves dot15.4 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*Dot15Cfg, error) <span class="cov5" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*Dot15Cfg, error) <span class="cov7" title="3">{
         return core.Get[Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
+}</span>
+
+// ListDot15GlobalConfigs retrieves 802.15 global configuration.
+func (s Service) ListDot15GlobalConfigs(ctx context.Context) (*Dot15CfgDot15GlobalConfig, error) <span class="cov7" title="3">{
+        return core.Get[Dot15CfgDot15GlobalConfig](ctx, s.Client(), routes.Dot15GlobalConfigPath)
 }</span>
 </pre>
 		
@@ -3440,6 +3542,46 @@ func NewService(client *core.Client) Service <span class="cov10" title="4">{
 func (s Service) GetConfig(ctx context.Context) (*FabricCfg, error) <span class="cov5" title="2">{
         return core.Get[FabricCfg](ctx, s.Client(), routes.FabricCfgPath)
 }</span>
+
+// ListCfgFabric retrieves fabric configuration wrapper data.
+func (s Service) ListCfgFabric(ctx context.Context) (*FabricCfgFabric, error) <span class="cov5" title="2">{
+        return core.Get[FabricCfgFabric](ctx, s.Client(), routes.FabricPath)
+}</span>
+
+// ListCfgFabricProfiles retrieves fabric profiles wrapper data.
+func (s Service) ListCfgFabricProfiles(ctx context.Context) (*FabricCfgFabricProfiles, error) <span class="cov5" title="2">{
+        return core.Get[FabricCfgFabricProfiles](ctx, s.Client(), routes.FabricProfilesPath)
+}</span>
+
+// ListCfgFabricControlplaneNames retrieves fabric controlplane names wrapper data.
+func (s Service) ListCfgFabricControlplaneNames(ctx context.Context) (*FabricCfgFabricControlplaneNames, error) <span class="cov5" title="2">{
+        return core.Get[FabricCfgFabricControlplaneNames](ctx, s.Client(), routes.FabricControlplaneNamesPath)
+}</span>
+
+// ListFabricConfig retrieves fabric global configuration data.
+func (s Service) ListFabricConfig(ctx context.Context) (*FabricConfig, error) <span class="cov5" title="2">{
+        return core.Get[FabricConfig](ctx, s.Client(), routes.FabricPath)
+}</span>
+
+// ListFabricProfiles retrieves fabric profiles data.
+func (s Service) ListFabricProfiles(ctx context.Context) (*FabricProfiles, error) <span class="cov5" title="2">{
+        return core.Get[FabricProfiles](ctx, s.Client(), routes.FabricProfilesPath)
+}</span>
+
+// ListFabricProfile retrieves individual fabric profile entries.
+func (s Service) ListFabricProfile(ctx context.Context) (*FabricProfile, error) <span class="cov5" title="2">{
+        return core.Get[FabricProfile](ctx, s.Client(), routes.FabricProfilesPath)
+}</span>
+
+// ListFabricControlplanes retrieves fabric controlplanes data.
+func (s Service) ListFabricControlplanes(ctx context.Context) (*FabricControlplanes, error) <span class="cov5" title="2">{
+        return core.Get[FabricControlplanes](ctx, s.Client(), routes.FabricControlplaneNamesPath)
+}</span>
+
+// ListFabricControlplaneName retrieves individual fabric controlplane name entries.
+func (s Service) ListFabricControlplaneName(ctx context.Context) (*FabricControlplaneName, error) <span class="cov5" title="2">{
+        return core.Get[FabricControlplaneName](ctx, s.Client(), routes.FabricControlplaneNamesPath)
+}</span>
 </pre>
 		
 		<pre class="file" id="file25" style="display: none">package flex
@@ -3458,13 +3600,18 @@ type Service struct {
 }
 
 // NewService creates a new FlexConnect service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves FlexConnect configuration data.
-func (s Service) GetConfig(ctx context.Context) (*FlexCfg, error) <span class="cov5" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*FlexCfg, error) <span class="cov7" title="3">{
         return core.Get[FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
+}</span>
+
+// ListFlexPolicyEntries retrieves FlexConnect policy entries.
+func (s Service) ListFlexPolicyEntries(ctx context.Context) (*FlexCfgFlexPolicyEntries, error) <span class="cov7" title="3">{
+        return core.Get[FlexCfgFlexPolicyEntries](ctx, s.Client(), routes.FlexPolicyEntriesPath)
 }</span>
 </pre>
 		
@@ -3484,22 +3631,22 @@ type Service struct {
 }
 
 // NewService creates a new General service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="9">{
+func NewService(client *core.Client) Service <span class="cov10" title="8">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetOperational retrieves general operational data.
-func (s Service) GetOperational(ctx context.Context) (*GeneralOper, error) <span class="cov3" title="2">{
+func (s Service) GetOperational(ctx context.Context) (*GeneralOper, error) <span class="cov4" title="2">{
         return core.Get[GeneralOper](ctx, s.Client(), routes.GeneralOperPath)
 }</span>
 
 // GetManagementInterfaceState retrieves management interface operational data.
-func (s Service) GetManagementInterfaceState(ctx context.Context) (*GeneralOperMgmtIntfData, error) <span class="cov3" title="2">{
+func (s Service) GetManagementInterfaceState(ctx context.Context) (*GeneralOperMgmtIntfData, error) <span class="cov4" title="2">{
         return core.Get[GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
 }</span>
 
 // GetConfig retrieves complete general configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*GeneralCfg, error) <span class="cov3" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*GeneralCfg, error) <span class="cov5" title="3">{
         return core.Get[GeneralCfg](ctx, s.Client(), routes.GeneralCfgPath)
 }</span>
 
@@ -3531,7 +3678,7 @@ func (s Service) GetGeolocationConfig(ctx context.Context) (*GeolocationCfg, err
 }</span>
 
 // GetLAGInfo retrieves LAG (Link Aggregation) information.
-func (s Service) GetLAGInfo(ctx context.Context) (*Laginfo, error) <span class="cov3" title="2">{
+func (s Service) GetLAGInfo(ctx context.Context) (*Laginfo, error) <span class="cov1" title="1">{
         return core.Get[Laginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
 }</span>
 
@@ -3541,7 +3688,7 @@ func (s Service) GetMEWLCConfig(ctx context.Context) (*MewlcConfig, error) <span
 }</span>
 
 // GetMFPConfig retrieves MFP (Management Frame Protection) configuration data.
-func (s Service) GetMFPConfig(ctx context.Context) (*Mfp, error) <span class="cov3" title="2">{
+func (s Service) GetMFPConfig(ctx context.Context) (*Mfp, error) <span class="cov1" title="1">{
         return core.Get[Mfp](ctx, s.Client(), routes.GeneralMfpPath)
 }</span>
 
@@ -3569,16 +3716,148 @@ func (s Service) GetWLCManagementInfo(ctx context.Context) (*WlcManagementData, 
 func (s Service) GetWSAAPClientEventConfig(ctx context.Context) (*WsaApClientEvent, error) <span class="cov1" title="1">{
         return core.Get[WsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
 }</span>
+
+// ListCfgMewlcConfig retrieves MEWLC configuration data wrapper.
+func (s Service) ListCfgMewlcConfig(ctx context.Context) (*GeneralCfgMewlcConfig, error) <span class="cov5" title="3">{
+        return core.Get[GeneralCfgMewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
+}</span>
+
+// ListCfgCacConfig retrieves CAC configuration data wrapper.
+func (s Service) ListCfgCacConfig(ctx context.Context) (*GeneralCfgCacConfig, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgCacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
+}</span>
+
+// ListCfgMfp retrieves MFP configuration data wrapper.
+func (s Service) ListCfgMfp(ctx context.Context) (*GeneralCfgMfp, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgMfp](ctx, s.Client(), routes.GeneralMfpPath)
+}</span>
+
+// ListCfgFipsCfg retrieves FIPS configuration data wrapper.
+func (s Service) ListCfgFipsCfg(ctx context.Context) (*GeneralCfgFipsCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgFipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
+}</span>
+
+// ListCfgWsaApClientEvent retrieves WSA AP client event configuration data wrapper.
+func (s Service) ListCfgWsaApClientEvent(ctx context.Context) (*GeneralCfgWsaApClientEvent, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgWsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
+}</span>
+
+// ListCfgSimL3InterfaceCacheData retrieves SIM L3 interface cache data wrapper.
+func (s Service) ListCfgSimL3InterfaceCacheData(ctx context.Context) (*GeneralCfgSimL3InterfaceCacheData, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgSimL3InterfaceCacheData](ctx, s.Client(), routes.GeneralSimL3InterfaceCacheDataPath)
+}</span>
+
+// ListCfgWlcManagementData retrieves WLC management data wrapper.
+func (s Service) ListCfgWlcManagementData(ctx context.Context) (*GeneralCfgWlcManagementData, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgWlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
+}</span>
+
+// ListCfgLaginfo retrieves LAG information wrapper.
+func (s Service) ListCfgLaginfo(ctx context.Context) (*GeneralCfgLaginfo, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgLaginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
+}</span>
+
+// ListCfgMulticastConfig retrieves multicast configuration data wrapper.
+func (s Service) ListCfgMulticastConfig(ctx context.Context) (*GeneralCfgMulticastConfig, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgMulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
+}</span>
+
+// ListCfgFeatureUsageCfg retrieves feature usage configuration data wrapper.
+func (s Service) ListCfgFeatureUsageCfg(ctx context.Context) (*GeneralCfgFeatureUsageCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgFeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
+}</span>
+
+// ListCfgThresholdWarnCfg retrieves threshold warning configuration data wrapper.
+func (s Service) ListCfgThresholdWarnCfg(ctx context.Context) (*GeneralCfgThresholdWarnCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
+}</span>
+
+// ListCfgApLocRangingCfg retrieves AP location ranging configuration data wrapper.
+func (s Service) ListCfgApLocRangingCfg(ctx context.Context) (*GeneralCfgApLocRangingCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
+}</span>
+
+// ListCfgGeolocationCfg retrieves geolocation configuration data wrapper.
+func (s Service) ListCfgGeolocationCfg(ctx context.Context) (*GeneralCfgGeolocationCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeneralCfgGeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
+}</span>
+
+// ListOperMgmtIntfData retrieves management interface operational data wrapper.
+func (s Service) ListOperMgmtIntfData(ctx context.Context) (*GeneralOperMgmtIntfData, error) <span class="cov1" title="1">{
+        return core.Get[GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
+}</span>
+
+// ListMewlcConfig retrieves MEWLC configuration data.
+func (s Service) ListMewlcConfig(ctx context.Context) (*MewlcConfig, error) <span class="cov5" title="3">{
+        return core.Get[MewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
+}</span>
+
+// ListCacConfig retrieves CAC configuration data.
+func (s Service) ListCacConfig(ctx context.Context) (*CacConfig, error) <span class="cov1" title="1">{
+        return core.Get[CacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
+}</span>
+
+// ListMfp retrieves MFP configuration data.
+func (s Service) ListMfp(ctx context.Context) (*Mfp, error) <span class="cov1" title="1">{
+        return core.Get[Mfp](ctx, s.Client(), routes.GeneralMfpPath)
+}</span>
+
+// ListFipsCfg retrieves FIPS configuration data.
+func (s Service) ListFipsCfg(ctx context.Context) (*FipsCfg, error) <span class="cov1" title="1">{
+        return core.Get[FipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
+}</span>
+
+// ListWsaApClientEvent retrieves WSA AP client event configuration data.
+func (s Service) ListWsaApClientEvent(ctx context.Context) (*WsaApClientEvent, error) <span class="cov1" title="1">{
+        return core.Get[WsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
+}</span>
+
+// ListWlcManagementData retrieves WLC management data.
+func (s Service) ListWlcManagementData(ctx context.Context) (*WlcManagementData, error) <span class="cov1" title="1">{
+        return core.Get[WlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
+}</span>
+
+// ListLaginfo retrieves LAG information.
+func (s Service) ListLaginfo(ctx context.Context) (*Laginfo, error) <span class="cov1" title="1">{
+        return core.Get[Laginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
+}</span>
+
+// ListMulticastConfig retrieves multicast configuration data.
+func (s Service) ListMulticastConfig(ctx context.Context) (*MulticastConfig, error) <span class="cov1" title="1">{
+        return core.Get[MulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
+}</span>
+
+// ListFeatureUsageCfg retrieves feature usage configuration data.
+func (s Service) ListFeatureUsageCfg(ctx context.Context) (*FeatureUsageCfg, error) <span class="cov1" title="1">{
+        return core.Get[FeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
+}</span>
+
+// ListThresholdWarnCfg retrieves threshold warning configuration data.
+func (s Service) ListThresholdWarnCfg(ctx context.Context) (*ThresholdWarnCfg, error) <span class="cov1" title="1">{
+        return core.Get[ThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
+}</span>
+
+// ListApLocRangingCfg retrieves AP location ranging configuration data.
+func (s Service) ListApLocRangingCfg(ctx context.Context) (*ApLocRangingCfg, error) <span class="cov1" title="1">{
+        return core.Get[ApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
+}</span>
+
+// ListGeolocationCfg retrieves geolocation configuration data.
+func (s Service) ListGeolocationCfg(ctx context.Context) (*GeolocationCfg, error) <span class="cov1" title="1">{
+        return core.Get[GeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
+}</span>
 </pre>
 		
 		<pre class="file" id="file27" style="display: none">package geolocation
 
 import (
         "context"
+        "strings"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+        "github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // Service provides geolocation tracking operations for Cisco IOS-XE Wireless LAN Controller.
@@ -3587,19 +3866,46 @@ type Service struct {
 }
 
 // NewService creates a new Geolocation service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="4">{
+func NewService(client *core.Client) Service <span class="cov8" title="10">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetOperational retrieves geolocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*GeolocationOper, error) <span class="cov5" title="2">{
+func (s Service) GetOperational(ctx context.Context) (*GeolocationOper, error) <span class="cov5" title="4">{
         return core.Get[GeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
 }</span>
 
 // ListAPGeolocationStats retrieves AP geolocation statistics.
-func (s Service) ListAPGeolocationStats(ctx context.Context) (*GeolocationOperApGeoLocStats, error) <span class="cov1" title="1">{
+func (s Service) ListAPGeolocationStats(ctx context.Context) (*GeolocationOperApGeoLocStats, error) <span class="cov4" title="3">{
         return core.Get[GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
 }</span>
+
+// ListAPGeolocationData retrieves AP geolocation data using GeolocationOperApGeoLocData wrapper.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListAPGeolocationData(ctx context.Context) (*GeolocationOperApGeoLocData, error) <span class="cov5" title="4">{
+        return core.Get[GeolocationOperApGeoLocData](ctx, s.Client(), routes.GeolocationApGeoLocDataPath)
+}</span>
+
+// GetAPGeolocationDataByMAC retrieves AP geolocation data for a specific AP by MAC address.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) GetAPGeolocationDataByMAC(ctx context.Context, apMAC string) (*ApGeoLocData, error) <span class="cov10" title="17">{
+        if apMAC == "" || strings.TrimSpace(apMAC) == "" </span><span class="cov3" title="2">{
+                return nil, core.ErrResourceNotFound
+        }</span>
+
+        // Validate and normalize MAC address
+        <span class="cov9" title="15">if err := validation.ValidateMACAddress(apMAC); err != nil </span><span class="cov6" title="5">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="10">normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="10">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.GeolocationApGeoLocDataPath, normalizedMAC)
+        return core.Get[ApGeoLocData](ctx, s.Client(), url)</span>
+}
 </pre>
 		
 		<pre class="file" id="file28" style="display: none">package hyperlocation
@@ -3746,23 +4052,6 @@ func (s Service) GetOperational(ctx context.Context) (*McastOper, error) <span c
 }</span>
 
 // GetFlexConnectMediastreamClientSummary retrieves FlexConnect mediastream client summary data from the wireless controller.
-// This function returns information about FlexConnect mediastream clients and their status.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation control
-//
-// Returns:
-//   - *McastOperFlexMediastreamClientSummary: FlexConnect mediastream data
-//   - error: Error if the operation fails
-//
-// Example:
-//
-//        service := mcast.NewService(client)
-//        data, err := service.GetFlexConnectMediastreamClientSummary(ctx)
-//        if err != nil {
-//            log.Fatal(err)
-//        }
-//        fmt.Printf("FlexConnect mediastream data: %+v\n", data)
 func (s Service) GetFlexConnectMediastreamClientSummary(
         ctx context.Context,
 ) (*McastOperFlexMediastreamClientSummary, error) <span class="cov7" title="3">{
@@ -3772,36 +4061,11 @@ func (s Service) GetFlexConnectMediastreamClientSummary(
 }</span>
 
 // ListVLANL2MGIDs retrieves VLAN Layer 2 multicast group ID operational data from the wireless controller.
-// This function returns information about VLAN Layer 2 multicast groups and their configuration.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation control
-//
-// Returns:
-//   - *McastOperVlanL2MgidOp: VLAN Layer 2 multicast group data
-//   - error: Error if the operation fails
-//
-// Example:
-//
-//        service := mcast.NewService(client)
-//        data, err := service.ListVLANL2MGIDs(ctx)
-//        if err != nil {
-//            log.Fatal(err)
-//        }
-//        fmt.Printf("VLAN L2 multicast group data: %+v\n", data)
 func (s Service) ListVLANL2MGIDs(ctx context.Context) (*McastOperVlanL2MgidOp, error) <span class="cov7" title="3">{
         return core.Get[McastOperVlanL2MgidOp](ctx, s.Client(), routes.McastVlanL2MgidPath)
 }</span>
 
 // GetFabricMediastreamClientSummary retrieves fabric mediastream client summary data from the wireless controller.
-// This function returns information about fabric mediastream clients and their status.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation control
-//
-// Returns:
-//   - *McastOperFabricMediaStreamClientSummary: Fabric mediastream data
-//   - error: Error if the operation fails
 func (s Service) GetFabricMediastreamClientSummary(
         ctx context.Context,
 ) (*McastOperFabricMediaStreamClientSummary, error) <span class="cov7" title="3">{
@@ -3811,29 +4075,43 @@ func (s Service) GetFabricMediastreamClientSummary(
 }</span>
 
 // GetMcastMgidInfo retrieves multicast MGID information from the wireless controller.
-// This function returns information about multicast group IDs and their configuration.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation control
-//
-// Returns:
-//   - *McastOperMcastMgidInfo: Multicast MGID information
-//   - error: Error if the operation fails
 func (s Service) GetMcastMgidInfo(ctx context.Context) (*McastOperMcastMgidInfo, error) <span class="cov7" title="3">{
         return core.Get[McastOperMcastMgidInfo](ctx, s.Client(), routes.McastMgidInfoPath)
 }</span>
 
 // GetMulticastOperData retrieves multicast operational data from the wireless controller.
-// This function returns detailed operational information about multicast operations.
-//
-// Parameters:
-//   - ctx: Context for request timeout and cancellation control
-//
-// Returns:
-//   - *McastOperMulticastOperData: Multicast operational data
-//   - error: Error if the operation fails
 func (s Service) GetMulticastOperData(ctx context.Context) (*McastOperMulticastOperData, error) <span class="cov7" title="3">{
         return core.Get[McastOperMulticastOperData](ctx, s.Client(), routes.McastMulticastOperDataPath)
+}</span>
+
+// ListRrcHistoryClientRecordData retrieves RRC history client record data from the controller.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListRrcHistoryClientRecordData(ctx context.Context) (*McastOperRrcHistoryClientRecordData, error) <span class="cov7" title="3">{
+        return core.Get[McastOperRrcHistoryClientRecordData](ctx, s.Client(), routes.McastRrcHistoryClientRecordDataPath)
+}</span>
+
+// ListRrcSrRadioRecord retrieves RRC stream radio record data from the controller.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListRrcSrRadioRecord(ctx context.Context) (*McastOperRrcSrRadioRecord, error) <span class="cov1" title="1">{
+        return core.Get[McastOperRrcSrRadioRecord](ctx, s.Client(), routes.McastRrcSrRadioRecordPath)
+}</span>
+
+// ListRrcStreamRecord retrieves RRC stream record data from the controller.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListRrcStreamRecord(ctx context.Context) (*McastOperRrcStreamRecord, error) <span class="cov7" title="3">{
+        return core.Get[McastOperRrcStreamRecord](ctx, s.Client(), routes.McastRrcStreamRecordPath)
+}</span>
+
+// ListRrcStreamAdmitRecord retrieves RRC stream admit record data from the controller.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListRrcStreamAdmitRecord(ctx context.Context) (*McastOperRrcStreamAdmitRecord, error) <span class="cov1" title="1">{
+        return core.Get[McastOperRrcStreamAdmitRecord](ctx, s.Client(), routes.McastRrcStreamAdmitRecordPath)
+}</span>
+
+// ListRrcStreamDenyRecord retrieves RRC stream deny record data from the controller.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListRrcStreamDenyRecord(ctx context.Context) (*McastOperRrcStreamDenyRecord, error) <span class="cov1" title="1">{
+        return core.Get[McastOperRrcStreamDenyRecord](ctx, s.Client(), routes.McastRrcStreamDenyRecordPath)
 }</span>
 </pre>
 		
@@ -3889,23 +4167,47 @@ type Service struct {
 }
 
 // NewService creates a new Mesh service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="7">{
+func NewService(client *core.Client) Service <span class="cov10" title="5">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // GetConfig retrieves all mesh configuration data.
-func (s Service) GetConfig(ctx context.Context) (*MeshCfg, error) <span class="cov6" title="3">{
+func (s Service) GetConfig(ctx context.Context) (*MeshCfg, error) <span class="cov7" title="3">{
         return core.Get[MeshCfg](ctx, s.Client(), routes.MeshCfgPath)
 }</span>
 
 // GetOperational retrieves all mesh operational data.
-func (s Service) GetOperational(ctx context.Context) (*MeshOper, error) <span class="cov6" title="3">{
+func (s Service) GetOperational(ctx context.Context) (*MeshOper, error) <span class="cov7" title="3">{
         return core.Get[MeshOper](ctx, s.Client(), routes.MeshOperPath)
 }</span>
 
 // GetOperationalData retrieves mesh operational data including queue stats, data rate stats, security stats, and operational data.
-func (s Service) GetOperationalData(ctx context.Context) (*MeshOper, error) <span class="cov6" title="3">{
+func (s Service) GetOperationalData(ctx context.Context) (*MeshOper, error) <span class="cov7" title="3">{
         return core.Get[MeshOper](ctx, s.Client(), routes.MeshGlobalStatsPath)
+}</span>
+
+// ListMeshQueueStats retrieves mesh packet queue statistics from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshQueueStats(ctx context.Context) (*MeshOperMeshQueueStats, error) <span class="cov7" title="3">{
+        return core.Get[MeshOperMeshQueueStats](ctx, s.Client(), routes.MeshQueueStatsPath)
+}</span>
+
+// ListMeshDataRateStats retrieves mesh data rate statistics from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshDataRateStats(ctx context.Context) (*MeshOperMeshDataRateStats, error) <span class="cov7" title="3">{
+        return core.Get[MeshOperMeshDataRateStats](ctx, s.Client(), routes.MeshDataRateStatsPath)
+}</span>
+
+// ListMeshSecurityStats retrieves mesh security statistics from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshSecurityStats(ctx context.Context) (*MeshOperMeshSecurityStats, error) <span class="cov7" title="3">{
+        return core.Get[MeshOperMeshSecurityStats](ctx, s.Client(), routes.MeshSecurityStatsPath)
+}</span>
+
+// ListMeshOperationalData retrieves mesh operational data from the controller.
+// Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
+func (s Service) ListMeshOperationalData(ctx context.Context) (*MeshOperMeshOperational, error) <span class="cov7" title="3">{
+        return core.Get[MeshOperMeshOperational](ctx, s.Client(), routes.MeshOperationalDataPath)
 }</span>
 </pre>
 		
@@ -3925,38 +4227,48 @@ type Service struct {
 }
 
 // NewService creates a new Mobility service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="8">{
+func NewService(client *core.Client) Service <span class="cov10" title="10">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
+// GetConfig retrieves complete mobility configuration data from the controller.
+func (s Service) GetConfig(ctx context.Context) (*MobilityCfg, error) <span class="cov5" title="3">{
+        return core.Get[MobilityCfg](ctx, s.Client(), routes.MobilityCfgPath)
+}</span>
+
+// ListMobilityConfig retrieves mobility configuration data using wrapper structure.
+func (s Service) ListMobilityConfig(ctx context.Context) (*MobilityCfgMobilityConfig, error) <span class="cov5" title="3">{
+        return core.Get[MobilityCfgMobilityConfig](ctx, s.Client(), routes.MobilityConfigPath)
+}</span>
+
 // GetOperational retrieves mobility operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*MobilityOper, error) <span class="cov4" title="2">{
+func (s Service) GetOperational(ctx context.Context) (*MobilityOper, error) <span class="cov5" title="3">{
         return core.Get[MobilityOper](ctx, s.Client(), routes.MobilityOperPath)
 }</span>
 
 // ListAPCache retrieves AP cache data.
-func (s Service) ListAPCache(ctx context.Context) (*MobilityOperApCache, error) <span class="cov4" title="2">{
+func (s Service) ListAPCache(ctx context.Context) (*MobilityOperApCache, error) <span class="cov6" title="4">{
         return core.Get[MobilityOperApCache](ctx, s.Client(), routes.MobilityApCachePath)
 }</span>
 
 // ListAPPeers retrieves AP peer list data.
-func (s Service) ListAPPeers(ctx context.Context) (*MobilityOperApPeerList, error) <span class="cov1" title="1">{
+func (s Service) ListAPPeers(ctx context.Context) (*MobilityOperApPeerList, error) <span class="cov3" title="2">{
         return core.Get[MobilityOperApPeerList](ctx, s.Client(), routes.MobilityApPeerListPath)
 }</span>
 
 // GetMMGlobalInfo retrieves MM global information.
-func (s Service) GetMMGlobalInfo(ctx context.Context) (*MobilityOperMmGlobalData, error) <span class="cov4" title="2">{
+func (s Service) GetMMGlobalInfo(ctx context.Context) (*MobilityOperMmGlobalData, error) <span class="cov3" title="2">{
         return core.Get[MobilityOperMmGlobalData](ctx, s.Client(), routes.MobilityMmGlobalDataPath)
 }</span>
 
 // GetMMIFGlobalStats retrieves MM interface global statistics.
-func (s Service) GetMMIFGlobalStats(ctx context.Context) (*MobilityOperMmIfGlobalStats, error) <span class="cov1" title="1">{
+func (s Service) GetMMIFGlobalStats(ctx context.Context) (*MobilityOperMmIfGlobalStats, error) <span class="cov3" title="2">{
         return core.Get[MobilityOperMmIfGlobalStats](
                 ctx, s.Client(), routes.MobilityMmIfGlobalStatsPath)
 }</span>
 
 // ListClients retrieves mobility client data.
-func (s Service) ListClients(ctx context.Context) (*MobilityOperMobilityClientData, error) <span class="cov1" title="1">{
+func (s Service) ListClients(ctx context.Context) (*MobilityOperMobilityClientData, error) <span class="cov3" title="2">{
         return core.Get[MobilityOperMobilityClientData](
                 ctx, s.Client(), routes.MobilityClientDataPath)
 }</span>
@@ -3964,10 +4276,35 @@ func (s Service) ListClients(ctx context.Context) (*MobilityOperMobilityClientDa
 // GetGlobalStats retrieves mobility global statistics.
 func (s Service) GetGlobalStats(
         ctx context.Context,
-) (*MobilityOperMobilityGlobalStats, error) <span class="cov4" title="2">{
+) (*MobilityOperMobilityGlobalStats, error) <span class="cov3" title="2">{
         return core.Get[MobilityOperMobilityGlobalStats](
                 ctx, s.Client(), routes.MobilityGlobalStatsPath,
         )
+}</span>
+
+// ListMmIfGlobalMsgStats retrieves MM interface global message statistics.
+func (s Service) ListMmIfGlobalMsgStats(ctx context.Context) (*MobilityOperMmIfGlobalMsgStats, error) <span class="cov5" title="3">{
+        return core.Get[MobilityOperMmIfGlobalMsgStats](ctx, s.Client(), routes.MobilityMmIfGlobalMsgStatsPath)
+}</span>
+
+// ListClientStats retrieves mobility client statistics.
+func (s Service) ListClientStats(ctx context.Context) (*MobilityOperMobilityClientStats, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperMobilityClientStats](ctx, s.Client(), routes.MobilityClientStatsPath)
+}</span>
+
+// ListGlobalDTLSStats retrieves mobility global DTLS statistics.
+func (s Service) ListGlobalDTLSStats(ctx context.Context) (*MobilityOperMobilityGlobalDTLSStats, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperMobilityGlobalDTLSStats](ctx, s.Client(), routes.MobilityGlobalDTLSStatsPath)
+}</span>
+
+// ListGlobalMsgStats retrieves mobility global message statistics.
+func (s Service) ListGlobalMsgStats(ctx context.Context) (*MobilityOperMobilityGlobalMsgStats, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperMobilityGlobalMsgStats](ctx, s.Client(), routes.MobilityGlobalMsgStatsPath)
+}</span>
+
+// ListWlanClientLimit retrieves WLAN client limit data.
+func (s Service) ListWlanClientLimit(ctx context.Context) (*MobilityOperWlanClientLimit, error) <span class="cov1" title="1">{
+        return core.Get[MobilityOperWlanClientLimit](ctx, s.Client(), routes.MobilityWlanClientLimitPath)
 }</span>
 </pre>
 		
@@ -4028,7 +4365,7 @@ type Service struct {
 }
 
 // NewService creates a new Radio service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="6">{
+func NewService(client *core.Client) Service <span class="cov10" title="7">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
@@ -4040,6 +4377,11 @@ func (s Service) GetConfig(ctx context.Context) (*RadioCfg, error) <span class="
 // ListProfileConfigs retrieves radio profiles configuration data.
 func (s Service) ListProfileConfigs(ctx context.Context) (*RadioProfiles, error) <span class="cov6" title="3">{
         return core.Get[RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles")
+}</span>
+
+// ListRadioProfiles retrieves radio profiles configuration data using wrapper structure.
+func (s Service) ListRadioProfiles(ctx context.Context) (*RadioCfgRadioProfiles, error) <span class="cov6" title="3">{
+        return core.Get[RadioCfgRadioProfiles](ctx, s.Client(), routes.RadioProfilesPath)
 }</span>
 </pre>
 		
@@ -4071,6 +4413,31 @@ func (s Service) RFTag() *RFTagService <span class="cov9" title="16">{
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
 func (s Service) GetConfig(ctx context.Context) (*RFCfg, error) <span class="cov3" title="2">{
         return core.Get[RFCfg](ctx, s.Client(), routes.RFCfgPath)
+}</span>
+
+// ListRFTags retrieves RF tags collection from the configuration.
+func (s Service) ListRFTags(ctx context.Context) (*RFCfgRFTags, error) <span class="cov3" title="2">{
+        return core.Get[RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+}</span>
+
+// ListRFProfiles retrieves RF profiles collection from the configuration.
+func (s Service) ListRFProfiles(ctx context.Context) (*RFProfiles, error) <span class="cov3" title="2">{
+        return core.Get[RFProfiles](ctx, s.Client(), routes.RFProfilesPath)
+}</span>
+
+// ListMultiBssidProfiles retrieves Multi-BSSID profiles from the configuration.
+func (s Service) ListMultiBssidProfiles(ctx context.Context) (*MultiBssidProfiles, error) <span class="cov3" title="2">{
+        return core.Get[MultiBssidProfiles](ctx, s.Client(), routes.MultiBssidProfilesPath)
+}</span>
+
+// ListAtfPolicies retrieves Air Time Fairness policies from the configuration.
+func (s Service) ListAtfPolicies(ctx context.Context) (*AtfPolicies, error) <span class="cov3" title="2">{
+        return core.Get[AtfPolicies](ctx, s.Client(), routes.AtfPoliciesPath)
+}</span>
+
+// ListRFProfileDefaultEntries retrieves RF profile default entries from the configuration.
+func (s Service) ListRFProfileDefaultEntries(ctx context.Context) (*RFProfileDefaultEntries, error) <span class="cov3" title="2">{
+        return core.Get[RFProfileDefaultEntries](ctx, s.Client(), routes.RFProfileDefaultEntriesPath)
 }</span>
 </pre>
 		
@@ -4295,8 +4662,7 @@ func (s Service) GetConfig(ctx context.Context) (*RFIDCfg, error) <span class="c
 
 // GetConfigSettings retrieves the RFID configuration settings.
 func (s Service) GetConfigSettings(ctx context.Context) (*RFIDConfig, error) <span class="cov1" title="1">{
-        url := routes.RFIDCfgPath + "/rfid-config"
-        return core.Get[RFIDConfig](ctx, s.Client(), url)
+        return core.Get[RFIDConfig](ctx, s.Client(), routes.RFIDCfgRFIDConfigPath)
 }</span>
 
 // GetGlobalInfo retrieves RFID global information.
@@ -4491,12 +4857,123 @@ func (s Service) GetEmulationOperational(ctx context.Context) (*RRMEmulOper, err
 
 // ListRrms retrieves RRM configuration data.
 func (s Service) ListRrms(ctx context.Context) (*RRMCfgRrms, error) <span class="cov7" title="3">{
-        return core.Get[RRMCfgRrms](ctx, s.Client(), routes.RRMCfgPath)
+        return core.Get[RRMCfgRrms](ctx, s.Client(), routes.RRMCfgRrmsPath)
 }</span>
 
 // ListRRMMgrCfgEntries retrieves RRM manager configuration entries.
 func (s Service) ListRRMMgrCfgEntries(ctx context.Context) (*RRMCfgRRMMgrCfgEntries, error) <span class="cov7" title="3">{
-        return core.Get[RRMCfgRRMMgrCfgEntries](ctx, s.Client(), routes.RRMCfgPath)
+        return core.Get[RRMCfgRRMMgrCfgEntries](ctx, s.Client(), routes.RRMCfgRRMMgrCfgEntriesPath)
+}</span>
+
+// ListApAutoRFDot11Data retrieves AP auto RF 802.11 data.
+func (s Service) ListApAutoRFDot11Data(ctx context.Context) (*RRMOperApAutoRFDot11Data, error) <span class="cov7" title="3">{
+        return core.Get[RRMOperApAutoRFDot11Data](ctx, s.Client(), routes.RRMOperApAutoRFDot11DataPath)
+}</span>
+
+// ListApDot11RadarData retrieves AP radar detection data.
+func (s Service) ListApDot11RadarData(ctx context.Context) (*RRMOperApDot11RadarData, error) <span class="cov7" title="3">{
+        return core.Get[RRMOperApDot11RadarData](ctx, s.Client(), routes.RRMOperApDot11RadarDataPath)
+}</span>
+
+// ListApDot11SpectrumData retrieves AP spectrum analysis data.
+func (s Service) ListApDot11SpectrumData(ctx context.Context) (*RRMOperApDot11SpectrumData, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperApDot11SpectrumData](ctx, s.Client(), routes.RRMOperApDot11SpectrumDataPath)
+}</span>
+
+// ListRRMMeasurement retrieves RRM measurement data.
+func (s Service) ListRRMMeasurement(ctx context.Context) (*RRMOperRRMMeasurement, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperRRMMeasurement](ctx, s.Client(), routes.RRMOperRRMMeasurementPath)
+}</span>
+
+// ListRadioSlot retrieves radio slot operational data.
+func (s Service) ListRadioSlot(ctx context.Context) (*RRMOperRadioSlot, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperRadioSlot](ctx, s.Client(), routes.RRMOperRadioSlotPath)
+}</span>
+
+// ListMainData retrieves main RRM data by PHY type.
+func (s Service) ListMainData(ctx context.Context) (*RRMOperMainData, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperMainData](ctx, s.Client(), routes.RRMOperMainDataPath)
+}</span>
+
+// ListRegDomainOper retrieves regulatory domain operational data.
+func (s Service) ListRegDomainOper(ctx context.Context) (*RRMOperRegDomainOper, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperRegDomainOper](ctx, s.Client(), routes.RRMOperRegDomainOperPath)
+}</span>
+
+// ListSpectrumDeviceTable retrieves spectrum device detection table.
+func (s Service) ListSpectrumDeviceTable(ctx context.Context) (*RRMOperSpectrumDeviceTable, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperSpectrumDeviceTable](ctx, s.Client(), routes.RRMOperSpectrumDeviceTablePath)
+}</span>
+
+// ListSpectrumAqTable retrieves spectrum air quality table.
+func (s Service) ListSpectrumAqTable(ctx context.Context) (*RRMOperSpectrumAqTable, error) <span class="cov1" title="1">{
+        return core.Get[RRMOperSpectrumAqTable](ctx, s.Client(), routes.RRMOperSpectrumAqTablePath)
+}</span>
+
+// ListRRMOneShotCounters retrieves RRM one-shot counters.
+func (s Service) ListRRMOneShotCounters(ctx context.Context) (*RRMGlobalOperRRMOneShotCounters, error) <span class="cov7" title="3">{
+        return core.Get[RRMGlobalOperRRMOneShotCounters](ctx, s.Client(), routes.RRMGlobalOperRRMOneShotCountersPath)
+}</span>
+
+// ListRRMChannelParams retrieves RRM channel parameters.
+func (s Service) ListRRMChannelParams(ctx context.Context) (*RRMGlobalOperRRMChannelParams, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRRMChannelParams](ctx, s.Client(), routes.RRMGlobalOperRRMChannelParamsPath)
+}</span>
+
+// ListRadioOperData24g retrieves 2.4GHz radio operational data.
+func (s Service) ListRadioOperData24g(ctx context.Context) (*RRMGlobalOperRadioOperData24g, error) <span class="cov7" title="3">{
+        return core.Get[RRMGlobalOperRadioOperData24g](ctx, s.Client(), routes.RRMGlobalOperRadioOperData24gPath)
+}</span>
+
+// ListRadioOperData5g retrieves 5GHz radio operational data.
+func (s Service) ListRadioOperData5g(ctx context.Context) (*RRMGlobalOperRadioOperData5g, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRadioOperData5g](ctx, s.Client(), routes.RRMGlobalOperRadioOperData5gPath)
+}</span>
+
+// ListRadioOperData6ghz retrieves 6GHz radio operational data.
+func (s Service) ListRadioOperData6ghz(ctx context.Context) (*RRMGlobalOperRadioOperData6ghz, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRadioOperData6ghz](ctx, s.Client(), routes.RRMGlobalOperRadioOperData6ghzPath)
+}</span>
+
+// ListRadioOperDataDualband retrieves dual-band radio operational data.
+func (s Service) ListRadioOperDataDualband(ctx context.Context) (*RRMGlobalOperRadioOperDataDualband, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRadioOperDataDualband](ctx, s.Client(), routes.RRMGlobalOperRadioOperDataDualbandPath)
+}</span>
+
+// ListSpectrumBandConfigData retrieves spectrum band configuration data.
+func (s Service) ListSpectrumBandConfigData(
+        ctx context.Context,
+) (*RRMGlobalOperSpectrumBandConfigData, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperSpectrumBandConfigData](
+                ctx,
+                s.Client(),
+                routes.RRMGlobalOperSpectrumBandConfigDataPath,
+        )
+}</span>
+
+// ListRRMClientData retrieves RRM client data.
+func (s Service) ListRRMClientData(ctx context.Context) (*RRMGlobalOperRRMClientData, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRRMClientData](ctx, s.Client(), routes.RRMGlobalOperRRMClientDataPath)
+}</span>
+
+// ListRRMFraStats retrieves RRM flexible radio assignment statistics from global operational data.
+func (s Service) ListRRMFraStats(ctx context.Context) (*RRMGlobalOperRRMFraStats, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRRMFraStats](ctx, s.Client(), routes.RRMGlobalOperRRMFraStatsPath)
+}</span>
+
+// ListRRMCoverage retrieves RRM coverage information.
+func (s Service) ListRRMCoverage(ctx context.Context) (*RRMGlobalOperRRMCoverage, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperRRMCoverage](ctx, s.Client(), routes.RRMGlobalOperRRMCoveragePath)
+}</span>
+
+// ListSpectrumAqWorstTable retrieves spectrum air quality worst table.
+func (s Service) ListSpectrumAqWorstTable(ctx context.Context) (*RRMGlobalOperSpectrumAqWorstTable, error) <span class="cov1" title="1">{
+        return core.Get[RRMGlobalOperSpectrumAqWorstTable](ctx, s.Client(), routes.RRMGlobalOperSpectrumAqWorstTablePath)
+}</span>
+
+// ListRRMFraStatsFromEmul retrieves RRM flexible radio assignment statistics from emulation operational data.
+func (s Service) ListRRMFraStatsFromEmul(ctx context.Context) (*RRMEmulOperRRMFraStats, error) <span class="cov7" title="3">{
+        return core.Get[RRMEmulOperRRMFraStats](ctx, s.Client(), routes.RRMEmulOperRRMFraStatsPath)
 }</span>
 </pre>
 		
@@ -4868,15 +5345,19 @@ func (s Service) PolicyTag() *PolicyTagService <span class="cov9" title="18">{
         return NewPolicyTagService(s.Client())
 }</span>
 
-// ListProfileConfigs retrieves WLAN configuration entries.
-func (s Service) ListProfileConfigs(ctx context.Context) (*WlanCfgEntries, error) <span class="cov3" title="2">{
-        return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
+// GetConfig retrieves WLAN configuration data from the controller.
+func (s Service) GetConfig(ctx context.Context) (*WlanCfg, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfg](ctx, s.Client(), routes.WLANCfgPath)
 }</span>
 
-// GetProfileConfig retrieves a specific WLAN configuration entry by profile name.
-func (s Service) GetProfileConfig(ctx context.Context, profileName string) (*WlanCfgEntry, error) <span class="cov3" title="2">{
-        url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.WLANWlanCfgEntryPath, profileName)
-        return core.Get[WlanCfgEntry](ctx, s.Client(), url)
+// GetOperational retrieves WLAN operational data from the controller.
+func (s Service) GetOperational(ctx context.Context) (*WlanGlobalOper, error) <span class="cov3" title="2">{
+        return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath)
+}</span>
+
+// ListConfigEntries retrieves WLAN configuration entries.
+func (s Service) ListConfigEntries(ctx context.Context) (*WlanCfgEntries, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
 }</span>
 
 // ListPolicies retrieves WLAN policies.
@@ -4894,14 +5375,36 @@ func (s Service) ListWirelessAAAPolicyConfigs(ctx context.Context) (*WirelessAaa
         return core.Get[WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath)
 }</span>
 
-// GetConfig retrieves WLAN configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*WlanCfg, error) <span class="cov3" title="2">{
-        return core.Get[WlanCfg](ctx, s.Client(), routes.WLANCfgPath)
+// ListWlanCfgEntries retrieves WLAN configuration entries using WlanCfgWlanCfgEntries wrapper.
+func (s Service) ListWlanCfgEntries(ctx context.Context) (*WlanCfgWlanCfgEntries, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfgWlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
 }</span>
 
-// GetOperational retrieves WLAN operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*WlanGlobalOper, error) <span class="cov3" title="2">{
-        return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath)
+// ListWlanPolicies retrieves WLAN policies using WlanCfgWlanPolicies wrapper.
+func (s Service) ListWlanPolicies(ctx context.Context) (*WlanCfgWlanPolicies, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfgWlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
+}</span>
+
+// ListCfgPolicyListEntries retrieves policy list entries using WlanCfgPolicyListEntries wrapper.
+func (s Service) ListCfgPolicyListEntries(ctx context.Context) (*WlanCfgPolicyListEntries, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+}</span>
+
+// ListCfgWirelessAaaPolicyConfigs retrieves wireless AAA policy configurations using WlanCfgWirelessAaaPolicyConfigs wrapper.
+func (s Service) ListCfgWirelessAaaPolicyConfigs(ctx context.Context) (*WlanCfgWirelessAaaPolicyConfigs, error) <span class="cov3" title="2">{
+        return core.Get[WlanCfgWirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath)
+}</span>
+
+// ListDot11beProfiles retrieves Wi-Fi 7 / 802.11be profiles using WlanCfgDot11beProfiles wrapper.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListDot11beProfiles(ctx context.Context) (*WlanCfgDot11beProfiles, error) <span class="cov1" title="1">{
+        return core.Get[WlanCfgDot11beProfiles](ctx, s.Client(), routes.WLANDot11beProfilesPath)
+}</span>
+
+// ListWlanInfo retrieves WLAN information using WlanGlobalOperWlanInfo wrapper.
+// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+func (s Service) ListWlanInfo(ctx context.Context) (*WlanGlobalOperWlanInfo, error) <span class="cov1" title="1">{
+        return core.Get[WlanGlobalOperWlanInfo](ctx, s.Client(), routes.WLANWlanInfoPath)
 }</span>
 </pre>
 		

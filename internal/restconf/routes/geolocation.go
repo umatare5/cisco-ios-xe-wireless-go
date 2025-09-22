@@ -12,4 +12,7 @@ const (
 
 	// GeolocationApGeoLocStatsPath defines the path for AP geolocation statistics.
 	GeolocationApGeoLocStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-stats"
+
+	// GeolocationApGeoLocDataPath defines the path for AP geolocation data.
+	GeolocationApGeoLocDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data"
 )

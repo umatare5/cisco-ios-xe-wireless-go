@@ -260,3 +260,17 @@ type MloGroup6Ghz struct {
 	GroupID int  `json:"group-id,omitempty"` // MLO group identifier (YANG: IOS-XE 17.18.1)
 	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
 }
+
+// WlanCfgWlanPolicies wraps the WlanPolicies structure of the WLAN configuration data.
+type WlanCfgWlanPolicies struct {
+	CiscoIOSXEWirelessWlanCfgData struct {
+		WlanPolicies *WlanPolicies `json:"wlan-policies,omitempty"`
+	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"`
+}
+
+// WlanCfgDot11beProfiles wraps the Dot11beProfiles structure of the WLAN configuration data.
+type WlanCfgDot11beProfiles struct {
+	CiscoIOSXEWirelessWlanCfgData struct {
+		Dot11beProfiles *Dot11beProfiles `json:"dot11be-profiles,omitempty"`
+	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"`
+}

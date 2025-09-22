@@ -13,9 +13,6 @@ const (
 	// WATProfilesPath provides the path for WAT profiles.
 	WATProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-profiles"
 
-	// WATProfileByNamePath provides the path for WAT profile by name.
-	WATProfileByNamePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-profiles/wat-profile"
-
 	// WATEnablePath provides the path for WAT enable configuration.
 	WATEnablePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-enable"
 

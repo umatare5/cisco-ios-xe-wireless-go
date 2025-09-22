@@ -13,9 +13,18 @@ const (
 	// RFProfilesPath provides the path for retrieving RF profiles.
 	RFProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-profiles"
 
-	// RFProfileByNamePath provides the path for retrieving RF profile by name.
-	RFProfileByNamePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-profiles/rf-profile"
-
 	// RFTagsPath provides the path for retrieving RF tags.
 	RFTagsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags"
+
+	// RFTagByNamePath provides the path for retrieving RF tag by name.
+	RFTagByNamePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag"
+
+	// MultiBssidProfilesPath provides the path for retrieving Multi-BSSID profiles.
+	MultiBssidProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/multi-bssid-profiles"
+
+	// AtfPoliciesPath provides the path for retrieving ATF policies.
+	AtfPoliciesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/atf-policies"
+
+	// RFProfileDefaultEntriesPath provides the path for retrieving RF profile default entries.
+	RFProfileDefaultEntriesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-profile-default-entries"
 )

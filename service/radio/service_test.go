@@ -60,6 +60,13 @@ func TestRadioServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 				]
 			}
 		}`,
+		"Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data/radio-profiles/radio-profile=test-profile": `{
+			"Cisco-IOS-XE-wireless-radio-cfg:radio-profile": {
+				"name": "test-profile",
+				"desc": "Test radio profile",
+				"mesh-backhaul": true
+			}
+		}`,
 	}
 
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
@@ -86,6 +93,16 @@ func TestRadioServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Error("ListProfileConfigs returned nil result")
+		}
+	})
+
+	t.Run("ListRadioProfiles", func(t *testing.T) {
+		result, err := service.ListRadioProfiles(ctx)
+		if err != nil {
+			t.Errorf("ListRadioProfiles returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListRadioProfiles returned nil result")
 		}
 	})
 }
@@ -122,6 +139,16 @@ func TestRadioServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 			t.Error("Expected nil result on error, got non-nil result")
 		}
 	})
+
+	t.Run("ListRadioProfiles_404Error", func(t *testing.T) {
+		result, err := service.ListRadioProfiles(ctx)
+		if err == nil {
+			t.Error("Expected error for ListRadioProfiles, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
 }
 
 // TestRadioServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
@@ -153,4 +180,26 @@ func TestRadioServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 			t.Error("Expected nil result for error case")
 		}
 	})
+
+	t.Run("ListRadioProfiles_NilClient", func(t *testing.T) {
+		service := radio.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.ListRadioProfiles(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+}
+
+// TestRadioServiceUnit_ValidationErrors tests validation error scenarios.
+func TestRadioServiceUnit_ValidationErrors(t *testing.T) {
+	t.Parallel()
+
+	// Mock server for validation tests
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
+	server.Close()
 }

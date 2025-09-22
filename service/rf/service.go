@@ -27,3 +27,28 @@ func (s Service) RFTag() *RFTagService {
 func (s Service) GetConfig(ctx context.Context) (*RFCfg, error) {
 	return core.Get[RFCfg](ctx, s.Client(), routes.RFCfgPath)
 }
+
+// ListRFTags retrieves RF tags collection from the configuration.
+func (s Service) ListRFTags(ctx context.Context) (*RFCfgRFTags, error) {
+	return core.Get[RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+}
+
+// ListRFProfiles retrieves RF profiles collection from the configuration.
+func (s Service) ListRFProfiles(ctx context.Context) (*RFProfiles, error) {
+	return core.Get[RFProfiles](ctx, s.Client(), routes.RFProfilesPath)
+}
+
+// ListMultiBssidProfiles retrieves Multi-BSSID profiles from the configuration.
+func (s Service) ListMultiBssidProfiles(ctx context.Context) (*MultiBssidProfiles, error) {
+	return core.Get[MultiBssidProfiles](ctx, s.Client(), routes.MultiBssidProfilesPath)
+}
+
+// ListAtfPolicies retrieves Air Time Fairness policies from the configuration.
+func (s Service) ListAtfPolicies(ctx context.Context) (*AtfPolicies, error) {
+	return core.Get[AtfPolicies](ctx, s.Client(), routes.AtfPoliciesPath)
+}
+
+// ListRFProfileDefaultEntries retrieves RF profile default entries from the configuration.
+func (s Service) ListRFProfileDefaultEntries(ctx context.Context) (*RFProfileDefaultEntries, error) {
+	return core.Get[RFProfileDefaultEntries](ctx, s.Client(), routes.RFProfileDefaultEntriesPath)
+}

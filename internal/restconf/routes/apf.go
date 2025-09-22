@@ -9,4 +9,7 @@ package routes
 const (
 	// APFCfgPath retrieves complete Application Policy Framework configuration data.
 	APFCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"
+
+	// APFAPFPath retrieves APF configuration parameters.
+	APFAPFPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data/apf"
 )

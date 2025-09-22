@@ -22,3 +22,8 @@ func NewService(client *core.Client) Service {
 func (s Service) GetConfig(ctx context.Context) (*APFCfg, error) {
 	return core.Get[APFCfg](ctx, s.Client(), routes.APFCfgPath)
 }
+
+// ListAPFConfigs retrieves APF configuration parameters.
+func (s Service) ListAPFConfigs(ctx context.Context) (*APFCfgAPF, error) {
+	return core.Get[APFCfgAPF](ctx, s.Client(), routes.APFAPFPath)
+}

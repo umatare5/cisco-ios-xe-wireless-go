@@ -25,6 +25,25 @@ const (
 	// McastMulticastOperDataPath provides the path for retrieving multicast operational data.
 	McastMulticastOperDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/multicast-oper-data"
 
+	// McastRrcHistoryClientRecordDataPath provides the path for retrieving RRC history client record data.
+	// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+	McastRrcHistoryClientRecordDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-history-client-record-data"
+
+	// McastRrcSrRadioRecordPath provides the path for retrieving RRC stream radio record data.
+	// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+	McastRrcSrRadioRecordPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-sr-radio-record"
+
+	// McastRrcStreamRecordPath provides the path for retrieving RRC stream record data.
+	// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+	McastRrcStreamRecordPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-record"
+
+	// McastRrcStreamAdmitRecordPath provides the path for retrieving RRC stream admit record data.
+	// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
+	McastRrcStreamAdmitRecordPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-admit-record"
+
+	// McastRrcStreamDenyRecordPath provides the path for retrieving RRC stream deny record data.
+	McastRrcStreamDenyRecordPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-deny-record"
+
 	// McastStatisticsPath provides the path for retrieving multicast statistics.
 	McastStatisticsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/statistics"
 

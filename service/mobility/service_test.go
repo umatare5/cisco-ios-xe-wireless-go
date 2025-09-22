@@ -39,48 +39,390 @@ func TestMobilityServiceUnit_Constructor_Success(t *testing.T) {
 
 // TestMobilityServiceUnit_GetOperations_MockSuccess tests Get operations using mock server.
 func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
-	// Create mock server and service
-	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
+	// Create mock responses for a subset of mobility endpoints used in these tests
+	responses := map[string]string{
+		// Root configuration data
+		"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data": `{
+			"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data": {
+				"mobility-config": {
+					"local-group": "test-group",
+					"mac-address": "aa:bb:cc:dd:ee:ff"
+				}
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data/mobility-config": `{
+			"Cisco-IOS-XE-wireless-mobility-cfg:mobility-config": {
+				"local-group": "test-group",
+				"mac-address": "aa:bb:cc:dd:ee:ff"
+			}
+		}`,
+
+		// Root operational data
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data": {
+				"ap-cache": [{"ap-mac-address": "aa:bb:cc:dd:ee:ff"}],
+				"ap-peer-list": [{"peer-ip": "192.168.1.100"}],
+				"mm-global-data": {"tunnel-count": 5},
+				"mm-if-global-msg-stats": {"total-messages": 1000},
+				"mm-if-global-stats": {"total-events": 500},
+				"mobility-client-data": [{"client-mac": "11:22:33:44:55:66"}],
+				"mobility-client-stats": [{"client-events": 10}],
+				"mobility-global-dtls-stats": {"dtls-tunnels": 3},
+				"mobility-global-msg-stats": {"messages-sent": 200},
+				"mobility-global-stats": {"global-events": 150},
+				"wlan-client-limit": [{"wlan-id": 1, "client-limit": 50}]
+			}
+		}`,
+
+		// Individual endpoint responses
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/ap-cache": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:ap-cache": [
+				{"ap-mac-address": "aa:bb:cc:dd:ee:ff", "mobility-role": "anchor"}
+			]
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/ap-peer-list": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:ap-peer-list": [
+				{"peer-ip": "192.168.1.100", "ap-count": 10}
+			]
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mm-global-data": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mm-global-data": {
+				"tunnel-count": 5,
+				"mobility-role": "anchor"
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mm-if-global-msg-stats": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mm-if-global-msg-stats": {
+				"total-messages": 1000,
+				"successful-messages": 950
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mm-if-global-stats": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mm-if-global-stats": {
+				"total-events": 500,
+				"successful-events": 480
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-client-data": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-data": [
+				{"client-mac": "11:22:33:44:55:66", "mobility-status": "local"}
+			]
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-client-stats": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats": {
+				"mm-mblty-stats": {"mm-mblty-tx-pkts": 100, "mm-mblty-rx-pkts": 200},
+				"ipc-stats": [],
+				"dgram-stats": []
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-dtls-stats": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-dtls-stats": {
+				"dtls-tunnels": 3,
+				"active-tunnels": 2
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-msg-stats": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-msg-stats": {
+				"messages-sent": 200,
+				"messages-received": 180
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-stats": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-stats": {
+				"global-events": 150,
+				"tunnel-events": 100
+			}
+		}`,
+
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/wlan-client-limit": `{
+			"Cisco-IOS-XE-wireless-mobility-oper:wlan-client-limit": [
+				{"wlan-id": 1, "client-limit": 50}
+			]
+		}`,
+	}
+
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 	defer mockServer.Close()
 
-	// Create test client configured for the mock server
 	testClient := testutil.NewTestClient(mockServer)
 	service := mobility.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	// Test GetOperational operation
-	result, err := service.GetOperational(ctx)
+	// Test configuration functions
+	t.Run("GetConfig", func(t *testing.T) {
+		result, err := service.GetConfig(ctx)
+		if err != nil {
+			t.Fatalf("GetConfig failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("GetConfig returned nil result")
+		}
+	})
 
-	// Verify results based on mobility service implementation - expects HTTP 404 from mock server
-	if err == nil {
-		t.Error("Expected error for GetOperational, got nil")
-	}
-	if result != nil {
-		t.Error("Expected nil result for GetOperational, got non-nil result")
-	}
+	t.Run("ListMobilityConfig", func(t *testing.T) {
+		result, err := service.ListMobilityConfig(ctx)
+		if err != nil {
+			t.Fatalf("ListMobilityConfig failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListMobilityConfig returned nil result")
+		}
+	})
+
+	// Test base GetOperational function
+	t.Run("GetOperational", func(t *testing.T) {
+		result, err := service.GetOperational(ctx)
+		if err != nil {
+			t.Fatalf("GetOperational failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("GetOperational returned nil result")
+		}
+	})
+
+	// Test existing List/Get functions
+	t.Run("ListAPCache", func(t *testing.T) {
+		result, err := service.ListAPCache(ctx)
+		if err != nil {
+			t.Fatalf("ListAPCache failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListAPCache returned nil result")
+		}
+	})
+
+	t.Run("ListAPPeers", func(t *testing.T) {
+		result, err := service.ListAPPeers(ctx)
+		if err != nil {
+			t.Fatalf("ListAPPeers failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListAPPeers returned nil result")
+		}
+	})
+
+	t.Run("GetMMGlobalInfo", func(t *testing.T) {
+		result, err := service.GetMMGlobalInfo(ctx)
+		if err != nil {
+			t.Fatalf("GetMMGlobalInfo failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("GetMMGlobalInfo returned nil result")
+		}
+	})
+
+	t.Run("GetMMIFGlobalStats", func(t *testing.T) {
+		result, err := service.GetMMIFGlobalStats(ctx)
+		if err != nil {
+			t.Fatalf("GetMMIFGlobalStats failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("GetMMIFGlobalStats returned nil result")
+		}
+	})
+
+	t.Run("ListClients", func(t *testing.T) {
+		result, err := service.ListClients(ctx)
+		if err != nil {
+			t.Fatalf("ListClients failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListClients returned nil result")
+		}
+	})
+
+	t.Run("GetGlobalStats", func(t *testing.T) {
+		result, err := service.GetGlobalStats(ctx)
+		if err != nil {
+			t.Fatalf("GetGlobalStats failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("GetGlobalStats returned nil result")
+		}
+	})
+
+	// Test newly implemented List* functions
+	t.Run("ListMmIfGlobalMsgStats", func(t *testing.T) {
+		result, err := service.ListMmIfGlobalMsgStats(ctx)
+		if err != nil {
+			t.Fatalf("ListMmIfGlobalMsgStats failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListMmIfGlobalMsgStats returned nil result")
+		}
+	})
+
+	t.Run("ListClientStats", func(t *testing.T) {
+		result, err := service.ListClientStats(ctx)
+		if err != nil {
+			t.Fatalf("ListClientStats failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListClientStats returned nil result")
+		}
+	})
+
+	t.Run("ListGlobalDTLSStats", func(t *testing.T) {
+		result, err := service.ListGlobalDTLSStats(ctx)
+		if err != nil {
+			t.Fatalf("ListGlobalDTLSStats failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListGlobalDTLSStats returned nil result")
+		}
+	})
+
+	t.Run("ListGlobalMsgStats", func(t *testing.T) {
+		result, err := service.ListGlobalMsgStats(ctx)
+		if err != nil {
+			t.Fatalf("ListGlobalMsgStats failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListGlobalMsgStats returned nil result")
+		}
+	})
+
+	t.Run("ListWlanClientLimit", func(t *testing.T) {
+		result, err := service.ListWlanClientLimit(ctx)
+		if err != nil {
+			t.Fatalf("ListWlanClientLimit failed: %v", err)
+		}
+		if result == nil {
+			t.Fatal("ListWlanClientLimit returned nil result")
+		}
+	})
 }
 
 // TestMobilityServiceUnit_GetOperations_ErrorHandling tests error scenarios using mock server.
 func TestMobilityServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
-	// Create test server and service
-	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
-	defer server.Close()
+	// Create mock server that returns 404 for endpoints
+	errorPaths := []string{
+		"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data",
+		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data",
+	}
+	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
+	defer mockServer.Close()
 
-	// Create test client configured for the mock server
-	testClient := testutil.NewTestClient(server)
+	testClient := testutil.NewTestClient(mockServer)
 	service := mobility.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	// Test error scenarios
-	result, err := service.GetOperational(ctx)
+	// Test error handling for configuration functions
+	t.Run("GetConfig_404Error", func(t *testing.T) {
+		_, err := service.GetConfig(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+	})
 
-	// Verify error handling
-	if err == nil {
-		t.Error("Expected error for GetOperational, got nil")
-	}
-	if result != nil {
-		t.Error("Expected nil result on error, got non-nil result")
-	}
+	t.Run("ListMobilityConfig_404Error", func(t *testing.T) {
+		_, err := service.ListMobilityConfig(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+	})
+
+	// Test error handling for operational functions
+	t.Run("GetOperational_404Error", func(t *testing.T) {
+		_, err := service.GetOperational(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+	})
+
+	t.Run("ListAPCache_404Error", func(t *testing.T) {
+		_, err := service.ListAPCache(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+	})
+
+	t.Run("ListMmIfGlobalMsgStats_404Error", func(t *testing.T) {
+		_, err := service.ListMmIfGlobalMsgStats(ctx)
+		if err == nil {
+			t.Error("Expected error for 404 response, got nil")
+		}
+	})
+}
+
+// TestMobilityServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
+func TestMobilityServiceUnit_ErrorHandling_NilClient(t *testing.T) {
+	t.Parallel()
+
+	t.Run("GetConfig_NilClient", func(t *testing.T) {
+		service := mobility.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.GetConfig(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListMobilityConfig_NilClient", func(t *testing.T) {
+		service := mobility.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.ListMobilityConfig(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("GetOperational_NilClient", func(t *testing.T) {
+		service := mobility.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.GetOperational(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListAPCache_NilClient", func(t *testing.T) {
+		service := mobility.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.ListAPCache(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListMmIfGlobalMsgStats_NilClient", func(t *testing.T) {
+		service := mobility.NewService(nil)
+		ctx := testutil.TestContext(t)
+
+		result, err := service.ListMmIfGlobalMsgStats(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
 }
 
 // TestMobilityServiceUnit_ListOperations_MockSuccess tests List operations using mock server.
@@ -197,50 +539,6 @@ func TestMobilityServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Error("GetGlobalStats returned nil result")
-		}
-	})
-}
-
-// TestMobilityServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
-func TestMobilityServiceUnit_ErrorHandling_NilClient(t *testing.T) {
-	t.Parallel()
-
-	t.Run("ListAPCache_NilClient", func(t *testing.T) {
-		service := mobility.NewService(nil)
-		ctx := testutil.TestContext(t)
-
-		result, err := service.ListAPCache(ctx)
-		if err == nil {
-			t.Error("Expected error for nil client")
-		}
-		if result != nil {
-			t.Error("Expected nil result for error case")
-		}
-	})
-
-	t.Run("GetMMGlobalInfo_NilClient", func(t *testing.T) {
-		service := mobility.NewService(nil)
-		ctx := testutil.TestContext(t)
-
-		result, err := service.GetMMGlobalInfo(ctx)
-		if err == nil {
-			t.Error("Expected error for nil client")
-		}
-		if result != nil {
-			t.Error("Expected nil result for error case")
-		}
-	})
-
-	t.Run("GetGlobalStats_NilClient", func(t *testing.T) {
-		service := mobility.NewService(nil)
-		ctx := testutil.TestContext(t)
-
-		result, err := service.GetGlobalStats(ctx)
-		if err == nil {
-			t.Error("Expected error for nil client")
-		}
-		if result != nil {
-			t.Error("Expected nil result for error case")
 		}
 	})
 }

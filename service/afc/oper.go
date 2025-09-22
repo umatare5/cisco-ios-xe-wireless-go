@@ -13,6 +13,11 @@ type AFCOperEwlcAFCApResp struct {
 	EwlcAFCApResp []EwlcAFCApResp `json:"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp"`
 }
 
+// AFCOperEwlcAFCApReq represents AFC AP request data container.
+type AFCOperEwlcAFCApReq struct {
+	EwlcAFCApReq []EwlcAFCApReq `json:"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-req"`
+}
+
 // EwlcAFCApReq represents AFC request information from access point.
 type EwlcAFCApReq struct {
 	ApMAC           string          `json:"ap-mac"`                      // Access point MAC address (YANG: IOS-XE 17.18.1)

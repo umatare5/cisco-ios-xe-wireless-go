@@ -68,6 +68,46 @@ func TestMcastServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListRrcHistoryClientRecordData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mcast.Service).ListRrcHistoryClientRecordData(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListRrcSrRadioRecord",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mcast.Service).ListRrcSrRadioRecord(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListRrcStreamRecord",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mcast.Service).ListRrcStreamRecord(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListRrcStreamAdmitRecord",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mcast.Service).ListRrcStreamAdmitRecord(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListRrcStreamDenyRecord",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mcast.Service).ListRrcStreamDenyRecord(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
 		},
 		FilterMethods:   []integration.TestMethod{},
 		ValidationTests: []integration.ValidationTestMethod{},

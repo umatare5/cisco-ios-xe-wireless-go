@@ -26,8 +26,7 @@ func (s Service) GetConfig(ctx context.Context) (*RFIDCfg, error) {
 
 // GetConfigSettings retrieves the RFID configuration settings.
 func (s Service) GetConfigSettings(ctx context.Context) (*RFIDConfig, error) {
-	url := routes.RFIDCfgPath + "/rfid-config"
-	return core.Get[RFIDConfig](ctx, s.Client(), url)
+	return core.Get[RFIDConfig](ctx, s.Client(), routes.RFIDCfgRFIDConfigPath)
 }
 
 // GetGlobalInfo retrieves RFID global information.

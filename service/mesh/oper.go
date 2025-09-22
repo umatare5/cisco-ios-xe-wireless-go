@@ -34,7 +34,6 @@ type MeshSecurityStats struct {
 	TxPktsTotal *uint32 `json:"tx-pkts-total,omitempty"` // Total transmitted packets during security negotiation (YANG: IOS-XE 17.12.1)
 	RxPktsTotal *uint32 `json:"rx-pkts-total,omitempty"` // Total received packets during security negotiation (YANG: IOS-XE 17.12.1)
 	RxPktsError *uint32 `json:"rx-pkts-error,omitempty"` // Total error packets received during security negotiation (YANG: IOS-XE 17.12.1)
-	// Additional parent/child stats containers will be added in future releases based on YANG model updates
 }
 
 // MeshOperational represents mesh access point operational data.
@@ -49,4 +48,24 @@ type MeshOperational struct {
 	APRole                *string `json:"ap-role,omitempty"`                  // Current AP role (YANG: IOS-XE 17.12.1)
 	BackhaulRadioType     *string `json:"bhaul-radio-type,omitempty"`         // Backhaul radio type (YANG: IOS-XE 17.12.1)
 	BackhaulDataRateType  *string `json:"bhaul-data-rate-type,omitempty"`     // Backhaul data rate type (YANG: IOS-XE 17.12.1)
+}
+
+// MeshOperMeshQueueStats represents mesh queue statistics container.
+type MeshOperMeshQueueStats struct {
+	MeshQueueStats []MeshQueueStats `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-q-stats"` // Mesh packet queue statistics (YANG: IOS-XE 17.12.1)
+}
+
+// MeshOperMeshDataRateStats represents mesh data rate statistics container.
+type MeshOperMeshDataRateStats struct {
+	MeshDataRateStats []MeshDataRateStats `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-dr-stats"` // Mesh data rate statistics (YANG: IOS-XE 17.12.1)
+}
+
+// MeshOperMeshSecurityStats represents mesh security statistics container.
+type MeshOperMeshSecurityStats struct {
+	MeshSecurityStats []MeshSecurityStats `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-sec-stats"` // Mesh security statistics (YANG: IOS-XE 17.12.1)
+}
+
+// MeshOperMeshOperational represents mesh operational data container.
+type MeshOperMeshOperational struct {
+	MeshOperational []MeshOperational `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data"` // Mesh operational data (YANG: IOS-XE 17.12.1)
 }
