@@ -22,3 +22,8 @@ func NewService(client *core.Client) Service {
 func (s Service) GetConfig(ctx context.Context) (*Dot15Cfg, error) {
 	return core.Get[Dot15Cfg](ctx, s.Client(), routes.Dot15CfgPath)
 }
+
+// ListDot15GlobalConfigs retrieves 802.15 global configuration.
+func (s Service) ListDot15GlobalConfigs(ctx context.Context) (*Dot15CfgDot15GlobalConfig, error) {
+	return core.Get[Dot15CfgDot15GlobalConfig](ctx, s.Client(), routes.Dot15GlobalConfigPath)
+}

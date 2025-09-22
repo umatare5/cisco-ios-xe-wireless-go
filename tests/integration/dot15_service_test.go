@@ -32,7 +32,15 @@ func TestDot15ServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 					return service.(dot15.Service).GetConfig(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // 802.15 may not be configured
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListDot15GlobalConfigs",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(dot15.Service).ListDot15GlobalConfigs(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
 			},
 		},
 	}
