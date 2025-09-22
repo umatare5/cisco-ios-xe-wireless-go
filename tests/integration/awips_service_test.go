@@ -33,6 +33,51 @@ func TestAWIPSServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 				},
 				LogResult: true,
 			},
+			{
+				Name: "ListAWIPSPerApInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(awips.Service).ListAWIPSPerApInfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListAWIPSDwldStatus",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(awips.Service).ListAWIPSDwldStatus(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListAWIPSApDwldStatus",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(awips.Service).ListAWIPSApDwldStatus(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListAWIPSPerSignStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(awips.Service).ListAWIPSPerSignStats(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListAWIPSGlobStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(awips.Service).ListAWIPSGlobStats(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
+			{
+				Name: "ListAWIPSDwldStatusWncd",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(awips.Service).ListAWIPSDwldStatusWncd(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+			},
 		},
 		FilterMethods:   []integration.TestMethod{},
 		ValidationTests: []integration.ValidationTestMethod{},
