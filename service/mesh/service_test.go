@@ -39,7 +39,7 @@ func TestMeshServiceUnit_Constructor_Success(t *testing.T) {
 	})
 }
 
-// TestMeshServiceUnit_GetOperations_MockSuccess tests Get configuration operations using mock server.
+// TestMeshServiceUnit_GetOperations_MockSuccess tests Get configuration and operational operations using a mock server.
 func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	t.Parallel()
 
