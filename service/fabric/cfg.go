@@ -3,10 +3,10 @@ package fabric
 // CiscoIOSXEWirelessFabricCfg represents fabric configuration data container.
 type CiscoIOSXEWirelessFabricCfg struct {
 	CiscoIOSXEWirelessFabricCfgData struct {
-		Fabric                  *FabricConfig        `json:"fabric"`                    // Fabric specific configuration (Live: IOS-XE 17.12.5)
+		Fabric                  *FabricConfig        `json:"fabric"`                    // Fabric specific configuration (Live: IOS-XE 17.12.6a)
 		FabricProfiles          *FabricProfiles      `json:"fabric-profiles,omitempty"` // Fabric profiles configuration (YANG: IOS-XE 17.12.1)
-		FabricControlplaneNames *FabricControlplanes `json:"fabric-controlplane-names"` // Fabric control plane name configuration (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"` // Fabric configuration data (Live: IOS-XE 17.12.5)
+		FabricControlplaneNames *FabricControlplanes `json:"fabric-controlplane-names"` // Fabric control plane name configuration (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"` // Fabric configuration data (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessFabricCfgFabric represents fabric configuration container.
@@ -46,13 +46,13 @@ type FabricProfile struct {
 
 // FabricControlplanes represents fabric control planes container.
 type FabricControlplanes struct {
-	FabricControlplaneName []FabricControlplaneName `json:"fabric-controlplane-name,omitempty"` // List of fabric control plane configurations (Live: IOS-XE 17.12.5)
+	FabricControlplaneName []FabricControlplaneName `json:"fabric-controlplane-name,omitempty"` // List of fabric control plane configurations (Live: IOS-XE 17.12.6a)
 }
 
 // FabricControlplaneName represents individual fabric control plane configuration.
 type FabricControlplaneName struct {
-	ControlPlaneName            string                       `json:"control-plane-name"`                        // Fabric control plane name (Live: IOS-XE 17.12.5)
-	Description                 string                       `json:"description,omitempty"`                     // Fabric control plane description (Live: IOS-XE 17.12.5)
+	ControlPlaneName            string                       `json:"control-plane-name"`                        // Fabric control plane name (Live: IOS-XE 17.12.6a)
+	Description                 string                       `json:"description,omitempty"`                     // Fabric control plane description (Live: IOS-XE 17.12.6a)
 	FabricControlPlaneIPConfigs *FabricControlPlaneIPConfigs `json:"fabric-control-plane-ip-configs,omitempty"` // Fabric control plane configuration (YANG: IOS-XE 17.12.1)
 }
 
