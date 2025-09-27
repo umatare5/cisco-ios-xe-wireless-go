@@ -287,7 +287,6 @@ func (s Service) ListRadioResetStats(ctx context.Context) (*CiscoIOSXEWirelessAp
 }
 
 // GetRadioResetStatsByAPMACAndRadioID retrieves radio reset statistics for a specific AP MAC and radio ID.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetRadioResetStatsByAPMACAndRadioID(
 	ctx context.Context, apMAC string, radioID int,
 ) (*CiscoIOSXEWirelessApOperRadioResetStats, error) {
@@ -318,7 +317,6 @@ func (s Service) ListQosClientData(ctx context.Context) (*CiscoIOSXEWirelessApOp
 }
 
 // GetQosClientDataByClientMAC retrieves QoS client data for a specific client MAC address.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetQosClientDataByClientMAC(
 	ctx context.Context, clientMAC string,
 ) (*CiscoIOSXEWirelessApOperQosClientData, error) {
@@ -379,7 +377,6 @@ func (s Service) ListEthernetMACWtpMACMaps(ctx context.Context) (*CiscoIOSXEWire
 }
 
 // GetEthernetMACWtpMACMapByEthernetMAC retrieves Ethernet MAC to WTP MAC mapping for a specific Ethernet MAC address.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetEthernetMACWtpMACMapByEthernetMAC(
 	ctx context.Context, ethernetMAC string,
 ) (*CiscoIOSXEWirelessApOperEthernetMACWtpMACMap, error) {
@@ -438,7 +435,6 @@ func (s Service) ListEthernetIfStats(ctx context.Context) (*CiscoIOSXEWirelessAp
 }
 
 // GetEthernetIfStatsByWTPMACAndInterfaceID retrieves Ethernet interface statistics for a specific WTP MAC and interface ID.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetEthernetIfStatsByWTPMACAndInterfaceID(
 	ctx context.Context,
 	wtpMAC string,
@@ -479,7 +475,6 @@ func (s Service) ListApIoxOperData(ctx context.Context) (*CiscoIOSXEWirelessApOp
 }
 
 // GetApIoxOperDataByWTPMAC retrieves AP IOx operational data for a specific WTP MAC address.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetApIoxOperDataByWTPMAC(
 	ctx context.Context, wtpMAC string,
 ) (*CiscoIOSXEWirelessApOperApIoxOperData, error) {
@@ -511,7 +506,6 @@ func (s Service) ListRlanOper(ctx context.Context) (*CiscoIOSXEWirelessApOperRla
 }
 
 // GetRlanOperByWTPMACAndPortID retrieves RLAN operational data for a specific WTP MAC and port ID.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetRlanOperByWTPMACAndPortID(
 	ctx context.Context, wtpMAC string, portID int,
 ) (*CiscoIOSXEWirelessApOperRlanOper, error) {
@@ -537,7 +531,7 @@ func (s Service) GetRlanOperByWTPMACAndPortID(
 }
 
 // ListEwlcMewlcPredownloadRec retrieves EWLC MEWLC predownload record information.
-// Note: Available on 17.12.5, Unavailable on 17.15.4b.
+// Note: Available on 17.12.6a, but unavailable on 17.15.4b.
 func (s Service) ListEwlcMewlcPredownloadRec(
 	ctx context.Context,
 ) (*CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec, error) {
@@ -554,7 +548,6 @@ func (s Service) ListCdpCacheData(ctx context.Context) (*CiscoIOSXEWirelessApOpe
 }
 
 // GetCdpCacheDataByWTPMAC retrieves CDP cache data for a specific WTP MAC address.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetCdpCacheDataByWTPMAC(
 	ctx context.Context, wtpMAC string,
 ) (*CiscoIOSXEWirelessApOperCdpCacheData, error) {
@@ -581,7 +574,6 @@ func (s Service) ListLldpNeigh(ctx context.Context) (*CiscoIOSXEWirelessApOperLl
 }
 
 // GetLldpNeighByWTPMAC retrieves LLDP neighbor information for a specific WTP MAC address.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetLldpNeighByWTPMAC(
 	ctx context.Context, wtpMAC string,
 ) (*CiscoIOSXEWirelessApOperLldpNeigh, error) {
@@ -639,7 +631,6 @@ func (s Service) ListCountryOper(ctx context.Context) (*CiscoIOSXEWirelessApOper
 }
 
 // GetCountryOperByWTPMACAndRadioID retrieves country operational data for a specific WTP MAC and radio ID.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetCountryOperByWTPMACAndRadioID(
 	ctx context.Context, wtpMAC string, radioID int,
 ) (*CiscoIOSXEWirelessApOperCountryOper, error) {
@@ -670,7 +661,6 @@ func (s Service) ListSuppCountryOper(ctx context.Context) (*CiscoIOSXEWirelessAp
 }
 
 // GetSuppCountryOperByWTPMACAndRadioID retrieves supported country operational data for a specific WTP MAC and radio ID.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetSuppCountryOperByWTPMACAndRadioID(
 	ctx context.Context, wtpMAC string, radioID int,
 ) (*CiscoIOSXEWirelessApOperSuppCountryOper, error) {
