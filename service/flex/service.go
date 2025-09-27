@@ -19,11 +19,11 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves FlexConnect configuration data.
-func (s Service) GetConfig(ctx context.Context) (*FlexCfg, error) {
-	return core.Get[FlexCfg](ctx, s.Client(), routes.FlexCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessFlexCfg, error) {
+	return core.Get[CiscoIOSXEWirelessFlexCfg](ctx, s.Client(), routes.FlexCfgPath)
 }
 
 // ListFlexPolicyEntries retrieves FlexConnect policy entries.
-func (s Service) ListFlexPolicyEntries(ctx context.Context) (*FlexCfgFlexPolicyEntries, error) {
-	return core.Get[FlexCfgFlexPolicyEntries](ctx, s.Client(), routes.FlexPolicyEntriesPath)
+func (s Service) ListFlexPolicyEntries(ctx context.Context) (*CiscoIOSXEWirelessFlexCfgFlexPolicyEntries, error) {
+	return core.Get[CiscoIOSXEWirelessFlexCfgFlexPolicyEntries](ctx, s.Client(), routes.FlexPolicyEntriesPath)
 }

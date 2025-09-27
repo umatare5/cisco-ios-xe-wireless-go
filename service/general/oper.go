@@ -1,14 +1,14 @@
 package general
 
-// GeneralOper represents the complete general operational data response.
-type GeneralOper struct {
+// CiscoIOSXEWirelessGeneralOper represents the complete general operational data response.
+type CiscoIOSXEWirelessGeneralOper struct {
 	CiscoIOSXEWirelessGeneralOperData struct {
 		MgmtIntfData MgmtIntfData `json:"mgmt-intf-data"` // Controller wireless interface data (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-general-oper:general-oper-data"` // General operational data (Live: IOS-XE 17.12.5)
 }
 
-// GeneralOperMgmtIntfData represents the management interface data response.
-type GeneralOperMgmtIntfData struct {
+// CiscoIOSXEWirelessGeneralOperMgmtIntfData represents the management interface data response.
+type CiscoIOSXEWirelessGeneralOperMgmtIntfData struct {
 	MgmtIntfData MgmtIntfData `json:"Cisco-IOS-XE-wireless-general-oper:mgmt-intf-data"` // Controller wireless interface data (Live: IOS-XE 17.12.5)
 }
 

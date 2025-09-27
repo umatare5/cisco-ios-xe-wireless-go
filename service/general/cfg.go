@@ -3,7 +3,7 @@ package general
 
 // GeneralCfg represents the general configuration response.
 type GeneralCfg struct {
-	CiscoIOSXEWirelessGeneralCfgGeneralCfgData struct {
+	GeneralCfgData struct {
 		MewlcConfig             MewlcConfig              `json:"mewlc-config"`                          // Embedded Wireless Controller configuration (Live: IOS-XE 17.12.5)
 		CacConfig               CacConfig                `json:"cac-config"`                            // CAC resources values configuration (Live: IOS-XE 17.12.5)
 		Mfp                     Mfp                      `json:"mfp"`                                   // Management Frame Protection configuration (Live: IOS-XE 17.12.5)
@@ -20,68 +20,68 @@ type GeneralCfg struct {
 	} `json:"Cisco-IOS-XE-wireless-general-cfg:general-cfg-data"` // General configuration data (Live: IOS-XE 17.12.5)
 }
 
-// GeneralCfgMewlcConfig represents the corresponding data structure.
-type GeneralCfgMewlcConfig struct {
+// CiscoIOSXEWirelessGeneralCfgMewlcConfig represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgMewlcConfig struct {
 	MewlcConfig MewlcConfig `json:"Cisco-IOS-XE-wireless-general-cfg:mewlc-config"`
 }
 
-// GeneralCfgCacConfig represents the corresponding data structure.
-type GeneralCfgCacConfig struct {
+// CiscoIOSXEWirelessGeneralCfgCacConfig represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgCacConfig struct {
 	CacConfig CacConfig `json:"Cisco-IOS-XE-wireless-general-cfg:cac-config"`
 }
 
-// GeneralCfgMfp represents the corresponding data structure.
-type GeneralCfgMfp struct {
+// CiscoIOSXEWirelessGeneralCfgMfp represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgMfp struct {
 	Mfp Mfp `json:"Cisco-IOS-XE-wireless-general-cfg:mfp"`
 }
 
-// GeneralCfgFipsCfg represents the corresponding data structure.
-type GeneralCfgFipsCfg struct {
+// CiscoIOSXEWirelessGeneralCfgFipsCfg represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgFipsCfg struct {
 	FipsCfg FipsCfg `json:"Cisco-IOS-XE-wireless-general-cfg:fips-cfg"`
 }
 
-// GeneralCfgWsaApClientEvent represents the corresponding data structure.
-type GeneralCfgWsaApClientEvent struct {
+// CiscoIOSXEWirelessGeneralCfgWsaApClientEvent represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgWsaApClientEvent struct {
 	WsaApClientEvent WsaApClientEvent `json:"Cisco-IOS-XE-wireless-general-cfg:wsa-ap-client-event"`
 }
 
-// GeneralCfgSimL3InterfaceCacheData represents the corresponding data structure.
-type GeneralCfgSimL3InterfaceCacheData struct {
+// CiscoIOSXEWirelessGeneralCfgSimL3InterfaceCacheData represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgSimL3InterfaceCacheData struct {
 	SimL3InterfaceCacheData *SimL3InterfaceCacheData `json:"Cisco-IOS-XE-wireless-general-cfg:sim-l3-interface-cache-data,omitempty"`
 }
 
-// GeneralCfgWlcManagementData represents the corresponding data structure.
-type GeneralCfgWlcManagementData struct {
+// CiscoIOSXEWirelessGeneralCfgWlcManagementData represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgWlcManagementData struct {
 	WlcManagementData *WlcManagementData `json:"Cisco-IOS-XE-wireless-general-cfg:wlc-management-data,omitempty"`
 }
 
-// GeneralCfgLaginfo represents the corresponding data structure.
-type GeneralCfgLaginfo struct {
+// CiscoIOSXEWirelessGeneralCfgLaginfo represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgLaginfo struct {
 	Laginfo Laginfo `json:"Cisco-IOS-XE-wireless-general-cfg:laginfo"`
 }
 
-// GeneralCfgMulticastConfig represents the corresponding data structure.
-type GeneralCfgMulticastConfig struct {
+// CiscoIOSXEWirelessGeneralCfgMulticastConfig represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgMulticastConfig struct {
 	MulticastConfig *MulticastConfig `json:"Cisco-IOS-XE-wireless-general-cfg:multicast-config,omitempty"`
 }
 
-// GeneralCfgFeatureUsageCfg represents the corresponding data structure.
-type GeneralCfgFeatureUsageCfg struct {
+// CiscoIOSXEWirelessGeneralCfgFeatureUsageCfg represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgFeatureUsageCfg struct {
 	FeatureUsageCfg FeatureUsageCfg `json:"Cisco-IOS-XE-wireless-general-cfg:feature-usage-cfg"`
 }
 
-// GeneralCfgThresholdWarnCfg represents the corresponding data structure.
-type GeneralCfgThresholdWarnCfg struct {
+// CiscoIOSXEWirelessGeneralCfgThresholdWarnCfg represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgThresholdWarnCfg struct {
 	ThresholdWarnCfg ThresholdWarnCfg `json:"Cisco-IOS-XE-wireless-general-cfg:threshold-warn-cfg"`
 }
 
-// GeneralCfgApLocRangingCfg represents the corresponding data structure.
-type GeneralCfgApLocRangingCfg struct {
+// CiscoIOSXEWirelessGeneralCfgApLocRangingCfg represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgApLocRangingCfg struct {
 	ApLocRangingCfg ApLocRangingCfg `json:"Cisco-IOS-XE-wireless-general-cfg:ap-loc-ranging-cfg"`
 }
 
-// GeneralCfgGeolocationCfg represents the corresponding data structure.
-type GeneralCfgGeolocationCfg struct {
+// CiscoIOSXEWirelessGeneralCfgGeolocationCfg represents the corresponding data structure.
+type CiscoIOSXEWirelessGeneralCfgGeolocationCfg struct {
 	GeolocationCfg GeolocationCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:geolocation-cfg"`
 }
 

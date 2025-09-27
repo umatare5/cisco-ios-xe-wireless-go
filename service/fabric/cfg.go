@@ -1,7 +1,7 @@
 package fabric
 
-// FabricCfg represents fabric configuration data container.
-type FabricCfg struct {
+// CiscoIOSXEWirelessFabricCfg represents fabric configuration data container.
+type CiscoIOSXEWirelessFabricCfg struct {
 	CiscoIOSXEWirelessFabricCfgData struct {
 		Fabric                  *FabricConfig        `json:"fabric"`                    // Fabric specific configuration (Live: IOS-XE 17.12.5)
 		FabricProfiles          *FabricProfiles      `json:"fabric-profiles,omitempty"` // Fabric profiles configuration (YANG: IOS-XE 17.12.1)
@@ -9,18 +9,18 @@ type FabricCfg struct {
 	} `json:"Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data"` // Fabric configuration data (Live: IOS-XE 17.12.5)
 }
 
-// FabricCfgFabric represents fabric configuration container.
-type FabricCfgFabric struct {
+// CiscoIOSXEWirelessFabricCfgFabric represents fabric configuration container.
+type CiscoIOSXEWirelessFabricCfgFabric struct {
 	Fabric *FabricConfig `json:"Cisco-IOS-XE-wireless-fabric-cfg:fabric,omitempty"`
 }
 
-// FabricCfgFabricProfiles represents fabric profiles container.
-type FabricCfgFabricProfiles struct {
+// CiscoIOSXEWirelessFabricCfgFabricProfiles represents fabric profiles container.
+type CiscoIOSXEWirelessFabricCfgFabricProfiles struct {
 	FabricProfiles *FabricProfiles `json:"Cisco-IOS-XE-wireless-fabric-cfg:fabric-profiles,omitempty"`
 }
 
-// FabricCfgFabricControlplaneNames represents fabric control plane names container.
-type FabricCfgFabricControlplaneNames struct {
+// CiscoIOSXEWirelessFabricCfgFabricControlplaneNames represents fabric control plane names container.
+type CiscoIOSXEWirelessFabricCfgFabricControlplaneNames struct {
 	FabricControlplaneNames *FabricControlplanes `json:"Cisco-IOS-XE-wireless-fabric-cfg:fabric-controlplane-names,omitempty"`
 }
 

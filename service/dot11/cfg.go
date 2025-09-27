@@ -1,33 +1,36 @@
 package dot11
 
-// Dot11Cfg represents the 802.11 configuration data container.
-type Dot11Cfg struct {
-	CiscoIOSXEWirelessDot11CfgData struct {
-		ConfiguredCountries *Dot11ConfiguredCountries `json:"configured-countries"` // Country code configuration container (Live: IOS-XE 17.12.5)
-		Dot11Entries        *Dot11Entries             `json:"dot11-entries"`        // 802.11 protocol related config container (Live: IOS-XE 17.12.5)
-		Dot11acMcsEntries   *Dot11acMcsEntries        `json:"dot11ac-mcs-entries"`  // 802.11ac MCS entries container (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"` // 802.11 configuration data (Live: IOS-XE 17.12.5)
+// Dot11CfgData represents the 802.11 configuration data container.
+type Dot11CfgData struct {
+	ConfiguredCountries *Dot11ConfiguredCountries `json:"configured-countries,omitempty"` // Country code configuration container (Live: IOS-XE 17.12.5)
+	Dot11Entries        *Dot11Entries             `json:"dot11-entries,omitempty"`        // 802.11 protocol related config container (Live: IOS-XE 17.12.5)
+	Dot11acMcsEntries   *Dot11acMcsEntries        `json:"dot11ac-mcs-entries,omitempty"`  // 802.11ac MCS entries container (Live: IOS-XE 17.12.5)
 }
 
-// Dot11CfgFilter represents filtered 802.11 configuration data container.
-type Dot11CfgFilter struct {
+// CiscoIOSXEWirelessDot11Cfg represents the 802.11 configuration data container.
+type CiscoIOSXEWirelessDot11Cfg struct {
+	CiscoIOSXEWirelessDot11CfgData Dot11CfgData `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"` // 802.11 configuration data (Live: IOS-XE 17.12.5)
+}
+
+// CiscoIOSXEWirelessDot11CfgFilter represents filtered 802.11 configuration data container.
+type CiscoIOSXEWirelessDot11CfgFilter struct {
 	ConfiguredCountry []Dot11ConfiguredCountry `json:"Cisco-IOS-XE-wireless-dot11-cfg:configured-country,omitempty"`
 	Dot11Entry        []Dot11Entry             `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-entry,omitempty"`
 	Dot11acMcsEntry   []Dot11acMcsEntry        `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11ac-mcs-entry,omitempty"`
 }
 
-// Dot11CfgConfiguredCountries represents the configured countries wrapper.
-type Dot11CfgConfiguredCountries struct {
+// CiscoIOSXEWirelessDot11CfgConfiguredCountries represents the configured countries wrapper.
+type CiscoIOSXEWirelessDot11CfgConfiguredCountries struct {
 	ConfiguredCountries *Dot11ConfiguredCountries `json:"Cisco-IOS-XE-wireless-dot11-cfg:configured-countries,omitempty"`
 }
 
-// Dot11CfgDot11Entries represents the 802.11 entries wrapper.
-type Dot11CfgDot11Entries struct {
+// CiscoIOSXEWirelessDot11CfgDot11Entries represents the 802.11 entries wrapper.
+type CiscoIOSXEWirelessDot11CfgDot11Entries struct {
 	Dot11Entries *Dot11Entries `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-entries,omitempty"`
 }
 
-// Dot11CfgDot11acMcsEntries represents the 802.11ac MCS entries wrapper.
-type Dot11CfgDot11acMcsEntries struct {
+// CiscoIOSXEWirelessDot11CfgDot11acMcsEntries represents the 802.11ac MCS entries wrapper.
+type CiscoIOSXEWirelessDot11CfgDot11acMcsEntries struct {
 	Dot11acMcsEntries *Dot11acMcsEntries `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11ac-mcs-entries,omitempty"`
 }
 
