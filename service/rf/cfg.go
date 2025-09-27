@@ -16,11 +16,6 @@ type CiscoIOSXEWirelessRFCfgRFTags struct {
 	RFTags RFTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
 }
 
-// CiscoIOSXEWirelessRFCfgRFTag represents individual RF tag response structure.
-type CiscoIOSXEWirelessRFCfgRFTag struct {
-	RFTagList []RFTag `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tag"`
-}
-
 // MultiBssidProfiles represents Multi-BSSID profiles collection.
 type MultiBssidProfiles struct {
 	MultiBssidProfileList []MultiBssidProfile `json:"multi-bssid-profile"` // Multi BSSID profile list (Live: IOS-XE 17.12.6a)
@@ -33,7 +28,7 @@ type AtfPolicies struct {
 
 // RFTags represents RF tags collection.
 type RFTags struct {
-	RFTagList []RFTag `json:"rf-tag"` // RF tag configuration list (Live: IOS-XE 17.12.6a)
+	RFTags []RFTag `json:"rf-tag"` // RF tag configuration list (Live: IOS-XE 17.12.6a)
 }
 
 // RFProfiles represents RF profiles collection.

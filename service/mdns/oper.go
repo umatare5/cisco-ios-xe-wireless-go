@@ -3,8 +3,8 @@ package mdns
 // CiscoIOSXEWirelessMDNSOper represents mDNS operational data container.
 type CiscoIOSXEWirelessMDNSOper struct {
 	CiscoIOSXEWirelessMDNSOperData struct {
-		MDNSGlobalStats CiscoIOSXEWirelessMDNSGlobalStats `json:"mdns-global-stats"` // mDNS global statistics (Live: IOS-XE 17.12.6a)
-		MDNSWlanStats   []CiscoIOSXEWirelessMDNSWlanStats `json:"mdns-wlan-stats"`   // mDNS per-WLAN statistics (Live: IOS-XE 17.12.6a)
+		MDNSGlobalStats MDNSGlobalStatsData `json:"mdns-global-stats"` // mDNS global statistics (Live: IOS-XE 17.12.6a)
+		MDNSWlanStats   []MDNSWlanStat      `json:"mdns-wlan-stats"`   // mDNS per-WLAN statistics (Live: IOS-XE 17.12.6a)
 	} `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data"` // mDNS operational data (Live: IOS-XE 17.12.6a)
 }
 

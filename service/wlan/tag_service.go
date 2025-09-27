@@ -47,11 +47,9 @@ func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*P
 
 // ListPolicyTags retrieves all policy tag configurations.
 func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntry, error) {
-	result, err := core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntries](
-		ctx,
-		s.Client(),
-		routes.WLANPolicyListEntriesPath,
-	)
+	wlanService := NewService(s.Client())
+
+	result, err := wlanService.ListCfgPolicyListEntries(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -59,11 +57,9 @@ func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntr
 	if result == nil {
 		return []PolicyListEntry{}, nil
 	}
-
 	if result.PolicyListEntries == nil {
 		return []PolicyListEntry{}, nil
 	}
-
 	if result.PolicyListEntries.PolicyListEntry == nil {
 		return []PolicyListEntry{}, nil
 	}
@@ -79,12 +75,10 @@ func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *PolicyLi
 	if config.TagName == "" {
 		return errors.New("policy tag name cannot be empty")
 	}
-
 	if err := s.validateTagName(config.TagName); err != nil {
 		return err
 	}
 
-	// Use the model directly without conversion
 	payload := s.buildPayload(*config)
 	return core.PostVoid(ctx, s.Client(), routes.WLANPolicyListEntriesPath, payload)
 }
@@ -97,12 +91,10 @@ func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *PolicyListE
 	if config.TagName == "" {
 		return errors.New("policy tag name cannot be empty")
 	}
-
 	if err := s.validateTagName(config.TagName); err != nil {
 		return err
 	}
 
-	// Use the model directly without conversion
 	payload := s.buildPayload(*config)
 	return core.PatchVoid(ctx, s.Client(), s.buildTagURL(config.TagName), payload)
 }
@@ -197,9 +189,9 @@ func (s *PolicyTagService) buildTagURL(tagName string) string {
 	)
 }
 
-// buildPayload builds a payload for tag operations directly.
-func (s *PolicyTagService) buildPayload(config PolicyListEntry) map[string]interface{} {
-	return map[string]interface{}{
-		"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entry": config,
+// buildPayload builds a payload for tag operations using the request.
+func (s *PolicyTagService) buildPayload(config PolicyListEntry) CiscoIOSXEWirelessWlanPolicyListEntriesPayload {
+	return CiscoIOSXEWirelessWlanPolicyListEntriesPayload{
+		PolicyListEntry: config,
 	}
 }

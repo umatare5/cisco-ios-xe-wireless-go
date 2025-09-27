@@ -103,6 +103,75 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"rf-profile-default-entry": []
 			}
 		}`,
+		// RRM operational data responses
+		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data": `{
+			"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data": {
+				"ap-auto-rf-dot11-data": [
+					{
+						"wtp-mac": "28:ac:9e:bb:3c:80",
+						"radio-slot-id": 0,
+						"neighbor-radio-info": {
+							"neighbor-radio-list": [
+								{
+									"neighbor-radio-info": {
+										"neighbor-radio-mac": "f0:d8:05:2c:41:20",
+										"neighbor-radio-slot-id": 0,
+										"rssi": -21,
+										"snr": 62,
+										"channel": 11,
+										"power": 18,
+										"group-leader-ip": "192.168.255.4",
+										"chan-width": "radio-neighbor-chan-width-20-mhz",
+										"sensor-covered": false
+									}
+								}
+							]
+						}
+					}
+				],
+				"ap-dot11-radar-data": [
+					{
+						"wtp-mac": "28:ac:9e:bb:3c:80",
+						"radio-slot-id": 0,
+						"last-radar-on-radio": "1970-01-01T00:00:00+00:00"
+					}
+				]
+			}
+		}`,
+		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data": `{
+			"Cisco-IOS-XE-wireless-rrm-oper:ap-auto-rf-dot11-data": [
+				{
+					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"radio-slot-id": 0,
+					"neighbor-radio-info": {
+						"neighbor-radio-list": [
+							{
+								"neighbor-radio-info": {
+									"neighbor-radio-mac": "f0:d8:05:2c:41:20",
+									"neighbor-radio-slot-id": 0,
+									"rssi": -21,
+									"snr": 62,
+									"channel": 11,
+									"power": 18,
+									"group-leader-ip": "192.168.255.4",
+									"chan-width": "radio-neighbor-chan-width-20-mhz",
+									"sensor-covered": false
+								}
+							}
+						]
+					}
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-radar-data": `{
+			"Cisco-IOS-XE-wireless-rrm-oper:ap-dot11-radar-data": [
+				{
+					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"radio-slot-id": 0,
+					"last-radar-on-radio": "1970-01-01T00:00:00+00:00"
+				}
+			]
+		}`,
 	}
 
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
@@ -177,6 +246,36 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			t.Error("ListRFProfileDefaultEntries returned nil result")
 		}
 	})
+
+	t.Run("GetOperational", func(t *testing.T) {
+		result, err := service.GetOperational(ctx)
+		if err != nil {
+			t.Errorf("GetOperational returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("GetOperational returned nil result")
+		}
+	})
+
+	t.Run("GetAutoRFDot11Data", func(t *testing.T) {
+		result, err := service.GetAutoRFDot11Data(ctx)
+		if err != nil {
+			t.Errorf("GetAutoRFDot11Data returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("GetAutoRFDot11Data returned nil result")
+		}
+	})
+
+	t.Run("GetRadarDetectionData", func(t *testing.T) {
+		result, err := service.GetRadarDetectionData(ctx)
+		if err != nil {
+			t.Errorf("GetRadarDetectionData returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("GetRadarDetectionData returned nil result")
+		}
+	})
 }
 
 func TestRfServiceUnit_ErrorHandling_NilClient(t *testing.T) {
@@ -237,6 +336,36 @@ func TestRfServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 
 	t.Run("ListRFProfileDefaultEntries_NilClient", func(t *testing.T) {
 		result, err := service.ListRFProfileDefaultEntries(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("GetOperational_NilClient", func(t *testing.T) {
+		result, err := service.GetOperational(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("GetAutoRFDot11Data_NilClient", func(t *testing.T) {
+		result, err := service.GetAutoRFDot11Data(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("GetRadarDetectionData_NilClient", func(t *testing.T) {
+		result, err := service.GetRadarDetectionData(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

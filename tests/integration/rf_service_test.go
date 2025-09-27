@@ -73,3 +73,45 @@ func TestRFServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 
 	integration.RunTestSuite(t, suite)
 }
+
+// TestRFServiceIntegration_GetOperationalOperations_Success validates RF service
+// operational data retrieval against live WNC controller.
+func TestRFServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
+	t.Parallel()
+
+	// Define the test suite configuration
+	suite := integration.TestSuite{
+		Config: integration.TestSuiteConfig{
+			ServiceName: "RF Operational",
+			ServiceConstructor: func(client any) any {
+				return rf.NewService(client.(*core.Client))
+			},
+			UseTimeout: true,
+		},
+		BasicMethods: []integration.TestMethod{
+			{
+				Name: "GetOperational",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).GetOperational(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetAutoRFDot11Data",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).GetAutoRFDot11Data(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "GetRadarDetectionData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rf.Service).GetRadarDetectionData(ctx)
+				},
+				LogResult: true,
+			},
+		},
+	}
+
+	integration.RunTestSuite(t, suite)
+}

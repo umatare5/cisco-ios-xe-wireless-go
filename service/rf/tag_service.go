@@ -34,34 +34,33 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*RFTag, er
 		return nil, err
 	}
 
-	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTagPayload](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
-
-	if result == nil || result.RFTagList == nil || len(result.RFTagList) == 0 {
+	if result == nil || result.RFTags == nil || len(result.RFTags) == 0 {
 		return nil, nil
 	}
 
-	return &result.RFTagList[0], nil
+	return &result.RFTags[0], nil
 }
 
 // ListRFTags retrieves all RF tag configurations.
 func (s *RFTagService) ListRFTags(ctx context.Context) ([]RFTag, error) {
-	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+	rfService := NewService(s.Client())
+
+	result, err := rfService.ListRFTags(ctx)
 	if err != nil {
 		return nil, err
 	}
-
 	if result == nil {
 		return []RFTag{}, nil
 	}
-
-	if len(result.RFTags.RFTagList) == 0 {
+	if len(result.RFTags.RFTags) == 0 {
 		return []RFTag{}, nil
 	}
 
-	return result.RFTags.RFTagList, nil
+	return result.RFTags.RFTags, nil
 }
 
 // CreateRFTag creates a new RF tag configuration.
@@ -77,7 +76,6 @@ func (s *RFTagService) CreateRFTag(ctx context.Context, config *RFTag) error {
 		return err
 	}
 
-	// Build payload directly from config
 	payload := s.buildPayload(config)
 	return core.PostVoid(ctx, s.Client(), routes.RFTagsPath, payload)
 }
@@ -183,9 +181,9 @@ func (s *RFTagService) buildTagURL(tagName string) string {
 	return fmt.Sprintf("%s/rf-tag=%s", routes.RFTagsPath, tagName)
 }
 
-// buildPayload builds the payload for POST/PUT operations.
-func (s *RFTagService) buildPayload(config *RFTag) map[string]any {
-	return map[string]any{
-		"Cisco-IOS-XE-wireless-rf-cfg:rf-tag": config,
+// buildPayload builds a payload for tag operations using the request.
+func (s *RFTagService) buildPayload(config *RFTag) CiscoIOSXEWirelessRFCfgRFTagsPayload {
+	return CiscoIOSXEWirelessRFCfgRFTagsPayload{
+		RFTag: *config,
 	}
 }

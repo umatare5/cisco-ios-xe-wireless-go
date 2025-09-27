@@ -3,7 +3,7 @@ package rrm
 // CiscoIOSXEWirelessRRMCfg represents RRM configuration response data.
 type CiscoIOSXEWirelessRRMCfg struct {
 	RRMCfgData struct {
-		Rrms             *RRMs             `json:"rrms,omitempty"`                // RRM configuration (Live: IOS-XE 17.12.6a)
+		RRMs             *RRMs             `json:"rrms,omitempty"`                // RRM configuration (Live: IOS-XE 17.12.6a)
 		RRMMgrCfgEntries *RRMMgrCfgEntries `json:"rrm-mgr-cfg-entries,omitempty"` // Configuration related to RRM Algorithms (Live: IOS-XE 17.12.6a)
 	} `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"` // All fields related rrm feature (Live: IOS-XE 17.12.6a)
 }

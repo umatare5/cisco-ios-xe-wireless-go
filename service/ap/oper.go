@@ -18,7 +18,7 @@ type CiscoIOSXEWirelessAPOper struct {
 		EwlcWncdStats           EwlcWncdStats            `json:"ewlc-wncd-stats"`            // AP image download and predownload statistics for EWC on AP platforms (Live: IOS-XE 17.12.6a)
 		ApIoxOperData           []ApIoxOperData          `json:"ap-iox-oper-data"`           // IOx application hosting operational data reported by the AP (Live: IOS-XE 17.12.6a)
 		QosGlobalStats          QosGlobalStats           `json:"qos-global-stats"`           // QoS Global statistics data in DB (Live: IOS-XE 17.12.6a)
-		OperData                []ApOperInternalData     `json:"oper-data"`                  // Operational data corresponding to an 802.11 LWAPP AP (Live: IOS-XE 17.12.6a)
+		OperData                []OperData               `json:"oper-data"`                  // Operational data corresponding to an 802.11 LWAPP AP (Live: IOS-XE 17.12.6a)
 		RlanOper                []RlanOper               `json:"rlan-oper,omitempty"`        // LAN information of the AP (YANG: IOS-XE 17.12.1)
 		EwlcMewlcPredownloadRec EwlcMewlcPredownloadRec  `json:"ewlc-mewlc-predownload-rec"` // Embedded Wireless Controller predownload data (Live: IOS-XE 17.12.6a)
 		CdpCacheData            []CdpCacheData           `json:"cdp-cache-data"`             // Cached neighbor information via CDP messages on APs (Live: IOS-XE 17.12.6a)
@@ -102,7 +102,7 @@ type CiscoIOSXEWirelessApOperQosGlobalStats struct {
 
 // CiscoIOSXEWirelessApOperData represents the AP operational data response.
 type CiscoIOSXEWirelessApOperData struct {
-	OperData []ApOperInternalData `json:"Cisco-IOS-XE-wireless-access-point-oper:oper-data"`
+	OperData []OperData `json:"Cisco-IOS-XE-wireless-access-point-oper:oper-data"`
 }
 
 // CiscoIOSXEWirelessApOperRlanOper represents the RLAN operational data response.
@@ -1024,8 +1024,8 @@ type QosGlobalStats struct {
 	} `json:"qos-client-voice-stats"`
 }
 
-// ApOperInternalData represents internal AP operational data.
-type ApOperInternalData struct {
+// OperData represents internal AP operational data.
+type OperData struct {
 	WtpMAC                 string                  `json:"wtp-mac"`                             // MAC Address of the AP Radio (Live: IOS-XE 17.12.6a)
 	RadioID                int                     `json:"radio-id"`                            // AP radio identifier (Live: IOS-XE 17.12.6a)
 	ApAntennaBandMode      string                  `json:"ap-antenna-band-mode"`                // AP antenna band mode configuration (Live: IOS-XE 17.12.6a)
