@@ -3,25 +3,25 @@ package rogue
 // CiscoIOSXEWirelessRogueOper represents rogue operational data container.
 type CiscoIOSXEWirelessRogueOper struct {
 	CiscoIOSXEWirelessRogueOperData struct {
-		RogueStats      RogueStatsData      `json:"rogue-stats"`          // Rogue detection statistics (Live: IOS-XE 17.12.6a)
-		RogueData       []RogueDataDetail   `json:"rogue-data"`           // Rogue access point details (Live: IOS-XE 17.12.6a)
-		RogueClientData []RogueClientDetail `json:"rogue-client-data"`    // Rogue client details (Live: IOS-XE 17.12.6a)
-		RLDPStats       *RLDPStats          `json:"rldp-stats,omitempty"` // RLDP statistics (Live: IOS-XE 17.12.6a)
+		RogueStats      RogueStats        `json:"rogue-stats"`          // Rogue detection statistics (Live: IOS-XE 17.12.6a)
+		RogueData       []RogueData       `json:"rogue-data"`           // Rogue access point details (Live: IOS-XE 17.12.6a)
+		RogueClientData []RogueClientData `json:"rogue-client-data"`    // Rogue client details (Live: IOS-XE 17.12.6a)
+		RLDPStats       *RLDPStats        `json:"rldp-stats,omitempty"` // RLDP statistics (Live: IOS-XE 17.12.6a)
 	} `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data"` // Rogue operational data container (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessRogueData represents rogue access point detection data collection.
 type CiscoIOSXEWirelessRogueData struct {
-	RogueData []RogueDataDetail `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-data"` // Rogue access point data (Live: IOS-XE 17.12.6a)
+	RogueData []RogueData `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-data"` // Rogue access point data (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessRogueClientData represents rogue client detection data collection.
 type CiscoIOSXEWirelessRogueClientData struct {
-	RogueClientData []RogueClientDetail `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-client-data"` // Rogue client data (Live: IOS-XE 17.12.6a)
+	RogueClientData []RogueClientData `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-client-data"` // Rogue client data (Live: IOS-XE 17.12.6a)
 }
 
-// RogueStatsData represents rogue detection and classification statistics.
-type RogueStatsData struct {
+// RogueStats represents rogue detection and classification statistics.
+type RogueStats struct {
 	RestartCount                int    `json:"restart-count"`                  // Number of process restarts (Live: IOS-XE 17.12.6a)
 	PendingCount                int    `json:"pending-count"`                  // Number of rogue AP in pending state (Live: IOS-XE 17.12.6a)
 	LradCount                   int    `json:"lrad-count"`                     // Number of rogue AP in LRAD state (Live: IOS-XE 17.12.6a)
@@ -212,8 +212,8 @@ type RLDPStats struct {
 	RLDPSocketEnabled bool `json:"rldp-socket-enabled"` // RLDP socket enabled flag (Live: IOS-XE 17.12.6a)
 }
 
-// RogueDataDetail represents detailed information about detected rogue access points.
-type RogueDataDetail struct {
+// RogueData represents detailed information about detected rogue access points.
+type RogueData struct {
 	RogueAddress           string `json:"rogue-address"`              // MAC Address of a rogue AP (Live: IOS-XE 17.12.6a)
 	RogueClassType         string `json:"rogue-class-type"`           // Type of a rogue AP (Live: IOS-XE 17.12.6a)
 	RogueMode              string `json:"rogue-mode"`                 // State in which the rogue AP is (Live: IOS-XE 17.12.6a)
@@ -354,8 +354,8 @@ type RogueDataDetail struct {
 	} `json:"band-data-6g"` // Rogue AP 6GHz band-specific data (Live: IOS-XE 17.12.6a)
 }
 
-// RogueClientDetail represents detailed information about detected rogue clients.
-type RogueClientDetail struct {
+// RogueClientData represents detailed information about detected rogue clients.
+type RogueClientData struct {
 	RogueClientAddress          string `json:"rogue-client-address"`           // Mac Address of Rogue Station (YANG: IOS-XE 17.12.1)
 	RogueClientBssid            string `json:"rogue-client-bssid"`             // Rogue BSSID (YANG: IOS-XE 17.12.1)
 	RogueClientGateway          string `json:"rogue-client-gateway"`           // MAC Address of the rogue AP Client gateway (YANG: IOS-XE 17.12.1)
