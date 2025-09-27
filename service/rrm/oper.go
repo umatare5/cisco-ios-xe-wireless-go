@@ -2,9 +2,9 @@ package rrm
 
 import "time"
 
-// RRMOper represents RRM operational response data.
-type RRMOper struct {
-	CiscoIOSXEWirelessRRMOperRRMOperData struct {
+// CiscoIOSXEWirelessRRMOper represents RRM operational response data.
+type CiscoIOSXEWirelessRRMOper struct {
+	CiscoIOSXEWirelessRRMOperData struct {
 		ApAutoRFDot11Data   []ApAutoRFDot11Data   `json:"ap-auto-rf-dot11-data,omitempty"`  // AP auto RF 802.11 data (Live: IOS-XE 17.12.5)
 		ApDot11RadarData    []ApDot11RadarData    `json:"ap-dot11-radar-data,omitempty"`    // AP radar detection data (Live: IOS-XE 17.12.5)
 		ApDot11SpectrumData []ApDot11SpectrumData `json:"ap-dot11-spectrum-data,omitempty"` // AP spectrum analysis data (Live: IOS-XE 17.12.5)
@@ -17,48 +17,48 @@ type RRMOper struct {
 	} `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container
 }
 
-// RRMOperApAutoRFDot11Data represents the AP auto RF 802.11 operational data (YANG: IOS-XE 17.12.1).
-type RRMOperApAutoRFDot11Data struct {
+// CiscoIOSXEWirelessRRMOperApAutoRFDot11Data represents the AP auto RF 802.11 operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperApAutoRFDot11Data struct {
 	ApAutoRFDot11Data []ApAutoRFDot11Data `json:"Cisco-IOS-XE-wireless-rrm-oper:ap-auto-rf-dot11-data"`
 }
 
-// RRMOperApDot11RadarData represents the AP radar detection operational data (YANG: IOS-XE 17.12.1).
-type RRMOperApDot11RadarData struct {
+// CiscoIOSXEWirelessRRMOperApDot11RadarData represents the AP radar detection operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperApDot11RadarData struct {
 	ApDot11RadarData []ApDot11RadarData `json:"Cisco-IOS-XE-wireless-rrm-oper:ap-dot11-radar-data"`
 }
 
-// RRMOperApDot11SpectrumData represents the AP spectrum analysis operational data (YANG: IOS-XE 17.12.1).
-type RRMOperApDot11SpectrumData struct {
+// CiscoIOSXEWirelessRRMOperApDot11SpectrumData wraps spectrum intelligence data.
+type CiscoIOSXEWirelessRRMOperApDot11SpectrumData struct {
 	ApDot11SpectrumData []ApDot11SpectrumData `json:"Cisco-IOS-XE-wireless-rrm-oper:ap-dot11-spectrum-data"`
 }
 
-// RRMOperRRMMeasurement represents the RRM measurement operational data (YANG: IOS-XE 17.12.1).
-type RRMOperRRMMeasurement struct {
+// CiscoIOSXEWirelessRRMOperRRMMeasurement represents the RRM measurement operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperRRMMeasurement struct {
 	RRMMeasurement []RRMMeasurement `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-measurement"`
 }
 
-// RRMOperRadioSlot represents the radio slot operational data (YANG: IOS-XE 17.12.1).
-type RRMOperRadioSlot struct {
+// CiscoIOSXEWirelessRRMOperRadioSlot represents the radio slot operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperRadioSlot struct {
 	RadioSlot []RadioSlot `json:"Cisco-IOS-XE-wireless-rrm-oper:radio-slot"`
 }
 
-// RRMOperMainData represents the main RRM operational data (YANG: IOS-XE 17.12.1).
-type RRMOperMainData struct {
+// CiscoIOSXEWirelessRRMOperMainData represents the main RRM operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperMainData struct {
 	MainData []MainData `json:"Cisco-IOS-XE-wireless-rrm-oper:main-data"`
 }
 
-// RRMOperRegDomainOper represents the regulatory domain operational data (YANG: IOS-XE 17.12.1).
-type RRMOperRegDomainOper struct {
+// CiscoIOSXEWirelessRRMOperRegDomainOper represents the regulatory domain operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperRegDomainOper struct {
 	RegDomainOper *RegDomainOper `json:"Cisco-IOS-XE-wireless-rrm-oper:reg-domain-oper"`
 }
 
-// RRMOperSpectrumDeviceTable represents the spectrum device detection table (YANG: IOS-XE 17.12.1).
-type RRMOperSpectrumDeviceTable struct {
+// CiscoIOSXEWirelessRRMOperSpectrumDeviceTable represents the spectrum device table operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperSpectrumDeviceTable struct {
 	SpectrumDeviceTable []SpectrumDeviceTable `json:"Cisco-IOS-XE-wireless-rrm-oper:spectrum-device-table"`
 }
 
-// RRMOperSpectrumAqTable represents the spectrum air quality table (YANG: IOS-XE 17.12.1).
-type RRMOperSpectrumAqTable struct {
+// CiscoIOSXEWirelessRRMOperSpectrumAqTable represents the spectrum air quality table (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRRMOperSpectrumAqTable struct {
 	SpectrumAqTable []SpectrumAqTable `json:"Cisco-IOS-XE-wireless-rrm-oper:spectrum-aq-table"`
 }
 

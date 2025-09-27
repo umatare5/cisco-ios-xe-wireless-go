@@ -96,13 +96,13 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("GetGlobalInfo", func(t *testing.T) {
-		result, err := service.GetGlobalInfo(ctx)
+	t.Run("GetGlobalOperational", func(t *testing.T) {
+		result, err := service.GetGlobalOperational(ctx)
 		if err != nil {
-			t.Errorf("GetGlobalInfo returned unexpected error: %v", err)
+			t.Errorf("GetGlobalOperational returned unexpected error: %v", err)
 		}
 		if result == nil {
-			t.Error("GetGlobalInfo returned nil result")
+			t.Error("GetGlobalOperational returned nil result")
 		}
 	})
 

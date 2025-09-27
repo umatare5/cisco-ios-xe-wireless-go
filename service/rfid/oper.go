@@ -19,9 +19,9 @@ const (
 	CiscoRFIDData    RFIDDataType = 1 // Cisco RFID tag
 )
 
-// RFIDOper represents RFID operational data.
-type RFIDOper struct {
-	RFIDOperData struct {
+// CiscoIOSXEWirelessRFIDOper represents RFID operational data.
+type CiscoIOSXEWirelessRFIDOper struct {
+	CiscoIOSXEWirelessRFIDOperData struct {
 		RFIDData []RFIDData `json:"rfid-data"` // RFID packet parameters list (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data"` // Wireless RFID operational data (YANG: IOS-XE 17.12.1)
 }

@@ -1,25 +1,25 @@
 package rrm
 
-// RRMCfg represents RRM configuration response data.
-type RRMCfg struct {
-	CiscoIOSXEWirelessRRMCfgRRMCfgData struct {
-		Rrms             *Rrms             `json:"rrms,omitempty"`                // RRM configuration (Live: IOS-XE 17.12.5)
+// CiscoIOSXEWirelessRRMCfg represents RRM configuration response data.
+type CiscoIOSXEWirelessRRMCfg struct {
+	RRMCfgData struct {
+		Rrms             *RRMs             `json:"rrms,omitempty"`                // RRM configuration (Live: IOS-XE 17.12.5)
 		RRMMgrCfgEntries *RRMMgrCfgEntries `json:"rrm-mgr-cfg-entries,omitempty"` // Configuration related to RRM Algorithms (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"` // All fields related rrm feature (Live: IOS-XE 17.12.5)
 }
 
-// RRMCfgRrms wraps the Rrms child struct for direct access (Live: IOS-XE 17.12.5).
-type RRMCfgRrms struct {
-	CiscoIOSXEWirelessRRMCfgRRMCfgDataRrms Rrms `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"`
+// CiscoIOSXEWirelessRRMCfgRrms wraps the Rrms child struct for direct access (Live: IOS-XE 17.12.5).
+type CiscoIOSXEWirelessRRMCfgRrms struct {
+	RRMs RRMs `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrms"`
 }
 
-// RRMCfgRRMMgrCfgEntries wraps the RRMMgrCfgEntries child struct for direct access (Live: IOS-XE 17.12.5).
-type RRMCfgRRMMgrCfgEntries struct {
-	CiscoIOSXEWirelessRRMCfgRRMCfgDataRRMMgrCfgEntries RRMMgrCfgEntries `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data"`
+// CiscoIOSXEWirelessRRMCfgRRMMgrCfgEntries wraps the RRMMgrCfgEntries child struct for direct access (Live: IOS-XE 17.12.5).
+type CiscoIOSXEWirelessRRMCfgRRMMgrCfgEntries struct {
+	RRMMgrCfgEntries RRMMgrCfgEntries `json:"Cisco-IOS-XE-wireless-rrm-cfg:rrm-mgr-cfg-entries"`
 }
 
-// Rrms represents RRM configurations by band.
-type Rrms struct {
+// RRMs represents RRM configurations by band.
+type RRMs struct {
 	RRM []RRMByBand `json:"rrm,omitempty"` // All rrm grouping algorithm related configurations (Live: IOS-XE 17.12.5)
 }
 

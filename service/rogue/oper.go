@@ -1,7 +1,7 @@
 package rogue
 
-// RogueOper represents rogue operational data container.
-type RogueOper struct {
+// CiscoIOSXEWirelessRogueOper represents rogue operational data container.
+type CiscoIOSXEWirelessRogueOper struct {
 	CiscoIOSXEWirelessRogueOperData struct {
 		RogueStats      RogueStatsData      `json:"rogue-stats"`          // Rogue detection statistics (Live: IOS-XE 17.12.5)
 		RogueData       []RogueDataDetail   `json:"rogue-data"`           // Rogue access point details (Live: IOS-XE 17.12.5)
@@ -10,13 +10,13 @@ type RogueOper struct {
 	} `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data"` // Rogue operational data container (Live: IOS-XE 17.12.5)
 }
 
-// RogueData represents rogue access point detection data collection.
-type RogueData struct {
+// CiscoIOSXEWirelessRogueData represents rogue access point detection data collection.
+type CiscoIOSXEWirelessRogueData struct {
 	RogueData []RogueDataDetail `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-data"` // Rogue access point data (Live: IOS-XE 17.12.5)
 }
 
-// RogueClientData represents rogue client detection data collection.
-type RogueClientData struct {
+// CiscoIOSXEWirelessRogueClientData represents rogue client detection data collection.
+type CiscoIOSXEWirelessRogueClientData struct {
 	RogueClientData []RogueClientDetail `json:"Cisco-IOS-XE-wireless-rogue-oper:rogue-client-data"` // Rogue client data (Live: IOS-XE 17.12.5)
 }
 
@@ -189,15 +189,15 @@ type RogueStatsData struct {
 	TotalUnknownCount      int `json:"total-unknown-count"`      // Total number of unknown classification rogues (Live: IOS-XE 17.12.5)
 
 	// Fields added in IOS-XE 17.18.1
-	RogueApMldLinkCount     int    `json:"rogue-ap-mld-link-count"`   // Total number of Rogue AP backward compatible MLD-Link records (YANG: IOS-XE 17.18.1)
-	RogueClientMldLinkCnt   int    `json:"rogue-client-mld-link-cnt"` // Total number of Rogue Client backward compatible MLD-Link records (YANG: IOS-XE 17.18.1)
-	ApDropMldMismatch       uint64 `json:"ap-drop-mld-mismatch"`      // Total number of rogue AP reports dropped due to MLD / Non-MLD type mismatch (YANG: IOS-XE 17.18.1)
-	ClientDropMldMismatch   uint64 `json:"client-drop-mld-mismatch"`  // Total number of rogue AP reports dropped due to MLD / Non-MLD type mismatch (YANG: IOS-XE 17.18.1)
-	IappUnconnectedClient   uint64 `json:"iapp-unconnected-client"`   // Number of IAPP Unconnected Client packets received (YANG: IOS-XE 17.18.1)
-	UnconnectedClientReport uint64 `json:"unconnected-client-report"` // Number of IAPP Client reports received (YANG: IOS-XE 17.18.1)
-	UnconnectedClientCount  uint64 `json:"unconnected-client-count"`  // Number of unconnected client in total (YANG: IOS-XE 17.18.1)
-	UnconnectedReportsDrop  uint64 `json:"unconnected-reports-drop"`  // Number of unconnected clients dropped due to max. scale reached (YANG: IOS-XE 17.18.1)
-	ApDropURWBLink          uint64 `json:"ap-drop-urwb-link"`         // Total number of rogue AP reports dropped due to URWB link address reported as rogue AP (YANG: IOS-XE 17.18.1)
+	RogueApMldLinkCount     int    `json:"rogue-ap-mld-link-count"`   // Total number of Rogue AP backward compatible MLD-Link records (Live: IOS-XE 17.15.4b)
+	RogueClientMldLinkCnt   int    `json:"rogue-client-mld-link-cnt"` // Total number of Rogue Client backward compatible MLD-Link records (Live: IOS-XE 17.15.4b)
+	ApDropMldMismatch       string `json:"ap-drop-mld-mismatch"`      // Total number of rogue AP reports dropped due to MLD / Non-MLD type mismatch (Live: IOS-XE 17.15.4b)
+	ClientDropMldMismatch   string `json:"client-drop-mld-mismatch"`  // Total number of rogue AP reports dropped due to MLD / Non-MLD type mismatch (Live: IOS-XE 17.15.4b)
+	IappUnconnectedClient   uint64 `json:"iapp-unconnected-client"`   // Number of IAPP Unconnected Client packets received (Live: IOS-XE 17.15.4b)
+	UnconnectedClientReport uint64 `json:"unconnected-client-report"` // Number of IAPP Client reports received (Live: IOS-XE 17.15.4b)
+	UnconnectedClientCount  uint64 `json:"unconnected-client-count"`  // Number of unconnected client in total (Live: IOS-XE 17.15.4b)
+	UnconnectedReportsDrop  uint64 `json:"unconnected-reports-drop"`  // Number of unconnected clients dropped due to max. scale reached (Live: IOS-XE 17.15.4b)
+	ApDropURWBLink          uint64 `json:"ap-drop-urwb-link"`         // Total number of rogue AP reports dropped due to URWB link address reported as rogue AP (Live: IOS-XE 17.15.4b)
 }
 
 // RLDPStats represents Rogue Location Discovery Protocol statistics.

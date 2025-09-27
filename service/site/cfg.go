@@ -1,25 +1,25 @@
 package site
 
-// SiteCfg represents site configuration data container (Live: IOS-XE 17.12.5).
-type SiteCfg struct {
-	SiteCfgData struct {
+// CiscoIOSXEWirelessSiteCfg represents site configuration data container (Live: IOS-XE 17.12.5).
+type CiscoIOSXEWirelessSiteCfg struct {
+	CiscoIOSXEWirelessSiteCfgData struct {
 		ApCfgProfiles  ApCfgProfiles  `json:"ap-cfg-profiles"`  // AP config profiles container (Live: IOS-XE 17.12.5)
 		SiteTagConfigs SiteTagConfigs `json:"site-tag-configs"` // Site tag configs container (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data"`
 }
 
-// SiteCfgApCfgProfiles represents AP config profiles container (Live: IOS-XE 17.12.5).
-type SiteCfgApCfgProfiles struct {
+// CiscoIOSXEWirelessSiteCfgApCfgProfiles represents AP config profiles container (Live: IOS-XE 17.12.5).
+type CiscoIOSXEWirelessSiteCfgApCfgProfiles struct {
 	ApCfgProfiles ApCfgProfiles `json:"Cisco-IOS-XE-wireless-site-cfg:ap-cfg-profiles"` // AP config profiles list (Live: IOS-XE 17.12.5)
 }
 
-// SiteCfgSiteTagConfigs represents site tag configs container (Live: IOS-XE 17.12.5).
-type SiteCfgSiteTagConfigs struct {
+// CiscoIOSXEWirelessSiteCfgSiteTagConfigs represents site tag configs container (Live: IOS-XE 17.12.5).
+type CiscoIOSXEWirelessSiteCfgSiteTagConfigs struct {
 	SiteTagConfigs SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"` // Site tag configs list (Live: IOS-XE 17.12.5)
 }
 
-// SiteCfgSiteTagConfig represents site tag config wrapper (Live: IOS-XE 17.12.5).
-type SiteCfgSiteTagConfig struct {
+// CiscoIOSXEWirelessSiteCfgSiteTagConfig represents site tag config wrapper (Live: IOS-XE 17.12.5).
+type CiscoIOSXEWirelessSiteCfgSiteTagConfig struct {
 	SiteListEntry []SiteListEntry `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-config"` // Site tag config entries (Live: IOS-XE 17.12.5)
 }
 
