@@ -29,7 +29,6 @@ func (s Service) ListAPResponses(ctx context.Context) (*CiscoIOSXEWirelessAFCOpe
 }
 
 // ListAPRequests retrieves AFC AP request data.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListAPRequests(ctx context.Context) (*CiscoIOSXEWirelessAFCOperEwlcAFCApReq, error) {
 	return core.Get[CiscoIOSXEWirelessAFCOperEwlcAFCApReq](ctx, s.Client(), routes.AFCEwlcAFCApReqPath)
 }
