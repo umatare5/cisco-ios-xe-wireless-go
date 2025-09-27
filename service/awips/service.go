@@ -29,7 +29,7 @@ func (s Service) ListAWIPSPerApInfo(ctx context.Context) (*CiscoIOSXEWirelessAWI
 }
 
 // ListAWIPSDwldStatus retrieves AWIPS download status.
-// Note: Available on 17.12.5, Unavailable on 17.15.4b.
+// Note: Available on 17.12.6a, but unavailable on 17.15.4b.
 func (s Service) ListAWIPSDwldStatus(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus, error) {
 	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus](ctx, s.Client(), routes.AWIPSDwldStatusPath)
 }
@@ -40,19 +40,16 @@ func (s Service) ListAWIPSApDwldStatus(ctx context.Context) (*CiscoIOSXEWireless
 }
 
 // ListAWIPSPerSignStats retrieves AWIPS per signature statistics.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListAWIPSPerSignStats(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats, error) {
 	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats](ctx, s.Client(), routes.AWIPSPerSignStatsPath)
 }
 
 // ListAWIPSGlobStats retrieves AWIPS global statistics.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListAWIPSGlobStats(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats, error) {
 	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats](ctx, s.Client(), routes.AWIPSGlobStatsPath)
 }
 
 // ListAWIPSDwldStatusWncd retrieves AWIPS download status for WNCD.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListAWIPSDwldStatusWncd(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd, error) {
 	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd](ctx, s.Client(), routes.AWIPSDwldStatusWncdPath)
 }

@@ -57,7 +57,7 @@ func TestAwipsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"last-failed-timestamp": "",
 					"num-of-failure-attempts": 0,
 					"last-failure-reason": 0,
-					"wlc-version": "17.12.5",
+					"wlc-version": "17.12.6a",
 					"max-file-ver": 1,
 					"latest-file-version": 1
 				}
@@ -79,7 +79,7 @@ func TestAwipsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"last-failed-timestamp": "",
 				"num-of-failure-attempts": 0,
 				"last-failure-reason": 0,
-				"wlc-version": "17.12.5",
+				"wlc-version": "17.12.6a",
 				"max-file-ver": 1,
 				"latest-file-version": 1
 			}
