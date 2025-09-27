@@ -3,8 +3,8 @@ package dot15
 // CiscoIOSXEWirelessDot15Cfg represents the root structure for IEEE 802.15.4 configuration data.
 type CiscoIOSXEWirelessDot15Cfg struct {
 	CiscoIOSXEWirelessDot15CfgData struct {
-		Dot15GlobalConfig *Dot15GlobalConfig `json:"dot15-global-config,omitempty"` // 802.15 global configuration (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"` // IEEE 802.15 configuration data (Live: IOS-XE 17.12.5)
+		Dot15GlobalConfig *Dot15GlobalConfig `json:"dot15-global-config,omitempty"` // 802.15 global configuration (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-dot15-cfg:dot15-cfg-data"` // IEEE 802.15 configuration data (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessDot15CfgDot15GlobalConfig represents the structure for 802.15 global configuration operations.
