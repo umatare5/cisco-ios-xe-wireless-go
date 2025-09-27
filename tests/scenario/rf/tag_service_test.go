@@ -53,6 +53,18 @@ func executeStandardRFTagWorkflow(t *testing.T, tsc *scenario.TagContext, servic
 	if err := service.CreateRFTag(tsc.Ctx, &rf.RFTag{
 		TagName:     tsc.TestTagName,
 		Description: expectedRFTagDescription,
+		RFTagRadioProfiles: rf.RFTagRadioProfiles{
+			RFTagRadioProfile: []rf.RFTagRadioProfile{
+				{
+					SlotID: "slot-0",
+					BandID: "band-2-dot-4-ghz",
+				},
+				{
+					SlotID: "slot-1",
+					BandID: "band-5-ghz",
+				},
+			},
+		},
 	}); err != nil {
 		t.Fatalf("Failed to create RF tag %s: %v", tsc.TestTagName, err)
 	}
