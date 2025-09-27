@@ -34,8 +34,8 @@
 Cisco Catalyst 9800 Wireless Network Controller running on:
 
 - **Cisco IOS-XE 17.12.x** - Verified on 17.12.6a
-- **Cisco IOS-XE 17.15.x** - Verified on 17.15.4b
-- **Cisco IOS-XE 17.18.x** - Verified on 17.18.1
+- **Cisco IOS-XE 17.15.x** - Verified on 17.15.4b (Experimental: Spaces)
+- **Cisco IOS-XE 17.18.x** - Verified on 17.18.1 (Experimental: URWB, WAT)
 
 ## 📦 Installation
 
