@@ -49,9 +49,9 @@ func TestSpacesServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"con-state": "connected",
 					"conn-estb-time": "2025-01-11T10:30:45Z",
 					"stats": {
-						"total-con-attempts": 25,
-						"con-attempts-success": 23,
-						"con-attempts-failure": 2,
+						"total-con-attempts": "25",
+						"con-attempts-success": "23",
+						"con-attempts-failure": "2",
 						"total-msg-sent": 12847,
 						"total-msg-rcvd": 12844,
 						"last-heartbeat-time": "2025-01-11T10:30:45Z"
@@ -70,9 +70,9 @@ func TestSpacesServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"con-state": "connected",
 				"conn-estb-time": "2025-01-11T10:30:45Z",
 				"stats": {
-					"total-con-attempts": 25,
-					"con-attempts-success": 23,
-					"con-attempts-failure": 2,
+					"total-con-attempts": "25",
+					"con-attempts-success": "23",
+					"con-attempts-failure": "2",
 					"total-msg-sent": 12847,
 					"total-msg-rcvd": 12844,
 					"last-heartbeat-time": "2025-01-11T10:30:45Z"

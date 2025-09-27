@@ -1,31 +1,29 @@
 package wlan
 
-// WlanCfg represents the complete WLAN configuration.
-type WlanCfg struct {
-	CiscoIOSXEWirelessWlanCfgData *struct {
-		WlanCfgEntries           *WlanCfgEntries           `json:"wlan-cfg-entries,omitempty"`            // WLAN configuration parameters (Live: IOS-XE 17.12.5)
-		WlanPolicies             *WlanPolicies             `json:"wlan-policies,omitempty"`               // WLAN policy configuration (Live: IOS-XE 17.12.5)
-		PolicyListEntries        *PolicyListEntries        `json:"policy-list-entries,omitempty"`         // Policy list configuration (Live: IOS-XE 17.12.5)
-		WirelessAaaPolicyConfigs *WirelessAaaPolicyConfigs `json:"wireless-aaa-policy-configs,omitempty"` // Wireless AAA policy configurations (Live: IOS-XE 17.12.5)
-
-		// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
-		Dot11beProfiles *Dot11beProfiles `json:"dot11be-profiles,omitempty"` // 802.11be profile parameters (YANG: IOS-XE 17.18.1)
+// CiscoIOSXEWirelessWlanCfg represents the complete WLAN configuration.
+type CiscoIOSXEWirelessWlanCfg struct {
+	CiscoIOSXEWirelessWlanCfgData struct {
+		WlanCfgEntries           *WlanCfgEntries          `json:"wlan-cfg-entries"`            // WLAN configuration parameters (Live: IOS-XE 17.12.5)
+		WlanPolicies             *WlanPolicies            `json:"wlan-policies"`               // WLAN policy configuration (Live: IOS-XE 17.12.5)
+		PolicyListEntries        PolicyListEntries        `json:"policy-list-entries"`         // Policy list configuration (Live: IOS-XE 17.12.5)
+		WirelessAaaPolicyConfigs WirelessAaaPolicyConfigs `json:"wireless-aaa-policy-configs"` // Wireless AAA policy configurations (Live: IOS-XE 17.12.5)
+		Dot11beProfiles          *Dot11beProfiles         `json:"dot11be-profiles"`            // 802.11be profile parameters (Live: IOS-XE 17.15.4b)
 	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"` // WLAN configuration data container
 }
 
-// WlanCfgWlanCfgEntries represents the WLAN configuration entries.
-type WlanCfgWlanCfgEntries struct {
-	WlanCfgEntries *WlanCfgEntries `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries,omitempty"`
+// CiscoIOSXEWirelessWlanCfgWlanCfgEntries represents the WLAN configuration entries.
+type CiscoIOSXEWirelessWlanCfgWlanCfgEntries struct {
+	WlanCfgEntries *WlanCfgEntries `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries"`
 }
 
-// WlanCfgPolicyListEntries represents the policy list entries.
-type WlanCfgPolicyListEntries struct {
-	PolicyListEntries *PolicyListEntries `json:"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entries,omitempty"`
+// CiscoIOSXEWirelessWlanCfgPolicyListEntries represents the policy list entries.
+type CiscoIOSXEWirelessWlanCfgPolicyListEntries struct {
+	PolicyListEntries *PolicyListEntries `json:"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entries"`
 }
 
-// WlanCfgWirelessAaaPolicyConfigs represents the wireless AAA policy configurations.
-type WlanCfgWirelessAaaPolicyConfigs struct {
-	WirelessAaaPolicyConfigs *WirelessAaaPolicyConfigs `json:"Cisco-IOS-XE-wireless-wlan-cfg:wireless-aaa-policy-configs,omitempty"`
+// CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs represents the wireless AAA policy configurations.
+type CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs struct {
+	WirelessAaaPolicyConfigs *WirelessAaaPolicyConfigs `json:"Cisco-IOS-XE-wireless-wlan-cfg:wireless-aaa-policy-configs"`
 }
 
 // WlanCfgEntries represents the WLAN configuration entries response.
@@ -215,15 +213,15 @@ type WirelessAaaPolicyConfig struct {
 	PolicyName string `json:"policy-name"` // The wireless AAA policy name (Live: IOS-XE 17.12.5)
 }
 
-// Dot11beProfiles represents Wi-Fi 7 / 802.11be profiles (YANG: IOS-XE 17.18.1).
+// Dot11beProfiles represents Wi-Fi 7 / 802.11be profiles (Live: IOS-XE 17.15.4b).
 type Dot11beProfiles struct {
-	Dot11beProfile []Dot11beProfile `json:"dot11be-profile"` // List of Wi-Fi 7 profiles (YANG: IOS-XE 17.18.1)
+	Dot11beProfile []Dot11beProfile `json:"dot11be-profile"` // List of Wi-Fi 7 profiles (Live: IOS-XE 17.15.4b)
 }
 
-// Dot11beProfile represents a single 802.11be profile (YANG: IOS-XE 17.18.1).
+// Dot11beProfile represents a single 802.11be profile (Live: IOS-XE 17.15.4b).
 type Dot11beProfile struct {
-	ProfileName       string `json:"profile-name"`                  // 802.11be profile name (YANG: IOS-XE 17.18.1)
-	Description       string `json:"description,omitempty"`         // 802.11be profile description (YANG: IOS-XE 17.18.1)
+	ProfileName       string `json:"profile-name"`                  // 802.11be profile name (Live: IOS-XE 17.15.4b)
+	Description       string `json:"description,omitempty"`         // 802.11be profile description (Live: IOS-XE 17.15.4b)
 	EhtOfdmaDownlink  bool   `json:"eht-ofdma-downlink,omitempty"`  // 802.11be OFDMA downlink (YANG: IOS-XE 17.18.1)
 	EhtOfdmaUplink    bool   `json:"eht-ofdma-uplink,omitempty"`    // 802.11be OFDMA uplink (YANG: IOS-XE 17.18.1)
 	EhtMumimoDownlink bool   `json:"eht-mumimo-downlink,omitempty"` // 802.11be MU-MIMO downlink (YANG: IOS-XE 17.18.1)
@@ -261,15 +259,15 @@ type MloGroup6Ghz struct {
 	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
 }
 
-// WlanCfgWlanPolicies wraps the WlanPolicies structure of the WLAN configuration data.
-type WlanCfgWlanPolicies struct {
+// CiscoIOSXEWirelessWlanCfgWlanPolicies wraps the WlanPolicies structure of the WLAN configuration data.
+type CiscoIOSXEWirelessWlanCfgWlanPolicies struct {
 	CiscoIOSXEWirelessWlanCfgData struct {
 		WlanPolicies *WlanPolicies `json:"wlan-policies,omitempty"`
 	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"`
 }
 
-// WlanCfgDot11beProfiles wraps the Dot11beProfiles structure of the WLAN configuration data.
-type WlanCfgDot11beProfiles struct {
+// CiscoIOSXEWirelessWlanCfgDot11beProfiles wraps the Dot11beProfiles structure of the WLAN configuration data.
+type CiscoIOSXEWirelessWlanCfgDot11beProfiles struct {
 	CiscoIOSXEWirelessWlanCfgData struct {
 		Dot11beProfiles *Dot11beProfiles `json:"dot11be-profiles,omitempty"`
 	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"`

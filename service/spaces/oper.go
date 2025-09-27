@@ -2,19 +2,19 @@ package spaces
 
 import "time"
 
-// CiscoSpacesOper represents the complete Cisco Spaces operational data from YANG 17.18.1.
-type CiscoSpacesOper struct {
-	CiscoIOSXEWirelessCiscoSpacesOperData *struct {
+// CiscoIOSXEWirelessSpacesOper represents the complete Cisco Spaces operational data.
+type CiscoIOSXEWirelessSpacesOper struct {
+	CiscoIOSXEWirelessSpacesOperData *struct {
 		SpacesConnectionDetail *SpacesConnectionDetail `json:"spaces-connection-detail,omitempty"`
 	} `json:"Cisco-IOS-XE-wireless-cisco-spaces-oper:cisco-spaces-oper-data"`
 }
 
-// CiscoSpacesOperSpacesConnectionDetail represents the Cisco Spaces connection detail container from YANG 17.18.1.
-type CiscoSpacesOperSpacesConnectionDetail struct {
+// CiscoIOSXEWirelessCiscoSpacesOperSpacesConnectionDetail represents the Cisco Spaces connection detail container.
+type CiscoIOSXEWirelessCiscoSpacesOperSpacesConnectionDetail struct {
 	SpacesConnectionDetail *SpacesConnectionDetail `json:"Cisco-IOS-XE-wireless-cisco-spaces-oper:spaces-connection-detail,omitempty"`
 }
 
-// SpacesConnectionDetail represents Cisco wireless controller to spaces connection details from YANG 17.18.1.
+// SpacesConnectionDetail represents Cisco wireless controller to spaces connection details.
 type SpacesConnectionDetail struct {
 	SpacesHealthURL     string                 `json:"spaces-health-url,omitempty"` // Cisco spaces health check URL
 	ConnectionState     string                 `json:"con-state,omitempty"`         // Onboarding web-socket connection state
@@ -24,12 +24,12 @@ type SpacesConnectionDetail struct {
 	Tenant              *SpacesTenant          `json:"tenant,omitempty"`            // Tenant details
 }
 
-// SpacesConnectionStats represents Cisco Spaces onboarding web-socket connection statistics from YANG 17.18.1.
+// SpacesConnectionStats represents Cisco Spaces onboarding web-socket connection statistics.
 type SpacesConnectionStats struct {
-	TotalConnectionAttempts   uint64    `json:"total-con-attempts,omitempty"`   // Total connection attempts
-	ConnectionAttemptsSuccess uint64    `json:"con-attempts-success,omitempty"` // Successful connection attempts
-	ConnectionAttemptsFailure uint64    `json:"con-attempts-failure,omitempty"` // Failed connection attempts
-	TotalDisconnections       uint64    `json:"total-discon,omitempty"`         // Total disconnections
+	TotalConnectionAttempts   string    `json:"total-con-attempts,omitempty"`   // Total connection attempts
+	ConnectionAttemptsSuccess string    `json:"con-attempts-success,omitempty"` // Successful connection attempts
+	ConnectionAttemptsFailure string    `json:"con-attempts-failure,omitempty"` // Failed connection attempts
+	TotalDisconnections       string    `json:"total-discon,omitempty"`         // Total disconnections
 	TotalMessagesReceived     uint64    `json:"total-msg-rcvd,omitempty"`       // Total messages received
 	TotalMessagesSent         uint64    `json:"total-msg-sent,omitempty"`       // Total messages sent
 	TotalDataReceived         uint64    `json:"total-data-rcvd,omitempty"`      // Total data received (bytes)
@@ -38,7 +38,7 @@ type SpacesConnectionStats struct {
 	AverageResponseTime       int       `json:"avg-response-time,omitempty"`    // Average response time (ms)
 }
 
-// SpacesTenant represents Cisco Spaces onboarding web-socket tenant details from YANG 17.18.1.
+// SpacesTenant represents Cisco Spaces onboarding web-socket tenant details.
 type SpacesTenant struct {
 	TenantID            string    `json:"tenant-id,omitempty"`            // Tenant identifier
 	TenantName          string    `json:"tenant-name,omitempty"`          // Tenant name
@@ -51,7 +51,7 @@ type SpacesTenant struct {
 	CapabilitiesEnabled []string  `json:"capabilities-enabled,omitempty"` // Enabled capabilities
 }
 
-// SpacesCapabilities represents the capabilities available for Cisco Spaces integration from YANG 17.18.1.
+// SpacesCapabilities represents the capabilities available for Cisco Spaces integration.
 type SpacesCapabilities struct {
 	LocationAnalytics    bool `json:"location-analytics,omitempty"`    // Location analytics capability
 	PresenceAnalytics    bool `json:"presence-analytics,omitempty"`    // Presence analytics capability
@@ -61,7 +61,7 @@ type SpacesCapabilities struct {
 	EnvironmentalMetrics bool `json:"environmental-metrics,omitempty"` // Environmental metrics capability
 }
 
-// SpacesLocationData represents location-based analytics data from YANG 17.18.1.
+// SpacesLocationData represents location-based analytics data.
 type SpacesLocationData struct {
 	BuildingID     string             `json:"building-id,omitempty"`
 	FloorID        string             `json:"floor-id,omitempty"`
@@ -73,7 +73,7 @@ type SpacesLocationData struct {
 	LastUpdated    time.Time          `json:"last-updated,omitempty"`
 }
 
-// SpacesCoordinates represents coordinate information for location services from YANG 17.18.1.
+// SpacesCoordinates represents coordinate information for location services.
 type SpacesCoordinates struct {
 	Latitude  float64 `json:"latitude,omitempty"`
 	Longitude float64 `json:"longitude,omitempty"`
