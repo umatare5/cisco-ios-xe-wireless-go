@@ -35,13 +35,11 @@ func (s Service) ListAPGeolocationStats(ctx context.Context) (*CiscoIOSXEWireles
 }
 
 // ListAPGeolocationData retrieves AP geolocation data using CiscoIOSXEWirelessGeolocationOperApGeoLocData wrapper.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListAPGeolocationData(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOperApGeoLocData, error) {
 	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocData](ctx, s.Client(), routes.GeolocationApGeoLocDataPath)
 }
 
 // GetAPGeolocationDataByMAC retrieves AP geolocation data for a specific AP by MAC address.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) GetAPGeolocationDataByMAC(ctx context.Context, apMAC string) (*ApGeoLocData, error) {
 	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, core.ErrResourceNotFound

@@ -4,8 +4,8 @@ package geolocation
 type CiscoIOSXEWirelessGeolocationOper struct {
 	CiscoIOSXEWirelessGeolocationOperData struct {
 		ApGeoLocData  []ApGeoLocData `json:"ap-geo-loc-data,omitempty"` // AP geolocation data list (YANG: IOS-XE 17.12.1)
-		ApGeoLocStats *ApGeoLocStats `json:"ap-geo-loc-stats"`          // AP geolocation statistics (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"` // Geolocation operational data (Live: IOS-XE 17.12.5)
+		ApGeoLocStats *ApGeoLocStats `json:"ap-geo-loc-stats"`          // AP geolocation statistics (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"` // Geolocation operational data (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessGeolocationOperApGeoLocStats represents the AP geolocation statistics.
@@ -15,10 +15,10 @@ type CiscoIOSXEWirelessGeolocationOperApGeoLocStats struct {
 
 // ApGeoLocStats represents AP geolocation statistics.
 type ApGeoLocStats struct {
-	NumApGnss               int    `json:"num-ap-gnss"`               // Number of APs with GNSS module (Live: IOS-XE 17.12.5)
-	NumApManHeight          int    `json:"num-ap-man-height"`         // Number of APs with manual elevation config (Live: IOS-XE 17.12.5)
-	NumApDerived            int    `json:"num-ap-derived"`            // Number of APs with derived geolocation info (Live: IOS-XE 17.12.5)
-	LastDerivationTimestamp string `json:"last-derivation-timestamp"` // Last derivation algorithm run timestamp (Live: IOS-XE 17.12.5)
+	NumApGnss               int    `json:"num-ap-gnss"`               // Number of APs with GNSS module (Live: IOS-XE 17.12.6a)
+	NumApManHeight          int    `json:"num-ap-man-height"`         // Number of APs with manual elevation config (Live: IOS-XE 17.12.6a)
+	NumApDerived            int    `json:"num-ap-derived"`            // Number of APs with derived geolocation info (Live: IOS-XE 17.12.6a)
+	LastDerivationTimestamp string `json:"last-derivation-timestamp"` // Last derivation algorithm run timestamp (Live: IOS-XE 17.12.6a)
 }
 
 // ApGeoLocData represents wireless AP geolocation data.
