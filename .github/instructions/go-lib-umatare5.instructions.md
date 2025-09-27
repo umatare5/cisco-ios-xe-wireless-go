@@ -39,7 +39,7 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
   2. Type definitions (service struct, enums).
   3. Constructor (**return a concrete type**): `func NewService(c *core.Client) Service` (returns concrete type, not pointer).
   4. Configuration methods (`GetConfig`, `ListTagConfigs`).
-  5. Operational methods (`GetOperational`, `GetGlobalInfo`, `ListCAPWAPData`).
+  5. Operational methods (`GetOperational`, `GetGlobalOperational`, `ListCAPWAPData`).
   6. Administrative methods (`Enable*`, `Disable*`, `Assign*`, `Reload`, etc.).
   7. Internal helpers (private).
 
