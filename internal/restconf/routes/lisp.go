@@ -18,4 +18,7 @@ const (
 
 	// LISPCapabilitiesPath provides the path for retrieving LISP WLC capabilities.
 	LISPCapabilitiesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-wlc-capabilities"
+
+	// LISPAPCapabilitiesPath provides the path for retrieving LISP AP capabilities.
+	LISPAPCapabilitiesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-ap-capabilities"
 )
