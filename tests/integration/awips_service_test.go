@@ -60,7 +60,7 @@ func TestAWIPSServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 					return service.(awips.Service).ListAWIPSPerSignStats(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.6a
 			},
 			{
 				Name: "ListAWIPSGlobStats",
@@ -68,7 +68,7 @@ func TestAWIPSServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 					return service.(awips.Service).ListAWIPSGlobStats(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.6a
 			},
 			{
 				Name: "ListAWIPSDwldStatusWncd",
@@ -76,7 +76,7 @@ func TestAWIPSServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 					return service.(awips.Service).ListAWIPSDwldStatusWncd(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.6a
 			},
 		},
 		FilterMethods:   []integration.TestMethod{},

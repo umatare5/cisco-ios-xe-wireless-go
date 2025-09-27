@@ -81,13 +81,11 @@ func (s Service) ListCfgWirelessAaaPolicyConfigs(
 }
 
 // ListDot11beProfiles retrieves Wi-Fi 7 / 802.11be profiles using WlanCfgDot11beProfiles wrapper.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListDot11beProfiles(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgDot11beProfiles, error) {
 	return core.Get[CiscoIOSXEWirelessWlanCfgDot11beProfiles](ctx, s.Client(), routes.WLANDot11beProfilesPath)
 }
 
 // ListWlanInfo retrieves WLAN information using WlanGlobalOperWlanInfo wrapper.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListWlanInfo(ctx context.Context) (*CiscoIOSXEWirelessWlanGlobalOperWlanInfo, error) {
 	return core.Get[CiscoIOSXEWirelessWlanGlobalOperWlanInfo](ctx, s.Client(), routes.WLANWlanInfoPath)
 }

@@ -31,8 +31,7 @@ func TestCTSServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(cts.Service).GetConfig(ctx)
 				},
-				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				LogResult: true,
 			},
 
 			{

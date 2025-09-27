@@ -231,7 +231,6 @@ func TestSiteTagServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 	t.Parallel()
 
-	// Based on real WNC 17.12.5 data structure
 	mockResponses := map[string]string{
 		"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs": `{
 			"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs": {

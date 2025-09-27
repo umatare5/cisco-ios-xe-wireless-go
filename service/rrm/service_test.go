@@ -38,7 +38,7 @@ func TestRrmServiceUnit_Constructor_Success(t *testing.T) {
 func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	t.Parallel()
 
-	// Mock responses based on real WNC RRM data structure (IOS-XE 17.12.5)
+	// Mock responses based on real WNC RRM data structure
 	responses := map[string]string{
 		"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data": `{
 			"Cisco-IOS-XE-wireless-rrm-cfg:rrm-cfg-data": {
