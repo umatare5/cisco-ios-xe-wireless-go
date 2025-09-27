@@ -4,12 +4,9 @@
 // It provides methods for accessing geographic positioning, location mapping, and spatial analytics across wireless infrastructures.
 //
 // RESTCONF Endpoints:
-// - Configuration: /restconf/data/Cisco-IOS-XE-wireless-geolocation-cfg:geolocation-cfg-data
 // - Operational: /restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-geolocation-cfg.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-geolocation-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-geolocation-cfg.yang (17.18.1)
-// - Cisco-IOS-XE-wireless-geolocation-oper.yang (17.18.1)
+// - Cisco-IOS-XE-wireless-geolocation-oper.yang (17.12.1, 17.15.1, 17.18.1)
+// - Cisco-IOS-XE-wireless-geolocation-types.yang (17.12.1, 17.15.1, 17.18.1)
 package geolocation

@@ -10,10 +10,10 @@
 // - Emulation Operational: /restconf/data/Cisco-IOS-XE-wireless-rrm-emul-oper:rrm-emul-oper-data
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-rrm-cfg.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-rrm-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-rrm-global-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-rrm-emul-oper.yang (17.12.1)
+// - Cisco-IOS-XE-wireless-rrm-cfg.yang (17.12.1, 17.15.1, 17.18.1)
+// - Cisco-IOS-XE-wireless-rrm-oper.yang (17.12.1, 17.15.1, 17.18.1)
+// - Cisco-IOS-XE-wireless-rrm-global-oper.yang (17.12.1, 17.15.1, 17.18.1)
+// - Cisco-IOS-XE-wireless-rrm-emul-oper.yang (17.12.1, 17.15.1, 17.18.1)
 // - Cisco-IOS-XE-wireless-rrm-cfg.yang (17.18.1)
 // - Cisco-IOS-XE-wireless-rrm-oper.yang (17.18.1)
 // - Cisco-IOS-XE-wireless-rrm-global-oper.yang (17.18.1)
