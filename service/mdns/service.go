@@ -19,16 +19,16 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves all mDNS operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*MDNSOper, error) {
-	return core.Get[MDNSOper](ctx, s.Client(), routes.MDNSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessMDNSOper, error) {
+	return core.Get[CiscoIOSXEWirelessMDNSOper](ctx, s.Client(), routes.MDNSOperPath)
 }
 
 // GetGlobalStats retrieves mDNS global statistics from the wireless controller.
-func (s Service) GetGlobalStats(ctx context.Context) (*MDNSGlobalStats, error) {
-	return core.Get[MDNSGlobalStats](ctx, s.Client(), routes.MDNSGlobalStatsPath)
+func (s Service) GetGlobalStats(ctx context.Context) (*CiscoIOSXEWirelessMDNSGlobalStats, error) {
+	return core.Get[CiscoIOSXEWirelessMDNSGlobalStats](ctx, s.Client(), routes.MDNSGlobalStatsPath)
 }
 
 // ListWLANStats retrieves mDNS WLAN statistics from the wireless controller.
-func (s Service) ListWLANStats(ctx context.Context) (*MDNSWlanStats, error) {
-	return core.Get[MDNSWlanStats](ctx, s.Client(), routes.MDNSWlanStatsPath)
+func (s Service) ListWLANStats(ctx context.Context) (*CiscoIOSXEWirelessMDNSWlanStats, error) {
+	return core.Get[CiscoIOSXEWirelessMDNSWlanStats](ctx, s.Client(), routes.MDNSWlanStatsPath)
 }

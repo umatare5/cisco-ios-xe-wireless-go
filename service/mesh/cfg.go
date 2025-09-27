@@ -8,8 +8,8 @@ type MeshCfg struct {
 	} `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"` // Mesh configuration data (YANG: IOS-XE 17.12.1)
 }
 
-// MeshCfgMeshProfiles represents mesh profiles container structure.
-type MeshCfgMeshProfiles struct {
+// CiscoIOSXEWirelessMeshCfgMeshProfiles represents mesh profiles container structure.
+type CiscoIOSXEWirelessMeshCfgMeshProfiles struct {
 	MeshProfiles []MeshProfile `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-profiles"`
 }
 

@@ -140,11 +140,46 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-global-stats": `{
 			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-stats": {
-				"queue-stats": {
-					"tx-packets": 0,
-					"rx-packets": 0
-				}
+				"num-of-bridge-aps": 5,
+				"num-of-maps": 10,
+				"num-of-raps": 3,
+				"num-of-flex-bridge-aps": 2,
+				"num-of-flex-bridge-maps": 8,
+				"num-of-flex-bridge-raps": 2
 			}
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-cac-info": `{
+			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-cac-info": [
+				{
+					"wtp-name": "TEST-AP01"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-path-info": `{
+			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-path-info": [
+				{
+					"wtp-name": "TEST-AP02"
+				}
+			]
+		}`,
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-tree-data": `{
+			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-tree-data": [
+				{
+					"sector-number": 1,
+					"wtp-mac": "00:11:22:33:44:55",
+					"mesh-ap-count": 5,
+					"rap-count": 2,
+					"map-count": 3,
+					"mesh-ap-list": [
+						{
+							"ap-name": "TEST-AP03",
+							"ap-role": "MAP",
+							"bridge-group-name": "default",
+							"pref-parent-ap-name": "TEST-RAP01"
+						}
+					]
+				}
+			]
 		}`,
 	}
 
@@ -224,6 +259,46 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			t.Error("ListMeshOperationalData returned nil result")
 		}
 	})
+
+	t.Run("GetGlobalStats", func(t *testing.T) {
+		result, err := service.GetGlobalStats(ctx)
+		if err != nil {
+			t.Errorf("GetGlobalStats returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("GetGlobalStats returned nil result")
+		}
+	})
+
+	t.Run("ListApCacInfo", func(t *testing.T) {
+		result, err := service.ListApCacInfo(ctx)
+		if err != nil {
+			t.Errorf("ListApCacInfo returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListApCacInfo returned nil result")
+		}
+	})
+
+	t.Run("ListApPathInfo", func(t *testing.T) {
+		result, err := service.ListApPathInfo(ctx)
+		if err != nil {
+			t.Errorf("ListApPathInfo returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListApPathInfo returned nil result")
+		}
+	})
+
+	t.Run("ListApTreeData", func(t *testing.T) {
+		result, err := service.ListApTreeData(ctx)
+		if err != nil {
+			t.Errorf("ListApTreeData returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListApTreeData returned nil result")
+		}
+	})
 }
 
 // TestMeshServiceUnit_GetOperations_ErrorHandling tests error scenarios for operations.
@@ -239,6 +314,9 @@ func TestMeshServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-dr-stats",
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-sec-stats",
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-oper-data",
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-cac-info",
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-path-info",
+		"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-tree-data",
 	}
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 404))
 	defer mockServer.Close()
@@ -316,6 +394,46 @@ func TestMeshServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 			t.Error("Expected nil result on error, got non-nil result")
 		}
 	})
+
+	t.Run("GetGlobalStats_404Error", func(t *testing.T) {
+		result, err := service.GetGlobalStats(ctx)
+		if err == nil {
+			t.Error("Expected error for GetGlobalStats, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListApCacInfo_404Error", func(t *testing.T) {
+		result, err := service.ListApCacInfo(ctx)
+		if err == nil {
+			t.Error("Expected error for ListApCacInfo, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListApPathInfo_404Error", func(t *testing.T) {
+		result, err := service.ListApPathInfo(ctx)
+		if err == nil {
+			t.Error("Expected error for ListApPathInfo, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListApTreeData_404Error", func(t *testing.T) {
+		result, err := service.ListApTreeData(ctx)
+		if err == nil {
+			t.Error("Expected error for ListApTreeData, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
 }
 
 // TestMeshServiceUnit_ErrorHandling_NilClient tests error handling with nil client.
@@ -387,6 +505,46 @@ func TestMeshServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 
 	t.Run("ListMeshOperationalData_NilClient", func(t *testing.T) {
 		result, err := service.ListMeshOperationalData(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("GetGlobalStats_NilClient", func(t *testing.T) {
+		result, err := service.GetGlobalStats(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListApCacInfo_NilClient", func(t *testing.T) {
+		result, err := service.ListApCacInfo(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListApPathInfo_NilClient", func(t *testing.T) {
+		result, err := service.ListApPathInfo(ctx)
+		if err == nil {
+			t.Error("Expected error for nil client")
+		}
+		if result != nil {
+			t.Error("Expected nil result for error case")
+		}
+	})
+
+	t.Run("ListApTreeData_NilClient", func(t *testing.T) {
+		result, err := service.ListApTreeData(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

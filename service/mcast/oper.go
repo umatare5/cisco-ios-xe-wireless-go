@@ -1,8 +1,8 @@
 package mcast
 
-// McastOper represents multicast operational data from controller.
-type McastOper struct {
-	CiscoIOSXEWirelessMcastOperMcastOperData struct {
+// CiscoIOSXEWirelessMcastOper represents multicast operational data from controller.
+type CiscoIOSXEWirelessMcastOper struct {
+	CiscoIOSXEWirelessMcastOperData struct {
 		FlexMediastreamClientSummary   []FlexMediastreamClientSummary   `json:"flex-mediastream-client-summary,omitempty"`    // FlexConnect mediastream client summary data (Live: IOS-XE 17.12.5)
 		VlanL2MgidOp                   []VlanL2MgidOp                   `json:"vlan-l2-mgid-op,omitempty"`                    // VLAN Layer 2 multicast group ID operational data (Live: IOS-XE 17.12.5)
 		FabricMediaStreamClientSummary []FabricMediaStreamClientSummary `json:"fabric-media-stream-client-summary,omitempty"` // Fabric mediastream client summary data (Live: IOS-XE 17.12.5)
@@ -16,53 +16,53 @@ type McastOper struct {
 	} `json:"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"` // Multicast operational data container (Live: IOS-XE 17.12.5)
 }
 
-// McastOperFlexMediastreamClientSummary represents the structure for FlexConnect mediastream client summary data.
-type McastOperFlexMediastreamClientSummary struct {
+// CiscoIOSXEWirelessMcastOperFlexMediastreamClientSummary represents the structure for FlexConnect mediastream client summary data.
+type CiscoIOSXEWirelessMcastOperFlexMediastreamClientSummary struct {
 	FlexMediastreamClientSummary []FlexMediastreamClientSummary `json:"Cisco-IOS-XE-wireless-mcast-oper:flex-mediastream-client-summary"`
 }
 
-// McastOperVlanL2MgidOp represents the structure for VLAN Layer 2 multicast group ID operational data.
-type McastOperVlanL2MgidOp struct {
+// CiscoIOSXEWirelessMcastOperVlanL2MgidOp represents the structure for VLAN Layer 2 multicast group ID operational data.
+type CiscoIOSXEWirelessMcastOperVlanL2MgidOp struct {
 	VlanL2MgidOp []VlanL2MgidOp `json:"Cisco-IOS-XE-wireless-mcast-oper:vlan-l2-mgid-op"`
 }
 
-// McastOperFabricMediaStreamClientSummary represents fabric mediastream client summary wrapper.
-type McastOperFabricMediaStreamClientSummary struct {
+// CiscoIOSXEWirelessMcastOperFabricMediaStreamClientSummary represents fabric mediastream client summary wrapper.
+type CiscoIOSXEWirelessMcastOperFabricMediaStreamClientSummary struct {
 	FabricMediaStreamClientSummary []FabricMediaStreamClientSummary `json:"Cisco-IOS-XE-wireless-mcast-oper:fabric-media-stream-client-summary"`
 }
 
-// McastOperMcastMgidInfo represents multicast MGID info wrapper.
-type McastOperMcastMgidInfo struct {
+// CiscoIOSXEWirelessMcastOperMcastMgidInfo represents multicast MGID info wrapper.
+type CiscoIOSXEWirelessMcastOperMcastMgidInfo struct {
 	McastMgidInfo []McastMgidInfo `json:"Cisco-IOS-XE-wireless-mcast-oper:mcast-mgid-info"`
 }
 
-// McastOperMulticastOperData represents multicast operational data wrapper.
-type McastOperMulticastOperData struct {
+// CiscoIOSXEWirelessMcastOperMulticastOperData represents multicast operational data wrapper.
+type CiscoIOSXEWirelessMcastOperMulticastOperData struct {
 	MulticastOperData []MulticastOperData `json:"Cisco-IOS-XE-wireless-mcast-oper:multicast-oper-data"`
 }
 
-// McastOperRrcHistoryClientRecordData represents RRC history client record data container.
-type McastOperRrcHistoryClientRecordData struct {
+// CiscoIOSXEWirelessMcastOperRrcHistoryClientRecordData represents RRC history client record data container.
+type CiscoIOSXEWirelessMcastOperRrcHistoryClientRecordData struct {
 	RrcHistoryClientRecordData []RrcHistoryClientRecordData `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-history-client-record-data"`
 }
 
-// McastOperRrcSrRadioRecord represents RRC stream radio record data container.
-type McastOperRrcSrRadioRecord struct {
+// CiscoIOSXEWirelessMcastOperRrcSrRadioRecord represents RRC stream radio record data container.
+type CiscoIOSXEWirelessMcastOperRrcSrRadioRecord struct {
 	RrcSrRadioRecord []RrcSrRadioRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-sr-radio-record"`
 }
 
-// McastOperRrcStreamRecord represents RRC stream record data container.
-type McastOperRrcStreamRecord struct {
+// CiscoIOSXEWirelessMcastOperRrcStreamRecord represents RRC stream record data container.
+type CiscoIOSXEWirelessMcastOperRrcStreamRecord struct {
 	RrcStreamRecord []RrcStreamRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-record"`
 }
 
-// McastOperRrcStreamAdmitRecord represents RRC stream admit record data container.
-type McastOperRrcStreamAdmitRecord struct {
+// CiscoIOSXEWirelessMcastOperRrcStreamAdmitRecord represents RRC stream admit record data container.
+type CiscoIOSXEWirelessMcastOperRrcStreamAdmitRecord struct {
 	RrcStreamAdmitRecord []RrcStreamAdmitRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-admit-record"`
 }
 
-// McastOperRrcStreamDenyRecord represents RRC stream deny record data container.
-type McastOperRrcStreamDenyRecord struct {
+// CiscoIOSXEWirelessMcastOperRrcStreamDenyRecord represents RRC stream deny record data container.
+type CiscoIOSXEWirelessMcastOperRrcStreamDenyRecord struct {
 	RrcStreamDenyRecord []RrcStreamDenyRecord `json:"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-deny-record"`
 }
 

@@ -10,6 +10,26 @@ type MeshGlobalOper struct {
 	} `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data"` // Mesh global operational data (Live: IOS-XE 17.12.5)
 }
 
+// CiscoIOSXEWirelessMeshOperMeshGlobalStats represents mesh global statistics wrapper.
+type CiscoIOSXEWirelessMeshOperMeshGlobalStats struct {
+	MeshGlobalStats MeshGlobalStats `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-stats"` // Summary of mesh AP statistics (Live: IOS-XE 17.12.5)
+}
+
+// CiscoIOSXEWirelessMeshOperMeshApCacInfo represents mesh AP CAC information wrapper.
+type CiscoIOSXEWirelessMeshOperMeshApCacInfo struct {
+	MeshApCacInfo []MeshApCacInfo `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-cac-info,omitempty"` // Summary of mesh voice call statistics (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessMeshOperMeshApPathInfo represents mesh AP path information wrapper.
+type CiscoIOSXEWirelessMeshOperMeshApPathInfo struct {
+	MeshApPathInfo []MeshApPathInfo `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-path-info,omitempty"` // Mesh AP path from root AP to mesh AP (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessMeshOperMeshApTreeData represents mesh AP tree data wrapper.
+type CiscoIOSXEWirelessMeshOperMeshApTreeData struct {
+	MeshApTreeData []MeshApTreeData `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-tree-data"` // Mesh AP tree view (Live: IOS-XE 17.12.5)
+}
+
 // MeshGlobalStats represents statistics of mesh APs joined to the controller.
 type MeshGlobalStats struct {
 	NumOfBridgeAPs      uint32 `json:"num-of-bridge-aps"`       // Number of bridge mode APs (Live: IOS-XE 17.12.5)

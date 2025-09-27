@@ -1,20 +1,20 @@
 package mdns
 
-// MDNSOper represents mDNS operational data container.
-type MDNSOper struct {
-	CiscoIOSXEWirelessMDNSOperMDNSOperData struct {
-		MDNSGlobalStats MDNSGlobalStatsData `json:"mdns-global-stats"` // mDNS global statistics (Live: IOS-XE 17.12.5)
-		MDNSWlanStats   []MDNSWlanStat      `json:"mdns-wlan-stats"`   // mDNS statistics per WLAN (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data"` // mDNS gateway operational data (Live: IOS-XE 17.12.5)
+// CiscoIOSXEWirelessMDNSOper represents mDNS operational data container.
+type CiscoIOSXEWirelessMDNSOper struct {
+	CiscoIOSXEWirelessMDNSOperData struct {
+		MDNSGlobalStats CiscoIOSXEWirelessMDNSGlobalStats `json:"mdns-global-stats"` // mDNS global statistics (Live: IOS-XE 17.12.5)
+		MDNSWlanStats   []CiscoIOSXEWirelessMDNSWlanStats `json:"mdns-wlan-stats"`   // mDNS per-WLAN statistics (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data"` // mDNS operational data (Live: IOS-XE 17.12.5)
 }
 
-// MDNSGlobalStats represents mDNS global statistics response wrapper.
-type MDNSGlobalStats struct {
+// CiscoIOSXEWirelessMDNSGlobalStats represents mDNS global statistics response wrapper.
+type CiscoIOSXEWirelessMDNSGlobalStats struct {
 	MDNSGlobalStats MDNSGlobalStatsData `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-global-stats"`
 }
 
-// MDNSWlanStats represents mDNS WLAN statistics response wrapper.
-type MDNSWlanStats struct {
+// CiscoIOSXEWirelessMDNSWlanStats represents mDNS WLAN statistics response wrapper.
+type CiscoIOSXEWirelessMDNSWlanStats struct {
 	MDNSWlanStats []MDNSWlanStat `json:"Cisco-IOS-XE-wireless-mdns-oper:mdns-wlan-stats"`
 }
 

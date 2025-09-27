@@ -1,9 +1,9 @@
 // Package mobility provides data models for mobility operational data.
 package mobility
 
-// MobilityOper represents the root mobility operational data container.
-type MobilityOper struct {
-	MobilityOperData struct {
+// CiscoIOSXEWirelessMobilityOper represents the root mobility operational data container.
+type CiscoIOSXEWirelessMobilityOper struct {
+	CiscoIOSXEWirelessMobilityOperData struct {
 		ApCache                 []ApCache               `json:"ap-cache"`                   // AP cache info by mobility controller (YANG: IOS-XE 17.12.1)
 		ApPeerList              []ApPeerList            `json:"ap-peer-list"`               // AP count reported by peer controllers (YANG: IOS-XE 17.12.1)
 		MmGlobalData            MmGlobalData            `json:"mm-global-data"`             // Container for global mobility data (YANG: IOS-XE 17.12.1)
@@ -18,58 +18,58 @@ type MobilityOper struct {
 	} `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"` // Mobility operational data (YANG: IOS-XE 17.12.1)
 }
 
-// MobilityOperApCache represents the AP cache data.
-type MobilityOperApCache struct {
+// CiscoIOSXEWirelessMobilityOperApCache represents the AP cache data.
+type CiscoIOSXEWirelessMobilityOperApCache struct {
 	ApCache []ApCache `json:"Cisco-IOS-XE-wireless-mobility-oper:ap-cache"`
 }
 
-// MobilityOperApPeerList represents the AP peer list data.
-type MobilityOperApPeerList struct {
+// CiscoIOSXEWirelessMobilityOperApPeerList represents the AP peer list data.
+type CiscoIOSXEWirelessMobilityOperApPeerList struct {
 	ApPeerList []ApPeerList `json:"Cisco-IOS-XE-wireless-mobility-oper:ap-peer-list"`
 }
 
-// MobilityOperMmGlobalData represents the structure for MM global data.
-type MobilityOperMmGlobalData struct {
+// CiscoIOSXEWirelessMobilityOperMmGlobalData represents the structure for MM global data.
+type CiscoIOSXEWirelessMobilityOperMmGlobalData struct {
 	MmGlobalData MmGlobalData `json:"Cisco-IOS-XE-wireless-mobility-oper:mm-global-data"`
 }
 
-// MobilityOperMmIfGlobalMsgStats represents the structure for MM interface global message statistics.
-type MobilityOperMmIfGlobalMsgStats struct {
+// CiscoIOSXEWirelessMobilityOperMmIfGlobalMsgStats represents the structure for MM if global message stats.
+type CiscoIOSXEWirelessMobilityOperMmIfGlobalMsgStats struct {
 	MmIfGlobalMsgStats MmIfGlobalMsgStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mm-if-global-msg-stats"`
 }
 
-// MobilityOperMmIfGlobalStats represents the structure for MM interface global statistics.
-type MobilityOperMmIfGlobalStats struct {
+// CiscoIOSXEWirelessMobilityOperMmIfGlobalStats represents the structure for MM if global stats.
+type CiscoIOSXEWirelessMobilityOperMmIfGlobalStats struct {
 	MmIfGlobalStats MmIfGlobalStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mm-if-global-stats"`
 }
 
-// MobilityOperMobilityClientData represents the structure for mobility client data.
-type MobilityOperMobilityClientData struct {
+// CiscoIOSXEWirelessMobilityOperMobilityClientData represents the mobility client data structure.
+type CiscoIOSXEWirelessMobilityOperMobilityClientData struct {
 	MobilityClientData []MobilityClientData `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-data"`
 }
 
-// MobilityOperMobilityClientStats represents the structure for mobility client statistics.
-type MobilityOperMobilityClientStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityClientStats represents the mobility client stats structure.
+type CiscoIOSXEWirelessMobilityOperMobilityClientStats struct {
 	MobilityClientStats MobilityClientStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats"`
 }
 
-// MobilityOperMobilityGlobalDTLSStats represents the structure for mobility global DTLS statistics.
-type MobilityOperMobilityGlobalDTLSStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityGlobalDTLSStats represents the structure for mobility global DTLS statistics.
+type CiscoIOSXEWirelessMobilityOperMobilityGlobalDTLSStats struct {
 	MobilityGlobalDTLSStats MobilityGlobalDTLSStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-dtls-stats"`
 }
 
-// MobilityOperMobilityGlobalMsgStats represents the structure for mobility global message statistics.
-type MobilityOperMobilityGlobalMsgStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityGlobalMsgStats represents the mobility global msg stats structure.
+type CiscoIOSXEWirelessMobilityOperMobilityGlobalMsgStats struct {
 	MobilityGlobalMsgStats MobilityGlobalMsgStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-msg-stats"`
 }
 
-// MobilityOperMobilityGlobalStats represents the structure for mobility global statistics.
-type MobilityOperMobilityGlobalStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityGlobalStats represents the structure for mobility global statistics.
+type CiscoIOSXEWirelessMobilityOperMobilityGlobalStats struct {
 	MobilityGlobalStats MobilityGlobalStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-stats"`
 }
 
-// MobilityOperWlanClientLimit represents the structure for WLAN client limit data.
-type MobilityOperWlanClientLimit struct {
+// CiscoIOSXEWirelessMobilityOperWlanClientLimit represents the WLAN client limit structure.
+type CiscoIOSXEWirelessMobilityOperWlanClientLimit struct {
 	WlanClientLimit []WlanClientLimit `json:"Cisco-IOS-XE-wireless-mobility-oper:wlan-client-limit"`
 }
 
