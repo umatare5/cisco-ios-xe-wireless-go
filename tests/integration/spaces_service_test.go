@@ -31,7 +31,7 @@ func TestSpacesServiceIntegration_GetOperationalOperations_Success(t *testing.T)
 					return service.(spaces.Service).GetOperational(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
+				ExpectNotFound: true, // IOS-XE 17.15.1+ feature
 			},
 			{
 				Name: "GetConnectionDetails",
@@ -39,7 +39,7 @@ func TestSpacesServiceIntegration_GetOperationalOperations_Success(t *testing.T)
 					return service.(spaces.Service).GetConnectionDetails(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // IOS-XE 17.18.1+ feature
+				ExpectNotFound: true, // IOS-XE 17.15.1+ feature
 			},
 		},
 		FilterMethods:   []integration.TestMethod{},

@@ -378,9 +378,9 @@ func TestAPServiceIntegration_GlobalOperations_Success(t *testing.T) {
 		},
 		BasicMethods: []integration.TestMethod{
 			{
-				Name: "GetGlobalInfo",
+				Name: "GetGlobalOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetGlobalInfo(ctx)
+					return service.(ap.Service).GetGlobalOperational(ctx)
 				},
 				LogResult: true,
 			},

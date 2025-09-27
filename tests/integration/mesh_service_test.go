@@ -47,6 +47,34 @@ func TestMeshServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
+			{
+				Name: "GetGlobalStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mesh.Service).GetGlobalStats(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListApCacInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mesh.Service).ListApCacInfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListApPathInfo",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mesh.Service).ListApPathInfo(ctx)
+				},
+				LogResult: true,
+			},
+			{
+				Name: "ListApTreeData",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(mesh.Service).ListApTreeData(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		FilterMethods:   []integration.TestMethod{},
 		ValidationTests: []integration.ValidationTestMethod{},

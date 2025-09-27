@@ -35,9 +35,25 @@ func TestLISPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
 			},
 			{
+				Name: "GetMemoryStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(lisp.Service).GetMemoryStats(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true,
+			},
+			{
 				Name: "GetCapabilities",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(lisp.Service).GetCapabilities(ctx)
+				},
+				LogResult:      true,
+				ExpectNotFound: true,
+			},
+			{
+				Name: "ListAPCapabilities",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(lisp.Service).ListAPCapabilities(ctx)
 				},
 				LogResult:      true,
 				ExpectNotFound: true,
