@@ -131,7 +131,7 @@
 				
 				<option value="file37">github.com/umatare5/cisco-ios-xe-wireless-go/service/rf/service.go (100.0%)</option>
 				
-				<option value="file38">github.com/umatare5/cisco-ios-xe-wireless-go/service/rf/tag_service.go (90.8%)</option>
+				<option value="file38">github.com/umatare5/cisco-ios-xe-wireless-go/service/rf/tag_service.go (90.9%)</option>
 				
 				<option value="file39">github.com/umatare5/cisco-ios-xe-wireless-go/service/rfid/service.go (100.0%)</option>
 				
@@ -151,7 +151,7 @@
 				
 				<option value="file47">github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan/service.go (100.0%)</option>
 				
-				<option value="file48">github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan/tag_service.go (91.3%)</option>
+				<option value="file48">github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan/tag_service.go (91.4%)</option>
 				
 				<option value="file49">github.com/umatare5/cisco-ios-xe-wireless-go/wnc.go (100.0%)</option>
 				
@@ -4491,43 +4491,58 @@ type Service struct {
 }
 
 // NewService creates a new RF service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="18">{
+func NewService(client *core.Client) Service <span class="cov10" title="23">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // RFTag returns an RF tag service instance for RF tag management operations.
-func (s Service) RFTag() *RFTagService <span class="cov9" title="16">{
+func (s Service) RFTag() *RFTagService <span class="cov8" title="16">{
         return NewRFTagService(s.Client())
 }</span>
 
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFCfg, error) <span class="cov3" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFCfg, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath)
 }</span>
 
 // ListRFTags retrieves RF tags collection from the configuration.
-func (s Service) ListRFTags(ctx context.Context) (*CiscoIOSXEWirelessRFCfgRFTags, error) <span class="cov3" title="2">{
+func (s Service) ListRFTags(ctx context.Context) (*CiscoIOSXEWirelessRFCfgRFTags, error) <span class="cov6" title="7">{
         return core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
 }</span>
 
 // ListRFProfiles retrieves RF profiles collection from the configuration.
-func (s Service) ListRFProfiles(ctx context.Context) (*RFProfiles, error) <span class="cov3" title="2">{
+func (s Service) ListRFProfiles(ctx context.Context) (*RFProfiles, error) <span class="cov2" title="2">{
         return core.Get[RFProfiles](ctx, s.Client(), routes.RFProfilesPath)
 }</span>
 
 // ListMultiBssidProfiles retrieves Multi-BSSID profiles from the configuration.
-func (s Service) ListMultiBssidProfiles(ctx context.Context) (*MultiBssidProfiles, error) <span class="cov3" title="2">{
+func (s Service) ListMultiBssidProfiles(ctx context.Context) (*MultiBssidProfiles, error) <span class="cov2" title="2">{
         return core.Get[MultiBssidProfiles](ctx, s.Client(), routes.MultiBssidProfilesPath)
 }</span>
 
 // ListAtfPolicies retrieves Air Time Fairness policies from the configuration.
-func (s Service) ListAtfPolicies(ctx context.Context) (*AtfPolicies, error) <span class="cov3" title="2">{
+func (s Service) ListAtfPolicies(ctx context.Context) (*AtfPolicies, error) <span class="cov2" title="2">{
         return core.Get[AtfPolicies](ctx, s.Client(), routes.AtfPoliciesPath)
 }</span>
 
 // ListRFProfileDefaultEntries retrieves RF profile default entries from the configuration.
-func (s Service) ListRFProfileDefaultEntries(ctx context.Context) (*RFProfileDefaultEntries, error) <span class="cov3" title="2">{
+func (s Service) ListRFProfileDefaultEntries(ctx context.Context) (*RFProfileDefaultEntries, error) <span class="cov2" title="2">{
         return core.Get[RFProfileDefaultEntries](ctx, s.Client(), routes.RFProfileDefaultEntriesPath)
+}</span>
+
+// GetOperational retrieves RF operational data including auto RF and radar detection data.
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessRFOper, error) <span class="cov2" title="2">{
+        return core.Get[CiscoIOSXEWirelessRFOper](ctx, s.Client(), routes.RRMOperPath)
+}</span>
+
+// GetAutoRFDot11Data retrieves Auto RF 802.11 operational data for access points.
+func (s Service) GetAutoRFDot11Data(ctx context.Context) (*CiscoIOSXEWirelessRFOperApAutoRFDot11Data, error) <span class="cov2" title="2">{
+        return core.Get[CiscoIOSXEWirelessRFOperApAutoRFDot11Data](ctx, s.Client(), routes.RRMOperApAutoRFDot11DataPath)
+}</span>
+
+// GetRadarDetectionData retrieves radar detection operational data for access points.
+func (s Service) GetRadarDetectionData(ctx context.Context) (*CiscoIOSXEWirelessRFOperApDot11RadarData, error) <span class="cov2" title="2">{
+        return core.Get[CiscoIOSXEWirelessRFOperApDot11RadarData](ctx, s.Client(), routes.RRMOperApDot11RadarDataPath)
 }</span>
 </pre>
 		
@@ -4567,34 +4582,33 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*RFTag, er
                 return nil, err
         }</span>
 
-        <span class="cov7" title="9">result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
+        <span class="cov7" title="9">result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTagPayload](ctx, s.Client(), s.buildTagURL(tagName))
         if err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
-
-        <span class="cov6" title="7">if result == nil || result.RFTagList == nil || len(result.RFTagList) == 0 </span><span class="cov2" title="2">{
+        <span class="cov6" title="7">if result == nil || result.RFTags == nil || len(result.RFTags) == 0 </span><span class="cov2" title="2">{
                 return nil, nil
         }</span>
 
-        <span class="cov5" title="5">return &amp;result.RFTagList[0], nil</span>
+        <span class="cov5" title="5">return &amp;result.RFTags[0], nil</span>
 }
 
 // ListRFTags retrieves all RF tag configurations.
 func (s *RFTagService) ListRFTags(ctx context.Context) ([]RFTag, error) <span class="cov5" title="5">{
-        result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+        rfService := NewService(s.Client())
+
+        result, err := rfService.ListRFTags(ctx)
         if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
-
         <span class="cov4" title="4">if result == nil </span><span class="cov0" title="0">{
                 return []RFTag{}, nil
         }</span>
-
-        <span class="cov4" title="4">if len(result.RFTags.RFTagList) == 0 </span><span class="cov4" title="3">{
+        <span class="cov4" title="4">if len(result.RFTags.RFTags) == 0 </span><span class="cov4" title="3">{
                 return []RFTag{}, nil
         }</span>
 
-        <span class="cov1" title="1">return result.RFTags.RFTagList, nil</span>
+        <span class="cov1" title="1">return result.RFTags.RFTags, nil</span>
 }
 
 // CreateRFTag creates a new RF tag configuration.
@@ -4610,7 +4624,6 @@ func (s *RFTagService) CreateRFTag(ctx context.Context, config *RFTag) error <sp
                 return err
         }</span>
 
-        // Build payload directly from config
         <span class="cov2" title="2">payload := s.buildPayload(config)
         return core.PostVoid(ctx, s.Client(), routes.RFTagsPath, payload)</span>
 }
@@ -4716,10 +4729,10 @@ func (s *RFTagService) buildTagURL(tagName string) string <span class="cov8" tit
         return fmt.Sprintf("%s/rf-tag=%s", routes.RFTagsPath, tagName)
 }</span>
 
-// buildPayload builds the payload for POST/PUT operations.
-func (s *RFTagService) buildPayload(config *RFTag) map[string]any <span class="cov6" title="6">{
-        return map[string]any{
-                "Cisco-IOS-XE-wireless-rf-cfg:rf-tag": config,
+// buildPayload builds a payload for tag operations using the request.
+func (s *RFTagService) buildPayload(config *RFTag) CiscoIOSXEWirelessRFCfgRFTagsPayload <span class="cov6" title="6">{
+        return CiscoIOSXEWirelessRFCfgRFTagsPayload{
+                RFTag: *config,
         }
 }</span>
 </pre>
@@ -4867,8 +4880,8 @@ func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*CiscoIOS
 }
 
 // GetStats retrieves rogue statistics.
-func (s Service) GetStats(ctx context.Context) (*RogueStatsData, error) <span class="cov7" title="4">{
-        return core.Get[RogueStatsData](ctx, s.Client(), routes.RogueStatsPath)
+func (s Service) GetStats(ctx context.Context) (*RogueStats, error) <span class="cov7" title="4">{
+        return core.Get[RogueStats](ctx, s.Client(), routes.RogueStatsPath)
 }</span>
 
 // Alias methods for integration test compatibility
@@ -4884,12 +4897,12 @@ func (s Service) GetOperData(ctx context.Context) (*CiscoIOSXEWirelessRogueData,
 }</span>
 
 // GetOperStats is an alias for GetStats.
-func (s Service) GetOperStats(ctx context.Context) (*RogueStatsData, error) <span class="cov1" title="1">{
+func (s Service) GetOperStats(ctx context.Context) (*RogueStats, error) <span class="cov1" title="1">{
         return s.GetStats(ctx)
 }</span>
 
 // GetRLDPStats retrieves RLDP (Rogue Location Discovery Protocol) statistics.
-func (s Service) GetRLDPStats(ctx context.Context) (*RogueStatsData, error) <span class="cov1" title="1">{
+func (s Service) GetRLDPStats(ctx context.Context) (*RogueStats, error) <span class="cov1" title="1">{
         // For now, return the same as rogue stats since RLDP is part of rogue detection
         return s.GetStats(ctx)
 }</span>
@@ -5132,27 +5145,27 @@ type Service struct {
 }
 
 // NewService creates a new Site service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="18">{
+func NewService(client *core.Client) Service <span class="cov10" title="24">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // SiteTag returns a site tag service instance for site tag management operations.
-func (s Service) SiteTag() *SiteTagService <span class="cov9" title="14">{
+func (s Service) SiteTag() *SiteTagService <span class="cov8" title="14">{
         return NewSiteTagService(s.Client())
 }</span>
 
 // GetConfig retrieves site configuration data including AP configuration profiles and site tag configurations.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessSiteCfg, error) <span class="cov3" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessSiteCfg, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessSiteCfg](ctx, s.Client(), routes.SiteCfgPath)
 }</span>
 
 // ListAPProfileConfigs retrieves all AP configuration profiles from the site configuration.
-func (s Service) ListAPProfileConfigs(ctx context.Context) (*CiscoIOSXEWirelessSiteCfgApCfgProfiles, error) <span class="cov3" title="2">{
+func (s Service) ListAPProfileConfigs(ctx context.Context) (*CiscoIOSXEWirelessSiteCfgApCfgProfiles, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessSiteCfgApCfgProfiles](ctx, s.Client(), routes.APProfilesPath)
 }</span>
 
 // ListSiteTagConfigs retrieves all site tag configurations from the site configuration.
-func (s Service) ListSiteTagConfigs(ctx context.Context) (*CiscoIOSXEWirelessSiteCfgSiteTagConfigs, error) <span class="cov3" title="2">{
+func (s Service) ListSiteTagConfigs(ctx context.Context) (*CiscoIOSXEWirelessSiteCfgSiteTagConfigs, error) <span class="cov6" title="8">{
         return core.Get[CiscoIOSXEWirelessSiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath)
 }</span>
 </pre>
@@ -5204,11 +5217,9 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*SiteL
 
 // ListSiteTags retrieves all site tag configurations.
 func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]SiteListEntry, error) <span class="cov5" title="6">{
-        type siteTagsResponse struct {
-                SiteTagConfigs SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
-        }
+        siteService := NewService(s.Client())
 
-        result, err := core.Get[siteTagsResponse](ctx, s.Client(), routes.SiteTagConfigsPath)
+        result, err := siteService.ListSiteTagConfigs(ctx)
         if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
@@ -5234,7 +5245,6 @@ func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *SiteListEntr
                 return err
         }</span>
 
-        // Convert service payload model to internal model
         <span class="cov2" title="2">payload := s.buildPayload(*config)
         return core.PostVoid(ctx, s.Client(), routes.SiteTagConfigsPath, payload)</span>
 }
@@ -5251,7 +5261,6 @@ func (s *SiteTagService) SetAPJoinProfile(ctx context.Context, siteTagName, apJo
                         fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
         }</span>
 
-        // Update AP join profile
         <span class="cov2" title="2">config.ApJoinProfile = &amp;apJoinProfile
         return s.setSiteTag(ctx, config)</span>
 }
@@ -5269,11 +5278,9 @@ func (s *SiteTagService) SetFlexProfile(ctx context.Context, siteTagName, flexPr
                         fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
         }</span>
 
-        // Update flex profile
-        <span class="cov2" title="2">config.FlexProfile = &amp;flexProfile
-        // Explicitly set to false for flex-profile compatibility
-        isLocalSite := false
+        <span class="cov2" title="2">isLocalSite := false // Explicitly set to false for flex-profile compatibility
         config.IsLocalSite = &amp;isLocalSite
+        config.FlexProfile = &amp;flexProfile
         return s.setSiteTag(ctx, config)</span>
 }
 
@@ -5290,7 +5297,6 @@ func (s *SiteTagService) SetLocalSite(ctx context.Context, siteTagName string, e
                         fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
         }</span>
 
-        // Update local site
         <span class="cov2" title="2">config.IsLocalSite = &amp;enabled
         return s.setSiteTag(ctx, config)</span>
 }
@@ -5307,7 +5313,6 @@ func (s *SiteTagService) SetDescription(ctx context.Context, siteTagName, descri
                         fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
         }</span>
 
-        // Update description
         <span class="cov2" title="2">config.Description = &amp;description
         return s.setSiteTag(ctx, config)</span>
 }
@@ -5332,7 +5337,6 @@ func (s *SiteTagService) setSiteTag(ctx context.Context, config *SiteListEntry) 
                 return err
         }</span>
 
-        // Convert service payload model to internal model
         <span class="cov6" title="8">payload := s.buildPayload(*config)
         return core.PatchVoid(ctx, s.Client(), s.buildTagURL(config.SiteTagName), payload)</span>
 }
@@ -5475,64 +5479,64 @@ type Service struct {
 }
 
 // NewService creates a new WLAN service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="21">{
+func NewService(client *core.Client) Service <span class="cov10" title="42">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
 // PolicyTag returns a PolicyTagService for policy tag operations.
-func (s Service) PolicyTag() *PolicyTagService <span class="cov9" title="18">{
+func (s Service) PolicyTag() *PolicyTagService <span class="cov7" title="18">{
         return NewPolicyTagService(s.Client())
 }</span>
 
 // GetConfig retrieves the complete WLAN configuration.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessWlanCfg, error) <span class="cov3" title="2">{
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessWlanCfg, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessWlanCfg](ctx, s.Client(), routes.WLANCfgPath)
 }</span>
 
 // GetOperational retrieves WLAN operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*WlanGlobalOper, error) <span class="cov3" title="2">{
+func (s Service) GetOperational(ctx context.Context) (*WlanGlobalOper, error) <span class="cov2" title="2">{
         return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath)
 }</span>
 
 // ListConfigEntries retrieves WLAN configuration entries.
-func (s Service) ListConfigEntries(ctx context.Context) (*WlanCfgEntries, error) <span class="cov3" title="2">{
+func (s Service) ListConfigEntries(ctx context.Context) (*WlanCfgEntries, error) <span class="cov2" title="2">{
         return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
 }</span>
 
 // ListPolicies retrieves WLAN policies.
-func (s Service) ListPolicies(ctx context.Context) (*WlanPolicies, error) <span class="cov3" title="2">{
+func (s Service) ListPolicies(ctx context.Context) (*WlanPolicies, error) <span class="cov2" title="2">{
         return core.Get[WlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
 }</span>
 
 // ListPolicyListEntries retrieves all policy list entries.
-func (s Service) ListPolicyListEntries(ctx context.Context) (*PolicyListEntries, error) <span class="cov3" title="2">{
+func (s Service) ListPolicyListEntries(ctx context.Context) (*PolicyListEntries, error) <span class="cov2" title="2">{
         return core.Get[PolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
 }</span>
 
 // ListWirelessAAAPolicyConfigs retrieves wireless AAA policy configurations.
-func (s Service) ListWirelessAAAPolicyConfigs(ctx context.Context) (*WirelessAaaPolicyConfigs, error) <span class="cov3" title="2">{
+func (s Service) ListWirelessAAAPolicyConfigs(ctx context.Context) (*WirelessAaaPolicyConfigs, error) <span class="cov2" title="2">{
         return core.Get[WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath)
 }</span>
 
 // ListWlanCfgEntries retrieves WLAN configuration entries using WlanCfgWlanCfgEntries wrapper.
-func (s Service) ListWlanCfgEntries(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgWlanCfgEntries, error) <span class="cov3" title="2">{
+func (s Service) ListWlanCfgEntries(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgWlanCfgEntries, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessWlanCfgWlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
 }</span>
 
 // ListWlanPolicies retrieves WLAN policies using WlanCfgWlanPolicies wrapper.
-func (s Service) ListWlanPolicies(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgWlanPolicies, error) <span class="cov3" title="2">{
+func (s Service) ListWlanPolicies(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgWlanPolicies, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessWlanCfgWlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
 }</span>
 
 // ListCfgPolicyListEntries retrieves policy list entries using WlanCfgPolicyListEntries wrapper.
-func (s Service) ListCfgPolicyListEntries(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgPolicyListEntries, error) <span class="cov3" title="2">{
+func (s Service) ListCfgPolicyListEntries(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgPolicyListEntries, error) <span class="cov8" title="23">{
         return core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
 }</span>
 
 // ListCfgWirelessAaaPolicyConfigs retrieves wireless AAA policy configurations using WlanCfgWirelessAaaPolicyConfigs wrapper.
 func (s Service) ListCfgWirelessAaaPolicyConfigs(
         ctx context.Context,
-) (*CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs, error) <span class="cov3" title="2">{
+) (*CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs, error) <span class="cov2" title="2">{
         return core.Get[CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs](
                 ctx,
                 s.Client(),
@@ -5600,11 +5604,9 @@ func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*P
 
 // ListPolicyTags retrieves all policy tag configurations.
 func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntry, error) <span class="cov9" title="21">{
-        result, err := core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntries](
-                ctx,
-                s.Client(),
-                routes.WLANPolicyListEntriesPath,
-        )
+        wlanService := NewService(s.Client())
+
+        result, err := wlanService.ListCfgPolicyListEntries(ctx)
         if err != nil </span><span class="cov6" title="6">{
                 return nil, err
         }</span>
@@ -5612,11 +5614,9 @@ func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntr
         <span class="cov8" title="15">if result == nil </span><span class="cov0" title="0">{
                 return []PolicyListEntry{}, nil
         }</span>
-
         <span class="cov8" title="15">if result.PolicyListEntries == nil </span><span class="cov4" title="3">{
                 return []PolicyListEntry{}, nil
         }</span>
-
         <span class="cov8" title="12">if result.PolicyListEntries.PolicyListEntry == nil </span><span class="cov1" title="1">{
                 return []PolicyListEntry{}, nil
         }</span>
@@ -5632,12 +5632,10 @@ func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *PolicyLi
         <span class="cov4" title="3">if config.TagName == "" </span><span class="cov1" title="1">{
                 return errors.New("policy tag name cannot be empty")
         }</span>
-
         <span class="cov2" title="2">if err := s.validateTagName(config.TagName); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        // Use the model directly without conversion
         <span class="cov1" title="1">payload := s.buildPayload(*config)
         return core.PostVoid(ctx, s.Client(), routes.WLANPolicyListEntriesPath, payload)</span>
 }
@@ -5650,12 +5648,10 @@ func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *PolicyListE
         <span class="cov5" title="5">if config.TagName == "" </span><span class="cov1" title="1">{
                 return errors.New("policy tag name cannot be empty")
         }</span>
-
         <span class="cov4" title="4">if err := s.validateTagName(config.TagName); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        // Use the model directly without conversion
         <span class="cov4" title="3">payload := s.buildPayload(*config)
         return core.PatchVoid(ctx, s.Client(), s.buildTagURL(config.TagName), payload)</span>
 }
@@ -5750,10 +5746,10 @@ func (s *PolicyTagService) buildTagURL(tagName string) string <span class="cov6"
         )
 }</span>
 
-// buildPayload builds a payload for tag operations directly.
-func (s *PolicyTagService) buildPayload(config PolicyListEntry) map[string]interface{} <span class="cov4" title="4">{
-        return map[string]interface{}{
-                "Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entry": config,
+// buildPayload builds a payload for tag operations using the request.
+func (s *PolicyTagService) buildPayload(config PolicyListEntry) CiscoIOSXEWirelessWlanPolicyListEntriesPayload <span class="cov4" title="4">{
+        return CiscoIOSXEWirelessWlanPolicyListEntriesPayload{
+                PolicyListEntry: config,
         }
 }</span>
 </pre>
