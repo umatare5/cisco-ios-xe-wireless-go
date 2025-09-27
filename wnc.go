@@ -236,7 +236,7 @@ func (c *Client) Site() site.Service {
 }
 
 // Spaces returns the Cisco Spaces integration service.
-// EXPERIMENTAL: Requires IOS-XE 17.18.1+.
+// EXPERIMENTAL: Requires IOS-XE 17.15.1+.
 func (c *Client) Spaces() spaces.Service {
 	return spaces.NewService(c.core)
 }
