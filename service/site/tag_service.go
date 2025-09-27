@@ -45,11 +45,9 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*SiteL
 
 // ListSiteTags retrieves all site tag configurations.
 func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]SiteListEntry, error) {
-	type siteTagsResponse struct {
-		SiteTagConfigs SiteTagConfigs `json:"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs"`
-	}
+	siteService := NewService(s.Client())
 
-	result, err := core.Get[siteTagsResponse](ctx, s.Client(), routes.SiteTagConfigsPath)
+	result, err := siteService.ListSiteTagConfigs(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +73,6 @@ func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *SiteListEntr
 		return err
 	}
 
-	// Convert service payload model to internal model
 	payload := s.buildPayload(*config)
 	return core.PostVoid(ctx, s.Client(), routes.SiteTagConfigsPath, payload)
 }
@@ -92,7 +89,6 @@ func (s *SiteTagService) SetAPJoinProfile(ctx context.Context, siteTagName, apJo
 			fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
 	}
 
-	// Update AP join profile
 	config.ApJoinProfile = &apJoinProfile
 	return s.setSiteTag(ctx, config)
 }
@@ -110,11 +106,9 @@ func (s *SiteTagService) SetFlexProfile(ctx context.Context, siteTagName, flexPr
 			fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
 	}
 
-	// Update flex profile
-	config.FlexProfile = &flexProfile
-	// Explicitly set to false for flex-profile compatibility
-	isLocalSite := false
+	isLocalSite := false // Explicitly set to false for flex-profile compatibility
 	config.IsLocalSite = &isLocalSite
+	config.FlexProfile = &flexProfile
 	return s.setSiteTag(ctx, config)
 }
 
@@ -131,7 +125,6 @@ func (s *SiteTagService) SetLocalSite(ctx context.Context, siteTagName string, e
 			fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
 	}
 
-	// Update local site
 	config.IsLocalSite = &enabled
 	return s.setSiteTag(ctx, config)
 }
@@ -148,7 +141,6 @@ func (s *SiteTagService) SetDescription(ctx context.Context, siteTagName, descri
 			fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
 	}
 
-	// Update description
 	config.Description = &description
 	return s.setSiteTag(ctx, config)
 }
@@ -173,7 +165,6 @@ func (s *SiteTagService) setSiteTag(ctx context.Context, config *SiteListEntry) 
 		return err
 	}
 
-	// Convert service payload model to internal model
 	payload := s.buildPayload(*config)
 	return core.PatchVoid(ctx, s.Client(), s.buildTagURL(config.SiteTagName), payload)
 }
