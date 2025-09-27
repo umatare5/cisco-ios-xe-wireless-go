@@ -54,7 +54,7 @@ func run(controller, token string, logger *slog.Logger) ([]NeighborInfo, error) 
 
 	// Create map for AP MAC to Name lookup
 	nameMap := make(map[string]string)
-	for _, nameMapping := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.ApNameMACMap {
+	for _, nameMapping := range apData.CiscoIOSXEWirelessAPOperData.ApNameMACMap {
 		nameMap[nameMapping.WtpMAC] = nameMapping.WtpName
 	}
 
