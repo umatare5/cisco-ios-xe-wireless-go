@@ -24,13 +24,13 @@ func (s Service) RFTag() *RFTagService {
 }
 
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
-func (s Service) GetConfig(ctx context.Context) (*RFCfg, error) {
-	return core.Get[RFCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFCfg, error) {
+	return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath)
 }
 
 // ListRFTags retrieves RF tags collection from the configuration.
-func (s Service) ListRFTags(ctx context.Context) (*RFCfgRFTags, error) {
-	return core.Get[RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+func (s Service) ListRFTags(ctx context.Context) (*CiscoIOSXEWirelessRFCfgRFTags, error) {
+	return core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
 }
 
 // ListRFProfiles retrieves RF profiles collection from the configuration.

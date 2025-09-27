@@ -1,23 +1,23 @@
 package rf
 
-// RFCfg represents RF configuration data response structure.
-type RFCfg struct {
-	RFCfgData struct {
-		MultiBssidProfiles      *MultiBssidProfiles      `json:"multi-bssid-profiles,omitempty"`       // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.5)
-		AtfPolicies             *AtfPolicies             `json:"atf-policies,omitempty"`               // Air Time Fairness policy configurations (Live: IOS-XE 17.12.5)
-		RFTags                  *RFTags                  `json:"rf-tags,omitempty"`                    // RF tag configuration data (Live: IOS-XE 17.12.5)
-		RFProfiles              *RFProfiles              `json:"rf-profiles,omitempty"`                // RF profile configuration data (Live: IOS-XE 17.12.5)
-		RFProfileDefaultEntries *RFProfileDefaultEntries `json:"rf-profile-default-entries,omitempty"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
+// CiscoIOSXEWirelessRFCfg represents RF configuration data response structure.
+type CiscoIOSXEWirelessRFCfg struct {
+	CiscoIOSXEWirelessRFCfgData struct {
+		MultiBssidProfiles      MultiBssidProfiles      `json:"multi-bssid-profiles"`       // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.5)
+		AtfPolicies             AtfPolicies             `json:"atf-policies"`               // Air Time Fairness policy configurations (Live: IOS-XE 17.12.5)
+		RFTags                  RFTags                  `json:"rf-tags"`                    // RF tag configuration data (Live: IOS-XE 17.12.5)
+		RFProfiles              RFProfiles              `json:"rf-profiles"`                // RF profile configuration data (Live: IOS-XE 17.12.5)
+		RFProfileDefaultEntries RFProfileDefaultEntries `json:"rf-profile-default-entries"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"` // RF configuration data (Live: IOS-XE 17.12.5)
 }
 
-// RFCfgRFTags represents RF tags list response structure.
-type RFCfgRFTags struct {
+// CiscoIOSXEWirelessRFCfgRFTags represents RF tags list response structure.
+type CiscoIOSXEWirelessRFCfgRFTags struct {
 	RFTags RFTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
 }
 
-// RFCfgRFTag represents individual RF tag response structure.
-type RFCfgRFTag struct {
+// CiscoIOSXEWirelessRFCfgRFTag represents individual RF tag response structure.
+type CiscoIOSXEWirelessRFCfgRFTag struct {
 	RFTagList []RFTag `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tag"`
 }
 
@@ -67,12 +67,12 @@ type AtfPolicyDetail struct {
 
 // RFTag represents RF tag configuration.
 type RFTag struct {
-	TagName             string              `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.5)
-	Description         string              `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.5)
-	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.5)
-	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.5)
-	Dot116GhzRFProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.5)
-	RFTagRadioProfiles  *RFTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.5)
+	TagName             string             `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.5)
+	Description         string             `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.5)
+	Dot11ARfProfileName string             `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.5)
+	Dot11BRfProfileName string             `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.5)
+	Dot116GhzRFProfName string             `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.5)
+	RFTagRadioProfiles  RFTagRadioProfiles `json:"rf-tag-radio-profiles"`             // RF tag radio profiles data (Live: IOS-XE 17.12.5)
 }
 
 // RFTagRadioProfiles represents RF tag radio profiles collection.

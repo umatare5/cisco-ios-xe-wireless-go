@@ -1,8 +1,8 @@
 package rf
 
-// RFOper represents RF operational data response structure.
-type RFOper struct {
-	RFOperData struct {
+// CiscoIOSXEWirelessRFOper represents RF operational data response structure.
+type CiscoIOSXEWirelessRFOper struct {
+	CiscoIOSXEWirelessRFOperData struct {
 		ApAutoRFDot11Data *ApAutoRFDot11Data `json:"ap-auto-rf-dot11-data,omitempty"` // Auto RF data for 802.11 radios (Live: IOS-XE 17.12.5)
 		ApDot11RadarData  *ApDot11RadarData  `json:"ap-dot11-radar-data,omitempty"`   // Radar detection data for 802.11 radios (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container (Live: IOS-XE 17.12.5)
