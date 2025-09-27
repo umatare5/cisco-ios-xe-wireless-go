@@ -2,15 +2,15 @@ package location
 
 import "time"
 
-// LocationOper represents the response structure for location operational endpoint (HTTP 204).
-type LocationOper struct {
+// CiscoIOSXEWirelessLocationOper represents the response structure for location operational endpoint (HTTP 204).
+type CiscoIOSXEWirelessLocationOper struct {
 	CiscoIOSXEWirelessLocationOperData *struct {
 		LocationRSSIMeasurements []LocationRSSIMeasurement `json:"location-rssi-measurements,omitempty"` // Radio measurements for specific AP hearing client (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-location-oper:location-oper-data,omitempty"` // Location operational data (YANG: IOS-XE 17.12.1)
 }
 
-// LocationLocationRSSIMeasurements represents the response structure for location RSSI measurements endpoint (HTTP 204).
-type LocationLocationRSSIMeasurements struct {
+// CiscoIOSXEWirelessLocationLocationRSSIMeasurements represents the response structure for location RSSI measurements endpoint (HTTP 204).
+type CiscoIOSXEWirelessLocationLocationRSSIMeasurements struct {
 	LocationRSSIMeasurements []LocationRSSIMeasurement `json:"Cisco-IOS-XE-wireless-location-oper:location-rssi-measurements,omitempty"`
 }
 

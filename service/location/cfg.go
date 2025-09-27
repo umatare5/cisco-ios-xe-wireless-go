@@ -1,7 +1,7 @@
 package location
 
-// LocationCfg represents the structure for Location configuration data.
-type LocationCfg struct {
+// CiscoIOSXEWirelessLocationCfg represents the structure for Location configuration data.
+type CiscoIOSXEWirelessLocationCfg struct {
 	CiscoIOSXEWirelessLocationCfgData struct {
 		NMSPConfig        NMSPConfig         `json:"nmsp-config"`                  // NMSP notification parameters (Live: IOS-XE 17.12.5)
 		LocationConfig    *LocationConfig    `json:"location,omitempty"`           // Location config parameters (YANG: IOS-XE 17.12.1)
@@ -9,13 +9,13 @@ type LocationCfg struct {
 	} `json:"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"` // Location configuration data (Live: IOS-XE 17.12.5)
 }
 
-// LocationSettings represents the response structure for location settings endpoint (HTTP 204).
-type LocationSettings struct {
+// CiscoIOSXEWirelessLocationSettings represents the response structure for location settings endpoint (HTTP 204).
+type CiscoIOSXEWirelessLocationSettings struct {
 	LocationConfig *LocationConfig `json:"Cisco-IOS-XE-wireless-location-cfg:location,omitempty"`
 }
 
-// LocationCfgNMSPConfig represents the corresponding data structure for NMSP config.
-type LocationCfgNMSPConfig struct {
+// CiscoIOSXEWirelessLocationCfgNMSPConfig represents the corresponding data structure for NMSP config.
+type CiscoIOSXEWirelessLocationCfgNMSPConfig struct {
 	NMSPConfig NMSPConfig `json:"Cisco-IOS-XE-wireless-location-cfg:nmsp-config"`
 }
 

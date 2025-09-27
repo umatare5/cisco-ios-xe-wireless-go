@@ -1,14 +1,14 @@
 package hyperlocation
 
-// HyperlocationOper represents the hyperlocation operational data.
-type HyperlocationOper struct {
-	CiscoIOSXEWirelessHyperlocationOperHyperlocationOperData struct {
+// CiscoIOSXEWirelessHyperlocationOper represents the hyperlocation operational data.
+type CiscoIOSXEWirelessHyperlocationOper struct {
+	CiscoIOSXEWirelessHyperlocationOperData struct {
 		EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"ewlc-hyperlocation-profile"` // Hyperlocation AP profile data (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data"` // Hyperlocation operational data (Live: IOS-XE 17.12.5)
 }
 
-// HyperlocationProfiles represents the hyperlocation profiles collection.
-type HyperlocationProfiles struct {
+// CiscoIOSXEWirelessHyperlocationProfiles represents the hyperlocation profiles collection.
+type CiscoIOSXEWirelessHyperlocationProfiles struct {
 	EwlcHyperlocationProfile []EwlcHyperlocationProfile `json:"Cisco-IOS-XE-wireless-hyperlocation-oper:ewlc-hyperlocation-profile"`
 }
 

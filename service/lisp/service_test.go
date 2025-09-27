@@ -93,6 +93,18 @@ func TestLispServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"fabric-capable": true
 			}
 		}`,
+		"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data/lisp-ap-capabilities": `{
+			"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-ap-capabilities": [
+				{
+					"ap-type": 35,
+					"fabric-capable": true
+				},
+				{
+					"ap-type": 36,
+					"fabric-capable": true
+				}
+			]
+		}`,
 	}
 
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
@@ -130,6 +142,16 @@ func TestLispServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Error("GetCapabilities returned nil result")
+		}
+	})
+
+	t.Run("ListAPCapabilities", func(t *testing.T) {
+		result, err := service.ListAPCapabilities(ctx)
+		if err != nil {
+			t.Errorf("ListAPCapabilities returned unexpected error: %v", err)
+		}
+		if result == nil {
+			t.Error("ListAPCapabilities returned nil result")
 		}
 	})
 }
@@ -171,6 +193,16 @@ func TestLispServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		result, err := service.GetCapabilities(ctx)
 		if err == nil {
 			t.Error("Expected error for GetCapabilities, got nil")
+		}
+		if result != nil {
+			t.Error("Expected nil result on error, got non-nil result")
+		}
+	})
+
+	t.Run("ListAPCapabilities_404Error", func(t *testing.T) {
+		result, err := service.ListAPCapabilities(ctx)
+		if err == nil {
+			t.Error("Expected error for ListAPCapabilities, got nil")
 		}
 		if result != nil {
 			t.Error("Expected nil result on error, got non-nil result")

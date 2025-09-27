@@ -1,15 +1,15 @@
 package geolocation
 
-// GeolocationOper represents the geolocation operational data.
-type GeolocationOper struct {
-	CiscoIOSXEWirelessGeolocationOperGeolocationOperData struct {
+// CiscoIOSXEWirelessGeolocationOper represents the geolocation operational data.
+type CiscoIOSXEWirelessGeolocationOper struct {
+	CiscoIOSXEWirelessGeolocationOperData struct {
 		ApGeoLocData  []ApGeoLocData `json:"ap-geo-loc-data,omitempty"` // AP geolocation data list (YANG: IOS-XE 17.12.1)
 		ApGeoLocStats *ApGeoLocStats `json:"ap-geo-loc-stats"`          // AP geolocation statistics (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"` // Geolocation operational data (Live: IOS-XE 17.12.5)
 }
 
-// GeolocationOperApGeoLocStats represents the AP geolocation statistics.
-type GeolocationOperApGeoLocStats struct {
+// CiscoIOSXEWirelessGeolocationOperApGeoLocStats represents the AP geolocation statistics.
+type CiscoIOSXEWirelessGeolocationOperApGeoLocStats struct {
 	ApGeoLocStats ApGeoLocStats `json:"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-stats"`
 }
 
@@ -71,7 +71,7 @@ type GeoLocPoint struct {
 	Latitude  *float64 `json:"latitude,omitempty"`  // Geolocation latitude in WGS 84 format (YANG: IOS-XE 17.12.1)
 }
 
-// GeolocationOperApGeoLocData wraps the ApGeoLocData structure of the geolocation operational data.
-type GeolocationOperApGeoLocData struct {
+// CiscoIOSXEWirelessGeolocationOperApGeoLocData wraps the ApGeoLocData structure of the geolocation operational data.
+type CiscoIOSXEWirelessGeolocationOperApGeoLocData struct {
 	ApGeoLocData []ApGeoLocData `json:"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data"`
 }

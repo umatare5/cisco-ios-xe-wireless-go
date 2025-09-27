@@ -19,16 +19,21 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves LISP operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*LISPAgentOper, error) {
-	return core.Get[LISPAgentOper](ctx, s.Client(), routes.LISPOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessLISPOper, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOper](ctx, s.Client(), routes.LISPOperPath)
 }
 
-// GetMemoryStats retrieves LISP agent memory statistics from the wireless controller.
-func (s Service) GetMemoryStats(ctx context.Context) (*LISPAgentMemoryStats, error) {
-	return core.Get[LISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
+// GetMemoryStats retrieves LISP agent memory statistics using wrapper struct.
+func (s Service) GetMemoryStats(ctx context.Context) (*CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
 }
 
-// GetCapabilities retrieves LISP WLC capabilities from the wireless controller.
-func (s Service) GetCapabilities(ctx context.Context) (*LISPWLCCapabilities, error) {
-	return core.Get[LISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
+// GetCapabilities retrieves LISP WLC capabilities using wrapper struct.
+func (s Service) GetCapabilities(ctx context.Context) (*CiscoIOSXEWirelessLISPOperLISPWLCCapabilities, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOperLISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
+}
+
+// ListAPCapabilities retrieves LISP AP capabilities list using wrapper struct.
+func (s Service) ListAPCapabilities(ctx context.Context) (*CiscoIOSXEWirelessLISPOperLISPAPCapabilities, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOperLISPAPCapabilities](ctx, s.Client(), routes.LISPAPCapabilitiesPath)
 }

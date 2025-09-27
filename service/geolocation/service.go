@@ -21,19 +21,23 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves geolocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*GeolocationOper, error) {
-	return core.Get[GeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOper, error) {
+	return core.Get[CiscoIOSXEWirelessGeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
 }
 
 // ListAPGeolocationStats retrieves AP geolocation statistics.
-func (s Service) ListAPGeolocationStats(ctx context.Context) (*GeolocationOperApGeoLocStats, error) {
-	return core.Get[GeolocationOperApGeoLocStats](ctx, s.Client(), routes.GeolocationApGeoLocStatsPath)
+func (s Service) ListAPGeolocationStats(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOperApGeoLocStats, error) {
+	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocStats](
+		ctx,
+		s.Client(),
+		routes.GeolocationApGeoLocStatsPath,
+	)
 }
 
-// ListAPGeolocationData retrieves AP geolocation data using GeolocationOperApGeoLocData wrapper.
+// ListAPGeolocationData retrieves AP geolocation data using CiscoIOSXEWirelessGeolocationOperApGeoLocData wrapper.
 // Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
-func (s Service) ListAPGeolocationData(ctx context.Context) (*GeolocationOperApGeoLocData, error) {
-	return core.Get[GeolocationOperApGeoLocData](ctx, s.Client(), routes.GeolocationApGeoLocDataPath)
+func (s Service) ListAPGeolocationData(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOperApGeoLocData, error) {
+	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocData](ctx, s.Client(), routes.GeolocationApGeoLocDataPath)
 }
 
 // GetAPGeolocationDataByMAC retrieves AP geolocation data for a specific AP by MAC address.
