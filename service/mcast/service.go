@@ -57,7 +57,6 @@ func (s Service) GetMulticastOperData(ctx context.Context) (*CiscoIOSXEWirelessM
 }
 
 // ListRrcHistoryClientRecordData retrieves RRC history client record data from the controller.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListRrcHistoryClientRecordData(
 	ctx context.Context,
 ) (*CiscoIOSXEWirelessMcastOperRrcHistoryClientRecordData, error) {
@@ -69,19 +68,16 @@ func (s Service) ListRrcHistoryClientRecordData(
 }
 
 // ListRrcSrRadioRecord retrieves RRC stream radio record data from the controller.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListRrcSrRadioRecord(ctx context.Context) (*CiscoIOSXEWirelessMcastOperRrcSrRadioRecord, error) {
 	return core.Get[CiscoIOSXEWirelessMcastOperRrcSrRadioRecord](ctx, s.Client(), routes.McastRrcSrRadioRecordPath)
 }
 
 // ListRrcStreamRecord retrieves RRC stream record data from the controller.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListRrcStreamRecord(ctx context.Context) (*CiscoIOSXEWirelessMcastOperRrcStreamRecord, error) {
 	return core.Get[CiscoIOSXEWirelessMcastOperRrcStreamRecord](ctx, s.Client(), routes.McastRrcStreamRecordPath)
 }
 
 // ListRrcStreamAdmitRecord retrieves RRC stream admit record data from the controller.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListRrcStreamAdmitRecord(
 	ctx context.Context,
 ) (*CiscoIOSXEWirelessMcastOperRrcStreamAdmitRecord, error) {
@@ -93,7 +89,6 @@ func (s Service) ListRrcStreamAdmitRecord(
 }
 
 // ListRrcStreamDenyRecord retrieves RRC stream deny record data from the controller.
-// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 func (s Service) ListRrcStreamDenyRecord(ctx context.Context) (*CiscoIOSXEWirelessMcastOperRrcStreamDenyRecord, error) {
 	return core.Get[CiscoIOSXEWirelessMcastOperRrcStreamDenyRecord](
 		ctx,

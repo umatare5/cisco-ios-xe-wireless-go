@@ -3,9 +3,9 @@ package mcast
 // CiscoIOSXEWirelessMcastOper represents multicast operational data from controller.
 type CiscoIOSXEWirelessMcastOper struct {
 	CiscoIOSXEWirelessMcastOperData struct {
-		FlexMediastreamClientSummary   []FlexMediastreamClientSummary   `json:"flex-mediastream-client-summary,omitempty"`    // FlexConnect mediastream client summary data (Live: IOS-XE 17.12.5)
-		VlanL2MgidOp                   []VlanL2MgidOp                   `json:"vlan-l2-mgid-op,omitempty"`                    // VLAN Layer 2 multicast group ID operational data (Live: IOS-XE 17.12.5)
-		FabricMediaStreamClientSummary []FabricMediaStreamClientSummary `json:"fabric-media-stream-client-summary,omitempty"` // Fabric mediastream client summary data (Live: IOS-XE 17.12.5)
+		FlexMediastreamClientSummary   []FlexMediastreamClientSummary   `json:"flex-mediastream-client-summary,omitempty"`    // FlexConnect mediastream client summary data (Live: IOS-XE 17.12.6a)
+		VlanL2MgidOp                   []VlanL2MgidOp                   `json:"vlan-l2-mgid-op,omitempty"`                    // VLAN Layer 2 multicast group ID operational data (Live: IOS-XE 17.12.6a)
+		FabricMediaStreamClientSummary []FabricMediaStreamClientSummary `json:"fabric-media-stream-client-summary,omitempty"` // Fabric mediastream client summary data (Live: IOS-XE 17.12.6a)
 		McastMgidInfo                  []McastMgidInfo                  `json:"mcast-mgid-info,omitempty"`                    // Multicast MGID information (YANG: IOS-XE 17.12.1)
 		MulticastOperData              []MulticastOperData              `json:"multicast-oper-data,omitempty"`                // Multicast operational data (YANG: IOS-XE 17.12.1)
 		RrcHistoryClientRecordData     []RrcHistoryClientRecordData     `json:"rrc-history-client-record-data,omitempty"`     // RRC history client record data (YANG: IOS-XE 17.12.1)
@@ -13,7 +13,7 @@ type CiscoIOSXEWirelessMcastOper struct {
 		RrcStreamRecord                []RrcStreamRecord                `json:"rrc-stream-record,omitempty"`                  // RRC stream record data (YANG: IOS-XE 17.12.1)
 		RrcStreamAdmitRecord           []RrcStreamAdmitRecord           `json:"rrc-stream-admit-record,omitempty"`            // RRC stream admit record data (YANG: IOS-XE 17.12.1)
 		RrcStreamDenyRecord            []RrcStreamDenyRecord            `json:"rrc-stream-deny-record,omitempty"`             // RRC stream deny record data (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"` // Multicast operational data container (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"` // Multicast operational data container (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessMcastOperFlexMediastreamClientSummary represents the structure for FlexConnect mediastream client summary data.
@@ -68,39 +68,39 @@ type CiscoIOSXEWirelessMcastOperRrcStreamDenyRecord struct {
 
 // FlexMediastreamClientSummary represents FlexConnect mediastream client information.
 type FlexMediastreamClientSummary struct {
-	ClientMAC            string                 `json:"client-mac"`              // Multicast flex client MAC address (Live: IOS-XE 17.12.5)
-	VlanID               int                    `json:"vlan-id"`                 // Multicast client's VLAN (Live: IOS-XE 17.12.5)
-	FlexMcastClientGroup []FlexMcastClientGroup `json:"flex-mcast-client-group"` // Flex multicast client group (Live: IOS-XE 17.12.5)
+	ClientMAC            string                 `json:"client-mac"`              // Multicast flex client MAC address (Live: IOS-XE 17.12.6a)
+	VlanID               int                    `json:"vlan-id"`                 // Multicast client's VLAN (Live: IOS-XE 17.12.6a)
+	FlexMcastClientGroup []FlexMcastClientGroup `json:"flex-mcast-client-group"` // Flex multicast client group (Live: IOS-XE 17.12.6a)
 }
 
 // FlexMcastClientGroup represents FlexConnect multicast client group configuration.
 type FlexMcastClientGroup struct {
-	McastIP    string `json:"mcast-ip"`    // Multicast group IP (Live: IOS-XE 17.12.5)
-	StreamName string `json:"stream-name"` // Stream name associated with multicast group (Live: IOS-XE 17.12.5)
-	ApMAC      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.5)
-	IsDirect   bool   `json:"is-direct"`   // Stream is Multicast-Direct or Multicast (Live: IOS-XE 17.12.5)
+	McastIP    string `json:"mcast-ip"`    // Multicast group IP (Live: IOS-XE 17.12.6a)
+	StreamName string `json:"stream-name"` // Stream name associated with multicast group (Live: IOS-XE 17.12.6a)
+	ApMAC      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.6a)
+	IsDirect   bool   `json:"is-direct"`   // Stream is Multicast-Direct or Multicast (Live: IOS-XE 17.12.6a)
 }
 
 // VlanL2MgidOp represents VLAN Layer 2 multicast group ID operational data.
 type VlanL2MgidOp struct {
-	VlanIndex               int  `json:"vlan-index"`                 // Multicast VLAN index (Live: IOS-XE 17.12.5)
-	IsNonipMulticastEnabled bool `json:"is-nonip-multicast-enabled"` // Is non IP multicast enabled (Live: IOS-XE 17.12.5)
-	IsBroadcastEnable       bool `json:"is-broadcast-enable"`        // Is broadcast enabled (Live: IOS-XE 17.12.5)
+	VlanIndex               int  `json:"vlan-index"`                 // Multicast VLAN index (Live: IOS-XE 17.12.6a)
+	IsNonipMulticastEnabled bool `json:"is-nonip-multicast-enabled"` // Is non IP multicast enabled (Live: IOS-XE 17.12.6a)
+	IsBroadcastEnable       bool `json:"is-broadcast-enable"`        // Is broadcast enabled (Live: IOS-XE 17.12.6a)
 }
 
 // FabricMediaStreamClientSummary represents fabric mediastream client summary.
 type FabricMediaStreamClientSummary struct {
-	ClientMAC              string                   `json:"client-mac"`                          // Multicast fabric client MAC address (Live: IOS-XE 17.12.5)
-	VlanID                 int                      `json:"vlan-id"`                             // Multicast client's VLAN (Live: IOS-XE 17.12.5)
-	FabricMcastClientGroup []FabricMcastClientGroup `json:"fabric-mcast-client-group,omitempty"` // Fabric multicast client group (Live: IOS-XE 17.12.5)
+	ClientMAC              string                   `json:"client-mac"`                          // Multicast fabric client MAC address (Live: IOS-XE 17.12.6a)
+	VlanID                 int                      `json:"vlan-id"`                             // Multicast client's VLAN (Live: IOS-XE 17.12.6a)
+	FabricMcastClientGroup []FabricMcastClientGroup `json:"fabric-mcast-client-group,omitempty"` // Fabric multicast client group (Live: IOS-XE 17.12.6a)
 }
 
 // FabricMcastClientGroup represents fabric multicast client group.
 type FabricMcastClientGroup struct {
-	McastIP    string `json:"mcast-ip"`    // Multicast IP (Live: IOS-XE 17.12.5)
-	StreamName string `json:"stream-name"` // Stream name (Live: IOS-XE 17.12.5)
-	ApMAC      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.5)
-	IsDirect   bool   `json:"is-direct"`   // Stream is Multicast-Direct or Multicast (Live: IOS-XE 17.12.5)
+	McastIP    string `json:"mcast-ip"`    // Multicast IP (Live: IOS-XE 17.12.6a)
+	StreamName string `json:"stream-name"` // Stream name (Live: IOS-XE 17.12.6a)
+	ApMAC      string `json:"ap-mac"`      // AP MAC on which Multicast group is reported (Live: IOS-XE 17.12.6a)
+	IsDirect   bool   `json:"is-direct"`   // Stream is Multicast-Direct or Multicast (Live: IOS-XE 17.12.6a)
 }
 
 // McastMgidInfo represents multicast MGID information.

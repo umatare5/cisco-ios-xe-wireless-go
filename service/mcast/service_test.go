@@ -37,13 +37,10 @@ func TestMcastServiceUnit_Constructor_Success(t *testing.T) {
 	})
 }
 
-// TestMcastServiceUnit_GetOperations_MockSuccess tests Get operations using mock server
-// with real multicast operational data structure from live Cisco C9800 IOS-XE 17.12.5.
+// TestMcastServiceUnit_GetOperations_MockSuccess tests Get operations using mock server.
 func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	// Create mock RESTCONF server with real multicast operational data structure
-	// Based on live WNC data from IOS-XE 17.12.5 environment
 	responses := map[string]string{
-		// GetOperational - Complete multicast operational data with FlexConnect and VLAN info
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data": `{
 			"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data": {
 				"flex-mediastream-client-summary": [
@@ -340,7 +337,6 @@ func TestMcastServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/mcast-mgid-info",
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/multicast-oper-data",
 
-		// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-history-client-record-data",
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-sr-radio-record",
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-stream-record",
@@ -414,7 +410,6 @@ func TestMcastServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		}
 	})
 
-	// Note: Not Verified on IOS-XE 17.12.5 - may return 404 errors on some controller versions.
 	t.Run("ListRrcHistoryClientRecordData_404Error", func(t *testing.T) {
 		_, err := service.ListRrcHistoryClientRecordData(ctx)
 		if err == nil {
