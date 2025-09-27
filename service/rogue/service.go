@@ -54,8 +54,8 @@ func (s Service) GetRogueClientByMAC(ctx context.Context, mac string) (*CiscoIOS
 }
 
 // GetStats retrieves rogue statistics.
-func (s Service) GetStats(ctx context.Context) (*RogueStatsData, error) {
-	return core.Get[RogueStatsData](ctx, s.Client(), routes.RogueStatsPath)
+func (s Service) GetStats(ctx context.Context) (*RogueStats, error) {
+	return core.Get[RogueStats](ctx, s.Client(), routes.RogueStatsPath)
 }
 
 // Alias methods for integration test compatibility
@@ -71,12 +71,12 @@ func (s Service) GetOperData(ctx context.Context) (*CiscoIOSXEWirelessRogueData,
 }
 
 // GetOperStats is an alias for GetStats.
-func (s Service) GetOperStats(ctx context.Context) (*RogueStatsData, error) {
+func (s Service) GetOperStats(ctx context.Context) (*RogueStats, error) {
 	return s.GetStats(ctx)
 }
 
 // GetRLDPStats retrieves RLDP (Rogue Location Discovery Protocol) statistics.
-func (s Service) GetRLDPStats(ctx context.Context) (*RogueStatsData, error) {
+func (s Service) GetRLDPStats(ctx context.Context) (*RogueStats, error) {
 	// For now, return the same as rogue stats since RLDP is part of rogue detection
 	return s.GetStats(ctx)
 }
