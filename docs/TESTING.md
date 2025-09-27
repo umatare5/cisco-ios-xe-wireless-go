@@ -19,15 +19,8 @@ The SDK implements **standardized test patterns** using the unified `pkg/testuti
 | **4. Integration**   | Live WNC GET operations   | Integration test suites       | N/A             |
 | **5. Scenario/E2E**  | Live WNC RPC operations   | Scenario-based test workflows | N/A             |
 
-### IOS-XE Version Support
-
-| IOS-XE Version | Service Support                            | Test Strategy                                 |
-| -------------- | ------------------------------------------ | --------------------------------------------- |
-| **17.12.x**    | Core services (AP, WLAN, Client, RF, etc.) | Full mock + integration testing               |
-| **17.18.x**    | Advanced services (WAT, URWB, Spaces)      | 404 error expectation tests + real data mocks |
-
 > [!NOTE]
-> WAT (Wireless Assurance Testing), URWB (Ultra-Reliable Wireless Backhaul), and Spaces services require IOS-XE 17.18.1+. Tests expect 404 responses when services are not configured and use real WNC data structure for mock responses.
+> WAT (Wireless Assurance Testing) and URWB (Ultra-Reliable Wireless Backhaul) services require IOS-XE 17.18.1+. Spaces service requires IOS-XE 17.15.1+. Tests expect 404 responses when services are not configured and use real WNC data structure for mock responses.
 
 ### Coverage Requirements
 
