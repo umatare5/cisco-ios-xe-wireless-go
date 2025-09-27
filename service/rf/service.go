@@ -52,3 +52,18 @@ func (s Service) ListAtfPolicies(ctx context.Context) (*AtfPolicies, error) {
 func (s Service) ListRFProfileDefaultEntries(ctx context.Context) (*RFProfileDefaultEntries, error) {
 	return core.Get[RFProfileDefaultEntries](ctx, s.Client(), routes.RFProfileDefaultEntriesPath)
 }
+
+// GetOperational retrieves RF operational data including auto RF and radar detection data.
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessRFOper, error) {
+	return core.Get[CiscoIOSXEWirelessRFOper](ctx, s.Client(), routes.RRMOperPath)
+}
+
+// GetAutoRFDot11Data retrieves Auto RF 802.11 operational data for access points.
+func (s Service) GetAutoRFDot11Data(ctx context.Context) (*CiscoIOSXEWirelessRFOperApAutoRFDot11Data, error) {
+	return core.Get[CiscoIOSXEWirelessRFOperApAutoRFDot11Data](ctx, s.Client(), routes.RRMOperApAutoRFDot11DataPath)
+}
+
+// GetRadarDetectionData retrieves radar detection operational data for access points.
+func (s Service) GetRadarDetectionData(ctx context.Context) (*CiscoIOSXEWirelessRFOperApDot11RadarData, error) {
+	return core.Get[CiscoIOSXEWirelessRFOperApDot11RadarData](ctx, s.Client(), routes.RRMOperApDot11RadarDataPath)
+}
