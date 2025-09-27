@@ -18,17 +18,23 @@ func NewService(client *core.Client) Service {
 	return Service{BaseService: service.NewBaseService(client)}
 }
 
-// GetConfig retrieves CTS configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*CTSCfg, error) {
-	return core.Get[CTSCfg](ctx, s.Client(), routes.CTSCfgPath)
+// GetConfig retrieves CTS SXP configuration.
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessCTSCfg, error) {
+	return core.Get[CiscoIOSXEWirelessCTSCfg](ctx, s.Client(), routes.CTSCfgPath)
 }
 
 // GetOperational retrieves CTS operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*CTSOper, error) {
-	return core.Get[CTSOper](ctx, s.Client(), routes.CTSOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessCTSOper, error) {
+	return core.Get[CiscoIOSXEWirelessCTSOper](ctx, s.Client(), routes.CTSOperPath)
 }
 
 // ListFlexModeApSxpConnectionStatus retrieves FlexConnect AP SXP connection status.
-func (s Service) ListFlexModeApSxpConnectionStatus(ctx context.Context) (*CTSOperFlexModeApSxpConnectionStatus, error) {
-	return core.Get[CTSOperFlexModeApSxpConnectionStatus](ctx, s.Client(), routes.CTSFlexModeApSxpConnectionStatusPath)
+func (s Service) ListFlexModeApSxpConnectionStatus(
+	ctx context.Context,
+) (*CiscoIOSXEWirelessCTSOperFlexModeApSxpConnectionStatus, error) {
+	return core.Get[CiscoIOSXEWirelessCTSOperFlexModeApSxpConnectionStatus](
+		ctx,
+		s.Client(),
+		routes.CTSFlexModeApSxpConnectionStatusPath,
+	)
 }

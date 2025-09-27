@@ -1,14 +1,14 @@
 package apf
 
-// APFCfg represents APF configuration data container.
-type APFCfg struct {
+// CiscoIOSXEWirelessAPFCfg represents APF configuration data container.
+type CiscoIOSXEWirelessAPFCfg struct {
 	CiscoIOSXEWirelessAPFCfgData struct {
 		APF APF `json:"apf"` // APF configuration parameters (Live: IOS-XE 17.12.5)
 	} `json:"Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"` // APF configuration data (Live: IOS-XE 17.12.5)
 }
 
-// APFCfgAPF represents APF configuration wrapper.
-type APFCfgAPF struct {
+// CiscoIOSXEWirelessAPFCfgAPF represents APF configuration wrapper.
+type CiscoIOSXEWirelessAPFCfgAPF struct {
 	APF APF `json:"Cisco-IOS-XE-wireless-apf-cfg:apf"`
 }
 

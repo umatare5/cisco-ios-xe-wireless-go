@@ -1,20 +1,20 @@
 package afc
 
-// AFCOper represents AFC operational data container.
-type AFCOper struct {
-	CiscoIOSXEWirelessAFCOperAFCOperData struct {
+// CiscoIOSXEWirelessAFCOper represents AFC operational data container.
+type CiscoIOSXEWirelessAFCOper struct {
+	CiscoIOSXEWirelessAFCOperData struct {
 		EwlcAFCApResp []EwlcAFCApResp `json:"ewlc-afc-ap-resp"`          // AFC response list (Live: IOS-XE 17.12.5)
 		EwlcAFCApReq  []EwlcAFCApReq  `json:"ewlc-afc-ap-req,omitempty"` // AFC request list (YANG: IOS-XE 17.18.1)
 	} `json:"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"` // AFC operational data (Live: IOS-XE 17.12.5)
 }
 
-// AFCOperEwlcAFCApResp represents AFC AP response data container.
-type AFCOperEwlcAFCApResp struct {
+// CiscoIOSXEWirelessAFCOperEwlcAFCApResp represents AFC AP response data container.
+type CiscoIOSXEWirelessAFCOperEwlcAFCApResp struct {
 	EwlcAFCApResp []EwlcAFCApResp `json:"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp"`
 }
 
-// AFCOperEwlcAFCApReq represents AFC AP request data container.
-type AFCOperEwlcAFCApReq struct {
+// CiscoIOSXEWirelessAFCOperEwlcAFCApReq represents AFC AP request data container.
+type CiscoIOSXEWirelessAFCOperEwlcAFCApReq struct {
 	EwlcAFCApReq []EwlcAFCApReq `json:"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-req"`
 }
 
@@ -39,7 +39,7 @@ type AFCRequestData struct {
 	MinDesiredPower *float64             `json:"min-desired-power,omitempty"` // Minimum desired power level (YANG: IOS-XE 17.18.1)
 
 	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
-	Band320 *AFCBandRequest `json:"band320,omitempty"` // 320MHz band request (YANG: IOS-XE 17.18.1)
+	Band320 *AFCBandRequest `json:"band320"` // 320MHz band request (Live: IOS-XE 17.15.4b)
 }
 
 // AFCDeviceDescriptor represents AFC device descriptor information.
@@ -108,7 +108,7 @@ type EwlcAFCApResp struct {
 	ApMAC    string `json:"ap-mac"` // Access point MAC address (Live: IOS-XE 17.12.5)
 	RespData struct {
 		RequestID string `json:"request-id"` // AFC request identifier (Live: IOS-XE 17.12.5)
-		RulesetID string `json:"ruleset-id"` // AFC ruleset identifier (YANG: IOS-XE 17.18.1)
+		RulesetID string `json:"ruleset-id"` // AFC ruleset identifier (Live: IOS-XE 17.15.4b)
 		RespCode  struct {
 			Code             int    `json:"code"`              // AFC response code (Live: IOS-XE 17.12.5)
 			Description      string `json:"description"`       // Response code description (Live: IOS-XE 17.12.5)
@@ -135,9 +135,9 @@ type EwlcAFCApResp struct {
 			Channels        []AFCChannelResponse `json:"channels,omitempty"` // Available 80+ MHz channels (Live: IOS-XE 17.12.5)
 		} `json:"band80plus"` // 80+ MHz band response (Live: IOS-XE 17.12.5)
 		Band320 *struct {
-			GlobalOperClass int                  `json:"global-oper-class"`  // 320MHz global operating class (YANG: IOS-XE 17.18.1)
-			Channels        []AFCChannelResponse `json:"channels,omitempty"` // Available 320MHz channels (YANG: IOS-XE 17.18.1)
-		} `json:"band320,omitempty"` // 320MHz band response (YANG: IOS-XE 17.18.1)
+			GlobalOperClass int                  `json:"global-oper-class"`  // 320MHz global operating class (Live: IOS-XE 17.15.4b)
+			Channels        []AFCChannelResponse `json:"channels,omitempty"` // Available 320MHz channels (Live: IOS-XE 17.15.4b)
+		} `json:"band320"` // 320MHz band response (Live: IOS-XE 17.15.4b)
 		ExpireTime        string `json:"expire-time"`         // Response expiration time (Live: IOS-XE 17.12.5)
 		RespRcvdTimestamp string `json:"resp-rcvd-timestamp"` // Response received timestamp (Live: IOS-XE 17.12.5)
 	} `json:"resp-data"` // AFC response data (Live: IOS-XE 17.12.5)

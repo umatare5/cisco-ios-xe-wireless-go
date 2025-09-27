@@ -2,9 +2,9 @@ package ap
 
 import "time"
 
-// ApOper represents access point operational data response.
-type ApOper struct {
-	CiscoIOSXEWirelessAccessPointOperAccessPointOperData struct { // Root container of access point operational data (Live: IOS-XE 17.12.5)
+// CiscoIOSXEWirelessAPOper represents access point operational data response.
+type CiscoIOSXEWirelessAPOper struct {
+	CiscoIOSXEWirelessAPOperData struct {
 		ApRadioNeighbor         []ApRadioNeighbor        `json:"ap-radio-neighbor"`          // AP radio neighbor information (Live: IOS-XE 17.12.5)
 		RadioOperData           []RadioOperData          `json:"radio-oper-data"`            // Radio operational data corresponding to a radio of the 802.11 LWAPP AP (Live: IOS-XE 17.12.5)
 		RadioResetStats         []RadioResetStats        `json:"radio-reset-stats"`          // Radio reset stats (Live: IOS-XE 17.12.5)
@@ -35,148 +35,148 @@ type ApOper struct {
 	} `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.5)
 }
 
-// ApOperApRadioNeighbor represents the access point radio neighbor response.
-type ApOperApRadioNeighbor struct {
+// CiscoIOSXEWirelessApOperApRadioNeighbor represents the access point radio neighbor response.
+type CiscoIOSXEWirelessApOperApRadioNeighbor struct {
 	ApRadioNeighbor []ApRadioNeighbor `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-radio-neighbor"`
 }
 
-// ApOperRadioOperData represents the radio operational data response.
-type ApOperRadioOperData struct {
+// CiscoIOSXEWirelessApOperRadioOperData represents the radio operational data response.
+type CiscoIOSXEWirelessApOperRadioOperData struct {
 	RadioOperData []RadioOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:radio-oper-data"`
 }
 
-// ApOperRadioResetStats represents the radio reset statistics response.
-type ApOperRadioResetStats struct {
+// CiscoIOSXEWirelessApOperRadioResetStats represents the radio reset statistics response.
+type CiscoIOSXEWirelessApOperRadioResetStats struct {
 	RadioResetStats []RadioResetStats `json:"Cisco-IOS-XE-wireless-access-point-oper:radio-reset-stats"`
 }
 
-// ApOperQosClientData represents the QoS client data response.
-type ApOperQosClientData struct {
+// CiscoIOSXEWirelessApOperQosClientData represents the QoS client data response.
+type CiscoIOSXEWirelessApOperQosClientData struct {
 	QosClientData []QosClientData `json:"Cisco-IOS-XE-wireless-access-point-oper:qos-client-data"`
 }
 
-// ApOperCAPWAPData represents the CAPWAP data response.
-type ApOperCAPWAPData struct {
+// CiscoIOSXEWirelessApOperCAPWAPData represents the CAPWAP data response.
+type CiscoIOSXEWirelessApOperCAPWAPData struct {
 	CAPWAPData []CAPWAPData `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-data"`
 }
 
-// ApOperApNameMACMap represents the AP name to MAC mapping response.
-type ApOperApNameMACMap struct {
+// CiscoIOSXEWirelessApOperApNameMACMap represents the AP name to MAC mapping response.
+type CiscoIOSXEWirelessApOperApNameMACMap struct {
 	ApNameMACMap []ApNameMACMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map"`
 }
 
-// ApOperWtpSlotWlanStats represents the WTP slot WLAN statistics response.
-type ApOperWtpSlotWlanStats struct {
+// CiscoIOSXEWirelessApOperWtpSlotWlanStats represents the WTP slot WLAN statistics response.
+type CiscoIOSXEWirelessApOperWtpSlotWlanStats struct {
 	WtpSlotWlanStats []WtpSlotWlanStats `json:"Cisco-IOS-XE-wireless-access-point-oper:wtp-slot-wlan-stats"`
 }
 
-// ApOperEthernetMACWtpMACMap represents the Ethernet MAC to WTP MAC mapping response.
-type ApOperEthernetMACWtpMACMap struct {
+// CiscoIOSXEWirelessApOperEthernetMACWtpMACMap represents the Ethernet MAC to WTP MAC mapping response.
+type CiscoIOSXEWirelessApOperEthernetMACWtpMACMap struct {
 	EthernetMACWtpMACMap []EthernetMACWtpMACMap `json:"Cisco-IOS-XE-wireless-access-point-oper:ethernet-mac-wtp-mac-map"`
 }
 
-// ApOperRadioOperStats represents the radio operational statistics response.
-type ApOperRadioOperStats struct {
+// CiscoIOSXEWirelessApOperRadioOperStats represents the radio operational statistics response.
+type CiscoIOSXEWirelessApOperRadioOperStats struct {
 	RadioOperStats []RadioOperStats `json:"Cisco-IOS-XE-wireless-access-point-oper:radio-oper-stats"`
 }
 
-// ApOperEthernetIfStats represents the Ethernet interface statistics response.
-type ApOperEthernetIfStats struct {
+// CiscoIOSXEWirelessApOperEthernetIfStats represents the Ethernet interface statistics response.
+type CiscoIOSXEWirelessApOperEthernetIfStats struct {
 	EthernetIfStats []EthernetIfStats `json:"Cisco-IOS-XE-wireless-access-point-oper:ethernet-if-stats"`
 }
 
-// ApOperEwlcWncdStats represents the EWLC WNCD statistics response.
-type ApOperEwlcWncdStats struct {
+// CiscoIOSXEWirelessApOperEwlcWncdStats represents the EWLC WNCD statistics response.
+type CiscoIOSXEWirelessApOperEwlcWncdStats struct {
 	EwlcWncdStats EwlcWncdStats `json:"Cisco-IOS-XE-wireless-access-point-oper:ewlc-wncd-stats"`
 }
 
-// ApOperApIoxOperData represents the AP IOx operational data response.
-type ApOperApIoxOperData struct {
+// CiscoIOSXEWirelessApOperApIoxOperData represents the AP IOx operational data response.
+type CiscoIOSXEWirelessApOperApIoxOperData struct {
 	ApIoxOperData []ApIoxOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-iox-oper-data"`
 }
 
-// ApOperQosGlobalStats represents the QoS global statistics response.
-type ApOperQosGlobalStats struct {
+// CiscoIOSXEWirelessApOperQosGlobalStats represents the QoS global statistics response.
+type CiscoIOSXEWirelessApOperQosGlobalStats struct {
 	QosGlobalStats QosGlobalStats `json:"Cisco-IOS-XE-wireless-access-point-oper:qos-global-stats"`
 }
 
-// ApOperData represents the AP operational data response.
-type ApOperData struct {
+// CiscoIOSXEWirelessApOperData represents the AP operational data response.
+type CiscoIOSXEWirelessApOperData struct {
 	OperData []ApOperInternalData `json:"Cisco-IOS-XE-wireless-access-point-oper:oper-data"`
 }
 
-// ApOperRlanOper represents the RLAN operational data response.
-type ApOperRlanOper struct {
+// CiscoIOSXEWirelessApOperRlanOper represents the RLAN operational data response.
+type CiscoIOSXEWirelessApOperRlanOper struct {
 	RlanOper []RlanOper `json:"Cisco-IOS-XE-wireless-access-point-oper:rlan-oper"`
 }
 
-// ApOperEwlcMewlcPredownloadRec represents the EWLC MEWLC predownload record response.
-type ApOperEwlcMewlcPredownloadRec struct {
+// CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec represents the EWLC MEWLC predownload record response.
+type CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec struct {
 	EwlcMewlcPredownloadRec EwlcMewlcPredownloadRec `json:"Cisco-IOS-XE-wireless-access-point-oper:ewlc-mewlc-predownload-rec"`
 }
 
-// ApOperCdpCacheData represents the CDP cache data response.
-type ApOperCdpCacheData struct {
+// CiscoIOSXEWirelessApOperCdpCacheData represents the CDP cache data response.
+type CiscoIOSXEWirelessApOperCdpCacheData struct {
 	CdpCacheData []CdpCacheData `json:"Cisco-IOS-XE-wireless-access-point-oper:cdp-cache-data"`
 }
 
-// ApOperLldpNeigh represents the LLDP neighbor response.
-type ApOperLldpNeigh struct {
+// CiscoIOSXEWirelessApOperLldpNeigh represents the LLDP neighbor response.
+type CiscoIOSXEWirelessApOperLldpNeigh struct {
 	LldpNeigh []LldpNeigh `json:"Cisco-IOS-XE-wireless-access-point-oper:lldp-neigh"`
 }
 
-// ApOperTpCertInfo represents the trustpoint certificate info response.
-type ApOperTpCertInfo struct {
+// CiscoIOSXEWirelessApOperTpCertInfo represents the trustpoint certificate info response.
+type CiscoIOSXEWirelessApOperTpCertInfo struct {
 	TpCertInfo TpCertInfo `json:"Cisco-IOS-XE-wireless-access-point-oper:tp-cert-info"`
 }
 
-// ApOperDiscData represents the discovery data response.
-type ApOperDiscData struct {
+// CiscoIOSXEWirelessApOperDiscData represents the discovery data response.
+type CiscoIOSXEWirelessApOperDiscData struct {
 	DiscData []DiscData `json:"Cisco-IOS-XE-wireless-access-point-oper:disc-data"`
 }
 
-// ApOperCAPWAPPkts represents the CAPWAP packets response.
-type ApOperCAPWAPPkts struct {
+// CiscoIOSXEWirelessApOperCAPWAPPkts represents the CAPWAP packets response.
+type CiscoIOSXEWirelessApOperCAPWAPPkts struct {
 	CAPWAPPkts []CAPWAPPkts `json:"Cisco-IOS-XE-wireless-access-point-oper:capwap-pkts"`
 }
 
-// ApOperCountryOper represents the country operational data response.
-type ApOperCountryOper struct {
+// CiscoIOSXEWirelessApOperCountryOper represents the country operational data response.
+type CiscoIOSXEWirelessApOperCountryOper struct {
 	CountryOper []CountryOper `json:"Cisco-IOS-XE-wireless-access-point-oper:country-oper"`
 }
 
-// ApOperSuppCountryOper represents the supported country operational data response.
-type ApOperSuppCountryOper struct {
+// CiscoIOSXEWirelessApOperSuppCountryOper represents the supported country operational data response.
+type CiscoIOSXEWirelessApOperSuppCountryOper struct {
 	SuppCountryOper []SuppCountryOper `json:"Cisco-IOS-XE-wireless-access-point-oper:supp-country-oper"`
 }
 
-// ApOperApNhGlobalData represents the AP neighborhood global data response.
-type ApOperApNhGlobalData struct {
+// CiscoIOSXEWirelessApOperApNhGlobalData represents the AP neighborhood global data response.
+type CiscoIOSXEWirelessApOperApNhGlobalData struct {
 	ApNhGlobalData ApNhGlobalData `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-nh-global-data"`
 }
 
-// ApOperApImagePrepareLocation represents the AP image prepare location response.
-type ApOperApImagePrepareLocation struct {
+// CiscoIOSXEWirelessApOperApImagePrepareLocation represents the AP image prepare location response.
+type CiscoIOSXEWirelessApOperApImagePrepareLocation struct {
 	ApImagePrepareLocation []ApImagePrepareLocation `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-image-prepare-location"`
 }
 
-// ApOperApImageActiveLocation represents the AP image active location response.
-type ApOperApImageActiveLocation struct {
+// CiscoIOSXEWirelessApOperApImageActiveLocation represents the AP image active location response.
+type CiscoIOSXEWirelessApOperApImageActiveLocation struct {
 	ApImageActiveLocation []ApImageActiveLocation `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-image-active-location"`
 }
 
-// ApOperApPwrInfo represents the AP power information response.
-type ApOperApPwrInfo struct {
+// CiscoIOSXEWirelessApOperApPwrInfo represents the AP power information response.
+type CiscoIOSXEWirelessApOperApPwrInfo struct {
 	ApPwrInfo []ApPwrInfo `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-pwr-info"`
 }
 
-// ApOperApSensorStatus represents the AP sensor status response.
-type ApOperApSensorStatus struct {
+// CiscoIOSXEWirelessApOperApSensorStatus represents the AP sensor status response.
+type CiscoIOSXEWirelessApOperApSensorStatus struct {
 	ApSensorStatus []ApSensorStatus `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-sensor-status"`
 }
 
-// ApOperIotFirmware represents the IoT firmware response.
-type ApOperIotFirmware struct {
+// CiscoIOSXEWirelessApOperIotFirmware represents the IoT firmware response.
+type CiscoIOSXEWirelessApOperIotFirmware struct {
 	IotFirmware []IotFirmware `json:"Cisco-IOS-XE-wireless-access-point-oper:iot-firmware"`
 }
 

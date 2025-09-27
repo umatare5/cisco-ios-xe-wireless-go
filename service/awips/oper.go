@@ -1,7 +1,7 @@
 package awips
 
-// AWIPSOper represents the AWIPS operational data.
-type AWIPSOper struct {
+// CiscoIOSXEWirelessAWIPSOper represents the AWIPS operational data.
+type CiscoIOSXEWirelessAWIPSOper struct {
 	CiscoIOSXEWirelessAWIPSOperData struct {
 		AWIPSPerApInfo      []AWIPSPerApInfo     `json:"awips-per-ap-info"`                // Per AP AWIPS information (Live: IOS-XE 17.12.5)
 		AWIPSDwldStatus     AWIPSDwldStatus      `json:"awips-dwld-status"`                // AWIPS file download status (Live: IOS-XE 17.12.5)
@@ -12,33 +12,33 @@ type AWIPSOper struct {
 	} `json:"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"` // AWIPS operational data (Live: IOS-XE 17.12.5)
 }
 
-// AWIPSOperAWIPSPerApInfo represents the AWIPS per AP information.
-type AWIPSOperAWIPSPerApInfo struct {
+// CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo represents the AWIPS per AP information wrapper.
+type CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo struct {
 	AWIPSPerApInfo []AWIPSPerApInfo `json:"Cisco-IOS-XE-wireless-awips-oper:awips-per-ap-info"`
 }
 
-// AWIPSOperAWIPSDwldStatus represents the AWIPS download status.
-type AWIPSOperAWIPSDwldStatus struct {
+// CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus represents the AWIPS download status wrapper.
+type CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus struct {
 	AWIPSDwldStatus AWIPSDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status"`
 }
 
-// AWIPSOperAWIPSApDwldStatus represents the AWIPS per AP download status.
-type AWIPSOperAWIPSApDwldStatus struct {
+// CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus represents the AWIPS per AP download status wrapper.
+type CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus struct {
 	AWIPSApDwldStatus []AWIPSApDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-ap-dwld-status"`
 }
 
-// AWIPSOperAWIPSPerSignStats represents the AWIPS per signature statistics.
-type AWIPSOperAWIPSPerSignStats struct {
+// CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats represents the AWIPS per signature statistics wrapper.
+type CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats struct {
 	AWIPSPerSignStats []AWIPSPerSignStats `json:"Cisco-IOS-XE-wireless-awips-oper:awips-per-sign-stats"`
 }
 
-// AWIPSOperAWIPSGlobStats represents the AWIPS global statistics.
-type AWIPSOperAWIPSGlobStats struct {
+// CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats represents the AWIPS global statistics wrapper.
+type CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats struct {
 	AWIPSGlobStats *AWIPSGlobStats `json:"Cisco-IOS-XE-wireless-awips-oper:awips-glob-stats"`
 }
 
-// AWIPSOperAWIPSDwldStatusWncd represents the AWIPS download status for WNCD.
-type AWIPSOperAWIPSDwldStatusWncd struct {
+// CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd represents the AWIPS download status for WNCD wrapper.
+type CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd struct {
 	AWIPSDwldStatusWncd *AWIPSDwldStatusWncd `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status-wncd"`
 }
 
@@ -80,10 +80,10 @@ type AWIPSPerSignStats struct {
 
 // AWIPSGlobStats represents AWIPS global statistics.
 type AWIPSGlobStats struct {
-	TimeoutInSeconds   int    `json:"timeout-in-seconds"`    // Stats timeout interval in seconds (YANG: IOS-XE 17.18.1)
-	CurrHourTimestamp  string `json:"curr-hour-timestamp"`   // Timestamp of current hour (YANG: IOS-XE 17.18.1)
-	LastClearTimestamp string `json:"last-clear-timestamp"`  // Timestamp of last clear (YANG: IOS-XE 17.18.1)
-	CurrHourAlarmCount int    `json:"curr-hour-alarm-count"` // Number of alarms in current hour (YANG: IOS-XE 17.18.1)
+	TimeoutInSeconds   int    `json:"timeout-in-seconds"`    // Stats timeout interval in seconds (Live: IOS-XE 17.15.4b)
+	CurrHourTimestamp  string `json:"curr-hour-timestamp"`   // Timestamp of current hour (Live: IOS-XE 17.15.4b)
+	LastClearTimestamp string `json:"last-clear-timestamp"`  // Timestamp of last clear (Live: IOS-XE 17.15.4b)
+	CurrHourAlarmCount int    `json:"curr-hour-alarm-count"` // Number of alarms in current hour (Live: IOS-XE 17.15.4b)
 }
 
 // AWIPSDwldStatusWncd represents AWIPS internal bookkeeping of file download status.

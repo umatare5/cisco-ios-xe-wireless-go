@@ -1,21 +1,19 @@
 package cts
 
-// CTSCfg represents the CTS SXP configuration data.
-type CTSCfg struct {
-	CiscoIOSXEWirelessCTSSxpCfgData struct {
-		CTSSxpConfiguration struct {
-			CTSSxpConfig []CTSSxpConfig `json:"cts-sxp-config,omitempty"` // CTS SXP configuration list (YANG: IOS-XE 17.12.1)
-		} `json:"cts-sxp-configuration"` // CTS SXP configuration container (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"` // CTS SXP configuration data (YANG: IOS-XE 17.12.1)
+// CiscoIOSXEWirelessCTSCfg represents the CTS SXP configuration data.
+type CiscoIOSXEWirelessCTSCfg struct {
+	CiscoIOSXEWirelessCTSCfgData struct {
+		CTSSxpConfiguration CTSSxpConfiguration `json:"cts-sxp-configuration"` // CTS SXP configuration container (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"` // CTS SXP configuration data (Live: IOS-XE 17.12.5)
 }
 
-// CTSCfgFilter represents the structure for filtered CTS SXP configuration data.
-type CTSCfgFilter struct {
-	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
+// CTSSxpConfiguration represents the CTS SXP configuration container.
+type CTSSxpConfiguration struct {
+	CTSSxpConfig []CTSSxpConfig `json:"cts-sxp-config"` // CTS SXP configuration list (Live: IOS-XE 17.12.5)
 }
 
-// CTSCfgCTSSxpConfig represents CTS SXP configuration wrapper.
-type CTSCfgCTSSxpConfig struct {
+// CiscoIOSXEWirelessCTSCfgCTSSxpConfig represents CTS SXP configuration wrapper.
+type CiscoIOSXEWirelessCTSCfgCTSSxpConfig struct {
 	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
 }
 

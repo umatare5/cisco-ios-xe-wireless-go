@@ -19,31 +19,31 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves BLE operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*BLELtxOper, error) {
-	return core.Get[BLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessBLELtxOper, error) {
+	return core.Get[CiscoIOSXEWirelessBLELtxOper](ctx, s.Client(), routes.BLELtxOperPath)
 }
 
 // ListBLELtxAp retrieves BLE LTX AP operational data.
-func (s Service) ListBLELtxAp(ctx context.Context) (*BLELtxOperBLELtxAp, error) {
-	return core.Get[BLELtxOperBLELtxAp](ctx, s.Client(), routes.BLELtxApPath)
+func (s Service) ListBLELtxAp(ctx context.Context) (*CiscoIOSXEWirelessBLELtxOperBLELtxAp, error) {
+	return core.Get[CiscoIOSXEWirelessBLELtxOperBLELtxAp](ctx, s.Client(), routes.BLELtxApPath)
 }
 
 // ListBLELtxApAntenna retrieves BLE LTX AP antenna operational data.
-func (s Service) ListBLELtxApAntenna(ctx context.Context) (*BLELtxOperBLELtxApAntenna, error) {
-	return core.Get[BLELtxOperBLELtxApAntenna](ctx, s.Client(), routes.BLELtxApAntennaPath)
+func (s Service) ListBLELtxApAntenna(ctx context.Context) (*CiscoIOSXEWirelessBLELtxOperBLELtxApAntenna, error) {
+	return core.Get[CiscoIOSXEWirelessBLELtxOperBLELtxApAntenna](ctx, s.Client(), routes.BLELtxApAntennaPath)
 }
 
 // GetMgmtOperational retrieves BLE management operational data from the controller.
-func (s Service) GetMgmtOperational(ctx context.Context) (*BLEMgmtOper, error) {
-	return core.Get[BLEMgmtOper](ctx, s.Client(), routes.BLEMgmtOperPath)
+func (s Service) GetMgmtOperational(ctx context.Context) (*CiscoIOSXEWirelessBLEMgmtOper, error) {
+	return core.Get[CiscoIOSXEWirelessBLEMgmtOper](ctx, s.Client(), routes.BLEMgmtOperPath)
 }
 
 // ListBLEMgmtAp retrieves BLE management AP operational data.
-func (s Service) ListBLEMgmtAp(ctx context.Context) (*BLEMgmtOperBLEMgmtAp, error) {
-	return core.Get[BLEMgmtOperBLEMgmtAp](ctx, s.Client(), routes.BLEMgmtApPath)
+func (s Service) ListBLEMgmtAp(ctx context.Context) (*CiscoIOSXEWirelessBLEMgmtOperBLEMgmtAp, error) {
+	return core.Get[CiscoIOSXEWirelessBLEMgmtOperBLEMgmtAp](ctx, s.Client(), routes.BLEMgmtApPath)
 }
 
 // ListBLEMgmtCmx retrieves BLE management CMX operational data.
-func (s Service) ListBLEMgmtCmx(ctx context.Context) (*BLEMgmtOperBLEMgmtCmx, error) {
-	return core.Get[BLEMgmtOperBLEMgmtCmx](ctx, s.Client(), routes.BLEMgmtCmxPath)
+func (s Service) ListBLEMgmtCmx(ctx context.Context) (*CiscoIOSXEWirelessBLEMgmtOperBLEMgmtCmx, error) {
+	return core.Get[CiscoIOSXEWirelessBLEMgmtOperBLEMgmtCmx](ctx, s.Client(), routes.BLEMgmtCmxPath)
 }

@@ -1,20 +1,20 @@
 package ble
 
-// BLEMgmtOper represents BLE management operational data container.
-type BLEMgmtOper struct {
-	BLEMgmtOperData struct {
+// CiscoIOSXEWirelessBLEMgmtOper represents BLE management operational data container.
+type CiscoIOSXEWirelessBLEMgmtOper struct {
+	CiscoIOSXEWirelessBLEMgmtOperData struct {
 		BLEMgmtAp  []BLEMgmtAp  `json:"ble-mgmt-ap,omitempty"`  // BLE Management AP data (YANG: IOS-XE 17.12.1)
 		BLEMgmtCmx []BLEMgmtCmx `json:"ble-mgmt-cmx,omitempty"` // BLE Management CMX data (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data"` // BLE management operational data (YANG: IOS-XE 17.12.1)
 }
 
-// BLEMgmtOperBLEMgmtAp represents BLE management AP data wrapper.
-type BLEMgmtOperBLEMgmtAp struct {
+// CiscoIOSXEWirelessBLEMgmtOperBLEMgmtAp represents BLE management AP data wrapper.
+type CiscoIOSXEWirelessBLEMgmtOperBLEMgmtAp struct {
 	BLEMgmtAp []BLEMgmtAp `json:"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-ap"`
 }
 
-// BLEMgmtOperBLEMgmtCmx represents BLE management CMX data wrapper.
-type BLEMgmtOperBLEMgmtCmx struct {
+// CiscoIOSXEWirelessBLEMgmtOperBLEMgmtCmx represents BLE management CMX data wrapper.
+type CiscoIOSXEWirelessBLEMgmtOperBLEMgmtCmx struct {
 	BLEMgmtCmx []BLEMgmtCmx `json:"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-cmx"`
 }
 

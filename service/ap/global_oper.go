@@ -2,55 +2,52 @@ package ap
 
 import "time"
 
-// ApGlobalOper represents the structure for AP global operational data.
-type ApGlobalOper struct {
-	ApHistory             []ApHistory           `json:"ap-history"`                  // AP history data for state tracking (Live: IOS-XE 17.12.5)
-	EwlcApStats           EwlcApStats           `json:"ewlc-ap-stats"`               // AP radio statistics (Live: IOS-XE 17.12.5)
-	ApImgPredownloadStats ApImgPredownloadStats `json:"ap-img-predownload-stats"`    // AP image predownload stats (Live: IOS-XE 17.12.5)
-	ApLocationStats       []ApLocationStats     `json:"ap-location-stats,omitempty"` // AP location statistics (YANG: IOS-XE 17.12.1)
-	ApJoinStats           []ApJoinStats         `json:"ap-join-stats"`               // AP join statistics (Live: IOS-XE 17.12.5)
-	WlanClientStats       []WlanClientStats     `json:"wlan-client-stats"`           // WLAN client stats (Live: IOS-XE 17.12.5)
-	EmltdJoinCountStat    EmltdJoinCountStat    `json:"emltd-join-count-stat"`       // AP join count statistics (Live: IOS-XE 17.12.5)
+// CiscoIOSXEWirelessAPGlobalOper represents the top-level wrapper for AP global operational data.
+type CiscoIOSXEWirelessAPGlobalOper struct {
+	ApGlobalOperData struct {
+		ApHistory             []ApHistory           `json:"ap-history"`                  // AP history data for state tracking (Live: IOS-XE 17.12.5)
+		EwlcApStats           EwlcApStats           `json:"ewlc-ap-stats"`               // AP radio statistics (Live: IOS-XE 17.12.5)
+		ApImgPredownloadStats ApImgPredownloadStats `json:"ap-img-predownload-stats"`    // AP image predownload stats (Live: IOS-XE 17.12.5)
+		ApLocationStats       []ApLocationStats     `json:"ap-location-stats,omitempty"` // AP location statistics (YANG: IOS-XE 17.12.1)
+		ApJoinStats           []ApJoinStats         `json:"ap-join-stats"`               // AP join statistics (Live: IOS-XE 17.12.5)
+		WlanClientStats       []WlanClientStats     `json:"wlan-client-stats"`           // WLAN client stats (Live: IOS-XE 17.12.5)
+		EmltdJoinCountStat    EmltdJoinCountStat    `json:"emltd-join-count-stat"`       // AP join count statistics (Live: IOS-XE 17.12.5)
+	} `json:"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data"`
 }
 
-// ApGlobalOperApHistory represents the structure for AP history data.
-type ApGlobalOperApHistory struct {
+// CiscoIOSXEWirelessApGlobalOperApHistory represents the structure for AP history data.
+type CiscoIOSXEWirelessApGlobalOperApHistory struct {
 	ApHistory []ApHistory `json:"Cisco-IOS-XE-wireless-ap-global-oper:ap-history"`
 }
 
-// ApGlobalOperEwlcApStats represents the structure for EWLC AP statistics.
-type ApGlobalOperEwlcApStats struct {
+// CiscoIOSXEWirelessApGlobalOperEwlcApStats represents the structure for EWLC AP statistics.
+type CiscoIOSXEWirelessApGlobalOperEwlcApStats struct {
 	EwlcApStats EwlcApStats `json:"Cisco-IOS-XE-wireless-ap-global-oper:ewlc-ap-stats"`
 }
 
-// ApGlobalOperApImgPredownloadStats represents the structure for AP image predownload statistics.
-type ApGlobalOperApImgPredownloadStats struct {
+// CiscoIOSXEWirelessApGlobalOperApImgPredownloadStats represents the structure for AP image predownload statistics.
+type CiscoIOSXEWirelessApGlobalOperApImgPredownloadStats struct {
 	ApImgPredownloadStats ApImgPredownloadStats `json:"Cisco-IOS-XE-wireless-ap-global-oper:ap-img-predownload-stats"`
 }
 
-// ApGlobalOperApJoinStats represents the structure for AP join statistics.
-type ApGlobalOperApJoinStats struct {
+// CiscoIOSXEWirelessApGlobalOperApJoinStats represents the structure for AP join statistics.
+type CiscoIOSXEWirelessApGlobalOperApJoinStats struct {
 	ApJoinStats []ApJoinStats `json:"Cisco-IOS-XE-wireless-ap-global-oper:ap-join-stats"`
 }
 
-// ApGlobalOperWlanClientStats represents the structure for WLAN client statistics.
-type ApGlobalOperWlanClientStats struct {
+// CiscoIOSXEWirelessApGlobalOperWlanClientStats represents the structure for WLAN client statistics.
+type CiscoIOSXEWirelessApGlobalOperWlanClientStats struct {
 	WlanClientStats []WlanClientStats `json:"Cisco-IOS-XE-wireless-ap-global-oper:wlan-client-stats"`
 }
 
-// ApGlobalOperApLocationStats represents the structure for AP location statistics.
-type ApGlobalOperApLocationStats struct {
+// CiscoIOSXEWirelessApGlobalOperApLocationStats represents the structure for AP location statistics.
+type CiscoIOSXEWirelessApGlobalOperApLocationStats struct {
 	ApLocationStats []ApLocationStats `json:"Cisco-IOS-XE-wireless-ap-global-oper:ap-location-stats"`
 }
 
-// ApGlobalOperEmltdJoinCountStat represents the structure for EMLTD join count statistics.
-type ApGlobalOperEmltdJoinCountStat struct {
+// CiscoIOSXEWirelessApGlobalOperEmltdJoinCountStat represents the structure for EMLTD join count statistics.
+type CiscoIOSXEWirelessApGlobalOperEmltdJoinCountStat struct {
 	EmltdJoinCountStat EmltdJoinCountStat `json:"Cisco-IOS-XE-wireless-ap-global-oper:emltd-join-count-stat"`
-}
-
-// ApGlobalOperData represents the top-level wrapper for AP global operational data.
-type ApGlobalOperData struct {
-	ApGlobalOper ApGlobalOper `json:"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data"`
 }
 
 // ApLocationStats represents AP location statistics data.

@@ -617,13 +617,13 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	})
 
 	// Test global operational data operations
-	t.Run("GetGlobalInfo", func(t *testing.T) {
-		result, err := service.GetGlobalInfo(ctx)
+	t.Run("GetGlobalOperational", func(t *testing.T) {
+		result, err := service.GetGlobalOperational(ctx)
 		if err != nil {
-			t.Errorf("Expected no error for GetGlobalInfo, got: %v", err)
+			t.Errorf("Expected no error for GetGlobalOperational, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected result for GetGlobalInfo, got nil")
+			t.Error("Expected result for GetGlobalOperational, got nil")
 		}
 	})
 

@@ -4,106 +4,92 @@ package client
 
 import "time"
 
-// ClientOper represents the complete client operational data.
-type ClientOper struct {
-	CiscoIOSXEWirelessClientOperClientOperData struct {
-		CommonOperData    []CommonOperData    `json:"common-oper-data"`     // Common operational data for all wireless clients (Live: IOS-XE 17.12.5)
-		Dot11OperData     []Dot11OperData     `json:"dot11-oper-data"`      // IEEE 802.11 operational data for wireless clients (Live: IOS-XE 17.12.5)
-		MobilityOperData  []MobilityOperData  `json:"mobility-oper-data"`   // Mobility operational data for roaming clients (Live: IOS-XE 17.12.5)
-		MmIfClientStats   []MmIfClientStats   `json:"mm-if-client-stats"`   // Mobility manager interface client statistics (YANG: IOS-XE 17.12.1)
-		MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history"` // Mobility manager interface client history (YANG: IOS-XE 17.12.1)
-		TrafficStats      []TrafficStats      `json:"traffic-stats"`        // Client traffic statistics and counters (Live: IOS-XE 17.12.5)
-		PolicyData        []PolicyData        `json:"policy-data"`          // Client policy configuration and VLAN data (Live: IOS-XE 17.12.5)
-		SisfDBMac         []SisfDBMac         `json:"sisf-db-mac"`          // SISF database MAC address bindings (YANG: IOS-XE 17.12.1)
-		DcInfo            []DcInfo            `json:"dc-info"`              // Device classification information (YANG: IOS-XE 17.12.1)
+// CiscoIOSXEWirelessClientOper represents the complete client operational data root structure.
+type CiscoIOSXEWirelessClientOper struct {
+	CiscoIOSXEWirelessClientOperData struct {
+		CommonOperData    []CommonOperData    `json:"common-oper-data"`               // Common operational data for all wireless clients (Live: IOS-XE 17.12.5)
+		Dot11OperData     []Dot11OperData     `json:"dot11-oper-data"`                // IEEE 802.11 operational data for wireless clients (Live: IOS-XE 17.12.5)
+		MobilityOperData  []MobilityOperData  `json:"mobility-oper-data"`             // Mobility operational data for roaming clients (Live: IOS-XE 17.12.5)
+		MmIfClientStats   []MmIfClientStats   `json:"mm-if-client-stats,omitempty"`   // Mobility manager interface client statistics (YANG: IOS-XE 17.12.1)
+		MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history,omitempty"` // Mobility manager interface client history (YANG: IOS-XE 17.12.1)
+		TrafficStats      []TrafficStats      `json:"traffic-stats"`                  // Client traffic statistics and counters (Live: IOS-XE 17.12.5)
+		PolicyData        []PolicyData        `json:"policy-data"`                    // Client policy configuration and VLAN data (Live: IOS-XE 17.12.5)
+		SisfDBMac         []SisfDBMac         `json:"sisf-db-mac,omitempty"`          // SISF database MAC address bindings (YANG: IOS-XE 17.12.1)
+		DcInfo            []DcInfo            `json:"dc-info,omitempty"`              // Device classification information (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"` // Client operational data (Live: IOS-XE 17.12.5)
 }
 
-// ClientOperCommonOperData represents the common operational data.
-type ClientOperCommonOperData struct {
+// CiscoIOSXEWirelessClientOperCommonOperData represents the common operational data.
+type CiscoIOSXEWirelessClientOperCommonOperData struct {
 	CommonOperData []CommonOperData `json:"Cisco-IOS-XE-wireless-client-oper:common-oper-data"`
 }
 
-// ClientOperDot11OperData represents the 802.11 operational data.
-type ClientOperDot11OperData struct {
+// CiscoIOSXEWirelessClientOperDot11OperData represents the 802.11 operational data.
+type CiscoIOSXEWirelessClientOperDot11OperData struct {
 	Dot11OperData []Dot11OperData `json:"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data"`
 }
 
-// ClientOperMobilityOperData represents the mobility operational data.
-type ClientOperMobilityOperData struct {
+// CiscoIOSXEWirelessClientOperMobilityOperData represents the mobility operational data.
+type CiscoIOSXEWirelessClientOperMobilityOperData struct {
 	MobilityOperData []MobilityOperData `json:"Cisco-IOS-XE-wireless-client-oper:mobility-oper-data"`
 }
 
-// ClientOperMmIfClientStats represents the MM interface client statistics.
-type ClientOperMmIfClientStats struct {
+// CiscoIOSXEWirelessClientOperMmIfClientStats represents the MM interface client statistics.
+type CiscoIOSXEWirelessClientOperMmIfClientStats struct {
 	MmIfClientStats []MmIfClientStats `json:"Cisco-IOS-XE-wireless-client-oper:mm-if-client-stats"`
 }
 
-// ClientOperMmIfClientHistory represents the MM interface client history.
-type ClientOperMmIfClientHistory struct {
+// CiscoIOSXEWirelessClientOperMmIfClientHistory represents the MM interface client history.
+type CiscoIOSXEWirelessClientOperMmIfClientHistory struct {
 	MmIfClientHistory []MmIfClientHistory `json:"Cisco-IOS-XE-wireless-client-oper:mm-if-client-history"`
 }
 
-// ClientOperTrafficStats represents the client traffic statistics.
-type ClientOperTrafficStats struct {
+// CiscoIOSXEWirelessClientOperTrafficStatsData represents the traffic statistics data.
+type CiscoIOSXEWirelessClientOperTrafficStatsData struct {
 	TrafficStats []TrafficStats `json:"Cisco-IOS-XE-wireless-client-oper:traffic-stats"`
 }
 
-// ClientOperPolicyData represents the client policy data.
-type ClientOperPolicyData struct {
+// CiscoIOSXEWirelessClientOperPolicyData represents the client policy data.
+type CiscoIOSXEWirelessClientOperPolicyData struct {
 	PolicyData []PolicyData `json:"Cisco-IOS-XE-wireless-client-oper:policy-data"`
 }
 
-// ClientOperSisfDBMac represents the SISF database MAC.
-type ClientOperSisfDBMac struct {
+// CiscoIOSXEWirelessClientOperSisfDBMac represents the SISF database MAC.
+type CiscoIOSXEWirelessClientOperSisfDBMac struct {
 	SisfDBMac []SisfDBMac `json:"Cisco-IOS-XE-wireless-client-oper:sisf-db-mac"`
 }
 
-// ClientOperDcInfo represents the discovery client information.
-type ClientOperDcInfo struct {
+// CiscoIOSXEWirelessClientOperDcInfo represents the discovery client information.
+type CiscoIOSXEWirelessClientOperDcInfo struct {
 	DcInfo []DcInfo `json:"Cisco-IOS-XE-wireless-client-oper:dc-info"`
 }
 
 // CommonOperData represents common client operational data.
 type CommonOperData struct {
-	ClientMAC             string `json:"client-mac"`              // MAC address used as network address for wireless stations (Live: IOS-XE 17.12.5)
-	ApName                string `json:"ap-name"`                 // Access Point name client is connected to (Live: IOS-XE 17.12.5)
-	MsApSlotID            int    `json:"ms-ap-slot-id"`           // Radio slot on AP client is connected to (Live: IOS-XE 17.12.5)
-	MsRadioType           string `json:"ms-radio-type"`           // Wireless Radio type client connected with (Live: IOS-XE 17.12.5)
-	WlanID                int    `json:"wlan-id"`                 // Unique Wireless LAN identifier client connected to (Live: IOS-XE 17.12.5)
-	ClientType            string `json:"client-type"`             // Wireless network type based on traffic switching mode (Live: IOS-XE 17.12.5)
-	CoState               string `json:"co-state"`                // Last association phase client completed successfully (Live: IOS-XE 17.12.5)
-	AaaOverridePassphrase bool   `json:"aaa-override-passphrase"` // AAA override passphrase enabled status (Live: IOS-XE 17.12.5)
-	IsTviEnabled          bool   `json:"is-tvi-enabled"`          // Encrypted Traffic Analytics enablement for client (Live: IOS-XE 17.12.5)
-	WlanPolicy            struct {
-		CurrentSwitchingMode  string `json:"current-switching-mode"` // Current traffic switching mode for client (Live: IOS-XE 17.12.5)
-		WlanSwitchingMode     string `json:"wlan-switching-mode"`    // WLAN traffic switching mode based on properties (Live: IOS-XE 17.12.5)
-		CentralAuthentication string `json:"central-authentication"` // Central or local authentication mode (Live: IOS-XE 17.12.5)
-		CentralDHCP           bool   `json:"central-dhcp"`           // Central or local DHCP mode (Live: IOS-XE 17.12.5)
-		CentralAssocEnable    bool   `json:"central-assoc-enable"`   // Central or local association mode (Live: IOS-XE 17.12.5)
-		VlanCentralSwitching  bool   `json:"vlan-central-switching"` // VLAN-based central switching mode (Live: IOS-XE 17.12.5)
-		IsFabricClient        bool   `json:"is-fabric-client"`       // Client associated to Fabric WLAN (Live: IOS-XE 17.12.5)
-		IsGuestFabricClient   bool   `json:"is-guest-fabric-client"` // Client associated to Guest Fabric WLAN (Live: IOS-XE 17.12.5)
-		UpnBitFlag            string `json:"upn-bit-flag"`           // User Defined Network enabled status (Live: IOS-XE 17.12.5)
-	} `json:"wlan-policy"`
-	Username           string `json:"username"` // Client username (Live: IOS-XE 17.12.5)
-	GuestLanClientInfo struct {
-		WiredVlan       int `json:"wired-vlan"`        // VLAN client joins and is learned on foreign controller (Live: IOS-XE 17.12.5)
-		PhyIfid         int `json:"phy-ifid"`          // Physical interface ID client joins on foreign controller (Live: IOS-XE 17.12.5)
-		IdleTimeSeconds int `json:"idle-time-seconds"` // Idle time for guest-lan clients in seconds (Live: IOS-XE 17.12.5)
-	} `json:"guest-lan-client-info"`
-	MethodID                 string    `json:"method-id"`                   // Method Identifier (Live: IOS-XE 17.12.5)
-	L3VlanOverrideReceived   bool      `json:"l3-vlan-override-received"`   // VLAN Override received after L3 authentication (Live: IOS-XE 17.12.5)
-	UpnID                    int       `json:"upn-id"`                      // User Defined Network Identity (Live: IOS-XE 17.12.5)
-	IsLocallyAdministeredMAC bool      `json:"is-locally-administered-mac"` // Client MAC address locally administered status (Live: IOS-XE 17.12.5)
-	IdleTimeout              int       `json:"idle-timeout"`                // Client idle timeout before deletion (Live: IOS-XE 17.12.5)
-	IdleTimestamp            time.Time `json:"idle-timestamp"`              // Timestamp when client moved to idle state (Live: IOS-XE 17.12.5)
-	ClientDuid               string    `json:"client-duid"`                 // Client device user identity (Live: IOS-XE 17.12.5)
-	VrfName                  string    `json:"vrf-name"`                    // VRF Name (Live: IOS-XE 17.12.5)
+	ClientMAC                string           `json:"client-mac"`                  // MAC address used as network address for wireless stations (Live: IOS-XE 17.12.5)
+	ApName                   string           `json:"ap-name"`                     // Access Point name client is connected to (Live: IOS-XE 17.12.5)
+	MsApSlotID               int              `json:"ms-ap-slot-id"`               // Radio slot on AP client is connected to (Live: IOS-XE 17.12.5)
+	MsRadioType              string           `json:"ms-radio-type"`               // Wireless Radio type client connected with (Live: IOS-XE 17.12.5)
+	WlanID                   int              `json:"wlan-id"`                     // Unique Wireless LAN identifier client connected to (Live: IOS-XE 17.12.5)
+	ClientType               string           `json:"client-type"`                 // Wireless network type based on traffic switching mode (Live: IOS-XE 17.12.5)
+	CoState                  string           `json:"co-state"`                    // Last association phase client completed successfully (Live: IOS-XE 17.12.5)
+	AaaOverridePassphrase    bool             `json:"aaa-override-passphrase"`     // AAA override passphrase enabled status (Live: IOS-XE 17.12.5)
+	IsTviEnabled             bool             `json:"is-tvi-enabled"`              // Encrypted Traffic Analytics enablement for client (Live: IOS-XE 17.12.5)
+	WlanPolicy               ClientWlanPolicy `json:"wlan-policy"`                 // Client WLAN policy configuration (Live: IOS-XE 17.12.5)
+	Username                 string           `json:"username"`                    // Client username (Live: IOS-XE 17.12.5)
+	GuestLanClientInfo       ClientGuestInfo  `json:"guest-lan-client-info"`       // Guest LAN client information (Live: IOS-XE 17.12.5)
+	MethodID                 string           `json:"method-id"`                   // Method Identifier (Live: IOS-XE 17.12.5)
+	L3VlanOverrideReceived   bool             `json:"l3-vlan-override-received"`   // VLAN Override received after L3 authentication (Live: IOS-XE 17.12.5)
+	UpnID                    int              `json:"upn-id"`                      // User Defined Network Identity (Live: IOS-XE 17.12.5)
+	IsLocallyAdministeredMAC bool             `json:"is-locally-administered-mac"` // Client MAC address locally administered status (Live: IOS-XE 17.12.5)
+	IdleTimeout              int              `json:"idle-timeout"`                // Client idle timeout before deletion (Live: IOS-XE 17.12.5)
+	IdleTimestamp            time.Time        `json:"idle-timestamp"`              // Timestamp when client moved to idle state (Live: IOS-XE 17.12.5)
+	ClientDuid               string           `json:"client-duid"`                 // Client device user identity (Live: IOS-XE 17.12.5)
+	VrfName                  string           `json:"vrf-name"`                    // VRF Name (Live: IOS-XE 17.12.5)
 
 	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
-	L3AccessEnabled bool `json:"l3-access-enabled,omitempty"` // Client Layer 3 access enabled status (YANG: IOS-XE 17.18.1)
-	MultiLinkClient bool `json:"multi-link-client,omitempty"` // Multi Link client capability (YANG: IOS-XE 17.18.1)
+	L3AccessEnabled bool `json:"l3-access-enabled"` // Client Layer 3 access enabled status (Live: IOS-XE 17.15.4b)
+	MultiLinkClient bool `json:"multi-link-client"` // Multi Link client capability (Live: IOS-XE 17.15.4b)
 }
 
 // Dot11OperData represents 802.11 operational data.
@@ -395,4 +381,24 @@ type DcInfo struct {
 	PowerTypeSrc     string    `json:"power-type-src"`               // Power type source (YANG: IOS-XE 17.12.1)
 	HwModelSrc       string    `json:"hw-model-src"`                 // Hardware model source (YANG: IOS-XE 17.12.1)
 	DeviceVendor     string    `json:"device-vendor,omitempty"`      // Device vendor (YANG: IOS-XE 17.12.1)
+}
+
+// ClientWlanPolicy represents client WLAN policy configuration.
+type ClientWlanPolicy struct {
+	CurrentSwitchingMode  string `json:"current-switching-mode"` // Current traffic switching mode for client (Live: IOS-XE 17.12.5)
+	WlanSwitchingMode     string `json:"wlan-switching-mode"`    // WLAN traffic switching mode based on properties (Live: IOS-XE 17.12.5)
+	CentralAuthentication string `json:"central-authentication"` // Central or local authentication mode (Live: IOS-XE 17.12.5)
+	CentralDHCP           bool   `json:"central-dhcp"`           // Central or local DHCP mode (Live: IOS-XE 17.12.5)
+	CentralAssocEnable    bool   `json:"central-assoc-enable"`   // Central or local association mode (Live: IOS-XE 17.12.5)
+	VlanCentralSwitching  bool   `json:"vlan-central-switching"` // VLAN-based central switching mode (Live: IOS-XE 17.12.5)
+	IsFabricClient        bool   `json:"is-fabric-client"`       // Client associated to Fabric WLAN (Live: IOS-XE 17.12.5)
+	IsGuestFabricClient   bool   `json:"is-guest-fabric-client"` // Client associated to Guest Fabric WLAN (Live: IOS-XE 17.12.5)
+	UpnBitFlag            string `json:"upn-bit-flag"`           // User Defined Network enabled status (Live: IOS-XE 17.12.5)
+}
+
+// ClientGuestInfo represents guest LAN client information.
+type ClientGuestInfo struct {
+	WiredVlan       int `json:"wired-vlan"`        // VLAN client joins and is learned on foreign controller (Live: IOS-XE 17.12.5)
+	PhyIfid         int `json:"phy-ifid"`          // Physical interface ID client joins on foreign controller (Live: IOS-XE 17.12.5)
+	IdleTimeSeconds int `json:"idle-time-seconds"` // Idle time for guest-lan clients in seconds (Live: IOS-XE 17.12.5)
 }
