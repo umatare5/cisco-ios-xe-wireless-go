@@ -1,43 +1,43 @@
 package ap
 
-// ApCfg represents the complete access point configuration.
-type ApCfg struct {
-	CiscoIOSXEWirelessApCfgApCfgData struct {
-		LocationEntries          *LocationEntries          `json:"location-entries,omitempty"`             // AP location configurations (YANG: IOS-XE 17.12.1)
-		TagSourcePriorityConfigs *TagSourcePriorityConfigs `json:"tag-source-priority-configs"`            // Tag source priority configurations (Live: IOS-XE 17.12.5)
-		ApFilterConfigs          *ApFilterConfigs          `json:"ap-filter-configs,omitempty"`            // AP filter configurations (YANG: IOS-XE 17.12.1)
-		ApRulePriorityConfigs    *ApRulePriorityConfigs    `json:"ap-rule-priority-cfg-entries,omitempty"` // AP rule priority configurations (YANG: IOS-XE 17.12.1)
-		ApTags                   *ApTags                   `json:"ap-tags"`                                // AP tag configurations (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"` // AP configuration data (Live: IOS-XE 17.12.5)
+// CiscoIOSXEWirelessAPCfg represents the complete access point configuration.
+type CiscoIOSXEWirelessAPCfg struct {
+	CiscoIOSXEWirelessAPCfgData struct {
+		LocationEntries          *LocationEntries         `json:"location-entries,omitempty"`             // AP location configurations (YANG: IOS-XE 17.12.1)
+		TagSourcePriorityConfigs TagSourcePriorityConfigs `json:"tag-source-priority-configs"`            // Tag source priority configurations (Live: IOS-XE 17.12.6a)
+		ApFilterConfigs          *ApFilterConfigs         `json:"ap-filter-configs,omitempty"`            // AP filter configurations (YANG: IOS-XE 17.12.1)
+		ApRulePriorityConfigs    *ApRulePriorityConfigs   `json:"ap-rule-priority-cfg-entries,omitempty"` // AP rule priority configurations (YANG: IOS-XE 17.12.1)
+		ApTags                   ApTags                   `json:"ap-tags"`                                // AP tag configurations (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data"` // AP configuration data (Live: IOS-XE 17.12.6a)
 }
 
-// ApCfgLocationEntries represents the AP location entries wrapper.
-type ApCfgLocationEntries struct {
+// CiscoIOSXEWirelessApCfgLocationEntries represents the AP location entries wrapper.
+type CiscoIOSXEWirelessApCfgLocationEntries struct {
 	LocationEntries LocationEntries `json:"Cisco-IOS-XE-wireless-ap-cfg:location-entries"`
 }
 
-// ApCfgTagSourcePriorityConfigs represents the tag source priority configurations.
-type ApCfgTagSourcePriorityConfigs struct {
+// CiscoIOSXEWirelessApCfgTagSourcePriorityConfigs represents the tag source priority configurations.
+type CiscoIOSXEWirelessApCfgTagSourcePriorityConfigs struct {
 	TagSourcePriorityConfigs TagSourcePriorityConfigs `json:"Cisco-IOS-XE-wireless-ap-cfg:tag-source-priority-configs"`
 }
 
-// ApCfgApFilterConfigs represents the AP filter configurations wrapper.
-type ApCfgApFilterConfigs struct {
+// CiscoIOSXEWirelessApCfgApFilterConfigs represents the AP filter configurations wrapper.
+type CiscoIOSXEWirelessApCfgApFilterConfigs struct {
 	ApFilterConfigs ApFilterConfigs `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-filter-configs"`
 }
 
-// ApCfgApRulePriorityConfigs represents the AP rule priority configurations wrapper.
-type ApCfgApRulePriorityConfigs struct {
+// CiscoIOSXEWirelessApCfgApRulePriorityConfigs represents the AP rule priority configurations wrapper.
+type CiscoIOSXEWirelessApCfgApRulePriorityConfigs struct {
 	ApRulePriorityConfigs ApRulePriorityConfigs `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-rule-priority-cfg-entries"`
 }
 
-// ApCfgApTag represents a single AP tag.
-type ApCfgApTag struct {
+// CiscoIOSXEWirelessApCfgApTag represents a single AP tag.
+type CiscoIOSXEWirelessApCfgApTag struct {
 	ApTag []ApTag `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
 }
 
-// ApCfgApTags represents the AP tags.
-type ApCfgApTags struct {
+// CiscoIOSXEWirelessApCfgApTags represents the AP tags.
+type CiscoIOSXEWirelessApCfgApTags struct {
 	ApTags ApTags `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tags"`
 }
 
@@ -58,7 +58,7 @@ type LocationEntries struct {
 
 // ApTags represents the collection of AP tags.
 type ApTags struct {
-	ApTag []ApTag `json:"ap-tag"` // List of AP tags (Live: IOS-XE 17.12.5)
+	ApTag []ApTag `json:"ap-tag"` // List of AP tags (Live: IOS-XE 17.12.6a)
 }
 
 // LocationEntry represents a single AP location configuration.
@@ -117,20 +117,20 @@ type ApRulePriorityConfig struct {
 
 // TagSourcePriorityConfigs represents tag source priority configurations container.
 type TagSourcePriorityConfigs struct {
-	TagSourcePriorityConfig []TagSourcePriorityConfig `json:"tag-source-priority-config"` // Priority for tag source configuration list (Live: IOS-XE 17.12.5)
+	TagSourcePriorityConfig []TagSourcePriorityConfig `json:"tag-source-priority-config"` // Priority for tag source configuration list (Live: IOS-XE 17.12.6a)
 }
 
 // TagSourcePriorityConfig represents a single tag source priority configuration.
 type TagSourcePriorityConfig struct {
-	Priority uint8  `json:"priority"` // Priority level for tag source (0-4) (Live: IOS-XE 17.12.5)
-	TagSrc   string `json:"tag-src"`  // Tag source identifier (Live: IOS-XE 17.12.5)
+	Priority uint8  `json:"priority"` // Priority level for tag source (0-4) (Live: IOS-XE 17.12.6a)
+	TagSrc   string `json:"tag-src"`  // Tag source identifier (Live: IOS-XE 17.12.6a)
 }
 
 // ApTag represents AP tag assignment configuration.
 type ApTag struct {
-	ApMAC          string `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.5)
-	PolicyTag      string `json:"policy-tag,omitempty"`      // Policy tag assigned to the AP (Live: IOS-XE 17.12.5)
-	SiteTag        string `json:"site-tag,omitempty"`        // Site tag assigned to the AP (Live: IOS-XE 17.12.5)
-	RFTag          string `json:"rf-tag,omitempty"`          // RF tag assigned to the AP (Live: IOS-XE 17.12.5)
+	ApMAC          string `json:"ap-mac"`                    // Access point MAC address (Live: IOS-XE 17.12.6a)
+	PolicyTag      string `json:"policy-tag"`                // Policy tag assigned to the AP (Live: IOS-XE 17.12.6a)
+	SiteTag        string `json:"site-tag"`                  // Site tag assigned to the AP (Live: IOS-XE 17.12.6a)
+	RFTag          string `json:"rf-tag"`                    // RF tag assigned to the AP (Live: IOS-XE 17.12.6a)
 	PrimingProfile string `json:"priming-profile,omitempty"` // Configuration of AP priming profile (YANG: IOS-XE 17.12.1)
 }

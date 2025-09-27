@@ -19,13 +19,13 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves general operational data.
-func (s Service) GetOperational(ctx context.Context) (*GeneralOper, error) {
-	return core.Get[GeneralOper](ctx, s.Client(), routes.GeneralOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessGeneralOper, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralOper](ctx, s.Client(), routes.GeneralOperPath)
 }
 
 // GetManagementInterfaceState retrieves management interface operational data.
-func (s Service) GetManagementInterfaceState(ctx context.Context) (*GeneralOperMgmtIntfData, error) {
-	return core.Get[GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
+func (s Service) GetManagementInterfaceState(ctx context.Context) (*CiscoIOSXEWirelessGeneralOperMgmtIntfData, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
 }
 
 // GetConfig retrieves complete general configuration data from the controller.
@@ -101,73 +101,79 @@ func (s Service) GetWSAAPClientEventConfig(ctx context.Context) (*WsaApClientEve
 }
 
 // ListCfgMewlcConfig retrieves MEWLC configuration data wrapper.
-func (s Service) ListCfgMewlcConfig(ctx context.Context) (*GeneralCfgMewlcConfig, error) {
-	return core.Get[GeneralCfgMewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
+func (s Service) ListCfgMewlcConfig(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgMewlcConfig, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgMewlcConfig](ctx, s.Client(), routes.GeneralMewlcConfigPath)
 }
 
 // ListCfgCacConfig retrieves CAC configuration data wrapper.
-func (s Service) ListCfgCacConfig(ctx context.Context) (*GeneralCfgCacConfig, error) {
-	return core.Get[GeneralCfgCacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
+func (s Service) ListCfgCacConfig(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgCacConfig, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgCacConfig](ctx, s.Client(), routes.GeneralCacConfigPath)
 }
 
 // ListCfgMfp retrieves MFP configuration data wrapper.
-func (s Service) ListCfgMfp(ctx context.Context) (*GeneralCfgMfp, error) {
-	return core.Get[GeneralCfgMfp](ctx, s.Client(), routes.GeneralMfpPath)
+func (s Service) ListCfgMfp(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgMfp, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgMfp](ctx, s.Client(), routes.GeneralMfpPath)
 }
 
 // ListCfgFipsCfg retrieves FIPS configuration data wrapper.
-func (s Service) ListCfgFipsCfg(ctx context.Context) (*GeneralCfgFipsCfg, error) {
-	return core.Get[GeneralCfgFipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
+func (s Service) ListCfgFipsCfg(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgFipsCfg, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgFipsCfg](ctx, s.Client(), routes.GeneralFipsCfgPath)
 }
 
 // ListCfgWsaApClientEvent retrieves WSA AP client event configuration data wrapper.
-func (s Service) ListCfgWsaApClientEvent(ctx context.Context) (*GeneralCfgWsaApClientEvent, error) {
-	return core.Get[GeneralCfgWsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
+func (s Service) ListCfgWsaApClientEvent(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgWsaApClientEvent, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgWsaApClientEvent](ctx, s.Client(), routes.GeneralWsaApClientEventPath)
 }
 
 // ListCfgSimL3InterfaceCacheData retrieves SIM L3 interface cache data wrapper.
-func (s Service) ListCfgSimL3InterfaceCacheData(ctx context.Context) (*GeneralCfgSimL3InterfaceCacheData, error) {
-	return core.Get[GeneralCfgSimL3InterfaceCacheData](ctx, s.Client(), routes.GeneralSimL3InterfaceCacheDataPath)
+func (s Service) ListCfgSimL3InterfaceCacheData(
+	ctx context.Context,
+) (*CiscoIOSXEWirelessGeneralCfgSimL3InterfaceCacheData, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgSimL3InterfaceCacheData](
+		ctx,
+		s.Client(),
+		routes.GeneralSimL3InterfaceCacheDataPath,
+	)
 }
 
 // ListCfgWlcManagementData retrieves WLC management data wrapper.
-func (s Service) ListCfgWlcManagementData(ctx context.Context) (*GeneralCfgWlcManagementData, error) {
-	return core.Get[GeneralCfgWlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
+func (s Service) ListCfgWlcManagementData(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgWlcManagementData, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgWlcManagementData](ctx, s.Client(), routes.GeneralWlcManagementDataPath)
 }
 
 // ListCfgLaginfo retrieves LAG information wrapper.
-func (s Service) ListCfgLaginfo(ctx context.Context) (*GeneralCfgLaginfo, error) {
-	return core.Get[GeneralCfgLaginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
+func (s Service) ListCfgLaginfo(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgLaginfo, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgLaginfo](ctx, s.Client(), routes.GeneralLaginfoPath)
 }
 
 // ListCfgMulticastConfig retrieves multicast configuration data wrapper.
-func (s Service) ListCfgMulticastConfig(ctx context.Context) (*GeneralCfgMulticastConfig, error) {
-	return core.Get[GeneralCfgMulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
+func (s Service) ListCfgMulticastConfig(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgMulticastConfig, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgMulticastConfig](ctx, s.Client(), routes.GeneralMulticastConfigPath)
 }
 
 // ListCfgFeatureUsageCfg retrieves feature usage configuration data wrapper.
-func (s Service) ListCfgFeatureUsageCfg(ctx context.Context) (*GeneralCfgFeatureUsageCfg, error) {
-	return core.Get[GeneralCfgFeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
+func (s Service) ListCfgFeatureUsageCfg(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgFeatureUsageCfg, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgFeatureUsageCfg](ctx, s.Client(), routes.GeneralFeatureUsageCfgPath)
 }
 
 // ListCfgThresholdWarnCfg retrieves threshold warning configuration data wrapper.
-func (s Service) ListCfgThresholdWarnCfg(ctx context.Context) (*GeneralCfgThresholdWarnCfg, error) {
-	return core.Get[GeneralCfgThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
+func (s Service) ListCfgThresholdWarnCfg(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgThresholdWarnCfg, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgThresholdWarnCfg](ctx, s.Client(), routes.GeneralThresholdWarnCfgPath)
 }
 
 // ListCfgApLocRangingCfg retrieves AP location ranging configuration data wrapper.
-func (s Service) ListCfgApLocRangingCfg(ctx context.Context) (*GeneralCfgApLocRangingCfg, error) {
-	return core.Get[GeneralCfgApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
+func (s Service) ListCfgApLocRangingCfg(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgApLocRangingCfg, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgApLocRangingCfg](ctx, s.Client(), routes.GeneralApLocRangingCfgPath)
 }
 
 // ListCfgGeolocationCfg retrieves geolocation configuration data wrapper.
-func (s Service) ListCfgGeolocationCfg(ctx context.Context) (*GeneralCfgGeolocationCfg, error) {
-	return core.Get[GeneralCfgGeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
+func (s Service) ListCfgGeolocationCfg(ctx context.Context) (*CiscoIOSXEWirelessGeneralCfgGeolocationCfg, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralCfgGeolocationCfg](ctx, s.Client(), routes.GeneralGeolocationCfgPath)
 }
 
 // ListOperMgmtIntfData retrieves management interface operational data wrapper.
-func (s Service) ListOperMgmtIntfData(ctx context.Context) (*GeneralOperMgmtIntfData, error) {
-	return core.Get[GeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
+func (s Service) ListOperMgmtIntfData(ctx context.Context) (*CiscoIOSXEWirelessGeneralOperMgmtIntfData, error) {
+	return core.Get[CiscoIOSXEWirelessGeneralOperMgmtIntfData](ctx, s.Client(), routes.GeneralMgmtIntfDataPath)
 }
 
 // ListMewlcConfig retrieves MEWLC configuration data.

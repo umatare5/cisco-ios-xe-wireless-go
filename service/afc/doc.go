@@ -8,8 +8,6 @@
 // - Cloud Operational: /restconf/data/Cisco-IOS-XE-wireless-afc-cloud-oper:afc-cloud-oper-data
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-afc-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-afc-cloud-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-afc-oper.yang (17.18.1)
-// - Cisco-IOS-XE-wireless-afc-cloud-oper.yang (17.18.1)
+// - Cisco-IOS-XE-wireless-afc-oper.yang (17.12.1, 17.15.1, 17.18.1)
+// - Cisco-IOS-XE-wireless-afc-cloud-oper.yang (17.12.1, 17.15.1, 17.18.1)
 package afc

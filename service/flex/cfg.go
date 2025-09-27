@@ -1,27 +1,27 @@
 package flex
 
-// FlexCfg represents FlexConnect configuration data container.
-type FlexCfg struct {
+// CiscoIOSXEWirelessFlexCfg represents FlexConnect configuration data container.
+type CiscoIOSXEWirelessFlexCfg struct {
 	CiscoIOSXEWirelessFlexCfgData struct {
-		FlexPolicyEntries FlexPolicyEntries `json:"flex-policy-entries"` // FlexConnect policy entries configuration (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"` // FlexConnect configuration data (Live: IOS-XE 17.12.5)
+		FlexPolicyEntries FlexPolicyEntries `json:"flex-policy-entries"` // FlexConnect policy entries configuration (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"` // FlexConnect configuration data (Live: IOS-XE 17.12.6a)
 }
 
-// FlexCfgFlexPolicyEntries represents FlexConnect policy entries container.
-type FlexCfgFlexPolicyEntries struct {
+// CiscoIOSXEWirelessFlexCfgFlexPolicyEntries represents FlexConnect policy entries container.
+type CiscoIOSXEWirelessFlexCfgFlexPolicyEntries struct {
 	FlexPolicyEntries FlexPolicyEntries `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-policy-entries"`
 }
 
 // FlexPolicyEntries represents FlexConnect policy entries collection.
 type FlexPolicyEntries struct {
-	FlexPolicyEntry []FlexPolicyEntry `json:"flex-policy-entry"` // List of FlexConnect policy configurations (Live: IOS-XE 17.12.5)
+	FlexPolicyEntry []FlexPolicyEntry `json:"flex-policy-entry"` // List of FlexConnect policy configurations (Live: IOS-XE 17.12.6a)
 }
 
 // FlexPolicyEntry represents individual FlexConnect policy configuration.
 type FlexPolicyEntry struct {
-	PolicyName                string               `json:"policy-name"`                             // Name of the flex profile (Live: IOS-XE 17.12.5)
-	Description               string               `json:"description,omitempty"`                   // Description for the flex profile (Live: IOS-XE 17.12.5)
-	IfNameVlanIDs             *FlexIfNameVlanIDs   `json:"if-name-vlan-ids,omitempty"`              // Interface name VLAN IDs container (Live: IOS-XE 17.12.5)
+	PolicyName                string               `json:"policy-name"`                             // Name of the flex profile (Live: IOS-XE 17.12.6a)
+	Description               string               `json:"description,omitempty"`                   // Description for the flex profile (Live: IOS-XE 17.12.6a)
+	IfNameVlanIDs             *FlexIfNameVlanIDs   `json:"if-name-vlan-ids,omitempty"`              // Interface name VLAN IDs container (Live: IOS-XE 17.12.6a)
 	EAPFastProfileName        string               `json:"eap-fast-profile-name,omitempty"`         // EAP fast profile for local authentication (YANG: IOS-XE 17.12.1)
 	RADIUSServerGroupName     string               `json:"radius-server-group-name,omitempty"`      // Radius server group for authentication (YANG: IOS-XE 17.12.1)
 	FallbackRadioShut         *bool                `json:"fallback-radio-shut,omitempty"`           // Fallback Radio Shut feature enable flag (YANG: IOS-XE 17.12.1)
@@ -90,11 +90,11 @@ type FlexIPOverlapConfig struct {
 
 // FlexIfNameVlanIDs represents FlexConnect interface name VLAN IDs container.
 type FlexIfNameVlanIDs struct {
-	IfNameVlanID []FlexIfNameVlanID `json:"if-name-vlan-id"` // Interface name VLAN ID list (Live: IOS-XE 17.12.5)
+	IfNameVlanID []FlexIfNameVlanID `json:"if-name-vlan-id"` // Interface name VLAN ID list (Live: IOS-XE 17.12.6a)
 }
 
 // FlexIfNameVlanID represents individual FlexConnect interface name VLAN ID mapping.
 type FlexIfNameVlanID struct {
-	InterfaceName string `json:"interface-name"` // VLAN name for vlan-acl mapping (Live: IOS-XE 17.12.5)
-	VlanID        int    `json:"vlan-id"`        // VLAN ID mapped to ACL for AP by VLAN name (Live: IOS-XE 17.12.5)
+	InterfaceName string `json:"interface-name"` // VLAN name for vlan-acl mapping (Live: IOS-XE 17.12.6a)
+	VlanID        int    `json:"vlan-id"`        // VLAN ID mapped to ACL for AP by VLAN name (Live: IOS-XE 17.12.6a)
 }

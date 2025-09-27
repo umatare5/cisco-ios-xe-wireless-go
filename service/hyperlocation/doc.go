@@ -4,12 +4,8 @@
 // It provides methods for precision tracking, location profiles management, and advanced location services across wireless infrastructures.
 //
 // RESTCONF Endpoints:
-// - Configuration: /restconf/data/Cisco-IOS-XE-wireless-hyperlocation-cfg:hyperlocation-cfg-data
 // - Operational: /restconf/data/Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-hyperlocation-cfg.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-hyperlocation-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-hyperlocation-cfg.yang (17.18.1)
-// - Cisco-IOS-XE-wireless-hyperlocation-oper.yang (17.18.1)
+// - Cisco-IOS-XE-wireless-hyperlocation-oper.yang (17.12.1, 17.15.1, 17.18.1)
 package hyperlocation

@@ -1,14 +1,14 @@
 // Package mobility provides data models for mobility operational data.
 package mobility
 
-// MobilityOper represents the root mobility operational data container.
-type MobilityOper struct {
-	MobilityOperData struct {
+// CiscoIOSXEWirelessMobilityOper represents the root mobility operational data container.
+type CiscoIOSXEWirelessMobilityOper struct {
+	CiscoIOSXEWirelessMobilityOperData struct {
 		ApCache                 []ApCache               `json:"ap-cache"`                   // AP cache info by mobility controller (YANG: IOS-XE 17.12.1)
 		ApPeerList              []ApPeerList            `json:"ap-peer-list"`               // AP count reported by peer controllers (YANG: IOS-XE 17.12.1)
 		MmGlobalData            MmGlobalData            `json:"mm-global-data"`             // Container for global mobility data (YANG: IOS-XE 17.12.1)
 		MmIfGlobalMsgStats      MmIfGlobalMsgStats      `json:"mm-if-global-msg-stats"`     // Global mobility interface message stats (YANG: IOS-XE 17.12.1)
-		MmIfGlobalStats         MmIfGlobalStats         `json:"mm-if-global-stats"`         // Global mobility interface event stats (Live: IOS-XE 17.12.5)
+		MmIfGlobalStats         MmIfGlobalStats         `json:"mm-if-global-stats"`         // Global mobility interface event stats (Live: IOS-XE 17.12.6a)
 		MobilityClientData      []MobilityClientData    `json:"mobility-client-data"`       // 802.11 LWAPP Mobility Clients info (YANG: IOS-XE 17.12.1)
 		MobilityClientStats     []MobilityClientStats   `json:"mobility-client-stats"`      // Client mobility event and message stats (YANG: IOS-XE 17.12.1)
 		MobilityGlobalDTLSStats MobilityGlobalDTLSStats `json:"mobility-global-dtls-stats"` // Global mobility DTLS tunnel stats (YANG: IOS-XE 17.12.1)
@@ -18,58 +18,58 @@ type MobilityOper struct {
 	} `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data"` // Mobility operational data (YANG: IOS-XE 17.12.1)
 }
 
-// MobilityOperApCache represents the AP cache data.
-type MobilityOperApCache struct {
+// CiscoIOSXEWirelessMobilityOperApCache represents the AP cache data.
+type CiscoIOSXEWirelessMobilityOperApCache struct {
 	ApCache []ApCache `json:"Cisco-IOS-XE-wireless-mobility-oper:ap-cache"`
 }
 
-// MobilityOperApPeerList represents the AP peer list data.
-type MobilityOperApPeerList struct {
+// CiscoIOSXEWirelessMobilityOperApPeerList represents the AP peer list data.
+type CiscoIOSXEWirelessMobilityOperApPeerList struct {
 	ApPeerList []ApPeerList `json:"Cisco-IOS-XE-wireless-mobility-oper:ap-peer-list"`
 }
 
-// MobilityOperMmGlobalData represents the structure for MM global data.
-type MobilityOperMmGlobalData struct {
+// CiscoIOSXEWirelessMobilityOperMmGlobalData represents the structure for MM global data.
+type CiscoIOSXEWirelessMobilityOperMmGlobalData struct {
 	MmGlobalData MmGlobalData `json:"Cisco-IOS-XE-wireless-mobility-oper:mm-global-data"`
 }
 
-// MobilityOperMmIfGlobalMsgStats represents the structure for MM interface global message statistics.
-type MobilityOperMmIfGlobalMsgStats struct {
+// CiscoIOSXEWirelessMobilityOperMmIfGlobalMsgStats represents the structure for MM if global message stats.
+type CiscoIOSXEWirelessMobilityOperMmIfGlobalMsgStats struct {
 	MmIfGlobalMsgStats MmIfGlobalMsgStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mm-if-global-msg-stats"`
 }
 
-// MobilityOperMmIfGlobalStats represents the structure for MM interface global statistics.
-type MobilityOperMmIfGlobalStats struct {
+// CiscoIOSXEWirelessMobilityOperMmIfGlobalStats represents the structure for MM if global stats.
+type CiscoIOSXEWirelessMobilityOperMmIfGlobalStats struct {
 	MmIfGlobalStats MmIfGlobalStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mm-if-global-stats"`
 }
 
-// MobilityOperMobilityClientData represents the structure for mobility client data.
-type MobilityOperMobilityClientData struct {
+// CiscoIOSXEWirelessMobilityOperMobilityClientData represents the mobility client data structure.
+type CiscoIOSXEWirelessMobilityOperMobilityClientData struct {
 	MobilityClientData []MobilityClientData `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-data"`
 }
 
-// MobilityOperMobilityClientStats represents the structure for mobility client statistics.
-type MobilityOperMobilityClientStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityClientStats represents the mobility client stats structure.
+type CiscoIOSXEWirelessMobilityOperMobilityClientStats struct {
 	MobilityClientStats MobilityClientStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats"`
 }
 
-// MobilityOperMobilityGlobalDTLSStats represents the structure for mobility global DTLS statistics.
-type MobilityOperMobilityGlobalDTLSStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityGlobalDTLSStats represents the structure for mobility global DTLS statistics.
+type CiscoIOSXEWirelessMobilityOperMobilityGlobalDTLSStats struct {
 	MobilityGlobalDTLSStats MobilityGlobalDTLSStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-dtls-stats"`
 }
 
-// MobilityOperMobilityGlobalMsgStats represents the structure for mobility global message statistics.
-type MobilityOperMobilityGlobalMsgStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityGlobalMsgStats represents the mobility global msg stats structure.
+type CiscoIOSXEWirelessMobilityOperMobilityGlobalMsgStats struct {
 	MobilityGlobalMsgStats MobilityGlobalMsgStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-msg-stats"`
 }
 
-// MobilityOperMobilityGlobalStats represents the structure for mobility global statistics.
-type MobilityOperMobilityGlobalStats struct {
+// CiscoIOSXEWirelessMobilityOperMobilityGlobalStats represents the structure for mobility global statistics.
+type CiscoIOSXEWirelessMobilityOperMobilityGlobalStats struct {
 	MobilityGlobalStats MobilityGlobalStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-global-stats"`
 }
 
-// MobilityOperWlanClientLimit represents the structure for WLAN client limit data.
-type MobilityOperWlanClientLimit struct {
+// CiscoIOSXEWirelessMobilityOperWlanClientLimit represents the WLAN client limit structure.
+type CiscoIOSXEWirelessMobilityOperWlanClientLimit struct {
 	WlanClientLimit []WlanClientLimit `json:"Cisco-IOS-XE-wireless-mobility-oper:wlan-client-limit"`
 }
 
@@ -86,7 +86,7 @@ type ApPeerList struct {
 
 // MmGlobalData represents mobility manager global configuration data.
 type MmGlobalData struct {
-	MmMACAddr string `json:"mm-mac-addr"` // MAC address being used by mobility module (Live: IOS-XE 17.12.5)
+	MmMACAddr string `json:"mm-mac-addr"` // MAC address being used by mobility module (Live: IOS-XE 17.12.6a)
 }
 
 // MmIfGlobalMsgStats represents mobility manager interface global message statistics.
@@ -96,89 +96,89 @@ type MmIfGlobalMsgStats struct {
 
 // IpcStats represents inter-process communication statistics.
 type IpcStats struct {
-	Type      int    `json:"type"`        // CAPWAP messages type for mobility client (Live: IOS-XE 17.12.5)
-	Allocs    int    `json:"allocs"`      // Number of CAPWAP messages allocated for mobility client (Live: IOS-XE 17.12.5)
-	Frees     int    `json:"frees"`       // Number of CAPWAP messages freed for mobility client (Live: IOS-XE 17.12.5)
-	TX        int    `json:"tx"`          // Number of CAPWAP messages transmitted for mobility client (Live: IOS-XE 17.12.5)
-	RX        int    `json:"rx"`          // Number of CAPWAP messages received for mobility client (Live: IOS-XE 17.12.5)
-	Forwarded int    `json:"forwarded"`   // Number of CAPWAP messages forwarded for mobility client (Live: IOS-XE 17.12.5)
-	TXErrors  int    `json:"tx-errors"`   // Number of CAPWAP message transmit errors for mobility client (Live: IOS-XE 17.12.5)
-	RXErrors  int    `json:"rx-errors"`   // Number of CAPWAP message receive errors for mobility client (Live: IOS-XE 17.12.5)
-	TXRetries int    `json:"tx-retries"`  // Number of retries for CAPWAP message transmit error for mobility client (Live: IOS-XE 17.12.5)
-	Drops     int    `json:"drops"`       // Number of dropped CAPWAP messages for mobility client (Live: IOS-XE 17.12.5)
-	Built     int    `json:"built"`       // Number of CAPWAP messages built for mobility client (Live: IOS-XE 17.12.5)
-	Processed int    `json:"processed"`   // Number of processed CAPWAP messages for mobility client (Live: IOS-XE 17.12.5)
-	MmMsgType string `json:"mm-msg-type"` // CAPWAP mobility message type (Live: IOS-XE 17.12.5)
+	Type      int    `json:"type"`        // CAPWAP messages type for mobility client (Live: IOS-XE 17.12.6a)
+	Allocs    int    `json:"allocs"`      // Number of CAPWAP messages allocated for mobility client (Live: IOS-XE 17.12.6a)
+	Frees     int    `json:"frees"`       // Number of CAPWAP messages freed for mobility client (Live: IOS-XE 17.12.6a)
+	TX        int    `json:"tx"`          // Number of CAPWAP messages transmitted for mobility client (Live: IOS-XE 17.12.6a)
+	RX        int    `json:"rx"`          // Number of CAPWAP messages received for mobility client (Live: IOS-XE 17.12.6a)
+	Forwarded int    `json:"forwarded"`   // Number of CAPWAP messages forwarded for mobility client (Live: IOS-XE 17.12.6a)
+	TXErrors  int    `json:"tx-errors"`   // Number of CAPWAP message transmit errors for mobility client (Live: IOS-XE 17.12.6a)
+	RXErrors  int    `json:"rx-errors"`   // Number of CAPWAP message receive errors for mobility client (Live: IOS-XE 17.12.6a)
+	TXRetries int    `json:"tx-retries"`  // Number of retries for CAPWAP message transmit error for mobility client (Live: IOS-XE 17.12.6a)
+	Drops     int    `json:"drops"`       // Number of dropped CAPWAP messages for mobility client (Live: IOS-XE 17.12.6a)
+	Built     int    `json:"built"`       // Number of CAPWAP messages built for mobility client (Live: IOS-XE 17.12.6a)
+	Processed int    `json:"processed"`   // Number of processed CAPWAP messages for mobility client (Live: IOS-XE 17.12.6a)
+	MmMsgType string `json:"mm-msg-type"` // CAPWAP mobility message type (Live: IOS-XE 17.12.6a)
 }
 
 // MmIfGlobalStats represents mobility manager interface global statistics.
 type MmIfGlobalStats struct {
-	MbltyStats      MbltyStats      `json:"mblty-stats"`       // Mobility statistics data (Live: IOS-XE 17.12.5)
-	MbltyDomainInfo MbltyDomainInfo `json:"mblty-domain-info"` // Mobility domain information (Live: IOS-XE 17.12.5)
+	MbltyStats      MbltyStats      `json:"mblty-stats"`       // Mobility statistics data (Live: IOS-XE 17.12.6a)
+	MbltyDomainInfo MbltyDomainInfo `json:"mblty-domain-info"` // Mobility domain information (Live: IOS-XE 17.12.6a)
 }
 
 // MbltyDomainInfo represents mobility domain information.
 type MbltyDomainInfo struct {
-	MobilityDomainID int `json:"mobility-domain-id"` // Mobility domain identifier (Live: IOS-XE 17.12.5)
+	MobilityDomainID int `json:"mobility-domain-id"` // Mobility domain identifier (Live: IOS-XE 17.12.6a)
 }
 
 // MbltyStats represents mobility statistics.
 type MbltyStats struct {
-	EventDataAllocs               int `json:"event-data-allocs"`                 // Total number of mobility interface event data allocations (Live: IOS-XE 17.12.5)
-	EventDataFrees                int `json:"event-data-frees"`                  // Total number of mobility interface event data frees (Live: IOS-XE 17.12.5)
-	MmifFsmInvalidEvents          int `json:"mmif-fsm-invalid-events"`           // Total number of invalid events received by mobility interface (Live: IOS-XE 17.12.5)
-	MmifScheduleErrors            int `json:"mmif-schedule-errors"`              // Total number of mobility interface event scheduling errors (Live: IOS-XE 17.12.5)
+	EventDataAllocs               int `json:"event-data-allocs"`                 // Total number of mobility interface event data allocations (Live: IOS-XE 17.12.6a)
+	EventDataFrees                int `json:"event-data-frees"`                  // Total number of mobility interface event data frees (Live: IOS-XE 17.12.6a)
+	MmifFsmInvalidEvents          int `json:"mmif-fsm-invalid-events"`           // Total number of invalid events received by mobility interface (Live: IOS-XE 17.12.6a)
+	MmifScheduleErrors            int `json:"mmif-schedule-errors"`              // Total number of mobility interface event scheduling errors (Live: IOS-XE 17.12.6a)
 	MmifFsmFailure                int `json:"mmif-fsm-failure"`                  // FSM failure count (YANG: IOS-XE 17.12.1)
-	MmifIpcFailure                int `json:"mmif-ipc-failure"`                  // Total number of mobility interface event processing errors due to IPC messaging failure (Live: IOS-XE 17.12.5)
-	MmifDBFailure                 int `json:"mmif-db-failure"`                   // Total number of mobility interface event processing errors due to database operation failure (Live: IOS-XE 17.12.5)
+	MmifIpcFailure                int `json:"mmif-ipc-failure"`                  // Total number of mobility interface event processing errors due to IPC messaging failure (Live: IOS-XE 17.12.6a)
+	MmifDBFailure                 int `json:"mmif-db-failure"`                   // Total number of mobility interface event processing errors due to database operation failure (Live: IOS-XE 17.12.6a)
 	MmifInvalidParamsFailure      int `json:"mmif-invalid-params-failure"`       // Invalid parameter failure count (YANG: IOS-XE 17.12.1)
 	MmifMmMsgDecodeFailure        int `json:"mmif-mm-msg-decode-failure"`        // Message decode failure count (YANG: IOS-XE 17.12.1)
 	MmifUnknownFailure            int `json:"mmif-unknown-failure"`              // Unknown failure count (YANG: IOS-XE 17.12.1)
-	MmifClientHandoffFailure      int `json:"mmif-client-handoff-failure"`       // Total number of client handoff failures for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
-	MmifClientHandoffSuccess      int `json:"mmif-client-handoff-success"`       // Total number of client handoff successes for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
+	MmifClientHandoffFailure      int `json:"mmif-client-handoff-failure"`       // Total number of client handoff failures for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
+	MmifClientHandoffSuccess      int `json:"mmif-client-handoff-success"`       // Total number of client handoff successes for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
 	MmifAnchorDeny                int `json:"mmif-anchor-deny"`                  // Anchor deny count (YANG: IOS-XE 17.12.1)
 	MmifRemoteDelete              int `json:"mmif-remote-delete"`                // Remote delete count (YANG: IOS-XE 17.12.1)
 	MmifTunnelDownDelete          int `json:"mmif-tunnel-down-delete"`           // Tunnel down delete count (YANG: IOS-XE 17.12.1)
 	MmifMbssidDownEvent           int `json:"mmif-mbssid-down-event"`            // MBSSID down event count (YANG: IOS-XE 17.12.1)
-	IntraWncdRoamCount            int `json:"intra-wncd-roam-count"`             // Total number of intra-process roams within wireless LAN controller (Live: IOS-XE 17.12.5)
-	RemoteInterCtrlrRoams         int `json:"remote-inter-ctrlr-roams"`          // Total number of inter-controller roams performed on peer controllers by anchored clients (Live: IOS-XE 17.12.5)
+	IntraWncdRoamCount            int `json:"intra-wncd-roam-count"`             // Total number of intra-process roams within wireless LAN controller (Live: IOS-XE 17.12.6a)
+	RemoteInterCtrlrRoams         int `json:"remote-inter-ctrlr-roams"`          // Total number of inter-controller roams performed on peer controllers by anchored clients (Live: IOS-XE 17.12.6a)
 	RemoteWebauthPendRoams        int `json:"remote-webauth-pend-roams"`         // Remote webauth pending roam count (YANG: IOS-XE 17.12.1)
-	AnchorRequestSent             int `json:"anchor-request-sent"`               // Total number of anchor requests sent for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
-	AnchorRequestGrantReceived    int `json:"anchor-request-grant-received"`     // Total number of anchor request grants received for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
-	AnchorRequestDenyReceived     int `json:"anchor-request-deny-received"`      // Total number of anchor request denies received for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
-	AnchorRequestDenySent         int `json:"anchor-request-deny-sent"`          // Anchor request deny sent count (Live: IOS-XE 17.12.5)
-	AnchorRequestGrantSent        int `json:"anchor-request-grant-sent"`         // Anchor request grant sent count (Live: IOS-XE 17.12.5)
-	AnchorRequestReceived         int `json:"anchor-request-received"`           // Anchor request received count (Live: IOS-XE 17.12.5)
-	HandoffReceivedDeny           int `json:"handoff-received-deny"`             // Handoff received deny count (Live: IOS-XE 17.12.5)
-	HandoffReceivedGrpMismatch    int `json:"handoff-received-grp-mismatch"`     // Handoff received group mismatch count (Live: IOS-XE 17.12.5)
-	HandoffReceivedL3VlanOverride int `json:"handoff-received-l3-vlan-override"` // Handoff received L3 VLAN override count (Live: IOS-XE 17.12.5)
-	HandoffReceivedMsSsid         int `json:"handoff-received-ms-ssid"`          // Handoff received MS SSID count (Live: IOS-XE 17.12.5)
-	HandoffReceivedMsUnknown      int `json:"handoff-received-ms-unknown"`       // Handoff received MS unknown count (Live: IOS-XE 17.12.5)
-	HandoffReceivedOk             int `json:"handoff-received-ok"`               // Total number of handoff status success received for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
-	HandoffReceivedUnknownPeer    int `json:"handoff-received-unknown-peer"`     // Handoff received unknown peer count (Live: IOS-XE 17.12.5)
-	HandoffSentDeny               int `json:"handoff-sent-deny"`                 // Handoff sent deny count (Live: IOS-XE 17.12.5)
-	HandoffSentGrpMismatch        int `json:"handoff-sent-grp-mismatch"`         // Handoff sent group mismatch count (Live: IOS-XE 17.12.5)
-	HandoffSentL3VlanOverride     int `json:"handoff-sent-l3-vlan-override"`     // Handoff sent L3 VLAN override count (Live: IOS-XE 17.12.5)
-	HandoffSentMsSsid             int `json:"handoff-sent-ms-ssid"`              // Handoff sent MS SSID count (Live: IOS-XE 17.12.5)
-	HandoffSentMsUnknown          int `json:"handoff-sent-ms-unknown"`           // Handoff sent MS unknown count (Live: IOS-XE 17.12.5)
-	HandoffSentOk                 int `json:"handoff-sent-ok"`                   // Total number of handoff status OK sent for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.5)
+	AnchorRequestSent             int `json:"anchor-request-sent"`               // Total number of anchor requests sent for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
+	AnchorRequestGrantReceived    int `json:"anchor-request-grant-received"`     // Total number of anchor request grants received for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
+	AnchorRequestDenyReceived     int `json:"anchor-request-deny-received"`      // Total number of anchor request denies received for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
+	AnchorRequestDenySent         int `json:"anchor-request-deny-sent"`          // Anchor request deny sent count (Live: IOS-XE 17.12.6a)
+	AnchorRequestGrantSent        int `json:"anchor-request-grant-sent"`         // Anchor request grant sent count (Live: IOS-XE 17.12.6a)
+	AnchorRequestReceived         int `json:"anchor-request-received"`           // Anchor request received count (Live: IOS-XE 17.12.6a)
+	HandoffReceivedDeny           int `json:"handoff-received-deny"`             // Handoff received deny count (Live: IOS-XE 17.12.6a)
+	HandoffReceivedGrpMismatch    int `json:"handoff-received-grp-mismatch"`     // Handoff received group mismatch count (Live: IOS-XE 17.12.6a)
+	HandoffReceivedL3VlanOverride int `json:"handoff-received-l3-vlan-override"` // Handoff received L3 VLAN override count (Live: IOS-XE 17.12.6a)
+	HandoffReceivedMsSsid         int `json:"handoff-received-ms-ssid"`          // Handoff received MS SSID count (Live: IOS-XE 17.12.6a)
+	HandoffReceivedMsUnknown      int `json:"handoff-received-ms-unknown"`       // Handoff received MS unknown count (Live: IOS-XE 17.12.6a)
+	HandoffReceivedOk             int `json:"handoff-received-ok"`               // Total number of handoff status success received for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
+	HandoffReceivedUnknownPeer    int `json:"handoff-received-unknown-peer"`     // Handoff received unknown peer count (Live: IOS-XE 17.12.6a)
+	HandoffSentDeny               int `json:"handoff-sent-deny"`                 // Handoff sent deny count (Live: IOS-XE 17.12.6a)
+	HandoffSentGrpMismatch        int `json:"handoff-sent-grp-mismatch"`         // Handoff sent group mismatch count (Live: IOS-XE 17.12.6a)
+	HandoffSentL3VlanOverride     int `json:"handoff-sent-l3-vlan-override"`     // Handoff sent L3 VLAN override count (Live: IOS-XE 17.12.6a)
+	HandoffSentMsSsid             int `json:"handoff-sent-ms-ssid"`              // Handoff sent MS SSID count (Live: IOS-XE 17.12.6a)
+	HandoffSentMsUnknown          int `json:"handoff-sent-ms-unknown"`           // Handoff sent MS unknown count (Live: IOS-XE 17.12.6a)
+	HandoffSentOk                 int `json:"handoff-sent-ok"`                   // Total number of handoff status OK sent for mobile stations on wireless LAN controller (Live: IOS-XE 17.12.6a)
 }
 
 // MobilityClientData represents mobility client data.
 type MobilityClientData struct {
-	ClientMAC           string `json:"client-mac"`             // Client MAC address (Live: IOS-XE 17.12.5)
-	ClientIfid          int64  `json:"client-ifid"`            // Client IFID (Live: IOS-XE 17.12.5)
-	OwnerInstance       int    `json:"owner-instance"`         // Owner instance for mobility client (Live: IOS-XE 17.12.5)
-	AssocTimeStamp      string `json:"assoc-time-stamp"`       // Client association timestamp (Live: IOS-XE 17.12.5)
-	MobilityState       string `json:"mobility-state"`         // Mobility state (Live: IOS-XE 17.12.5)
-	ClientRole          string `json:"client-role"`            // Client role (Live: IOS-XE 17.12.5)
-	ClientType          string `json:"client-type"`            // Client type (Live: IOS-XE 17.12.5)
-	ClientMode          string `json:"client-mode"`            // Mobility client mode (Live: IOS-XE 17.12.5)
-	ClientRoamType      string `json:"client-roam-type"`       // Mobility client roam type (Live: IOS-XE 17.12.5)
-	PeerIP              string `json:"peer-ip"`                // Mobility peer IP for anchor or foreign client (Live: IOS-XE 17.12.5)
-	EntryLastUpdateTime string `json:"entry-last-update-time"` // Entry last update timestamp (Live: IOS-XE 17.12.5)
-	ClientCreateTime    string `json:"client-create-time"`     // Client creation timestamp (Live: IOS-XE 17.12.5)
-	WlanProfile         string `json:"wlan-profile"`           // Mobility client wlan profile name (Live: IOS-XE 17.12.5)
+	ClientMAC           string `json:"client-mac"`             // Client MAC address (Live: IOS-XE 17.12.6a)
+	ClientIfid          int64  `json:"client-ifid"`            // Client IFID (Live: IOS-XE 17.12.6a)
+	OwnerInstance       int    `json:"owner-instance"`         // Owner instance for mobility client (Live: IOS-XE 17.12.6a)
+	AssocTimeStamp      string `json:"assoc-time-stamp"`       // Client association timestamp (Live: IOS-XE 17.12.6a)
+	MobilityState       string `json:"mobility-state"`         // Mobility state (Live: IOS-XE 17.12.6a)
+	ClientRole          string `json:"client-role"`            // Client role (Live: IOS-XE 17.12.6a)
+	ClientType          string `json:"client-type"`            // Client type (Live: IOS-XE 17.12.6a)
+	ClientMode          string `json:"client-mode"`            // Mobility client mode (Live: IOS-XE 17.12.6a)
+	ClientRoamType      string `json:"client-roam-type"`       // Mobility client roam type (Live: IOS-XE 17.12.6a)
+	PeerIP              string `json:"peer-ip"`                // Mobility peer IP for anchor or foreign client (Live: IOS-XE 17.12.6a)
+	EntryLastUpdateTime string `json:"entry-last-update-time"` // Entry last update timestamp (Live: IOS-XE 17.12.6a)
+	ClientCreateTime    string `json:"client-create-time"`     // Client creation timestamp (Live: IOS-XE 17.12.6a)
+	WlanProfile         string `json:"wlan-profile"`           // Mobility client wlan profile name (Live: IOS-XE 17.12.6a)
 }
 
 // MobilityClientStats represents mobility client statistics.
@@ -259,8 +259,8 @@ type MsgStats struct {
 
 // MobilityGlobalStats represents mobility global statistics.
 type MobilityGlobalStats struct {
-	MmMbltyStats         MmMbltyStats `json:"mm-mblty-stats"`          // Mobility manager statistics (Live: IOS-XE 17.12.5)
-	NumOfSleepingClients int          `json:"num-of-sleeping-clients"` // Number of sleeping clients (Live: IOS-XE 17.12.5)
+	MmMbltyStats         MmMbltyStats `json:"mm-mblty-stats"`          // Mobility manager statistics (Live: IOS-XE 17.12.6a)
+	NumOfSleepingClients int          `json:"num-of-sleeping-clients"` // Number of sleeping clients (Live: IOS-XE 17.12.6a)
 }
 
 // MmMbltyStats represents mobility manager statistics.
@@ -308,6 +308,6 @@ type MmMbltyStats struct {
 
 // WlanClientLimit represents WLAN client limit information.
 type WlanClientLimit struct {
-	WlanProfile      string `json:"wlan-profile"`       // Name of the wlan profile (Live: IOS-XE 17.12.5)
+	WlanProfile      string `json:"wlan-profile"`       // Name of the wlan profile (Live: IOS-XE 17.12.6a)
 	CurrClientsCount int    `json:"curr-clients-count"` // Current client count (YANG: IOS-XE 17.12.1)
 }

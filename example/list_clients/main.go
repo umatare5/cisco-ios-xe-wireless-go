@@ -40,7 +40,7 @@ func run(controller, token string, logger *slog.Logger) ([]ClientInfo, error) {
 	}
 
 	var clients []ClientInfo
-	for _, sisfData := range clientData.CiscoIOSXEWirelessClientOperClientOperData.SisfDBMac {
+	for _, sisfData := range clientData.CiscoIOSXEWirelessClientOperData.SisfDBMac {
 		clientInfo := ClientInfo{
 			MAC: sisfData.MACAddr,
 		}

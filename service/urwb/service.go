@@ -21,12 +21,12 @@ func NewService(client *core.Client) Service {
 
 // GetConfig retrieves the complete URWB configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*URWBCfg, error) {
-	return core.Get[URWBCfg](ctx, s.Client(), routes.URWBCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessURWBCfg, error) {
+	return core.Get[CiscoIOSXEWirelessURWBCfg](ctx, s.Client(), routes.URWBCfgPath)
 }
 
 // GetURWBNetOperational retrieves URWB network operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetURWBNetOperational(ctx context.Context) (*URWBnetOper, error) {
-	return core.Get[URWBnetOper](ctx, s.Client(), routes.URWBNetOperPath)
+func (s Service) GetURWBNetOperational(ctx context.Context) (*CiscoIOSXEWirelessURWBOper, error) {
+	return core.Get[CiscoIOSXEWirelessURWBOper](ctx, s.Client(), routes.URWBNetOperPath)
 }

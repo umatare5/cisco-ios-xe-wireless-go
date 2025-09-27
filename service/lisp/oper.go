@@ -1,12 +1,27 @@
 package lisp
 
-// LISPAgentOper represents LISP agent operational data root structure.
-type LISPAgentOper struct {
-	CiscoIOSXEWirelessLISPAgentOperData struct {
+// CiscoIOSXEWirelessLISPOper represents LISP agent operational data root structure.
+type CiscoIOSXEWirelessLISPOper struct {
+	CiscoIOSXEWirelessLISPOperData struct {
 		LISPAgentMemoryStats *LISPAgentMemoryStats `json:"lisp-agent-memory-stats,omitempty"` // LISP Agent Memory Statistics (YANG: IOS-XE 17.12.1)
 		LISPWLCCapabilities  *LISPWLCCapabilities  `json:"lisp-wlc-capabilities,omitempty"`   // Wireless Fabric WLC Capabilities (YANG: IOS-XE 17.12.1)
 		LISPAPCapabilities   []LISPAPCapability    `json:"lisp-ap-capabilities,omitempty"`    // Wireless Fabric AP Capabilities (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-oper-data"` // LISP Agent operational data (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats represents the wrapper for LISP agent memory statistics.
+type CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats struct {
+	LISPAgentMemoryStats LISPAgentMemoryStats `json:"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-agent-memory-stats"`
+}
+
+// CiscoIOSXEWirelessLISPOperLISPWLCCapabilities represents the wrapper for LISP WLC capabilities.
+type CiscoIOSXEWirelessLISPOperLISPWLCCapabilities struct {
+	LISPWLCCapabilities LISPWLCCapabilities `json:"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-wlc-capabilities"`
+}
+
+// CiscoIOSXEWirelessLISPOperLISPAPCapabilities represents the wrapper for LISP AP capabilities.
+type CiscoIOSXEWirelessLISPOperLISPAPCapabilities struct {
+	LISPAPCapabilities []LISPAPCapability `json:"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-ap-capabilities"`
 }
 
 // LISPAgentMemoryStats represents LISP agent memory allocation statistics.

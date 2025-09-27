@@ -29,7 +29,7 @@ func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*SiteL
 		return nil, err
 	}
 
-	result, err := core.Get[SiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[CiscoIOSXEWirelessSiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
@@ -196,8 +196,8 @@ func (s *SiteTagService) buildTagURL(tagName string) string {
 }
 
 // buildPayload builds a payload for tag operations using the request.
-func (s *SiteTagService) buildPayload(config SiteListEntry) SiteTagConfigsPayload {
-	return SiteTagConfigsPayload{
+func (s *SiteTagService) buildPayload(config SiteListEntry) CiscoIOSXEWirelessSiteTagConfigsPayload {
+	return CiscoIOSXEWirelessSiteTagConfigsPayload{
 		SiteListEntry: config,
 	}
 }

@@ -31,8 +31,7 @@ func TestLocationServiceIntegration_GetOperationalOperations_Success(t *testing.
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(location.Service).GetOperational(ctx)
 				},
-				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				LogResult: true,
 			},
 			{
 				Name: "LocationRSSIMeasurements",

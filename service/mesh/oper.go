@@ -1,8 +1,8 @@
 package mesh
 
-// MeshOper represents mesh operational data container.
-type MeshOper struct {
-	MeshOperData struct {
+// CiscoIOSXEWirelessMeshOper represents mesh operational data container.
+type CiscoIOSXEWirelessMeshOper struct {
+	CiscoIOSXEWirelessMeshOperData struct {
 		MeshQueueStats    []MeshQueueStats    `json:"mesh-q-stats,omitempty"`   // Mesh packet queue statistics (YANG: IOS-XE 17.12.1)
 		MeshDataRateStats []MeshDataRateStats `json:"mesh-dr-stats,omitempty"`  // Mesh data rate statistics (YANG: IOS-XE 17.12.1)
 		MeshSecurityStats []MeshSecurityStats `json:"mesh-sec-stats,omitempty"` // Mesh security statistics (YANG: IOS-XE 17.12.1)
@@ -50,22 +50,22 @@ type MeshOperational struct {
 	BackhaulDataRateType  *string `json:"bhaul-data-rate-type,omitempty"`     // Backhaul data rate type (YANG: IOS-XE 17.12.1)
 }
 
-// MeshOperMeshQueueStats represents mesh queue statistics container.
-type MeshOperMeshQueueStats struct {
+// CiscoIOSXEWirelessMeshOperMeshQueueStats represents mesh queue statistics container.
+type CiscoIOSXEWirelessMeshOperMeshQueueStats struct {
 	MeshQueueStats []MeshQueueStats `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-q-stats"` // Mesh packet queue statistics (YANG: IOS-XE 17.12.1)
 }
 
-// MeshOperMeshDataRateStats represents mesh data rate statistics container.
-type MeshOperMeshDataRateStats struct {
+// CiscoIOSXEWirelessMeshOperMeshDataRateStats represents mesh data rate statistics container.
+type CiscoIOSXEWirelessMeshOperMeshDataRateStats struct {
 	MeshDataRateStats []MeshDataRateStats `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-dr-stats"` // Mesh data rate statistics (YANG: IOS-XE 17.12.1)
 }
 
-// MeshOperMeshSecurityStats represents mesh security statistics container.
-type MeshOperMeshSecurityStats struct {
+// CiscoIOSXEWirelessMeshOperMeshSecurityStats represents mesh security statistics container.
+type CiscoIOSXEWirelessMeshOperMeshSecurityStats struct {
 	MeshSecurityStats []MeshSecurityStats `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-sec-stats"` // Mesh security statistics (YANG: IOS-XE 17.12.1)
 }
 
-// MeshOperMeshOperational represents mesh operational data container.
-type MeshOperMeshOperational struct {
+// CiscoIOSXEWirelessMeshOperMeshOperational represents mesh operational data container.
+type CiscoIOSXEWirelessMeshOperMeshOperational struct {
 	MeshOperational []MeshOperational `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data"` // Mesh operational data (YANG: IOS-XE 17.12.1)
 }

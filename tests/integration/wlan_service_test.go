@@ -96,7 +96,7 @@ func TestWLANServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 					return service.(*wlan.Service).ListDot11beProfiles(ctx)
 				},
 				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.6a
 			},
 		},
 		FilterMethods:   []integration.TestMethod{},
@@ -134,8 +134,7 @@ func TestWLANServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(*wlan.Service).ListWlanInfo(ctx)
 				},
-				LogResult:      true,
-				ExpectNotFound: true, // Not Verified on IOS-XE 17.12.5
+				LogResult: true,
 			},
 		},
 		FilterMethods:   []integration.TestMethod{},

@@ -21,6 +21,6 @@ func NewService(client *core.Client) Service {
 
 // GetConfig retrieves the complete WAT configuration from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.18.1+.
-func (s Service) GetConfig(ctx context.Context) (*WATCfg, error) {
-	return core.Get[WATCfg](ctx, s.Client(), routes.WATCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessWATCfg, error) {
+	return core.Get[CiscoIOSXEWirelessWATCfg](ctx, s.Client(), routes.WATCfgPath)
 }

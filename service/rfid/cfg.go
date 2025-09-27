@@ -1,8 +1,8 @@
 package rfid
 
-// RFIDCfg represents RFID configuration data structure.
-type RFIDCfg struct {
-	RFIDCfgData struct { // RFID configuration data for threshold timer (YANG: IOS-XE 17.12.1)
+// CiscoIOSXEWirelessRFIDCfg represents RFID configuration data structure.
+type CiscoIOSXEWirelessRFIDCfg struct {
+	CiscoIOSXEWirelessRFIDCfgData struct { // RFID configuration data for threshold timer (YANG: IOS-XE 17.12.1)
 		RFID *RFIDConfig `json:"rfid,omitempty"` // RFID config attributes container (YANG: IOS-XE 17.12.1)
 	} `json:"Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"`
 }

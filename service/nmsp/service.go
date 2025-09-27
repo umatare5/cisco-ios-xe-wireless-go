@@ -18,22 +18,22 @@ func NewService(client *core.Client) Service {
 	return Service{BaseService: service.NewBaseService(client)}
 }
 
-// GetOperational retrieves NMSP operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*NMSPOper, error) {
-	return core.Get[NMSPOper](ctx, s.Client(), routes.NMSPOperPath)
+// GetOperational retrieves the complete NMSP operational data.
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessNMSPOper, error) {
+	return core.Get[CiscoIOSXEWirelessNMSPOper](ctx, s.Client(), routes.NMSPOperPath)
 }
 
 // ListClientRegistrations retrieves NMSP client registration data.
-func (s Service) ListClientRegistrations(ctx context.Context) (*NMSPClientRegistration, error) {
-	return core.Get[NMSPClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
+func (s Service) ListClientRegistrations(ctx context.Context) (*CiscoIOSXEWirelessNMSPClientRegistration, error) {
+	return core.Get[CiscoIOSXEWirelessNMSPClientRegistration](ctx, s.Client(), routes.NMSPClientRegistrationPath)
 }
 
 // GetCMXConnectionInfo retrieves NMSP CMX connection information.
-func (s Service) GetCMXConnectionInfo(ctx context.Context) (*NMSPCmxConnection, error) {
-	return core.Get[NMSPCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
+func (s Service) GetCMXConnectionInfo(ctx context.Context) (*CiscoIOSXEWirelessNMSPCmxConnection, error) {
+	return core.Get[CiscoIOSXEWirelessNMSPCmxConnection](ctx, s.Client(), routes.NMSPCmxConnectionPath)
 }
 
 // GetCMXCloudInfo retrieves NMSP CMX cloud information.
-func (s Service) GetCMXCloudInfo(ctx context.Context) (*NMSPCmxCloudInfo, error) {
-	return core.Get[NMSPCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
+func (s Service) GetCMXCloudInfo(ctx context.Context) (*CiscoIOSXEWirelessNMSPCmxCloudInfo, error) {
+	return core.Get[CiscoIOSXEWirelessNMSPCmxCloudInfo](ctx, s.Client(), routes.NMSPCmxCloudInfoPath)
 }

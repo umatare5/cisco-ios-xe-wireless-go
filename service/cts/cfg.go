@@ -1,27 +1,25 @@
 package cts
 
-// CTSCfg represents the CTS SXP configuration data.
-type CTSCfg struct {
-	CiscoIOSXEWirelessCTSSxpCfgData struct {
-		CTSSxpConfiguration struct {
-			CTSSxpConfig []CTSSxpConfig `json:"cts-sxp-config,omitempty"` // CTS SXP configuration list (YANG: IOS-XE 17.12.1)
-		} `json:"cts-sxp-configuration"` // CTS SXP configuration container (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"` // CTS SXP configuration data (YANG: IOS-XE 17.12.1)
+// CiscoIOSXEWirelessCTSCfg represents the CTS SXP configuration data.
+type CiscoIOSXEWirelessCTSCfg struct {
+	CiscoIOSXEWirelessCTSCfgData struct {
+		CTSSxpConfiguration CTSSxpConfiguration `json:"cts-sxp-configuration"` // CTS SXP configuration container (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data"` // CTS SXP configuration data (Live: IOS-XE 17.12.6a)
 }
 
-// CTSCfgFilter represents the structure for filtered CTS SXP configuration data.
-type CTSCfgFilter struct {
-	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
+// CTSSxpConfiguration represents the CTS SXP configuration container.
+type CTSSxpConfiguration struct {
+	CTSSxpConfig []CTSSxpConfig `json:"cts-sxp-config"` // CTS SXP configuration list (Live: IOS-XE 17.12.6a)
 }
 
-// CTSCfgCTSSxpConfig represents CTS SXP configuration wrapper.
-type CTSCfgCTSSxpConfig struct {
+// CiscoIOSXEWirelessCTSCfgCTSSxpConfig represents CTS SXP configuration wrapper.
+type CiscoIOSXEWirelessCTSCfgCTSSxpConfig struct {
 	CTSSxpConfig []CTSSxpConfig `json:"Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-config"`
 }
 
 // CTSSxpConfig represents individual CTS SXP profile configuration.
 type CTSSxpConfig struct {
-	SxpProfileName          string          `json:"sxp-profile-name"`                    // CTS SXP profile name (Live: IOS-XE 17.12.5)
+	SxpProfileName          string          `json:"sxp-profile-name"`                    // CTS SXP profile name (Live: IOS-XE 17.12.6a)
 	Enable                  *bool           `json:"enable,omitempty"`                    // Enable CTS SXP configuration (YANG: IOS-XE 17.12.1)
 	ListenerMinimumHoldtime *int            `json:"listener-minimum-holdtime,omitempty"` // CTS SXP listener hold time minimum (YANG: IOS-XE 17.12.1)
 	ListenerMaximumHoldtime *int            `json:"listener-maximum-holdtime,omitempty"` // CTS SXP listener hold time maximum (YANG: IOS-XE 17.12.1)

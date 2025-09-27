@@ -18,24 +18,30 @@ func NewService(client *core.Client) Service {
 	return Service{BaseService: service.NewBaseService(client)}
 }
 
-// GetConfig retrieves Fabric configuration data.
-func (s Service) GetConfig(ctx context.Context) (*FabricCfg, error) {
-	return core.Get[FabricCfg](ctx, s.Client(), routes.FabricCfgPath)
+// GetConfig retrieves fabric configuration data from the controller.
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessFabricCfg, error) {
+	return core.Get[CiscoIOSXEWirelessFabricCfg](ctx, s.Client(), routes.FabricCfgPath)
 }
 
 // ListCfgFabric retrieves fabric configuration wrapper data.
-func (s Service) ListCfgFabric(ctx context.Context) (*FabricCfgFabric, error) {
-	return core.Get[FabricCfgFabric](ctx, s.Client(), routes.FabricPath)
+func (s Service) ListCfgFabric(ctx context.Context) (*CiscoIOSXEWirelessFabricCfgFabric, error) {
+	return core.Get[CiscoIOSXEWirelessFabricCfgFabric](ctx, s.Client(), routes.FabricPath)
 }
 
 // ListCfgFabricProfiles retrieves fabric profiles wrapper data.
-func (s Service) ListCfgFabricProfiles(ctx context.Context) (*FabricCfgFabricProfiles, error) {
-	return core.Get[FabricCfgFabricProfiles](ctx, s.Client(), routes.FabricProfilesPath)
+func (s Service) ListCfgFabricProfiles(ctx context.Context) (*CiscoIOSXEWirelessFabricCfgFabricProfiles, error) {
+	return core.Get[CiscoIOSXEWirelessFabricCfgFabricProfiles](ctx, s.Client(), routes.FabricProfilesPath)
 }
 
 // ListCfgFabricControlplaneNames retrieves fabric controlplane names wrapper data.
-func (s Service) ListCfgFabricControlplaneNames(ctx context.Context) (*FabricCfgFabricControlplaneNames, error) {
-	return core.Get[FabricCfgFabricControlplaneNames](ctx, s.Client(), routes.FabricControlplaneNamesPath)
+func (s Service) ListCfgFabricControlplaneNames(
+	ctx context.Context,
+) (*CiscoIOSXEWirelessFabricCfgFabricControlplaneNames, error) {
+	return core.Get[CiscoIOSXEWirelessFabricCfgFabricControlplaneNames](
+		ctx,
+		s.Client(),
+		routes.FabricControlplaneNamesPath,
+	)
 }
 
 // ListFabricConfig retrieves fabric global configuration data.

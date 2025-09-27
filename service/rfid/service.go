@@ -20,8 +20,8 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves RFID configuration data.
-func (s Service) GetConfig(ctx context.Context) (*RFIDCfg, error) {
-	return core.Get[RFIDCfg](ctx, s.Client(), routes.RFIDCfgPath)
+func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFIDCfg, error) {
+	return core.Get[CiscoIOSXEWirelessRFIDCfg](ctx, s.Client(), routes.RFIDCfgPath)
 }
 
 // GetConfigSettings retrieves the RFID configuration settings.
@@ -29,8 +29,8 @@ func (s Service) GetConfigSettings(ctx context.Context) (*RFIDConfig, error) {
 	return core.Get[RFIDConfig](ctx, s.Client(), routes.RFIDCfgRFIDConfigPath)
 }
 
-// GetGlobalInfo retrieves RFID global information.
-func (s Service) GetGlobalInfo(ctx context.Context) (*RFIDGlobalOper, error) {
+// GetGlobalOperational retrieves RFID global information.
+func (s Service) GetGlobalOperational(ctx context.Context) (*RFIDGlobalOper, error) {
 	return core.Get[RFIDGlobalOper](ctx, s.Client(), routes.RFIDGlobalOperPath)
 }
 
@@ -70,8 +70,8 @@ func (s Service) GetRadioInfo(
 }
 
 // GetOperational retrieves RFID operational data.
-func (s Service) GetOperational(ctx context.Context) (*RFIDOper, error) {
-	return core.Get[RFIDOper](ctx, s.Client(), routes.RFIDOperPath)
+func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessRFIDOper, error) {
+	return core.Get[CiscoIOSXEWirelessRFIDOper](ctx, s.Client(), routes.RFIDOperPath)
 }
 
 // GetDetailByMAC retrieves specific RFID data based on MAC address.

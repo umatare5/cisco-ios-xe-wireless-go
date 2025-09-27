@@ -70,9 +70,9 @@ func TestRFIDServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
-				Name: "GetGlobalInfo",
+				Name: "GetGlobalOperational",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rfid.Service).GetGlobalInfo(ctx)
+					return service.(rfid.Service).GetGlobalOperational(ctx)
 				},
 				LogResult: true,
 			},

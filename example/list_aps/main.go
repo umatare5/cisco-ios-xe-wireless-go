@@ -45,12 +45,12 @@ func run(controller, token string, logger *slog.Logger) ([]APInfo, error) {
 
 	// Create map for AP MAC to Name lookup
 	nameMap := make(map[string]string)
-	for _, nameMapping := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.ApNameMACMap {
+	for _, nameMapping := range apData.CiscoIOSXEWirelessAPOperData.ApNameMACMap {
 		nameMap[nameMapping.WtpMAC] = nameMapping.WtpName
 	}
 
 	// Extract AP information from CAPWAP data
-	for _, capwapData := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.CAPWAPData {
+	for _, capwapData := range apData.CiscoIOSXEWirelessAPOperData.CAPWAPData {
 		apInfo := APInfo{
 			MAC: capwapData.WtpMAC,
 			IP:  capwapData.IPAddr,

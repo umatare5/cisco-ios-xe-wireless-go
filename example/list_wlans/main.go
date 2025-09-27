@@ -47,14 +47,14 @@ func run(controller, token string, logger *slog.Logger) ([]WLANInfo, error) {
 
 	// Create map for AP MAC to Name lookup
 	nameMap := make(map[string]string)
-	for _, nameMapping := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.ApNameMACMap {
+	for _, nameMapping := range apData.CiscoIOSXEWirelessAPOperData.ApNameMACMap {
 		nameMap[nameMapping.WtpMAC] = nameMapping.WtpName
 	}
 
 	var wlans []WLANInfo
 
 	// Process all WLAN statistics which contains Radio + WLAN + BSSID information
-	for _, wlanStats := range apData.CiscoIOSXEWirelessAccessPointOperAccessPointOperData.WtpSlotWlanStats {
+	for _, wlanStats := range apData.CiscoIOSXEWirelessAPOperData.WtpSlotWlanStats {
 		if wlanStats.BssidMAC == "" {
 			continue // Skip entries without BSSID
 		}

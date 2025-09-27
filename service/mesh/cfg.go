@@ -4,12 +4,12 @@ package mesh
 type MeshCfg struct {
 	MeshCfgData struct {
 		Mesh         *MeshGlobalCfg        `json:"mesh,omitempty"` // Global mesh configuration (YANG: IOS-XE 17.12.1)
-		MeshProfiles MeshProfilesContainer `json:"mesh-profiles"`  // Mesh profiles configuration (Live: IOS-XE 17.12.5)
+		MeshProfiles MeshProfilesContainer `json:"mesh-profiles"`  // Mesh profiles configuration (Live: IOS-XE 17.12.6a)
 	} `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"` // Mesh configuration data (YANG: IOS-XE 17.12.1)
 }
 
-// MeshCfgMeshProfiles represents mesh profiles container structure.
-type MeshCfgMeshProfiles struct {
+// CiscoIOSXEWirelessMeshCfgMeshProfiles represents mesh profiles container structure.
+type CiscoIOSXEWirelessMeshCfgMeshProfiles struct {
 	MeshProfiles []MeshProfile `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-profiles"`
 }
 
@@ -34,8 +34,8 @@ type MeshGlobalCfg struct {
 
 // MeshProfile represents individual mesh profile configuration.
 type MeshProfile struct {
-	ProfileName           string                `json:"profile-name"`                       // Mesh profile name identifier (Live: IOS-XE 17.12.5)
-	Description           string                `json:"description"`                        // Mesh profile description (Live: IOS-XE 17.12.5)
+	ProfileName           string                `json:"profile-name"`                       // Mesh profile name identifier (Live: IOS-XE 17.12.6a)
+	Description           string                `json:"description"`                        // Mesh profile description (Live: IOS-XE 17.12.6a)
 	AMSDUEnabled          *bool                 `json:"amsdu-enabled,omitempty"`            // AMSDU aggregation enabled flag (YANG: IOS-XE 17.12.1)
 	BackgroundScanEnabled *bool                 `json:"bg-scan-enabled,omitempty"`          // Background scanning enabled flag (YANG: IOS-XE 17.12.1)
 	CCNMode               *bool                 `json:"ccn-mode,omitempty"`                 // Cisco Compatible eXtensions mode (YANG: IOS-XE 17.12.1)

@@ -24,8 +24,8 @@ func NewRFTagService(client *core.Client) *RFTagService {
 }
 
 // GetConfig retrieves the RF configuration.
-func (s *RFTagService) GetConfig(ctx context.Context) (*RFCfg, error) {
-	return core.Get[RFCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s *RFTagService) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFCfg, error) {
+	return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath)
 }
 
 // GetRFTag retrieves an RF tag configuration by name.
@@ -34,7 +34,7 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*RFTag, er
 		return nil, err
 	}
 
-	result, err := core.Get[RFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTag](ctx, s.Client(), s.buildTagURL(tagName))
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*RFTag, er
 
 // ListRFTags retrieves all RF tag configurations.
 func (s *RFTagService) ListRFTags(ctx context.Context) ([]RFTag, error) {
-	result, err := core.Get[RFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
 	if err != nil {
 		return nil, err
 	}

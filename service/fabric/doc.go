@@ -7,6 +7,5 @@
 // - Configuration: /restconf/data/Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-fabric-cfg.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-fabric-cfg.yang (17.18.1)
+// - Cisco-IOS-XE-wireless-fabric-cfg.yang (17.12.1, 17.15.1, 17.18.1)
 package fabric

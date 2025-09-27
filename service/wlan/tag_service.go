@@ -47,7 +47,11 @@ func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*P
 
 // ListPolicyTags retrieves all policy tag configurations.
 func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntry, error) {
-	result, err := core.Get[WlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+	result, err := core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntries](
+		ctx,
+		s.Client(),
+		routes.WLANPolicyListEntriesPath,
+	)
 	if err != nil {
 		return nil, err
 	}

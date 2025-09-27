@@ -28,6 +28,12 @@ const (
 
 	// MeshApTreeDataPath provides the path for retrieving mesh statistics (using mesh-ap-tree-data).
 	MeshApTreeDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-tree-data"
+
+	// MeshApCacInfoPath provides the path for retrieving mesh AP CAC information.
+	MeshApCacInfoPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-cac-info"
+
+	// MeshApPathInfoPath provides the path for retrieving mesh AP path information.
+	MeshApPathInfoPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-oper-data/mesh-ap-path-info"
 )
 
 // Mesh Configuration Paths.

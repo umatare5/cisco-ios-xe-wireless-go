@@ -8,8 +8,6 @@
 // - Operational: /restconf/data/Cisco-IOS-XE-wireless-ble-oper:ble-oper-data
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-ble-cfg.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-ble-oper.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-ble-cfg.yang (17.18.1)
-// - Cisco-IOS-XE-wireless-ble-oper.yang (17.18.1)
+// - Cisco-IOS-XE-wireless-ble-ltx-oper.yang (17.12.1, 17.15.1, 17.18.1)
+// - Cisco-IOS-XE-wireless-ble-mgmt-oper.yang (17.11, 17.12.1, 17.15.1, 17.18.1)
 package ble

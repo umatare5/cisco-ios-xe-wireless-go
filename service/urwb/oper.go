@@ -2,16 +2,16 @@ package urwb
 
 import "time"
 
-// URWBnetOper represents the complete URWB network operational data from YANG 17.18.1.
-type URWBnetOper struct {
-	CiscoIOSXEWirelessUrwbnetOperData *struct {
+// CiscoIOSXEWirelessURWBOper represents the complete URWB network operational data from YANG 17.18.1.
+type CiscoIOSXEWirelessURWBOper struct {
+	CiscoIOSXEWirelessURWBOperData *struct {
 		UrwbnetStats []URWBnetStats `json:"urwbnet-stats"`
 		UrwbnetNodeG []URWBnetNodeG `json:"urwbnet-node-g,omitempty"`
 	} `json:"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data"`
 }
 
-// URWBnetOperUrwbnetStats represents the URWB network stats container from YANG 17.18.1.
-type URWBnetOperUrwbnetStats struct {
+// CiscoIOSXEWirelessURWBnetOperUrwbnetStats represents the URWB network stats container from YANG 17.18.1.
+type CiscoIOSXEWirelessURWBnetOperUrwbnetStats struct {
 	UrwbnetStats []URWBnetStats `json:"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-stats"`
 }
 

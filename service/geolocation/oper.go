@@ -1,24 +1,24 @@
 package geolocation
 
-// GeolocationOper represents the geolocation operational data.
-type GeolocationOper struct {
-	CiscoIOSXEWirelessGeolocationOperGeolocationOperData struct {
+// CiscoIOSXEWirelessGeolocationOper represents the geolocation operational data.
+type CiscoIOSXEWirelessGeolocationOper struct {
+	CiscoIOSXEWirelessGeolocationOperData struct {
 		ApGeoLocData  []ApGeoLocData `json:"ap-geo-loc-data,omitempty"` // AP geolocation data list (YANG: IOS-XE 17.12.1)
-		ApGeoLocStats *ApGeoLocStats `json:"ap-geo-loc-stats"`          // AP geolocation statistics (Live: IOS-XE 17.12.5)
-	} `json:"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"` // Geolocation operational data (Live: IOS-XE 17.12.5)
+		ApGeoLocStats *ApGeoLocStats `json:"ap-geo-loc-stats"`          // AP geolocation statistics (Live: IOS-XE 17.12.6a)
+	} `json:"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"` // Geolocation operational data (Live: IOS-XE 17.12.6a)
 }
 
-// GeolocationOperApGeoLocStats represents the AP geolocation statistics.
-type GeolocationOperApGeoLocStats struct {
+// CiscoIOSXEWirelessGeolocationOperApGeoLocStats represents the AP geolocation statistics.
+type CiscoIOSXEWirelessGeolocationOperApGeoLocStats struct {
 	ApGeoLocStats ApGeoLocStats `json:"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-stats"`
 }
 
 // ApGeoLocStats represents AP geolocation statistics.
 type ApGeoLocStats struct {
-	NumApGnss               int    `json:"num-ap-gnss"`               // Number of APs with GNSS module (Live: IOS-XE 17.12.5)
-	NumApManHeight          int    `json:"num-ap-man-height"`         // Number of APs with manual elevation config (Live: IOS-XE 17.12.5)
-	NumApDerived            int    `json:"num-ap-derived"`            // Number of APs with derived geolocation info (Live: IOS-XE 17.12.5)
-	LastDerivationTimestamp string `json:"last-derivation-timestamp"` // Last derivation algorithm run timestamp (Live: IOS-XE 17.12.5)
+	NumApGnss               int    `json:"num-ap-gnss"`               // Number of APs with GNSS module (Live: IOS-XE 17.12.6a)
+	NumApManHeight          int    `json:"num-ap-man-height"`         // Number of APs with manual elevation config (Live: IOS-XE 17.12.6a)
+	NumApDerived            int    `json:"num-ap-derived"`            // Number of APs with derived geolocation info (Live: IOS-XE 17.12.6a)
+	LastDerivationTimestamp string `json:"last-derivation-timestamp"` // Last derivation algorithm run timestamp (Live: IOS-XE 17.12.6a)
 }
 
 // ApGeoLocData represents wireless AP geolocation data.
@@ -71,7 +71,7 @@ type GeoLocPoint struct {
 	Latitude  *float64 `json:"latitude,omitempty"`  // Geolocation latitude in WGS 84 format (YANG: IOS-XE 17.12.1)
 }
 
-// GeolocationOperApGeoLocData wraps the ApGeoLocData structure of the geolocation operational data.
-type GeolocationOperApGeoLocData struct {
+// CiscoIOSXEWirelessGeolocationOperApGeoLocData wraps the ApGeoLocData structure of the geolocation operational data.
+type CiscoIOSXEWirelessGeolocationOperApGeoLocData struct {
 	ApGeoLocData []ApGeoLocData `json:"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data"`
 }
