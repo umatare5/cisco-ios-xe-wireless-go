@@ -3,8 +3,8 @@ package mesh
 // MeshCfg represents mesh configuration data.
 type MeshCfg struct {
 	MeshCfgData struct {
-		Mesh         *MeshGlobalCfg        `json:"mesh,omitempty"` // Global mesh configuration (YANG: IOS-XE 17.12.1)
-		MeshProfiles MeshProfilesContainer `json:"mesh-profiles"`  // Mesh profiles configuration (Live: IOS-XE 17.12.6a)
+		Mesh         *Mesh        `json:"mesh,omitempty"` // Global mesh configuration (YANG: IOS-XE 17.12.1)
+		MeshProfiles MeshProfiles `json:"mesh-profiles"`  // Mesh profiles configuration (Live: IOS-XE 17.12.6a)
 	} `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"` // Mesh configuration data (YANG: IOS-XE 17.12.1)
 }
 
@@ -13,13 +13,13 @@ type CiscoIOSXEWirelessMeshCfgMeshProfiles struct {
 	MeshProfiles []MeshProfile `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-profiles"`
 }
 
-// MeshProfilesContainer represents mesh profiles container.
-type MeshProfilesContainer struct {
+// MeshProfiles represents mesh profiles container.
+type MeshProfiles struct {
 	MeshProfile []MeshProfile `json:"mesh-profile"`
 }
 
-// MeshGlobalCfg represents global mesh configuration.
-type MeshGlobalCfg struct {
+// Mesh represents global mesh configuration.
+type Mesh struct {
 	AssocCountAlarmThresh        *int  `json:"assoc-count-alarm-thresh,omitempty"`         // Association count alarm threshold (YANG: IOS-XE 17.12.1)
 	HighSNRAlarmThresh           *int  `json:"high-snr-alarm-thresh,omitempty"`            // High SNR alarm threshold (YANG: IOS-XE 17.12.1)
 	LowSNRAlarmThresh            *int  `json:"low-snr-alarm-thresh,omitempty"`             // Low SNR alarm threshold (YANG: IOS-XE 17.12.1)
