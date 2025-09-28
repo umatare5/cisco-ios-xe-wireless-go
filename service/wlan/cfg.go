@@ -26,6 +26,16 @@ type CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs struct {
 	WirelessAaaPolicyConfigs *WirelessAaaPolicyConfigs `json:"Cisco-IOS-XE-wireless-wlan-cfg:wireless-aaa-policy-configs"`
 }
 
+// CiscoIOSXEWirelessWlanCfgWlanPolicies wraps the WlanPolicies structure of the WLAN configuration data.
+type CiscoIOSXEWirelessWlanCfgWlanPolicies struct {
+	WlanPolicies *WlanPolicies `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-policies"`
+}
+
+// CiscoIOSXEWirelessWlanCfgDot11beProfiles wraps the Dot11beProfiles structure of the WLAN configuration data.
+type CiscoIOSXEWirelessWlanCfgDot11beProfiles struct {
+	Dot11beProfiles *Dot11beProfiles `json:"Cisco-IOS-XE-wireless-wlan-cfg:dot11be-profiles"`
+}
+
 // WlanCfgEntries represents the WLAN configuration entries response.
 type WlanCfgEntries struct {
 	WlanCfgEntry []WlanCfgEntry `json:"wlan-cfg-entry"` // List of WLAN configuration entries
@@ -257,18 +267,4 @@ type MloGroup5GhzSec struct {
 type MloGroup6Ghz struct {
 	GroupID int  `json:"group-id,omitempty"` // MLO group identifier (YANG: IOS-XE 17.18.1)
 	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
-}
-
-// CiscoIOSXEWirelessWlanCfgWlanPolicies wraps the WlanPolicies structure of the WLAN configuration data.
-type CiscoIOSXEWirelessWlanCfgWlanPolicies struct {
-	CiscoIOSXEWirelessWlanCfgData struct {
-		WlanPolicies *WlanPolicies `json:"wlan-policies,omitempty"`
-	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"`
-}
-
-// CiscoIOSXEWirelessWlanCfgDot11beProfiles wraps the Dot11beProfiles structure of the WLAN configuration data.
-type CiscoIOSXEWirelessWlanCfgDot11beProfiles struct {
-	CiscoIOSXEWirelessWlanCfgData struct {
-		Dot11beProfiles *Dot11beProfiles `json:"dot11be-profiles,omitempty"`
-	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"`
 }
