@@ -356,7 +356,7 @@ Wait for controller to complete restart before attempting reconnection
 
 ## 📦 Used By
 
-- [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.4.1](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.4.1))
+- [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.4.2](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.4.2))
 
 ## 🤝 Contributing
 
