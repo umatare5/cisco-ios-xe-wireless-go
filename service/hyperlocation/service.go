@@ -19,11 +19,17 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves hyperlocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessHyperlocationOper, error) {
-	return core.Get[CiscoIOSXEWirelessHyperlocationOper](ctx, s.Client(), routes.HyperlocationOperPath)
+func (s Service) GetOperational(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessHyperlocationOper, error) {
+	return core.Get[CiscoIOSXEWirelessHyperlocationOper](ctx, s.Client(), routes.HyperlocationOperPath, opts...)
 }
 
 // ListProfiles retrieves hyperlocation profiles.
-func (s Service) ListProfiles(ctx context.Context) (*CiscoIOSXEWirelessHyperlocationProfiles, error) {
-	return core.Get[CiscoIOSXEWirelessHyperlocationProfiles](ctx, s.Client(), routes.HyperlocationProfilesPath)
+func (s Service) ListProfiles(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessHyperlocationProfiles, error) {
+	return core.Get[CiscoIOSXEWirelessHyperlocationProfiles](ctx, s.Client(), routes.HyperlocationProfilesPath, opts...)
 }

@@ -19,37 +19,40 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves complete location configuration data from the wireless controller.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessLocationCfg, error) {
-	return core.Get[CiscoIOSXEWirelessLocationCfg](ctx, s.Client(), routes.LocationCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessLocationCfg, error) {
+	return core.Get[CiscoIOSXEWirelessLocationCfg](ctx, s.Client(), routes.LocationCfgPath, opts...)
 }
 
 // ListOperatorLocations retrieves location profile configuration data from the wireless controller.
-func (s Service) ListOperatorLocations(ctx context.Context) (*OperatorLocations, error) {
-	return core.Get[OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath)
+func (s Service) ListOperatorLocations(ctx context.Context, opts ...core.GetOption) (*OperatorLocations, error) {
+	return core.Get[OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath, opts...)
 }
 
 // ListNMSPConfig retrieves location NMSP configuration data from the wireless controller.
-func (s Service) ListNMSPConfig(ctx context.Context) (*CiscoIOSXEWirelessLocationCfgNMSPConfig, error) {
-	return core.Get[CiscoIOSXEWirelessLocationCfgNMSPConfig](ctx, s.Client(), routes.LocationNMSPConfigPath)
+func (s Service) ListNMSPConfig(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessLocationCfgNMSPConfig, error) {
+	return core.Get[CiscoIOSXEWirelessLocationCfgNMSPConfig](ctx, s.Client(), routes.LocationNMSPConfigPath, opts...)
 }
 
 // GetLocation retrieves location settings configuration data from the wireless controller.
-func (s Service) GetLocation(ctx context.Context) (*CiscoIOSXEWirelessLocationSettings, error) {
-	return core.Get[CiscoIOSXEWirelessLocationSettings](ctx, s.Client(), routes.LocationPath)
+func (s Service) GetLocation(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessLocationSettings, error) {
+	return core.Get[CiscoIOSXEWirelessLocationSettings](ctx, s.Client(), routes.LocationPath, opts...)
 }
 
 // GetOperational retrieves all location operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessLocationOper, error) {
-	return core.Get[CiscoIOSXEWirelessLocationOper](ctx, s.Client(), routes.LocationOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessLocationOper, error) {
+	return core.Get[CiscoIOSXEWirelessLocationOper](ctx, s.Client(), routes.LocationOperPath, opts...)
 }
 
 // LocationRSSIMeasurements retrieves location statistics operational data from the wireless controller.
 func (s Service) LocationRSSIMeasurements(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessLocationLocationRSSIMeasurements, error) {
 	return core.Get[CiscoIOSXEWirelessLocationLocationRSSIMeasurements](
 		ctx,
 		s.Client(),
-		routes.LocationRSSIMeasurementsPath,
+		routes.LocationRSSIMeasurementsPath, opts...,
 	)
 }

@@ -20,8 +20,8 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves the complete client operational data.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessClientOper, error) {
-	result, err := core.Get[CiscoIOSXEWirelessClientOper](ctx, s.Client(), routes.ClientOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessClientOper, error) {
+	result, err := core.Get[CiscoIOSXEWirelessClientOper](ctx, s.Client(), routes.ClientOperPath, opts...)
 	if err == nil {
 		return result, nil
 	}
@@ -34,40 +34,58 @@ func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessClientO
 }
 
 // ListCommonInfo retrieves common operational data for clients.
-func (s Service) ListCommonInfo(ctx context.Context) (*CiscoIOSXEWirelessClientOperCommonOperData, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperCommonOperData](ctx, s.Client(), routes.ClientCommonOperDataPath)
+func (s Service) ListCommonInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperCommonOperData, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperCommonOperData](
+		ctx,
+		s.Client(),
+		routes.ClientCommonOperDataPath,
+		opts...)
 }
 
 // GetCommonInfoByMAC retrieves client operational data filtered by MAC address.
 func (s Service) GetCommonInfoByMAC(
-	ctx context.Context, mac string,
+	ctx context.Context, mac string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperCommonOperData, error) {
 	if mac == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, mac)
-	return core.Get[CiscoIOSXEWirelessClientOperCommonOperData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessClientOperCommonOperData](ctx, s.Client(), url, opts...)
 }
 
 // ListDCInfo retrieves discovery client information.
-func (s Service) ListDCInfo(ctx context.Context) (*CiscoIOSXEWirelessClientOperDcInfo, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperDcInfo](ctx, s.Client(), routes.ClientDcInfoPath)
+func (s Service) ListDCInfo(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessClientOperDcInfo, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperDcInfo](ctx, s.Client(), routes.ClientDcInfoPath, opts...)
 }
 
 // GetDCInfoByMAC retrieves dc-info for a specific client by MAC address.
-func (s Service) GetDCInfoByMAC(ctx context.Context, clientMAC string) (*CiscoIOSXEWirelessClientOperDcInfo, error) {
+func (s Service) GetDCInfoByMAC(
+	ctx context.Context,
+	clientMAC string,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperDcInfo, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDcInfoPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperDcInfo](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperDcInfo](ctx, s.Client(), endpoint, opts...)
 }
 
 // ListDot11Info returns 802.11 operational data for clients.
-func (s Service) ListDot11Info(ctx context.Context) (*CiscoIOSXEWirelessClientOperDot11OperData, error) {
-	result, err := core.Get[CiscoIOSXEWirelessClientOperDot11OperData](ctx, s.Client(), routes.ClientDot11OperDataPath)
+func (s Service) ListDot11Info(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperDot11OperData, error) {
+	result, err := core.Get[CiscoIOSXEWirelessClientOperDot11OperData](
+		ctx,
+		s.Client(),
+		routes.ClientDot11OperDataPath,
+		opts...)
 	if err == nil {
 		return result, nil
 	}
@@ -82,7 +100,7 @@ func (s Service) ListDot11Info(ctx context.Context) (*CiscoIOSXEWirelessClientOp
 // GetDot11InfoByMAC retrieves 802.11 operational data filtered by MAC address.
 func (s Service) GetDot11InfoByMAC(
 	ctx context.Context,
-	mac string,
+	mac string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperDot11OperData, error) {
 	if mac == "" || strings.TrimSpace(mac) == "" {
 		return nil, core.ErrInvalidConfiguration
@@ -90,7 +108,7 @@ func (s Service) GetDot11InfoByMAC(
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, mac)
 
-	result, err := core.Get[CiscoIOSXEWirelessClientOperDot11OperData](ctx, s.Client(), url)
+	result, err := core.Get[CiscoIOSXEWirelessClientOperDot11OperData](ctx, s.Client(), url, opts...)
 	if err == nil {
 		return result, nil
 	}
@@ -103,108 +121,146 @@ func (s Service) GetDot11InfoByMAC(
 }
 
 // ListMMIFClientHistory retrieves mobility manager interface client history.
-func (s Service) ListMMIFClientHistory(ctx context.Context) (*CiscoIOSXEWirelessClientOperMmIfClientHistory, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientHistory](ctx, s.Client(), routes.ClientMmIfClientHistoryPath)
+func (s Service) ListMMIFClientHistory(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperMmIfClientHistory, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientHistory](
+		ctx,
+		s.Client(),
+		routes.ClientMmIfClientHistoryPath,
+		opts...)
 }
 
 // GetMMIFClientHistoryByMAC retrieves mm-if-client-history for a specific client by MAC address.
 func (s Service) GetMMIFClientHistoryByMAC(
 	ctx context.Context,
-	clientMAC string,
+	clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperMmIfClientHistory, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientHistory](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientHistory](ctx, s.Client(), endpoint, opts...)
 }
 
 // ListMMIFClientStats retrieves mobility manager interface client statistics.
-func (s Service) ListMMIFClientStats(ctx context.Context) (*CiscoIOSXEWirelessClientOperMmIfClientStats, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientStats](ctx, s.Client(), routes.ClientMmIfClientStatsPath)
+func (s Service) ListMMIFClientStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperMmIfClientStats, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientStats](
+		ctx,
+		s.Client(),
+		routes.ClientMmIfClientStatsPath,
+		opts...)
 }
 
 // GetMMIFClientStatsByMAC retrieves mm-if-client-stats for a specific client by MAC address.
 func (s Service) GetMMIFClientStatsByMAC(
 	ctx context.Context,
-	clientMAC string,
+	clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperMmIfClientStats, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientStats](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperMmIfClientStats](ctx, s.Client(), endpoint, opts...)
 }
 
 // ListMobilityInfo retrieves mobility operational data for clients.
-func (s Service) ListMobilityInfo(ctx context.Context) (*CiscoIOSXEWirelessClientOperMobilityOperData, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperMobilityOperData](ctx, s.Client(), routes.ClientMobilityOperDataPath)
+func (s Service) ListMobilityInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperMobilityOperData, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperMobilityOperData](
+		ctx,
+		s.Client(),
+		routes.ClientMobilityOperDataPath,
+		opts...)
 }
 
 // GetMobilityInfoByMAC retrieves mobility operational data filtered by MAC address.
 func (s Service) GetMobilityInfoByMAC(
 	ctx context.Context,
-	clientMAC string,
+	clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperMobilityOperData, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperMobilityOperData](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperMobilityOperData](ctx, s.Client(), endpoint, opts...)
 }
 
 // ListPolicyInfo retrieves client policy data.
-func (s Service) ListPolicyInfo(ctx context.Context) (*CiscoIOSXEWirelessClientOperPolicyData, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperPolicyData](ctx, s.Client(), routes.ClientPolicyDataPath)
+func (s Service) ListPolicyInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperPolicyData, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperPolicyData](ctx, s.Client(), routes.ClientPolicyDataPath, opts...)
 }
 
 // GetPolicyInfoByMAC retrieves policy-data for a specific client by MAC address.
 func (s Service) GetPolicyInfoByMAC(
 	ctx context.Context,
-	clientMAC string,
+	clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperPolicyData, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientPolicyDataPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperPolicyData](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperPolicyData](ctx, s.Client(), endpoint, opts...)
 }
 
 // ListSISFDB retrieves SISF database MAC information.
-func (s Service) ListSISFDB(ctx context.Context) (*CiscoIOSXEWirelessClientOperSisfDBMac, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperSisfDBMac](ctx, s.Client(), routes.ClientSisfDBMacPath)
+func (s Service) ListSISFDB(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperSisfDBMac, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperSisfDBMac](ctx, s.Client(), routes.ClientSisfDBMacPath, opts...)
 }
 
 // GetSISFDBByMAC retrieves sisf-db-mac for a specific client by MAC address.
-func (s Service) GetSISFDBByMAC(ctx context.Context, clientMAC string) (*CiscoIOSXEWirelessClientOperSisfDBMac, error) {
+func (s Service) GetSISFDBByMAC(
+	ctx context.Context,
+	clientMAC string,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperSisfDBMac, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperSisfDBMac](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperSisfDBMac](ctx, s.Client(), endpoint, opts...)
 }
 
 // ListTrafficStats retrieves client traffic statistics.
-func (s Service) ListTrafficStats(ctx context.Context) (*CiscoIOSXEWirelessClientOperTrafficStatsData, error) {
-	return core.Get[CiscoIOSXEWirelessClientOperTrafficStatsData](ctx, s.Client(), routes.ClientTrafficStatsPath)
+func (s Service) ListTrafficStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessClientOperTrafficStatsData, error) {
+	return core.Get[CiscoIOSXEWirelessClientOperTrafficStatsData](
+		ctx,
+		s.Client(),
+		routes.ClientTrafficStatsPath,
+		opts...)
 }
 
 // GetTrafficStatsByMAC retrieves traffic-stats for a specific client by MAC address.
 func (s Service) GetTrafficStatsByMAC(
 	ctx context.Context,
-	clientMAC string,
+	clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperTrafficStatsData, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrInvalidConfiguration
 	}
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, clientMAC)
-	return core.Get[CiscoIOSXEWirelessClientOperTrafficStatsData](ctx, s.Client(), endpoint)
+	return core.Get[CiscoIOSXEWirelessClientOperTrafficStatsData](ctx, s.Client(), endpoint, opts...)
 }
 
 // isKnownGetOperationalIssue checks if the error is a known IOS-XE 17.18.1 compatibility issue

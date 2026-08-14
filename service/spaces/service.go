@@ -21,12 +21,12 @@ func NewService(client *core.Client) Service {
 
 // GetOperational retrieves all Cisco Spaces operational data from the controller.
 // EXPERIMENTAL: Requires IOS-XE 17.15.1+.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessSpacesOper, error) {
-	return core.Get[CiscoIOSXEWirelessSpacesOper](ctx, s.Client(), routes.SpacesOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessSpacesOper, error) {
+	return core.Get[CiscoIOSXEWirelessSpacesOper](ctx, s.Client(), routes.SpacesOperPath, opts...)
 }
 
 // GetConnectionDetails retrieves detailed connection information for Cisco Spaces integration.
 // EXPERIMENTAL: Requires IOS-XE 17.15.1+.
-func (s Service) GetConnectionDetails(ctx context.Context) (*SpacesConnectionDetail, error) {
-	return core.Get[SpacesConnectionDetail](ctx, s.Client(), routes.SpacesConnectionDetailPath)
+func (s Service) GetConnectionDetails(ctx context.Context, opts ...core.GetOption) (*SpacesConnectionDetail, error) {
+	return core.Get[SpacesConnectionDetail](ctx, s.Client(), routes.SpacesConnectionDetailPath, opts...)
 }

@@ -19,11 +19,11 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves the complete APF configuration data.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessAPFCfg, error) {
-	return core.Get[CiscoIOSXEWirelessAPFCfg](ctx, s.Client(), routes.APFCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessAPFCfg, error) {
+	return core.Get[CiscoIOSXEWirelessAPFCfg](ctx, s.Client(), routes.APFCfgPath, opts...)
 }
 
 // ListAPFConfigs retrieves APF configuration parameters.
-func (s Service) ListAPFConfigs(ctx context.Context) (*CiscoIOSXEWirelessAPFCfgAPF, error) {
-	return core.Get[CiscoIOSXEWirelessAPFCfgAPF](ctx, s.Client(), routes.APFAPFPath)
+func (s Service) ListAPFConfigs(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessAPFCfgAPF, error) {
+	return core.Get[CiscoIOSXEWirelessAPFCfgAPF](ctx, s.Client(), routes.APFAPFPath, opts...)
 }

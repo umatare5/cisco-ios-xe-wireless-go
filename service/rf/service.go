@@ -24,46 +24,63 @@ func (s Service) RFTag() *RFTagService {
 }
 
 // GetConfig retrieves RF configuration data including RF profiles and power settings.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFCfg, error) {
-	return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessRFCfg, error) {
+	return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath, opts...)
 }
 
 // ListRFTags retrieves RF tags collection from the configuration.
-func (s Service) ListRFTags(ctx context.Context) (*CiscoIOSXEWirelessRFCfgRFTags, error) {
-	return core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath)
+func (s Service) ListRFTags(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessRFCfgRFTags, error) {
+	return core.Get[CiscoIOSXEWirelessRFCfgRFTags](ctx, s.Client(), routes.RFTagsPath, opts...)
 }
 
 // ListRFProfiles retrieves RF profiles collection from the configuration.
-func (s Service) ListRFProfiles(ctx context.Context) (*RFProfiles, error) {
-	return core.Get[RFProfiles](ctx, s.Client(), routes.RFProfilesPath)
+func (s Service) ListRFProfiles(ctx context.Context, opts ...core.GetOption) (*RFProfiles, error) {
+	return core.Get[RFProfiles](ctx, s.Client(), routes.RFProfilesPath, opts...)
 }
 
 // ListMultiBssidProfiles retrieves Multi-BSSID profiles from the configuration.
-func (s Service) ListMultiBssidProfiles(ctx context.Context) (*MultiBssidProfiles, error) {
-	return core.Get[MultiBssidProfiles](ctx, s.Client(), routes.MultiBssidProfilesPath)
+func (s Service) ListMultiBssidProfiles(ctx context.Context, opts ...core.GetOption) (*MultiBssidProfiles, error) {
+	return core.Get[MultiBssidProfiles](ctx, s.Client(), routes.MultiBssidProfilesPath, opts...)
 }
 
 // ListAtfPolicies retrieves Air Time Fairness policies from the configuration.
-func (s Service) ListAtfPolicies(ctx context.Context) (*AtfPolicies, error) {
-	return core.Get[AtfPolicies](ctx, s.Client(), routes.AtfPoliciesPath)
+func (s Service) ListAtfPolicies(ctx context.Context, opts ...core.GetOption) (*AtfPolicies, error) {
+	return core.Get[AtfPolicies](ctx, s.Client(), routes.AtfPoliciesPath, opts...)
 }
 
 // ListRFProfileDefaultEntries retrieves RF profile default entries from the configuration.
-func (s Service) ListRFProfileDefaultEntries(ctx context.Context) (*RFProfileDefaultEntries, error) {
-	return core.Get[RFProfileDefaultEntries](ctx, s.Client(), routes.RFProfileDefaultEntriesPath)
+func (s Service) ListRFProfileDefaultEntries(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*RFProfileDefaultEntries, error) {
+	return core.Get[RFProfileDefaultEntries](ctx, s.Client(), routes.RFProfileDefaultEntriesPath, opts...)
 }
 
 // GetOperational retrieves RF operational data including auto RF and radar detection data.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessRFOper, error) {
-	return core.Get[CiscoIOSXEWirelessRFOper](ctx, s.Client(), routes.RRMOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessRFOper, error) {
+	return core.Get[CiscoIOSXEWirelessRFOper](ctx, s.Client(), routes.RRMOperPath, opts...)
 }
 
 // GetAutoRFDot11Data retrieves Auto RF 802.11 operational data for access points.
-func (s Service) GetAutoRFDot11Data(ctx context.Context) (*CiscoIOSXEWirelessRFOperApAutoRFDot11Data, error) {
-	return core.Get[CiscoIOSXEWirelessRFOperApAutoRFDot11Data](ctx, s.Client(), routes.RRMOperApAutoRFDot11DataPath)
+func (s Service) GetAutoRFDot11Data(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRFOperApAutoRFDot11Data, error) {
+	return core.Get[CiscoIOSXEWirelessRFOperApAutoRFDot11Data](
+		ctx,
+		s.Client(),
+		routes.RRMOperApAutoRFDot11DataPath,
+		opts...)
 }
 
 // GetRadarDetectionData retrieves radar detection operational data for access points.
-func (s Service) GetRadarDetectionData(ctx context.Context) (*CiscoIOSXEWirelessRFOperApDot11RadarData, error) {
-	return core.Get[CiscoIOSXEWirelessRFOperApDot11RadarData](ctx, s.Client(), routes.RRMOperApDot11RadarDataPath)
+func (s Service) GetRadarDetectionData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRFOperApDot11RadarData, error) {
+	return core.Get[CiscoIOSXEWirelessRFOperApDot11RadarData](
+		ctx,
+		s.Client(),
+		routes.RRMOperApDot11RadarDataPath,
+		opts...)
 }

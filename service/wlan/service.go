@@ -25,67 +25,89 @@ func (s Service) PolicyTag() *PolicyTagService {
 }
 
 // GetConfig retrieves the complete WLAN configuration.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessWlanCfg, error) {
-	return core.Get[CiscoIOSXEWirelessWlanCfg](ctx, s.Client(), routes.WLANCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessWlanCfg, error) {
+	return core.Get[CiscoIOSXEWirelessWlanCfg](ctx, s.Client(), routes.WLANCfgPath, opts...)
 }
 
 // GetOperational retrieves WLAN operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*WlanGlobalOper, error) {
-	return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*WlanGlobalOper, error) {
+	return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath, opts...)
 }
 
 // ListConfigEntries retrieves WLAN configuration entries.
-func (s Service) ListConfigEntries(ctx context.Context) (*WlanCfgEntries, error) {
-	return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
+func (s Service) ListConfigEntries(ctx context.Context, opts ...core.GetOption) (*WlanCfgEntries, error) {
+	return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath, opts...)
 }
 
 // ListPolicies retrieves WLAN policies.
-func (s Service) ListPolicies(ctx context.Context) (*WlanPolicies, error) {
-	return core.Get[WlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
+func (s Service) ListPolicies(ctx context.Context, opts ...core.GetOption) (*WlanPolicies, error) {
+	return core.Get[WlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath, opts...)
 }
 
 // ListPolicyListEntries retrieves all policy list entries.
-func (s Service) ListPolicyListEntries(ctx context.Context) (*PolicyListEntries, error) {
-	return core.Get[PolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+func (s Service) ListPolicyListEntries(ctx context.Context, opts ...core.GetOption) (*PolicyListEntries, error) {
+	return core.Get[PolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath, opts...)
 }
 
 // ListWirelessAAAPolicyConfigs retrieves wireless AAA policy configurations.
-func (s Service) ListWirelessAAAPolicyConfigs(ctx context.Context) (*WirelessAaaPolicyConfigs, error) {
-	return core.Get[WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath)
+func (s Service) ListWirelessAAAPolicyConfigs(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*WirelessAaaPolicyConfigs, error) {
+	return core.Get[WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath, opts...)
 }
 
 // ListWlanCfgEntries retrieves WLAN configuration entries using WlanCfgWlanCfgEntries wrapper.
-func (s Service) ListWlanCfgEntries(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgWlanCfgEntries, error) {
-	return core.Get[CiscoIOSXEWirelessWlanCfgWlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath)
+func (s Service) ListWlanCfgEntries(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessWlanCfgWlanCfgEntries, error) {
+	return core.Get[CiscoIOSXEWirelessWlanCfgWlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath, opts...)
 }
 
 // ListWlanPolicies retrieves WLAN policies using WlanCfgWlanPolicies wrapper.
-func (s Service) ListWlanPolicies(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgWlanPolicies, error) {
-	return core.Get[CiscoIOSXEWirelessWlanCfgWlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath)
+func (s Service) ListWlanPolicies(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessWlanCfgWlanPolicies, error) {
+	return core.Get[CiscoIOSXEWirelessWlanCfgWlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath, opts...)
 }
 
 // ListCfgPolicyListEntries retrieves policy list entries using WlanCfgPolicyListEntries wrapper.
-func (s Service) ListCfgPolicyListEntries(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgPolicyListEntries, error) {
-	return core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath)
+func (s Service) ListCfgPolicyListEntries(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessWlanCfgPolicyListEntries, error) {
+	return core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntries](
+		ctx,
+		s.Client(),
+		routes.WLANPolicyListEntriesPath,
+		opts...)
 }
 
 // ListCfgWirelessAaaPolicyConfigs retrieves wireless AAA policy configurations using WlanCfgWirelessAaaPolicyConfigs wrapper.
 func (s Service) ListCfgWirelessAaaPolicyConfigs(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs, error) {
 	return core.Get[CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs](
 		ctx,
 		s.Client(),
-		routes.WLANWirelessAaaPolicyConfigsPath,
+		routes.WLANWirelessAaaPolicyConfigsPath, opts...,
 	)
 }
 
 // ListDot11beProfiles retrieves Wi-Fi 7 / 802.11be profiles using WlanCfgDot11beProfiles wrapper.
-func (s Service) ListDot11beProfiles(ctx context.Context) (*CiscoIOSXEWirelessWlanCfgDot11beProfiles, error) {
-	return core.Get[CiscoIOSXEWirelessWlanCfgDot11beProfiles](ctx, s.Client(), routes.WLANDot11beProfilesPath)
+func (s Service) ListDot11beProfiles(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessWlanCfgDot11beProfiles, error) {
+	return core.Get[CiscoIOSXEWirelessWlanCfgDot11beProfiles](ctx, s.Client(), routes.WLANDot11beProfilesPath, opts...)
 }
 
 // ListWlanInfo retrieves WLAN information using WlanGlobalOperWlanInfo wrapper.
-func (s Service) ListWlanInfo(ctx context.Context) (*CiscoIOSXEWirelessWlanGlobalOperWlanInfo, error) {
-	return core.Get[CiscoIOSXEWirelessWlanGlobalOperWlanInfo](ctx, s.Client(), routes.WLANWlanInfoPath)
+func (s Service) ListWlanInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessWlanGlobalOperWlanInfo, error) {
+	return core.Get[CiscoIOSXEWirelessWlanGlobalOperWlanInfo](ctx, s.Client(), routes.WLANWlanInfoPath, opts...)
 }

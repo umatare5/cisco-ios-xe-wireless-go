@@ -19,38 +19,54 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves dot11 configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessDot11Cfg, error) {
-	return core.Get[CiscoIOSXEWirelessDot11Cfg](ctx, s.Client(), routes.Dot11CfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessDot11Cfg, error) {
+	return core.Get[CiscoIOSXEWirelessDot11Cfg](ctx, s.Client(), routes.Dot11CfgPath, opts...)
 }
 
 // ListCfgFilters retrieves dot11 configuration filters.
-func (s Service) ListCfgFilters(ctx context.Context) (*CiscoIOSXEWirelessDot11CfgFilter, error) {
-	return core.Get[CiscoIOSXEWirelessDot11CfgFilter](ctx, s.Client(), routes.Dot11CfgPath)
+func (s Service) ListCfgFilters(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessDot11CfgFilter, error) {
+	return core.Get[CiscoIOSXEWirelessDot11CfgFilter](ctx, s.Client(), routes.Dot11CfgPath, opts...)
 }
 
 // ListCfgConfiguredCountries retrieves dot11 configured countries wrapper data.
 func (s Service) ListCfgConfiguredCountries(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessDot11CfgConfiguredCountries, error) {
-	return core.Get[CiscoIOSXEWirelessDot11CfgConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath)
+	return core.Get[CiscoIOSXEWirelessDot11CfgConfiguredCountries](
+		ctx,
+		s.Client(),
+		routes.Dot11ConfiguredCountriesPath,
+		opts...)
 }
 
 // ListCfgDot11Entries retrieves dot11 entries wrapper data.
-func (s Service) ListCfgDot11Entries(ctx context.Context) (*CiscoIOSXEWirelessDot11CfgDot11Entries, error) {
-	return core.Get[CiscoIOSXEWirelessDot11CfgDot11Entries](ctx, s.Client(), routes.Dot11EntriesPath)
+func (s Service) ListCfgDot11Entries(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessDot11CfgDot11Entries, error) {
+	return core.Get[CiscoIOSXEWirelessDot11CfgDot11Entries](ctx, s.Client(), routes.Dot11EntriesPath, opts...)
 }
 
 // ListCfgDot11acMcsEntries retrieves dot11ac MCS entries wrapper data.
-func (s Service) ListCfgDot11acMcsEntries(ctx context.Context) (*CiscoIOSXEWirelessDot11CfgDot11acMcsEntries, error) {
-	return core.Get[CiscoIOSXEWirelessDot11CfgDot11acMcsEntries](ctx, s.Client(), routes.Dot11AcMcsEntriesPath)
+func (s Service) ListCfgDot11acMcsEntries(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessDot11CfgDot11acMcsEntries, error) {
+	return core.Get[CiscoIOSXEWirelessDot11CfgDot11acMcsEntries](ctx, s.Client(), routes.Dot11AcMcsEntriesPath, opts...)
 }
 
 // ListConfiguredCountries retrieves configured countries data.
-func (s Service) ListConfiguredCountries(ctx context.Context) (*Dot11ConfiguredCountries, error) {
-	return core.Get[Dot11ConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath)
+func (s Service) ListConfiguredCountries(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*Dot11ConfiguredCountries, error) {
+	return core.Get[Dot11ConfiguredCountries](ctx, s.Client(), routes.Dot11ConfiguredCountriesPath, opts...)
 }
 
 // ListDot11Entries retrieves 802.11 entries data.
-func (s Service) ListDot11Entries(ctx context.Context) (*Dot11Entries, error) {
-	return core.Get[Dot11Entries](ctx, s.Client(), routes.Dot11EntriesPath)
+func (s Service) ListDot11Entries(ctx context.Context, opts ...core.GetOption) (*Dot11Entries, error) {
+	return core.Get[Dot11Entries](ctx, s.Client(), routes.Dot11EntriesPath, opts...)
 }

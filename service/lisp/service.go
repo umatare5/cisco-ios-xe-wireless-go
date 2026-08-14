@@ -19,21 +19,42 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves LISP operational data from the wireless controller.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessLISPOper, error) {
-	return core.Get[CiscoIOSXEWirelessLISPOper](ctx, s.Client(), routes.LISPOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessLISPOper, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOper](ctx, s.Client(), routes.LISPOperPath, opts...)
 }
 
 // GetMemoryStats retrieves LISP agent memory statistics using wrapper struct.
-func (s Service) GetMemoryStats(ctx context.Context) (*CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats, error) {
-	return core.Get[CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats](ctx, s.Client(), routes.LISPMemoryStatsPath)
+func (s Service) GetMemoryStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOperLISPAgentMemoryStats](
+		ctx,
+		s.Client(),
+		routes.LISPMemoryStatsPath,
+		opts...)
 }
 
 // GetCapabilities retrieves LISP WLC capabilities using wrapper struct.
-func (s Service) GetCapabilities(ctx context.Context) (*CiscoIOSXEWirelessLISPOperLISPWLCCapabilities, error) {
-	return core.Get[CiscoIOSXEWirelessLISPOperLISPWLCCapabilities](ctx, s.Client(), routes.LISPCapabilitiesPath)
+func (s Service) GetCapabilities(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessLISPOperLISPWLCCapabilities, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOperLISPWLCCapabilities](
+		ctx,
+		s.Client(),
+		routes.LISPCapabilitiesPath,
+		opts...)
 }
 
 // ListAPCapabilities retrieves LISP AP capabilities list using wrapper struct.
-func (s Service) ListAPCapabilities(ctx context.Context) (*CiscoIOSXEWirelessLISPOperLISPAPCapabilities, error) {
-	return core.Get[CiscoIOSXEWirelessLISPOperLISPAPCapabilities](ctx, s.Client(), routes.LISPAPCapabilitiesPath)
+func (s Service) ListAPCapabilities(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessLISPOperLISPAPCapabilities, error) {
+	return core.Get[CiscoIOSXEWirelessLISPOperLISPAPCapabilities](
+		ctx,
+		s.Client(),
+		routes.LISPAPCapabilitiesPath,
+		opts...)
 }
