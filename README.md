@@ -149,6 +149,23 @@ There are several options to customize the client behavior.
 | `WithLogger(l)`             | `*slog.Logger`  | `slog.Default()`    | Sets structured logger.    |
 | `WithUserAgent(ua)`         | `string`        | `wnc-go-client/1.0` | Custom User-Agent.         |
 
+### Request Options
+
+Every read method takes optional `GetOption` values after `ctx`, which apply to that single request. These are a different type from the client `Option` values above and cannot be mixed.
+
+| Option                        | Value on the wire          | Description                                                |
+| ----------------------------- | -------------------------- | ---------------------------------------------------------- |
+| `WithDefaults(wnc.ReportAll)` | `with-defaults=report-all` | Also returns the leaves in force at their schema default.  |
+| `WithDefaults(wnc.Explicit)`  | `with-defaults=explicit`   | Returns client-set leaves only, which matches a plain GET. |
+
+```go
+entries, err := client.WLAN().ListWlanCfgEntries(ctx, wnc.WithDefaults(wnc.ReportAll))
+```
+
+> [!NOTE]
+>
+> The controller reports client-set leaves by default, so a configuration leaf left at its default is absent from a plain GET. Scope `wnc.ReportAll` to the container you need: on a whole-container read, the added leaves accumulate across every nested container.
+
 ### Supported Services
 
 Please refer to the Go Reference for the complete reference.

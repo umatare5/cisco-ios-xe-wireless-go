@@ -24,16 +24,22 @@ func (s Service) SiteTag() *SiteTagService {
 }
 
 // GetConfig retrieves site configuration data including AP configuration profiles and site tag configurations.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessSiteCfg, error) {
-	return core.Get[CiscoIOSXEWirelessSiteCfg](ctx, s.Client(), routes.SiteCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessSiteCfg, error) {
+	return core.Get[CiscoIOSXEWirelessSiteCfg](ctx, s.Client(), routes.SiteCfgPath, opts...)
 }
 
 // ListAPProfileConfigs retrieves all AP configuration profiles from the site configuration.
-func (s Service) ListAPProfileConfigs(ctx context.Context) (*CiscoIOSXEWirelessSiteCfgApCfgProfiles, error) {
-	return core.Get[CiscoIOSXEWirelessSiteCfgApCfgProfiles](ctx, s.Client(), routes.APProfilesPath)
+func (s Service) ListAPProfileConfigs(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessSiteCfgApCfgProfiles, error) {
+	return core.Get[CiscoIOSXEWirelessSiteCfgApCfgProfiles](ctx, s.Client(), routes.APProfilesPath, opts...)
 }
 
 // ListSiteTagConfigs retrieves all site tag configurations from the site configuration.
-func (s Service) ListSiteTagConfigs(ctx context.Context) (*CiscoIOSXEWirelessSiteCfgSiteTagConfigs, error) {
-	return core.Get[CiscoIOSXEWirelessSiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath)
+func (s Service) ListSiteTagConfigs(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessSiteCfgSiteTagConfigs, error) {
+	return core.Get[CiscoIOSXEWirelessSiteCfgSiteTagConfigs](ctx, s.Client(), routes.SiteTagConfigsPath, opts...)
 }

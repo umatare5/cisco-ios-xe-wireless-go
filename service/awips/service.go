@@ -19,37 +19,67 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves the complete AWIPS operational data.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOper, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOper](ctx, s.Client(), routes.AWIPSOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessAWIPSOper, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOper](ctx, s.Client(), routes.AWIPSOperPath, opts...)
 }
 
 // ListAWIPSPerApInfo retrieves AWIPS per AP information.
-func (s Service) ListAWIPSPerApInfo(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo](ctx, s.Client(), routes.AWIPSPerApInfoPath)
+func (s Service) ListAWIPSPerApInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo](ctx, s.Client(), routes.AWIPSPerApInfoPath, opts...)
 }
 
 // ListAWIPSDwldStatus retrieves AWIPS download status.
 // Note: Available on 17.12.6a, but unavailable on 17.15.4b.
-func (s Service) ListAWIPSDwldStatus(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus](ctx, s.Client(), routes.AWIPSDwldStatusPath)
+func (s Service) ListAWIPSDwldStatus(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus](ctx, s.Client(), routes.AWIPSDwldStatusPath, opts...)
 }
 
 // ListAWIPSApDwldStatus retrieves AWIPS per AP download status.
-func (s Service) ListAWIPSApDwldStatus(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus](ctx, s.Client(), routes.AWIPSApDownloadStatusPath)
+func (s Service) ListAWIPSApDwldStatus(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus](
+		ctx,
+		s.Client(),
+		routes.AWIPSApDownloadStatusPath,
+		opts...)
 }
 
 // ListAWIPSPerSignStats retrieves AWIPS per signature statistics.
-func (s Service) ListAWIPSPerSignStats(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats](ctx, s.Client(), routes.AWIPSPerSignStatsPath)
+func (s Service) ListAWIPSPerSignStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSPerSignStats](
+		ctx,
+		s.Client(),
+		routes.AWIPSPerSignStatsPath,
+		opts...)
 }
 
 // ListAWIPSGlobStats retrieves AWIPS global statistics.
-func (s Service) ListAWIPSGlobStats(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats](ctx, s.Client(), routes.AWIPSGlobStatsPath)
+func (s Service) ListAWIPSGlobStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSGlobStats](ctx, s.Client(), routes.AWIPSGlobStatsPath, opts...)
 }
 
 // ListAWIPSDwldStatusWncd retrieves AWIPS download status for WNCD.
-func (s Service) ListAWIPSDwldStatusWncd(ctx context.Context) (*CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd, error) {
-	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd](ctx, s.Client(), routes.AWIPSDwldStatusWncdPath)
+func (s Service) ListAWIPSDwldStatusWncd(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd, error) {
+	return core.Get[CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatusWncd](
+		ctx,
+		s.Client(),
+		routes.AWIPSDwldStatusWncdPath,
+		opts...)
 }

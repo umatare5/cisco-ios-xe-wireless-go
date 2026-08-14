@@ -19,16 +19,19 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves radio configuration data from the controller.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRadioCfg, error) {
-	return core.Get[CiscoIOSXEWirelessRadioCfg](ctx, s.Client(), routes.RadioCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessRadioCfg, error) {
+	return core.Get[CiscoIOSXEWirelessRadioCfg](ctx, s.Client(), routes.RadioCfgPath, opts...)
 }
 
 // ListProfileConfigs retrieves radio profiles configuration data.
-func (s Service) ListProfileConfigs(ctx context.Context) (*RadioProfiles, error) {
-	return core.Get[RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles")
+func (s Service) ListProfileConfigs(ctx context.Context, opts ...core.GetOption) (*RadioProfiles, error) {
+	return core.Get[RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles", opts...)
 }
 
 // ListRadioProfiles retrieves radio profiles configuration data using wrapper structure.
-func (s Service) ListRadioProfiles(ctx context.Context) (*CiscoIOSXEWirelessRadioCfgRadioProfiles, error) {
-	return core.Get[CiscoIOSXEWirelessRadioCfgRadioProfiles](ctx, s.Client(), routes.RadioProfilesPath)
+func (s Service) ListRadioProfiles(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRadioCfgRadioProfiles, error) {
+	return core.Get[CiscoIOSXEWirelessRadioCfgRadioProfiles](ctx, s.Client(), routes.RadioProfilesPath, opts...)
 }

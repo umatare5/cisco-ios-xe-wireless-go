@@ -25,17 +25,21 @@ func NewService(client *core.Client) Service {
 }
 
 // GetConfig retrieves the complete AP configuration data.
-func (s Service) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessAPCfg, error) {
-	return core.Get[CiscoIOSXEWirelessAPCfg](ctx, s.Client(), routes.APCfgPath)
+func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessAPCfg, error) {
+	return core.Get[CiscoIOSXEWirelessAPCfg](ctx, s.Client(), routes.APCfgPath, opts...)
 }
 
 // ListTagConfigs retrieves access point tag configurations.
-func (s Service) ListTagConfigs(ctx context.Context) (*CiscoIOSXEWirelessApCfgApTag, error) {
-	return core.Get[CiscoIOSXEWirelessApCfgApTag](ctx, s.Client(), routes.APTagsPath)
+func (s Service) ListTagConfigs(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessApCfgApTag, error) {
+	return core.Get[CiscoIOSXEWirelessApCfgApTag](ctx, s.Client(), routes.APTagsPath, opts...)
 }
 
 // GetTagConfigByMAC retrieves AP tag configuration filtered by AP MAC address.
-func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*CiscoIOSXEWirelessApCfgApTag, error) {
+func (s Service) GetTagConfigByMAC(
+	ctx context.Context,
+	mac string,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApCfgApTag, error) {
 	if err := validation.ValidateMACAddress(mac); err != nil {
 		return nil, fmt.Errorf(ErrInvalidAPMacFormat, mac)
 	}
@@ -46,28 +50,37 @@ func (s Service) GetTagConfigByMAC(ctx context.Context, mac string) (*CiscoIOSXE
 
 	// Build correct RESTCONF path: /ap-cfg-data/ap-tags/ap-tag=MAC
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApCfgApTag](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApCfgApTag](ctx, s.Client(), url, opts...)
 }
 
 // ListTagSourcePriorityConfigs retrieves tag source priority configurations.
-func (s Service) ListTagSourcePriorityConfigs(ctx context.Context) (*TagSourcePriorityConfigs, error) {
-	return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath)
+func (s Service) ListTagSourcePriorityConfigs(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*TagSourcePriorityConfigs, error) {
+	return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath, opts...)
 }
 
 // GetGlobalOperational retrieves the complete AP global operational data.
-func (s Service) GetGlobalOperational(ctx context.Context) (*CiscoIOSXEWirelessAPGlobalOper, error) {
-	return core.Get[CiscoIOSXEWirelessAPGlobalOper](ctx, s.Client(), routes.APGlobalOperPath)
+func (s Service) GetGlobalOperational(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessAPGlobalOper, error) {
+	return core.Get[CiscoIOSXEWirelessAPGlobalOper](ctx, s.Client(), routes.APGlobalOperPath, opts...)
 }
 
 // GetEWLCAPStats retrieves EWLC AP statistics.
-func (s Service) GetEWLCAPStats(ctx context.Context) (*CiscoIOSXEWirelessApGlobalOperEwlcApStats, error) {
-	return core.Get[CiscoIOSXEWirelessApGlobalOperEwlcApStats](ctx, s.Client(), routes.APEwlcApStatsPath)
+func (s Service) GetEWLCAPStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApGlobalOperEwlcApStats, error) {
+	return core.Get[CiscoIOSXEWirelessApGlobalOperEwlcApStats](ctx, s.Client(), routes.APEwlcApStatsPath, opts...)
 }
 
 // ListAPHistoryByEthernetMAC retrieves AP history data filtered by ethernet MAC address.
 func (s Service) ListAPHistoryByEthernetMAC(
 	ctx context.Context,
-	ethernetMAC string,
+	ethernetMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApGlobalOperApHistory, error) {
 	if ethernetMAC == "" {
 		return nil, core.ErrResourceNotFound
@@ -77,12 +90,12 @@ func (s Service) ListAPHistoryByEthernetMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
-	return core.Get[CiscoIOSXEWirelessApGlobalOperApHistory](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApGlobalOperApHistory](ctx, s.Client(), url, opts...)
 }
 
 // GetAPJoinStatsByWTPMAC retrieves AP join statistics filtered by WTP MAC address.
 func (s Service) GetAPJoinStatsByWTPMAC(
-	ctx context.Context, mac string,
+	ctx context.Context, mac string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApGlobalOperApJoinStats, error) {
 	if mac == "" {
 		return nil, core.ErrResourceNotFound
@@ -101,13 +114,13 @@ func (s Service) GetAPJoinStatsByWTPMAC(
 		routes.APJoinStatsPath,
 		normalizedMAC,
 	)
-	return core.Get[CiscoIOSXEWirelessApGlobalOperApJoinStats](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApGlobalOperApJoinStats](ctx, s.Client(), url, opts...)
 }
 
 // GetWLANClientStatsByWLANID retrieves WLAN client statistics filtered by WLAN ID.
 func (s Service) GetWLANClientStatsByWLANID(
 	ctx context.Context,
-	wlanID int,
+	wlanID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApGlobalOperWlanClientStats, error) {
 	if wlanID <= 0 {
 		return nil, core.ErrResourceNotFound
@@ -116,63 +129,79 @@ func (s Service) GetWLANClientStatsByWLANID(
 		routes.APWlanClientStatsQueryPath,
 		strconv.Itoa(wlanID),
 	)
-	return core.Get[CiscoIOSXEWirelessApGlobalOperWlanClientStats](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApGlobalOperWlanClientStats](ctx, s.Client(), url, opts...)
 }
 
 // ListAPHistory retrieves only AP history data using fields parameter.
-func (s Service) ListAPHistory(ctx context.Context) (*CiscoIOSXEWirelessApGlobalOperApHistory, error) {
-	return core.Get[CiscoIOSXEWirelessApGlobalOperApHistory](ctx, s.Client(), routes.APHistoryPath)
+func (s Service) ListAPHistory(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApGlobalOperApHistory, error) {
+	return core.Get[CiscoIOSXEWirelessApGlobalOperApHistory](ctx, s.Client(), routes.APHistoryPath, opts...)
 }
 
 // ListAPJoinStats retrieves only AP join statistics using fields parameter.
-func (s Service) ListAPJoinStats(ctx context.Context) (*CiscoIOSXEWirelessApGlobalOperApJoinStats, error) {
-	return core.Get[CiscoIOSXEWirelessApGlobalOperApJoinStats](ctx, s.Client(), routes.APJoinStatsPath)
+func (s Service) ListAPJoinStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApGlobalOperApJoinStats, error) {
+	return core.Get[CiscoIOSXEWirelessApGlobalOperApJoinStats](ctx, s.Client(), routes.APJoinStatsPath, opts...)
 }
 
 // ListWLANClientStats retrieves only WLAN client statistics using fields parameter.
 func (s Service) ListWLANClientStats(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApGlobalOperWlanClientStats, error) {
-	return core.Get[CiscoIOSXEWirelessApGlobalOperWlanClientStats](ctx, s.Client(), routes.APWlanClientStatsPath)
+	return core.Get[CiscoIOSXEWirelessApGlobalOperWlanClientStats](
+		ctx,
+		s.Client(),
+		routes.APWlanClientStatsPath,
+		opts...)
 }
 
 // GetOperational retrieves the complete AP operational data.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessAPOper, error) {
-	return core.Get[CiscoIOSXEWirelessAPOper](ctx, s.Client(), routes.APOperPath)
+func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessAPOper, error) {
+	return core.Get[CiscoIOSXEWirelessAPOper](ctx, s.Client(), routes.APOperPath, opts...)
 }
 
 // ListApOperData retrieves AP operational data.
-func (s Service) ListApOperData(ctx context.Context) (*CiscoIOSXEWirelessApOperData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperData](ctx, s.Client(), routes.APOperDataPath)
+func (s Service) ListApOperData(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessApOperData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperData](ctx, s.Client(), routes.APOperDataPath, opts...)
 }
 
 // ListCAPWAPData retrieves CAPWAP protocol data.
-func (s Service) ListCAPWAPData(ctx context.Context) (*CiscoIOSXEWirelessApOperCAPWAPData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath)
+func (s Service) ListCAPWAPData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperCAPWAPData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperCAPWAPData](ctx, s.Client(), routes.APCapwapDataPath, opts...)
 }
 
 // GetCAPWAPDataByWTPMAC retrieves CAPWAP data for a specific WTP MAC.
 func (s Service) GetCAPWAPDataByWTPMAC(
 	ctx context.Context,
-	wtpMAC string,
+	wtpMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperCAPWAPData, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
-	return core.Get[CiscoIOSXEWirelessApOperCAPWAPData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperCAPWAPData](ctx, s.Client(), url, opts...)
 }
 
 // ListNameMACMaps retrieves AP name-to-MAC mapping data.
-func (s Service) ListNameMACMaps(ctx context.Context) (*CiscoIOSXEWirelessApOperApNameMACMap, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath)
+func (s Service) ListNameMACMaps(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperApNameMACMap, error) {
+	return core.Get[CiscoIOSXEWirelessApOperApNameMACMap](ctx, s.Client(), routes.APApNameMACMapPath, opts...)
 }
 
 // GetNameMACMapByWTPName retrieves AP name-to-MAC mapping filtered by WTP name.
 func (s Service) GetNameMACMapByWTPName(
 	ctx context.Context,
-	wtpName string,
+	wtpName string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApNameMACMap, error) {
 	if wtpName == "" {
 		return nil, core.ErrResourceNotFound
@@ -182,17 +211,20 @@ func (s Service) GetNameMACMapByWTPName(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
-	return core.Get[CiscoIOSXEWirelessApOperApNameMACMap](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperApNameMACMap](ctx, s.Client(), url, opts...)
 }
 
 // ListRadioData retrieves radio operational data.
-func (s Service) ListRadioData(ctx context.Context) (*CiscoIOSXEWirelessApOperRadioOperData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperRadioOperData](ctx, s.Client(), routes.APRadioOperDataPath)
+func (s Service) ListRadioData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperRadioOperData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperRadioOperData](ctx, s.Client(), routes.APRadioOperDataPath, opts...)
 }
 
 // GetRadioStatusByWTPMACAndSlot retrieves radio operational data by WTP MAC and slot ID.
 func (s Service) GetRadioStatusByWTPMACAndSlot(
-	ctx context.Context, wtpMAC string, slotID int,
+	ctx context.Context, wtpMAC string, slotID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperRadioOperData, error) {
 	if wtpMAC == "" {
 		return nil, core.ErrResourceNotFound
@@ -202,18 +234,21 @@ func (s Service) GetRadioStatusByWTPMACAndSlot(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
-	return core.Get[CiscoIOSXEWirelessApOperRadioOperData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperRadioOperData](ctx, s.Client(), url, opts...)
 }
 
 // ListRadioNeighbors retrieves all AP radio neighbor information.
-func (s Service) ListRadioNeighbors(ctx context.Context) (*CiscoIOSXEWirelessApOperApRadioNeighbor, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApRadioNeighbor](ctx, s.Client(), routes.APRadioNeighborPath)
+func (s Service) ListRadioNeighbors(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperApRadioNeighbor, error) {
+	return core.Get[CiscoIOSXEWirelessApOperApRadioNeighbor](ctx, s.Client(), routes.APRadioNeighborPath, opts...)
 }
 
 // GetRadioNeighborByAPMACSlotAndBSSID retrieves AP radio neighbor information for a specific AP MAC, slot ID and BSSID.
 // This follows the YANG model key structure: "ap-mac slot-id bssid".
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
-	ctx context.Context, apMAC string, slotID int, bssid string,
+	ctx context.Context, apMAC string, slotID int, bssid string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApRadioNeighbor, error) {
 	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, errors.New("AP MAC address cannot be empty")
@@ -244,51 +279,74 @@ func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
 		slotID,
 		normalizedBSSID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperApRadioNeighbor](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperApRadioNeighbor](ctx, s.Client(), url, opts...)
 }
 
 // ListActiveImageLocations retrieves active image location information using fields parameter.
 func (s Service) ListActiveImageLocations(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApImageActiveLocation, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApImageActiveLocation](ctx, s.Client(), routes.APImageActiveLocationPath)
+	return core.Get[CiscoIOSXEWirelessApOperApImageActiveLocation](
+		ctx,
+		s.Client(),
+		routes.APImageActiveLocationPath,
+		opts...)
 }
 
 // ListPreparedImageLocations retrieves only AP image prepare location data using fields parameter.
 func (s Service) ListPreparedImageLocations(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApImagePrepareLocation, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApImagePrepareLocation](ctx, s.Client(), routes.APImagePrepareLocationPath)
+	return core.Get[CiscoIOSXEWirelessApOperApImagePrepareLocation](
+		ctx,
+		s.Client(),
+		routes.APImagePrepareLocationPath,
+		opts...)
 }
 
 // ListPowerInfo retrieves only AP power information using fields parameter.
-func (s Service) ListPowerInfo(ctx context.Context) (*CiscoIOSXEWirelessApOperApPwrInfo, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApPwrInfo](ctx, s.Client(), routes.APPwrInfoPath)
+func (s Service) ListPowerInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperApPwrInfo, error) {
+	return core.Get[CiscoIOSXEWirelessApOperApPwrInfo](ctx, s.Client(), routes.APPwrInfoPath, opts...)
 }
 
 // ListSensorStatus retrieves only AP sensor status using fields parameter.
-func (s Service) ListSensorStatus(ctx context.Context) (*CiscoIOSXEWirelessApOperApSensorStatus, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApSensorStatus](ctx, s.Client(), routes.APSensorStatusPath)
+func (s Service) ListSensorStatus(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperApSensorStatus, error) {
+	return core.Get[CiscoIOSXEWirelessApOperApSensorStatus](ctx, s.Client(), routes.APSensorStatusPath, opts...)
 }
 
 // ListCAPWAPPackets retrieves only CAPWAP packets data using fields parameter.
-func (s Service) ListCAPWAPPackets(ctx context.Context) (*CiscoIOSXEWirelessApOperCAPWAPPkts, error) {
-	return core.Get[CiscoIOSXEWirelessApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath)
+func (s Service) ListCAPWAPPackets(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperCAPWAPPkts, error) {
+	return core.Get[CiscoIOSXEWirelessApOperCAPWAPPkts](ctx, s.Client(), routes.APCapwapPktsPath, opts...)
 }
 
 // ListIotFirmware retrieves IoT firmware information for all access points.
-func (s Service) ListIotFirmware(ctx context.Context) (*CiscoIOSXEWirelessApOperIotFirmware, error) {
-	return core.Get[CiscoIOSXEWirelessApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath)
+func (s Service) ListIotFirmware(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperIotFirmware, error) {
+	return core.Get[CiscoIOSXEWirelessApOperIotFirmware](ctx, s.Client(), routes.APIotFirmwarePath, opts...)
 }
 
 // ListRadioResetStats retrieves radio reset statistics for all access points.
-func (s Service) ListRadioResetStats(ctx context.Context) (*CiscoIOSXEWirelessApOperRadioResetStats, error) {
-	return core.Get[CiscoIOSXEWirelessApOperRadioResetStats](ctx, s.Client(), routes.APRadioResetStatsPath)
+func (s Service) ListRadioResetStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperRadioResetStats, error) {
+	return core.Get[CiscoIOSXEWirelessApOperRadioResetStats](ctx, s.Client(), routes.APRadioResetStatsPath, opts...)
 }
 
 // GetRadioResetStatsByAPMACAndRadioID retrieves radio reset statistics for a specific AP MAC and radio ID.
 func (s Service) GetRadioResetStatsByAPMACAndRadioID(
-	ctx context.Context, apMAC string, radioID int,
+	ctx context.Context, apMAC string, radioID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperRadioResetStats, error) {
 	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -308,17 +366,20 @@ func (s Service) GetRadioResetStatsByAPMACAndRadioID(
 		normalizedMAC,
 		radioID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperRadioResetStats](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperRadioResetStats](ctx, s.Client(), url, opts...)
 }
 
 // ListQosClientData retrieves QoS client data for all access points.
-func (s Service) ListQosClientData(ctx context.Context) (*CiscoIOSXEWirelessApOperQosClientData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperQosClientData](ctx, s.Client(), routes.APQosClientDataPath)
+func (s Service) ListQosClientData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperQosClientData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperQosClientData](ctx, s.Client(), routes.APQosClientDataPath, opts...)
 }
 
 // GetQosClientDataByClientMAC retrieves QoS client data for a specific client MAC address.
 func (s Service) GetQosClientDataByClientMAC(
-	ctx context.Context, clientMAC string,
+	ctx context.Context, clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperQosClientData, error) {
 	if clientMAC == "" || strings.TrimSpace(clientMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -334,12 +395,15 @@ func (s Service) GetQosClientDataByClientMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APQosClientDataPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApOperQosClientData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperQosClientData](ctx, s.Client(), url, opts...)
 }
 
 // ListWtpSlotWlanStats retrieves WTP slot WLAN statistics for all access points.
-func (s Service) ListWtpSlotWlanStats(ctx context.Context) (*CiscoIOSXEWirelessApOperWtpSlotWlanStats, error) {
-	return core.Get[CiscoIOSXEWirelessApOperWtpSlotWlanStats](ctx, s.Client(), routes.APWtpSlotWlanStatsPath)
+func (s Service) ListWtpSlotWlanStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperWtpSlotWlanStats, error) {
+	return core.Get[CiscoIOSXEWirelessApOperWtpSlotWlanStats](ctx, s.Client(), routes.APWtpSlotWlanStatsPath, opts...)
 }
 
 // GetWtpSlotWlanStatsByWTPMACSlotAndWLANID retrieves WTP slot WLAN statistics for a specific WTP MAC, slot ID, and WLAN ID.
@@ -347,7 +411,7 @@ func (s Service) GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(
 	ctx context.Context,
 	wtpMAC string,
 	slotID int,
-	wlanID int,
+	wlanID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperWtpSlotWlanStats, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -368,17 +432,24 @@ func (s Service) GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(
 		slotID,
 		wlanID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperWtpSlotWlanStats](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperWtpSlotWlanStats](ctx, s.Client(), url, opts...)
 }
 
 // ListEthernetMACWtpMACMaps retrieves Ethernet MAC to WTP MAC mapping for all access points.
-func (s Service) ListEthernetMACWtpMACMaps(ctx context.Context) (*CiscoIOSXEWirelessApOperEthernetMACWtpMACMap, error) {
-	return core.Get[CiscoIOSXEWirelessApOperEthernetMACWtpMACMap](ctx, s.Client(), routes.APEthernetMACWtpMACMapPath)
+func (s Service) ListEthernetMACWtpMACMaps(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperEthernetMACWtpMACMap, error) {
+	return core.Get[CiscoIOSXEWirelessApOperEthernetMACWtpMACMap](
+		ctx,
+		s.Client(),
+		routes.APEthernetMACWtpMACMapPath,
+		opts...)
 }
 
 // GetEthernetMACWtpMACMapByEthernetMAC retrieves Ethernet MAC to WTP MAC mapping for a specific Ethernet MAC address.
 func (s Service) GetEthernetMACWtpMACMapByEthernetMAC(
-	ctx context.Context, ethernetMAC string,
+	ctx context.Context, ethernetMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperEthernetMACWtpMACMap, error) {
 	if ethernetMAC == "" || strings.TrimSpace(ethernetMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -394,19 +465,22 @@ func (s Service) GetEthernetMACWtpMACMapByEthernetMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APEthernetMACWtpMACMapPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApOperEthernetMACWtpMACMap](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperEthernetMACWtpMACMap](ctx, s.Client(), url, opts...)
 }
 
 // ListRadioOperStats retrieves radio operational statistics for all access points.
-func (s Service) ListRadioOperStats(ctx context.Context) (*CiscoIOSXEWirelessApOperRadioOperStats, error) {
-	return core.Get[CiscoIOSXEWirelessApOperRadioOperStats](ctx, s.Client(), routes.APRadioOperStatsPath)
+func (s Service) ListRadioOperStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperRadioOperStats, error) {
+	return core.Get[CiscoIOSXEWirelessApOperRadioOperStats](ctx, s.Client(), routes.APRadioOperStatsPath, opts...)
 }
 
 // GetRadioOperStatsByWTPMACAndSlot retrieves radio operational statistics for a specific WTP MAC and slot ID.
 func (s Service) GetRadioOperStatsByWTPMACAndSlot(
 	ctx context.Context,
 	wtpMAC string,
-	slotID int,
+	slotID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperRadioOperStats, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -426,19 +500,22 @@ func (s Service) GetRadioOperStatsByWTPMACAndSlot(
 		normalizedMAC,
 		slotID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperRadioOperStats](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperRadioOperStats](ctx, s.Client(), url, opts...)
 }
 
 // ListEthernetIfStats retrieves Ethernet interface statistics for all access points.
-func (s Service) ListEthernetIfStats(ctx context.Context) (*CiscoIOSXEWirelessApOperEthernetIfStats, error) {
-	return core.Get[CiscoIOSXEWirelessApOperEthernetIfStats](ctx, s.Client(), routes.APEthernetIfStatsPath)
+func (s Service) ListEthernetIfStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperEthernetIfStats, error) {
+	return core.Get[CiscoIOSXEWirelessApOperEthernetIfStats](ctx, s.Client(), routes.APEthernetIfStatsPath, opts...)
 }
 
 // GetEthernetIfStatsByWTPMACAndInterfaceID retrieves Ethernet interface statistics for a specific WTP MAC and interface ID.
 func (s Service) GetEthernetIfStatsByWTPMACAndInterfaceID(
 	ctx context.Context,
 	wtpMAC string,
-	interfaceID string,
+	interfaceID string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperEthernetIfStats, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -461,22 +538,28 @@ func (s Service) GetEthernetIfStatsByWTPMACAndInterfaceID(
 		normalizedMAC,
 		interfaceID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperEthernetIfStats](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperEthernetIfStats](ctx, s.Client(), url, opts...)
 }
 
 // ListEwlcWncdStats retrieves EWLC WNCD statistics information.
-func (s Service) ListEwlcWncdStats(ctx context.Context) (*CiscoIOSXEWirelessApOperEwlcWncdStats, error) {
-	return core.Get[CiscoIOSXEWirelessApOperEwlcWncdStats](ctx, s.Client(), routes.APEwlcWncdStatsPath)
+func (s Service) ListEwlcWncdStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperEwlcWncdStats, error) {
+	return core.Get[CiscoIOSXEWirelessApOperEwlcWncdStats](ctx, s.Client(), routes.APEwlcWncdStatsPath, opts...)
 }
 
 // ListApIoxOperData retrieves AP IOx operational data for all access points.
-func (s Service) ListApIoxOperData(ctx context.Context) (*CiscoIOSXEWirelessApOperApIoxOperData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApIoxOperData](ctx, s.Client(), routes.APApIoxOperDataPath)
+func (s Service) ListApIoxOperData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperApIoxOperData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperApIoxOperData](ctx, s.Client(), routes.APApIoxOperDataPath, opts...)
 }
 
 // GetApIoxOperDataByWTPMAC retrieves AP IOx operational data for a specific WTP MAC address.
 func (s Service) GetApIoxOperDataByWTPMAC(
-	ctx context.Context, wtpMAC string,
+	ctx context.Context, wtpMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApIoxOperData, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -492,22 +575,25 @@ func (s Service) GetApIoxOperDataByWTPMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApIoxOperDataPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApOperApIoxOperData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperApIoxOperData](ctx, s.Client(), url, opts...)
 }
 
 // ListQosGlobalStats retrieves QoS global statistics information.
-func (s Service) ListQosGlobalStats(ctx context.Context) (*CiscoIOSXEWirelessApOperQosGlobalStats, error) {
-	return core.Get[CiscoIOSXEWirelessApOperQosGlobalStats](ctx, s.Client(), routes.APQosGlobalStatsPath)
+func (s Service) ListQosGlobalStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperQosGlobalStats, error) {
+	return core.Get[CiscoIOSXEWirelessApOperQosGlobalStats](ctx, s.Client(), routes.APQosGlobalStatsPath, opts...)
 }
 
 // ListRlanOper retrieves RLAN operational data for all access points.
-func (s Service) ListRlanOper(ctx context.Context) (*CiscoIOSXEWirelessApOperRlanOper, error) {
-	return core.Get[CiscoIOSXEWirelessApOperRlanOper](ctx, s.Client(), routes.APRlanOperPath)
+func (s Service) ListRlanOper(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessApOperRlanOper, error) {
+	return core.Get[CiscoIOSXEWirelessApOperRlanOper](ctx, s.Client(), routes.APRlanOperPath, opts...)
 }
 
 // GetRlanOperByWTPMACAndPortID retrieves RLAN operational data for a specific WTP MAC and port ID.
 func (s Service) GetRlanOperByWTPMACAndPortID(
-	ctx context.Context, wtpMAC string, portID int,
+	ctx context.Context, wtpMAC string, portID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperRlanOper, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -527,29 +613,32 @@ func (s Service) GetRlanOperByWTPMACAndPortID(
 		normalizedMAC,
 		portID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperRlanOper](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperRlanOper](ctx, s.Client(), url, opts...)
 }
 
 // ListEwlcMewlcPredownloadRec retrieves EWLC MEWLC predownload record information.
 // Note: Available on 17.12.6a, but unavailable on 17.15.4b.
 func (s Service) ListEwlcMewlcPredownloadRec(
-	ctx context.Context,
+	ctx context.Context, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec, error) {
 	return core.Get[CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec](
 		ctx,
 		s.Client(),
-		routes.APEwlcMewlcPredownloadRecPath,
+		routes.APEwlcMewlcPredownloadRecPath, opts...,
 	)
 }
 
 // ListCdpCacheData retrieves CDP cache data for all access points.
-func (s Service) ListCdpCacheData(ctx context.Context) (*CiscoIOSXEWirelessApOperCdpCacheData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperCdpCacheData](ctx, s.Client(), routes.APCdpCacheDataPath)
+func (s Service) ListCdpCacheData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperCdpCacheData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperCdpCacheData](ctx, s.Client(), routes.APCdpCacheDataPath, opts...)
 }
 
 // GetCdpCacheDataByWTPMAC retrieves CDP cache data for a specific WTP MAC address.
 func (s Service) GetCdpCacheDataByWTPMAC(
-	ctx context.Context, wtpMAC string,
+	ctx context.Context, wtpMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperCdpCacheData, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -565,17 +654,20 @@ func (s Service) GetCdpCacheDataByWTPMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCdpCacheDataPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApOperCdpCacheData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperCdpCacheData](ctx, s.Client(), url, opts...)
 }
 
 // ListLldpNeigh retrieves LLDP neighbor information for all access points.
-func (s Service) ListLldpNeigh(ctx context.Context) (*CiscoIOSXEWirelessApOperLldpNeigh, error) {
-	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), routes.APLldpNeighPath)
+func (s Service) ListLldpNeigh(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperLldpNeigh, error) {
+	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), routes.APLldpNeighPath, opts...)
 }
 
 // GetLldpNeighByWTPMAC retrieves LLDP neighbor information for a specific WTP MAC address.
 func (s Service) GetLldpNeighByWTPMAC(
-	ctx context.Context, wtpMAC string,
+	ctx context.Context, wtpMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperLldpNeigh, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -591,22 +683,25 @@ func (s Service) GetLldpNeighByWTPMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APLldpNeighPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), url, opts...)
 }
 
 // ListTpCertInfo retrieves trustpoint certificate info information.
-func (s Service) ListTpCertInfo(ctx context.Context) (*CiscoIOSXEWirelessApOperTpCertInfo, error) {
-	return core.Get[CiscoIOSXEWirelessApOperTpCertInfo](ctx, s.Client(), routes.APTpCertInfoPath)
+func (s Service) ListTpCertInfo(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperTpCertInfo, error) {
+	return core.Get[CiscoIOSXEWirelessApOperTpCertInfo](ctx, s.Client(), routes.APTpCertInfoPath, opts...)
 }
 
 // ListDiscData retrieves discovery data for all access points.
-func (s Service) ListDiscData(ctx context.Context) (*CiscoIOSXEWirelessApOperDiscData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperDiscData](ctx, s.Client(), routes.APDiscDataPath)
+func (s Service) ListDiscData(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessApOperDiscData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperDiscData](ctx, s.Client(), routes.APDiscDataPath, opts...)
 }
 
 // GetDiscDataByWTPMAC retrieves discovery data for a specific WTP MAC address.
 func (s Service) GetDiscDataByWTPMAC(
-	ctx context.Context, wtpMAC string,
+	ctx context.Context, wtpMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperDiscData, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -622,17 +717,20 @@ func (s Service) GetDiscDataByWTPMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APDiscDataPath, normalizedMAC)
-	return core.Get[CiscoIOSXEWirelessApOperDiscData](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperDiscData](ctx, s.Client(), url, opts...)
 }
 
 // ListCountryOper retrieves country operational data for all access points.
-func (s Service) ListCountryOper(ctx context.Context) (*CiscoIOSXEWirelessApOperCountryOper, error) {
-	return core.Get[CiscoIOSXEWirelessApOperCountryOper](ctx, s.Client(), routes.APCountryOperPath)
+func (s Service) ListCountryOper(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperCountryOper, error) {
+	return core.Get[CiscoIOSXEWirelessApOperCountryOper](ctx, s.Client(), routes.APCountryOperPath, opts...)
 }
 
 // GetCountryOperByWTPMACAndRadioID retrieves country operational data for a specific WTP MAC and radio ID.
 func (s Service) GetCountryOperByWTPMACAndRadioID(
-	ctx context.Context, wtpMAC string, radioID int,
+	ctx context.Context, wtpMAC string, radioID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperCountryOper, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -652,17 +750,20 @@ func (s Service) GetCountryOperByWTPMACAndRadioID(
 		normalizedMAC,
 		radioID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperCountryOper](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperCountryOper](ctx, s.Client(), url, opts...)
 }
 
 // ListSuppCountryOper retrieves supported country operational data for all access points.
-func (s Service) ListSuppCountryOper(ctx context.Context) (*CiscoIOSXEWirelessApOperSuppCountryOper, error) {
-	return core.Get[CiscoIOSXEWirelessApOperSuppCountryOper](ctx, s.Client(), routes.APSuppCountryOperPath)
+func (s Service) ListSuppCountryOper(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperSuppCountryOper, error) {
+	return core.Get[CiscoIOSXEWirelessApOperSuppCountryOper](ctx, s.Client(), routes.APSuppCountryOperPath, opts...)
 }
 
 // GetSuppCountryOperByWTPMACAndRadioID retrieves supported country operational data for a specific WTP MAC and radio ID.
 func (s Service) GetSuppCountryOperByWTPMACAndRadioID(
-	ctx context.Context, wtpMAC string, radioID int,
+	ctx context.Context, wtpMAC string, radioID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperSuppCountryOper, error) {
 	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
 		return nil, core.ErrResourceNotFound
@@ -682,12 +783,15 @@ func (s Service) GetSuppCountryOperByWTPMACAndRadioID(
 		normalizedMAC,
 		radioID,
 	)
-	return core.Get[CiscoIOSXEWirelessApOperSuppCountryOper](ctx, s.Client(), url)
+	return core.Get[CiscoIOSXEWirelessApOperSuppCountryOper](ctx, s.Client(), url, opts...)
 }
 
 // ListApNhGlobalData retrieves AP neighborhood global data.
-func (s Service) ListApNhGlobalData(ctx context.Context) (*CiscoIOSXEWirelessApOperApNhGlobalData, error) {
-	return core.Get[CiscoIOSXEWirelessApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath)
+func (s Service) ListApNhGlobalData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessApOperApNhGlobalData, error) {
+	return core.Get[CiscoIOSXEWirelessApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath, opts...)
 }
 
 // EnableAP enables the administrative state of an access point.

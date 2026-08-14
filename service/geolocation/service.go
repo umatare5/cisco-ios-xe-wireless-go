@@ -21,26 +21,43 @@ func NewService(client *core.Client) Service {
 }
 
 // GetOperational retrieves geolocation operational data from the controller.
-func (s Service) GetOperational(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOper, error) {
-	return core.Get[CiscoIOSXEWirelessGeolocationOper](ctx, s.Client(), routes.GeolocationOperPath)
+func (s Service) GetOperational(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessGeolocationOper, error) {
+	return core.Get[CiscoIOSXEWirelessGeolocationOper](ctx, s.Client(), routes.GeolocationOperPath, opts...)
 }
 
 // ListAPGeolocationStats retrieves AP geolocation statistics.
-func (s Service) ListAPGeolocationStats(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOperApGeoLocStats, error) {
+func (s Service) ListAPGeolocationStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessGeolocationOperApGeoLocStats, error) {
 	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocStats](
 		ctx,
 		s.Client(),
-		routes.GeolocationApGeoLocStatsPath,
+		routes.GeolocationApGeoLocStatsPath, opts...,
 	)
 }
 
 // ListAPGeolocationData retrieves AP geolocation data using CiscoIOSXEWirelessGeolocationOperApGeoLocData wrapper.
-func (s Service) ListAPGeolocationData(ctx context.Context) (*CiscoIOSXEWirelessGeolocationOperApGeoLocData, error) {
-	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocData](ctx, s.Client(), routes.GeolocationApGeoLocDataPath)
+func (s Service) ListAPGeolocationData(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessGeolocationOperApGeoLocData, error) {
+	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocData](
+		ctx,
+		s.Client(),
+		routes.GeolocationApGeoLocDataPath,
+		opts...)
 }
 
 // GetAPGeolocationDataByMAC retrieves AP geolocation data for a specific AP by MAC address.
-func (s Service) GetAPGeolocationDataByMAC(ctx context.Context, apMAC string) (*ApGeoLocData, error) {
+func (s Service) GetAPGeolocationDataByMAC(
+	ctx context.Context,
+	apMAC string,
+	opts ...core.GetOption,
+) (*ApGeoLocData, error) {
 	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -56,5 +73,5 @@ func (s Service) GetAPGeolocationDataByMAC(ctx context.Context, apMAC string) (*
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.GeolocationApGeoLocDataPath, normalizedMAC)
-	return core.Get[ApGeoLocData](ctx, s.Client(), url)
+	return core.Get[ApGeoLocData](ctx, s.Client(), url, opts...)
 }

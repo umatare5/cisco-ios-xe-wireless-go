@@ -24,17 +24,17 @@ func NewRFTagService(client *core.Client) *RFTagService {
 }
 
 // GetConfig retrieves the RF configuration.
-func (s *RFTagService) GetConfig(ctx context.Context) (*CiscoIOSXEWirelessRFCfg, error) {
-	return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath)
+func (s *RFTagService) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessRFCfg, error) {
+	return core.Get[CiscoIOSXEWirelessRFCfg](ctx, s.Client(), routes.RFCfgPath, opts...)
 }
 
 // GetRFTag retrieves an RF tag configuration by name.
-func (s *RFTagService) GetRFTag(ctx context.Context, tagName string) (*RFTag, error) {
+func (s *RFTagService) GetRFTag(ctx context.Context, tagName string, opts ...core.GetOption) (*RFTag, error) {
 	if err := s.validateTagName(tagName); err != nil {
 		return nil, err
 	}
 
-	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTagPayload](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[CiscoIOSXEWirelessRFCfgRFTagPayload](ctx, s.Client(), s.buildTagURL(tagName), opts...)
 	if err != nil {
 		return nil, err
 	}

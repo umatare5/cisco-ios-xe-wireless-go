@@ -14,10 +14,12 @@ import (
 // These functions provide a consistent interface for HTTP operations across all services.
 
 // Get is a generic helper reducing boilerplate in service GET methods.
-func Get[T any](ctx context.Context, c *Client, endpoint string) (*T, error) {
+func Get[T any](ctx context.Context, c *Client, endpoint string, opts ...GetOption) (*T, error) {
 	if c == nil {
 		return nil, errors.New(ierrors.ErrClientNil)
 	}
+
+	endpoint = applyGetOptions(endpoint, opts)
 
 	body, err := c.Do(ctx, http.MethodGet, endpoint)
 	if err != nil {

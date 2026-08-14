@@ -24,12 +24,16 @@ func NewSiteTagService(client *core.Client) *SiteTagService {
 }
 
 // GetSiteTag retrieves a specific site tag configuration.
-func (s *SiteTagService) GetSiteTag(ctx context.Context, tagName string) (*SiteListEntry, error) {
+func (s *SiteTagService) GetSiteTag(
+	ctx context.Context,
+	tagName string,
+	opts ...core.GetOption,
+) (*SiteListEntry, error) {
 	if err := s.validateTagName(tagName); err != nil {
 		return nil, err
 	}
 
-	result, err := core.Get[CiscoIOSXEWirelessSiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName))
+	result, err := core.Get[CiscoIOSXEWirelessSiteCfgSiteTagConfig](ctx, s.Client(), s.buildTagURL(tagName), opts...)
 	if err != nil {
 		return nil, err
 	}
