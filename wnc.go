@@ -87,6 +87,24 @@ func WithLogger(l *slog.Logger) Option { return core.WithLogger(l) }
 // WithUserAgent sets a custom User-Agent header value.
 func WithUserAgent(ua string) Option { return core.WithUserAgent(ua) }
 
+// GetOption customizes a single GET request (re-export of internal core.GetOption).
+type GetOption = core.GetOption
+
+// DefaultsMode selects the RFC 6243 retrieval mode for WithDefaults.
+type DefaultsMode = core.DefaultsMode
+
+const (
+	// ReportAll materializes the leaves in force at their schema default.
+	ReportAll = core.DefaultsReportAll
+	// Explicit returns client-set leaves only, matching a plain GET.
+	Explicit = core.DefaultsExplicit
+)
+
+// WithDefaults requests the given with-defaults retrieval mode (RFC 8040 4.8.9).
+// Scope it to the container that needs it: on a whole-container read the added
+// leaves accumulate across every nested container.
+func WithDefaults(mode DefaultsMode) GetOption { return core.WithDefaults(mode) }
+
 // Core returns the underlying core.Client for advanced use cases.
 // This should typically not be needed for normal usage.
 func (c *Client) Core() *core.Client {
