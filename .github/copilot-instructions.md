@@ -2,9 +2,9 @@
 
 ## Scope & Metadata
 
-- **Last Updated**: 2025-09-20
+- **Last Updated**: 2026-08-15
 - **Precedence**: **Highest** in this repo. When instructions conflict, **this file wins**.
-- **Compatibility**: Go **1.25+** cross‑platform
+- **Compatibility**: Go **1.26+** cross‑platform
 
 ## 0. Normative Keywords
 
@@ -33,7 +33,7 @@ Interpret **MUST / SHOULD / MAY** per RFC 2119/8174.
 
 ## 4. Expert Personas
 
-- **EXP-001 (MUST)** Act as a **Go 1.25+ expert**.
+- **EXP-001 (MUST)** Act as a **Go 1.26+ expert**.
 - **EXP-002 (MUST)** Act as a **modern shell scripting and tools expert**.
 - **EXP-003 (MUST)** Act as a **radio and wireless communications engineering expert**.
 - **EXP-004 (MUST)** Act as a **Cisco Catalyst 9800 Wireless Network Controller IOS-XE 17.12 to 17.18 expert**.

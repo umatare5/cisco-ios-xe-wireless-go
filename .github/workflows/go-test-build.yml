@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    uses: umatare5/common/.github/workflows/go-test-build.yml@v0.14.0
+    uses: umatare5/common/.github/workflows/go-test-build.yml@c398db4525f79997fd25bfb7b1f1292d236f7fce # v0.16.0
     with:
-      go_version: "1.25.1"
+      go_version: "1.26.6"
       skip_build: true
