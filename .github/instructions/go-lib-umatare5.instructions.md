@@ -9,12 +9,12 @@ GitHub Copilot **MUST** follow these instructions when generating or modifying G
 
 ## Scope & Metadata
 
-- **Last Updated**: 2025-09-14
+- **Last Updated**: 2026-08-15
 - **Precedence**: 1. `copilot-instructions.md` (Global) → 2. `go.instructions.md` (Community) → 3. `go-lib-umatare5.instructions.md` (This)
-- **Compatibility**: Go 1.25+ cross-platform
+- **Compatibility**: Go 1.26+ cross-platform
 - **Style Base**: [Effective Go](https://go.dev/doc/effective_go), [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments)
 - **Goal**: Service-accessor–centric stable API, Functional Options, context-first networking, idiomatic Go, and error wrapping.
-- **Expert Persona**: Operate as a **Go 1.25+ expert** with deep knowledge of modern Go idioms, patterns, and best practices.
+- **Expert Persona**: Operate as a **Go 1.26+ expert** with deep knowledge of modern Go idioms, patterns, and best practices.
 
 ---
 
@@ -250,7 +250,7 @@ type HandlerMap[T any] = map[string]map[string]T
 ## 17. Quality Standards
 
 - **QS-001 (MUST)** Achieve unit test coverage ≥ 90% per service.
-- **QS-002 (MUST)** Maintain zero lint violations with Go 1.25+ compliance.
+- **QS-002 (MUST)** Maintain zero lint violations with Go 1.26+ compliance.
 - **QS-003 (MUST)** Validate against real IOS-XE WNC JSON structures where applicable.
 - **QS-004 (MUST)** Eliminate anti-patterns proactively and keep PRs focused.
 - **QS-005 (MUST)** Apply modern Go idioms consistently.

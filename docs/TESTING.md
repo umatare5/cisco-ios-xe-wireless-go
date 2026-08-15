@@ -90,7 +90,7 @@ Unit tests require no special configuration and can be run in any Go development
 
 | Requirement | Version | Notes                              |
 | ----------- | ------- | ---------------------------------- |
-| Go          | 1.25+   | Uses stdlib testing + pkg/testutil |
+| Go          | 1.26+   | Uses stdlib testing + pkg/testutil |
 | make        | Latest  | Convenience targets                |
 
 ### For Integration/E2E Tests (Layers 4-5)
