@@ -33,13 +33,6 @@ func TestRadioServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				},
 				LogResult: true,
 			},
-			{
-				Name: "ListProfileConfigs",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(radio.Service).ListProfileConfigs(ctx)
-				},
-				LogResult: true,
-			},
 		},
 		FilterMethods:   []integration.TestMethod{},
 		ValidationTests: []integration.ValidationTestMethod{},

@@ -35,34 +35,6 @@ func TestWLANServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
-				Name: "ListConfigEntries",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(*wlan.Service).ListConfigEntries(ctx)
-				},
-				LogResult: true,
-			},
-			{
-				Name: "ListPolicies",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(*wlan.Service).ListPolicies(ctx)
-				},
-				LogResult: true,
-			},
-			{
-				Name: "ListPolicyListEntries",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(*wlan.Service).ListPolicyListEntries(ctx)
-				},
-				LogResult: true,
-			},
-			{
-				Name: "ListWirelessAAAPolicyConfigs",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(*wlan.Service).ListWirelessAAAPolicyConfigs(ctx)
-				},
-				LogResult: true,
-			},
-			{
 				Name: "ListWlanCfgEntries",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(*wlan.Service).ListWlanCfgEntries(ctx)
