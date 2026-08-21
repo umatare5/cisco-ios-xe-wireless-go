@@ -11,7 +11,7 @@ const (
 	RFIDCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data"
 
 	// RFIDCfgRFIDConfigPath provides the path for RFID configuration settings.
-	RFIDCfgRFIDConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data/rfid-config"
+	RFIDCfgRFIDConfigPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data/rfid"
 )
 
 // RFID Operational Paths.

@@ -18,4 +18,7 @@ const (
 
 	// RogueClientDataPath provides the path for rogue client data.
 	RogueClientDataPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-client-data"
+
+	// RogueRLDPStatsPath provides the path for RLDP statistics.
+	RogueRLDPStatsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rldp-stats"
 )

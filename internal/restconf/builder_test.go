@@ -106,28 +106,6 @@ func TestRESTCONFBuilderUnit_NormalizeEndpointPath_Success(t *testing.T) {
 	}
 }
 
-func TestRESTCONFBuilderUnit_isValidProtocol_Success(t *testing.T) {
-	testCases := []struct {
-		protocol string
-		expected bool
-	}{
-		{"http", true},
-		{"https", true},
-		{"HTTP", false},
-		{"HTTPS", false},
-		{"ftp", false},
-		{"", false},
-		{"tcp", false},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.protocol, func(t *testing.T) {
-			result := isValidProtocol(tt.protocol)
-			testutil.AssertBoolEquals(t, result, tt.expected, "isValidProtocol()")
-		})
-	}
-}
-
 func TestRESTCONFBuilderUnit_Constants_Success(t *testing.T) {
 	// Test RESTCONF constants
 	testutil.AssertStringEquals(t, routes.RESTCONFDataPath, "/restconf/data", "RESTCONFDataPath")
@@ -202,6 +180,48 @@ func TestRESTCONFBuilderUnit_BuildQueryURL_Success(t *testing.T) {
 			expected:   "wtp-mac=aa:bb:cc:dd:ee:ff",
 		},
 		{
+			name:       "Dotted MAC query",
+			endpoint:   "wtp-mac",
+			identifier: "aabb.ccdd.eeff",
+			expected:   "wtp-mac=aabb.ccdd.eeff",
+		},
+		{
+			name:       "Bare MAC query",
+			endpoint:   "wtp-mac",
+			identifier: "aabbccddeeff",
+			expected:   "wtp-mac=aabbccddeeff",
+		},
+		{
+			name:       "Profile name carrying a space",
+			endpoint:   "profile-name",
+			identifier: "Guest WLAN 01",
+			expected:   "profile-name=Guest%20WLAN%2001",
+		},
+		{
+			name:       "Key value carrying the composite separator",
+			endpoint:   "tag-name",
+			identifier: "east,west",
+			expected:   "tag-name=east%2Cwest",
+		},
+		{
+			name:       "Key value carrying a path separator",
+			endpoint:   "ap-name",
+			identifier: "TEST-AP/2",
+			expected:   "ap-name=TEST-AP%2F2",
+		},
+		{
+			name:       "Key value cannot open a query or a fragment",
+			endpoint:   "ap-name",
+			identifier: "TEST-AP?depth=1#frag",
+			expected:   "ap-name=TEST-AP%3Fdepth=1%23frag",
+		},
+		{
+			name:       "Percent is encoded once, so a pre-encoded key is encoded twice",
+			endpoint:   "profile-name",
+			identifier: "Guest%20WLAN",
+			expected:   "profile-name=Guest%2520WLAN",
+		},
+		{
 			name:       "Empty identifier",
 			endpoint:   "test",
 			identifier: "",
@@ -273,7 +293,19 @@ func TestRESTCONFBuilderUnit_BuildQueryCompositeURL_Success(t *testing.T) {
 			name:     "Custom type fallback",
 			endpoint: "custom-test",
 			values:   []interface{}{struct{ Name string }{"test"}},
-			expected: "custom-test={test}",
+			expected: "custom-test=%7Btest%7D",
+		},
+		{
+			name:     "Comma inside a value cannot pass for the separator",
+			endpoint: "query",
+			values:   []interface{}{"east,west", 0},
+			expected: "query=east%2Cwest,0",
+		},
+		{
+			name:     "Space inside a value is encoded, joining commas are not",
+			endpoint: "query",
+			values:   []interface{}{"Guest WLAN", "slot 1"},
+			expected: "query=Guest%20WLAN,slot%201",
 		},
 	}
 

@@ -2,15 +2,20 @@ package core
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/transport"
 )
 
 // Test constants.
@@ -62,6 +67,60 @@ func TestCoreClientUnit_Options_Success(t *testing.T) {
 	t.Run("InvalidTimeout", func(t *testing.T) {
 		_, err := New(controller, token, WithTimeout(0))
 		testutil.AssertClientCreationError(t, err, "InvalidTimeout")
+	})
+}
+
+// TestCoreClientUnit_WithProxy_Success tests the proxy resolver option.
+func TestCoreClientUnit_WithProxy_Success(t *testing.T) {
+	controller := "test.example.com"
+	token := "dGVzdDp0ZXN0"
+
+	t.Run("DefaultLeavesProxyUnset", func(t *testing.T) {
+		client, err := New(controller, token)
+		testutil.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertTrue(t, client.httpTransport.Proxy == nil,
+			"Proxy must stay unset so no environment variable is consulted")
+	})
+
+	t.Run("ResolverIsConsulted", func(t *testing.T) {
+		want := "http://proxy.example.com:3128"
+		proxyURL, err := url.Parse(want)
+		testutil.AssertNoError(t, err, "Proxy URL should parse")
+
+		client, err := New(controller, token, WithProxy(http.ProxyURL(proxyURL)))
+		testutil.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertTrue(t, client.httpTransport.Proxy != nil, "Proxy resolver should be installed")
+
+		req := httptest.NewRequest(http.MethodGet, "https://"+controller+"/restconf/data", http.NoBody)
+		resolved, err := client.httpTransport.Proxy(req)
+		testutil.AssertNoError(t, err, "Proxy resolver should not fail")
+		testutil.AssertTrue(t, resolved != nil, "Proxy resolver should return a URL")
+		if resolved == nil {
+			return
+		}
+		testutil.AssertStringEquals(t, resolved.String(), want, "Resolved proxy URL")
+	})
+
+	t.Run("NilResolverRestoresDirect", func(t *testing.T) {
+		client, err := New(controller, token, WithProxy(http.ProxyFromEnvironment), WithProxy(nil))
+		testutil.AssertNoError(t, err, "Client creation should succeed")
+		testutil.AssertTrue(t, client.httpTransport.Proxy == nil,
+			"A nil resolver connects directly, it does not restore the environment resolver")
+	})
+
+	t.Run("SurvivesLaterTransportOption", func(t *testing.T) {
+		client, err := New(controller, token,
+			WithProxy(http.ProxyFromEnvironment), WithInsecureSkipVerify(true))
+		testutil.AssertNoError(t, err, "Client creation should succeed")
+
+		testutil.AssertTrue(t, client.httpTransport.Proxy != nil,
+			"A later transport option must not drop the proxy resolver")
+		testutil.AssertTrue(t, client.httpTransport.TLSClientConfig.InsecureSkipVerify,
+			"WithInsecureSkipVerify should still take effect")
+
+		tr, ok := client.httpClient.Transport.(*http.Transport)
+		testutil.AssertTrue(t, ok && tr == client.httpTransport,
+			"httpClient.Transport must stay the object the options mutate in place")
 	})
 }
 
@@ -380,7 +439,7 @@ func TestCoreClientUnit_GenericRequests(t *testing.T) {
 	mockServer := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"data": {"value": "test"}}`))
+		w.Write([]byte(`{"Cisco-IOS-XE-wireless-test:test": {"value": "test"}}`))
 	}))
 	defer mockServer.Close()
 
@@ -392,7 +451,7 @@ func TestCoreClientUnit_GenericRequests(t *testing.T) {
 	type TestData struct {
 		Data struct {
 			Value string `json:"value"`
-		} `json:"data"`
+		} `json:"Cisco-IOS-XE-wireless-test:test"`
 	}
 
 	t.Run("Get", func(t *testing.T) {
@@ -480,4 +539,251 @@ func TestAPIErrorMethod(t *testing.T) {
 	errorString := apiError.Error()
 	testutil.AssertStringContains(t, errorString, "404", "Error string should contain status code")
 	testutil.AssertStringContains(t, errorString, "not found", "Error string should contain message")
+}
+
+// TestCoreClientUnit_TransportOptions_Success pins the transport-level options against
+// the option-order dependency the wholesale Transport replacement created.
+func TestCoreClientUnit_TransportOptions_Success(t *testing.T) {
+	controller := "test.example.com"
+	token := "dGVzdDp0ZXN0"
+
+	t.Run("SurvivesLaterInsecureSkipVerify", func(t *testing.T) {
+		client, err := New(controller, token,
+			WithResponseHeaderTimeout(20*time.Second),
+			WithTLSHandshakeTimeout(15*time.Second),
+			WithInsecureSkipVerify(true),
+		)
+		testutil.AssertClientCreated(t, client, err, "SurvivesLaterInsecureSkipVerify")
+
+		tr := client.httpTransport
+		testutil.AssertDurationEquals(t, tr.ResponseHeaderTimeout, 20*time.Second, "ResponseHeaderTimeout")
+		testutil.AssertDurationEquals(t, tr.TLSHandshakeTimeout, 15*time.Second, "TLSHandshakeTimeout")
+		testutil.AssertTrue(t, tr.TLSClientConfig.InsecureSkipVerify, "InsecureSkipVerify")
+		testutil.AssertTrue(t, client.httpClient.Transport == tr, "httpClient keeps the same transport")
+	})
+
+	t.Run("DefaultsAndRejections", func(t *testing.T) {
+		client, err := New(controller, token)
+		testutil.AssertClientCreated(t, client, err, "DefaultsAndRejections")
+		testutil.AssertTrue(t, client.httpTransport.Proxy == nil, "Proxy is off by default")
+		testutil.AssertTrue(t, client.httpTransport.DialContext != nil, "DialContext is set")
+
+		_, err = New(controller, token, WithResponseHeaderTimeout(0))
+		testutil.AssertClientCreationError(t, err, "zero response header timeout")
+		_, err = New(controller, token, WithTLSHandshakeTimeout(-1))
+		testutil.AssertClientCreationError(t, err, "negative TLS handshake timeout")
+	})
+}
+
+// TestCoreClientUnit_UserAgentReachesRequest_Success pins that WithUserAgent changes the
+// header a request carries, which the earlier comment-only option body could not do.
+func TestCoreClientUnit_UserAgentReachesRequest_Success(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+
+	client, err := New("test.example.com", "dGVzdDp0ZXN0", WithUserAgent("  probe-agent/9.9  "))
+	testutil.AssertClientCreated(t, client, err, "WithUserAgent")
+
+	req, err := client.requestBuilder.CreateRequest(context.Background(), http.MethodGet, path)
+	testutil.AssertNoError(t, err, "CreateRequest")
+	testutil.AssertStringEquals(t, req.Header.Get(transport.HTTPHeaderKeyUserAgent),
+		"probe-agent/9.9", "the trimmed custom User-Agent reaches the request")
+}
+
+// TestCoreClientUnit_HeaderTimeout_Error pins that a transport timeout carries the
+// sentinel wnc.go already documents, not only an opaque *url.Error.
+func TestCoreClientUnit_HeaderTimeout_Error(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+
+	server := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+		time.Sleep(500 * time.Millisecond)
+	}))
+	defer server.Close()
+
+	client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+		WithInsecureSkipVerify(true), WithResponseHeaderTimeout(20*time.Millisecond))
+	testutil.AssertClientCreated(t, client, err, "HeaderTimeoutClient")
+
+	_, err = client.Do(context.Background(), http.MethodGet, path)
+	testutil.AssertError(t, err, "header timeout")
+	testutil.AssertTrue(t, errors.Is(err, ErrRequestTimeout), "errors.Is(err, ErrRequestTimeout)")
+}
+
+// TestCoreClientUnit_ConstructionInputNormalization_Success pins the two inputs that
+// passed validation and then broke every request.
+func TestCoreClientUnit_ConstructionInputNormalization_Success(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	defer server.Close()
+
+	host := strings.TrimPrefix(server.URL, "https://")
+	client, err := New(" "+host+"\n", "dGVzdDp0ZXN0\n", WithInsecureSkipVerify(true))
+	testutil.AssertClientCreated(t, client, err, "padded host and newline-terminated token")
+
+	_, err = client.Do(context.Background(), http.MethodGet, path)
+	testutil.AssertNoError(t, err, "request with a newline-terminated token")
+}
+
+// TestCoreClientUnit_ErrorBodyTruncation_Error pins the bound on the copies that reach
+// a log line, and that APIError.Body is not the one truncated.
+func TestCoreClientUnit_ErrorBodyTruncation_Error(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+	body := strings.Repeat("x", maxLoggedBodyBytes*3)
+
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		_, _ = w.Write([]byte(body))
+	}))
+	defer server.Close()
+
+	client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+		WithInsecureSkipVerify(true))
+	testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncation")
+
+	_, err = client.Do(context.Background(), http.MethodGet, path)
+	var apiErr *APIError
+	testutil.AssertTrue(t, errors.As(err, &apiErr), "errors.As(*APIError)")
+	// The bound is written out rather than taken from the constant: comparing the constant
+	// with itself passes at any value, which is what the bound exists to fix.
+	testutil.AssertIntEquals(t, len(apiErr.Message), 512+len("... (truncated)"), "Message is bounded at 512")
+	testutil.AssertTrue(t, strings.HasSuffix(apiErr.Message, "... (truncated)"), "truncation marker")
+	testutil.AssertIntEquals(t, len(apiErr.Body), len(body), "Body is intact")
+}
+
+// TestCoreClientUnit_ErrorBodyTruncationBoundary_Error pins the comparison at the bound itself.
+// A body of exactly maxLoggedBodyBytes must pass through untouched: relaxing the guard from <= to
+// < truncates it, and no other test in this package notices, because they all use a body either
+// far longer or far shorter than the bound.
+func TestCoreClientUnit_ErrorBodyTruncationBoundary_Error(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+
+	for _, tc := range []struct {
+		name      string
+		length    int
+		truncated bool
+	}{
+		{"one byte under the bound", maxLoggedBodyBytes - 1, false},
+		{"exactly the bound", maxLoggedBodyBytes, false},
+		{"one byte over the bound", maxLoggedBodyBytes + 1, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			body := strings.Repeat("x", tc.length)
+			server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				w.WriteHeader(http.StatusInternalServerError)
+				_, _ = w.Write([]byte(body))
+			}))
+			defer server.Close()
+
+			client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+				WithInsecureSkipVerify(true))
+			testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncationBoundary")
+
+			_, err = client.Do(context.Background(), http.MethodGet, path)
+			var apiErr *APIError
+			testutil.AssertTrue(t, errors.As(err, &apiErr), "errors.As(*APIError)")
+
+			marked := strings.HasSuffix(apiErr.Message, "... (truncated)")
+			if marked != tc.truncated {
+				t.Errorf("Expected truncated=%v for a %d-byte body, got %v",
+					tc.truncated, tc.length, marked)
+			}
+			if !tc.truncated {
+				testutil.AssertIntEquals(t, len(apiErr.Message), tc.length, "Message is the whole body")
+			}
+		})
+	}
+}
+
+// TestCoreClientUnit_ErrorBodyTruncationUTF8_Error pins the reason the cut runs through
+// ToValidUTF8: 512 bytes lands mid-rune on a multibyte body.
+func TestCoreClientUnit_ErrorBodyTruncationUTF8_Error(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+	// 3 bytes per rune, so the 512th byte falls inside the 171st one.
+	body := strings.Repeat("あ", 400)
+
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		_, _ = w.Write([]byte(body))
+	}))
+	defer server.Close()
+
+	client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+		WithInsecureSkipVerify(true))
+	testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncationUTF8")
+
+	_, err = client.Do(context.Background(), http.MethodGet, path)
+	var apiErr *APIError
+	testutil.AssertTrue(t, errors.As(err, &apiErr), "errors.As(*APIError)")
+	testutil.AssertTrue(t, utf8.ValidString(apiErr.Message), "Message stays valid UTF-8")
+	testutil.AssertTrue(t, len(apiErr.Message) < 512+len("... (truncated)"),
+		"the partial rune is dropped, so the cut is shorter than the bound")
+}
+
+// TestCoreClientUnit_TransportErrorClassification_Error pins the negative side: only a
+// timeout carries ErrRequestTimeout. Without these, widening the classifier goes unnoticed.
+func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
+	t.Run("CanceledIsNotTimeout", func(t *testing.T) {
+		server := httptest.NewTLSServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+			time.Sleep(500 * time.Millisecond)
+		}))
+		defer server.Close()
+
+		client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+			WithInsecureSkipVerify(true))
+		testutil.AssertClientCreated(t, client, err, "CanceledIsNotTimeout")
+
+		ctx, cancel := context.WithCancel(context.Background())
+		go func() {
+			time.Sleep(20 * time.Millisecond)
+			cancel()
+		}()
+		_, err = client.Do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
+		testutil.AssertError(t, err, "canceled request")
+		testutil.AssertTrue(t, errors.Is(err, context.Canceled), "errors.Is(err, context.Canceled)")
+		testutil.AssertTrue(t, !errors.Is(err, ErrRequestTimeout), "a cancel is not a timeout")
+	})
+
+	t.Run("RefusedIsNotTimeout", func(t *testing.T) {
+		// A closed port on the loopback interface: the dial fails as a net.Error whose
+		// Timeout() is false, which is the case dropping the guard would misclassify.
+		listener, lerr := net.Listen("tcp", "127.0.0.1:0")
+		testutil.AssertNoError(t, lerr, "listen")
+		addr := listener.Addr().String()
+		testutil.AssertNoError(t, listener.Close(), "close listener")
+
+		client, err := New(addr, "dGVzdDp0ZXN0", WithInsecureSkipVerify(true))
+		testutil.AssertClientCreated(t, client, err, "RefusedIsNotTimeout")
+
+		_, err = client.Do(context.Background(), http.MethodGet,
+			"Cisco-IOS-XE-wireless-general-oper:general-oper-data")
+		testutil.AssertError(t, err, "refused dial")
+		testutil.AssertTrue(t, !errors.Is(err, ErrRequestTimeout), "a refused dial is not a timeout")
+	})
+
+	t.Run("BodyReadTimeoutIsATimeout", func(t *testing.T) {
+		// The headers arrive and then the body stalls, so the deadline fires inside the
+		// body read rather than before the headers. Both are one event to the caller.
+		server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Length", "1024")
+			w.WriteHeader(http.StatusOK)
+			if f, ok := w.(http.Flusher); ok {
+				f.Flush()
+			}
+			time.Sleep(2 * time.Second)
+		}))
+		defer server.Close()
+
+		client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+			WithInsecureSkipVerify(true), WithTimeout(300*time.Millisecond))
+		testutil.AssertClientCreated(t, client, err, "BodyReadTimeout")
+
+		_, err = client.Do(context.Background(), http.MethodGet,
+			"Cisco-IOS-XE-wireless-general-oper:general-oper-data")
+		testutil.AssertError(t, err, "body read timeout")
+		testutil.AssertTrue(t, errors.Is(err, ErrRequestTimeout),
+			"a deadline that fires during the body read is still a timeout")
+	})
 }

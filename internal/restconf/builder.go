@@ -2,6 +2,7 @@ package restconf
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -58,18 +59,25 @@ func (b *Builder) BuildOperationsURL(rpcPath string) string {
 
 // BuildQueryURL constructs URLs for queries with key-value parameters
 // Format: endpoint=identifier.
+//
+// url.PathEscape is the escaper RFC 8040 3.5.3 asks for: it encodes the "," that
+// separates composite key values and the "/" that separates path segments, and leaves
+// ":" "-" "." alone, so a MAC key in any of the three separator forms is unchanged.
 func (b *Builder) BuildQueryURL(endpoint, identifier string) string {
-	return fmt.Sprintf("%s=%s", endpoint, identifier)
+	return fmt.Sprintf("%s=%s", endpoint, url.PathEscape(identifier))
 }
 
 // BuildQueryCompositeURL constructs URLs for queries with composite parameters
 // Format: endpoint=value1,value2,value3...
+//
+// The joining commas are the key separator and stay literal; a comma inside a value
+// is escaped by url.PathEscape so it cannot pass for one.
 func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{}) string {
 	strValues := make([]string, len(values))
 	for i, v := range values {
 		switch val := v.(type) {
 		case string:
-			strValues[i] = val
+			strValues[i] = url.PathEscape(val)
 		case int:
 			strValues[i] = strconv.Itoa(val)
 		case int64:
@@ -79,7 +87,7 @@ func (b *Builder) BuildQueryCompositeURL(endpoint string, values ...interface{})
 		case bool:
 			strValues[i] = strconv.FormatBool(val)
 		default:
-			strValues[i] = fmt.Sprintf("%v", val)
+			strValues[i] = url.PathEscape(fmt.Sprintf("%v", val))
 		}
 	}
 	return fmt.Sprintf("%s=%s", endpoint, strings.Join(strValues, ","))
@@ -96,9 +104,4 @@ func (b *Builder) normalizeEndpointPath(endpointPath string) string {
 		return URLPathSeparator + endpointPath
 	}
 	return endpointPath
-}
-
-// isValidProtocol checks if the protocol is supported.
-func isValidProtocol(protocol string) bool {
-	return protocol == ProtocolHTTP || protocol == ProtocolHTTPS
 }

@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"net"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	ierrors "github.com/umatare5/cisco-ios-xe-wireless-go/internal/errors"
@@ -21,12 +24,18 @@ const (
 	DefaultTimeout = 60 * time.Second
 )
 
+// maxLoggedBodyBytes bounds the error body copied into the log line and into
+// APIError.Message. APIError.Body keeps the whole document.
+const maxLoggedBodyBytes = 512
+
 // Client represents the core WNC API client with connection pooling and structured logging.
 type Client struct {
 	httpClient     *http.Client              // Reused HTTP client with connection pool
+	httpTransport  *http.Transport           // Same transport as httpClient.Transport, mutated in place by options
 	rest           *restconf.Builder         // RESTCONF URL builder
 	logger         *slog.Logger              // Structured logger
 	token          string                    // Access token for authorization
+	userAgent      string                    // User-Agent header value; empty means the transport default
 	requestBuilder *transport.RequestBuilder // HTTP request builder
 }
 
@@ -48,7 +57,44 @@ func WithTimeout(timeout time.Duration) Option {
 // WithInsecureSkipVerify configures TLS certificate verification.
 func WithInsecureSkipVerify(skip bool) Option {
 	return func(c *Client) error {
-		c.httpClient.Transport = transport.NewTransport(skip)
+		c.httpTransport.TLSClientConfig.InsecureSkipVerify = skip //nolint:gosec
+		return nil
+	}
+}
+
+// WithProxy routes every request through the proxy the resolver returns.
+// Proxying is off by default: no environment variable is consulted unless this
+// option names a resolver. Pass http.ProxyFromEnvironment to honor HTTP_PROXY,
+// HTTPS_PROXY and NO_PROXY, or http.ProxyURL to pin one proxy. A nil resolver,
+// like a resolver returning a nil URL, connects directly.
+func WithProxy(fn func(*http.Request) (*url.URL, error)) Option {
+	return func(c *Client) error {
+		c.httpTransport.Proxy = fn
+		return nil
+	}
+}
+
+// WithResponseHeaderTimeout bounds the wait from the end of the request write to the
+// first byte of the response headers.
+func WithResponseHeaderTimeout(timeout time.Duration) Option {
+	return func(c *Client) error {
+		if !validation.IsValidTimeout(timeout) {
+			return fmt.Errorf("client configuration failed: %w",
+				fmt.Errorf("response header timeout validation failed: timeout must be positive, got %v", timeout))
+		}
+		c.httpTransport.ResponseHeaderTimeout = timeout
+		return nil
+	}
+}
+
+// WithTLSHandshakeTimeout bounds the TLS handshake.
+func WithTLSHandshakeTimeout(timeout time.Duration) Option {
+	return func(c *Client) error {
+		if !validation.IsValidTimeout(timeout) {
+			return fmt.Errorf("client configuration failed: %w",
+				fmt.Errorf("TLS handshake timeout validation failed: timeout must be positive, got %v", timeout))
+		}
+		c.httpTransport.TLSHandshakeTimeout = timeout
 		return nil
 	}
 }
@@ -67,14 +113,21 @@ func WithLogger(logger *slog.Logger) Option {
 // WithUserAgent sets a custom User-Agent header.
 func WithUserAgent(userAgent string) Option {
 	return func(c *Client) error {
-		// This will be handled in the headers when making requests
-		// For now, we store it in the client context (not implemented yet)
+		if !validation.IsNonEmptyString(userAgent) {
+			return errors.New("user agent cannot be empty")
+		}
+		c.userAgent = strings.TrimSpace(userAgent)
 		return nil
 	}
 }
 
 // New creates a new WNC client with the specified host, token, and options.
 func New(host, token string, opts ...Option) (*Client, error) {
+	// Normalize before validating: the trimmed and bracketed form is both what the
+	// validator judges and what reaches the Authorization header and the request URL.
+	host = validation.NormalizeHost(host)
+	token = strings.TrimSpace(token)
+
 	// Validate inputs using existing validation functions
 	if !validation.IsValidController(host) {
 		return nil, fmt.Errorf("client initialization failed: %w",
@@ -86,8 +139,9 @@ func New(host, token string, opts ...Option) (*Client, error) {
 	}
 
 	// Create HTTP client with transport
+	httpTransport := transport.NewTransport(false) // Default to secure
 	httpClient := &http.Client{
-		Transport: transport.NewTransport(false), // Default to secure
+		Transport: httpTransport,
 		Timeout:   DefaultTimeout,
 	}
 
@@ -96,14 +150,12 @@ func New(host, token string, opts ...Option) (*Client, error) {
 
 	// Create client with defaults
 	client := &Client{
-		httpClient: httpClient,
-		rest:       restBuilder,
-		logger:     slog.Default(),
-		token:      token,
+		httpClient:    httpClient,
+		httpTransport: httpTransport,
+		rest:          restBuilder,
+		logger:        slog.Default(),
+		token:         token,
 	}
-
-	// Initialize request builder
-	client.requestBuilder = transport.NewRequestBuilder(restBuilder, token, client.logger)
 
 	// Apply options
 	for _, opt := range opts {
@@ -111,6 +163,9 @@ func New(host, token string, opts ...Option) (*Client, error) {
 			return nil, fmt.Errorf("failed to apply option: %w", err)
 		}
 	}
+
+	// Build the request builder last: WithLogger and WithUserAgent decide what it carries.
+	client.requestBuilder = transport.NewRequestBuilder(restBuilder, token, client.userAgent, client.logger)
 
 	return client, nil
 }
@@ -126,19 +181,8 @@ func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) {
 		return nil, err
 	}
 
-	resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+	body, err := c.execute(req)
 	if err != nil {
-		return nil, err
-	}
-	defer c.closeResponseBody(resp)
-
-	body, err := c.readResponseBody(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	// Early return for HTTP errors
-	if err := c.checkHTTPErrors(resp, body); err != nil {
 		return nil, err
 	}
 
@@ -157,18 +201,8 @@ func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload
 		return nil, err
 	}
 
-	resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+	body, err := c.execute(req)
 	if err != nil {
-		return nil, err
-	}
-	defer c.closeResponseBody(resp)
-
-	body, err := c.readResponseBody(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := c.checkHTTPErrors(resp, body); err != nil {
 		return nil, err
 	}
 
@@ -187,9 +221,20 @@ func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, p
 		return nil, err
 	}
 
-	resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+	body, err := c.execute(req)
 	if err != nil {
 		return nil, err
+	}
+
+	c.logger.Debug("Successfully processed RPC response", "rpcPath", rpcPath)
+	return body, nil
+}
+
+// execute sends req and returns its body once the status has been checked.
+func (c *Client) execute(req *http.Request) ([]byte, error) {
+	resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
+	if err != nil {
+		return nil, classifyTransportError(err)
 	}
 	defer c.closeResponseBody(resp)
 
@@ -202,7 +247,6 @@ func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, p
 		return nil, err
 	}
 
-	c.logger.Debug("Successfully processed RPC response", "rpcPath", rpcPath)
 	return body, nil
 }
 
@@ -229,7 +273,9 @@ func (c *Client) readResponseBody(resp *http.Response) ([]byte, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		c.logger.Error("Failed to read response body", "error", err)
-		return nil, fmt.Errorf("failed to read response: %w", err)
+		// The same client deadline can fire before the headers arrive or partway through the
+		// body, and both are one event to whoever set the deadline.
+		return nil, classifyTransportError(fmt.Errorf("failed to read response: %w", err))
 	}
 
 	c.logger.Debug("Received API response", "status", resp.StatusCode, "content_length", len(body))
@@ -238,15 +284,39 @@ func (c *Client) readResponseBody(resp *http.Response) ([]byte, error) {
 
 // checkHTTPErrors validates HTTP status codes and returns appropriate errors.
 func (c *Client) checkHTTPErrors(resp *http.Response, body []byte) error {
-	if resp.StatusCode >= http.StatusBadRequest {
-		c.logger.Error("HTTP error response", "status", resp.StatusCode, "body", string(body))
-		return &APIError{
-			StatusCode: resp.StatusCode,
-			Message:    string(body),
-			Body:       body,
-		}
+	if resp.StatusCode < http.StatusBadRequest {
+		return nil
 	}
-	return nil
+
+	summary := truncateBody(body)
+	c.logger.Error("HTTP error response", "status", resp.StatusCode,
+		"content_length", len(body), "body_prefix", summary)
+
+	return &APIError{
+		StatusCode: resp.StatusCode,
+		Message:    summary,
+		Body:       body,
+	}
+}
+
+// truncateBody bounds a response body for logging, dropping the partial rune the cut
+// may leave behind.
+func truncateBody(body []byte) string {
+	if len(body) <= maxLoggedBodyBytes {
+		return string(body)
+	}
+	return strings.ToValidUTF8(string(body[:maxLoggedBodyBytes]), "") + "... (truncated)"
+}
+
+// classifyTransportError maps a transport failure onto the SDK error taxonomy so a
+// caller can match it with errors.Is. The original error stays in the chain, so
+// errors.As for *url.Error keeps working.
+func classifyTransportError(err error) error {
+	var netErr net.Error
+	if (errors.As(err, &netErr) && netErr.Timeout()) || errors.Is(err, context.DeadlineExceeded) {
+		return fmt.Errorf("%w: %w", ErrRequestTimeout, err)
+	}
+	return err
 }
 
 // RESTCONFBuilder returns the RESTCONF URL builder for the client.

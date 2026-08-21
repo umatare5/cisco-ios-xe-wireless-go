@@ -209,3 +209,23 @@ func TestValidationUnit_ValidationErrors_Success(t *testing.T) {
 	err = ValidateWlanID("")
 	testutil.AssertError(t, err, "empty WLAN ID should error")
 }
+
+// TestValidationUnit_NormalizeHost_Success pins the authority forms the URL builder
+// concatenates after the scheme.
+func TestValidationUnit_NormalizeHost_Success(t *testing.T) {
+	cases := []struct{ in, want string }{
+		{"wnc.example.internal", "wnc.example.internal"},
+		{" wnc.example.internal\n", "wnc.example.internal"},
+		{"wnc.example.internal:443", "wnc.example.internal:443"},
+		{"192.0.2.10", "192.0.2.10"},
+		{"192.0.2.10:443", "192.0.2.10:443"},
+		{"2001:db8::1", "[2001:db8::1]"},
+		{"[2001:db8::1]", "[2001:db8::1]"},
+		{"[2001:db8::1]:443", "[2001:db8::1]:443"},
+		{"::ffff:192.0.2.10", "[::ffff:192.0.2.10]"},
+		{"", ""},
+	}
+	for _, tc := range cases {
+		testutil.AssertStringEquals(t, NormalizeHost(tc.in), tc.want, tc.in)
+	}
+}

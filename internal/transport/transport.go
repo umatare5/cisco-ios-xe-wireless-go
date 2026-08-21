@@ -3,6 +3,7 @@ package transport
 
 import (
 	"crypto/tls"
+	"net"
 	"net/http"
 	"time"
 )
@@ -25,8 +26,8 @@ const (
 	HTTPHeaderValueBasicPrefix = "Basic "
 	// HTTPHeaderValueYANGData defines the YANG data content type.
 	HTTPHeaderValueYANGData = "application/yang-data+json"
-	// HTTPHeaderUserAgent defines the User-Agent string.
-	HTTPHeaderUserAgent = "wnc-go-client/1.0"
+	// HTTPHeaderUserAgent defines the default User-Agent string.
+	HTTPHeaderUserAgent = "cisco-ios-xe-wireless-go"
 	// HTTPHeaderAccept defines the default Accept header value.
 	HTTPHeaderAccept = HTTPHeaderValueYANGData
 	// HTTPHeaderContentType defines the default Content-Type header value.
@@ -45,8 +46,14 @@ const (
 	DefaultResponseHeaderTimeout = QuickTimeout
 	// DefaultIdleConnTimeout is the default timeout for idle connections.
 	DefaultIdleConnTimeout = ExtendedTimeout
+	// DefaultDialTimeout is the default timeout for establishing a TCP connection.
+	DefaultDialTimeout = StandardTimeout
+	// DefaultDialKeepAlive is the default interval between TCP keep-alive probes.
+	DefaultDialKeepAlive = StandardTimeout
 	// ExtendedTimeout for longer operations (idle connections).
 	ExtendedTimeout = 90 * time.Second
+	// StandardTimeout for connection establishment.
+	StandardTimeout = 30 * time.Second
 	// QuickTimeout for fast operations (TLS handshake, response headers).
 	QuickTimeout = 5 * time.Second
 )
@@ -57,6 +64,10 @@ func NewTransport(skipVerify bool) *http.Transport {
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: skipVerify, //nolint:gosec
 		},
+		DialContext: (&net.Dialer{
+			Timeout:   DefaultDialTimeout,
+			KeepAlive: DefaultDialKeepAlive,
+		}).DialContext,
 		ForceAttemptHTTP2:     false,
 		DisableKeepAlives:     false,
 		DisableCompression:    false,
@@ -69,10 +80,15 @@ func NewTransport(skipVerify bool) *http.Transport {
 }
 
 // DefaultHeaders returns a pre-configured header map with authentication and content type.
-func DefaultHeaders(token string) http.Header {
+// An empty userAgent falls back to HTTPHeaderUserAgent.
+func DefaultHeaders(token, userAgent string) http.Header {
+	if userAgent == "" {
+		userAgent = HTTPHeaderUserAgent
+	}
+
 	headers := make(http.Header)
 	headers.Set(HTTPHeaderKeyAuthorization, HTTPHeaderValueBasicPrefix+token)
 	headers.Set(HTTPHeaderKeyAccept, HTTPHeaderValueYANGData)
-	headers.Set(HTTPHeaderKeyUserAgent, HTTPHeaderUserAgent)
+	headers.Set(HTTPHeaderKeyUserAgent, userAgent)
 	return headers
 }
