@@ -2,7 +2,10 @@
 package wnc
 
 import (
+	"context"
 	"log/slog"
+	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -81,6 +84,15 @@ func WithTimeout(d time.Duration) Option { return core.WithTimeout(d) }
 // WithInsecureSkipVerify controls TLS certificate verification (lab/testing only).
 func WithInsecureSkipVerify(skip bool) Option { return core.WithInsecureSkipVerify(skip) }
 
+// WithProxy routes requests through the proxy the resolver returns (re-export wrapper).
+func WithProxy(fn func(*http.Request) (*url.URL, error)) Option { return core.WithProxy(fn) }
+
+// WithResponseHeaderTimeout bounds the wait for the response headers (re-export wrapper).
+func WithResponseHeaderTimeout(d time.Duration) Option { return core.WithResponseHeaderTimeout(d) }
+
+// WithTLSHandshakeTimeout bounds the TLS handshake (re-export wrapper).
+func WithTLSHandshakeTimeout(d time.Duration) Option { return core.WithTLSHandshakeTimeout(d) }
+
 // WithLogger sets a custom slog.Logger.
 func WithLogger(l *slog.Logger) Option { return core.WithLogger(l) }
 
@@ -96,7 +108,7 @@ type DefaultsMode = core.DefaultsMode
 const (
 	// ReportAll materializes the leaves in force at their schema default.
 	ReportAll = core.DefaultsReportAll
-	// Explicit returns client-set leaves only, matching a plain GET.
+	// Explicit returns the leaves a client set, including any set to their schema default.
 	Explicit = core.DefaultsExplicit
 )
 
@@ -105,10 +117,44 @@ const (
 // leaves accumulate across every nested container.
 func WithDefaults(mode DefaultsMode) GetOption { return core.WithDefaults(mode) }
 
+// WithFields limits the answer to an RFC 8040 4.8.3 fields expression (re-export wrapper).
+// A pruned leaf is absent, and an absent leaf decodes to a zero value, so prune only
+// the fields the caller reads.
+func WithFields(expression string) GetOption { return core.WithFields(expression) }
+
+// WithDepth limits the answer to an RFC 8040 4.8.2 subtree depth (re-export wrapper).
+// A node the limit cuts is absent exactly as a pruned leaf is, so an absent leaf still
+// decodes to a zero value; bound the depth to what the caller reads.
+func WithDepth(levels int) GetOption { return core.WithDepth(levels) }
+
 // Core returns the underlying core.Client for advanced use cases.
-// This should typically not be needed for normal usage.
+//
+// Deprecated: the returned type lives in an internal package, so no consumer can name
+// it in a signature or a test double. Use GetData for an untyped read and a service
+// accessor for everything else. Removed in v0.9.0.
 func (c *Client) Core() *core.Client {
 	return c.core
+}
+
+// GetData performs a GET on a RESTCONF data path and returns the body as received, for
+// a container this package has no typed accessor for. The path may be given with or
+// without the /restconf/data prefix, and GetOption values apply as they do to a typed
+// read. Errors are the same as everywhere else, *APIError included.
+//
+// A container or leaf read answers with exactly one top-level key: the module-qualified
+// name of the node requested. A caller decoding the body should check that key rather
+// than trusting its own struct tags, because a tag naming a key the controller does not
+// send decodes to nothing and reports success.
+//
+// A node the controller carries nothing at answers with no body: the returned slice is
+// non-nil and empty and the error is nil, so check the length before decoding. A path
+// the controller does not have answers 404, which arrives as an *APIError.
+//
+// The path is sent as given. A caller keying into a list escapes the key value itself;
+// the typed accessors use url.PathEscape, and an unescaped "#" or "?" ends the path
+// early and reads a different node with no error to show for it.
+func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([]byte, error) {
+	return core.GetRaw(ctx, c.core, path, opts...)
 }
 
 // Domain service accessors - each returns a service instance for the respective domain
@@ -128,7 +174,7 @@ func (c *Client) APF() apf.Service {
 	return apf.NewService(c.core)
 }
 
-// AWIPS returns the Advanced Weather Interactive Processing System service.
+// AWIPS returns the Automated Wireless Intrusion Prevention System service.
 func (c *Client) AWIPS() awips.Service {
 	return awips.NewService(c.core)
 }

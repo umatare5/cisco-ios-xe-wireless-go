@@ -21,7 +21,7 @@ func TestWithDefaultsWireQuery(t *testing.T) {
 		rawQuery = r.URL.RawQuery
 		mu.Unlock()
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{}`))
+		_, _ = w.Write([]byte(`{"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {}}`))
 	}))
 	defer server.Close()
 
