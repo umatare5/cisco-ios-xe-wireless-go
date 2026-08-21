@@ -2,6 +2,7 @@ package testutil
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
@@ -157,4 +158,64 @@ func TestTestUtilUnit_NewMockServer_WithTesting_Success(t *testing.T) {
 	defer server.Close()
 
 	testutil.AssertNotNil(t, server, "NewMockServer should return a non-nil server")
+}
+
+// foreignMockServer is a MockServer this package did not construct, which is the case the
+// removed type assertion turned away.
+type foreignMockServer struct{ server *httptest.Server }
+
+func (f *foreignMockServer) URL() string { return f.server.URL }
+func (f *foreignMockServer) Close()      { f.server.Close() }
+
+// brokenMockServer reports a URL no parser accepts.
+type brokenMockServer struct{}
+
+func (brokenMockServer) URL() string { return "://" }
+func (brokenMockServer) Close()      {}
+
+// TestTestUtilUnit_NewTestClient_ForeignMockServer_Success pins that NewTestClient needs
+// nothing but the URL. A test supplying its own handler used to be met with a panic.
+func TestTestUtilUnit_NewTestClient_ForeignMockServer_Success(t *testing.T) {
+	inner := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	server := &foreignMockServer{server: inner}
+	defer server.Close()
+
+	_, isOwn := MockServer(server).(*mockServerImpl)
+	testutil.AssertFalse(t, isOwn, "the fixture must not be this package's own MockServer")
+
+	client := NewTestClient(server)
+	testutil.AssertTrue(t, client != nil, "NewTestClient should accept any MockServer")
+	testutil.AssertTrue(t, client.Core() != nil, "Client core should not be nil")
+}
+
+// TestTestUtilUnit_NewMockServerFromHTTP_Success pins the adapter that lets a recording
+// RESTCONFServer be handed to NewTestClient.
+func TestTestUtilUnit_NewMockServerFromHTTP_Success(t *testing.T) {
+	recorder := NewRESTCONFServer(t)
+	defer recorder.Close()
+
+	adapted := NewMockServerFromHTTP(recorder.Server)
+	testutil.AssertTrue(t, adapted != nil, "NewMockServerFromHTTP should return a MockServer")
+	testutil.AssertStringEquals(t, adapted.URL(), recorder.URL, "adapted URL")
+
+	client := NewTestClient(adapted)
+	testutil.AssertTrue(t, client.Core() != nil, "Client core should not be nil")
+}
+
+// TestTestUtilUnit_NewTestClient_UnparseableURL_Panics pins the boundary of what the
+// removed type assertion cost: a MockServer of any type is accepted, but a URL that does
+// not parse still stops the test rather than handing back a client aimed nowhere.
+func TestTestUtilUnit_NewTestClient_UnparseableURL_Panics(t *testing.T) {
+	var recovered any
+	func() {
+		defer func() { recovered = recover() }()
+		NewTestClient(brokenMockServer{})
+	}()
+
+	testutil.AssertTrue(t, recovered != nil, "NewTestClient should panic on an unparseable URL")
+	message, isString := recovered.(string)
+	testutil.AssertTrue(t, isString, "the panic value should be a string")
+	testutil.AssertStringContains(t, message, "failed to parse server URL", "panic message")
 }
