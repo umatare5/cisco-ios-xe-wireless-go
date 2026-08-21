@@ -38,16 +38,17 @@ run_formats() {
     return $exit_code
 }
 
-# Run Go code linting with golangci-lint or go vet fallback
+# Run Go code linting with golangci-lint
 lint_go() {
     printf '\n--- Go Code Linting (golangci-lint) ---\n' >&2
 
-    if command -v golangci-lint >/dev/null 2>&1; then
-        golangci-lint run --timeout=10m
-    else
-        printf 'Warning: golangci-lint not found, falling back to go vet\n' >&2
-        go vet ./...
+    if ! command_exists golangci-lint; then
+        printf '✗ %s\n' "golangci-lint is required for Go linting" >&2
+        show_cli_installation_instructions golangci-lint
+        return 1
     fi
+
+    golangci-lint run --timeout=10m
 }
 
 # Format Go code using gofumpt
@@ -170,7 +171,7 @@ install_golangci_lint() {
     fi
 
     printf 'Installing golangci-lint@%s...\n' "${version}"
-    go install "github.com/golangci/golangci-lint/cmd/golangci-lint@${version}"
+    go install "github.com/golangci/golangci-lint/v2/cmd/golangci-lint@${version}"
 
     if ! command_exists golangci-lint; then
         printf '✗ %s\n' "Failed to install golangci-lint" >&2
@@ -190,7 +191,7 @@ install_goreleaser() {
     fi
 
     printf 'Installing goreleaser@%s...\n' "${version}"
-    go install "github.com/goreleaser/goreleaser@${version}"
+    go install "github.com/goreleaser/goreleaser/v2@${version}"
 
     if ! command_exists goreleaser; then
         printf '✗ %s\n' "Failed to install goreleaser" >&2
