@@ -3,6 +3,9 @@
 project_name: cisco-ios-xe-wireless-go
 version: 2
 
+# Distribution directory
+dist: tmp/dist
+
 # Build destination
 github_urls:
   # set to true if you use a self-signed certificate
@@ -17,30 +20,21 @@ before:
 builds:
   - skip: true
 
-# Create source archives for the library
-archives:
-  - id: source
-    name_template: '{{ .ProjectName }}-v{{ .Version }}_source'
-    formats: [ 'tar.gz' ]
-    files:
-      - "*.go"
-      - "*.md"
-      - "go.mod"
-      - "go.sum"
-      - "LICENSE"
-
-# Generate documentation
-dockers: []
-
 # Release configuration
 release:
   prerelease: auto
-  draft: false
+  # Drafted, not published: goreleaser composes the body from header, generated
+  # changelog and footer, so a hand-written migration note has to be pasted in
+  # before the release becomes visible.
+  draft: true
   replace_existing_draft: true
   header: |
     ## {{ .ProjectName }} v{{ .Version }}
 
     This release contains the Go SDK for interacting with Cisco Catalyst 9800 Wireless Network Controller.
+
+    > [!IMPORTANT]
+    > This SDK is pre-1.0 and a MINOR release may change or remove exported API. Read the notes below before upgrading.
 
     ### 📦 Installation
 
@@ -55,7 +49,7 @@ release:
     - [README](https://github.com/umatare5/cisco-ios-xe-wireless-go/blob/{{ .Tag }}/README.md)
     - [API Reference](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@v{{ .Version }})
 
-# Generate checksums for source archives
+# Checksums for published artifacts
 checksum:
   name_template: "{{ .ProjectName }}-v{{ .Version }}_checksums.txt"
 
@@ -65,15 +59,18 @@ changelog:
   sort: asc
   abbrev: 0
   groups:
+    - title: Breaking Changes
+      regexp: '^.*?[[:word:]]+(\([[:word:]]+\))?!:.+$'
+      order: 0
     - title: Features
       regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
-      order: 0
+      order: 1
     - title: Bug Fixes
       regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
-      order: 1
+      order: 2
     - title: Documentation Updates
       regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
-      order: 2
+      order: 3
     - title: Others
       order: 999
   filters:
