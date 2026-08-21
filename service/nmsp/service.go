@@ -32,7 +32,8 @@ func (s Service) ListClientRegistrations(
 		ctx,
 		s.Client(),
 		routes.NMSPClientRegistrationPath,
-		opts...)
+		opts...,
+	)
 }
 
 // GetCMXConnectionInfo retrieves NMSP CMX connection information.

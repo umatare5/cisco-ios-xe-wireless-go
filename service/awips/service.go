@@ -49,7 +49,8 @@ func (s Service) ListAWIPSApDwldStatus(
 		ctx,
 		s.Client(),
 		routes.AWIPSApDownloadStatusPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListAWIPSPerSignStats retrieves AWIPS per signature statistics.
@@ -61,7 +62,8 @@ func (s Service) ListAWIPSPerSignStats(
 		ctx,
 		s.Client(),
 		routes.AWIPSPerSignStatsPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListAWIPSGlobStats retrieves AWIPS global statistics.
@@ -81,5 +83,6 @@ func (s Service) ListAWIPSDwldStatusWncd(
 		ctx,
 		s.Client(),
 		routes.AWIPSDwldStatusWncdPath,
-		opts...)
+		opts...,
+	)
 }

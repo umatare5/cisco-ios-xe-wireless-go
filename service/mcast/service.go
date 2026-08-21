@@ -66,7 +66,8 @@ func (s Service) GetMulticastOperData(
 		ctx,
 		s.Client(),
 		routes.McastMulticastOperDataPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListRrcHistoryClientRecordData retrieves RRC history client record data from the controller.
@@ -89,7 +90,8 @@ func (s Service) ListRrcSrRadioRecord(
 		ctx,
 		s.Client(),
 		routes.McastRrcSrRadioRecordPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListRrcStreamRecord retrieves RRC stream record data from the controller.
@@ -101,7 +103,8 @@ func (s Service) ListRrcStreamRecord(
 		ctx,
 		s.Client(),
 		routes.McastRrcStreamRecordPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListRrcStreamAdmitRecord retrieves RRC stream admit record data from the controller.

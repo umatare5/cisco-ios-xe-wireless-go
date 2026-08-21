@@ -32,7 +32,8 @@ func (s Service) GetMemoryStats(
 		ctx,
 		s.Client(),
 		routes.LISPMemoryStatsPath,
-		opts...)
+		opts...,
+	)
 }
 
 // GetCapabilities retrieves LISP WLC capabilities using wrapper struct.
@@ -44,7 +45,8 @@ func (s Service) GetCapabilities(
 		ctx,
 		s.Client(),
 		routes.LISPCapabilitiesPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListAPCapabilities retrieves LISP AP capabilities list using wrapper struct.
@@ -56,5 +58,6 @@ func (s Service) ListAPCapabilities(
 		ctx,
 		s.Client(),
 		routes.LISPAPCapabilitiesPath,
-		opts...)
+		opts...,
+	)
 }
