@@ -151,6 +151,12 @@ prepare_test_arguments() {
         # is_verbose_enabled && info "Running in short mode (skipping long tests)"  # Temporarily disabled
     fi
 
+    # Race detection, matching what CI runs: the reusable workflow defaults
+    # enable_race_detection to true, so a local run without it is a weaker gate.
+    if [[ "$test_type" == "unit" || "$test_type" == "coverage" ]]; then
+        args="$args -race"
+    fi
+
     # Coverage-specific options
     if [[ "$test_type" == "coverage" ]]; then
         _add_coverage_args "$coverage_file" "args"
