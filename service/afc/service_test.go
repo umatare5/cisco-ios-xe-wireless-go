@@ -186,3 +186,110 @@ func TestAfcServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		}
 	})
 }
+
+// TestAfcServiceUnit_QuotedDecimal64_MockSuccess is the regression barrier for the five afc leaves
+// this release retyped from *float64 to *string. RFC 7951 6.1 requires a JSON string for a
+// decimal64 leaf, so the float form could not decode one; nothing in this package asserted that
+// before, and reverting any of the five leaves would have passed the whole suite.
+//
+// The quoted uint64 in the same body is here for the same reason.
+func TestAfcServiceUnit_QuotedDecimal64_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-req": `{
+			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-req": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"req-id-sent": "18446744073709551615",
+					"req-data": {
+						"min-desired-power": "-12.5",
+						"location": {
+							"ellipse": {
+								"center": {"longitude": "139.7671248", "latitude": "35.6812405"},
+								"major-axis": 30,
+								"minor-axis": 10,
+								"orientation": "45.0"
+							}
+						}
+					}
+				}
+			]
+		}`,
+	}))
+	defer mockServer.Close()
+
+	service := afc.NewService(testutil.NewTestClient(mockServer).Core().(*core.Client))
+
+	result, err := service.ListAPRequests(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("ListAPRequests failed: %v", err)
+	}
+	if len(result.EwlcAFCApReq) != 1 {
+		t.Fatalf("Expected 1 request, got %+v", result.EwlcAFCApReq)
+	}
+
+	req := result.EwlcAFCApReq[0]
+	if req.ReqIDSent == nil || *req.ReqIDSent != "18446744073709551615" {
+		t.Errorf("Expected the quoted uint64 to decode as its string, got %v", req.ReqIDSent)
+	}
+	if req.ReqData == nil || req.ReqData.MinDesiredPower == nil ||
+		*req.ReqData.MinDesiredPower != "-12.5" {
+		t.Fatalf("Expected min-desired-power to decode as a string, got %+v", req.ReqData)
+	}
+
+	ellipse := req.ReqData.Location.Ellipse
+	if ellipse == nil || ellipse.Center == nil {
+		t.Fatal("Expected the ellipse and its center to decode")
+	}
+	if ellipse.Center.Longitude == nil || *ellipse.Center.Longitude != "139.7671248" {
+		t.Errorf("Expected longitude to decode as a string, got %v", ellipse.Center.Longitude)
+	}
+	if ellipse.Center.Latitude == nil || *ellipse.Center.Latitude != "35.6812405" {
+		t.Errorf("Expected latitude to decode as a string, got %v", ellipse.Center.Latitude)
+	}
+	if ellipse.Orientation == nil || *ellipse.Orientation != "45.0" {
+		t.Errorf("Expected orientation to decode as a string, got %v", ellipse.Orientation)
+	}
+}
+
+// TestAfcServiceUnit_QuotedMaxEIRP_MockSuccess covers the fifth retyped decimal64 leaf, which sits
+// on the response side rather than the request side.
+func TestAfcServiceUnit_QuotedMaxEIRP_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-resp": `{
+			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"slot": 2,
+					"resp-data": {
+						"request-id": "1",
+						"band20": {
+							"global-oper-class": 131,
+							"channels": [
+								{"avail-channel-cfi": 1, "max-eirp": "30.5"}
+							]
+						}
+					}
+				}
+			]
+		}`,
+	}))
+	defer mockServer.Close()
+
+	service := afc.NewService(testutil.NewTestClient(mockServer).Core().(*core.Client))
+
+	result, err := service.ListAPResponses(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("ListAPResponses failed: %v", err)
+	}
+	if len(result.EwlcAFCApResp) != 1 {
+		t.Fatalf("Expected 1 response, got %+v", result.EwlcAFCApResp)
+	}
+
+	channels := result.EwlcAFCApResp[0].RespData.Band20.Channels
+	if len(channels) != 1 {
+		t.Fatalf("Expected 1 channel, got %+v", channels)
+	}
+	if channels[0].MaxEIRP == nil || *channels[0].MaxEIRP != "30.5" {
+		t.Errorf("Expected max-eirp to decode as a string, got %v", channels[0].MaxEIRP)
+	}
+}

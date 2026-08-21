@@ -2,18 +2,21 @@ package mcast
 
 // CiscoIOSXEWirelessMcastOper represents multicast operational data from controller.
 type CiscoIOSXEWirelessMcastOper struct {
-	CiscoIOSXEWirelessMcastOperData struct {
-		FlexMediastreamClientSummary   []FlexMediastreamClientSummary   `json:"flex-mediastream-client-summary,omitempty"`    // FlexConnect mediastream client summary data (Live: IOS-XE 17.12.6a)
-		VlanL2MgidOp                   []VlanL2MgidOp                   `json:"vlan-l2-mgid-op,omitempty"`                    // VLAN Layer 2 multicast group ID operational data (Live: IOS-XE 17.12.6a)
-		FabricMediaStreamClientSummary []FabricMediaStreamClientSummary `json:"fabric-media-stream-client-summary,omitempty"` // Fabric mediastream client summary data (Live: IOS-XE 17.12.6a)
-		McastMgidInfo                  []McastMgidInfo                  `json:"mcast-mgid-info,omitempty"`                    // Multicast MGID information (YANG: IOS-XE 17.12.1)
-		MulticastOperData              []MulticastOperData              `json:"multicast-oper-data,omitempty"`                // Multicast operational data (YANG: IOS-XE 17.12.1)
-		RrcHistoryClientRecordData     []RrcHistoryClientRecordData     `json:"rrc-history-client-record-data,omitempty"`     // RRC history client record data (YANG: IOS-XE 17.12.1)
-		RrcSrRadioRecord               []RrcSrRadioRecord               `json:"rrc-sr-radio-record,omitempty"`                // RRC stream radio record data (YANG: IOS-XE 17.12.1)
-		RrcStreamRecord                []RrcStreamRecord                `json:"rrc-stream-record,omitempty"`                  // RRC stream record data (YANG: IOS-XE 17.12.1)
-		RrcStreamAdmitRecord           []RrcStreamAdmitRecord           `json:"rrc-stream-admit-record,omitempty"`            // RRC stream admit record data (YANG: IOS-XE 17.12.1)
-		RrcStreamDenyRecord            []RrcStreamDenyRecord            `json:"rrc-stream-deny-record,omitempty"`             // RRC stream deny record data (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"` // Multicast operational data container (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessMcastOperData *CiscoIOSXEWirelessMcastOperData `json:"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data"` // Multicast operational data container (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessMcastOperData represents Multicast operational data container (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessMcastOperData struct {
+	FlexMediastreamClientSummary   []FlexMediastreamClientSummary   `json:"flex-mediastream-client-summary,omitempty"`    // FlexConnect mediastream client summary data (Live: IOS-XE 17.12.6a)
+	VlanL2MgidOp                   []VlanL2MgidOp                   `json:"vlan-l2-mgid-op,omitempty"`                    // VLAN Layer 2 multicast group ID operational data (Live: IOS-XE 17.12.6a)
+	FabricMediaStreamClientSummary []FabricMediaStreamClientSummary `json:"fabric-media-stream-client-summary,omitempty"` // Fabric mediastream client summary data (Live: IOS-XE 17.12.6a)
+	McastMgidInfo                  []McastMgidInfo                  `json:"mcast-mgid-info,omitempty"`                    // Multicast MGID information (YANG: IOS-XE 17.12.1)
+	MulticastOperData              []MulticastOperData              `json:"multicast-oper-data,omitempty"`                // Multicast operational data (YANG: IOS-XE 17.12.1)
+	RrcHistoryClientRecordData     []RrcHistoryClientRecordData     `json:"rrc-history-client-record-data,omitempty"`     // RRC history client record data (YANG: IOS-XE 17.12.1)
+	RrcSrRadioRecord               []RrcSrRadioRecord               `json:"rrc-sr-radio-record,omitempty"`                // RRC stream radio record data (YANG: IOS-XE 17.12.1)
+	RrcStreamRecord                []RrcStreamRecord                `json:"rrc-stream-record,omitempty"`                  // RRC stream record data (YANG: IOS-XE 17.12.1)
+	RrcStreamAdmitRecord           []RrcStreamAdmitRecord           `json:"rrc-stream-admit-record,omitempty"`            // RRC stream admit record data (YANG: IOS-XE 17.12.1)
+	RrcStreamDenyRecord            []RrcStreamDenyRecord            `json:"rrc-stream-deny-record,omitempty"`             // RRC stream deny record data (YANG: IOS-XE 17.12.1)
 }
 
 // CiscoIOSXEWirelessMcastOperFlexMediastreamClientSummary represents the structure for FlexConnect mediastream client summary data.

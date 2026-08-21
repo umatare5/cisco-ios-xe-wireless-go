@@ -24,8 +24,16 @@ func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoI
 }
 
 // ListOperatorLocations retrieves location profile configuration data from the wireless controller.
-func (s Service) ListOperatorLocations(ctx context.Context, opts ...core.GetOption) (*OperatorLocations, error) {
-	return core.Get[OperatorLocations](ctx, s.Client(), routes.LocationOperatorLocationsPath, opts...)
+func (s Service) ListOperatorLocations(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessLocationCfgOperatorLocations, error) {
+	return core.Get[CiscoIOSXEWirelessLocationCfgOperatorLocations](
+		ctx,
+		s.Client(),
+		routes.LocationOperatorLocationsPath,
+		opts...,
+	)
 }
 
 // ListNMSPConfig retrieves location NMSP configuration data from the wireless controller.

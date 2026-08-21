@@ -1,6 +1,7 @@
 package wlan
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -95,11 +96,11 @@ func TestWlanPolicyTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Errorf("Expected tag name 'test-policy-tag', got %s", tag.TagName)
 	}
 
-	// Test GetPolicyTag for non-existent tag
+	// A keyed read of a key the controller does not hold answers 404, which unwraps to
+	// ErrResourceNotFound.
 	nonExistentTag, err := policyTag.GetPolicyTag(ctx, "non-existent")
-	if err != nil {
-		t.Errorf("GetPolicyTag failed for non-existent tag: %v", err)
-		return
+	if !errors.Is(err, core.ErrResourceNotFound) {
+		t.Errorf("Expected ErrResourceNotFound for a non-existent tag, got %v", err)
 	}
 
 	if nonExistentTag != nil {
@@ -294,11 +295,12 @@ func TestWlanPolicyTagServiceUnit_GetOperations_EdgeCases(t *testing.T) {
 		name         string
 		mockResponse string
 		expectEmpty  bool
+		expectErr    bool
 	}{
 		{
 			name:         "NilResult",
 			mockResponse: `null`,
-			expectEmpty:  true,
+			expectErr:    true,
 		},
 		{
 			name: "EmptyPolicyListEntries",
@@ -340,6 +342,12 @@ func TestWlanPolicyTagServiceUnit_GetOperations_EdgeCases(t *testing.T) {
 			ctx := testutil.TestContext(t)
 
 			tags, err := policyTag.ListPolicyTags(ctx)
+			if tt.expectErr {
+				if err == nil {
+					t.Error("Expected error for a body carrying no top-level key")
+				}
+				return
+			}
 			if err != nil {
 				t.Errorf("ListPolicyTags failed: %v", err)
 				return
@@ -435,10 +443,13 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 		policyTagService := service.PolicyTag()
 		ctx := testutil.TestContext(t)
 
-		// Test GetPolicyTag with non-existent tag should return nil
+		// GetPolicyTag reads the keyed URL, and a controller answers a key it does not hold with
+		// 404, which APIError.Unwrap maps to ErrResourceNotFound. Measured on a controller: an
+		// absent key answers 404 and a present one 200. The earlier contract of nil, nil was only
+		// reachable while this method filtered the whole container client-side.
 		result, err := policyTagService.GetPolicyTag(ctx, "non-existent")
-		if err != nil {
-			t.Errorf("GetPolicyTag should not error for non-existent tag: %v", err)
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected ErrResourceNotFound for a non-existent policy tag, got %v", err)
 		}
 		if result != nil {
 			t.Error("Expected nil result for non-existent policy tag")

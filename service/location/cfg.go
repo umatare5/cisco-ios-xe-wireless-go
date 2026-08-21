@@ -2,11 +2,14 @@ package location
 
 // CiscoIOSXEWirelessLocationCfg represents the structure for Location configuration data.
 type CiscoIOSXEWirelessLocationCfg struct {
-	CiscoIOSXEWirelessLocationCfgData struct {
-		NMSPConfig        NMSPConfig         `json:"nmsp-config"`                  // NMSP notification parameters (Live: IOS-XE 17.12.6a)
-		LocationConfig    *LocationConfig    `json:"location,omitempty"`           // Location config parameters (YANG: IOS-XE 17.12.1)
-		OperatorLocations *OperatorLocations `json:"operator-locations,omitempty"` // AAA Location Operators (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"` // Location configuration data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessLocationCfgData *CiscoIOSXEWirelessLocationCfgData `json:"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data"` // Location configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessLocationCfgData represents Location configuration data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessLocationCfgData struct {
+	NMSPConfig        *NMSPConfig        `json:"nmsp-config,omitempty"`        // NMSP notification parameters (Live: IOS-XE 17.12.6a)
+	LocationConfig    *LocationConfig    `json:"location,omitempty"`           // Location config parameters (YANG: IOS-XE 17.12.1)
+	OperatorLocations *OperatorLocations `json:"operator-locations,omitempty"` // AAA Location Operators (YANG: IOS-XE 17.12.1)
 }
 
 // CiscoIOSXEWirelessLocationSettings represents the response structure for location settings endpoint (HTTP 204).
@@ -16,7 +19,12 @@ type CiscoIOSXEWirelessLocationSettings struct {
 
 // CiscoIOSXEWirelessLocationCfgNMSPConfig represents the corresponding data structure for NMSP config.
 type CiscoIOSXEWirelessLocationCfgNMSPConfig struct {
-	NMSPConfig NMSPConfig `json:"Cisco-IOS-XE-wireless-location-cfg:nmsp-config"`
+	NMSPConfig *NMSPConfig `json:"Cisco-IOS-XE-wireless-location-cfg:nmsp-config"`
+}
+
+// CiscoIOSXEWirelessLocationCfgOperatorLocations represents the corresponding data structure for operator locations.
+type CiscoIOSXEWirelessLocationCfgOperatorLocations struct {
+	OperatorLocations *OperatorLocations `json:"Cisco-IOS-XE-wireless-location-cfg:operator-locations"` // AAA Location Operators (YANG: IOS-XE 17.12.1)
 }
 
 // OperatorLocations represents AAA Location Operators container.

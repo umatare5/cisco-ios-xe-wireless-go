@@ -2,9 +2,12 @@ package urwb
 
 // CiscoIOSXEWirelessURWBCfg represents the complete URWB configuration from YANG 17.18.1.
 type CiscoIOSXEWirelessURWBCfg struct {
-	CiscoIOSXEWirelessURWBCfgData struct {
-		URWBProfiles *URWBProfiles `json:"urwb-profiles,omitempty"`
-	} `json:"Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data"`
+	CiscoIOSXEWirelessURWBCfgData *CiscoIOSXEWirelessURWBCfgData `json:"Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data"`
+}
+
+// CiscoIOSXEWirelessURWBCfgData represents the URWB configuration data from YANG 17.18.1.
+type CiscoIOSXEWirelessURWBCfgData struct {
+	URWBProfiles *URWBProfiles `json:"urwb-profiles,omitempty"`
 }
 
 // CiscoIOSXEWirelessURWBCfgURWBProfiles represents the URWB profiles container from YANG 17.18.1.

@@ -49,23 +49,27 @@ func TestRfidServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		// Add mock responses for MAC-based queries
 		"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-data-detail=aa:bb:cc:dd:ee:ff": `{
-			"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-emltd-data": {
-				"mac-address": "aa:bb:cc:dd:ee:ff",
-				"location": "Building A"
-			}
+			"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-data-detail": [
+				{
+					"rfid-mac-addr": "aa:bb:cc:dd:ee:ff"
+				}
+			]
 		}`,
 		"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data/rfid-data=aa:bb:cc:dd:ee:ff": `{
-			"Cisco-IOS-XE-wireless-rfid-oper:rfid-data": {
-				"mac-address": "aa:bb:cc:dd:ee:ff",
-				"status": "active"
-			}
+			"Cisco-IOS-XE-wireless-rfid-oper:rfid-data": [
+				{
+					"rfid-mac-addr": "aa:bb:cc:dd:ee:ff"
+				}
+			]
 		}`,
 		"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data/rfid-radio-data=aa:bb:cc:dd:ee:ff,00:25:36:57:ed:cb,0": `{
-			"Cisco-IOS-XE-wireless-rfid-oper:rfid-radio-data": {
-				"mac-address": "aa:bb:cc:dd:ee:ff",
-				"ap-mac-address": "00:25:36:57:ed:cb",
-				"slot": 0
-			}
+			"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-radio-data": [
+				{
+					"rfid-mac-addr": "aa:bb:cc:dd:ee:ff",
+					"ap-mac-addr": "00:25:36:57:ed:cb",
+					"slot": 0
+				}
+			]
 		}`,
 	}
 
@@ -142,11 +146,11 @@ func TestRfidServiceUnit_GetConfigSettings_MockSuccess(t *testing.T) {
 	t.Parallel()
 
 	responses := map[string]string{
-		"Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data/rfid-config": `{
-			"Cisco-IOS-XE-wireless-rfid-cfg:rfid-config": {
-				"enable": false,
-				"timeout": 120,
-				"interval": 60
+		"Cisco-IOS-XE-wireless-rfid-cfg:rfid-cfg-data/rfid": `{
+			"Cisco-IOS-XE-wireless-rfid-cfg:rfid": {
+				"rfid-enable-cisco": false,
+				"rfid-timeout": 120,
+				"rfid-rssi-expiry": 60
 			}
 		}`,
 	}
@@ -248,4 +252,55 @@ func TestRfidServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 			t.Error("Expected nil result for error case")
 		}
 	})
+}
+
+// TestRfidServiceUnit_EnumSpelling_MockSuccess tests that the wire's enumeration spellings decode
+// into the RFID enum types. The spellings come from the device's own schema declaration; the route
+// answers 204 on every lab release, so no populated body is available to read them from.
+func TestRfidServiceUnit_EnumSpelling_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data": `{
+			"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data": {
+				"rfid-data": [
+					{
+						"rfid-type": "cisco-rfid-data",
+						"rfid-auto-interval": 60,
+						"rfid-vendor": {
+							"cisco": {"cisco-vendor-type": "rfid-type-aeroscout"}
+						}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.GetOperational(ctx)
+	if err != nil {
+		t.Fatalf("GetOperational failed: %v", err)
+	}
+
+	if result.CiscoIOSXEWirelessRFIDOperData == nil {
+		t.Fatal("Expected rfid-oper-data to decode")
+	}
+
+	records := result.CiscoIOSXEWirelessRFIDOperData.RFIDData
+	if len(records) != 1 {
+		t.Fatalf("Expected 1 record, got %d", len(records))
+	}
+	if records[0].RFIDType != CiscoRFIDData {
+		t.Errorf("Expected rfid-type %q, got %q", CiscoRFIDData, records[0].RFIDType)
+	}
+	if records[0].RFIDAutoInterval != 60 {
+		t.Error("Expected a bare sibling of the enumeration to survive")
+	}
+
+	cisco := records[0].RFIDVendor.Cisco
+	if cisco == nil || cisco.CiscoVendorType != RFIDTypeAeroscout {
+		t.Errorf("Expected cisco-vendor-type to decode, got %+v", cisco)
+	}
 }

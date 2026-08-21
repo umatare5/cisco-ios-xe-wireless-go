@@ -2,14 +2,17 @@ package mobility
 
 // CiscoIOSXEWirelessMobilityCfg represents the root container for mobility configuration data.
 type CiscoIOSXEWirelessMobilityCfg struct {
-	CiscoIOSXEWirelessMobilityCfgData struct {
-		MobilityConfig MobilityConfig `json:"mobility-config"` // Local mobility configuration (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data"` // Mobility configuration data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessMobilityCfgData *CiscoIOSXEWirelessMobilityCfgData `json:"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data"` // Mobility configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessMobilityCfgData represents Mobility configuration data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessMobilityCfgData struct {
+	MobilityConfig *MobilityConfig `json:"mobility-config,omitempty"` // Local mobility configuration (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessMobilityCfgMobilityConfig represents the mobility configuration wrapper structure.
 type CiscoIOSXEWirelessMobilityCfgMobilityConfig struct {
-	MobilityConfig MobilityConfig `json:"Cisco-IOS-XE-wireless-mobility-cfg:mobility-config"`
+	MobilityConfig *MobilityConfig `json:"Cisco-IOS-XE-wireless-mobility-cfg:mobility-config"`
 }
 
 // MobilityConfig represents local mobility configuration.

@@ -2,14 +2,17 @@ package apf
 
 // CiscoIOSXEWirelessAPFCfg represents APF configuration data container.
 type CiscoIOSXEWirelessAPFCfg struct {
-	CiscoIOSXEWirelessAPFCfgData struct {
-		APF APF `json:"apf"` // APF configuration parameters (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"` // APF configuration data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessAPFCfgData *CiscoIOSXEWirelessAPFCfgData `json:"Cisco-IOS-XE-wireless-apf-cfg:apf-cfg-data"` // APF configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessAPFCfgData represents APF configuration data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessAPFCfgData struct {
+	APF *APF `json:"apf,omitempty"` // APF configuration parameters (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessAPFCfgAPF represents APF configuration wrapper.
 type CiscoIOSXEWirelessAPFCfgAPF struct {
-	APF APF `json:"Cisco-IOS-XE-wireless-apf-cfg:apf"`
+	APF *APF `json:"Cisco-IOS-XE-wireless-apf-cfg:apf"`
 }
 
 // APF represents Access Point Filter configuration parameters.

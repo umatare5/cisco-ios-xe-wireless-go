@@ -83,20 +83,22 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				}
 			]
 		}`,
-		// BLE Management endpoints
+		// BLE Management endpoints. cmx-id is quoted because the schema declares it uint64 and
+		// RFC 7951 6.1 requires a string for int64, uint64 and decimal64; the earlier bare number
+		// was a shape no conformant server sends.
 		"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data": `{
 			"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data": {
 				"ble-mgmt-ap": [
 					{
 						"ap-mac": "aa:bb:cc:dd:ee:f0",
 						"is-new": false,
-						"cmx-id": 1,
+						"cmx-id": "1",
 						"oper-state": true
 					}
 				],
 				"ble-mgmt-cmx": [
 					{
-						"cmx-id": 1,
+						"cmx-id": "1",
 						"oper-state": true,
 						"admin-state": true
 					}
@@ -108,7 +110,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				{
 					"ap-mac": "aa:bb:cc:dd:ee:f0",
 					"is-new": false,
-					"cmx-id": 1,
+					"cmx-id": "1",
 					"oper-state": true
 				}
 			]
@@ -116,7 +118,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data/ble-mgmt-cmx": `{
 			"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-cmx": [
 				{
-					"cmx-id": 1,
+					"cmx-id": "1",
 					"oper-state": true,
 					"admin-state": true
 				}

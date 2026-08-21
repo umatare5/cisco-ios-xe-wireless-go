@@ -34,29 +34,6 @@ func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*W
 	return core.Get[WlanGlobalOper](ctx, s.Client(), routes.WLANGlobalOperPath, opts...)
 }
 
-// ListConfigEntries retrieves WLAN configuration entries.
-func (s Service) ListConfigEntries(ctx context.Context, opts ...core.GetOption) (*WlanCfgEntries, error) {
-	return core.Get[WlanCfgEntries](ctx, s.Client(), routes.WLANWlanCfgEntriesPath, opts...)
-}
-
-// ListPolicies retrieves WLAN policies.
-func (s Service) ListPolicies(ctx context.Context, opts ...core.GetOption) (*WlanPolicies, error) {
-	return core.Get[WlanPolicies](ctx, s.Client(), routes.WLANWlanPoliciesPath, opts...)
-}
-
-// ListPolicyListEntries retrieves all policy list entries.
-func (s Service) ListPolicyListEntries(ctx context.Context, opts ...core.GetOption) (*PolicyListEntries, error) {
-	return core.Get[PolicyListEntries](ctx, s.Client(), routes.WLANPolicyListEntriesPath, opts...)
-}
-
-// ListWirelessAAAPolicyConfigs retrieves wireless AAA policy configurations.
-func (s Service) ListWirelessAAAPolicyConfigs(
-	ctx context.Context,
-	opts ...core.GetOption,
-) (*WirelessAaaPolicyConfigs, error) {
-	return core.Get[WirelessAaaPolicyConfigs](ctx, s.Client(), routes.WLANWirelessAaaPolicyConfigsPath, opts...)
-}
-
 // ListWlanCfgEntries retrieves WLAN configuration entries using WlanCfgWlanCfgEntries wrapper.
 func (s Service) ListWlanCfgEntries(
 	ctx context.Context,
@@ -82,7 +59,8 @@ func (s Service) ListCfgPolicyListEntries(
 		ctx,
 		s.Client(),
 		routes.WLANPolicyListEntriesPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListCfgWirelessAaaPolicyConfigs retrieves wireless AAA policy configurations using WlanCfgWirelessAaaPolicyConfigs wrapper.

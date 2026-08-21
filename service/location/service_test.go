@@ -51,7 +51,7 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 			}
 		}`,
 		"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/operator-locations": `{
-			"Cisco-IOS-XE-wireless-location-cfg:operator-locations": []
+			"Cisco-IOS-XE-wireless-location-cfg:operator-locations": {}
 		}`,
 		"Cisco-IOS-XE-wireless-location-cfg:location-cfg-data/nmsp-config": `{
 			"Cisco-IOS-XE-wireless-location-cfg:nmsp-config": {}
@@ -96,8 +96,8 @@ func TestLocationServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 	})
 }
 
-// TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess tests operations that return HTTP 204 (No Content) responses.
-func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing.T) {
+// TestLocationServiceUnit_GetConfigOperations_MockNoContentError tests operations that return HTTP 204 (No Content) responses.
+func TestLocationServiceUnit_GetConfigOperations_MockNoContentError(t *testing.T) {
 	t.Parallel()
 
 	mockServerNoContent := testutil.NewMockServer(
@@ -107,19 +107,22 @@ func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing
 			testutil.ResponseConfig{
 				StatusCode: 204,
 				Body:       "",
-			}),
+			},
+		),
 		testutil.WithCustomResponse(
 			"Cisco-IOS-XE-wireless-location-oper:location-oper-data",
 			testutil.ResponseConfig{
 				StatusCode: 204,
 				Body:       "",
-			}),
+			},
+		),
 		testutil.WithCustomResponse(
 			"Cisco-IOS-XE-wireless-location-oper:location-oper-data/location-rssi-measurements",
 			testutil.ResponseConfig{
 				StatusCode: 204,
 				Body:       "",
-			}),
+			},
+		),
 	)
 	defer mockServerNoContent.Close()
 
@@ -133,9 +136,7 @@ func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing
 			t.Errorf("Expected no error for GetLocation, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected non-nil result for GetLocation")
-		} else if result.LocationConfig != nil {
-			t.Error("Expected nil LocationConfig for HTTP 204 response")
+			t.Error("Expected a zero result for HTTP 204 response")
 		}
 	})
 
@@ -145,9 +146,7 @@ func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing
 			t.Errorf("Expected no error for GetOperational, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected non-nil result for GetOperational")
-		} else if result.CiscoIOSXEWirelessLocationOperData != nil {
-			t.Error("Expected nil CiscoIOSXEWirelessLocationOperData for HTTP 204 response")
+			t.Error("Expected a zero result for HTTP 204 response")
 		}
 	})
 
@@ -157,9 +156,7 @@ func TestLocationServiceUnit_GetConfigOperations_MockNoContentSuccess(t *testing
 			t.Errorf("Expected no error for LocationRSSIMeasurements, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected non-nil result for LocationRSSIMeasurements")
-		} else if len(result.LocationRSSIMeasurements) > 0 {
-			t.Error("Expected empty LocationRSSIMeasurements for HTTP 204 response")
+			t.Error("Expected a zero result for HTTP 204 response")
 		}
 	})
 }
@@ -186,10 +183,6 @@ func TestLocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 			t.Error("GetConfig should return nil result on error")
 		}
 	})
-
-	// Note: ListProfileConfigs and ListServerConfigs with empty responses
-	// are handled by HTTP 204 (No Content) in live environment,
-	// which core.Get handles gracefully by returning empty structs.
 }
 
 // TestLocationServiceUnit_ErrorHandling_NilClient tests error handling with nil client.

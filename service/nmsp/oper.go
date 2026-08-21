@@ -2,11 +2,14 @@ package nmsp
 
 // CiscoIOSXEWirelessNMSPOper represents the NMSP operational data container.
 type CiscoIOSXEWirelessNMSPOper struct {
-	CiscoIOSXEWirelessNMSPOperData struct {
-		ClientRegistration []ClientRegistration `json:"client-registration"` // NMSP client applications providing services (Live: IOS-XE 17.12.6a)
-		CmxConnection      []CmxConnection      `json:"cmx-connection"`      // CMX connection table (Live: IOS-XE 17.12.6a)
-		CmxCloudInfo       CmxCloudInfo         `json:"cmx-cloud-info"`      // NMSP services over HTTPS transport info (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"` // Network Mobility Services Protocol (YANG: IOS-XE 17.12.1)
+	CiscoIOSXEWirelessNMSPOperData *CiscoIOSXEWirelessNMSPOperData `json:"Cisco-IOS-XE-wireless-nmsp-oper:nmsp-oper-data"` // Network Mobility Services Protocol (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessNMSPOperData represents Network Mobility Services Protocol (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessNMSPOperData struct {
+	ClientRegistration []ClientRegistration `json:"client-registration"`      // NMSP client applications providing services (Live: IOS-XE 17.12.6a)
+	CmxConnection      []CmxConnection      `json:"cmx-connection"`           // CMX connection table (Live: IOS-XE 17.12.6a)
+	CmxCloudInfo       *CmxCloudInfo        `json:"cmx-cloud-info,omitempty"` // NMSP services over HTTPS transport info (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessNMSPClientRegistration represents the NMSP client registration data container.
@@ -21,7 +24,7 @@ type CiscoIOSXEWirelessNMSPCmxConnection struct {
 
 // CiscoIOSXEWirelessNMSPCmxCloudInfo represents the NMSP CMX cloud information data container.
 type CiscoIOSXEWirelessNMSPCmxCloudInfo struct {
-	CmxCloudInfo CmxCloudInfo `json:"Cisco-IOS-XE-wireless-nmsp-oper:cmx-cloud-info"`
+	CmxCloudInfo *CmxCloudInfo `json:"Cisco-IOS-XE-wireless-nmsp-oper:cmx-cloud-info"`
 }
 
 // ClientRegistration represents individual NMSP client registration record.

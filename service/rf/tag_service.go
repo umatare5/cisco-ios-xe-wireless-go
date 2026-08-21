@@ -46,15 +46,15 @@ func (s *RFTagService) GetRFTag(ctx context.Context, tagName string, opts ...cor
 }
 
 // ListRFTags retrieves all RF tag configurations.
-func (s *RFTagService) ListRFTags(ctx context.Context) ([]RFTag, error) {
+func (s *RFTagService) ListRFTags(ctx context.Context, opts ...core.GetOption) ([]RFTag, error) {
 	rfService := NewService(s.Client())
 
-	result, err := rfService.ListRFTags(ctx)
+	result, err := rfService.ListRFTags(ctx, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if result == nil {
-		return []RFTag{}, nil
+	if result == nil || result.RFTags == nil {
+		return nil, nil
 	}
 	if len(result.RFTags.RFTags) == 0 {
 		return []RFTag{}, nil
@@ -178,7 +178,7 @@ func (s *RFTagService) validateTagName(tagName string) error {
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
 func (s *RFTagService) buildTagURL(tagName string) string {
-	return fmt.Sprintf("%s/rf-tag=%s", routes.RFTagsPath, tagName)
+	return s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFTagByNamePath, tagName)
 }
 
 // buildPayload builds a payload for tag operations using the request.

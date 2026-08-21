@@ -4,35 +4,38 @@ import "time"
 
 // CiscoIOSXEWirelessAPOper represents access point operational data response.
 type CiscoIOSXEWirelessAPOper struct {
-	CiscoIOSXEWirelessAPOperData struct {
-		ApRadioNeighbor         []ApRadioNeighbor        `json:"ap-radio-neighbor"`          // AP radio neighbor information (Live: IOS-XE 17.12.6a)
-		RadioOperData           []RadioOperData          `json:"radio-oper-data"`            // Radio operational data corresponding to a radio of the 802.11 LWAPP AP (Live: IOS-XE 17.12.6a)
-		RadioResetStats         []RadioResetStats        `json:"radio-reset-stats"`          // Radio reset stats (Live: IOS-XE 17.12.6a)
-		QosClientData           []QosClientData          `json:"qos-client-data,omitempty"`  // QoS client data (YANG: IOS-XE 17.12.1)
-		CAPWAPData              []CAPWAPData             `json:"capwap-data"`                // Information about the 802.11 LWAPP AP that has joined the controller (Live: IOS-XE 17.12.6a)
-		ApNameMACMap            []ApNameMACMap           `json:"ap-name-mac-map"`            // Mapping between AP name and radio MAC of AP (Live: IOS-XE 17.12.6a)
-		WtpSlotWlanStats        []WtpSlotWlanStats       `json:"wtp-slot-wlan-stats"`        // AP slot and WLAN stats (Live: IOS-XE 17.12.6a)
-		EthernetMACWtpMACMap    []EthernetMACWtpMACMap   `json:"ethernet-mac-wtp-mac-map"`   // Mapping between AP ethernet MAC and base radio MAC (Live: IOS-XE 17.12.6a)
-		RadioOperStats          []RadioOperStats         `json:"radio-oper-stats"`           // Operational statistics for a particular radio (Live: IOS-XE 17.12.6a)
-		EthernetIfStats         []EthernetIfStats        `json:"ethernet-if-stats"`          // Ethernet interface statistics (Live: IOS-XE 17.12.6a)
-		EwlcWncdStats           EwlcWncdStats            `json:"ewlc-wncd-stats"`            // AP image download and predownload statistics for EWC on AP platforms (Live: IOS-XE 17.12.6a)
-		ApIoxOperData           []ApIoxOperData          `json:"ap-iox-oper-data"`           // IOx application hosting operational data reported by the AP (Live: IOS-XE 17.12.6a)
-		QosGlobalStats          QosGlobalStats           `json:"qos-global-stats"`           // QoS Global statistics data in DB (Live: IOS-XE 17.12.6a)
-		OperData                []OperData               `json:"oper-data"`                  // Operational data corresponding to an 802.11 LWAPP AP (Live: IOS-XE 17.12.6a)
-		RlanOper                []RlanOper               `json:"rlan-oper,omitempty"`        // LAN information of the AP (YANG: IOS-XE 17.12.1)
-		EwlcMewlcPredownloadRec EwlcMewlcPredownloadRec  `json:"ewlc-mewlc-predownload-rec"` // Embedded Wireless Controller predownload data (Live: IOS-XE 17.12.6a)
-		CdpCacheData            []CdpCacheData           `json:"cdp-cache-data"`             // Cached neighbor information via CDP messages on APs (Live: IOS-XE 17.12.6a)
-		LldpNeigh               []LldpNeigh              `json:"lldp-neigh"`                 // Cached neighbor information via LLDP messages on APs (Live: IOS-XE 17.12.6a)
-		TpCertInfo              TpCertInfo               `json:"tp-cert-info"`               // Trustpoint Certificate information (Live: IOS-XE 17.12.6a)
-		DiscData                []DiscData               `json:"disc-data"`                  // Discovery packet counters (Live: IOS-XE 17.12.6a)
-		CAPWAPPkts              []CAPWAPPkts             `json:"capwap-pkts"`                // CAPWAP packet counters (Live: IOS-XE 17.12.6a)
-		CountryOper             []CountryOper            `json:"country-oper"`               // Regulatory Domain country details (Live: IOS-XE 17.12.6a)
-		SuppCountryOper         []SuppCountryOper        `json:"supp-country-oper"`          // Supported Regulatory Domain country details (Live: IOS-XE 17.12.6a)
-		ApNhGlobalData          ApNhGlobalData           `json:"ap-nh-global-data"`          // Information about the RRM based AP clustering algorithm stats (Live: IOS-XE 17.12.6a)
-		ApImagePrepareLocation  []ApImagePrepareLocation `json:"ap-image-prepare-location"`  // AP image for prepare location (Live: IOS-XE 17.12.6a)
-		ApImageActiveLocation   []ApImageActiveLocation  `json:"ap-image-active-location"`   // AP image for active location (Live: IOS-XE 17.12.6a)
-		IotFirmware             []IotFirmware            `json:"iot-firmware"`               // IoT radio firmware operational data (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessAPOperData *CiscoIOSXEWirelessAPOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessAPOperData represents Root container of access point operational data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessAPOperData struct {
+	ApRadioNeighbor         []ApRadioNeighbor        `json:"ap-radio-neighbor"`                    // AP radio neighbor information (Live: IOS-XE 17.12.6a)
+	RadioOperData           []RadioOperData          `json:"radio-oper-data"`                      // Radio operational data corresponding to a radio of the 802.11 LWAPP AP (Live: IOS-XE 17.12.6a)
+	RadioResetStats         []RadioResetStats        `json:"radio-reset-stats"`                    // Radio reset stats (Live: IOS-XE 17.12.6a)
+	QosClientData           []QosClientData          `json:"qos-client-data,omitempty"`            // QoS client data (YANG: IOS-XE 17.12.1)
+	CAPWAPData              []CAPWAPData             `json:"capwap-data"`                          // Information about the 802.11 LWAPP AP that has joined the controller (Live: IOS-XE 17.12.6a)
+	ApNameMACMap            []ApNameMACMap           `json:"ap-name-mac-map"`                      // Mapping between AP name and radio MAC of AP (Live: IOS-XE 17.12.6a)
+	WtpSlotWlanStats        []WtpSlotWlanStats       `json:"wtp-slot-wlan-stats"`                  // AP slot and WLAN stats (Live: IOS-XE 17.12.6a)
+	EthernetMACWtpMACMap    []EthernetMACWtpMACMap   `json:"ethernet-mac-wtp-mac-map"`             // Mapping between AP ethernet MAC and base radio MAC (Live: IOS-XE 17.12.6a)
+	RadioOperStats          []RadioOperStats         `json:"radio-oper-stats"`                     // Operational statistics for a particular radio (Live: IOS-XE 17.12.6a)
+	EthernetIfStats         []EthernetIfStats        `json:"ethernet-if-stats"`                    // Ethernet interface statistics (Live: IOS-XE 17.12.6a)
+	EwlcWncdStats           *EwlcWncdStats           `json:"ewlc-wncd-stats,omitempty"`            // AP image download and predownload statistics for EWC on AP platforms (Live: IOS-XE 17.12.6a)
+	ApIoxOperData           []ApIoxOperData          `json:"ap-iox-oper-data"`                     // IOx application hosting operational data reported by the AP (Live: IOS-XE 17.12.6a)
+	QosGlobalStats          *QosGlobalStats          `json:"qos-global-stats,omitempty"`           // QoS Global statistics data in DB (Live: IOS-XE 17.12.6a)
+	OperData                []OperData               `json:"oper-data"`                            // Operational data corresponding to an 802.11 LWAPP AP (Live: IOS-XE 17.12.6a)
+	RlanOper                []RlanOper               `json:"rlan-oper,omitempty"`                  // LAN information of the AP (YANG: IOS-XE 17.12.1)
+	EwlcMewlcPredownloadRec *EwlcMewlcPredownloadRec `json:"ewlc-mewlc-predownload-rec,omitempty"` // Embedded Wireless Controller predownload data (Live: IOS-XE 17.12.6a)
+	CdpCacheData            []CdpCacheData           `json:"cdp-cache-data"`                       // Cached neighbor information via CDP messages on APs (Live: IOS-XE 17.12.6a)
+	LldpNeigh               []LldpNeigh              `json:"lldp-neigh"`                           // Cached neighbor information via LLDP messages on APs (Live: IOS-XE 17.12.6a)
+	TpCertInfo              *TpCertInfo              `json:"tp-cert-info,omitempty"`               // Trustpoint Certificate information (Live: IOS-XE 17.12.6a)
+	DiscData                []DiscData               `json:"disc-data"`                            // Discovery packet counters (Live: IOS-XE 17.12.6a)
+	CAPWAPPkts              []CAPWAPPkts             `json:"capwap-pkts"`                          // CAPWAP packet counters (Live: IOS-XE 17.12.6a)
+	CountryOper             []CountryOper            `json:"country-oper"`                         // Regulatory Domain country details (Live: IOS-XE 17.12.6a)
+	SuppCountryOper         []SuppCountryOper        `json:"supp-country-oper"`                    // Supported Regulatory Domain country details (Live: IOS-XE 17.12.6a)
+	ApNhGlobalData          *ApNhGlobalData          `json:"ap-nh-global-data,omitempty"`          // Information about the RRM based AP clustering algorithm stats (Live: IOS-XE 17.12.6a)
+	ApImagePrepareLocation  []ApImagePrepareLocation `json:"ap-image-prepare-location"`            // AP image for prepare location (Live: IOS-XE 17.12.6a)
+	ApImageActiveLocation   []ApImageActiveLocation  `json:"ap-image-active-location"`             // AP image for active location (Live: IOS-XE 17.12.6a)
+	IotFirmware             []IotFirmware            `json:"iot-firmware"`                         // IoT radio firmware operational data (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessApOperApRadioNeighbor represents the access point radio neighbor response.
@@ -87,7 +90,7 @@ type CiscoIOSXEWirelessApOperEthernetIfStats struct {
 
 // CiscoIOSXEWirelessApOperEwlcWncdStats represents the EWLC WNCD statistics response.
 type CiscoIOSXEWirelessApOperEwlcWncdStats struct {
-	EwlcWncdStats EwlcWncdStats `json:"Cisco-IOS-XE-wireless-access-point-oper:ewlc-wncd-stats"`
+	EwlcWncdStats *EwlcWncdStats `json:"Cisco-IOS-XE-wireless-access-point-oper:ewlc-wncd-stats"`
 }
 
 // CiscoIOSXEWirelessApOperApIoxOperData represents the AP IOx operational data response.
@@ -97,7 +100,7 @@ type CiscoIOSXEWirelessApOperApIoxOperData struct {
 
 // CiscoIOSXEWirelessApOperQosGlobalStats represents the QoS global statistics response.
 type CiscoIOSXEWirelessApOperQosGlobalStats struct {
-	QosGlobalStats QosGlobalStats `json:"Cisco-IOS-XE-wireless-access-point-oper:qos-global-stats"`
+	QosGlobalStats *QosGlobalStats `json:"Cisco-IOS-XE-wireless-access-point-oper:qos-global-stats"`
 }
 
 // CiscoIOSXEWirelessApOperData represents the AP operational data response.
@@ -112,7 +115,7 @@ type CiscoIOSXEWirelessApOperRlanOper struct {
 
 // CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec represents the EWLC MEWLC predownload record response.
 type CiscoIOSXEWirelessApOperEwlcMewlcPredownloadRec struct {
-	EwlcMewlcPredownloadRec EwlcMewlcPredownloadRec `json:"Cisco-IOS-XE-wireless-access-point-oper:ewlc-mewlc-predownload-rec"`
+	EwlcMewlcPredownloadRec *EwlcMewlcPredownloadRec `json:"Cisco-IOS-XE-wireless-access-point-oper:ewlc-mewlc-predownload-rec"`
 }
 
 // CiscoIOSXEWirelessApOperCdpCacheData represents the CDP cache data response.
@@ -127,7 +130,7 @@ type CiscoIOSXEWirelessApOperLldpNeigh struct {
 
 // CiscoIOSXEWirelessApOperTpCertInfo represents the trustpoint certificate info response.
 type CiscoIOSXEWirelessApOperTpCertInfo struct {
-	TpCertInfo TpCertInfo `json:"Cisco-IOS-XE-wireless-access-point-oper:tp-cert-info"`
+	TpCertInfo *TpCertInfo `json:"Cisco-IOS-XE-wireless-access-point-oper:tp-cert-info"`
 }
 
 // CiscoIOSXEWirelessApOperDiscData represents the discovery data response.
@@ -152,7 +155,7 @@ type CiscoIOSXEWirelessApOperSuppCountryOper struct {
 
 // CiscoIOSXEWirelessApOperApNhGlobalData represents the AP neighborhood global data response.
 type CiscoIOSXEWirelessApOperApNhGlobalData struct {
-	ApNhGlobalData ApNhGlobalData `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-nh-global-data"`
+	ApNhGlobalData *ApNhGlobalData `json:"Cisco-IOS-XE-wireless-access-point-oper:ap-nh-global-data"`
 }
 
 // CiscoIOSXEWirelessApOperApImagePrepareLocation represents the AP image prepare location response.
@@ -724,16 +727,16 @@ type PhyTxPwrLvlCfg struct {
 
 // PhyTxPwrLvlCfgData represents PHY TX power level configuration data.
 type PhyTxPwrLvlCfgData struct {
-	NumSuppPowerLevels uint8 `json:"num-supp-power-levels"` // Number of supported power levels (Live: IOS-XE 17.12.6a)
-	TxPowerLevel1      int8  `json:"tx-power-level-1"`      // TX power level 1 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel2      int8  `json:"tx-power-level-2"`      // TX power level 2 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel3      int8  `json:"tx-power-level-3"`      // TX power level 3 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel4      int8  `json:"tx-power-level-4"`      // TX power level 4 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel5      int8  `json:"tx-power-level-5"`      // TX power level 5 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel6      int8  `json:"tx-power-level-6"`      // TX power level 6 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel7      int8  `json:"tx-power-level-7"`      // TX power level 7 (dBm) (Live: IOS-XE 17.12.6a)
-	TxPowerLevel8      int8  `json:"tx-power-level-8"`      // TX power level 8 (dBm) (Live: IOS-XE 17.12.6a)
-	CurrTxPowerInDbm   int8  `json:"curr-tx-power-in-dbm"`  // Current active TX power (dBm) (Live: IOS-XE 17.12.6a)
+	NumSuppPowerLevels uint8 `json:"num-supp-power-levels"`          // Number of supported power levels (Live: IOS-XE 17.12.6a)
+	TxPowerLevel1      *int8 `json:"tx-power-level-1,omitempty"`     // TX power level 1 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel2      int8  `json:"tx-power-level-2"`               // TX power level 2 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel3      int8  `json:"tx-power-level-3"`               // TX power level 3 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel4      int8  `json:"tx-power-level-4"`               // TX power level 4 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel5      int8  `json:"tx-power-level-5"`               // TX power level 5 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel6      int8  `json:"tx-power-level-6"`               // TX power level 6 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel7      int8  `json:"tx-power-level-7"`               // TX power level 7 (dBm) (Live: IOS-XE 17.12.6a)
+	TxPowerLevel8      int8  `json:"tx-power-level-8"`               // TX power level 8 (dBm) (Live: IOS-XE 17.12.6a)
+	CurrTxPowerInDbm   *int8 `json:"curr-tx-power-in-dbm,omitempty"` // Current active TX power (dBm) (Live: IOS-XE 17.12.6a)
 }
 
 // AntennaCfg represents antenna configuration.
@@ -813,14 +816,14 @@ type TempInfo struct {
 
 // TagInfo represents AP tag information.
 type TagInfo struct {
-	TagSource         string          `json:"tag-source"`          // Tag assignment source methodology (Live: IOS-XE 17.12.6a)
-	IsApMisconfigured bool            `json:"is-ap-misconfigured"` // AP misconfiguration detection (Live: IOS-XE 17.12.6a)
-	ResolvedTagInfo   ResolvedTagInfo `json:"resolved-tag-info"`   // Final resolved tag assignments (Live: IOS-XE 17.12.6a)
-	PolicyTagInfo     PolicyTagInfo   `json:"policy-tag-info"`     // Policy tag configuration (Live: IOS-XE 17.12.6a)
-	SiteTag           SiteTag         `json:"site-tag"`            // Site tag information (Live: IOS-XE 17.12.6a)
-	RFTag             RFTag           `json:"rf-tag"`              // RF tag configuration (Live: IOS-XE 17.12.6a)
-	FilterInfo        FilterInfo      `json:"filter-info"`         // Access control filter information (Live: IOS-XE 17.12.6a)
-	IsDTLSLscFbkAp    bool            `json:"is-dtls-lsc-fbk-ap"`  // DTLS LSC fallback AP designation (Live: IOS-XE 17.12.6a)
+	TagSource         string          `json:"tag-source"`                    // Tag assignment source methodology (Live: IOS-XE 17.12.6a)
+	IsApMisconfigured *bool           `json:"is-ap-misconfigured,omitempty"` // AP misconfiguration detection (Live: IOS-XE 17.12.6a)
+	ResolvedTagInfo   ResolvedTagInfo `json:"resolved-tag-info"`             // Final resolved tag assignments (Live: IOS-XE 17.12.6a)
+	PolicyTagInfo     PolicyTagInfo   `json:"policy-tag-info"`               // Policy tag configuration (Live: IOS-XE 17.12.6a)
+	SiteTag           SiteTag         `json:"site-tag"`                      // Site tag information (Live: IOS-XE 17.12.6a)
+	RFTag             RFTag           `json:"rf-tag"`                        // RF tag configuration (Live: IOS-XE 17.12.6a)
+	FilterInfo        FilterInfo      `json:"filter-info"`                   // Access control filter information (Live: IOS-XE 17.12.6a)
+	IsDTLSLscFbkAp    bool            `json:"is-dtls-lsc-fbk-ap"`            // DTLS LSC fallback AP designation (Live: IOS-XE 17.12.6a)
 }
 
 // ResolvedTagInfo represents resolved tag information.

@@ -30,8 +30,8 @@ func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoI
 }
 
 // ListTagConfigs retrieves access point tag configurations.
-func (s Service) ListTagConfigs(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessApCfgApTag, error) {
-	return core.Get[CiscoIOSXEWirelessApCfgApTag](ctx, s.Client(), routes.APTagsPath, opts...)
+func (s Service) ListTagConfigs(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessApCfgApTags, error) {
+	return core.Get[CiscoIOSXEWirelessApCfgApTags](ctx, s.Client(), routes.APTagsPath, opts...)
 }
 
 // GetTagConfigByMAC retrieves AP tag configuration filtered by AP MAC address.
@@ -57,8 +57,13 @@ func (s Service) GetTagConfigByMAC(
 func (s Service) ListTagSourcePriorityConfigs(
 	ctx context.Context,
 	opts ...core.GetOption,
-) (*TagSourcePriorityConfigs, error) {
-	return core.Get[TagSourcePriorityConfigs](ctx, s.Client(), routes.APTagSourcePriorityConfigsPath, opts...)
+) (*CiscoIOSXEWirelessApCfgTagSourcePriorityConfigs, error) {
+	return core.Get[CiscoIOSXEWirelessApCfgTagSourcePriorityConfigs](
+		ctx,
+		s.Client(),
+		routes.APTagSourcePriorityConfigsPath,
+		opts...,
+	)
 }
 
 // GetGlobalOperational retrieves the complete AP global operational data.
@@ -82,14 +87,12 @@ func (s Service) ListAPHistoryByEthernetMAC(
 	ctx context.Context,
 	ethernetMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApGlobalOperApHistory, error) {
-	if ethernetMAC == "" {
-		return nil, core.ErrResourceNotFound
-	}
-	if strings.TrimSpace(ethernetMAC) == "" {
-		return nil, core.ErrResourceNotFound
+	normalizedMAC, err := service.RequireMACAddress(ethernetMAC)
+	if err != nil {
+		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, ethernetMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APHistoryQueryPath, normalizedMAC)
 	return core.Get[CiscoIOSXEWirelessApGlobalOperApHistory](ctx, s.Client(), url, opts...)
 }
 
@@ -156,7 +159,8 @@ func (s Service) ListWLANClientStats(
 		ctx,
 		s.Client(),
 		routes.APWlanClientStatsPath,
-		opts...)
+		opts...,
+	)
 }
 
 // GetOperational retrieves the complete AP operational data.
@@ -182,11 +186,12 @@ func (s Service) GetCAPWAPDataByWTPMAC(
 	ctx context.Context,
 	wtpMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperCAPWAPData, error) {
-	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
-		return nil, core.ErrResourceNotFound
+	normalizedMAC, err := service.RequireMACAddress(wtpMAC)
+	if err != nil {
+		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, wtpMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APCapwapDataPath, normalizedMAC)
 	return core.Get[CiscoIOSXEWirelessApOperCAPWAPData](ctx, s.Client(), url, opts...)
 }
 
@@ -226,14 +231,12 @@ func (s Service) ListRadioData(
 func (s Service) GetRadioStatusByWTPMACAndSlot(
 	ctx context.Context, wtpMAC string, slotID int, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperRadioOperData, error) {
-	if wtpMAC == "" {
-		return nil, core.ErrResourceNotFound
-	}
-	if strings.TrimSpace(wtpMAC) == "" {
-		return nil, core.ErrResourceNotFound
+	normalizedMAC, err := service.RequireMACAddress(wtpMAC)
+	if err != nil {
+		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, wtpMAC, slotID)
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(routes.APRadioOperDataPath, normalizedMAC, slotID)
 	return core.Get[CiscoIOSXEWirelessApOperRadioOperData](ctx, s.Client(), url, opts...)
 }
 
@@ -250,27 +253,13 @@ func (s Service) ListRadioNeighbors(
 func (s Service) GetRadioNeighborByAPMACSlotAndBSSID(
 	ctx context.Context, apMAC string, slotID int, bssid string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApRadioNeighbor, error) {
-	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
-		return nil, errors.New("AP MAC address cannot be empty")
-	}
-	if bssid == "" || strings.TrimSpace(bssid) == "" {
-		return nil, errors.New("BSSID cannot be empty")
-	}
-
-	if err := validation.ValidateMACAddress(apMAC); err != nil {
+	normalizedAPMAC, err := service.RequireMACAddress(apMAC)
+	if err != nil {
 		return nil, fmt.Errorf("invalid AP MAC address: %w", err)
 	}
-	if err := validation.ValidateMACAddress(bssid); err != nil {
+	normalizedBSSID, err := service.RequireMACAddress(bssid)
+	if err != nil {
 		return nil, fmt.Errorf("invalid BSSID: %w", err)
-	}
-
-	normalizedAPMAC, err := validation.NormalizeMACAddress(apMAC)
-	if err != nil {
-		return nil, fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
-	}
-	normalizedBSSID, err := validation.NormalizeMACAddress(bssid)
-	if err != nil {
-		return nil, fmt.Errorf("invalid BSSID %s: %w", bssid, err)
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
@@ -290,7 +279,8 @@ func (s Service) ListActiveImageLocations(
 		ctx,
 		s.Client(),
 		routes.APImageActiveLocationPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListPreparedImageLocations retrieves only AP image prepare location data using fields parameter.
@@ -301,7 +291,8 @@ func (s Service) ListPreparedImageLocations(
 		ctx,
 		s.Client(),
 		routes.APImagePrepareLocationPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListPowerInfo retrieves only AP power information using fields parameter.
@@ -444,7 +435,8 @@ func (s Service) ListEthernetMACWtpMACMaps(
 		ctx,
 		s.Client(),
 		routes.APEthernetMACWtpMACMapPath,
-		opts...)
+		opts...,
+	)
 }
 
 // GetEthernetMACWtpMACMapByEthernetMAC retrieves Ethernet MAC to WTP MAC mapping for a specific Ethernet MAC address.
@@ -849,7 +841,10 @@ func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error {
 
 // Reload restarts an Access Point by MAC address causing temporary service interruption.
 func (s Service) Reload(ctx context.Context, apMAC string) error {
-	if !validation.IsValidMACAddr(apMAC) {
+	// findAPByMAC compares against the colon form the controller reports, so a dotted or
+	// upper-case address has to be normalized here or it matches no joined AP.
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+	if err != nil {
 		return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
 	}
 
@@ -861,7 +856,7 @@ func (s Service) Reload(ctx context.Context, apMAC string) error {
 		return errors.New(ErrCAPWAPDataUnavailable)
 	}
 
-	apName, found := findAPByMAC(resp, apMAC)
+	apName, found := findAPByMAC(resp, normalizedMAC)
 	if !found {
 		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
 	}

@@ -31,16 +31,17 @@ func (q *queryRecorder) get() string {
 }
 
 // newRecordingService starts a server that records the query of each request and answers
-// with an empty JSON object, then returns a service bound to it. The mocks in pkg/testutil
-// match on the path alone, so they cannot observe the query.
-func newRecordingService(t *testing.T) (Service, *queryRecorder) {
+// with body, then returns a service bound to it. The mocks in pkg/testutil match on the path
+// alone, so they cannot observe the query. body must be the envelope of the node under read:
+// core.Get holds the sole top-level key against the endpoint.
+func newRecordingService(t *testing.T, body string) (Service, *queryRecorder) {
 	t.Helper()
 
 	recorder := &queryRecorder{}
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		recorder.set(r.URL.RawQuery)
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{}`))
+		_, _ = w.Write([]byte(body))
 	}))
 	t.Cleanup(server.Close)
 
@@ -71,10 +72,12 @@ func assertQueryBothDirections(t *testing.T, read func(ctx context.Context, opts
 func TestWlanServiceUnit_GetOptions_ConfigRouteWireQuery(t *testing.T) {
 	tests := []struct {
 		name string
+		body string
 		read func(s Service) func(ctx context.Context, opts ...core.GetOption) error
 	}{
 		{
 			name: "GetConfig",
+			body: `{"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data": {}}`,
 			read: func(s Service) func(ctx context.Context, opts ...core.GetOption) error {
 				return func(ctx context.Context, opts ...core.GetOption) error {
 					_, err := s.GetConfig(ctx, opts...)
@@ -84,6 +87,7 @@ func TestWlanServiceUnit_GetOptions_ConfigRouteWireQuery(t *testing.T) {
 		},
 		{
 			name: "ListWlanCfgEntries",
+			body: `{"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {}}`,
 			read: func(s Service) func(ctx context.Context, opts ...core.GetOption) error {
 				return func(ctx context.Context, opts ...core.GetOption) error {
 					_, err := s.ListWlanCfgEntries(ctx, opts...)
@@ -93,6 +97,7 @@ func TestWlanServiceUnit_GetOptions_ConfigRouteWireQuery(t *testing.T) {
 		},
 		{
 			name: "ListWlanPolicies",
+			body: `{"Cisco-IOS-XE-wireless-wlan-cfg:wlan-policies": {}}`,
 			read: func(s Service) func(ctx context.Context, opts ...core.GetOption) error {
 				return func(ctx context.Context, opts ...core.GetOption) error {
 					_, err := s.ListWlanPolicies(ctx, opts...)
@@ -104,14 +109,15 @@ func TestWlanServiceUnit_GetOptions_ConfigRouteWireQuery(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			service, recorder := newRecordingService(t)
+			service, recorder := newRecordingService(t, tt.body)
 			assertQueryBothDirections(t, tt.read(service), recorder)
 		})
 	}
 }
 
 func TestWlanServiceUnit_GetOptions_OperRouteWireQuery(t *testing.T) {
-	service, recorder := newRecordingService(t)
+	service, recorder := newRecordingService(t,
+		`{"Cisco-IOS-XE-wireless-wlan-global-oper:wlan-global-oper-data": {}}`)
 
 	assertQueryBothDirections(t, func(ctx context.Context, opts ...core.GetOption) error {
 		_, err := service.GetOperational(ctx, opts...)

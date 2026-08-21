@@ -3,27 +3,35 @@ package rfid
 import "time"
 
 // RFIDCiscoVendorType represents the RFID Cisco vendor type enumeration.
-type RFIDCiscoVendorType int
+type RFIDCiscoVendorType string
 
 const (
-	RFIDTypeG2        RFIDCiscoVendorType = 0 // G2 vendor
-	RFIDTypeAeroscout RFIDCiscoVendorType = 1 // Aero scout vendor
-	RFIDTypeUnknown   RFIDCiscoVendorType = 2 // Unknown vendor
+	RFIDTypeG2        RFIDCiscoVendorType = "rfid-type-g2"        // G2 vendor
+	RFIDTypeAeroscout RFIDCiscoVendorType = "rfid-type-aeroscout" // Aero scout vendor
+	RFIDTypeUnknown   RFIDCiscoVendorType = "rfid-type-unknown"   // Unknown vendor
 )
 
 // RFIDDataType represents the RFID data type enumeration.
-type RFIDDataType int
+type RFIDDataType string
 
 const (
-	BluesoftRFIDData RFIDDataType = 0 // Bluesoft RFID tag
-	CiscoRFIDData    RFIDDataType = 1 // Cisco RFID tag
+	BluesoftRFIDData RFIDDataType = "bluesoft-rfid-data" // Bluesoft RFID tag
+	CiscoRFIDData    RFIDDataType = "cisco-rfid-data"    // Cisco RFID tag
 )
 
 // CiscoIOSXEWirelessRFIDOper represents RFID operational data.
 type CiscoIOSXEWirelessRFIDOper struct {
-	CiscoIOSXEWirelessRFIDOperData struct {
-		RFIDData []RFIDData `json:"rfid-data"` // RFID packet parameters list (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data"` // Wireless RFID operational data (YANG: IOS-XE 17.12.1)
+	CiscoIOSXEWirelessRFIDOperData *CiscoIOSXEWirelessRFIDOperData `json:"Cisco-IOS-XE-wireless-rfid-oper:rfid-oper-data"` // Wireless RFID operational data (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessRFIDOperData represents Wireless RFID operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessRFIDOperData struct {
+	RFIDData []RFIDData `json:"rfid-data"` // RFID packet parameters list (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessRFIDOperRFIDData represents the RFID packet parameters list.
+type CiscoIOSXEWirelessRFIDOperRFIDData struct {
+	RFIDData []RFIDData `json:"Cisco-IOS-XE-wireless-rfid-oper:rfid-data"` // RFID packet parameters list (YANG: IOS-XE 17.12.1)
 }
 
 // RFIDData represents RFID packet parameters.
@@ -38,7 +46,7 @@ type RFIDData struct {
 	ApHighRSSI          RFIDApHighestRSSI  `json:"ap-high-rssi"`                  // Highest RSSI AP parameters (YANG: IOS-XE 17.12.1)
 	ApData              []RFIDApEntryList  `json:"ap-data"`                       // AP information list for RFID packet (YANG: IOS-XE 17.12.1)
 	TxPower             int8               `json:"tx-power"`                      // AP transmit power for RFID packet (YANG: IOS-XE 17.12.1)
-	TimerHandle         uint64             `json:"timer-handle"`                  // RFID record timer handle (YANG: IOS-XE 17.12.1)
+	TimerHandle         *string            `json:"timer-handle,omitempty"`        // RFID record timer handle (YANG: IOS-XE 17.12.1)
 	ApListLowestRSSI    *RFIDApLowestRSSI  `json:"ap-list-lowest-rssi,omitempty"` // Lowest RSSI AP parameters (YANG: IOS-XE 17.12.1)
 }
 

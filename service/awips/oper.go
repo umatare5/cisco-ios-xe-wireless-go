@@ -2,14 +2,17 @@ package awips
 
 // CiscoIOSXEWirelessAWIPSOper represents the AWIPS operational data.
 type CiscoIOSXEWirelessAWIPSOper struct {
-	CiscoIOSXEWirelessAWIPSOperData struct {
-		AWIPSPerApInfo      []AWIPSPerApInfo     `json:"awips-per-ap-info"`                // Per AP AWIPS information (Live: IOS-XE 17.12.6a)
-		AWIPSDwldStatus     AWIPSDwldStatus      `json:"awips-dwld-status"`                // AWIPS file download status (Live: IOS-XE 17.12.6a)
-		AWIPSApDwldStatus   []AWIPSApDwldStatus  `json:"awips-ap-dwld-status"`             // Per AP AWIPS file download status (Live: IOS-XE 17.12.6a)
-		AWIPSPerSignStats   []AWIPSPerSignStats  `json:"awips-per-sign-stats,omitempty"`   // AWIPS statistics per signature (YANG: IOS-XE 17.18.1)
-		AWIPSGlobStats      *AWIPSGlobStats      `json:"awips-glob-stats,omitempty"`       // AWIPS global statistics (YANG: IOS-XE 17.18.1)
-		AWIPSDwldStatusWncd *AWIPSDwldStatusWncd `json:"awips-dwld-status-wncd,omitempty"` // AWIPS internal bookkeeping (YANG: IOS-XE 17.18.1)
-	} `json:"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"` // AWIPS operational data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessAWIPSOperData *CiscoIOSXEWirelessAWIPSOperData `json:"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data"` // AWIPS operational data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessAWIPSOperData represents AWIPS operational data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessAWIPSOperData struct {
+	AWIPSPerApInfo      []AWIPSPerApInfo     `json:"awips-per-ap-info"`                // Per AP AWIPS information (Live: IOS-XE 17.12.6a)
+	AWIPSDwldStatus     *AWIPSDwldStatus     `json:"awips-dwld-status,omitempty"`      // AWIPS file download status (Live: IOS-XE 17.12.6a)
+	AWIPSApDwldStatus   []AWIPSApDwldStatus  `json:"awips-ap-dwld-status"`             // Per AP AWIPS file download status (Live: IOS-XE 17.12.6a)
+	AWIPSPerSignStats   []AWIPSPerSignStats  `json:"awips-per-sign-stats,omitempty"`   // AWIPS statistics per signature (YANG: IOS-XE 17.18.1)
+	AWIPSGlobStats      *AWIPSGlobStats      `json:"awips-glob-stats,omitempty"`       // AWIPS global statistics (YANG: IOS-XE 17.18.1)
+	AWIPSDwldStatusWncd *AWIPSDwldStatusWncd `json:"awips-dwld-status-wncd,omitempty"` // AWIPS internal bookkeeping (YANG: IOS-XE 17.18.1)
 }
 
 // CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo represents the AWIPS per AP information wrapper.
@@ -19,7 +22,7 @@ type CiscoIOSXEWirelessAWIPSOperAWIPSPerApInfo struct {
 
 // CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus represents the AWIPS download status wrapper.
 type CiscoIOSXEWirelessAWIPSOperAWIPSDwldStatus struct {
-	AWIPSDwldStatus AWIPSDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status"`
+	AWIPSDwldStatus *AWIPSDwldStatus `json:"Cisco-IOS-XE-wireless-awips-oper:awips-dwld-status"`
 }
 
 // CiscoIOSXEWirelessAWIPSOperAWIPSApDwldStatus represents the AWIPS per AP download status wrapper.

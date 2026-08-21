@@ -1,6 +1,9 @@
 package client_test
 
 import (
+	"context"
+	"errors"
+	"net/http"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -482,7 +485,98 @@ func TestClientServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	}
 }
 
-// TestClientServiceUnit_ValidationErrors_EmptyMAC tests validation error scenarios.
+// byMACLookup names one of the nine list lookups this service keys by MAC address,
+// together with the list node it reads, so the wire form can be asserted for each.
+type byMACLookup struct {
+	name string
+	node string
+	call func(ctx context.Context, s client.Service, mac string) error
+}
+
+// byMACLookups enumerates every lookup that rejects an unusable MAC address, so the
+// sentinel, the malformed-address rejection and the wire form are asserted for all
+// nine rather than for one.
+func byMACLookups() []byMACLookup {
+	return []byMACLookup{
+		{
+			name: "GetCommonInfoByMAC",
+			node: "common-oper-data",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetCommonInfoByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetDCInfoByMAC",
+			node: "dc-info",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetDCInfoByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetDot11InfoByMAC",
+			node: "dot11-oper-data",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetDot11InfoByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetMMIFClientHistoryByMAC",
+			node: "mm-if-client-history",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetMMIFClientHistoryByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetMMIFClientStatsByMAC",
+			node: "mm-if-client-stats",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetMMIFClientStatsByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetMobilityInfoByMAC",
+			node: "mobility-oper-data",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetMobilityInfoByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetPolicyInfoByMAC",
+			node: "policy-data",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetPolicyInfoByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetSISFDBByMAC",
+			node: "sisf-db-mac",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetSISFDBByMAC(ctx, mac)
+				return err
+			},
+		},
+		{
+			name: "GetTrafficStatsByMAC",
+			node: "traffic-stats",
+			call: func(ctx context.Context, s client.Service, mac string) error {
+				_, err := s.GetTrafficStatsByMAC(ctx, mac)
+				return err
+			},
+		},
+	}
+}
+
+// TestClientServiceUnit_ValidationErrors_EmptyMAC pins the sentinel an empty list key
+// carries. It is core.ErrResourceNotFound, which core.IsNotFoundError reports true for:
+// asking for a record by an address that cannot name one is an absence, not a client
+// misconfiguration.
 func TestClientServiceUnit_ValidationErrors_EmptyMAC(t *testing.T) {
 	t.Parallel()
 
@@ -492,63 +586,116 @@ func TestClientServiceUnit_ValidationErrors_EmptyMAC(t *testing.T) {
 	service := client.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	// Test GetCommonInfoByMAC with empty MAC
-	_, err := service.GetCommonInfoByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetCommonInfoByMAC")
+	lookups := byMACLookups()
+	if len(lookups) != 9 {
+		t.Fatalf("Enumerated %d MAC lookups, want 9", len(lookups))
 	}
 
-	// Test GetDCInfoByMAC with empty MAC
-	_, err = service.GetDCInfoByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetDCInfoByMAC")
-	}
-
-	// Test GetDot11InfoByMAC with empty MAC
-	_, err = service.GetDot11InfoByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetDot11InfoByMAC")
-	}
-
-	// Test GetMMIFClientHistoryByMAC with empty MAC
-	_, err = service.GetMMIFClientHistoryByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetMMIFClientHistoryByMAC")
-	}
-
-	// Test GetMMIFClientStatsByMAC with empty MAC
-	_, err = service.GetMMIFClientStatsByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetMMIFClientStatsByMAC")
-	}
-
-	// Test GetMobilityInfoByMAC with empty MAC
-	_, err = service.GetMobilityInfoByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetMobilityInfoByMAC")
-	}
-
-	// Test GetPolicyInfoByMAC with empty MAC
-	_, err = service.GetPolicyInfoByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetPolicyInfoByMAC")
-	}
-
-	// Test GetSISFDBByMAC with empty MAC
-	_, err = service.GetSISFDBByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetSISFDBByMAC")
-	}
-
-	// Test GetTrafficStatsByMAC with empty MAC
-	_, err = service.GetTrafficStatsByMAC(ctx, "")
-	if err == nil {
-		t.Error("Expected error for empty MAC in GetTrafficStatsByMAC")
+	for _, lookup := range lookups {
+		for _, mac := range []string{"", "   "} {
+			err := lookup.call(ctx, service, mac)
+			if !errors.Is(err, core.ErrResourceNotFound) {
+				t.Errorf("%s(%q) error = %v, want core.ErrResourceNotFound", lookup.name, mac, err)
+			}
+			if errors.Is(err, core.ErrInvalidConfiguration) {
+				t.Errorf("%s(%q) still reports the pre-v0.6.0 sentinel", lookup.name, mac)
+			}
+		}
 	}
 }
 
-// TestClientServiceUnit_KnownIssueHandling_Success tests known issue error handling.
-func TestClientServiceUnit_KnownIssueHandling_Success(t *testing.T) {
+// TestClientServiceUnit_ValidationErrors_MalformedMAC pins that a malformed address is
+// refused before a request is built, and that it is not reported as an absent record: a
+// caller testing with core.IsNotFoundError must not read its own typo as an empty list.
+func TestClientServiceUnit_ValidationErrors_MalformedMAC(t *testing.T) {
+	t.Parallel()
+
+	server := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{}))
+	defer server.Close()
+	testClient := testutil.NewTestClient(server)
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	for _, lookup := range byMACLookups() {
+		err := lookup.call(ctx, service, "not-a-mac")
+		if err == nil {
+			t.Errorf("%s(\"not-a-mac\") returned no error", lookup.name)
+			continue
+		}
+		if core.IsNotFoundError(err) {
+			t.Errorf("%s(\"not-a-mac\") error = %v, want a validation error", lookup.name, err)
+		}
+	}
+}
+
+// TestClientServiceUnit_ByMAC_WireForm pins the address form that reaches the controller,
+// for all nine lookups rather than one. Every separator spelling and either case has to
+// arrive as the lower-case colon form the controller keys its lists by, so a dashed
+// address reads the same record.
+func TestClientServiceUnit_ByMAC_WireForm(t *testing.T) {
+	t.Parallel()
+
+	const prefix = "/restconf/data/Cisco-IOS-XE-wireless-client-oper:client-oper-data/"
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+
+	lookups := byMACLookups()
+	for _, lookup := range lookups {
+		// The sole-key check holds the body against the node requested, so each node
+		// needs its own envelope.
+		body := `{"Cisco-IOS-XE-wireless-client-oper:` + lookup.node + `":[]}`
+		server.AddHandler(http.MethodGet, "client-oper-data/"+lookup.node, func() (int, string) {
+			return http.StatusOK, body
+		})
+	}
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	spellings := []string{
+		"00:11:22:33:44:55",
+		"00-11-22-33-44-55",
+		"0011.2233.4455",
+		"001122334455",
+		"AA:BB:CC:DD:EE:55",
+	}
+	wants := map[string]string{
+		"00:11:22:33:44:55": "00:11:22:33:44:55",
+		"00-11-22-33-44-55": "00:11:22:33:44:55",
+		"0011.2233.4455":    "00:11:22:33:44:55",
+		"001122334455":      "00:11:22:33:44:55",
+		"AA:BB:CC:DD:EE:55": "aa:bb:cc:dd:ee:55",
+	}
+
+	for _, lookup := range lookups {
+		for _, mac := range spellings {
+			if err := lookup.call(ctx, service, mac); err != nil {
+				t.Fatalf("%s(%q) unexpected error: %v", lookup.name, mac, err)
+			}
+		}
+	}
+
+	recorded := server.Requests()
+	if want := len(lookups) * len(spellings); len(recorded) != want {
+		t.Fatalf("Recorded %d requests, want %d", len(recorded), want)
+	}
+
+	i := 0
+	for _, lookup := range lookups {
+		for _, mac := range spellings {
+			want := prefix + lookup.node + "=" + wants[mac]
+			if got := recorded[i].Path; got != want {
+				t.Errorf("%s(%q) wire path = %q, want %q", lookup.name, mac, got, want)
+			}
+			i++
+		}
+	}
+}
+
+// TestClientServiceUnit_Dot11Operations_MockSuccess tests ListDot11Info against a well-formed response.
+func TestClientServiceUnit_Dot11Operations_MockSuccess(t *testing.T) {
 	t.Parallel()
 
 	// Create mock server with normal responses
@@ -580,160 +727,91 @@ func TestClientServiceUnit_KnownIssueHandling_Success(t *testing.T) {
 	}
 }
 
-// TestClientServiceUnit_KnownIssueHandling_Dot11Errors tests known Dot11 operational data issue handling.
-func TestClientServiceUnit_KnownIssueHandling_Dot11Errors(t *testing.T) {
+// TestClientServiceUnit_ReadFailure_ReturnsError tests that a failed read reaches the caller
+// instead of an empty client table.
+func TestClientServiceUnit_ReadFailure_ReturnsError(t *testing.T) {
 	t.Parallel()
 
-	// Create mock server with specific error message for known Dot11 issues using pkg/testutil
-	server := testutil.NewMockServer(
-		testutil.WithTesting(t),
-		testutil.WithCustomResponse("dot11-oper-data", testutil.ResponseConfig{
-			StatusCode: 500,
-			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "failed to retrieve table cursor"}]}}`,
-		}),
-	)
-	defer server.Close()
-
-	testClient := testutil.NewTestClient(server)
-	service := client.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
-
-	// Test ListDot11Info with known cursor issue - should return empty result
-	result, err := service.ListDot11Info(ctx)
-	if err != nil {
-		t.Errorf("Expected ListDot11Info to handle known issue gracefully, got error: %v", err)
-	}
-	if result == nil {
-		t.Error("Expected empty result for known issue, got nil")
-	}
-
-	// Test GetDot11InfoByMAC with known cursor issue - should return empty result
-	resultByMAC, err := service.GetDot11InfoByMAC(ctx, "02:40:f1:f7:f7:87")
-	if err != nil {
-		t.Errorf("Expected GetDot11InfoByMAC to handle known issue gracefully, got error: %v", err)
-	}
-	if resultByMAC == nil {
-		t.Error("Expected empty result for known issue, got nil")
-	}
-}
-
-// TestClientServiceUnit_KnownIssueHandling_GetOperationalErrors tests GetOperational known issue handling.
-func TestClientServiceUnit_KnownIssueHandling_GetOperationalErrors(t *testing.T) {
-	t.Parallel()
-
-	// Create mock server with specific error message for known GetOperational issues using pkg/testutil
-	server := testutil.NewMockServer(
-		testutil.WithTesting(t),
-		testutil.WithCustomResponse("client-oper-data", testutil.ResponseConfig{
-			StatusCode: 500,
-			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unexpected EOF"}]}}`,
-		}),
-	)
-	defer server.Close()
-
-	testClient := testutil.NewTestClient(server)
-	service := client.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
-
-	// Test GetOperational with known EOF issue - should return empty result
-	result, err := service.GetOperational(ctx)
-	if err != nil {
-		t.Errorf("Expected GetOperational to handle known issue gracefully, got error: %v", err)
-	}
-	if result == nil {
-		t.Error("Expected empty result for known issue, got nil")
-	}
-}
-
-// TestClientServiceUnit_KnownIssueHandling_AdditionalDot11Errors tests additional Dot11 error scenarios.
-func TestClientServiceUnit_KnownIssueHandling_AdditionalDot11Errors(t *testing.T) {
-	t.Parallel()
-
-	// Create mock server for additional known Dot11 error: "Process DBAL response failed" using pkg/testutil
-	server := testutil.NewMockServer(
-		testutil.WithTesting(t),
-		testutil.WithCustomResponse("dot11-oper-data", testutil.ResponseConfig{
-			StatusCode: 500,
-			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "Process DBAL response failed"}]}}`,
-		}),
-	)
-	defer server.Close()
-
-	testClient := testutil.NewTestClient(server)
-	service := client.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
-
-	// Test ListDot11Info with DBAL error - should return empty result
-	result, err := service.ListDot11Info(ctx)
-	if err != nil {
-		t.Errorf("Expected ListDot11Info to handle DBAL error gracefully, got error: %v", err)
-	}
-	if result == nil {
-		t.Error("Expected empty result for DBAL error, got nil")
+	tests := []struct {
+		name     string
+		response testutil.ResponseConfig
+	}{
+		{
+			name: "UnexpectedEOF",
+			response: testutil.ResponseConfig{
+				StatusCode: 500,
+				Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unexpected EOF"}]}}`,
+			},
+		},
+		{
+			name: "TableCursorFailure",
+			response: testutil.ResponseConfig{
+				StatusCode: 500,
+				Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "failed to retrieve table cursor"}]}}`,
+			},
+		},
+		{
+			name: "DBALResponseFailure",
+			response: testutil.ResponseConfig{
+				StatusCode: 500,
+				Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "Process DBAL response failed"}]}}`,
+			},
+		},
+		{
+			name: "UnknownFailure",
+			response: testutil.ResponseConfig{
+				StatusCode: 500,
+				Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unknown database error"}]}}`,
+			},
+		},
+		{
+			name: "TruncatedBody",
+			response: testutil.ResponseConfig{
+				StatusCode: 200,
+				Body:       `{"Cisco-IOS-XE-wireless-client-oper:client-oper-data":`,
+			},
+		},
 	}
 
-	// Test GetDot11InfoByMAC with DBAL error - should return empty result
-	resultByMAC, err := service.GetDot11InfoByMAC(ctx, "02:40:f1:f7:f7:87")
-	if err != nil {
-		t.Errorf("Expected GetDot11InfoByMAC to handle DBAL error gracefully, got error: %v", err)
-	}
-	if resultByMAC == nil {
-		t.Error("Expected empty result for DBAL error, got nil")
-	}
-}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-// TestClientServiceUnit_KnownIssueHandling_UnknownErrors tests error scenarios that are not known issues.
-func TestClientServiceUnit_KnownIssueHandling_UnknownErrors(t *testing.T) {
-	t.Parallel()
+			// The path of every dot11-oper-data read contains client-oper-data, so one
+			// handler covers all three reads under test.
+			server := testutil.NewMockServer(
+				testutil.WithTesting(t),
+				testutil.WithCustomResponse("client-oper-data", tt.response),
+			)
+			defer server.Close()
 
-	// Create mock server with unknown error messages that should not be handled gracefully
-	server := testutil.NewMockServer(
-		testutil.WithTesting(t),
-		testutil.WithCustomResponse("dot11-oper-data", testutil.ResponseConfig{
-			StatusCode: 500,
-			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unknown database error"}]}}`,
-		}),
-	)
-	defer server.Close()
+			testClient := testutil.NewTestClient(server)
+			service := client.NewService(testClient.Core().(*core.Client))
+			ctx := testutil.TestContext(t)
 
-	testClient := testutil.NewTestClient(server)
-	service := client.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
+			oper, err := service.GetOperational(ctx)
+			if err == nil {
+				t.Error("Expected error from GetOperational, got nil")
+			}
+			if oper != nil {
+				t.Error("Expected nil result from GetOperational")
+			}
 
-	// Test ListDot11Info with unknown error - should return error (not gracefully handled)
-	_, err := service.ListDot11Info(ctx)
-	if err == nil {
-		t.Error("Expected error for unknown database error, got nil")
-	}
+			dot11, err := service.ListDot11Info(ctx)
+			if err == nil {
+				t.Error("Expected error from ListDot11Info, got nil")
+			}
+			if dot11 != nil {
+				t.Error("Expected nil result from ListDot11Info")
+			}
 
-	// Test GetDot11InfoByMAC with unknown error - should return error (not gracefully handled)
-	_, err = service.GetDot11InfoByMAC(ctx, "02:40:f1:f7:f7:87")
-	if err == nil {
-		t.Error("Expected error for unknown database error, got nil")
-	}
-}
-
-// TestClientServiceUnit_KnownIssueHandling_GetOperationalUnknownErrors tests GetOperational with unknown errors.
-func TestClientServiceUnit_KnownIssueHandling_GetOperationalUnknownErrors(t *testing.T) {
-	t.Parallel()
-
-	// Create mock server with unknown error message for GetOperational
-	server := testutil.NewMockServer(
-		testutil.WithTesting(t),
-		testutil.WithCustomResponse("client-oper-data", testutil.ResponseConfig{
-			StatusCode: 500,
-			Body:       `{"ietf-restconf:errors": {"error": [{"error-message": "unknown system error"}]}}`,
-		}),
-	)
-	defer server.Close()
-
-	testClient := testutil.NewTestClient(server)
-	service := client.NewService(testClient.Core().(*core.Client))
-	ctx := testutil.TestContext(t)
-
-	// Test GetOperational with unknown error - should return error (not gracefully handled)
-	_, err := service.GetOperational(ctx)
-	if err == nil {
-		t.Error("Expected error for unknown system error, got nil")
+			dot11ByMAC, err := service.GetDot11InfoByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+			if err == nil {
+				t.Error("Expected error from GetDot11InfoByMAC, got nil")
+			}
+			if dot11ByMAC != nil {
+				t.Error("Expected nil result from GetDot11InfoByMAC")
+			}
+		})
 	}
 }

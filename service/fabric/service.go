@@ -49,31 +49,3 @@ func (s Service) ListCfgFabricControlplaneNames(
 		routes.FabricControlplaneNamesPath, opts...,
 	)
 }
-
-// ListFabricConfig retrieves fabric global configuration data.
-func (s Service) ListFabricConfig(ctx context.Context, opts ...core.GetOption) (*FabricConfig, error) {
-	return core.Get[FabricConfig](ctx, s.Client(), routes.FabricPath, opts...)
-}
-
-// ListFabricProfiles retrieves fabric profiles data.
-func (s Service) ListFabricProfiles(ctx context.Context, opts ...core.GetOption) (*FabricProfiles, error) {
-	return core.Get[FabricProfiles](ctx, s.Client(), routes.FabricProfilesPath, opts...)
-}
-
-// ListFabricProfile retrieves individual fabric profile entries.
-func (s Service) ListFabricProfile(ctx context.Context, opts ...core.GetOption) (*FabricProfile, error) {
-	return core.Get[FabricProfile](ctx, s.Client(), routes.FabricProfilesPath, opts...)
-}
-
-// ListFabricControlplanes retrieves fabric controlplanes data.
-func (s Service) ListFabricControlplanes(ctx context.Context, opts ...core.GetOption) (*FabricControlplanes, error) {
-	return core.Get[FabricControlplanes](ctx, s.Client(), routes.FabricControlplaneNamesPath, opts...)
-}
-
-// ListFabricControlplaneName retrieves individual fabric controlplane name entries.
-func (s Service) ListFabricControlplaneName(
-	ctx context.Context,
-	opts ...core.GetOption,
-) (*FabricControlplaneName, error) {
-	return core.Get[FabricControlplaneName](ctx, s.Client(), routes.FabricControlplaneNamesPath, opts...)
-}

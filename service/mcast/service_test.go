@@ -145,13 +145,19 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 
 		// GetFabricMediastreamClientSummary - Empty data (not available in test environment)
-		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/fabric-media-stream-client-summary": `{}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/fabric-media-stream-client-summary": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:fabric-media-stream-client-summary": []
+		}`,
 
 		// GetMcastMgidInfo - Empty data (not available in test environment)
-		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/mcast-mgid-info": `{}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/mcast-mgid-info": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:mcast-mgid-info": []
+		}`,
 
 		// GetMulticastOperData - Empty data (not available in test environment)
-		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/multicast-oper-data": `{}`,
+		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/multicast-oper-data": `{
+			"Cisco-IOS-XE-wireless-mcast-oper:multicast-oper-data": []
+		}`,
 
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-history-client-record-data": `{
 			"Cisco-IOS-XE-wireless-mcast-oper:rrc-history-client-record-data": [

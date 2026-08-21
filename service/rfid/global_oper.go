@@ -4,11 +4,24 @@ import "time"
 
 // RFIDGlobalOper represents RFID global operational data.
 type RFIDGlobalOper struct {
-	RFIDGlobalOperData struct {
-		RFIDTotalCount *RFIDCountData  `json:"rfid-total-count,omitempty"` // Total unique RFID entries count (YANG: IOS-XE 17.12.1)
-		RFIDDataDetail []RFIDEmltdData `json:"rfid-data-detail"`           // Detailed RFID data entries (YANG: IOS-XE 17.12.1)
-		RFIDRadioData  []RFIDRadioData `json:"rfid-radio-data"`            // Known RFID tags operational data (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data"` // RFID global operational data (YANG: IOS-XE 17.12.1)
+	RFIDGlobalOperData *RFIDGlobalOperData `json:"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-global-oper-data"` // RFID global operational data (YANG: IOS-XE 17.12.1)
+}
+
+// RFIDGlobalOperData represents RFID global operational data (YANG: IOS-XE 17.12.1).
+type RFIDGlobalOperData struct {
+	RFIDTotalCount *RFIDCountData  `json:"rfid-total-count,omitempty"` // Total unique RFID entries count (YANG: IOS-XE 17.12.1)
+	RFIDDataDetail []RFIDEmltdData `json:"rfid-data-detail"`           // Detailed RFID data entries (YANG: IOS-XE 17.12.1)
+	RFIDRadioData  []RFIDRadioData `json:"rfid-radio-data"`            // Known RFID tags operational data (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessRFIDGlobalOperRFIDDataDetail represents the detailed RFID data entries.
+type CiscoIOSXEWirelessRFIDGlobalOperRFIDDataDetail struct {
+	RFIDDataDetail []RFIDEmltdData `json:"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-data-detail"` // Detailed RFID data entries (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessRFIDGlobalOperRFIDRadioData represents the known RFID tags operational data.
+type CiscoIOSXEWirelessRFIDGlobalOperRFIDRadioData struct {
+	RFIDRadioData []RFIDRadioData `json:"Cisco-IOS-XE-wireless-rfid-global-oper:rfid-radio-data"` // Known RFID tags operational data (YANG: IOS-XE 17.12.1)
 }
 
 // RFIDCountData represents RFID count information.

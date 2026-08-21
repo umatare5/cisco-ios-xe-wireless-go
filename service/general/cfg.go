@@ -3,151 +3,89 @@ package general
 
 // GeneralCfg represents the general configuration response.
 type GeneralCfg struct {
-	GeneralCfgData struct {
-		MewlcConfig             MewlcConfig              `json:"mewlc-config"`                          // Embedded Wireless Controller configuration (Live: IOS-XE 17.12.6a)
-		CacConfig               CacConfig                `json:"cac-config"`                            // CAC resources values configuration (Live: IOS-XE 17.12.6a)
-		Mfp                     Mfp                      `json:"mfp"`                                   // Management Frame Protection configuration (Live: IOS-XE 17.12.6a)
-		FipsCfg                 FipsCfg                  `json:"fips-cfg"`                              // DTLS for AP join configurations (Live: IOS-XE 17.12.6a)
-		WsaApClientEvent        WsaApClientEvent         `json:"wsa-ap-client-event"`                   // Client event config parameters for AP (Live: IOS-XE 17.12.6a)
-		SimL3InterfaceCacheData *SimL3InterfaceCacheData `json:"sim-l3-interface-cache-data,omitempty"` // Wireless management interface data (Live: IOS-XE 17.12.6a)
-		WlcManagementData       *WlcManagementData       `json:"wlc-management-data,omitempty"`         // WLC management certificate and authorization config (Live: IOS-XE 17.12.6a)
-		Laginfo                 Laginfo                  `json:"laginfo"`                               // AP LAG information (Live: IOS-XE 17.12.6a)
-		MulticastConfig         *MulticastConfig         `json:"multicast-config,omitempty"`            // Broadcast/Multicast configuration (Live: IOS-XE 17.12.6a)
-		FeatureUsageCfg         FeatureUsageCfg          `json:"feature-usage-cfg"`                     // Wireless feature usage monitoring configuration (Live: IOS-XE 17.12.6a)
-		ThresholdWarnCfg        ThresholdWarnCfg         `json:"threshold-warn-cfg"`                    // Threshold warnings configuration (Live: IOS-XE 17.12.6a)
-		ApLocRangingCfg         ApLocRangingCfg          `json:"ap-loc-ranging-cfg"`                    // Location calendar profile configuration (Live: IOS-XE 17.12.6a)
-		GeolocationCfg          GeolocationCfg           `json:"geolocation-cfg"`                       // Wireless geolocation configuration (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-general-cfg:general-cfg-data"` // General configuration data (Live: IOS-XE 17.12.6a)
+	GeneralCfgData *GeneralCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:general-cfg-data"` // General configuration data (Live: IOS-XE 17.12.6a)
 }
 
-// CiscoIOSXEWirelessGeneralCfgMewlcConfig represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgMewlcConfig struct {
-	MewlcConfig MewlcConfig `json:"Cisco-IOS-XE-wireless-general-cfg:mewlc-config"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgCacConfig represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgCacConfig struct {
-	CacConfig CacConfig `json:"Cisco-IOS-XE-wireless-general-cfg:cac-config"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgMfp represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgMfp struct {
-	Mfp Mfp `json:"Cisco-IOS-XE-wireless-general-cfg:mfp"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgFipsCfg represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgFipsCfg struct {
-	FipsCfg FipsCfg `json:"Cisco-IOS-XE-wireless-general-cfg:fips-cfg"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgWsaApClientEvent represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgWsaApClientEvent struct {
-	WsaApClientEvent WsaApClientEvent `json:"Cisco-IOS-XE-wireless-general-cfg:wsa-ap-client-event"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgSimL3InterfaceCacheData represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgSimL3InterfaceCacheData struct {
-	SimL3InterfaceCacheData *SimL3InterfaceCacheData `json:"Cisco-IOS-XE-wireless-general-cfg:sim-l3-interface-cache-data,omitempty"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgWlcManagementData represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgWlcManagementData struct {
-	WlcManagementData *WlcManagementData `json:"Cisco-IOS-XE-wireless-general-cfg:wlc-management-data,omitempty"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgLaginfo represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgLaginfo struct {
-	Laginfo Laginfo `json:"Cisco-IOS-XE-wireless-general-cfg:laginfo"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgMulticastConfig represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgMulticastConfig struct {
-	MulticastConfig *MulticastConfig `json:"Cisco-IOS-XE-wireless-general-cfg:multicast-config,omitempty"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgFeatureUsageCfg represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgFeatureUsageCfg struct {
-	FeatureUsageCfg FeatureUsageCfg `json:"Cisco-IOS-XE-wireless-general-cfg:feature-usage-cfg"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgThresholdWarnCfg represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgThresholdWarnCfg struct {
-	ThresholdWarnCfg ThresholdWarnCfg `json:"Cisco-IOS-XE-wireless-general-cfg:threshold-warn-cfg"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgApLocRangingCfg represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgApLocRangingCfg struct {
-	ApLocRangingCfg ApLocRangingCfg `json:"Cisco-IOS-XE-wireless-general-cfg:ap-loc-ranging-cfg"`
-}
-
-// CiscoIOSXEWirelessGeneralCfgGeolocationCfg represents the corresponding data structure.
-type CiscoIOSXEWirelessGeneralCfgGeolocationCfg struct {
-	GeolocationCfg GeolocationCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:geolocation-cfg"`
+// GeneralCfgData represents General configuration data (Live: IOS-XE 17.12.6a).
+type GeneralCfgData struct {
+	MewlcConfig             *MewlcConfigData             `json:"mewlc-config,omitempty"`                // Embedded Wireless Controller configuration (Live: IOS-XE 17.12.6a)
+	CacConfig               *CacConfigData               `json:"cac-config,omitempty"`                  // CAC resources values configuration (Live: IOS-XE 17.12.6a)
+	Mfp                     *MfpData                     `json:"mfp,omitempty"`                         // Management Frame Protection configuration (Live: IOS-XE 17.12.6a)
+	FipsCfg                 *FipsCfgData                 `json:"fips-cfg,omitempty"`                    // DTLS for AP join configurations (Live: IOS-XE 17.12.6a)
+	WsaApClientEvent        *WsaApClientEventData        `json:"wsa-ap-client-event,omitempty"`         // Client event config parameters for AP (Live: IOS-XE 17.12.6a)
+	SimL3InterfaceCacheData *SimL3InterfaceCacheDataInfo `json:"sim-l3-interface-cache-data,omitempty"` // Wireless management interface data (Live: IOS-XE 17.12.6a)
+	WlcManagementData       *WlcManagementDataInfo       `json:"wlc-management-data,omitempty"`         // WLC management certificate and authorization config (Live: IOS-XE 17.12.6a)
+	Laginfo                 *LaginfoData                 `json:"laginfo,omitempty"`                     // AP LAG information (Live: IOS-XE 17.12.6a)
+	MulticastConfig         *MulticastConfigData         `json:"multicast-config,omitempty"`            // Broadcast/Multicast configuration (Live: IOS-XE 17.12.6a)
+	FeatureUsageCfg         *FeatureUsageCfgData         `json:"feature-usage-cfg,omitempty"`           // Wireless feature usage monitoring configuration (Live: IOS-XE 17.12.6a)
+	ThresholdWarnCfg        *ThresholdWarnCfgData        `json:"threshold-warn-cfg,omitempty"`          // Threshold warnings configuration (Live: IOS-XE 17.12.6a)
+	ApLocRangingCfg         *ApLocRangingCfgData         `json:"ap-loc-ranging-cfg,omitempty"`          // Location calendar profile configuration (Live: IOS-XE 17.12.6a)
+	GeolocationCfg          *GeolocationCfgData          `json:"geolocation-cfg,omitempty"`             // Wireless geolocation configuration (Live: IOS-XE 17.12.6a)
 }
 
 // MewlcConfig represents the MEWLC configuration response.
 type MewlcConfig struct {
-	MewlcConfigData MewlcConfigData `json:"Cisco-IOS-XE-wireless-general-cfg:mewlc-config"`
+	MewlcConfigData *MewlcConfigData `json:"Cisco-IOS-XE-wireless-general-cfg:mewlc-config"`
 }
 
 // CacConfig represents the CAC configuration response.
 type CacConfig struct {
-	CacConfigData CacConfigData `json:"Cisco-IOS-XE-wireless-general-cfg:cac-config"`
+	CacConfigData *CacConfigData `json:"Cisco-IOS-XE-wireless-general-cfg:cac-config"`
 }
 
 // Mfp represents the Management Frame Protection configuration response.
 type Mfp struct {
-	MfpData MfpData `json:"Cisco-IOS-XE-wireless-general-cfg:mfp"`
+	MfpData *MfpData `json:"Cisco-IOS-XE-wireless-general-cfg:mfp"`
 }
 
 // FipsCfg represents FIPS configuration.
 type FipsCfg struct {
-	FipsCfgData FipsCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:fips-cfg"`
+	FipsCfgData *FipsCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:fips-cfg"`
 }
 
 // WsaApClientEvent represents WSA AP client event configuration.
 type WsaApClientEvent struct {
-	WsaApClientEventData WsaApClientEventData `json:"Cisco-IOS-XE-wireless-general-cfg:wsa-ap-client-event"`
+	WsaApClientEventData *WsaApClientEventData `json:"Cisco-IOS-XE-wireless-general-cfg:wsa-ap-client-event"`
 }
 
 // SimL3InterfaceCacheData represents SIM L3 interface cache data.
 type SimL3InterfaceCacheData struct {
-	SimL3InterfaceCacheDataInfo SimL3InterfaceCacheDataInfo `json:"Cisco-IOS-XE-wireless-general-cfg:sim-l3-interface-cache-data"`
+	SimL3InterfaceCacheDataInfo *SimL3InterfaceCacheDataInfo `json:"Cisco-IOS-XE-wireless-general-cfg:sim-l3-interface-cache-data"`
 }
 
 // WlcManagementData represents WLC management data.
 type WlcManagementData struct {
-	WlcManagementDataInfo WlcManagementDataInfo `json:"Cisco-IOS-XE-wireless-general-cfg:wlc-management-data"`
+	WlcManagementDataInfo *WlcManagementDataInfo `json:"Cisco-IOS-XE-wireless-general-cfg:wlc-management-data"`
 }
 
 // Laginfo represents LAG information.
 type Laginfo struct {
-	LaginfoData LaginfoData `json:"Cisco-IOS-XE-wireless-general-cfg:laginfo"`
+	LaginfoData *LaginfoData `json:"Cisco-IOS-XE-wireless-general-cfg:laginfo"`
 }
 
 // MulticastConfig represents multicast configuration.
 type MulticastConfig struct {
-	MulticastConfigData MulticastConfigData `json:"Cisco-IOS-XE-wireless-general-cfg:multicast-config"`
+	MulticastConfigData *MulticastConfigData `json:"Cisco-IOS-XE-wireless-general-cfg:multicast-config"`
 }
 
 // FeatureUsageCfg represents feature usage configuration.
 type FeatureUsageCfg struct {
-	FeatureUsageCfgData FeatureUsageCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:feature-usage-cfg"`
+	FeatureUsageCfgData *FeatureUsageCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:feature-usage-cfg"`
 }
 
 // ThresholdWarnCfg represents threshold warning configuration.
 type ThresholdWarnCfg struct {
-	ThresholdWarnCfgData ThresholdWarnCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:threshold-warn-cfg"`
+	ThresholdWarnCfgData *ThresholdWarnCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:threshold-warn-cfg"`
 }
 
 // ApLocRangingCfg represents AP location ranging configuration.
 type ApLocRangingCfg struct {
-	ApLocRangingCfgData ApLocRangingCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:ap-loc-ranging-cfg"`
+	ApLocRangingCfgData *ApLocRangingCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:ap-loc-ranging-cfg"`
 }
 
 // GeolocationCfg represents geolocation configuration.
 type GeolocationCfg struct {
-	GeolocationCfgData GeolocationCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:geolocation-cfg"`
+	GeolocationCfgData *GeolocationCfgData `json:"Cisco-IOS-XE-wireless-general-cfg:geolocation-cfg"`
 }
 
 // MewlcConfigData represents MEWLC configuration data structure.
@@ -195,7 +133,7 @@ type SimL3InterfaceCacheDataInfo struct {
 // WlcManagementDataInfo represents WLC management data information.
 type WlcManagementDataInfo struct {
 	PkiTrustpointName string  `json:"pki-trustpoint-name"`           // Wireless management trustpoint name (Live: IOS-XE 17.12.6a)
-	SscAuthToken      *string `json:"ssc-auth-token,omitempty"`      // SSC authorization token (Live: IOS-XE 17.12.6a)
+	SscAuthToken      *string `json:"ssc-auth-token,omitempty"`      // SSC authorization token — secret, never log (Live: IOS-XE 17.12.6a)
 	SscAuthTokenType  *string `json:"ssc-auth-token-type,omitempty"` // SSC authorization token encryption type (Live: IOS-XE 17.12.6a)
 }
 
