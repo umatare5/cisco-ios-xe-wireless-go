@@ -151,6 +151,29 @@ client, err := wnc.NewClient(
 )
 ```
 
+### Secret-bearing response fields
+
+Twelve typed fields are populated by ordinary reads, so a log path that dumps a decoded struct discloses a credential. **Nine arrive on a configuration read and three on an operational one** — an operational read is not a safe read.
+
+| Field                                        | Route                                                            |
+| -------------------------------------------- | ---------------------------------------------------------------- |
+| `wlan.WlanCfgEntry.PSK`                      | `Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data`                   |
+| `general.WlcManagementDataInfo.SscAuthToken` | `Cisco-IOS-XE-wireless-general-cfg:general-cfg-data`             |
+| `site.UserMgmt.Password`                     | `Cisco-IOS-XE-wireless-site-cfg:site-cfg-data`                   |
+| `site.UserMgmt.Secret`                       | `Cisco-IOS-XE-wireless-site-cfg:site-cfg-data`                   |
+| `flex.FlexLocalAuthUser.Password`            | `Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data`                   |
+| `fabric.FabricControlPlaneIPConfig.PSKKey`   | `Cisco-IOS-XE-wireless-fabric-cfg:fabric-cfg-data`               |
+| `cts.CTSSxpConfig.DefaultPassword`           | `Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data`             |
+| `location.NMSPCloudParams.AuthToken`         | `Cisco-IOS-XE-wireless-location-cfg:location-cfg-data`           |
+| `urwb.URWBProfile.Passphrase`                | `Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data`                   |
+| `ap.ProxyInfo.Password`                      | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
+| `ap.ApNtpServerInfo.TrustKey`                | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
+| `ap.ApIoxOperData.CafToken`                  | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
+
+The companion `*Type` fields next to most of these carry an encoding-type enumeration, not the secret, so they are safe to log. A field whose name suggests a secret is not always one: `client.CommonOperData.AaaOverridePassphrase` and `wlan.WlanCfgEntry.AuthKeyMgmtPsk` are booleans, and `lisp.LISPAgentMemoryStats`'s `MallocPskBuf` and `FreePskBuf` are allocation counters.
+
+An error response body is the controller's own error document. The copy in the log line and in `APIError.Message` is bounded to a 512-byte prefix — `APIError.Body` still carries the whole document, so treat it as untrusted content and do not log it unbounded.
+
 ## 🏭 Environment Isolation <a id="environment-isolation"></a>
 
 Use separate clients and credentials for dev, staging, and prod to limit blast radius and enforce tailored timeouts.

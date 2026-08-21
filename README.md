@@ -144,21 +144,26 @@ To create a new client, use the `wnc.NewClient` function with the controller add
 
 There are several options to customize the client behavior.
 
-| Option                      | Type            | Default             | Description                |
-| --------------------------- | --------------- | ------------------- | -------------------------- |
-| `WithTimeout(d)`            | `time.Duration` | `60s`               | Sets HTTP request timeout. |
-| `WithInsecureSkipVerify(b)` | `bool`          | `false`             | Skips TLS verify.          |
-| `WithLogger(l)`             | `*slog.Logger`  | `slog.Default()`    | Sets structured logger.    |
-| `WithUserAgent(ua)`         | `string`        | `wnc-go-client/1.0` | Custom User-Agent.         |
+| Option                         | Type                                    | Default                    | Description                                  |
+| ------------------------------ | --------------------------------------- | -------------------------- | -------------------------------------------- |
+| `WithTimeout(d)`               | `time.Duration`                         | `60s`                      | Sets HTTP request timeout.                   |
+| `WithResponseHeaderTimeout(d)` | `time.Duration`                         | `5s`                       | Bounds the wait for response headers.        |
+| `WithTLSHandshakeTimeout(d)`   | `time.Duration`                         | `5s`                       | Bounds the TLS handshake.                    |
+| `WithInsecureSkipVerify(b)`    | `bool`                                  | `false`                    | Skips TLS verify.                            |
+| `WithProxy(fn)`                | `func(*http.Request) (*url.URL, error)` | `nil`                      | Sets the proxy resolver; unset means direct. |
+| `WithLogger(l)`                | `*slog.Logger`                          | `slog.Default()`           | Sets structured logger.                      |
+| `WithUserAgent(ua)`            | `string`                                | `cisco-ios-xe-wireless-go` | Custom User-Agent.                           |
 
 ### Request Options
 
 Every read method takes optional `GetOption` values after `ctx`, which apply to that single request. These are a different type from the client `Option` values above and cannot be mixed.
 
-| Option                        | Value on the wire          | Description                                                |
-| ----------------------------- | -------------------------- | ---------------------------------------------------------- |
-| `WithDefaults(wnc.ReportAll)` | `with-defaults=report-all` | Also returns the leaves in force at their schema default.  |
-| `WithDefaults(wnc.Explicit)`  | `with-defaults=explicit`   | Returns client-set leaves only, which matches a plain GET. |
+| Option                        | Value on the wire          | Description                                                          |
+| ----------------------------- | -------------------------- | -------------------------------------------------------------------- |
+| `WithDefaults(wnc.ReportAll)` | `with-defaults=report-all` | Also returns the leaves in force at their schema default.            |
+| `WithDefaults(wnc.Explicit)`  | `with-defaults=explicit`   | Returns the leaves a client set, including any set to their default. |
+| `WithFields(expr)`            | `fields=<expr>`            | Returns only the nodes the expression names.                         |
+| `WithDepth(n)`                | `depth=<n>`                | Returns only the top `n` levels of the subtree.                      |
 
 ```go
 entries, err := client.WLAN().ListWlanCfgEntries(ctx, wnc.WithDefaults(wnc.ReportAll))
@@ -166,7 +171,11 @@ entries, err := client.WLAN().ListWlanCfgEntries(ctx, wnc.WithDefaults(wnc.Repor
 
 > [!NOTE]
 >
-> The controller reports client-set leaves by default, so a configuration leaf left at its default is absent from a plain GET. Scope `wnc.ReportAll` to the container you need: on a whole-container read, the added leaves accumulate across every nested container.
+> A plain GET omits every configuration leaf whose value equals its schema default, whoever set it. `wnc.Explicit` differs: RFC 6243 3.3 requires the server to also return a leaf a client set to that default value. Scope `wnc.ReportAll` to the container you need: on a whole-container read, the added leaves accumulate across every nested container.
+
+> [!NOTE]
+>
+> A pruned leaf is absent from the answer, and an absent leaf decodes to a zero value, so `WithFields` and `WithDepth` should name every node the caller reads: a pruned counter cannot be told from a counter reading zero.
 
 ### Supported Services
 
