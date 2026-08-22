@@ -1,4 +1,3 @@
-// Package ap provides AP-specific errors for the Cisco IOS-XE Wireless Network Controller API.
 package ap
 
 import (

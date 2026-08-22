@@ -1,4 +1,3 @@
-// Package general provides type definitions for Cisco IOS-XE wireless controller operations.
 package general
 
 // GeneralCfg represents the general configuration response.
