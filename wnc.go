@@ -179,20 +179,24 @@ func (c *Client) PostData(ctx context.Context, path string, payload any) ([]byte
 	return core.EditRaw(ctx, c.core, http.MethodPost, path, payload)
 }
 
-// PutData replaces a node at a RESTCONF data path (RFC 8040 4.5). A PUT replaces the whole node,
-// so a leaf omitted from the payload is removed rather than left alone.
+// PutData replaces a node at a RESTCONF data path (RFC 8040 4.5). A typed struct carrying
+// omitempty marshals fewer leaves than it decoded, so replacing a node with one removes the rest.
 func (c *Client) PutData(ctx context.Context, path string, payload any) ([]byte, error) {
 	return core.EditRaw(ctx, c.core, http.MethodPut, path, payload)
 }
 
-// PatchData merges a payload into a node at a RESTCONF data path (RFC 8040 4.6). A merge PATCH
-// omits an empty value, so a field cannot be cleared by sending its zero.
+// PatchData merges a payload into a node at a RESTCONF data path. This package sends
+// application/yang-data+json, so the edit is the plain patch of RFC 8040 4.6.1: a leaf absent from
+// the payload is left alone, and no payload deletes anything.
+//
+// A typed struct cannot clear a leaf, because encoding/json drops a zero field carrying omitempty
+// before the payload is built, and its absence then means "leave alone". Send the leaf as bytes to
+// set it to its zero, and DeleteData to remove it.
 func (c *Client) PatchData(ctx context.Context, path string, payload any) ([]byte, error) {
 	return core.EditRaw(ctx, c.core, http.MethodPatch, path, payload)
 }
 
-// DeleteData removes a node at a RESTCONF data path (RFC 8040 4.7). A path carrying no list key
-// deletes the whole list rather than one entry.
+// DeleteData removes a node at a RESTCONF data path (RFC 8040 4.7).
 func (c *Client) DeleteData(ctx context.Context, path string) ([]byte, error) {
 	return core.EditRaw(ctx, c.core, http.MethodDelete, path, nil)
 }

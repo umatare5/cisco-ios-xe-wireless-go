@@ -337,7 +337,7 @@ func (s Service) ListTagConfigs(ctx context.Context) (*model.ApCfgApTag, error)
 func (s Service) ListAPHistory(ctx context.Context) (*model.ApGlobalOperApHistory, error)
 
 // Trivial accessor (avoid Get prefix)
-func (c *Client) Core() *core.Client
+func (c *Client) AP() ap.Service
 ```
 
 ## 21. Test Helpers — Example
