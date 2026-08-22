@@ -193,9 +193,10 @@ RESTCONF on this platform encodes **per leaf, not per container**: one response 
 
 ### Module Charter
 
-A service wraps the `Cisco-IOS-XE-wireless-*` models for one feature area. One non-wireless model is in charter, and it lives in [`service/controller`](./service/controller):
+A service wraps the `Cisco-IOS-XE-wireless-*` models for one feature area. Two non-wireless models are in charter, and both live in [`service/controller`](./service/controller):
 
 - `Cisco-IOS-XE-rpc` — controller reload ([internal/restconf/routes/controller.go](./internal/restconf/routes/controller.go#L13))
+- `Cisco-IOS-XE-device-hardware-oper` — the controller's own boot instant ([internal/restconf/routes/controller.go](./internal/restconf/routes/controller.go#L25)). In charter on the same ground as the reload RPC: the subject is the controller as a system, not its wireless namespace. The route answers on every supported release.
 
 Any other non-wireless model needs a decision recorded here before a route is added.
 
@@ -226,7 +227,7 @@ A new service must satisfy the six conventions below. The 45 accessors this rele
 #### 4. Decode types
 
 - A GET of container `X` answers exactly one module-qualified top-level key naming `X`. Every accessor decodes that envelope.
-- Name the envelope `CiscoIOSXEWireless<Module><Node>`, give it exactly one field, and tag that field with the module-qualified node the route ends in. See [service/ap/global_oper.go](./service/ap/global_oper.go#L22-L24) and [service/wlan/cfg.go](./service/wlan/cfg.go#L18-L20).
+- Name the envelope after its module and node in camel case, give it exactly one field, and tag that field with the module-qualified node the route ends in. A `Cisco-IOS-XE-wireless-*` model yields `CiscoIOSXEWireless<Module><Node>` — see [service/ap/global_oper.go](./service/ap/global_oper.go#L22-L24) and [service/wlan/cfg.go](./service/wlan/cfg.go#L18-L20) — and a non-wireless model in charter carries no `Wireless`, as in [service/controller/oper.go](./service/controller/oper.go#L12-L14).
 - **Qualify only that outermost tag.** A same-module child takes the bare node name; a module prefix below the top level never matches, so the field stays at its zero value while its siblings decode.
 - Annotate each leaf comment `(Live: IOS-XE <version>)` when the leaf was seen in a controller response, and `(YANG: IOS-XE <version>)` otherwise. A YANG model is a design document, not the implementation.
 - The envelope rules above are enforced by [tests/contract](./tests/contract); a violation fails `make test-unit`. The annotation rule is not gated — it is reviewed.

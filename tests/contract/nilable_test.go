@@ -27,10 +27,12 @@ const payloadSuffix = "Payload"
 // service/ap/cfg.go, two in service/ap/global_oper.go and one in service/mesh/global_oper.go —
 // every one of which held its node as a value while every route-reachable gate passed.
 //
-// The base type is not examined because it does not need to be: measured on this tree, all 243
-// module-qualified fields have a struct base, named or anonymous, and none has a scalar or a
-// qualified type such as time.Time. A level-0 leaf wrapper would be a new shape, and requiring it
-// to be nil-able too is the same rule, not a false finding.
+// The base type is not examined because it does not need to be. Every module-qualified field but
+// one has a struct base, named or anonymous; the exception is
+// controller.CiscoIOSXEDeviceHardwareOperBootTime, whose route reads a single leaf and whose base
+// is therefore the qualified type time.Time. That wrapper is the level-0 leaf shape this comment
+// once predicted, and the rule caught it: holding the instant as a value failed here, because a
+// read answered with no body would have decoded to the year 1 rather than to an absent reading.
 func TestEveryLevelZeroNodeIsNilable(t *testing.T) {
 	pkgs, _ := loadTree(t)
 

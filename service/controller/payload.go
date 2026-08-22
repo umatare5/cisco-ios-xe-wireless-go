@@ -1,4 +1,3 @@
-// Package controller provides WNC controller configuration and operation data structures.
 package controller
 
 // WNC Controller Reload RPC Payload Structures
