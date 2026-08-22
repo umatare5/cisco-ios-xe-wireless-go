@@ -4,8 +4,8 @@
 // It provides methods for BLE beacon monitoring, antenna management, and proximity analytics.
 //
 // RESTCONF Endpoints:
-// - Configuration: /restconf/data/Cisco-IOS-XE-wireless-ble-cfg:ble-cfg-data
-// - Operational: /restconf/data/Cisco-IOS-XE-wireless-ble-oper:ble-oper-data
+// - Operational: /restconf/data/Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data
+// - Operational: /restconf/data/Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data
 //
 // YANG References:
 // - Cisco-IOS-XE-wireless-ble-ltx-oper.yang (17.12.1, 17.15.1, 17.18.1)

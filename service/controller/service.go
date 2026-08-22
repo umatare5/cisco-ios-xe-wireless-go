@@ -21,6 +21,14 @@ func NewService(client *core.Client) Service {
 	return Service{BaseService: service.NewBaseService(client)}
 }
 
+// GetBootTime retrieves the instant at which the controller last booted.
+func (s Service) GetBootTime(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEDeviceHardwareOperBootTime, error) {
+	return core.Get[CiscoIOSXEDeviceHardwareOperBootTime](ctx, s.Client(), routes.ControllerBootTimePath, opts...)
+}
+
 // Reload restarts the WNC controller causing temporary service interruption.
 func (s Service) Reload(ctx context.Context, reason string, force bool) error {
 	if strings.TrimSpace(reason) == "" {

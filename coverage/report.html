@@ -63,7 +63,7 @@
 				
 				<option value="file3">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/get_options.go (100.0%)</option>
 				
-				<option value="file4">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/request.go (93.0%)</option>
+				<option value="file4">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/request.go (62.4%)</option>
 				
 				<option value="file5">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/wireless.go (100.0%)</option>
 				
@@ -356,8 +356,12 @@ func New(host, token string, opts ...Option) (*Client, error) <span class="cov9"
         return client, nil</span>
 }
 
-// Do executes an HTTP request and returns the response body.
-func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) <span class="cov8" title="31">{
+// do executes an HTTP request and returns the response body.
+//
+// The transport methods are unexported so that the root client's untyped methods are the only
+// route out of the typed API. A value reached through a service constructor can build URLs and
+// services with it, and nothing else.
+func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) <span class="cov8" title="31">{
         if err := c.validateDoParameters(ctx); err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
@@ -376,8 +380,8 @@ func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) <s
         return body, nil</span>
 }
 
-// DoWithPayload performs an HTTP request with a payload and returns the response body.
-func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) <span class="cov6" title="13">{
+// doWithPayload performs an HTTP request with a payload and returns the response body.
+func (c *Client) doWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) <span class="cov6" title="13">{
         if err := c.validateDoParameters(ctx); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -396,13 +400,15 @@ func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload
         return body, nil</span>
 }
 
-// DoRPCWithPayload performs an HTTP RPC request with a payload and returns the response body.
-func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, payload any) ([]byte, error) <span class="cov4" title="4">{
+// doRPC posts an RPC input to rpcPath and returns the output body. RFC 8040 4.4.2 invokes an
+// operation with POST and nothing else, so the method is not a parameter; a caller needing
+// another method on an operations path goes through the root client's Request.
+func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte, error) <span class="cov4" title="4">{
         if err := c.validateDoParameters(ctx); err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov2" title="2">req, err := c.requestBuilder.CreateRPCRequestWithPayload(ctx, method, rpcPath, payload)
+        <span class="cov2" title="2">req, err := c.requestBuilder.CreateRPCRequestWithPayload(ctx, http.MethodPost, rpcPath, payload)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -629,27 +635,6 @@ import (
         "net/http"
 )
 
-// HTTP status code constants.
-const (
-        // Success status codes.
-        StatusOK = http.StatusOK
-
-        // Client error status codes.
-        StatusBadRequest          = http.StatusBadRequest
-        StatusUnauthorized        = http.StatusUnauthorized
-        StatusForbidden           = http.StatusForbidden
-        StatusNotFound            = http.StatusNotFound
-        StatusMethodNotAllowed    = http.StatusMethodNotAllowed
-        StatusConflict            = http.StatusConflict
-        StatusUnprocessableEntity = http.StatusUnprocessableEntity
-
-        // Server error status codes.
-        StatusInternalServerError = http.StatusInternalServerError
-        StatusBadGateway          = http.StatusBadGateway
-        StatusServiceUnavailable  = http.StatusServiceUnavailable
-        StatusGatewayTimeout      = http.StatusGatewayTimeout
-)
-
 // Custom error types for better error handling and debugging.
 var (
         // ErrAuthenticationFailed indicates that authentication with the WNC failed due to invalid credentials.
@@ -788,8 +773,10 @@ import (
         "errors"
         "fmt"
         "net/http"
+        "strings"
 
         ierrors "github.com/umatare5/cisco-ios-xe-wireless-go/internal/errors"
+        "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 )
 
 // Generic HTTP Operation Functions for Service Layer
@@ -808,7 +795,7 @@ func Get[T any](ctx context.Context, c *Client, endpoint string, opts ...GetOpti
 
         <span class="cov7" title="4">endpoint = applyGetOptions(endpoint, opts)
 
-        body, err := c.Do(ctx, http.MethodGet, endpoint)
+        body, err := c.do(ctx, http.MethodGet, endpoint)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -833,7 +820,106 @@ func GetRaw(ctx context.Context, c *Client, endpoint string, opts ...GetOption) 
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
-        <span class="cov9" title="6">return c.Do(ctx, http.MethodGet, applyGetOptions(endpoint, opts))</span>
+        <span class="cov9" title="6">return c.do(ctx, http.MethodGet, applyGetOptions(endpoint, opts))</span>
+}
+
+// Faults in an untyped request, reported before anything is sent.
+var (
+        // errEmptyMethod reports the one method value net/http reinterprets rather than rejects: it
+        // substitutes GET, which would read where a write was asked for.
+        errEmptyMethod = errors.New("HTTP method cannot be empty")
+        // errInvalidJSONPayload reports payload bytes this package would send under a JSON content
+        // type without them being JSON. Checking here keeps the message ours rather than the
+        // encoder's, which names its own internal types.
+        errInvalidJSONPayload = errors.New("payload bytes are not a JSON document")
+)
+
+// EditRaw performs a request with the caller's method on a RESTCONF data path and returns the
+// response body as the controller sent it.
+//
+// This is the seam behind the root client's PostData, PutData, PatchData and DeleteData. A nil
+// payload sends no body and no Content-Type, which is what DELETE wants.
+func EditRaw(ctx context.Context, c *Client, method, endpoint string, payload any) ([]byte, error) <span class="cov0" title="0">{
+        body, err := prepareUntypedRequest(c, method, payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return c.doWithPayload(ctx, method, endpoint, body)</span>
+}
+
+// CallRPCRaw posts an RPC input to a RESTCONF operations path and returns the output body as the
+// controller sent it.
+//
+// This is the seam behind the root client's PostRPC. It differs from EditRaw in the RESTCONF root
+// the path resolves against, /restconf/operations rather than /restconf/data, and in fixing the
+// method: RFC 8040 4.4.2 invokes an operation with POST and nothing else.
+func CallRPCRaw(ctx context.Context, c *Client, rpcEndpoint string, payload any) ([]byte, error) <span class="cov0" title="0">{
+        body, err := prepareUntypedRequest(c, http.MethodPost, payload)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return c.doRPC(ctx, rpcEndpoint, body)</span>
+}
+
+// RequestRaw performs a request with the caller's method on the path the caller wrote, routed to
+// the RESTCONF root that path names.
+//
+// This is the seam behind the root client's Request, which exists because the controller's schema
+// moves between releases: a node or an operation this package has no accessor and no verb method
+// for still has to be reachable without waiting for a release. A path already under
+// /restconf/operations goes to the operations root; anything else goes to the data root, which
+// passes a /restconf/data-prefixed path through and prefixes a bare one.
+func RequestRaw(ctx context.Context, c *Client, method, path string, payload any) ([]byte, error) <span class="cov0" title="0">{
+        if strings.HasPrefix(path, routes.RESTCONFOperationsPath) </span><span class="cov0" title="0">{
+                body, err := prepareUntypedRequest(c, method, payload)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">return c.doRPC(ctx, path, body)</span>
+        }
+
+        <span class="cov0" title="0">return EditRaw(ctx, c, method, path, payload)</span>
+}
+
+// prepareUntypedRequest checks what every untyped route checks and returns the payload in the shape
+// the request builder has to marshal.
+//
+// Bytes are carried as json.RawMessage rather than marshaled as a value, because a []byte handed to
+// encoding/json encodes as a base64 string: a body read with GetData could not be edited and sent
+// back. Their validity is checked here, so the JSON content type this package sets is never a lie.
+func prepareUntypedRequest(c *Client, method string, payload any) (any, error) <span class="cov0" title="0">{
+        if c == nil </span><span class="cov0" title="0">{
+                return nil, errors.New(ierrors.ErrClientNil)
+        }</span>
+        <span class="cov0" title="0">if method == "" </span><span class="cov0" title="0">{
+                return nil, errEmptyMethod
+        }</span>
+
+        <span class="cov0" title="0">switch body := payload.(type) </span>{
+        case nil:<span class="cov0" title="0">
+                return nil, nil</span>
+        case []byte:<span class="cov0" title="0">
+                return rawJSONPayload(body)</span>
+        case json.RawMessage:<span class="cov0" title="0">
+                return rawJSONPayload(body)</span>
+        }
+
+        <span class="cov0" title="0">return payload, nil</span>
+}
+
+// rawJSONPayload carries bytes to the wire as written, refusing what is not JSON.
+func rawJSONPayload(body []byte) (any, error) <span class="cov0" title="0">{
+        if len(body) == 0 </span><span class="cov0" title="0">{
+                return nil, nil
+        }</span>
+        <span class="cov0" title="0">if !json.Valid(body) </span><span class="cov0" title="0">{
+                return nil, errInvalidJSONPayload
+        }</span>
+
+        <span class="cov0" title="0">return json.RawMessage(body), nil</span>
 }
 
 // decode unmarshals a write response body into T, treating an empty body as a zero T.
@@ -859,7 +945,7 @@ func Post[T any](ctx context.Context, c *Client, endpoint string, payload any) (
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
-        <span class="cov6" title="3">body, err := c.DoWithPayload(ctx, http.MethodPost, endpoint, payload)
+        <span class="cov6" title="3">body, err := c.doWithPayload(ctx, http.MethodPost, endpoint, payload)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -872,7 +958,7 @@ func PostVoid(ctx context.Context, c *Client, endpoint string, payload any) erro
         if c == nil </span><span class="cov4" title="2">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov6" title="3">_, err := c.DoWithPayload(ctx, http.MethodPost, endpoint, payload)
+        <span class="cov6" title="3">_, err := c.doWithPayload(ctx, http.MethodPost, endpoint, payload)
         return err</span>
 }
 
@@ -881,7 +967,7 @@ func PostRPCVoid(ctx context.Context, c *Client, rpcEndpoint string, payload any
         if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov1" title="1">_, err := c.DoRPCWithPayload(ctx, http.MethodPost, rpcEndpoint, payload)
+        <span class="cov1" title="1">_, err := c.doRPC(ctx, rpcEndpoint, payload)
         return err</span>
 }
 
@@ -891,7 +977,7 @@ func Put[T any](ctx context.Context, c *Client, endpoint string, payload any) (*
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
-        <span class="cov4" title="2">body, err := c.DoWithPayload(ctx, http.MethodPut, endpoint, payload)
+        <span class="cov4" title="2">body, err := c.doWithPayload(ctx, http.MethodPut, endpoint, payload)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -904,7 +990,7 @@ func PutVoid(ctx context.Context, c *Client, endpoint string, payload any) error
         if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov1" title="1">_, err := c.DoWithPayload(ctx, http.MethodPut, endpoint, payload)
+        <span class="cov1" title="1">_, err := c.doWithPayload(ctx, http.MethodPut, endpoint, payload)
         return err</span>
 }
 
@@ -914,7 +1000,7 @@ func Patch[T any](ctx context.Context, c *Client, endpoint string, payload any) 
                 return nil, errors.New(ierrors.ErrClientNil)
         }</span>
 
-        <span class="cov4" title="2">body, err := c.DoWithPayload(ctx, http.MethodPatch, endpoint, payload)
+        <span class="cov4" title="2">body, err := c.doWithPayload(ctx, http.MethodPatch, endpoint, payload)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -927,7 +1013,7 @@ func PatchVoid(ctx context.Context, c *Client, endpoint string, payload any) err
         if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov1" title="1">_, err := c.DoWithPayload(ctx, http.MethodPatch, endpoint, payload)
+        <span class="cov1" title="1">_, err := c.doWithPayload(ctx, http.MethodPatch, endpoint, payload)
         return err</span>
 }
 
@@ -936,7 +1022,7 @@ func Delete(ctx context.Context, c *Client, endpoint string) error <span class="
         if c == nil </span><span class="cov1" title="1">{
                 return errors.New(ierrors.ErrClientNil)
         }</span>
-        <span class="cov1" title="1">_, err := c.Do(ctx, http.MethodDelete, endpoint)
+        <span class="cov1" title="1">_, err := c.do(ctx, http.MethodDelete, endpoint)
         return err</span>
 }
 </pre>
@@ -1339,8 +1425,7 @@ func isQueryValueByte(c byte) bool <span class="cov10" title="448">{
 }
 </pre>
 		
-		<pre class="file" id="file9" style="display: none">// Package service provides common service infrastructure for Cisco IOS-XE Wireless Network Controller API services.
-package service
+		<pre class="file" id="file9" style="display: none">package service
 
 import (
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -1406,8 +1491,7 @@ func RequireMACAddress(mac string) (string, error) <span class="cov10" title="14
 }
 </pre>
 		
-		<pre class="file" id="file11" style="display: none">// Package testutil provides internal test helpers and utilities for unit testing.
-package testutil
+		<pre class="file" id="file11" style="display: none">package testutil
 
 import (
         "reflect"
@@ -1596,8 +1680,7 @@ func AssertPointerEquals(t *testing.T, actual, expected any, context string) <sp
 }
 </pre>
 		
-		<pre class="file" id="file12" style="display: none">// Package transport provides HTTP client utilities and request creation functions.
-package transport
+		<pre class="file" id="file12" style="display: none">package transport
 
 import (
         "bytes"
@@ -1736,8 +1819,7 @@ func (rb *RequestBuilder) createRequestWithJSONPayload(
 }
 </pre>
 		
-		<pre class="file" id="file13" style="display: none">// Package transport provides HTTP transport and header utilities for the WNC client.
-package transport
+		<pre class="file" id="file13" style="display: none">package transport
 
 import (
         "crypto/tls"
@@ -2265,6 +2347,11 @@ import (
 )
 
 // TestClient represents a test client with core functionality hidden.
+//
+// It is a seam for this module's own tests. The concrete type behind Core is *core.Client, which
+// lives in an internal package, so only a test inside this module can assert it back and pass it
+// to a service constructor. A test outside the module builds a client with wnc.NewClient against
+// a MockServer's URL instead, and reaches an untyped node through the root client's GetData.
 type TestClient interface {
         // Core returns the underlying core client for service initialization.
         // The concrete type is *core.Client but returned as interface{} to hide internals.
@@ -3989,12 +4076,20 @@ type Service struct {
 }
 
 // NewService creates a new Controller service instance with the provided client.
-func NewService(client *core.Client) Service <span class="cov10" title="5">{
+func NewService(client *core.Client) Service <span class="cov10" title="8">{
         return Service{BaseService: service.NewBaseService(client)}
 }</span>
 
+// GetBootTime retrieves the instant at which the controller last booted.
+func (s Service) GetBootTime(
+        ctx context.Context,
+        opts ...core.GetOption,
+) (*CiscoIOSXEDeviceHardwareOperBootTime, error) <span class="cov5" title="3">{
+        return core.Get[CiscoIOSXEDeviceHardwareOperBootTime](ctx, s.Client(), routes.ControllerBootTimePath, opts...)
+}</span>
+
 // Reload restarts the WNC controller causing temporary service interruption.
-func (s Service) Reload(ctx context.Context, reason string, force bool) error <span class="cov8" title="4">{
+func (s Service) Reload(ctx context.Context, reason string, force bool) error <span class="cov7" title="4">{
         if strings.TrimSpace(reason) == "" </span><span class="cov4" title="2">{
                 return errors.New(ErrInvalidReloadReason)
         }</span>
@@ -4003,7 +4098,7 @@ func (s Service) Reload(ctx context.Context, reason string, force bool) error <s
 }
 
 // ReloadWithReason restarts the WNC controller with the specified reason only.
-func (s Service) ReloadWithReason(ctx context.Context, reason string) error <span class="cov8" title="4">{
+func (s Service) ReloadWithReason(ctx context.Context, reason string) error <span class="cov7" title="4">{
         if strings.TrimSpace(reason) == "" </span><span class="cov4" title="2">{
                 return errors.New(ErrInvalidReloadReason)
         }</span>
@@ -4012,7 +4107,7 @@ func (s Service) ReloadWithReason(ctx context.Context, reason string) error <spa
 }
 
 // reload is the internal helper function for WNC controller reload operations.
-func (s Service) reload(ctx context.Context, reason string, force *bool) error <span class="cov8" title="4">{
+func (s Service) reload(ctx context.Context, reason string, force *bool) error <span class="cov7" title="4">{
         requestBody := WNCReloadRPCPayload{
                 Input: WNCReloadRPCInput{
                         Reason: reason,
@@ -4026,7 +4121,7 @@ func (s Service) reload(ctx context.Context, reason string, force *bool) error <
                         fmt.Errorf("reload RPC execution failed: %w", err))
         }</span>
 
-        <span class="cov7" title="3">return nil</span>
+        <span class="cov5" title="3">return nil</span>
 }
 </pre>
 		
@@ -6259,8 +6354,7 @@ func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoI
 }</span>
 </pre>
 		
-		<pre class="file" id="file51" style="display: none">// Package wlan provides WLAN domain services for Cisco IOS-XE Wireless Network Controller API.
-package wlan
+		<pre class="file" id="file51" style="display: none">package wlan
 
 import (
         "context"
@@ -6516,8 +6610,9 @@ func (s *PolicyTagService) SetDescription(ctx context.Context, tagName, descript
                         fmt.Errorf("tag '%s' not found in controller configuration", tagName))
         }</span>
 
-        // Update description
-        <span class="cov1" title="1">config.Description = description
+        // Take the address rather than the value: a merge PATCH omits an empty string, so assigning
+        // one through a value field cannot clear a description that is already set.
+        <span class="cov1" title="1">config.Description = &amp;description
         return s.SetPolicyTag(ctx, config)</span>
 }
 
@@ -6557,8 +6652,7 @@ func (s *PolicyTagService) buildPayload(config PolicyListEntry) CiscoIOSXEWirele
 }</span>
 </pre>
 		
-		<pre class="file" id="file53" style="display: none">// Package wnc provides a unified client for the Cisco Wireless Network Controller API.
-package wnc
+		<pre class="file" id="file53" style="display: none">package wnc
 
 import (
         "context"
@@ -6617,6 +6711,20 @@ var (
 // APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
 type APIError = core.APIError
 
+// RadioBand names the radio a band-scoped accessor acts on (re-export of internal
+// core.RadioBand), so a consumer can declare one in a variable, a struct field or a test double
+// rather than passing an untyped literal.
+type RadioBand = core.RadioBand
+
+const (
+        // RadioBand24GHz is the 2.4 GHz radio.
+        RadioBand24GHz = core.RadioBand24GHz
+        // RadioBand5GHz is the 5 GHz radio.
+        RadioBand5GHz = core.RadioBand5GHz
+        // RadioBand6GHz is the 6 GHz radio.
+        RadioBand6GHz = core.RadioBand6GHz
+)
+
 // Client represents the unified WNC API client with access to all domain services.
 // This provides a single-import approach to accessing all wireless controller functionality.
 type Client struct {
@@ -6625,12 +6733,12 @@ type Client struct {
 
 // NewClient creates a new unified WNC client with the specified host, token, and options.
 // This is the main entry point for all wireless controller operations.
-func NewClient(host, token string, opts ...Option) (*Client, error) <span class="cov10" title="16">{
+func NewClient(host, token string, opts ...Option) (*Client, error) <span class="cov10" title="20">{
         coreClient, err := core.New(host, token, opts...)
         if err != nil </span><span class="cov5" title="4">{
                 return nil, err
         }</span>
-        <span class="cov9" title="12">return &amp;Client{core: coreClient}, nil</span>
+        <span class="cov9" title="16">return &amp;Client{core: coreClient}, nil</span>
 }
 
 // Option is a functional option for configuring the unified client (re-export of internal core.Option).
@@ -6641,7 +6749,7 @@ type Option = core.Option
 func WithTimeout(d time.Duration) Option <span class="cov1" title="1">{ return core.WithTimeout(d) }</span>
 
 // WithInsecureSkipVerify controls TLS certificate verification (lab/testing only).
-func WithInsecureSkipVerify(skip bool) Option <span class="cov7" title="7">{ return core.WithInsecureSkipVerify(skip) }</span>
+func WithInsecureSkipVerify(skip bool) Option <span class="cov8" title="11">{ return core.WithInsecureSkipVerify(skip) }</span>
 
 // WithProxy routes requests through the proxy the resolver returns (re-export wrapper).
 func WithProxy(fn func(*http.Request) (*url.URL, error)) Option <span class="cov3" title="2">{ return core.WithProxy(fn) }</span>
@@ -6686,15 +6794,6 @@ func WithFields(expression string) GetOption <span class="cov3" title="2">{ retu
 // decodes to a zero value; bound the depth to what the caller reads.
 func WithDepth(levels int) GetOption <span class="cov4" title="3">{ return core.WithDepth(levels) }</span>
 
-// Core returns the underlying core.Client for advanced use cases.
-//
-// Deprecated: the returned type lives in an internal package, so no consumer can name
-// it in a signature or a test double. Use GetData for an untyped read and a service
-// accessor for everything else. Removed in v0.9.0.
-func (c *Client) Core() *core.Client <span class="cov1" title="1">{
-        return c.core
-}</span>
-
 // GetData performs a GET on a RESTCONF data path and returns the body as received, for
 // a container this package has no typed accessor for. The path may be given with or
 // without the /restconf/data prefix, and GetOption values apply as they do to a typed
@@ -6712,8 +6811,64 @@ func (c *Client) Core() *core.Client <span class="cov1" title="1">{
 // The path is sent as given. A caller keying into a list escapes the key value itself;
 // the typed accessors use url.PathEscape, and an unescaped "#" or "?" ends the path
 // early and reads a different node with no error to show for it.
-func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([]byte, error) <span class="cov9" title="13">{
+func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([]byte, error) <span class="cov8" title="13">{
         return core.GetRaw(ctx, c.core, path, opts...)
+}</span>
+
+// The untyped request methods below are this package's escape hatch. They exist because the
+// controller's schema moves between releases: a node or an operation this package has no typed
+// accessor for still has to be reachable without waiting for one. Each returns the body as the
+// controller sent it, and each reports an *APIError the way every typed accessor does.
+//
+// A payload is marshaled with encoding/json, as every typed write in this package marshals its
+// own, so an SDK config struct or a map may be passed directly. A []byte or a json.RawMessage is
+// the exception: it is sent as written, having been checked for well-formed JSON, which is how a
+// body read with GetData is edited and sent back. A nil payload sends no body and no Content-Type.
+//
+// A write is answered with the edited node, with an RPC-style output, or with nothing at all, so
+// an empty return with a nil error is a success.
+
+// PostData creates a node under a RESTCONF data path (RFC 8040 4.4).
+func (c *Client) PostData(ctx context.Context, path string, payload any) ([]byte, error) <span class="cov3" title="2">{
+        return core.EditRaw(ctx, c.core, http.MethodPost, path, payload)
+}</span>
+
+// PutData replaces a node at a RESTCONF data path (RFC 8040 4.5). A PUT replaces the whole node,
+// so a leaf omitted from the payload is removed rather than left alone.
+func (c *Client) PutData(ctx context.Context, path string, payload any) ([]byte, error) <span class="cov3" title="2">{
+        return core.EditRaw(ctx, c.core, http.MethodPut, path, payload)
+}</span>
+
+// PatchData merges a payload into a node at a RESTCONF data path (RFC 8040 4.6). A merge PATCH
+// omits an empty value, so a field cannot be cleared by sending its zero.
+func (c *Client) PatchData(ctx context.Context, path string, payload any) ([]byte, error) <span class="cov5" title="5">{
+        return core.EditRaw(ctx, c.core, http.MethodPatch, path, payload)
+}</span>
+
+// DeleteData removes a node at a RESTCONF data path (RFC 8040 4.7). A path carrying no list key
+// deletes the whole list rather than one entry.
+func (c *Client) DeleteData(ctx context.Context, path string) ([]byte, error) <span class="cov3" title="2">{
+        return core.EditRaw(ctx, c.core, http.MethodDelete, path, nil)
+}</span>
+
+// PostRPC invokes an operation on a RESTCONF operations path (RFC 8040 3.6 and 4.4.2), which is
+// the only method that tree accepts. The path is the RPC name, module-qualified as the controller
+// publishes it, with or without the /restconf/operations prefix, and the payload is normally an
+// object under a single "input" key.
+func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte, error) <span class="cov1" title="1">{
+        return core.CallRPCRaw(ctx, c.core, path, payload)
+}</span>
+
+// Request performs a request with the given method on the path as the caller wrote it, for
+// whatever the verb methods above cannot express: a method RESTCONF gains later, a bodiless probe
+// such as HEAD, or a query parameter this package has no option for.
+//
+// The method is sent as given and is checked against neither the path nor the payload; the one
+// value rejected is the empty string, which net/http reads as GET. A path already under
+// /restconf/operations is sent to the operations root and anything else to the data root, which
+// passes a /restconf/data-prefixed path through and prefixes a bare one.
+func (c *Client) Request(ctx context.Context, method, path string, payload any) ([]byte, error) <span class="cov5" title="4">{
+        return core.RequestRaw(ctx, c.core, method, path, payload)
 }</span>
 
 // Domain service accessors - each returns a service instance for the respective domain

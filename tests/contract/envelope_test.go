@@ -407,6 +407,13 @@ func flatten(structType *ast.StructType, level int) []tagged {
 		switch typ := base.(type) {
 		case *ast.Ident:
 			entry.typeName = typ.Name
+		case *ast.SelectorExpr:
+			// A qualified type is named rather than left blank because time.Time is a leaf on the
+			// wire whatever Go spells it as. An unnamed one is invisible to scalarKinds, which is
+			// how a pointer to it escaped the omitempty gate.
+			if qualifier, ok := typ.X.(*ast.Ident); ok {
+				entry.typeName = qualifier.Name + "." + typ.Sel.Name
+			}
 		case *ast.StructType:
 			fields = append(fields, entry)
 			fields = append(fields, flatten(typ, level+1)...)

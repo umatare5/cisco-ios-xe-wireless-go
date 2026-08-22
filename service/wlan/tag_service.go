@@ -162,8 +162,9 @@ func (s *PolicyTagService) SetDescription(ctx context.Context, tagName, descript
 			fmt.Errorf("tag '%s' not found in controller configuration", tagName))
 	}
 
-	// Update description
-	config.Description = description
+	// Take the address rather than the value: a merge PATCH omits an empty string, so assigning
+	// one through a value field cannot clear a description that is already set.
+	config.Description = &description
 	return s.SetPolicyTag(ctx, config)
 }
 

@@ -12,3 +12,15 @@ const (
 	// This operation follows the Cisco-IOS-XE-rpc:reload YANG model specification.
 	ControllerReloadRPC = RESTCONFOperationsPath + "/Cisco-IOS-XE-rpc:reload"
 )
+
+// Controller Device Operational Data
+//
+// The subject of this service is the controller itself and not only its wireless namespace, so
+// these paths read the platform's own operational data under a module that is not a
+// Cisco-IOS-XE-wireless-* one. ControllerReloadRPC above is the same case for an RPC.
+
+// Controller Operational Paths.
+const (
+	// ControllerBootTimePath retrieves the instant at which the controller last booted.
+	ControllerBootTimePath = RESTCONFDataPath + "/Cisco-IOS-XE-device-hardware-oper:device-hardware-data/device-hardware/device-system-data/boot-time"
+)

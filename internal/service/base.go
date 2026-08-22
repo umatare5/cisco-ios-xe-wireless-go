@@ -1,4 +1,3 @@
-// Package service provides common service infrastructure for Cisco IOS-XE Wireless Network Controller API services.
 package service
 
 import (

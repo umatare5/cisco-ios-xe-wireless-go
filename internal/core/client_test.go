@@ -149,24 +149,24 @@ func TestCoreClientUnit_DoOperations_Success(t *testing.T) {
 	defer cancel()
 
 	t.Run("GET_GeneralOper", func(t *testing.T) {
-		body, err := client.Do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
+		body, err := client.do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
 		testutil.AssertNoError(t, err, "GET request should succeed with mock server")
 		testutil.AssertTrue(t, len(body) > 0, "Response body should not be empty")
 	})
 
 	t.Run("InvalidMethod", func(t *testing.T) {
-		_, err := client.Do(ctx, "INVALID", "/restconf/data/test")
+		_, err := client.do(ctx, "INVALID", "/restconf/data/test")
 		testutil.AssertError(t, err, "Expected error for invalid HTTP method")
 	})
 
 	t.Run("NilContext", func(t *testing.T) {
 		var nilCtx context.Context //nolint:staticcheck
-		_, err := client.Do(nilCtx, http.MethodGet, "/restconf/data/test")
+		_, err := client.do(nilCtx, http.MethodGet, "/restconf/data/test")
 		testutil.AssertError(t, err, "Expected error for nil context")
 	})
 
 	t.Run("NotFoundResponse", func(t *testing.T) {
-		_, err := client.Do(ctx, http.MethodGet, "/restconf/data/nonexistent")
+		_, err := client.do(ctx, http.MethodGet, "/restconf/data/nonexistent")
 		testutil.AssertError(t, err, "Expected error for 404 response")
 	})
 }
@@ -196,7 +196,7 @@ func TestCoreClientUnit_DoOperations_ErrorHandling(t *testing.T) {
 	ctx := context.Background()
 
 	// Test with invalid host to cover error paths
-	_, err = client.Do(ctx, http.MethodGet, "/test")
+	_, err = client.do(ctx, http.MethodGet, "/test")
 	testutil.AssertError(t, err, "Expected error for invalid host")
 }
 
@@ -226,7 +226,7 @@ func TestCoreClientUnit_HTTPErrorBoundaries(t *testing.T) {
 			testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 			ctx := context.Background()
-			_, err = client.Do(ctx, http.MethodGet, "/test")
+			_, err = client.do(ctx, http.MethodGet, "/test")
 
 			if tc.expectErr {
 				testutil.AssertError(t, err, fmt.Sprintf("Expected error for status %d", tc.statusCode))
@@ -243,7 +243,7 @@ func TestCoreClientUnit_Validation_NilContext(t *testing.T) {
 	testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 	var nilCtx context.Context //nolint:staticcheck
-	_, err = client.Do(nilCtx, http.MethodGet, "/test")
+	_, err = client.do(nilCtx, http.MethodGet, "/test")
 	testutil.AssertError(t, err, "Expected error with nil context")
 
 	testutil.AssertStringContains(t, err.Error(),
@@ -343,7 +343,7 @@ func TestCoreClientUnit_PostOperations_Success(t *testing.T) {
 	})
 }
 
-// TestCoreClientUnit_RPCOperations_WithPayload tests the DoRPCWithPayload method.
+// TestCoreClientUnit_RPCOperations_WithPayload tests the doRPC method.
 func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 	// Create mock server that handles RPC requests
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -369,25 +369,25 @@ func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 	payload := map[string]string{"test": "data"}
 
 	t.Run("ValidRPCRequest", func(t *testing.T) {
-		result, err := testClient.DoRPCWithPayload(ctx, http.MethodPost, rpcPath, payload)
+		result, err := testClient.doRPC(ctx, rpcPath, payload)
 		if err != nil {
-			t.Logf("DoRPCWithPayload() error (expected in test): %v", err)
+			t.Logf("doRPC() error (expected in test): %v", err)
 			return
 		}
 		if result == nil {
-			testutil.AssertNotNil(t, result, "DoRPCWithPayload() result should not be nil")
+			testutil.AssertNotNil(t, result, "doRPC() result should not be nil")
 		}
 	})
 
 	t.Run("NilClient", func(t *testing.T) {
 		var nilClient *Client
-		_, err := nilClient.DoRPCWithPayload(ctx, http.MethodPost, rpcPath, payload)
+		_, err := nilClient.doRPC(ctx, rpcPath, payload)
 		testutil.AssertError(t, err, "Expected error for nil client")
 	})
 
 	t.Run("NilContext", func(t *testing.T) {
 		var nilCtx context.Context //nolint:staticcheck
-		_, err := testClient.DoRPCWithPayload(nilCtx, http.MethodPost, rpcPath, payload)
+		_, err := testClient.doRPC(nilCtx, rpcPath, payload)
 		testutil.AssertError(t, err, "Expected error for nil context")
 	})
 }
@@ -412,8 +412,8 @@ func TestCoreClientUnit_RESTCONFBuilder(t *testing.T) {
 	})
 }
 
-// TestCoreClientUnit_DoWithPayload tests DoWithPayload method.
-func TestCoreClientUnit_DoWithPayload(t *testing.T) {
+// TestCoreClientUnit_doWithPayload tests doWithPayload method.
+func TestCoreClientUnit_doWithPayload(t *testing.T) {
 	// Create mock server
 	mockServer := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -427,9 +427,9 @@ func TestCoreClientUnit_DoWithPayload(t *testing.T) {
 
 	ctx := context.Background()
 	payload := map[string]string{"test": "data"}
-	body, err := client.DoWithPayload(ctx, "POST", "/restconf/data/test", payload)
+	body, err := client.doWithPayload(ctx, "POST", "/restconf/data/test", payload)
 
-	testutil.AssertNoError(t, err, "DoWithPayload should succeed")
+	testutil.AssertNoError(t, err, "doWithPayload should succeed")
 	testutil.AssertTrue(t, len(body) > 0, "Response body should not be empty")
 }
 
@@ -603,7 +603,7 @@ func TestCoreClientUnit_HeaderTimeout_Error(t *testing.T) {
 		WithInsecureSkipVerify(true), WithResponseHeaderTimeout(20*time.Millisecond))
 	testutil.AssertClientCreated(t, client, err, "HeaderTimeoutClient")
 
-	_, err = client.Do(context.Background(), http.MethodGet, path)
+	_, err = client.do(context.Background(), http.MethodGet, path)
 	testutil.AssertError(t, err, "header timeout")
 	testutil.AssertTrue(t, errors.Is(err, ErrRequestTimeout), "errors.Is(err, ErrRequestTimeout)")
 }
@@ -623,7 +623,7 @@ func TestCoreClientUnit_ConstructionInputNormalization_Success(t *testing.T) {
 	client, err := New(" "+host+"\n", "dGVzdDp0ZXN0\n", WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, client, err, "padded host and newline-terminated token")
 
-	_, err = client.Do(context.Background(), http.MethodGet, path)
+	_, err = client.do(context.Background(), http.MethodGet, path)
 	testutil.AssertNoError(t, err, "request with a newline-terminated token")
 }
 
@@ -643,7 +643,7 @@ func TestCoreClientUnit_ErrorBodyTruncation_Error(t *testing.T) {
 		WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncation")
 
-	_, err = client.Do(context.Background(), http.MethodGet, path)
+	_, err = client.do(context.Background(), http.MethodGet, path)
 	var apiErr *APIError
 	testutil.AssertTrue(t, errors.As(err, &apiErr), "errors.As(*APIError)")
 	// The bound is written out rather than taken from the constant: comparing the constant
@@ -681,7 +681,7 @@ func TestCoreClientUnit_ErrorBodyTruncationBoundary_Error(t *testing.T) {
 				WithInsecureSkipVerify(true))
 			testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncationBoundary")
 
-			_, err = client.Do(context.Background(), http.MethodGet, path)
+			_, err = client.do(context.Background(), http.MethodGet, path)
 			var apiErr *APIError
 			testutil.AssertTrue(t, errors.As(err, &apiErr), "errors.As(*APIError)")
 
@@ -714,7 +714,7 @@ func TestCoreClientUnit_ErrorBodyTruncationUTF8_Error(t *testing.T) {
 		WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncationUTF8")
 
-	_, err = client.Do(context.Background(), http.MethodGet, path)
+	_, err = client.do(context.Background(), http.MethodGet, path)
 	var apiErr *APIError
 	testutil.AssertTrue(t, errors.As(err, &apiErr), "errors.As(*APIError)")
 	testutil.AssertTrue(t, utf8.ValidString(apiErr.Message), "Message stays valid UTF-8")
@@ -740,7 +740,7 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 			time.Sleep(20 * time.Millisecond)
 			cancel()
 		}()
-		_, err = client.Do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
+		_, err = client.do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
 		testutil.AssertError(t, err, "canceled request")
 		testutil.AssertTrue(t, errors.Is(err, context.Canceled), "errors.Is(err, context.Canceled)")
 		testutil.AssertTrue(t, !errors.Is(err, ErrRequestTimeout), "a cancel is not a timeout")
@@ -757,7 +757,7 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 		client, err := New(addr, "dGVzdDp0ZXN0", WithInsecureSkipVerify(true))
 		testutil.AssertClientCreated(t, client, err, "RefusedIsNotTimeout")
 
-		_, err = client.Do(context.Background(), http.MethodGet,
+		_, err = client.do(context.Background(), http.MethodGet,
 			"Cisco-IOS-XE-wireless-general-oper:general-oper-data")
 		testutil.AssertError(t, err, "refused dial")
 		testutil.AssertTrue(t, !errors.Is(err, ErrRequestTimeout), "a refused dial is not a timeout")
@@ -780,7 +780,7 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 			WithInsecureSkipVerify(true), WithTimeout(300*time.Millisecond))
 		testutil.AssertClientCreated(t, client, err, "BodyReadTimeout")
 
-		_, err = client.Do(context.Background(), http.MethodGet,
+		_, err = client.do(context.Background(), http.MethodGet,
 			"Cisco-IOS-XE-wireless-general-oper:general-oper-data")
 		testutil.AssertError(t, err, "body read timeout")
 		testutil.AssertTrue(t, errors.Is(err, ErrRequestTimeout),

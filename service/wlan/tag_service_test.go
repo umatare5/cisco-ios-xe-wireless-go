@@ -175,7 +175,7 @@ func TestWlanPolicyTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	// Test CreatePolicyTag with valid config using proper model
 	config := &PolicyListEntry{
 		TagName:     "new-tag",
-		Description: "New policy tag",
+		Description: strPtr("New policy tag"),
 	}
 
 	err := policyTag.CreatePolicyTag(ctx, config)
@@ -187,7 +187,7 @@ func TestWlanPolicyTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	// Test SetPolicyTag with valid config using proper model
 	updateConfig := &PolicyListEntry{
 		TagName:     "updated-tag",
-		Description: "Updated description",
+		Description: strPtr("Updated description"),
 	}
 
 	err = policyTag.SetPolicyTag(ctx, updateConfig)
@@ -228,7 +228,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_EmptyTagName(t *testing.T) {
 	// Test CreatePolicyTag with empty tag name config using proper model
 	configEmptyName := &PolicyListEntry{
 		TagName:     "",
-		Description: "Test description",
+		Description: strPtr("Test description"),
 	}
 
 	err := policyTag.CreatePolicyTag(ctx, configEmptyName)
@@ -245,7 +245,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_EmptyTagName(t *testing.T) {
 	// Test CreatePolicyTag with long tag name config using proper model
 	configLongName := &PolicyListEntry{
 		TagName:     "this-is-a-very-long-tag-name-that-exceeds-thirty-two-characters",
-		Description: "Test description",
+		Description: strPtr("Test description"),
 	}
 
 	err = policyTag.CreatePolicyTag(ctx, configLongName)
@@ -588,4 +588,9 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 			t.Error("Expected error for DeletePolicyTag with server error")
 		}
 	})
+}
+
+// Helper function for pointer creation.
+func strPtr(s string) *string {
+	return &s
 }

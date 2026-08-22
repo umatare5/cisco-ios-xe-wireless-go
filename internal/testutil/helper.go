@@ -1,4 +1,3 @@
-// Package testutil provides internal test helpers and utilities for unit testing.
 package testutil
 
 import (

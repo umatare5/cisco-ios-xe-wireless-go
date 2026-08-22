@@ -49,9 +49,10 @@ func executeStandardPolicyTagWorkflow(t *testing.T, tsc *scenario.TagContext, se
 
 	// Step 2: Create test tag
 	t.Logf("Step 2: Creating test policy tag: %s", tsc.TestTagName)
+	description := expectedPolicyTagDescription
 	if err := service.CreatePolicyTag(tsc.Ctx, &wlan.PolicyListEntry{
 		TagName:     tsc.TestTagName,
-		Description: expectedPolicyTagDescription,
+		Description: &description,
 	}); err != nil {
 		t.Fatalf("Failed to create policy tag %s: %v", tsc.TestTagName, err)
 	}
@@ -112,12 +113,18 @@ func validatePolicyTagConfiguration(t *testing.T, tsc *scenario.TagContext, conf
 		return
 	}
 
+	// Get description value for validation
+	var description string
+	if config.Description != nil {
+		description = *config.Description
+	}
+
 	// Validate common tag fields
 	if config.TagName != tsc.TestTagName {
 		t.Errorf("Tag name mismatch: expected %s, got %s", tsc.TestTagName, config.TagName)
 	}
-	if config.Description != expectedPolicyTagDescription {
-		t.Errorf("Description mismatch: expected %s, got %s", expectedPolicyTagDescription, config.Description)
+	if description != expectedPolicyTagDescription {
+		t.Errorf("Description mismatch: expected %s, got %s", expectedPolicyTagDescription, description)
 	}
 
 	// Validate WLAN policies

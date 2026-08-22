@@ -2,6 +2,7 @@ package controller_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/pkg/testutil"
@@ -35,6 +36,87 @@ func TestControllerServiceUnit_Constructor_Success(t *testing.T) {
 			t.Error("Expected service with nil client to return nil from Client()")
 		}
 	})
+}
+
+// bootTimeEndpoint is the endpoint GetBootTime reads, without the RESTCONF data prefix the mock
+// server strips.
+const bootTimeEndpoint = "Cisco-IOS-XE-device-hardware-oper:device-hardware-data/" +
+	"device-hardware/device-system-data/boot-time"
+
+// wireBootTime is the shape a controller sends: RFC 3339 to the second, with UTC written as an
+// explicit "+00:00" offset rather than "Z", and with no fractional part.
+const wireBootTime = "2026-01-02T03:04:05+00:00"
+
+// TestControllerServiceUnit_GetBootTime_MockSuccess tests that a boot instant decodes and that an
+// answer holding nothing decodes to nil rather than to the year 1.
+func TestControllerServiceUnit_GetBootTime_MockSuccess(t *testing.T) {
+	t.Run("InstantIsDecoded", func(t *testing.T) {
+		responses := map[string]string{
+			bootTimeEndpoint: `{"Cisco-IOS-XE-device-hardware-oper:boot-time": "` + wireBootTime + `"}`,
+		}
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+		defer mockServer.Close()
+
+		testClient := testutil.NewTestClient(mockServer)
+		service := controller.NewService(testClient.Core().(*core.Client))
+
+		result, err := service.GetBootTime(testutil.TestContext(t))
+		if err != nil {
+			t.Fatalf("Expected no error, got: %v", err)
+		}
+		if result == nil || result.BootTime == nil {
+			t.Fatal("Expected a boot instant, got nil")
+		}
+
+		want, err := time.Parse(time.RFC3339, wireBootTime)
+		if err != nil {
+			t.Fatalf("Test constant is not RFC 3339: %v", err)
+		}
+		if !result.BootTime.Equal(want) {
+			t.Errorf("Boot instant mismatch: expected %s, got %s", want, result.BootTime)
+		}
+	})
+
+	// A read answered with no body is a successful read of a node holding nothing, so the field has
+	// to be able to say so. Were it a value, this would be the year 1 behind a nil error.
+	t.Run("EmptyAnswerIsNotAnInstant", func(t *testing.T) {
+		responses := map[string]string{
+			bootTimeEndpoint: "",
+		}
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+		defer mockServer.Close()
+
+		testClient := testutil.NewTestClient(mockServer)
+		service := controller.NewService(testClient.Core().(*core.Client))
+
+		result, err := service.GetBootTime(testutil.TestContext(t))
+		if err != nil {
+			t.Fatalf("Expected no error for an empty answer, got: %v", err)
+		}
+		if result == nil {
+			t.Fatal("Expected a result for an empty answer, got nil")
+		}
+		if result.BootTime != nil {
+			t.Errorf("Expected nil boot instant for an empty answer, got %s", result.BootTime)
+		}
+	})
+}
+
+// TestControllerServiceUnit_GetBootTime_ErrorHandling tests that a body keyed for another node is
+// an error rather than a zero instant.
+func TestControllerServiceUnit_GetBootTime_ErrorHandling(t *testing.T) {
+	responses := map[string]string{
+		bootTimeEndpoint: `{"Cisco-IOS-XE-device-hardware-oper:up-time": "` + wireBootTime + `"}`,
+	}
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := controller.NewService(testClient.Core().(*core.Client))
+
+	if _, err := service.GetBootTime(testutil.TestContext(t)); err == nil {
+		t.Error("Expected an error for a body keyed for another node, got nil")
+	}
 }
 
 // TestControllerServiceUnit_ReloadOperations_MockSuccess tests Reload operations using mock server

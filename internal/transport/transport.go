@@ -1,4 +1,3 @@
-// Package transport provides HTTP transport and header utilities for the WNC client.
 package transport
 
 import (

@@ -71,7 +71,7 @@ type WlanCfgEntry struct {
 	WlanID                 int                `json:"wlan-id"`                              // WLAN identifier (Live: IOS-XE 17.12.6a)
 	ProfileName            string             `json:"profile-name"`                         // WLAN profile name (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtPsk         bool               `json:"auth-key-mgmt-psk,omitempty"`          // Authentication key management PSK (Live: IOS-XE 17.12.6a)
-	AuthKeyMgmtDot1x       bool               `json:"auth-key-mgmt-dot1x,omitempty"`        // Authentication key management type 802.1x (Live: IOS-XE 17.12.6a)
+	AuthKeyMgmtDot1x       *bool              `json:"auth-key-mgmt-dot1x,omitempty"`        // Authentication key management type 802.1x (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtDot1xSha256 bool               `json:"auth-key-mgmt-dot1x-sha256,omitempty"` // Authentication key management type 802.1x SHA256 (Live: IOS-XE 17.12.6a)
 	PSK                    string             `json:"psk,omitempty"`                        // Authentication pre-shared key — secret, never log (Live: IOS-XE 17.12.6a)
 	PSKType                string             `json:"psk-type,omitempty"`                   // Pre-shared key encryption type (Live: IOS-XE 17.12.6a)
@@ -158,7 +158,8 @@ type DHCPParams struct {
 
 // UmbrellaFlexParams represents Umbrella Flex parameters configuration.
 type UmbrellaFlexParams struct {
-	DHCPDNSOptionEnable bool `json:"dhcp-dns-option-enable,omitempty"` // DHCP DNS option for Umbrella enabled (Live: IOS-XE 17.12.6a)
+	DHCPDNSOptionEnable *bool `json:"dhcp-dns-option-enable,omitempty"` // DHCP DNS option for Umbrella enabled (Live: IOS-XE 17.12.6a)
+	ModeForce           bool  `json:"mode-force,omitempty"`             // Force Umbrella mode on the profile (Live: IOS-XE 17.12.7a)
 }
 
 // AtfPolicyMapEntries represents ATF (Airtime Fairness) policy map entries from live WNC 17.12.1.
@@ -215,7 +216,7 @@ type AvcIPv6FmEgressEntry struct {
 // PolicyListEntry represents individual policy list entry.
 type PolicyListEntry struct {
 	TagName      string        `json:"tag-name,omitempty"`      // This object uniquely identifies the policy tag (Live: IOS-XE 17.12.6a)
-	Description  string        `json:"description,omitempty"`   // Description for the policy tag (Live: IOS-XE 17.12.6a)
+	Description  *string       `json:"description,omitempty"`   // Description for the policy tag (Live: IOS-XE 17.12.6a)
 	WLANPolicies *WLANPolicies `json:"wlan-policies,omitempty"` // WLAN policy configuration (Live: IOS-XE 17.12.6a)
 }
 
