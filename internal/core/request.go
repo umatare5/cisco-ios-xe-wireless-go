@@ -61,6 +61,10 @@ var (
 	// errEmptyMethod reports the one method value net/http reinterprets rather than rejects: it
 	// substitutes GET, which would read where a write was asked for.
 	errEmptyMethod = errors.New("HTTP method cannot be empty")
+	// errOperationsMethod reports a method other than POST on an operations path. doRPC sends POST
+	// there whatever it is handed, so passing another method through would invoke the operation
+	// rather than do what the caller asked.
+	errOperationsMethod = errors.New("only POST reaches a RESTCONF operations path")
 	// errInvalidJSONPayload reports payload bytes this package would send under a JSON content
 	// type without them being JSON. Checking here keeps the message ours rather than the
 	// encoder's, which names its own internal types.
@@ -109,6 +113,10 @@ func RequestRaw(ctx context.Context, c *Client, method, path string, payload any
 		body, err := prepareUntypedRequest(c, method, payload)
 		if err != nil {
 			return nil, err
+		}
+
+		if method != http.MethodPost {
+			return nil, errOperationsMethod
 		}
 
 		return c.doRPC(ctx, path, body)
