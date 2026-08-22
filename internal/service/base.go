@@ -37,6 +37,12 @@ func NewBaseService(client *core.Client) BaseService {
 //
 // Returns:
 //   - *core.Client: The configured HTTP client instance, or nil if not initialized
+//
+// Deprecated: BaseService is embedded in every service type, so this method is promoted onto each
+// of them and returns a value whose type is declared in an internal package. A caller outside this
+// module cannot name that type, so the value carries no operation it can perform. Reach a node with
+// no typed accessor through the untyped request methods on the root client instead — GetData and
+// its siblings — which are the supported route to the wire.
 func (b BaseService) Client() *core.Client {
 	return b.client
 }
