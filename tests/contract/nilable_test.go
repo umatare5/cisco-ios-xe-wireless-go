@@ -192,10 +192,11 @@ func TestEveryNodeIsNilableWhereverItIsDecoded(t *testing.T) {
 // service/mesh/global_oper.go holds mesh-global-stats that way.
 //
 // Two kinds of field are left out. A scalar is a leaf, whose absence contract absence_test.go owns
-// and whose local name recurs under unrelated parents. A field whose type flatten leaves unnamed is
-// skipped because an inline anonymous struct and a qualified type such as time.Time both arrive
-// with an empty type name, and two of those are not the same type merely because neither could be
-// named — TestEveryLevelZeroNodeIsNilable is what covers an unnamed type at level 0.
+// and whose local name recurs under unrelated parents; time.Time is in scalarKinds for that reason,
+// so a timestamp is excluded here as the leaf it is. A field whose type flatten leaves unnamed is
+// skipped because an inline anonymous struct arrives with an empty type name, and two of those are
+// not the same type merely because neither could be named — TestEveryLevelZeroNodeIsNilable is what
+// covers an unnamed type at level 0.
 func nodesOf(pkg *servicePkg) map[nodeKey][]shape {
 	byNode := make(map[nodeKey][]shape)
 
