@@ -215,8 +215,8 @@ func (c *Client) doWithPayload(ctx context.Context, method, path string, payload
 }
 
 // doRPC posts an RPC input to rpcPath and returns the output body. RFC 8040 4.4.2 invokes an
-// operation with POST and nothing else, so the method is not a parameter; a caller needing
-// another method on an operations path goes through the root client's Request.
+// operation with POST and nothing else, so the method is not a parameter; RequestRaw refuses
+// another method on an operations path rather than routing it here.
 func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
