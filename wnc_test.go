@@ -58,6 +58,44 @@ func TestNewClient(t *testing.T) {
 			opts:        nil,
 			expectError: true,
 		},
+		{
+			name:  "ValidClientWithTransportOptions",
+			host:  "controller.example.internal",
+			token: "test-token-123",
+			opts: []Option{
+				WithProxy(http.ProxyFromEnvironment),
+				WithResponseHeaderTimeout(15 * time.Second),
+				WithTLSHandshakeTimeout(10 * time.Second),
+			},
+			expectError: false,
+		},
+		{
+			name:  "RejectsNonPositiveResponseHeaderTimeout",
+			host:  "controller.example.internal",
+			token: "test-token-123",
+			opts: []Option{
+				WithResponseHeaderTimeout(0),
+			},
+			expectError: true,
+		},
+		{
+			name:  "RejectsNonPositiveTLSHandshakeTimeout",
+			host:  "controller.example.internal",
+			token: "test-token-123",
+			opts: []Option{
+				WithTLSHandshakeTimeout(-1 * time.Second),
+			},
+			expectError: true,
+		},
+		{
+			name:  "NilProxyResolverIsAccepted",
+			host:  "controller.example.internal",
+			token: "test-token-123",
+			opts: []Option{
+				WithProxy(nil),
+			},
+			expectError: false,
+		},
 	}
 
 	for _, tt := range testCases {
