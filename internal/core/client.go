@@ -170,8 +170,12 @@ func New(host, token string, opts ...Option) (*Client, error) {
 	return client, nil
 }
 
-// Do executes an HTTP request and returns the response body.
-func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) {
+// do executes an HTTP request and returns the response body.
+//
+// The transport methods are unexported so that the root client's untyped methods are the only
+// route out of the typed API. A value reached through a service constructor can build URLs and
+// services with it, and nothing else.
+func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -190,8 +194,8 @@ func (c *Client) Do(ctx context.Context, method, path string) ([]byte, error) {
 	return body, nil
 }
 
-// DoWithPayload performs an HTTP request with a payload and returns the response body.
-func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) {
+// doWithPayload performs an HTTP request with a payload and returns the response body.
+func (c *Client) doWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -210,13 +214,15 @@ func (c *Client) DoWithPayload(ctx context.Context, method, path string, payload
 	return body, nil
 }
 
-// DoRPCWithPayload performs an HTTP RPC request with a payload and returns the response body.
-func (c *Client) DoRPCWithPayload(ctx context.Context, method, rpcPath string, payload any) ([]byte, error) {
+// doRPC posts an RPC input to rpcPath and returns the output body. RFC 8040 4.4.2 invokes an
+// operation with POST and nothing else, so the method is not a parameter; a caller needing
+// another method on an operations path goes through the root client's Request.
+func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
 
-	req, err := c.requestBuilder.CreateRPCRequestWithPayload(ctx, method, rpcPath, payload)
+	req, err := c.requestBuilder.CreateRPCRequestWithPayload(ctx, http.MethodPost, rpcPath, payload)
 	if err != nil {
 		return nil, err
 	}

@@ -128,12 +128,6 @@ func TestClientServiceAccessors(t *testing.T) {
 		t.Fatalf("Failed to create client: %v", err)
 	}
 
-	// Test Core() method
-	coreClient := client.Core()
-	if coreClient == nil {
-		t.Error("Core() returned nil")
-	}
-
 	// Test all service accessors - verify they don't panic and return valid structs
 	defer func() {
 		if r := recover(); r != nil {

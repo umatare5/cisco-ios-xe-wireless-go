@@ -170,6 +170,8 @@ Before `v1.0.0` this SDK ships no deprecation window for an accessor. An accesso
 
 An escape hatch is the exception, because a consumer may have no replacement to move to. One is marked `Deprecated:` naming its removal release, and that release is a ceiling: removing it earlier breaks a promise a published tag already made.
 
+The hatch this SDK ships is the untyped request methods on the root client: `GetData`, the four `*Data` verb methods, `PostRPC`, and `Request` for a method or a root they cannot express. It exists because the controller's schema moves between releases, so a node or an operation with no typed accessor still has to be reachable without waiting for one. `core.Client`'s transport methods are unexported, so these are the only route to the wire that is not a typed accessor. A further hatch is added against a named consumer need, never on the argument that the typed surface is incomplete.
+
 ### Toolchain Requirement
 
 The `go` directive in [go.mod](./go.mod) and the `go_version` inputs under [.github/workflows](./.github/workflows) move together. Raising the directive lifts the toolchain floor of every consumer, so it ships as a MINOR release with the new floor named in the release notes.
