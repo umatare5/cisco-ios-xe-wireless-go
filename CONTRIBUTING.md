@@ -1,9 +1,11 @@
 # 🤝 Contribution Guide
 
-Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go SDK**! This document explains how you can get involved, the development workflow, and our release process.
+Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go SDK**!
+
+This document explains how you can get involved, the development workflow, and our release process.
 
 > [!WARNING]
-> This SDK is under **active development**. I'll make the breaking changes until `v1.0.0`. If you give the contribution to this repo, please create an issue before to avoid duplicate work. The remaining tasks to reach `v1.0.0` are tracked in **[Milestone: 1.0.0](https://github.com/umatare5/cisco-ios-xe-wireless-go/milestone/1)**.
+> This SDK is under **active development**, so expect breaking changes. Open an issue before contributing.
 
 ## 💡 How to Contribute
 
@@ -53,10 +55,10 @@ make test-integration    # Run integration test using live WNC
 
 ## 🧪 Testing
 
-This SDK includes **unit, contract, integration and scenario tests** to ensure reliability and compatibility with Cisco Catalyst 9800 controllers.
+This SDK includes **unit, contract, integration and scenario tests** for reliability against Cisco Catalyst 9800 controllers.
 
 - **Unit tests** run without any external dependencies.
-- **Contract tests** in [tests/contract](./tests/contract) hold every decode type to the route that reads it, and a violation fails `make test-unit`.
+- **Contract tests** hold every decode type to the route that reads it, and fail `make test-unit`.
 - **Integration tests** require a live WNC instance and valid credentials.
 - **Scenario tests** perform end-to-end operations on a live WNC and may modify its state.
 
@@ -74,7 +76,7 @@ They use `curl` to access WNC, so they are independent of Go. For detailed usage
 >
 > This section is for maintainers. Contributors do not need to perform these steps.
 
-GitHub Actions cannot access a live WNC. Reviewers therefore must have a functional WNC development environment to complete reviews.
+GitHub Actions cannot access a live WNC, so a reviewer needs a working WNC development environment.
 
 ### Verify the Changes using a Live WNC
 
@@ -153,7 +155,7 @@ Once merged, GitHub Actions will automatically release the new version using [Re
 
 ### Versioning Rules
 
-This SDK is pre-`v1.0.0`, so a **MINOR release may ship breaking changes**. A PATCH release never changes the exported API.
+While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**. A PATCH release never changes the exported API.
 
 | Change | Bump | Release notes must name |
 | :--- | :--- | :--- |
@@ -162,92 +164,43 @@ This SDK is pre-`v1.0.0`, so a **MINOR release may ship breaking changes**. A PA
 | Changed or removed symbol | MINOR | Every affected symbol |
 | No exported API change | PATCH | Nothing |
 
-Adding a variadic parameter is source-breaking for consumer-defined interfaces and method values, so it is never a PATCH.
-
-Mark every breaking change with a Conventional Commits `!`. The release notes group those commits under **Breaking Changes**.
-
-Before `v1.0.0` this SDK ships no deprecation window for an accessor. An accessor is removed in the release that repairs the resource it reads — whether it never decoded the node it names, or it merely duplicates the accessor that does — and the release notes name every removed symbol.
-
-An escape hatch is the exception, because a consumer may have no replacement to move to. One is marked `Deprecated:` naming its removal release, and that release is a ceiling: removing it earlier breaks a promise a published tag already made.
-
-The hatch this SDK ships is the untyped request methods on the root client: `GetData`, the four `*Data` verb methods, `PostRPC`, and `Request` for a method or a root they cannot express. It exists because the controller's schema moves between releases, so a node or an operation with no typed accessor still has to be reachable without waiting for one. `core.Client`'s transport methods are unexported, so these are the only route to the wire that is not a typed accessor. A further hatch is added against a named consumer need, never on the argument that the typed surface is incomplete.
-
 ### Toolchain Requirement
 
 The `go` directive in [go.mod](./go.mod) and the `go_version` inputs under [.github/workflows](./.github/workflows) move together. Raising the directive lifts the toolchain floor of every consumer, so it ships as a MINOR release with the new floor named in the release notes.
 
 ## 🔢 Typing Rules for Wire Values
 
-RESTCONF on this platform encodes **per leaf, not per container**: one response body carries bare numbers and quoted strings side by side. Type every field from a measured response — a YANG model states the value space, not the encoding.
+This platform encodes **per leaf, not per container**: one body carries bare numbers and quoted strings side by side.
 
-| Wire form | Go type | Measured example |
-| :--- | :--- | :--- |
-| Quoted number: `decimal64`, 64-bit counter | `string`, or `*string` when omittable | `latitude`, `iapp-unconnected-client` |
-| Bare number: `uint32` and narrower | `int` or `uintN`, `*T` when omittable | `adhoc-count`, `rogue-ap-mld-link-count` |
-| Enumeration | `string`, or a named `string` type | `reboot-reason` |
+Type every field from a measured response, never from the YANG model.
 
-- A Go `uint64` is not evidence of a quoted wire form. Two `uint64` siblings in one struct can differ, so retype a leaf only when that leaf was measured.
-- Do not add `,string` to a numeric field. It accepts the quoted form and then rejects the bare one, so it cannot carry a leaf whose encoding differs between releases.
-- Do not introduce a third numeric convention — `json.Number`, a custom `UnmarshalJSON`, or a quoted-tolerant named type — for a single leaf.
-- Pointerize any leaf whose absence carries meaning and give it `,omitempty`. A configuration leaf omitted from a plain read means its default is in force, which is often `true`, so a value-typed field publishes a fabricated and sometimes inverted reading.
+| Wire form | Go type |
+| :--- | :--- |
+| Quoted number: `decimal64`, 64-bit counter | `string`, or `*string` when omittable |
+| Bare number: `uint32` and narrower | `int` or `uintN`, `*T` when omittable |
+| Enumeration | `string`, or a named `string` type |
+
+- Retype a leaf only when that leaf was measured. Two `uint64` siblings in one struct can differ.
+- Do not add `,string` to a numeric field, and do not introduce a third numeric convention for a single leaf.
+- Pointerize any leaf whose absence carries meaning, and give it `,omitempty`.
+- An omitted configuration leaf means its default is in force, and that default is often `true`.
 
 ## 📖 Reference
 
-### Module Charter
-
-A service wraps the `Cisco-IOS-XE-wireless-*` models for one feature area. Two non-wireless models are in charter, and both live in [`service/controller`](./service/controller):
-
-- `Cisco-IOS-XE-rpc` — controller reload ([internal/restconf/routes/controller.go](./internal/restconf/routes/controller.go#L13))
-- `Cisco-IOS-XE-device-hardware-oper` — the controller's own boot instant ([internal/restconf/routes/controller.go](./internal/restconf/routes/controller.go#L25)). In charter on the same ground as the reload RPC: the subject is the controller as a system, not its wireless namespace. The route answers on every supported release.
-
-Any other non-wireless model needs a decision recorded here before a route is added.
-
 ### Adding New Service
 
-A new service must satisfy the six conventions below. The 45 accessors this release removes trace to two of them: the duplicate-accessor clause in §3 and the envelope rule in §4.
+Copy the shape of an existing service, then satisfy each rule below. [tests/contract](./tests/contract) gates the envelope and route rules.
 
-#### 1. Service shape and facade wiring
-
-- Declare `type Service struct { service.BaseService }` and `func NewService(client *core.Client) Service` — a value type, not a pointer. See [service/rogue/service.go](./service/rogue/service.go#L12-L20) and [internal/service/base.go](./internal/service/base.go#L12-L29).
-- Expose the service from the facade as exactly one accessor, `func (c *Client) X() x.Service`. See [wnc.go](./wnc.go).
-- Add the service row to the **Supported Services** table in [README.md](./README.md#supported-services).
-- Write a `doc.go` whose `RESTCONF Endpoints:` list matches the service's route file, and whose `YANG References:` list names only the modules those routes use.
-
-#### 2. Route constants
-
-- Declare every path as a constant in `internal/restconf/routes/<service>.go`, built from `RESTCONFDataPath` or `RESTCONFOperationsPath`. See [internal/restconf/routes/base.go](./internal/restconf/routes/base.go#L4-L9).
-- Never assemble a path at the call site. One route, one constant, one accessor.
-- Controller-level, non-wireless modules belong in `service/controller` alone, per the Module Charter above.
-
-#### 3. Method naming and signature
-
-- Name reads `GetOperational`, `GetConfig`, `List<Subtree>` and `Get<Subtree>ByMAC`. See [service/wlan/service.go](./service/wlan/service.go#L27-L35) and [service/client/service.go](./service/client/service.go).
-- Every read method takes `opts ...core.GetOption` after `ctx` and forwards them, including a method that delegates to another read rather than to `core.Get`. See [service/rf/tag_service.go](./service/rf/tag_service.go#L27-L32) for the direct form and [service/site/tag_service.go](./service/site/tag_service.go#L51-L56) for the delegating one.
-- Never add a second accessor to a route that already has one. A duplicate pair leaves consumers no way to tell which twin decodes.
-- A keyed read is a different resource, not a duplicate: `BuildQueryURL` appends `=<key>`, so `List<X>` beside `Get<X>ByMAC` is the correct pair.
-
-#### 4. Decode types
-
-- A GET of container `X` answers exactly one module-qualified top-level key naming `X`. Every accessor decodes that envelope.
-- Name the envelope after its module and node in camel case, give it exactly one field, and tag that field with the module-qualified node the route ends in. A `Cisco-IOS-XE-wireless-*` model yields `CiscoIOSXEWireless<Module><Node>` — see [service/ap/global_oper.go](./service/ap/global_oper.go#L22-L24) and [service/wlan/cfg.go](./service/wlan/cfg.go#L18-L20) — and a non-wireless model in charter carries no `Wireless`, as in [service/controller/oper.go](./service/controller/oper.go#L12-L14).
-- **Qualify only that outermost tag.** A same-module child takes the bare node name; a module prefix below the top level never matches, so the field stays at its zero value while its siblings decode.
-- Annotate each leaf comment `(Live: IOS-XE <version>)` when the leaf was seen in a controller response, and `(YANG: IOS-XE <version>)` otherwise. A YANG model is a design document, not the implementation.
-- The envelope rules above are enforced by [tests/contract](./tests/contract); a violation fails `make test-unit`. The annotation rule is not gated — it is reviewed.
-
-#### 5. Leaf typing
-
-- Type every leaf by the rules in [Typing Rules for Wire Values](#-typing-rules-for-wire-values). Do not restate them here.
-
-#### 6. Keyed reads and their sentinel
-
-- A `Get<X>ByMAC` method rejects an empty key with `core.ErrResourceNotFound`, then validates and normalizes the key through the shared MAC helper in [internal/validation](./internal/validation), then builds the URL with `BuildQueryURL`. See [service/geolocation/service.go](./service/geolocation/service.go).
-- Return the helper's error unchanged. Use that one sentinel and do not invent a second one for the same condition — `core.ErrInvalidConfiguration` reports a bad client configuration, not a bad list key.
-
-#### Tests and release
-
-- Put unit tests in `service/<service>/service_test.go`, package `<service>_test`, driving the mock server from [pkg/testutil](./pkg/testutil), and name them `Test<Service>ServiceUnit_<Area>_<Case>`. See [docs/TESTING.md](./docs/TESTING.md).
-- Add the service's live-controller table to `tests/integration/<service>_service_test.go`, and add a scenario test under `tests/scenario/<service>/` only when the operation changes controller state.
-- Release by updating the `VERSION` file, per [Versioning Rules](#versioning-rules).
+- **Routes**: one constant per path, and no second accessor on a route that already has one.
+- **Envelope**: one field per accessor, tagged with the node the route ends in.
+- **Qualification**: qualify only that outermost tag — a prefix below it never matches.
+- **Read options**: every read forwards `opts ...core.GetOption`, delegating reads included.
+- **Leaf types**: follow [Typing Rules for Wire Values](#-typing-rules-for-wire-values).
+- **Leaf comments**: `(Live: IOS-XE <version>)` when measured, `(YANG: IOS-XE <version>)` otherwise.
+- **Keyed reads**: reject an empty key with `core.ErrResourceNotFound`, then normalize it.
+- **Registration**: one facade accessor, a `doc.go`, and a row in [README.md](./README.md#supported-services).
+- **Tests**: name unit tests `Test<Service>ServiceUnit_<Area>_<Case>`.
+- **Scenario tests**: only when the operation changes controller state.
 
 ### Adding New Function to an Existing Service
 
@@ -255,4 +208,4 @@ A new service must satisfy the six conventions below. The 45 accessors this rele
 
 ### HTTP Transport
 
-- `NewTransport` is tuned for a single controller and is not a copy of `http.DefaultTransport`: HTTP/2 is off and both the handshake and header budgets are 5 s. No proxy is used by default — `Proxy` is unset and no environment variable is read. Pass `WithProxy(http.ProxyFromEnvironment)` to route through one.
+`NewTransport` tunes the transport for a single controller rather than copying `http.DefaultTransport`: HTTP/2 is off, and the handshake and header budgets are 5 s each. It uses no proxy by default, so pass `WithProxy(http.ProxyFromEnvironment)` to route through one.

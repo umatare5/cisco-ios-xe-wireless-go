@@ -153,7 +153,9 @@ client, err := wnc.NewClient(
 
 ### Secret-bearing response fields
 
-Twelve typed fields are populated by ordinary reads, so a log path that dumps a decoded struct discloses a credential. **Nine arrive on a configuration read and three on an operational one** — an operational read is not a safe read.
+Ordinary reads populate twelve typed fields, so a log path that dumps a decoded struct discloses a credential.
+
+**Nine arrive on a configuration read and three on an operational one** — an operational read is not a safe read.
 
 | Field                                        | Route                                                            |
 | -------------------------------------------- | ---------------------------------------------------------------- |
@@ -169,10 +171,6 @@ Twelve typed fields are populated by ordinary reads, so a log path that dumps a 
 | `ap.ProxyInfo.Password`                      | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
 | `ap.ApNtpServerInfo.TrustKey`                | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
 | `ap.ApIoxOperData.CafToken`                  | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
-
-The companion `*Type` fields next to most of these carry an encoding-type enumeration, not the secret, so they are safe to log. A field whose name suggests a secret is not always one: `client.CommonOperData.AaaOverridePassphrase` and `wlan.WlanCfgEntry.AuthKeyMgmtPsk` are booleans, and `lisp.LISPAgentMemoryStats`'s `MallocPskBuf` and `FreePskBuf` are allocation counters.
-
-An error response body is the controller's own error document. The copy in the log line and in `APIError.Message` is bounded to a 512-byte prefix — `APIError.Body` still carries the whole document, so treat it as untrusted content and do not log it unbounded.
 
 ## 🏭 Environment Isolation <a id="environment-isolation"></a>
 

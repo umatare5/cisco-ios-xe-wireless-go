@@ -103,8 +103,7 @@ func start() int {
 	}))
 
 	logger.Info("starting neighbor listing tool",
-		slog.String("operation", "list_neighbors"),
-		slog.String("version", "v1.0.0"))
+		slog.String("operation", "list_neighbors"))
 
 	controller := os.Getenv("WNC_CONTROLLER")
 	if controller == "" {

@@ -30,10 +30,11 @@ Scripts share a consistent bootstrap pattern:
 - Call `init_wnc_libraries(<script_dir>, <module_dir>)` to load the target module (e.g., `lib/testing`).
 - Expose common predicates, formatters, and validators in the current shell.
 - Invoke exactly one exported `run_*_operation` function.
-- Keep entry points thin; centralize behavior under `scripts/lib/`.
-- Output is standardized via shared `show_*` helpers and `printf` (no `echo -e`); when `--insecure` is used, `-k` is appended to curl calls only when requested.
+- Keep entry points thin — behavior is centralized under `scripts/lib/`.
+- Output goes through the shared `show_*` helpers and `printf`, never `echo -e`.
+- `--insecure` appends `-k` to a curl call only where it is requested.
 
-```text
+```plaintext
 scripts/
 ├── <command>.sh            # Thin entry point(s)
 └── lib/                    # Reusable modules (loaded via bootstrap)
@@ -286,7 +287,7 @@ Runs golangci-lint using the repo configuration. Supports optional auto-fix.
 
 `scripts/lint.sh` only supports execution with no arguments.
 
-````text
+````plaintext
 
 #### Sample Output
 
@@ -546,7 +547,7 @@ Prints a consolidated help guide covering common Make targets, environment varia
 
 <details><summary>Click to expand sample output</summary>
 
-```text
+```plaintext
 Cisco WNC Development Scripts
 -------------------------------
 

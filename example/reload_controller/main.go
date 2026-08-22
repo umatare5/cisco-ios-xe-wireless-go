@@ -32,8 +32,7 @@ func main() {
 	}))
 
 	logger.Info("starting controller reload tool",
-		slog.String("operation", "controller_reload"),
-		slog.String("version", "v1.0.0"))
+		slog.String("operation", "controller_reload"))
 
 	fmt.Println("=== WNC Controller Reload Tool ===")
 	fmt.Println("WARNING: This tool will restart the wireless controller!")

@@ -692,9 +692,7 @@ func stringLit(lit *ast.BasicLit) (string, bool) {
 	return unquoted, err == nil
 }
 
-// tagMatchesRoute reports whether tag is the envelope key a read of route answers with. RFC 7951
-// names the sole top-level member with the module that defines it, so the local part has to be
-// the node the route ends at.
+// tagMatchesRoute reports whether tag is the envelope key a read of route answers with.
 func tagMatchesRoute(tag, route string) bool {
 	module, local, qualified := strings.Cut(tag, ":")
 

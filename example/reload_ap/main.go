@@ -33,8 +33,7 @@ func main() {
 	}))
 
 	logger.Info("starting AP reload tool",
-		slog.String("operation", "reload_ap"),
-		slog.String("version", "v1.0.0"))
+		slog.String("operation", "reload_ap"))
 
 	fmt.Println("=== Access Point Reload Tool ===")
 	fmt.Println("WARNING: This tool will restart access points causing service interruption!")

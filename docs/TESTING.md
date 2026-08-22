@@ -32,7 +32,7 @@ The SDK implements **standardized test patterns** using the unified `pkg/testuti
 
 ### Directory Structure
 
-```text
+```plaintext
 cisco-ios-xe-wireless-go/
 ├── service/
 │   └── {service}/
@@ -86,7 +86,7 @@ TestXServiceIntegration_GetConfigurationOperations_Success // Live WNC configura
 - `TestApServiceUnit_Constructor_Success` - AP service construction using direct instantiation
 - `TestApServiceUnit_GetOperations_MockSuccess` - AP GET operations with mock server
 - `TestApServiceUnit_SetOperations_ValidationErrors` - AP SET validation and edge cases
-- `TestClientServiceIntegration_GetOperationalOperations_Success` - Client operational data retrieval with live controller
+- `TestClientServiceIntegration_GetOperationalOperations_Success` - Client GET against a live controller
 
 ## 🧰 Prerequisites
 
@@ -130,7 +130,7 @@ export WNC_AP_NEIGHBOR_BSSID="<test-ap-neighbor-bssid>"
 </details>
 
 > [!TIP]
-> Environment variables such as `WNC_AP_MAC_ADDR` and `WNC_CLIENT_MAC_ADDR` can be discovered by running the example commands listed in the [README.md - Usecases](../README.md?#-usecases) section.
+> Run the example commands in [README.md - Usecases](../README.md#-usecases) to find values for `WNC_AP_MAC_ADDR`, `WNC_CLIENT_MAC_ADDR` and the other environment variables.
 
 > [!CAUTION]
 > Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
@@ -203,8 +203,8 @@ go test ./tests/scenario/wlan/ -tags=scenario -v
 
 - [`tests/scenario/ap/service_test.go`](../tests/scenario/ap/service_test.go) - AP admin, and radio operations
 - [`tests/scenario/site/tag_service_test.go`](../tests/scenario/site/tag_service_test.go) - Site tag operations
-- [`tests/scenario/rf/service_test.go`](../tests/scenario/rf/service_test.go) - RF tag operations
-- [`tests/scenario/wlan/service_test.go`](../tests/scenario/wlan/service_test.go) - Poliy tag operations
+- [`tests/scenario/rf/tag_service_test.go`](../tests/scenario/rf/tag_service_test.go) - RF tag operations
+- [`tests/scenario/wlan/tag_service_test.go`](../tests/scenario/wlan/tag_service_test.go) - Policy tag operations
 
 > [!NOTE]
 > Tag operations in scenario tests **MUST** use newly created tags to avoid communication impact.

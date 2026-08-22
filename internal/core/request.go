@@ -86,7 +86,7 @@ func EditRaw(ctx context.Context, c *Client, method, endpoint string, payload an
 //
 // This is the seam behind the root client's PostRPC. It differs from EditRaw in the RESTCONF root
 // the path resolves against, /restconf/operations rather than /restconf/data, and in fixing the
-// method: RFC 8040 4.4.2 invokes an operation with POST and nothing else.
+// method to POST.
 func CallRPCRaw(ctx context.Context, c *Client, rpcEndpoint string, payload any) ([]byte, error) {
 	body, err := prepareUntypedRequest(c, http.MethodPost, payload)
 	if err != nil {

@@ -140,23 +140,17 @@ func WithFields(expression string) GetOption { return core.WithFields(expression
 // decodes to a zero value; bound the depth to what the caller reads.
 func WithDepth(levels int) GetOption { return core.WithDepth(levels) }
 
-// GetData performs a GET on a RESTCONF data path and returns the body as received, for
-// a container this package has no typed accessor for. The path may be given with or
-// without the /restconf/data prefix, and GetOption values apply as they do to a typed
-// read. Errors are the same as everywhere else, *APIError included.
+// GetData reads a RESTCONF data path this package has no typed accessor for and returns the
+// body as received. The /restconf/data prefix is optional and GetOption values apply as they
+// do to a typed read.
 //
-// A container or leaf read answers with exactly one top-level key: the module-qualified
-// name of the node requested. A caller decoding the body should check that key rather
-// than trusting its own struct tags, because a tag naming a key the controller does not
-// send decodes to nothing and reports success.
-//
-// A node the controller carries nothing at answers with no body: the returned slice is
-// non-nil and empty and the error is nil, so check the length before decoding. A path
-// the controller does not have answers 404, which arrives as an *APIError.
-//
-// The path is sent as given. A caller keying into a list escapes the key value itself;
-// the typed accessors use url.PathEscape, and an unescaped "#" or "?" ends the path
-// early and reads a different node with no error to show for it.
+// Three things the body does not say for itself. The response carries exactly one top-level
+// key, the module-qualified name of the node requested, so check that key rather than trusting
+// a struct tag: a tag naming a key the controller did not send decodes to nothing and reports
+// success. A node holding nothing answers with no body, so the slice is non-nil and empty with
+// a nil error — check the length before decoding. The path is sent as given, so a caller keying
+// into a list escapes the key itself, an unescaped "#" or "?" ending the path early and reading
+// a different node without error.
 func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([]byte, error) {
 	return core.GetRaw(ctx, c.core, path, opts...)
 }
@@ -201,10 +195,9 @@ func (c *Client) DeleteData(ctx context.Context, path string) ([]byte, error) {
 	return core.EditRaw(ctx, c.core, http.MethodDelete, path, nil)
 }
 
-// PostRPC invokes an operation on a RESTCONF operations path (RFC 8040 3.6 and 4.4.2), which is
-// the only method that tree accepts. The path is the RPC name, module-qualified as the controller
-// publishes it, with or without the /restconf/operations prefix, and the payload is normally an
-// object under a single "input" key.
+// PostRPC invokes an operation on a RESTCONF operations path (RFC 8040 3.6 and 4.4.2). The path
+// is the RPC name, module-qualified as the controller publishes it, with or without the
+// /restconf/operations prefix, and the payload is normally an object under a single "input" key.
 func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte, error) {
 	return core.CallRPCRaw(ctx, c.core, path, payload)
 }

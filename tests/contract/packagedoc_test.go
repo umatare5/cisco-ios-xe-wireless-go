@@ -19,15 +19,12 @@ const docFile = "doc.go"
 // readable: godoc concatenates every package comment in a package, in file order, so a second one
 // appends a second summary to the page and the reader finishes on whichever file sorts last.
 //
-// The rule is conditional on a doc.go existing, and that condition is the whole gate. A package
-// whose only package comment sits in another file is documented, not defective — example/ puts its
-// comment in main.go, and the helpers under tests/ put theirs in the file that holds them, this file
-// among them. Condemning those would delete documentation to satisfy a naming convention.
+// The rule applies only where a doc.go exists. A package whose only package comment sits in another
+// file is documented, not defective, and condemning it would delete documentation to satisfy a
+// naming convention.
 //
-// Eleven files failed this rule when it was written, in ten packages, and the module root was one of
-// them: doc.go opened the page and wnc.go closed it with a stale one-liner. Nothing in the toolchain
-// reports this — staticcheck's ST1000 finds a package with no comment at all and says nothing about a
-// package with two, and revive's package-comments rule is not enabled.
+// Nothing in the toolchain reports this: staticcheck's ST1000 finds a package with no comment at all
+// and says nothing about a package with two.
 func TestOnlyDocGoCarriesThePackageComment(t *testing.T) {
 	byDir := documentedPackages(t)
 

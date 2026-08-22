@@ -143,13 +143,10 @@ var scalarKinds = map[string]bool{
 
 // TestEveryPointerLeafCanBeOmitted holds a property that needs no list to maintain: a leaf the
 // tree already made a pointer must also carry omitempty, or an absent leaf is re-marshaled as
-// null rather than disappearing. It names no consumer, so it cannot rot, and it fails the moment
-// a pointer leaf is added without the tag.
+// null rather than disappearing.
 //
-// It does not subsume TestEveryPublishedLeafCanBeAbsent. This gate says nothing about which
-// leaves must be pointers, so reverting a publish-path leaf to a value passes here and fails
-// there. Read the count this gate logs rather than a figure written here, which rots on every
-// release that pointerises a leaf.
+// It says nothing about which leaves must be pointers, so it does not replace the gate above:
+// reverting a publish-path leaf to a value passes here and fails there.
 func TestEveryPointerLeafCanBeOmitted(t *testing.T) {
 	pkgs, _ := loadTree(t)
 
@@ -184,12 +181,10 @@ func TestEveryPointerLeafCanBeOmitted(t *testing.T) {
 // zero reading — it means the default is in force — so a value field inverts the answer instead
 // of merely flattening it, which is the one decoding error this library exists to avoid.
 //
-// The list is written out because the arbiter is the device, not the source. It was built by
-// fetching each module the controller implements through ietf-yang-library and reading the
-// `default` substatement: Cisco-IOS-XE-wireless-wlan-cfg declares 32 boolean leaves default-true
-// across the four revisions the lab serves, of which this tree declares these seven and leaves
-// the other 25 undeclared. That is why the list is a closure and not a sample, and why it grows
-// only when another module is measured.
+// The list is written out because the arbiter is the device, not the source: it was built by reading
+// the `default` substatement of each module the controller implements, taken through
+// ietf-yang-library. It is therefore a closure over the modules measured so far, not a sample, and
+// it grows only when another module is read.
 var trueByDefaultLeaves = map[string]map[string][]string{
 	"wlan": {
 		"WlanCfgEntry": {
