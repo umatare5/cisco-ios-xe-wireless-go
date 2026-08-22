@@ -52,8 +52,9 @@ type CiscoIOSXEWirelessMobilityOperMobilityClientData struct {
 }
 
 // CiscoIOSXEWirelessMobilityOperMobilityClientStats represents the mobility client stats structure.
+// The node is a list, measured on a controller, so a single struct here cannot decode the answer.
 type CiscoIOSXEWirelessMobilityOperMobilityClientStats struct {
-	MobilityClientStats *MobilityClientStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats"`
+	MobilityClientStats []MobilityClientStats `json:"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats"`
 }
 
 // CiscoIOSXEWirelessMobilityOperMobilityGlobalDTLSStats represents the structure for mobility global DTLS statistics.

@@ -171,3 +171,92 @@ func TestEveryPointerLeafCanBeOmitted(t *testing.T) {
 
 	t.Logf("checked %d pointer leaves", checked)
 }
+
+// trueByDefaultLeaves names every leaf this tree declares that the controller's own schema gives
+// `default "true"`, keyed by the package and the type that declares it. Absence there is not the
+// zero reading — it means the default is in force — so a value field inverts the answer instead
+// of merely flattening it, which is the one decoding error this library exists to avoid.
+//
+// The list is written out because the arbiter is the device, not the source. It was built by
+// fetching each module the controller implements through ietf-yang-library and reading the
+// `default` substatement: Cisco-IOS-XE-wireless-wlan-cfg declares 32 boolean leaves default-true
+// across the four revisions the lab serves, of which this tree declares these seven and leaves
+// the other 25 undeclared. That is why the list is a closure and not a sample, and why it grows
+// only when another module is measured.
+var trueByDefaultLeaves = map[string]map[string][]string{
+	"wlan": {
+		"WlanCfgEntry": {
+			"auth-key-mgmt-dot1x",
+			"wlan-11k-neigh-list",
+			"wpa2-enabled",
+		},
+		"APFVap80211vData":    {"dot11v-dms"},
+		"UmbrellaFlexParams":  {"dhcp-dns-option-enable"},
+		"WlanSwitchingPolicy": {"central-assoc-enable", "central-authentication"},
+	},
+}
+
+// trueByDefaultLeafCount is how many leaves the list above holds, for the same reason
+// publishedLeafCount exists: a dropped entry would take its finding with it.
+const trueByDefaultLeafCount = 7
+
+// TestEveryTrueByDefaultLeafIsNilable holds the leaves whose schema default is true to a pointer
+// with omitempty. It is not the same property as TestEveryPublishedLeafCanBeAbsent: that gate asks
+// whether a consumer can withhold a series, this one asks whether the SDK can report the value at
+// all. A default-false leaf is deliberately absent from the list — decoding its absence as false
+// gives the right answer, so pointerising it would be symmetry rather than a fix.
+//
+// Three of the seven were already pointers before this gate existed, which is what makes a pass
+// meaningful: they are the positive control that the predicate matches the shape the tree already
+// treats as correct, so the gate cannot pass by asserting nothing.
+func TestEveryTrueByDefaultLeafIsNilable(t *testing.T) {
+	pkgs, _ := loadTree(t)
+
+	byDir := make(map[string]*servicePkg, len(pkgs))
+	for _, pkg := range pkgs {
+		byDir[pkg.dir] = pkg
+	}
+
+	checked := 0
+
+	for _, dir := range slices.Sorted(maps.Keys(trueByDefaultLeaves)) {
+		pkg, ok := byDir[dir]
+		if !ok {
+			t.Errorf("%s/%s: the package the list names is not in the tree", serviceDir, dir)
+			continue
+		}
+
+		for _, typeName := range slices.Sorted(maps.Keys(trueByDefaultLeaves[dir])) {
+			fields, ok := pkg.types[typeName]
+			if !ok {
+				t.Errorf("%s/%s: %s is not declared", serviceDir, dir, typeName)
+				continue
+			}
+
+			for _, tag := range trueByDefaultLeaves[dir][typeName] {
+				field, ok := leafOf(fields, tag)
+				if !ok {
+					t.Errorf("%s/%s: %s declares no %q at its top level", serviceDir, dir, typeName, tag)
+					continue
+				}
+
+				checked++
+
+				if !field.nilable {
+					t.Errorf("%s/%s: %s.%s is a value, want a pointer: the schema defaults it to true,"+
+						" so decoding its absence as false inverts the reading",
+						serviceDir, dir, typeName, tag)
+				}
+
+				if !field.omitempty {
+					t.Errorf("%s/%s: %s.%s lacks omitempty, so an absent leaf is re-marshaled as null",
+						serviceDir, dir, typeName, tag)
+				}
+			}
+		}
+	}
+
+	if checked != trueByDefaultLeafCount {
+		t.Errorf("checked %d default-true leaves, want %d", checked, trueByDefaultLeafCount)
+	}
+}

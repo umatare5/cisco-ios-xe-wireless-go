@@ -47,7 +47,7 @@
 //
 // - Requires Go 1.21+ for full functionality
 // - Mock servers use HTTPS with self-signed certificates
-// - Path matching uses simple string contains logic
+// - Path matching is a substring test, and the longest registered prefix wins
 //
 // # Error Handling
 //
