@@ -216,7 +216,7 @@ type AvcIPv6FmEgressEntry struct {
 // PolicyListEntry represents individual policy list entry.
 type PolicyListEntry struct {
 	TagName      string        `json:"tag-name,omitempty"`      // This object uniquely identifies the policy tag (Live: IOS-XE 17.12.6a)
-	Description  string        `json:"description,omitempty"`   // Description for the policy tag (Live: IOS-XE 17.12.6a)
+	Description  *string       `json:"description,omitempty"`   // Description for the policy tag (Live: IOS-XE 17.12.6a)
 	WLANPolicies *WLANPolicies `json:"wlan-policies,omitempty"` // WLAN policy configuration (Live: IOS-XE 17.12.6a)
 }
 
