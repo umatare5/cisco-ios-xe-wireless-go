@@ -41,7 +41,7 @@ func TestUrwbServiceUnit_Constructor_Success(t *testing.T) {
 func TestUrwbServiceUnit_GetConfig_MockSuccess(t *testing.T) {
 	// Mock server response that returns empty data (simulating successful response with no content)
 	responses := map[string]string{
-		"Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data": `{}`,
+		"Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data": `{"Cisco-IOS-XE-wireless-urwb-cfg:urwb-cfg-data": {}}`,
 	}
 
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
@@ -94,7 +94,7 @@ func TestUrwbServiceUnit_GetConfig_ErrorHandling(t *testing.T) {
 func TestUrwbServiceUnit_GetURWBNetOperational_MockSuccess(t *testing.T) {
 	// Mock server response that returns empty operational data
 	responses := map[string]string{
-		"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data": `{}`,
+		"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data": `{"Cisco-IOS-XE-wireless-urwbnet-oper:urwbnet-oper-data": {}}`,
 	}
 
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))

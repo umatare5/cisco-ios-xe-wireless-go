@@ -50,34 +50,3 @@ type SpacesTenant struct {
 	ConfigVersion       string    `json:"config-version,omitempty"`       // Configuration version
 	CapabilitiesEnabled []string  `json:"capabilities-enabled,omitempty"` // Enabled capabilities
 }
-
-// SpacesCapabilities represents the capabilities available for Cisco Spaces integration.
-type SpacesCapabilities struct {
-	LocationAnalytics    bool `json:"location-analytics,omitempty"`    // Location analytics capability
-	PresenceAnalytics    bool `json:"presence-analytics,omitempty"`    // Presence analytics capability
-	BehaviorAnalytics    bool `json:"behavior-analytics,omitempty"`    // Behavior analytics capability
-	AssetTracking        bool `json:"asset-tracking,omitempty"`        // Asset tracking capability
-	GuestEngagement      bool `json:"guest-engagement,omitempty"`      // Guest engagement capability
-	EnvironmentalMetrics bool `json:"environmental-metrics,omitempty"` // Environmental metrics capability
-}
-
-// SpacesLocationData represents location-based analytics data.
-type SpacesLocationData struct {
-	BuildingID     string             `json:"building-id,omitempty"`
-	FloorID        string             `json:"floor-id,omitempty"`
-	ZoneID         string             `json:"zone-id,omitempty"`
-	DeviceCount    int                `json:"device-count,omitempty"`
-	UniqueVisitors int                `json:"unique-visitors,omitempty"`
-	DwellTime      int                `json:"dwell-time,omitempty"` // Average dwell time (minutes)
-	Coordinates    *SpacesCoordinates `json:"coordinates,omitempty"`
-	LastUpdated    time.Time          `json:"last-updated,omitempty"`
-}
-
-// SpacesCoordinates represents coordinate information for location services.
-type SpacesCoordinates struct {
-	Latitude  float64 `json:"latitude,omitempty"`
-	Longitude float64 `json:"longitude,omitempty"`
-	Accuracy  float64 `json:"accuracy,omitempty"` // Accuracy in meters
-	Altitude  float64 `json:"altitude,omitempty"` // Altitude in meters
-	Floor     int     `json:"floor,omitempty"`    // Floor number
-}

@@ -28,11 +28,6 @@ func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*C
 	return core.Get[CiscoIOSXEWirelessMeshOper](ctx, s.Client(), routes.MeshOperPath, opts...)
 }
 
-// GetOperationalData retrieves mesh operational data including queue stats, data rate stats, security stats, and operational data.
-func (s Service) GetOperationalData(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessMeshOper, error) {
-	return core.Get[CiscoIOSXEWirelessMeshOper](ctx, s.Client(), routes.MeshGlobalStatsPath, opts...)
-}
-
 // ListMeshQueueStats retrieves mesh packet queue statistics from the controller.
 // Note: Based on YANG: IOS-XE 17.12.1 - may not be available on all controller versions.
 func (s Service) ListMeshQueueStats(

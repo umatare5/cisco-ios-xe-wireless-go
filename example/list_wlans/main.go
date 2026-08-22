@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -27,7 +28,8 @@ type WLANInfo struct {
 
 // run performs the core logic; separated for testing.
 func run(controller, token string, logger *slog.Logger) ([]WLANInfo, error) {
-	client, err := wnc.NewClient(controller, token,
+	client, err := wnc.NewClient(
+		controller, token,
 		wnc.WithTimeout(30*time.Second),
 		wnc.WithInsecureSkipVerify(true), // lab only
 		wnc.WithLogger(logger),
@@ -43,6 +45,10 @@ func run(controller, token string, logger *slog.Logger) ([]WLANInfo, error) {
 	apData, err := client.AP().GetOperational(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("AP oper request: %w", err)
+	}
+
+	if apData == nil || apData.CiscoIOSXEWirelessAPOperData == nil {
+		return nil, errors.New("controller returned no AP operational data")
 	}
 
 	// Create map for AP MAC to Name lookup

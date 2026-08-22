@@ -65,12 +65,9 @@ func TestDot11ServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		fn   func() error
 	}{
 		{"GetConfig", func() error { _, err := service.GetConfig(ctx); return err }},
-		{"ListCfgFilters", func() error { _, err := service.ListCfgFilters(ctx); return err }},
 		{"ListCfgConfiguredCountries", func() error { _, err := service.ListCfgConfiguredCountries(ctx); return err }},
 		{"ListCfgDot11Entries", func() error { _, err := service.ListCfgDot11Entries(ctx); return err }},
 		{"ListCfgDot11acMcsEntries", func() error { _, err := service.ListCfgDot11acMcsEntries(ctx); return err }},
-		{"ListConfiguredCountries", func() error { _, err := service.ListConfiguredCountries(ctx); return err }},
-		{"ListDot11Entries", func() error { _, err := service.ListDot11Entries(ctx); return err }},
 	}
 
 	for _, tt := range tests {
@@ -107,12 +104,9 @@ func TestDot11ServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		fn   func() error
 	}{
 		{"GetConfig", func() error { _, err := service.GetConfig(ctx); return err }},
-		{"ListCfgFilters", func() error { _, err := service.ListCfgFilters(ctx); return err }},
 		{"ListCfgConfiguredCountries", func() error { _, err := service.ListCfgConfiguredCountries(ctx); return err }},
 		{"ListCfgDot11Entries", func() error { _, err := service.ListCfgDot11Entries(ctx); return err }},
 		{"ListCfgDot11acMcsEntries", func() error { _, err := service.ListCfgDot11acMcsEntries(ctx); return err }},
-		{"ListConfiguredCountries", func() error { _, err := service.ListConfiguredCountries(ctx); return err }},
-		{"ListDot11Entries", func() error { _, err := service.ListDot11Entries(ctx); return err }},
 	}
 
 	for _, tt := range tests {
@@ -136,8 +130,6 @@ func TestDot11ServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		fn   func() error
 	}{
 		{"GetConfig_NilClient", func() error { _, err := service.GetConfig(ctx); return err }},
-		{"ListCfgFilters_NilClient", func() error { _, err := service.ListCfgFilters(ctx); return err }},
-		{"ListDot11Entries_NilClient", func() error { _, err := service.ListDot11Entries(ctx); return err }},
 	}
 
 	for _, tt := range tests {

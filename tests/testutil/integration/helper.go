@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -262,6 +263,27 @@ func handleValidationResult(t *testing.T, validationTest ValidationTestMethod, e
 	t.Logf("%s: correctly rejected invalid parameter: %v", validationTest.Name, err)
 }
 
+// A capture is a live controller's answer written to disk for a human to read later, so it
+// is redacted first: the body carries MAC addresses, credentials and chassis serials, and
+// none of those may reach a file. A MAC becomes another MAC rather than a word so the shape
+// stays usable — every MAC collapses onto one value, so a capture shows how many records a
+// list holds but no longer which key each one had.
+var (
+	captureSecret    = regexp.MustCompile(`("(?:password|psk|psk-key|secret|auth-token|ssc-auth-token|trust-key|passphrase)"\s*:\s*")[^"]*"`)
+	captureColonMAC  = regexp.MustCompile(`\b(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b`)
+	captureDottedMAC = regexp.MustCompile(`\b(?:[0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}\b`)
+	captureSerial    = regexp.MustCompile(`\b[A-Z]{3}[0-9]{4}[A-Z0-9]{4}\b`)
+)
+
+// redactCapture removes from a response body everything that may not be written to disk.
+func redactCapture(body []byte) []byte {
+	body = captureSecret.ReplaceAll(body, []byte(`${1}REDACTED"`))
+	body = captureColonMAC.ReplaceAll(body, []byte("02:11:22:33:44:55"))
+	body = captureDottedMAC.ReplaceAll(body, []byte("0211.2233.4455"))
+
+	return captureSerial.ReplaceAll(body, []byte("REDACTEDSERIAL"))
+}
+
 // saveTestResponse saves the test response to testdata directory for future reference
 func saveTestResponse(t *testing.T, methodName string, response any) {
 	t.Helper()
@@ -296,7 +318,7 @@ func saveTestResponse(t *testing.T, methodName string, response any) {
 	// Save to file
 	filename := methodName + ".json"
 	fullPath := filepath.Join(testdataDir, filename)
-	if err := os.WriteFile(fullPath, jsonData, 0o644); err != nil {
+	if err := os.WriteFile(fullPath, redactCapture(jsonData), 0o644); err != nil {
 		t.Logf("%s: warning: failed to save test response: %v", methodName, err)
 		return
 	}

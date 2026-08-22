@@ -98,23 +98,6 @@ func TestFabricServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"ListCfgFabricControlplaneNames",
 			func() error { _, err := service.ListCfgFabricControlplaneNames(ctx); return err },
 		},
-		{"ListFabricConfig", func() error { _, err := service.ListFabricConfig(ctx); return err }},
-		{
-			"ListFabricProfiles",
-			func() error { _, err := service.ListFabricProfiles(ctx); return err },
-		},
-		{
-			"ListFabricProfile",
-			func() error { _, err := service.ListFabricProfile(ctx); return err },
-		},
-		{
-			"ListFabricControlplanes",
-			func() error { _, err := service.ListFabricControlplanes(ctx); return err },
-		},
-		{
-			"ListFabricControlplaneName",
-			func() error { _, err := service.ListFabricControlplaneName(ctx); return err },
-		},
 	}
 
 	for _, tt := range tests {
@@ -155,23 +138,6 @@ func TestFabricServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		{
 			"ListCfgFabricControlplaneNames",
 			func() error { _, err := service.ListCfgFabricControlplaneNames(ctx); return err },
-		},
-		{"ListFabricConfig", func() error { _, err := service.ListFabricConfig(ctx); return err }},
-		{
-			"ListFabricProfiles",
-			func() error { _, err := service.ListFabricProfiles(ctx); return err },
-		},
-		{
-			"ListFabricProfile",
-			func() error { _, err := service.ListFabricProfile(ctx); return err },
-		},
-		{
-			"ListFabricControlplanes",
-			func() error { _, err := service.ListFabricControlplanes(ctx); return err },
-		},
-		{
-			"ListFabricControlplaneName",
-			func() error { _, err := service.ListFabricControlplaneName(ctx); return err },
 		},
 	}
 

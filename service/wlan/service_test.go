@@ -101,54 +101,6 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		return
 	}
 
-	// Test ListConfigEntries
-	profiles, err := service.ListConfigEntries(ctx)
-	if err != nil {
-		t.Errorf("ListConfigEntries failed: %v", err)
-		return
-	}
-
-	if profiles == nil {
-		t.Error("ListConfigEntries returned nil result")
-		return
-	}
-
-	// Test ListPolicies
-	policies, err := service.ListPolicies(ctx)
-	if err != nil {
-		t.Errorf("ListPolicies failed: %v", err)
-		return
-	}
-
-	if policies == nil {
-		t.Error("ListPolicies returned nil result")
-		return
-	}
-
-	// Test ListPolicyListEntries
-	policyEntries, err := service.ListPolicyListEntries(ctx)
-	if err != nil {
-		t.Errorf("ListPolicyListEntries failed: %v", err)
-		return
-	}
-
-	if policyEntries == nil {
-		t.Error("ListPolicyListEntries returned nil result")
-		return
-	}
-
-	// Test ListWirelessAAAPolicyConfigs
-	aaaConfigs, err := service.ListWirelessAAAPolicyConfigs(ctx)
-	if err != nil {
-		t.Errorf("ListWirelessAAAPolicyConfigs failed: %v", err)
-		return
-	}
-
-	if aaaConfigs == nil {
-		t.Error("ListWirelessAAAPolicyConfigs returned nil result")
-		return
-	}
-
 	// Test GetOperational
 	operational, err := service.GetOperational(ctx)
 	if err != nil {
@@ -241,26 +193,6 @@ func TestWlanServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		t.Error("Expected error with nil client for GetConfig")
 	}
 
-	_, err = service.ListConfigEntries(ctx)
-	if err == nil {
-		t.Error("Expected error with nil client for ListConfigEntries")
-	}
-
-	_, err = service.ListPolicies(ctx)
-	if err == nil {
-		t.Error("Expected error with nil client for ListPolicies")
-	}
-
-	_, err = service.ListPolicyListEntries(ctx)
-	if err == nil {
-		t.Error("Expected error with nil client for ListPolicyListEntries")
-	}
-
-	_, err = service.ListWirelessAAAPolicyConfigs(ctx)
-	if err == nil {
-		t.Error("Expected error with nil client for ListWirelessAAAPolicyConfigs")
-	}
-
 	_, err = service.GetOperational(ctx)
 	if err == nil {
 		t.Error("Expected error with nil client for GetOperational")
@@ -287,4 +219,149 @@ func TestWlanServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	}
 
 	// Note: ListDot11beProfiles and ListWlanInfo are not tested with nil client as they may not be supported by all mock servers
+}
+
+// TestWlanServiceUnit_OmittedSecurityLeaf_MockSuccess tests that an omitted security leaf stays
+// nil while an explicitly configured false decodes to a non-nil false.
+func TestWlanServiceUnit_OmittedSecurityLeaf_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries": `{
+			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {
+				"wlan-cfg-entry": [
+					{"wlan-id": 1, "profile-name": "profile-default"},
+					{
+						"wlan-id": 2,
+						"profile-name": "profile-explicit",
+						"wpa2-enabled": false,
+						"wlan-11k-neigh-list": false,
+						"apf-vap-802-11v-data": {"dot11v-dms": false},
+						"apf-vap-id-data": {"ssid": "ssid-explicit", "wlan-status": false}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.ListWlanCfgEntries(ctx)
+	if err != nil {
+		t.Fatalf("ListWlanCfgEntries failed: %v", err)
+	}
+	if result.WlanCfgEntries == nil || len(result.WlanCfgEntries.WlanCfgEntry) != 2 {
+		t.Fatalf("Expected 2 entries, got %+v", result.WlanCfgEntries)
+	}
+
+	entries := result.WlanCfgEntries.WlanCfgEntry
+	if entries[0].WPA2Enabled != nil {
+		t.Error("Expected an omitted wpa2-enabled to stay nil: the default in force is not false")
+	}
+	if entries[0].Wlan11kNeighList != nil {
+		t.Error("Expected an omitted wlan-11k-neigh-list to stay nil")
+	}
+	if entries[0].APFVap80211vData != nil {
+		t.Error("Expected an omitted apf-vap-802-11v-data container to stay nil")
+	}
+	// Every leaf this test retypes is asserted in both directions. An omission-only assertion
+	// leaves the JSON tag unreachable, so renaming it breaks nothing a nil-check can observe.
+	if entries[1].WPA2Enabled == nil || *entries[1].WPA2Enabled {
+		t.Error("Expected an explicit false to decode to a non-nil false")
+	}
+	if entries[1].Wlan11kNeighList == nil || *entries[1].Wlan11kNeighList {
+		t.Error("Expected an explicit false wlan-11k-neigh-list to decode to a non-nil false")
+	}
+	if entries[1].APFVap80211vData == nil || entries[1].APFVap80211vData.Dot11vDms == nil ||
+		*entries[1].APFVap80211vData.Dot11vDms {
+		t.Error("Expected an explicit false dot11v-dms to decode to a non-nil false")
+	}
+	if entries[1].APFVapIDData == nil || entries[1].APFVapIDData.WlanStatus == nil {
+		t.Fatal("Expected wlan-status to decode")
+	}
+	if *entries[1].APFVapIDData.WlanStatus {
+		t.Error("Expected the explicit false for wlan-status")
+	}
+}
+
+// TestWlanServiceUnit_PartialTimeoutContainer_MockSuccess tests that a container arriving with only
+// some of its leaves leaves the omitted ones nil, and that an explicit zero stays distinguishable
+// from an omission. Both record shapes are the measured ones: a plain read sends wlan-timeout with
+// session-timeout alone and wlan-switching-policy with two of its four central-* leaves, while a
+// with-defaults read sends every leaf and idle-threshold arrives as zero.
+func TestWlanServiceUnit_PartialTimeoutContainer_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-policies": `{
+			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-policies": {
+				"wlan-policy": [
+					{
+						"policy-profile-name": "policy-omitted-leaves",
+						"wlan-timeout": {"session-timeout": 1800},
+						"wlan-switching-policy": {"central-switching": false, "central-dhcp": false}
+					},
+					{
+						"policy-profile-name": "policy-every-leaf",
+						"wlan-timeout": {"session-timeout": 1800, "idle-timeout": 300, "idle-threshold": 0},
+						"wlan-switching-policy": {
+							"central-switching": false,
+							"central-authentication": false,
+							"central-dhcp": false,
+							"central-assoc-enable": false
+						}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.ListWlanPolicies(ctx)
+	if err != nil {
+		t.Fatalf("ListWlanPolicies failed: %v", err)
+	}
+	if result.WlanPolicies == nil || len(result.WlanPolicies.WlanPolicy) != 2 {
+		t.Fatalf("Expected 2 policies, got %+v", result.WlanPolicies)
+	}
+
+	partial := result.WlanPolicies.WlanPolicy[0]
+	if partial.WlanTimeout == nil || partial.WlanTimeout.SessionTimeout == nil {
+		t.Fatal("Expected session-timeout to decode")
+	}
+	if partial.WlanTimeout.IdleTimeout != nil || partial.WlanTimeout.IdleThreshold != nil {
+		t.Error("Expected the idle leaves omitted from a present container to stay nil")
+	}
+	if partial.WlanSwitchingPolicy == nil || partial.WlanSwitchingPolicy.CentralSwitching == nil {
+		t.Fatal("Expected central-switching to decode")
+	}
+	if partial.WlanSwitchingPolicy.CentralAuthentication != nil ||
+		partial.WlanSwitchingPolicy.CentralAssocEnable != nil {
+		t.Error("Expected an omitted central-* leaf to stay nil: the default in force is true")
+	}
+
+	// central-dhcp arrives on both records, so it is asserted in the present direction. An
+	// omission-only assertion leaves the tag unreachable: renaming it changes nothing a nil-check
+	// can see.
+	if partial.WlanSwitchingPolicy.CentralDHCP == nil || *partial.WlanSwitchingPolicy.CentralDHCP {
+		t.Error("Expected an explicit false central-dhcp to decode to a non-nil false")
+	}
+
+	complete := result.WlanPolicies.WlanPolicy[1]
+	if complete.WlanTimeout.IdleThreshold == nil || *complete.WlanTimeout.IdleThreshold != 0 {
+		t.Error("Expected an explicit zero to decode to a non-nil zero")
+	}
+	if complete.WlanTimeout.IdleTimeout == nil || *complete.WlanTimeout.IdleTimeout != 300 {
+		t.Error("Expected the idle-timeout of a complete container to decode to its value")
+	}
+	if complete.WlanSwitchingPolicy.CentralAuthentication == nil ||
+		complete.WlanSwitchingPolicy.CentralAssocEnable == nil {
+		t.Error("Expected every central-* leaf of a complete container to decode")
+	}
+	if complete.WlanSwitchingPolicy.CentralDHCP == nil || *complete.WlanSwitchingPolicy.CentralDHCP {
+		t.Error("Expected the central-dhcp of a complete container to decode as a non-nil false")
+	}
 }

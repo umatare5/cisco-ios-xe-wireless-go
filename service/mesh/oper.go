@@ -2,12 +2,15 @@ package mesh
 
 // CiscoIOSXEWirelessMeshOper represents mesh operational data container.
 type CiscoIOSXEWirelessMeshOper struct {
-	CiscoIOSXEWirelessMeshOperData struct {
-		MeshQueueStats    []MeshQueueStats    `json:"mesh-q-stats,omitempty"`   // Mesh packet queue statistics (YANG: IOS-XE 17.12.1)
-		MeshDataRateStats []MeshDataRateStats `json:"mesh-dr-stats,omitempty"`  // Mesh data rate statistics (YANG: IOS-XE 17.12.1)
-		MeshSecurityStats []MeshSecurityStats `json:"mesh-sec-stats,omitempty"` // Mesh security statistics (YANG: IOS-XE 17.12.1)
-		MeshOperational   []MeshOperational   `json:"mesh-oper-data,omitempty"` // Mesh operational data (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data"` // Mesh operational data (YANG: IOS-XE 17.12.1)
+	CiscoIOSXEWirelessMeshOperData *CiscoIOSXEWirelessMeshOperData `json:"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data"` // Mesh operational data (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessMeshOperData represents Mesh operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessMeshOperData struct {
+	MeshQueueStats    []MeshQueueStats    `json:"mesh-q-stats,omitempty"`   // Mesh packet queue statistics (YANG: IOS-XE 17.12.1)
+	MeshDataRateStats []MeshDataRateStats `json:"mesh-dr-stats,omitempty"`  // Mesh data rate statistics (YANG: IOS-XE 17.12.1)
+	MeshSecurityStats []MeshSecurityStats `json:"mesh-sec-stats,omitempty"` // Mesh security statistics (YANG: IOS-XE 17.12.1)
+	MeshOperational   []MeshOperational   `json:"mesh-oper-data,omitempty"` // Mesh operational data (YANG: IOS-XE 17.12.1)
 }
 
 // MeshQueueStats represents mesh access point packet queue statistics.

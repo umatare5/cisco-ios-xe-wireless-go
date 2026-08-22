@@ -11,11 +11,89 @@ permissions:
   id-token: write
 
 jobs:
+  build:
+    permissions:
+      contents: read
+    uses: umatare5/common/.github/workflows/go-test-build.yml@c398db4525f79997fd25bfb7b1f1292d236f7fce # v0.16.0
+    with:
+      go_version: "1.26.6"
+      skip_build: true
+
+  fmt:
+    permissions:
+      contents: read
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@c398db4525f79997fd25bfb7b1f1292d236f7fce # v0.16.0
+    with:
+      go_version: "1.26.6"
+      golangci_lint_version: "v2.12.2"
+      golangci_lint_config: ".golangci.yml"
+
+  coverage:
+    permissions:
+      contents: read
+    uses: umatare5/common/.github/workflows/go-test-coverage.yml@c398db4525f79997fd25bfb7b1f1292d236f7fce # v0.16.0
+    with:
+      go_version: "1.26.6"
+      coverage_threshold: 90
+
+  verify-version:
+    needs: [build, fmt, coverage]
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Reject before tagging: the tagging job turns any VERSION content into a pushed tag
+      - name: Verify VERSION is a semantic version
+        run: |
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "Error: VERSION is not a semantic version: '$VERSION'"
+            exit 1
+          fi
+
+          echo "VERSION is releasable: $VERSION"
+
   tagging:
+    needs: [verify-version]
     uses: umatare5/common/.github/workflows/tagging.yml@c398db4525f79997fd25bfb7b1f1292d236f7fce # v0.16.0
 
-  release:
+  verify-tag:
     needs: [tagging]
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    steps:
+      # Full history and tags are required for the pushed tag to resolve locally
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      # The tagging job exits 0 on an existing tag, which would release another commit
+      - name: Verify the tag matches VERSION
+        run: |
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+          TAG="v$VERSION"
+
+          if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "Error: Tag $TAG does not exist after tagging"
+            exit 1
+          fi
+
+          if [ "$(git rev-parse "$TAG^{commit}")" != "$(git rev-parse HEAD)" ]; then
+            echo "Error: Tag $TAG does not point at the commit being released"
+            exit 1
+          fi
+
+          echo "Releasing $TAG"
+
+  release:
+    needs: [verify-tag]
     uses: umatare5/common/.github/workflows/go-release.yml@c398db4525f79997fd25bfb7b1f1292d236f7fce # v0.16.0
     with:
       go_version: "1.26.6"

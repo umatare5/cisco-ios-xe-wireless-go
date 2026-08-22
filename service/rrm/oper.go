@@ -4,17 +4,20 @@ import "time"
 
 // CiscoIOSXEWirelessRRMOper represents RRM operational response data.
 type CiscoIOSXEWirelessRRMOper struct {
-	CiscoIOSXEWirelessRRMOperData struct {
-		ApAutoRFDot11Data   []ApAutoRFDot11Data   `json:"ap-auto-rf-dot11-data,omitempty"`  // AP auto RF 802.11 data (Live: IOS-XE 17.12.6a)
-		ApDot11RadarData    []ApDot11RadarData    `json:"ap-dot11-radar-data,omitempty"`    // AP radar detection data (Live: IOS-XE 17.12.6a)
-		ApDot11SpectrumData []ApDot11SpectrumData `json:"ap-dot11-spectrum-data,omitempty"` // AP spectrum analysis data (Live: IOS-XE 17.12.6a)
-		RRMMeasurement      []RRMMeasurement      `json:"rrm-measurement,omitempty"`        // RRM measurement data (Live: IOS-XE 17.12.6a)
-		RadioSlot           []RadioSlot           `json:"radio-slot,omitempty"`             // Radio slot operational data (Live: IOS-XE 17.12.6a)
-		MainData            []MainData            `json:"main-data,omitempty"`              // Main RRM data by PHY type (Live: IOS-XE 17.12.6a)
-		RegDomainOper       *RegDomainOper        `json:"reg-domain-oper,omitempty"`        // Regulatory domain operational data (Live: IOS-XE 17.12.6a)
-		SpectrumDeviceTable []SpectrumDeviceTable `json:"spectrum-device-table,omitempty"`  // Spectrum device detection table (Live: IOS-XE 17.12.6a)
-		SpectrumAqTable     []SpectrumAqTable     `json:"spectrum-aq-table,omitempty"`      // Spectrum air quality table (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container
+	CiscoIOSXEWirelessRRMOperData *CiscoIOSXEWirelessRRMOperData `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container
+}
+
+// CiscoIOSXEWirelessRRMOperData represents RRM operational data container.
+type CiscoIOSXEWirelessRRMOperData struct {
+	ApAutoRFDot11Data   []ApAutoRFDot11Data   `json:"ap-auto-rf-dot11-data,omitempty"`  // AP auto RF 802.11 data (Live: IOS-XE 17.12.6a)
+	ApDot11RadarData    []ApDot11RadarData    `json:"ap-dot11-radar-data,omitempty"`    // AP radar detection data (Live: IOS-XE 17.12.6a)
+	ApDot11SpectrumData []ApDot11SpectrumData `json:"ap-dot11-spectrum-data,omitempty"` // AP spectrum analysis data (Live: IOS-XE 17.12.6a)
+	RRMMeasurement      []RRMMeasurement      `json:"rrm-measurement,omitempty"`        // RRM measurement data (Live: IOS-XE 17.12.6a)
+	RadioSlot           []RadioSlot           `json:"radio-slot,omitempty"`             // Radio slot operational data (Live: IOS-XE 17.12.6a)
+	MainData            []MainData            `json:"main-data,omitempty"`              // Main RRM data by PHY type (Live: IOS-XE 17.12.6a)
+	RegDomainOper       *RegDomainOper        `json:"reg-domain-oper,omitempty"`        // Regulatory domain operational data (Live: IOS-XE 17.12.6a)
+	SpectrumDeviceTable []SpectrumDeviceTable `json:"spectrum-device-table,omitempty"`  // Spectrum device detection table (Live: IOS-XE 17.12.6a)
+	SpectrumAqTable     []SpectrumAqTable     `json:"spectrum-aq-table,omitempty"`      // Spectrum air quality table (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessRRMOperApAutoRFDot11Data represents the AP auto RF 802.11 operational data (YANG: IOS-XE 17.12.1).
@@ -182,16 +185,16 @@ type RadioSlot struct {
 
 // RadioData represents detailed radio operational data.
 type RadioData struct {
-	BestTxPwrLevel            int       `json:"best-tx-pwr-level"`           // Best transmit power level (Live: IOS-XE 17.12.6a)
-	BestRtsThresh             int       `json:"best-rts-thresh"`             // Best RTS threshold (Live: IOS-XE 17.12.6a)
-	BestFragThresh            int       `json:"best-frag-thresh"`            // Best fragmentation threshold (Live: IOS-XE 17.12.6a)
-	LoadProfPassed            bool      `json:"load-prof-passed"`            // Load profile test result (Live: IOS-XE 17.12.6a)
-	CoverageProfilePassed     bool      `json:"coverage-profile-passed"`     // Coverage profile test result (Live: IOS-XE 17.12.6a)
-	InterferenceProfilePassed bool      `json:"interference-profile-passed"` // Interference profile test result (Live: IOS-XE 17.12.6a)
-	NoiseProfilePassed        bool      `json:"noise-profile-passed"`        // Noise profile test result (Live: IOS-XE 17.12.6a)
-	DCAStats                  *DCAStats `json:"dca-stats,omitempty"`         // Dynamic Channel Assignment statistics (Live: IOS-XE 17.12.6a)
-	CoverageOverlapFactor     string    `json:"coverage-overlap-factor"`     // Coverage overlap factor (Live: IOS-XE 17.12.6a)
-	SensorCoverageFactor      string    `json:"sensor-coverage-factor"`      // Sensor coverage factor (Live: IOS-XE 17.12.6a)
+	BestTxPwrLevel            int       `json:"best-tx-pwr-level"`                     // Best transmit power level (Live: IOS-XE 17.12.6a)
+	BestRtsThresh             int       `json:"best-rts-thresh"`                       // Best RTS threshold (Live: IOS-XE 17.12.6a)
+	BestFragThresh            int       `json:"best-frag-thresh"`                      // Best fragmentation threshold (Live: IOS-XE 17.12.6a)
+	LoadProfPassed            *bool     `json:"load-prof-passed,omitempty"`            // Load profile test result (Live: IOS-XE 17.12.6a)
+	CoverageProfilePassed     *bool     `json:"coverage-profile-passed,omitempty"`     // Coverage profile test result (Live: IOS-XE 17.12.6a)
+	InterferenceProfilePassed *bool     `json:"interference-profile-passed,omitempty"` // Interference profile test result (Live: IOS-XE 17.12.6a)
+	NoiseProfilePassed        *bool     `json:"noise-profile-passed,omitempty"`        // Noise profile test result (Live: IOS-XE 17.12.6a)
+	DCAStats                  *DCAStats `json:"dca-stats,omitempty"`                   // Dynamic Channel Assignment statistics (Live: IOS-XE 17.12.6a)
+	CoverageOverlapFactor     string    `json:"coverage-overlap-factor"`               // Coverage overlap factor (Live: IOS-XE 17.12.6a)
+	SensorCoverageFactor      string    `json:"sensor-coverage-factor"`                // Sensor coverage factor (Live: IOS-XE 17.12.6a)
 }
 
 // DCAStats represents Dynamic Channel Assignment statistics.

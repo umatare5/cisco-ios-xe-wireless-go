@@ -173,7 +173,7 @@ show_cli_installation_instructions() {
                 printf '  %s: %s\n' "$tool" "go install gotest.tools/gotestsum@latest" >&2
                 ;;
             "golangci-lint")
-                printf '  %s: %s\n' "$tool" "go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest" >&2
+                printf '  %s: %s\n' "$tool" "go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest" >&2
                 ;;
             "shellcheck")
                 printf '  %s: %s\n' "$tool" "brew install shellcheck (macOS) or sudo apt-get install shellcheck (Ubuntu)" >&2

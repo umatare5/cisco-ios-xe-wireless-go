@@ -2,9 +2,12 @@ package wat
 
 // CiscoIOSXEWirelessWATCfg represents the complete WAT configuration from YANG 17.18.1+.
 type CiscoIOSXEWirelessWATCfg struct {
-	CiscoIOSXEWirelessWATCfgData struct {
-		WATConfig *WATConfig `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-config,omitempty"`
-	} `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data"`
+	CiscoIOSXEWirelessWATCfgData *CiscoIOSXEWirelessWATCfgData `json:"Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data"`
+}
+
+// CiscoIOSXEWirelessWATCfgData represents the WAT configuration data from YANG 17.18.1+.
+type CiscoIOSXEWirelessWATCfgData struct {
+	WATConfig *WATConfig `json:"wat-config,omitempty"`
 }
 
 // CiscoIOSXEWirelessWATCfgWATConfig represents the WAT configuration container from YANG 17.18.1+.

@@ -6,9 +6,11 @@
 // WARNING: These operations are destructive and will cause complete wireless network service interruption.
 //
 // RESTCONF Endpoints:
-// - RPC Operations: /restconf/operations/Cisco-IOS-XE-wireless-general-rpc:*
+// - RPC Operations: /restconf/operations/Cisco-IOS-XE-rpc:reload
+//
+// This package also carries controller-level operations from non-wireless modules such
+// as Cisco-IOS-XE-rpc, which no wireless service owns.
 //
 // YANG References:
-// - Cisco-IOS-XE-wireless-general-rpc.yang (17.12.1)
-// - Cisco-IOS-XE-wireless-general-rpc.yang (17.18.1)
+// - Cisco-IOS-XE-rpc.yang
 package controller

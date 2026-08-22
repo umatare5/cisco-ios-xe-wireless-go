@@ -55,7 +55,8 @@ func (s Service) ListRRMMgrCfgEntries(
 		ctx,
 		s.Client(),
 		routes.RRMCfgRRMMgrCfgEntriesPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListApAutoRFDot11Data retrieves AP auto RF 802.11 data.
@@ -67,7 +68,8 @@ func (s Service) ListApAutoRFDot11Data(
 		ctx,
 		s.Client(),
 		routes.RRMOperApAutoRFDot11DataPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListApDot11RadarData retrieves AP radar detection data.
@@ -79,7 +81,8 @@ func (s Service) ListApDot11RadarData(
 		ctx,
 		s.Client(),
 		routes.RRMOperApDot11RadarDataPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListApDot11SpectrumData retrieves AP spectrum analysis data.
@@ -144,7 +147,8 @@ func (s Service) ListSpectrumAqTable(
 		ctx,
 		s.Client(),
 		routes.RRMOperSpectrumAqTablePath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListRRMOneShotCounters retrieves RRM one-shot counters.
@@ -249,7 +253,8 @@ func (s Service) ListRRMFraStats(
 		ctx,
 		s.Client(),
 		routes.RRMGlobalOperRRMFraStatsPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListRRMCoverage retrieves RRM coverage information.
@@ -261,7 +266,8 @@ func (s Service) ListRRMCoverage(
 		ctx,
 		s.Client(),
 		routes.RRMGlobalOperRRMCoveragePath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListSpectrumAqWorstTable retrieves spectrum air quality worst table.
@@ -284,5 +290,6 @@ func (s Service) ListRRMFraStatsFromEmul(
 		ctx,
 		s.Client(),
 		routes.RRMEmulOperRRMFraStatsPath,
-		opts...)
+		opts...,
+	)
 }

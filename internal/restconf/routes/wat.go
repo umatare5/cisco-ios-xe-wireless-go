@@ -6,25 +6,26 @@ package routes
 // based on Cisco-IOS-XE-wireless-wat-cfg YANG model.
 
 // WAT Configuration Paths.
+//
+// The module is implemented on the 17.18 and 26.1 trains only, and wat-cfg-data holds a
+// single child container, wat-config. Paths for wat-profiles, wat-thousandeyes and
+// wat-test-profile were removed: no release declares those nodes.
 const (
 	// WATCfgPath provides the path for WAT configuration data.
 	WATCfgPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data"
 
-	// WATProfilesPath provides the path for WAT profiles.
-	WATProfilesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-profiles"
+	// WATConfigPath provides the path for the WAT configuration container.
+	WATConfigPath = WATCfgPath + "/wat-config"
 
 	// WATEnablePath provides the path for WAT enable configuration.
-	WATEnablePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-enable"
-
-	// WATThousandeyesPath provides the path for WAT Thousandeyes configuration.
-	WATThousandeyesPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-thousandeyes"
-
-	// WATTestProfilePath provides the path for WAT test profiles.
-	WATTestProfilePath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-cfg:wat-cfg-data/wat-test-profile"
+	WATEnablePath = WATConfigPath + "/wat-enable"
 )
 
 // WAT Operational Paths.
 const (
 	// WATOperPath provides the path for WAT operational data.
-	WATOperPath = RESTCONFOperationsPath + "/Cisco-IOS-XE-wireless-wat-oper:wat-oper-data"
+	//
+	// No release measured implements the wat-oper module, so this path is unverified. It is
+	// kept because a later train may add it, and it reads data rather than invoking an RPC.
+	WATOperPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-wat-oper:wat-oper-data"
 )

@@ -48,15 +48,18 @@ func (s *SiteTagService) GetSiteTag(
 }
 
 // ListSiteTags retrieves all site tag configurations.
-func (s *SiteTagService) ListSiteTags(ctx context.Context) ([]SiteListEntry, error) {
+func (s *SiteTagService) ListSiteTags(
+	ctx context.Context,
+	opts ...core.GetOption,
+) ([]SiteListEntry, error) {
 	siteService := NewService(s.Client())
 
-	result, err := siteService.ListSiteTagConfigs(ctx)
+	result, err := siteService.ListSiteTagConfigs(ctx, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if result == nil {
-		return []SiteListEntry{}, nil
+	if result == nil || result.SiteTagConfigs == nil {
+		return nil, nil
 	}
 	if len(result.SiteTagConfigs.SiteTagConfig) == 0 {
 		return []SiteListEntry{}, nil

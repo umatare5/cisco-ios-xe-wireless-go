@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 // HTTP status code constants.
@@ -42,16 +41,6 @@ var (
 	ErrRequestTimeout = errors.New("request timeout")
 )
 
-// HTTPError represents an HTTP error response from the API.
-type HTTPError struct {
-	Status int
-	Body   []byte
-}
-
-func (e *HTTPError) Error() string {
-	return fmt.Sprintf("HTTP %d: %s", e.Status, string(e.Body))
-}
-
 // APIError represents an API-specific error with HTTP status code and message.
 type APIError struct {
 	StatusCode int    `json:"status_code"`
@@ -63,24 +52,27 @@ func (e *APIError) Error() string {
 	return fmt.Sprintf("API error (HTTP %d): %s", e.StatusCode, e.Message)
 }
 
-// IsNotFoundError checks if the error is a 404 not found error.
+// Unwrap returns the sentinel that describes the status, so a caller can match with
+// errors.Is instead of reading StatusCode. A status with no sentinel unwraps to nil,
+// which ends the chain.
+func (e *APIError) Unwrap() error {
+	switch e.StatusCode {
+	case http.StatusUnauthorized:
+		return ErrAuthenticationFailed
+	case http.StatusForbidden:
+		return ErrAccessForbidden
+	case http.StatusNotFound:
+		return ErrResourceNotFound
+	default:
+		return nil
+	}
+}
+
+// IsNotFoundError reports whether err carries an HTTP 404 from the controller.
+//
+// ErrResourceNotFound answers true as well: a guard that rejects an empty list key returns
+// it before a request is built, and a caller asking "was this absent" must not have to know
+// which of the two paths produced the error.
 func IsNotFoundError(err error) bool {
-	if err == nil {
-		return false
-	}
-
-	var httpErr *HTTPError
-	if errors.As(err, &httpErr) {
-		return httpErr.Status == http.StatusNotFound
-	}
-
-	var apiErr *APIError
-	if errors.As(err, &apiErr) {
-		return apiErr.StatusCode == http.StatusNotFound
-	}
-
-	errStr := err.Error()
-	return strings.Contains(errStr, "404") ||
-		strings.Contains(errStr, "not found") ||
-		strings.Contains(errStr, "Not Found")
+	return errors.Is(err, ErrResourceNotFound)
 }

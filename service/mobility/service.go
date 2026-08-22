@@ -61,7 +61,8 @@ func (s Service) GetMMGlobalInfo(
 		ctx,
 		s.Client(),
 		routes.MobilityMmGlobalDataPath,
-		opts...)
+		opts...,
+	)
 }
 
 // GetMMIFGlobalStats retrieves MM interface global statistics.
@@ -70,7 +71,8 @@ func (s Service) GetMMIFGlobalStats(
 	opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessMobilityOperMmIfGlobalStats, error) {
 	return core.Get[CiscoIOSXEWirelessMobilityOperMmIfGlobalStats](
-		ctx, s.Client(), routes.MobilityMmIfGlobalStatsPath, opts...)
+		ctx, s.Client(), routes.MobilityMmIfGlobalStatsPath, opts...,
+	)
 }
 
 // ListClients retrieves mobility client data.
@@ -79,7 +81,8 @@ func (s Service) ListClients(
 	opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessMobilityOperMobilityClientData, error) {
 	return core.Get[CiscoIOSXEWirelessMobilityOperMobilityClientData](
-		ctx, s.Client(), routes.MobilityClientDataPath, opts...)
+		ctx, s.Client(), routes.MobilityClientDataPath, opts...,
+	)
 }
 
 // GetGlobalStats retrieves mobility global statistics.
@@ -111,7 +114,8 @@ func (s Service) ListClientStats(
 		ctx,
 		s.Client(),
 		routes.MobilityClientStatsPath,
-		opts...)
+		opts...,
+	)
 }
 
 // ListGlobalDTLSStats retrieves mobility global DTLS statistics.
@@ -145,5 +149,6 @@ func (s Service) ListWlanClientLimit(
 		ctx,
 		s.Client(),
 		routes.MobilityWlanClientLimitPath,
-		opts...)
+		opts...,
+	)
 }

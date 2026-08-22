@@ -1300,14 +1300,12 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 			}
 		}`,
 		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag=28:ac:9e:11:48:10": `{
-			"Cisco-IOS-XE-wireless-ap-cfg:ap-tags": {
-				"ap-tag": [{
-					"ap-mac": "28:ac:9e:11:48:10",
-					"policy-tag": "labo-wlan-flex",
-					"site-tag": "labo-site-flex",
-					"rf-tag": "labo-inside"
-				}]
-			}
+			"Cisco-IOS-XE-wireless-ap-cfg:ap-tag": [{
+				"ap-mac": "28:ac:9e:11:48:10",
+				"policy-tag": "labo-wlan-flex",
+				"site-tag": "labo-site-flex",
+				"rf-tag": "labo-inside"
+			}]
 		}`,
 		"Cisco-IOS-XE-wireless-ap-global-oper:ap-global-oper-data/ap-history=28:ac:9e:11:48:10": `{
 			"Cisco-IOS-XE-wireless-ap-global-oper:ap-history": [{
@@ -2110,17 +2108,20 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 			"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state", testutil.ResponseConfig{
 				StatusCode: 400,
 				Body:       "Invalid request",
-			}),
+			},
+		),
 		testutil.WithCustomResponse(
 			"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state", testutil.ResponseConfig{
 				StatusCode: 400,
 				Body:       "Invalid request",
-			}),
+			},
+		),
 		testutil.WithCustomResponse(
 			"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff", testutil.ResponseConfig{
 				StatusCode: 400,
 				Body:       "Invalid request",
-			}),
+			},
+		),
 	)
 	defer mockServer.Close()
 

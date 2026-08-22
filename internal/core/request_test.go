@@ -2,6 +2,7 @@ package core_test
 
 import (
 	"context"
+	"net/http"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -62,6 +63,105 @@ func TestRequestFunctions(t *testing.T) {
 		err := core.Delete(ctx, nil, "/test")
 		testutil.AssertError(t, err, "Delete() with nil client should return error")
 	})
+
+	t.Run("GetRaw with nil client", func(t *testing.T) {
+		_, err := core.GetRaw(ctx, nil, "/test")
+		testutil.AssertError(t, err, "GetRaw() with nil client should return error")
+		testutil.AssertErrorContains(t, err, "client cannot be nil", "GetRaw() nil client message")
+	})
+}
+
+// TestGetRawReturnsBodyUnchecked pins the seam GetData sits on: the body arrives as the
+// controller sent it, with no envelope check and no decode.
+//
+// The body carries two top-level keys, which is what makes the assertion mean something:
+// the same read through Get fails, so a byte-identical answer from GetRaw is the absence
+// of the guard rather than a body the guard would have accepted anyway.
+func TestGetRawReturnsBodyUnchecked(t *testing.T) {
+	const body = `{"a:one":{"x":1},"a:two":{"y":2}}`
+
+	mockServer := mock.NewMockServer(mock.WithSuccessResponses(map[string]string{"probe": body}))
+	defer mockServer.Close()
+
+	client, ok := mock.NewTestClient(mockServer).Core().(*core.Client)
+	testutil.AssertTrue(t, ok, "test client should carry a *core.Client")
+
+	t.Run("Get rejects the body", func(t *testing.T) {
+		type probe struct{}
+		_, err := core.Get[probe](context.Background(), client, "probe")
+		testutil.AssertError(t, err, "Get() should reject a body carrying two top-level keys")
+		testutil.AssertErrorContains(t, err, "top-level keys", "Get() envelope error")
+	})
+
+	t.Run("GetRaw returns the same body", func(t *testing.T) {
+		got, err := core.GetRaw(context.Background(), client, "probe")
+		testutil.AssertNoError(t, err, "GetRaw() should not check the envelope")
+		testutil.AssertStringEquals(t, string(got), body, "GetRaw() body")
+	})
+}
+
+// TestGetRawEmptyBodyIsNonNilAndEmpty pins the empty-2xx contract GetRaw documents: an
+// answer with no body is a successful read, reported as a non-nil slice of length zero.
+func TestGetRawEmptyBodyIsNonNilAndEmpty(t *testing.T) {
+	mockServer := mock.NewMockServer(
+		mock.WithTesting(t),
+		mock.WithCustomResponse("probe", mock.ResponseConfig{StatusCode: 204, Body: ""}),
+	)
+	defer mockServer.Close()
+
+	client, ok := mock.NewTestClient(mockServer).Core().(*core.Client)
+	testutil.AssertTrue(t, ok, "test client should carry a *core.Client")
+
+	got, err := core.GetRaw(context.Background(), client, "probe")
+	testutil.AssertNoError(t, err, "GetRaw() with an empty body should succeed")
+	testutil.AssertTrue(t, got != nil, "GetRaw() with an empty body should not return nil")
+	testutil.AssertIntEquals(t, len(got), 0, "GetRaw() empty body length")
+}
+
+// TestGetRawAppliesGetOptions pins that GetRaw folds options the way Get does, observed on
+// the wire rather than on the return value of applyGetOptions.
+func TestGetRawAppliesGetOptions(t *testing.T) {
+	server := mock.NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodGet, "probe", func() (int, string) { return http.StatusOK, `{}` })
+
+	client, ok := mock.NewTestClient(mock.NewMockServerFromHTTP(server.Server)).Core().(*core.Client)
+	testutil.AssertTrue(t, ok, "test client should carry a *core.Client")
+
+	testCases := []struct {
+		name     string
+		opts     []core.GetOption
+		expected string
+	}{
+		{name: "no option", opts: nil, expected: ""},
+		{
+			name:     "fields only",
+			opts:     []core.GetOption{core.WithFields("probe(one;two)")},
+			expected: "fields=probe(one;two)",
+		},
+		{name: "depth only", opts: []core.GetOption{core.WithDepth(3)}, expected: "depth=3"},
+		{
+			name: "all three fold in a fixed order",
+			opts: []core.GetOption{
+				core.WithDepth(3),
+				core.WithFields("probe(one;two)"),
+				core.WithDefaults(core.DefaultsReportAll),
+			},
+			expected: "with-defaults=report-all&fields=probe(one;two)&depth=3",
+		},
+	}
+
+	for i, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := core.GetRaw(context.Background(), client, "probe", tt.opts...)
+			testutil.AssertNoError(t, err, "GetRaw() should succeed")
+
+			recorded := server.Requests()
+			testutil.AssertIntEquals(t, len(recorded), i+1, "recorded request count")
+			testutil.AssertStringEquals(t, recorded[i].RawQuery, tt.expected, "wire query")
+			testutil.AssertStringEquals(t, recorded[i].Path, "/restconf/data/probe", "wire path")
+		})
+	}
 }
 
 // TestRequestFunctionsJSONUnmarshalError tests JSON unmarshal error paths.
@@ -84,7 +184,8 @@ func TestRequestFunctionsJSONUnmarshalError(t *testing.T) {
 		testutil.AssertError(t, err, "Get() with invalid JSON should return error")
 		testutil.AssertStringContains(
 			t, err.Error(), "failed to unmarshal response",
-			"error should contain unmarshal message")
+			"error should contain unmarshal message",
+		)
 	})
 
 	// Test JSON unmarshal error for Post
@@ -94,7 +195,8 @@ func TestRequestFunctionsJSONUnmarshalError(t *testing.T) {
 		testutil.AssertError(t, err, "Post() with invalid JSON should return error")
 		testutil.AssertStringContains(
 			t, err.Error(), "failed to unmarshal response",
-			"error should contain unmarshal message")
+			"error should contain unmarshal message",
+		)
 	})
 
 	// Test JSON unmarshal error for Put
@@ -104,7 +206,8 @@ func TestRequestFunctionsJSONUnmarshalError(t *testing.T) {
 		testutil.AssertError(t, err, "Put() with invalid JSON should return error")
 		testutil.AssertStringContains(
 			t, err.Error(), "failed to unmarshal response",
-			"error should contain unmarshal message")
+			"error should contain unmarshal message",
+		)
 	})
 
 	// Test JSON unmarshal error for Patch
@@ -114,6 +217,37 @@ func TestRequestFunctionsJSONUnmarshalError(t *testing.T) {
 		testutil.AssertError(t, err, "Patch() with invalid JSON should return error")
 		testutil.AssertStringContains(
 			t, err.Error(), "failed to unmarshal response",
-			"error should contain unmarshal message")
+			"error should contain unmarshal message",
+		)
+	})
+}
+
+// TestRequestFunctionsEmptyBodyIsZeroValue tests that a read answered with no body succeeds at
+// the zero value, which is how the controller answers a node it holds no data for.
+func TestRequestFunctionsEmptyBodyIsZeroValue(t *testing.T) {
+	ctx := context.Background()
+
+	mockServer := mock.NewMockServer(
+		mock.WithTesting(t),
+		mock.WithCustomResponse("test", mock.ResponseConfig{StatusCode: 204, Body: ""}),
+		mock.WithCustomResponse("post", mock.ResponseConfig{StatusCode: 204, Body: "", Method: "POST"}),
+	)
+	defer mockServer.Close()
+
+	testClient := mock.NewTestClient(mockServer)
+	client := testClient.Core().(*core.Client)
+
+	t.Run("Get with empty body", func(t *testing.T) {
+		type TestResponse struct{}
+		result, err := core.Get[TestResponse](ctx, client, "/test")
+		testutil.AssertNoError(t, err, "Get() with an empty body should succeed")
+		testutil.AssertTrue(t, result != nil, "Get() with an empty body should return a zero result")
+	})
+
+	t.Run("Post with empty body", func(t *testing.T) {
+		type TestResponse struct{}
+		result, err := core.Post[TestResponse](ctx, client, "/post", map[string]string{"key": "value"})
+		testutil.AssertNoError(t, err, "Post() with an empty body should succeed")
+		testutil.AssertTrue(t, result != nil, "Post() with an empty body should return a zero result")
 	})
 }

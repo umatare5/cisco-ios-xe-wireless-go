@@ -6,17 +6,20 @@ import "time"
 
 // CiscoIOSXEWirelessClientOper represents the complete client operational data root structure.
 type CiscoIOSXEWirelessClientOper struct {
-	CiscoIOSXEWirelessClientOperData struct {
-		CommonOperData    []CommonOperData    `json:"common-oper-data"`               // Common operational data for all wireless clients (Live: IOS-XE 17.12.6a)
-		Dot11OperData     []Dot11OperData     `json:"dot11-oper-data"`                // IEEE 802.11 operational data for wireless clients (Live: IOS-XE 17.12.6a)
-		MobilityOperData  []MobilityOperData  `json:"mobility-oper-data"`             // Mobility operational data for roaming clients (Live: IOS-XE 17.12.6a)
-		MmIfClientStats   []MmIfClientStats   `json:"mm-if-client-stats,omitempty"`   // Mobility manager interface client statistics (YANG: IOS-XE 17.12.1)
-		MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history,omitempty"` // Mobility manager interface client history (YANG: IOS-XE 17.12.1)
-		TrafficStats      []TrafficStats      `json:"traffic-stats"`                  // Client traffic statistics and counters (Live: IOS-XE 17.12.6a)
-		PolicyData        []PolicyData        `json:"policy-data"`                    // Client policy configuration and VLAN data (Live: IOS-XE 17.12.6a)
-		SisfDBMac         []SisfDBMac         `json:"sisf-db-mac,omitempty"`          // SISF database MAC address bindings (YANG: IOS-XE 17.12.1)
-		DcInfo            []DcInfo            `json:"dc-info,omitempty"`              // Device classification information (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"` // Client operational data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessClientOperData *CiscoIOSXEWirelessClientOperData `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"` // Client operational data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessClientOperData represents Client operational data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessClientOperData struct {
+	CommonOperData    []CommonOperData    `json:"common-oper-data"`               // Common operational data for all wireless clients (Live: IOS-XE 17.12.6a)
+	Dot11OperData     []Dot11OperData     `json:"dot11-oper-data"`                // IEEE 802.11 operational data for wireless clients (Live: IOS-XE 17.12.6a)
+	MobilityOperData  []MobilityOperData  `json:"mobility-oper-data"`             // Mobility operational data for roaming clients (Live: IOS-XE 17.12.6a)
+	MmIfClientStats   []MmIfClientStats   `json:"mm-if-client-stats,omitempty"`   // Mobility manager interface client statistics (YANG: IOS-XE 17.12.1)
+	MmIfClientHistory []MmIfClientHistory `json:"mm-if-client-history,omitempty"` // Mobility manager interface client history (YANG: IOS-XE 17.12.1)
+	TrafficStats      []TrafficStats      `json:"traffic-stats"`                  // Client traffic statistics and counters (Live: IOS-XE 17.12.6a)
+	PolicyData        []PolicyData        `json:"policy-data"`                    // Client policy configuration and VLAN data (Live: IOS-XE 17.12.6a)
+	SisfDBMac         []SisfDBMac         `json:"sisf-db-mac,omitempty"`          // SISF database MAC address bindings (YANG: IOS-XE 17.12.1)
+	DcInfo            []DcInfo            `json:"dc-info,omitempty"`              // Device classification information (YANG: IOS-XE 17.12.1)
 }
 
 // CiscoIOSXEWirelessClientOperCommonOperData represents the common operational data.

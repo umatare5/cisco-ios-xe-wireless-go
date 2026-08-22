@@ -69,8 +69,8 @@ func TestGeolocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 						"source": "manual",
 						"ellipse": {
 							"center": {
-								"longitude": -122.0,
-								"latitude": 37.0
+								"longitude": "-122.0",
+								"latitude": "37.0"
 							}
 						}
 					}
@@ -175,8 +175,8 @@ func TestGeolocationServiceUnit_GetOperations_IndividualEndpoints(t *testing.T) 
 							"source": "manual",
 							"ellipse": {
 								"center": {
-									"longitude": -122.0,
-									"latitude": 37.0
+									"longitude": "-122.0",
+									"latitude": "37.0"
 								}
 							}
 						}
@@ -252,53 +252,69 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 	responses := map[string]string{
 		// Exact path that BuildQueryURL will construct
 		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:f0": `{
-			"ap-mac": "aa:bb:cc:dd:ee:f0",
-			"loc": {
-				"source": "manual",
-				"ellipse": {
-					"center": {
-						"longitude": -122.0,
-						"latitude": 37.0
+			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"loc": {
+						"source": "manual",
+						"ellipse": {
+							"center": {
+								"longitude": "-122.0",
+								"latitude": "37.0"
+							}
+						}
 					}
 				}
-			}
+			]
 		}`,
 		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:ff": `{
-			"ap-mac": "aa:bb:cc:dd:ee:ff",
-			"loc": {
-				"source": "derived",
-				"ellipse": {
-					"center": {
-						"longitude": -122.419416,
-						"latitude": 37.7749295
+			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"loc": {
+						"source": "derived",
+						"ellipse": {
+							"center": {
+								"longitude": "-122.419416",
+								"latitude": "37.7749295"
+							}
+						}
 					}
 				}
-			}
+			]
 		}`,
 		// Also support simplified paths for the mock server
 		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:f0": `{
-			"ap-mac": "aa:bb:cc:dd:ee:f0",
-			"loc": {
-				"source": "manual",
-				"ellipse": {
-					"center": {
-						"longitude": -122.0,
-						"latitude": 37.0
+			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"loc": {
+						"source": "manual",
+						"ellipse": {
+							"center": {
+								"longitude": "-122.0",
+								"latitude": "37.0"
+							}
+						}
 					}
 				}
-			}
+			]
 		}`,
 		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:ff": `{
-			"ap-mac": "aa:bb:cc:dd:ee:ff",
-			"loc": {
-				"source": "derived",
-				"ellipse": {
-					"center": {
-						"longitude": -122.419416,
-						"latitude": 37.7749295
+			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
+				{
+					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"loc": {
+						"source": "derived",
+						"ellipse": {
+							"center": {
+								"longitude": "-122.419416",
+								"latitude": "37.7749295"
+							}
+						}
 					}
 				}
-			}
+			]
 		}`,
 	}
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
@@ -433,5 +449,172 @@ func TestGeolocationServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
 	if err == nil {
 		t.Error("Expected error with nil client for GetAPGeolocationDataByMAC, got nil")
+	}
+}
+
+// TestGeolocationServiceUnit_QuotedDecimal64_MockSuccess tests that the platform's quoted
+// decimal64 encoding decodes and that no bare sibling is lost with it.
+func TestGeolocationServiceUnit_QuotedDecimal64_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data": `{
+			"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data": {
+				"ap-geo-loc-data": [
+					{
+						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"loc": {
+							"source": "gnss",
+							"area-of-uncertainty": 12,
+							"hdop": "0.900000",
+							"ellipse": {
+								"center": {"longitude": "0.000000", "latitude": "0.000000"},
+								"major-axis": 10,
+								"orientation": "0.000000"
+							}
+						}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := geolocation.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.GetOperational(ctx)
+	if err != nil {
+		t.Fatalf("GetOperational failed: %v", err)
+	}
+
+	if result.CiscoIOSXEWirelessGeolocationOperData == nil {
+		t.Fatal("Expected geolocation-oper-data to decode")
+	}
+
+	records := result.CiscoIOSXEWirelessGeolocationOperData.ApGeoLocData
+	if len(records) != 1 {
+		t.Fatalf("Expected 1 record, got %d", len(records))
+	}
+
+	loc := records[0].Loc
+	if loc == nil || loc.HDOP == nil || *loc.HDOP != "0.900000" {
+		t.Fatalf("Expected hdop to decode, got %+v", loc)
+	}
+	if loc.AreaOfUncertainty == nil || *loc.AreaOfUncertainty != 12 {
+		t.Error("Expected a bare sibling of the quoted leaves to survive")
+	}
+	if loc.Ellipse == nil || loc.Ellipse.Center == nil || loc.Ellipse.Center.Longitude == nil {
+		t.Fatal("Expected ellipse center to decode")
+	}
+	if *loc.Ellipse.Center.Longitude != "0.000000" {
+		t.Errorf("Expected longitude in the quoted wire form, got %q", *loc.Ellipse.Center.Longitude)
+	}
+	if loc.Ellipse.Orientation == nil || *loc.Ellipse.Orientation != "0.000000" {
+		t.Error("Expected orientation to decode")
+	}
+}
+
+// TestGeolocationServiceUnit_DeclaredWidths_MockSuccess pins the five integer leaves to the
+// widths the device declares. The in-range case carries each leaf at its declared maximum,
+// which a narrower type would refuse.
+func TestGeolocationServiceUnit_DeclaredWidths_MockSuccess(t *testing.T) {
+	const route = "Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		route: `{
+			"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data": {
+				"ap-geo-loc-data": [
+					{
+						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"loc": {
+							"area-of-uncertainty": 4294967295,
+							"ellipse": {"major-axis": 65535, "minor-axis": 65535}
+						},
+						"elevation": {"agl-data": {"height": -32768, "uncertainty": 65535}}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := geolocation.NewService(testClient.Core().(*core.Client))
+
+	result, err := service.GetOperational(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("GetOperational failed: %v", err)
+	}
+
+	records := result.CiscoIOSXEWirelessGeolocationOperData.ApGeoLocData
+	if len(records) != 1 {
+		t.Fatalf("Expected 1 record, got %d", len(records))
+	}
+
+	loc, elev := records[0].Loc, records[0].Elevation
+	if loc.AreaOfUncertainty == nil || *loc.AreaOfUncertainty != 4294967295 {
+		t.Errorf("area-of-uncertainty is a uint32: %v", loc.AreaOfUncertainty)
+	}
+	if loc.Ellipse.MajorAxis == nil || *loc.Ellipse.MajorAxis != 65535 {
+		t.Errorf("major-axis is a uint16: %v", loc.Ellipse.MajorAxis)
+	}
+	if loc.Ellipse.MinorAxis == nil || *loc.Ellipse.MinorAxis != 65535 {
+		t.Errorf("minor-axis is a uint16: %v", loc.Ellipse.MinorAxis)
+	}
+	if elev.AGLData.Height == nil || *elev.AGLData.Height != -32768 {
+		t.Errorf("height is a signed int16: %v", elev.AGLData.Height)
+	}
+	if elev.AGLData.Uncertainty == nil || *elev.AGLData.Uncertainty != 65535 {
+		t.Errorf("elevation uncertainty is a uint16: %v", elev.AGLData.Uncertainty)
+	}
+}
+
+// TestGeolocationServiceUnit_OutOfRangeIsRefused_MockError pins the widths from the other
+// side: a value the declared type cannot hold must fail the read rather than arrive
+// truncated or negative. A plain int would accept every one of these on a 64-bit build,
+// so this is what separates the declared width from "wide enough today".
+func TestGeolocationServiceUnit_OutOfRangeIsRefused_MockError(t *testing.T) {
+	const route = "Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data"
+
+	for name, loc := range map[string]string{
+		"NegativeAreaOfUncertainty": `"area-of-uncertainty": -1`,
+		"AreaOfUncertaintyOverflow": `"area-of-uncertainty": 4294967296`,
+		"MajorAxisOverflow":         `"ellipse": {"major-axis": 65536}`,
+		"MinorAxisNegative":         `"ellipse": {"minor-axis": -1}`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+				route: `{"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data":{"ap-geo-loc-data":[{"loc":{` +
+					loc + `}}]}}`,
+			}))
+			defer mockServer.Close()
+
+			testClient := testutil.NewTestClient(mockServer)
+			service := geolocation.NewService(testClient.Core().(*core.Client))
+
+			if _, err := service.GetOperational(testutil.TestContext(t)); err == nil {
+				t.Error("Expected a value outside the declared width to fail the read")
+			}
+		})
+	}
+
+	for name, elev := range map[string]string{
+		"HeightOverflow":               `"height": 32768`,
+		"HeightUnderflow":              `"height": -32769`,
+		"ElevationUncertaintyNegative": `"uncertainty": -1`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+				route: `{"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data":{"ap-geo-loc-data":[{"elevation":{"agl-data":{` +
+					elev + `}}}]}}`,
+			}))
+			defer mockServer.Close()
+
+			testClient := testutil.NewTestClient(mockServer)
+			service := geolocation.NewService(testClient.Core().(*core.Client))
+
+			if _, err := service.GetOperational(testutil.TestContext(t)); err == nil {
+				t.Error("Expected a value outside the declared width to fail the read")
+			}
+		})
 	}
 }

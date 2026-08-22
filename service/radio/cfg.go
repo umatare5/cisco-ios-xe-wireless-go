@@ -2,14 +2,17 @@ package radio
 
 // CiscoIOSXEWirelessRadioCfg represents the root container for radio configuration data.
 type CiscoIOSXEWirelessRadioCfg struct {
-	CiscoIOSXEWirelessRadioCfgData struct {
-		RadioProfiles RadioProfiles `json:"radio-profiles"` // Radio profiles configuration container (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"` // Radio configuration data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessRadioCfgData *CiscoIOSXEWirelessRadioCfgData `json:"Cisco-IOS-XE-wireless-radio-cfg:radio-cfg-data"` // Radio configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessRadioCfgData represents Radio configuration data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessRadioCfgData struct {
+	RadioProfiles *RadioProfiles `json:"radio-profiles,omitempty"` // Radio profiles configuration container (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessRadioCfgRadioProfiles represents the radio profiles configuration wrapper structure.
 type CiscoIOSXEWirelessRadioCfgRadioProfiles struct {
-	RadioProfiles RadioProfiles `json:"Cisco-IOS-XE-wireless-radio-cfg:radio-profiles"`
+	RadioProfiles *RadioProfiles `json:"Cisco-IOS-XE-wireless-radio-cfg:radio-profiles"`
 }
 
 // RadioProfiles represents radio profiles container.

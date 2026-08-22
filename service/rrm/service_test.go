@@ -812,3 +812,75 @@ func TestRrmServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		}
 	})
 }
+
+// TestRrmServiceUnit_OmittedVerdict_MockSuccess tests that an omitted RRM profile verdict stays nil
+// rather than decoding as a failed profile, while an explicit false still decodes.
+func TestRrmServiceUnit_OmittedVerdict_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/radio-slot": `{
+			"Cisco-IOS-XE-wireless-rrm-oper:radio-slot": [
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"radio-slot-id": 0,
+					"radio-data": {"load-prof-passed": false, "coverage-overlap-factor": "0.00"}
+				},
+				{
+					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"radio-slot-id": 1,
+					"radio-data": {
+						"load-prof-passed": true,
+						"coverage-profile-passed": false,
+						"interference-profile-passed": true,
+						"noise-profile-passed": false,
+						"coverage-overlap-factor": "0.00"
+					}
+				}
+			]
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := rrm.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.ListRadioSlot(ctx)
+	if err != nil {
+		t.Fatalf("ListRadioSlot failed: %v", err)
+	}
+	if len(result.RadioSlot) != 2 || result.RadioSlot[0].RadioData == nil ||
+		result.RadioSlot[1].RadioData == nil {
+		t.Fatalf("Expected radio-data to decode on both records, got %+v", result.RadioSlot)
+	}
+
+	data := result.RadioSlot[0].RadioData
+	if data.LoadProfPassed == nil || *data.LoadProfPassed {
+		t.Error("Expected an explicit false to decode to a non-nil false")
+	}
+	if data.CoverageProfilePassed != nil {
+		t.Error("Expected an omitted coverage verdict to stay nil rather than decoding as failed")
+	}
+	if data.InterferenceProfilePassed != nil || data.NoiseProfilePassed != nil {
+		t.Error("Expected an omitted verdict to stay nil rather than decoding as failed")
+	}
+	if data.CoverageOverlapFactor != "0.00" {
+		t.Errorf("Expected the quoted sibling to survive, got %q", data.CoverageOverlapFactor)
+	}
+
+	// The second record carries every verdict, so each tag is exercised in the present direction
+	// too. Without this an omission-only fixture leaves the tag unreachable: renaming it changes
+	// nothing a nil-check can see, and the assertion above passes on a leaf that never decodes.
+	present := result.RadioSlot[1].RadioData
+	if present.LoadProfPassed == nil || !*present.LoadProfPassed {
+		t.Error("Expected an explicit true load verdict to decode as true")
+	}
+	if present.CoverageProfilePassed == nil || *present.CoverageProfilePassed {
+		t.Error("Expected an explicit false coverage verdict to decode as a non-nil false")
+	}
+	if present.InterferenceProfilePassed == nil || !*present.InterferenceProfilePassed {
+		t.Error("Expected an explicit true interference verdict to decode as true")
+	}
+	if present.NoiseProfilePassed == nil || *present.NoiseProfilePassed {
+		t.Error("Expected an explicit false noise verdict to decode as a non-nil false")
+	}
+}

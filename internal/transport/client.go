@@ -17,14 +17,16 @@ import (
 type RequestBuilder struct {
 	restBuilder *restconf.Builder
 	token       string
+	userAgent   string
 	logger      *slog.Logger
 }
 
 // NewRequestBuilder creates a new RequestBuilder instance.
-func NewRequestBuilder(restBuilder *restconf.Builder, token string, logger *slog.Logger) *RequestBuilder {
+func NewRequestBuilder(restBuilder *restconf.Builder, token, userAgent string, logger *slog.Logger) *RequestBuilder {
 	return &RequestBuilder{
 		restBuilder: restBuilder,
 		token:       token,
+		userAgent:   userAgent,
 		logger:      logger,
 	}
 }
@@ -43,7 +45,7 @@ func (rb *RequestBuilder) CreateRequest(ctx context.Context, method, path string
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	req.Header = DefaultHeaders(rb.token)
+	req.Header = DefaultHeaders(rb.token, rb.userAgent)
 	rb.logger.Debug("Sending API request", "method", method, "url", url)
 	return req, nil
 }
@@ -87,7 +89,7 @@ func (rb *RequestBuilder) CreateRPCRequestWithPayload(
 			rb.logger.Error("Failed to create HTTP RPC request", "error", err, "url", url)
 			return nil, fmt.Errorf("failed to create RPC request: %w", err)
 		}
-		req.Header = DefaultHeaders(rb.token)
+		req.Header = DefaultHeaders(rb.token, rb.userAgent)
 		rb.logger.Debug("Sending RPC request", "method", method, "url", url)
 		return req, nil
 	}
@@ -129,7 +131,7 @@ func (rb *RequestBuilder) createRequestWithJSONPayload(
 		return nil, fmt.Errorf("failed to create "+logType+" request: %w", err)
 	}
 
-	req.Header = DefaultHeaders(rb.token)
+	req.Header = DefaultHeaders(rb.token, rb.userAgent)
 	req.Header.Set("Content-Type", HTTPHeaderValueYANGData)
 	rb.logger.Debug("Sending "+logType+" request", "method", method, "url", url)
 	return req, nil

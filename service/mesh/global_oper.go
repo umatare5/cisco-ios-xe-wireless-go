@@ -2,8 +2,8 @@ package mesh
 
 // MeshGlobalOper represents mesh global operational data response.
 type MeshGlobalOper struct {
-	MeshGlobalOperData struct {
-		MeshGlobalStats MeshGlobalStats  `json:"mesh-global-stats"`           // Summary of mesh AP statistics (Live: IOS-XE 17.12.6a)
+	MeshGlobalOperData *struct {
+		MeshGlobalStats *MeshGlobalStats `json:"mesh-global-stats,omitempty"` // Summary of mesh AP statistics (Live: IOS-XE 17.12.6a)
 		MeshApCacInfo   []MeshApCacInfo  `json:"mesh-ap-cac-info,omitempty"`  // Summary of mesh voice call statistics (YANG: IOS-XE 17.12.1)
 		MeshApPathInfo  []MeshApPathInfo `json:"mesh-ap-path-info,omitempty"` // Mesh AP path from root AP to mesh AP (YANG: IOS-XE 17.12.1)
 		MeshApTreeData  []MeshApTreeData `json:"mesh-ap-tree-data"`           // Mesh AP tree view (Live: IOS-XE 17.12.6a)
@@ -12,7 +12,7 @@ type MeshGlobalOper struct {
 
 // CiscoIOSXEWirelessMeshOperMeshGlobalStats represents mesh global statistics wrapper.
 type CiscoIOSXEWirelessMeshOperMeshGlobalStats struct {
-	MeshGlobalStats MeshGlobalStats `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-stats"` // Summary of mesh AP statistics (Live: IOS-XE 17.12.6a)
+	MeshGlobalStats *MeshGlobalStats `json:"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-global-stats"` // Summary of mesh AP statistics (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessMeshOperMeshApCacInfo represents mesh AP CAC information wrapper.

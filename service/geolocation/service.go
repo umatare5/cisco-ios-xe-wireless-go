@@ -49,7 +49,8 @@ func (s Service) ListAPGeolocationData(
 		ctx,
 		s.Client(),
 		routes.GeolocationApGeoLocDataPath,
-		opts...)
+		opts...,
+	)
 }
 
 // GetAPGeolocationDataByMAC retrieves AP geolocation data for a specific AP by MAC address.
@@ -57,7 +58,7 @@ func (s Service) GetAPGeolocationDataByMAC(
 	ctx context.Context,
 	apMAC string,
 	opts ...core.GetOption,
-) (*ApGeoLocData, error) {
+) (*CiscoIOSXEWirelessGeolocationOperApGeoLocData, error) {
 	if apMAC == "" || strings.TrimSpace(apMAC) == "" {
 		return nil, core.ErrResourceNotFound
 	}
@@ -73,5 +74,5 @@ func (s Service) GetAPGeolocationDataByMAC(
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.GeolocationApGeoLocDataPath, normalizedMAC)
-	return core.Get[ApGeoLocData](ctx, s.Client(), url, opts...)
+	return core.Get[CiscoIOSXEWirelessGeolocationOperApGeoLocData](ctx, s.Client(), url, opts...)
 }

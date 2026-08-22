@@ -2,9 +2,12 @@ package cts
 
 // CiscoIOSXEWirelessCTSOper represents the structure for CTS SXP operational data.
 type CiscoIOSXEWirelessCTSOper struct {
-	CiscoIOSXEWirelessCTSOperData struct {
-		FlexModeApSxpConnectionStatus []FlexModeApSxpConnectionStatus `json:"flex-mode-ap-sxp-connection-status,omitempty"` // FlexConnect AP SXP connection status list (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data"` // CTS SXP operational data (YANG: IOS-XE 17.12.1)
+	CiscoIOSXEWirelessCTSOperData *CiscoIOSXEWirelessCTSOperData `json:"Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data"` // CTS SXP operational data (YANG: IOS-XE 17.12.1)
+}
+
+// CiscoIOSXEWirelessCTSOperData represents CTS SXP operational data (YANG: IOS-XE 17.12.1).
+type CiscoIOSXEWirelessCTSOperData struct {
+	FlexModeApSxpConnectionStatus []FlexModeApSxpConnectionStatus `json:"flex-mode-ap-sxp-connection-status,omitempty"` // FlexConnect AP SXP connection status list (YANG: IOS-XE 17.12.1)
 }
 
 // CiscoIOSXEWirelessCTSOperFlexModeApSxpConnectionStatus represents FlexConnect AP SXP connection status wrapper.

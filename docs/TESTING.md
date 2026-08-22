@@ -18,6 +18,7 @@ The SDK implements **standardized test patterns** using the unified `pkg/testuti
 | **3. Set Tests**     | Mock-based RPC operations | `testutil.NewMockServer()`    | Set/Admin: 90%+ |
 | **4. Integration**   | Live WNC GET operations   | Integration test suites       | N/A             |
 | **5. Scenario/E2E**  | Live WNC RPC operations   | Scenario-based test workflows | N/A             |
+| **6. Contract**      | Route and type agreement  | Static parse of `service/`    | N/A             |
 
 > [!NOTE]
 > WAT (Wireless Assurance Testing) and URWB (Ultra-Reliable Wireless Backhaul) services require IOS-XE 17.18.1+. Spaces service requires IOS-XE 17.15.1+. Tests expect 404 responses when services are not configured and use real WNC data structure for mock responses.
@@ -40,6 +41,11 @@ cisco-ios-xe-wireless-go/
 │       ├── errors.go              # Service-specific error constants
 │       └── doc.go                 # Package documentation
 ├── tests/
+│   ├── contract/
+│   │   ├── envelope_test.go          # Static route and decode-type agreement
+│   │   ├── absence_test.go           # Absence contract for envelope and publish-path leaves
+│   │   ├── nilable_test.go           # Nil-ability of a node wherever it is decoded
+│   │   └── predicate_test.go         # Checks of the gate's own predicates
 │   ├── integration/
 │   │   ├── {service}_service_test.go  # Live WNC integration tests per service
 │   │   └── ...                       # Additional integration tests

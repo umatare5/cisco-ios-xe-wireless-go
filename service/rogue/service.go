@@ -34,11 +34,12 @@ func (s Service) GetRogueByMAC(
 	mac string,
 	opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessRogueData, error) {
-	if mac == "" {
-		return nil, core.ErrInvalidConfiguration
+	normalizedMAC, err := service.RequireMACAddress(mac)
+	if err != nil {
+		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueDataPath, mac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueDataPath, normalizedMAC)
 	return core.Get[CiscoIOSXEWirelessRogueData](ctx, s.Client(), url, opts...)
 }
 
@@ -56,51 +57,32 @@ func (s Service) GetRogueClientByMAC(
 	mac string,
 	opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessRogueClientData, error) {
-	if mac == "" {
-		return nil, core.ErrInvalidConfiguration
+	normalizedMAC, err := service.RequireMACAddress(mac)
+	if err != nil {
+		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueClientDataPath, mac)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RogueClientDataPath, normalizedMAC)
 	return core.Get[CiscoIOSXEWirelessRogueClientData](ctx, s.Client(), url, opts...)
 }
 
 // GetStats retrieves rogue statistics.
-func (s Service) GetStats(ctx context.Context, opts ...core.GetOption) (*RogueStats, error) {
-	return core.Get[RogueStats](ctx, s.Client(), routes.RogueStatsPath, opts...)
-}
-
-// Alias methods for integration test compatibility
-
-// GetOperClientData is an alias for ListRogueClients.
-func (s Service) GetOperClientData(ctx context.Context) (*CiscoIOSXEWirelessRogueClientData, error) {
-	return s.ListRogueClients(ctx)
-}
-
-// GetOperData is an alias for ListRogues.
-func (s Service) GetOperData(ctx context.Context) (*CiscoIOSXEWirelessRogueData, error) {
-	return s.ListRogues(ctx)
-}
-
-// GetOperStats is an alias for GetStats.
-func (s Service) GetOperStats(ctx context.Context) (*RogueStats, error) {
-	return s.GetStats(ctx)
-}
-
-// GetRLDPStats retrieves RLDP (Rogue Location Discovery Protocol) statistics.
-func (s Service) GetRLDPStats(ctx context.Context) (*RogueStats, error) {
-	// For now, return the same as rogue stats since RLDP is part of rogue detection
-	return s.GetStats(ctx)
-}
-
-// GetOperByRogueAddress is an alias for GetRogueByMAC.
-func (s Service) GetOperByRogueAddress(ctx context.Context, mac string) (*CiscoIOSXEWirelessRogueData, error) {
-	return s.GetRogueByMAC(ctx, mac)
-}
-
-// GetOperByRogueClientAddress is an alias for GetRogueClientByMAC.
-func (s Service) GetOperByRogueClientAddress(
+func (s Service) GetStats(
 	ctx context.Context,
-	mac string,
-) (*CiscoIOSXEWirelessRogueClientData, error) {
-	return s.GetRogueClientByMAC(ctx, mac)
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRogueOperRogueStats, error) {
+	return core.Get[CiscoIOSXEWirelessRogueOperRogueStats](ctx, s.Client(), routes.RogueStatsPath, opts...)
+}
+
+// GetRLDPStats retrieves RLDP statistics.
+//
+// The controller declares this node as a presence container with status deprecated in every
+// release measured (17.12, 17.15, 17.18 and 26.1), and answers it with data on all four.
+// A presence container exists only once the feature instantiates it, so a 404 here reports a
+// chassis where RLDP was never enabled, not a route the release lacks.
+func (s Service) GetRLDPStats(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRogueOperRLDPStats, error) {
+	return core.Get[CiscoIOSXEWirelessRogueOperRLDPStats](ctx, s.Client(), routes.RogueRLDPStatsPath, opts...)
 }

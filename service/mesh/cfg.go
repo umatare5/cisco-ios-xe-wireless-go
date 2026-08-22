@@ -2,10 +2,13 @@ package mesh
 
 // MeshCfg represents mesh configuration data.
 type MeshCfg struct {
-	MeshCfgData struct {
-		Mesh         *Mesh        `json:"mesh,omitempty"` // Global mesh configuration (YANG: IOS-XE 17.12.1)
-		MeshProfiles MeshProfiles `json:"mesh-profiles"`  // Mesh profiles configuration (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"` // Mesh configuration data (YANG: IOS-XE 17.12.1)
+	MeshCfgData *MeshCfgData `json:"Cisco-IOS-XE-wireless-mesh-cfg:mesh-cfg-data"` // Mesh configuration data (YANG: IOS-XE 17.12.1)
+}
+
+// MeshCfgData represents Mesh configuration data (YANG: IOS-XE 17.12.1).
+type MeshCfgData struct {
+	Mesh         *Mesh        `json:"mesh,omitempty"` // Global mesh configuration (YANG: IOS-XE 17.12.1)
+	MeshProfiles MeshProfiles `json:"mesh-profiles"`  // Mesh profiles configuration (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessMeshCfgMeshProfiles represents mesh profiles container structure.

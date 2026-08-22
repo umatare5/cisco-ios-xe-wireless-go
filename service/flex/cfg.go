@@ -2,14 +2,17 @@ package flex
 
 // CiscoIOSXEWirelessFlexCfg represents FlexConnect configuration data container.
 type CiscoIOSXEWirelessFlexCfg struct {
-	CiscoIOSXEWirelessFlexCfgData struct {
-		FlexPolicyEntries FlexPolicyEntries `json:"flex-policy-entries"` // FlexConnect policy entries configuration (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"` // FlexConnect configuration data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessFlexCfgData *CiscoIOSXEWirelessFlexCfgData `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-cfg-data"` // FlexConnect configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessFlexCfgData represents FlexConnect configuration data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessFlexCfgData struct {
+	FlexPolicyEntries *FlexPolicyEntries `json:"flex-policy-entries,omitempty"` // FlexConnect policy entries configuration (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessFlexCfgFlexPolicyEntries represents FlexConnect policy entries container.
 type CiscoIOSXEWirelessFlexCfgFlexPolicyEntries struct {
-	FlexPolicyEntries FlexPolicyEntries `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-policy-entries"`
+	FlexPolicyEntries *FlexPolicyEntries `json:"Cisco-IOS-XE-wireless-flex-cfg:flex-policy-entries"`
 }
 
 // FlexPolicyEntries represents FlexConnect policy entries collection.

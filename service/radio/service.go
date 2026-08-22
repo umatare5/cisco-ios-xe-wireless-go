@@ -23,11 +23,6 @@ func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoI
 	return core.Get[CiscoIOSXEWirelessRadioCfg](ctx, s.Client(), routes.RadioCfgPath, opts...)
 }
 
-// ListProfileConfigs retrieves radio profiles configuration data.
-func (s Service) ListProfileConfigs(ctx context.Context, opts ...core.GetOption) (*RadioProfiles, error) {
-	return core.Get[RadioProfiles](ctx, s.Client(), routes.RadioCfgPath+"/radio-profiles", opts...)
-}
-
 // ListRadioProfiles retrieves radio profiles configuration data using wrapper structure.
 func (s Service) ListRadioProfiles(
 	ctx context.Context,

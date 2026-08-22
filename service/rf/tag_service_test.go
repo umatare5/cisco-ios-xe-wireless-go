@@ -401,8 +401,8 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 		ctx := testutil.TestContext(t)
 
 		result, err := rfTagService.GetRFTag(ctx, "test-tag")
-		if err != nil {
-			t.Errorf("Expected no error for nil response, got: %v", err)
+		if err == nil {
+			t.Error("Expected error for a body carrying no top-level key")
 		}
 		if result != nil {
 			t.Error("Expected nil result for null response")
@@ -445,8 +445,8 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 		ctx := testutil.TestContext(t)
 
 		result, err := rfTagService.ListRFTags(ctx)
-		if err != nil {
-			t.Errorf("Expected no error for nil response, got: %v", err)
+		if err == nil {
+			t.Error("Expected error for a body carrying no top-level key")
 		}
 		if len(result) != 0 {
 			t.Errorf("Expected empty slice for nil response, got length: %d", len(result))

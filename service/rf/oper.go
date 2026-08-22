@@ -2,10 +2,13 @@ package rf
 
 // CiscoIOSXEWirelessRFOper represents RF operational data response structure.
 type CiscoIOSXEWirelessRFOper struct {
-	CiscoIOSXEWirelessRFOperData struct {
-		ApAutoRFList []ApAutoRF `json:"ap-auto-rf-dot11-data,omitempty"` // Auto RF data for 802.11 radios (Live: IOS-XE 17.12.6a)
-		ApRadarList  []ApRadar  `json:"ap-dot11-radar-data,omitempty"`   // Radar detection data for 802.11 radios (Live: IOS-XE 17.12.6a)
-	} `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessRFOperData *CiscoIOSXEWirelessRFOperData `json:"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data"` // RRM operational data container (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessRFOperData represents RRM operational data container (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessRFOperData struct {
+	ApAutoRFList []ApAutoRF `json:"ap-auto-rf-dot11-data,omitempty"` // Auto RF data for 802.11 radios (Live: IOS-XE 17.12.6a)
+	ApRadarList  []ApRadar  `json:"ap-dot11-radar-data,omitempty"`   // Radar detection data for 802.11 radios (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessRFOperApAutoRFDot11Data represents Auto RF 802.11 data response structure.

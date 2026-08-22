@@ -27,6 +27,14 @@ func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*C
 
 // GetConnectionDetails retrieves detailed connection information for Cisco Spaces integration.
 // EXPERIMENTAL: Requires IOS-XE 17.15.1+.
-func (s Service) GetConnectionDetails(ctx context.Context, opts ...core.GetOption) (*SpacesConnectionDetail, error) {
-	return core.Get[SpacesConnectionDetail](ctx, s.Client(), routes.SpacesConnectionDetailPath, opts...)
+func (s Service) GetConnectionDetails(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessCiscoSpacesOperSpacesConnectionDetail, error) {
+	return core.Get[CiscoIOSXEWirelessCiscoSpacesOperSpacesConnectionDetail](
+		ctx,
+		s.Client(),
+		routes.SpacesConnectionDetailPath,
+		opts...,
+	)
 }

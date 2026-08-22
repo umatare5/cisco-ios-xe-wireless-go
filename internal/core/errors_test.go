@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -12,16 +13,43 @@ import (
 // 1. UNIT TESTS (Structure/Type Validation & JSON Serialization/Deserialization)
 // ========================================
 
-// TestCoreErrorsUnit_HTTPError_Success tests HTTPError methods.
-func TestCoreErrorsUnit_HTTPError_Success(t *testing.T) {
-	httpErr := &HTTPError{
-		Status: 404,
-		Body:   []byte("Not Found"),
+// TestCoreErrorsUnit_APIErrorUnwrap_Success pins the status-to-sentinel map that
+// wnc.go:46-53 documents.
+func TestCoreErrorsUnit_APIErrorUnwrap_Success(t *testing.T) {
+	mapped := []struct {
+		status   int
+		sentinel error
+	}{
+		{http.StatusUnauthorized, ErrAuthenticationFailed},
+		{http.StatusForbidden, ErrAccessForbidden},
+		{http.StatusNotFound, ErrResourceNotFound},
+	}
+	for _, tc := range mapped {
+		var err error = &APIError{StatusCode: tc.status}
+		testutil.AssertTrue(t, errors.Is(err, tc.sentinel), http.StatusText(tc.status))
 	}
 
-	expected := "HTTP 404: Not Found"
-	actual := httpErr.Error()
-	testutil.AssertStringEquals(t, actual, expected, "HTTPError.Error() output")
+	var unmapped error = &APIError{StatusCode: http.StatusInternalServerError, Message: "boom"}
+	testutil.AssertFalse(t, errors.Is(unmapped, ErrResourceNotFound), "500 matches no sentinel")
+	testutil.AssertFalse(t, errors.Is(unmapped, ErrAuthenticationFailed), "500 matches no sentinel")
+
+	var apiErr *APIError
+	testutil.AssertTrue(t, errors.As(unmapped, &apiErr), "errors.As still reaches *APIError")
+	testutil.AssertIntEquals(t, apiErr.StatusCode, http.StatusInternalServerError, "StatusCode")
+
+	testutil.AssertFalse(t, IsNotFoundError(errors.New("resource not found")),
+		"a message is no longer evidence of a 404")
+
+	// Both paths that report absence answer true. A guard rejecting an empty list key
+	// returns the sentinel before a request exists, so a caller asking "was this absent"
+	// must not have to know which path produced the error.
+	testutil.AssertTrue(t, IsNotFoundError(ErrResourceNotFound), "the sentinel itself")
+	testutil.AssertTrue(t, IsNotFoundError(fmt.Errorf("read failed: %w", ErrResourceNotFound)),
+		"the sentinel wrapped")
+	testutil.AssertTrue(t, IsNotFoundError(&APIError{StatusCode: http.StatusNotFound}),
+		"a 404 from the controller")
+	testutil.AssertFalse(t, IsNotFoundError(&APIError{StatusCode: http.StatusBadRequest}),
+		"a 400 is not absence")
 }
 
 // TestAPIErrorStructure tests the basic structure of APIError.
@@ -127,22 +155,6 @@ func TestIsNotFoundError(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "http_error_404",
-			err: &HTTPError{
-				Status: http.StatusNotFound,
-				Body:   []byte("Not Found"),
-			},
-			expected: true,
-		},
-		{
-			name: "http_error_500",
-			err: &HTTPError{
-				Status: http.StatusInternalServerError,
-				Body:   []byte("Internal Server Error"),
-			},
-			expected: false,
-		},
-		{
 			name: "api_error_404",
 			err: &APIError{
 				StatusCode: http.StatusNotFound,
@@ -161,17 +173,17 @@ func TestIsNotFoundError(t *testing.T) {
 		{
 			name:     "string_error_with_404",
 			err:      errors.New("API error (HTTP 404): resource not found"),
-			expected: true,
+			expected: false,
 		},
 		{
 			name:     "string_error_with_not_found",
 			err:      errors.New("resource not found"),
-			expected: true,
+			expected: false,
 		},
 		{
 			name:     "string_error_with_not_found_uppercase",
 			err:      errors.New("API error: Not Found"),
-			expected: true,
+			expected: false,
 		},
 		{
 			name:     "string_error_without_404",

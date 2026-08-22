@@ -210,16 +210,6 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("GetOperationalData", func(t *testing.T) {
-		result, err := service.GetOperationalData(ctx)
-		if err != nil {
-			t.Errorf("GetOperationalData returned unexpected error: %v", err)
-		}
-		if result == nil {
-			t.Error("GetOperationalData returned nil result")
-		}
-	})
-
 	t.Run("ListMeshQueueStats", func(t *testing.T) {
 		result, err := service.ListMeshQueueStats(ctx)
 		if err != nil {
@@ -345,16 +335,6 @@ func TestMeshServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		}
 	})
 
-	t.Run("GetOperationalData_404Error", func(t *testing.T) {
-		result, err := service.GetOperationalData(ctx)
-		if err == nil {
-			t.Error("Expected error for GetOperationalData, got nil")
-		}
-		if result != nil {
-			t.Error("Expected nil result on error, got non-nil result")
-		}
-	})
-
 	t.Run("ListMeshQueueStats_404Error", func(t *testing.T) {
 		result, err := service.ListMeshQueueStats(ctx)
 		if err == nil {
@@ -455,16 +435,6 @@ func TestMeshServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 
 	t.Run("GetOperational_NilClient", func(t *testing.T) {
 		result, err := service.GetOperational(ctx)
-		if err == nil {
-			t.Error("Expected error for nil client")
-		}
-		if result != nil {
-			t.Error("Expected nil result for error case")
-		}
-	})
-
-	t.Run("GetOperationalData_NilClient", func(t *testing.T) {
-		result, err := service.GetOperationalData(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

@@ -6,7 +6,6 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // Service provides RFID (Radio Frequency Identification) operations for Cisco IOS-XE Wireless LAN Controller.
@@ -25,8 +24,11 @@ func (s Service) GetConfig(ctx context.Context, opts ...core.GetOption) (*CiscoI
 }
 
 // GetConfigSettings retrieves the RFID configuration settings.
-func (s Service) GetConfigSettings(ctx context.Context, opts ...core.GetOption) (*RFIDConfig, error) {
-	return core.Get[RFIDConfig](ctx, s.Client(), routes.RFIDCfgRFIDConfigPath, opts...)
+func (s Service) GetConfigSettings(
+	ctx context.Context,
+	opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRFIDCfgRFID, error) {
+	return core.Get[CiscoIOSXEWirelessRFIDCfgRFID](ctx, s.Client(), routes.RFIDCfgRFIDConfigPath, opts...)
 }
 
 // GetGlobalOperational retrieves RFID global information.
@@ -38,13 +40,14 @@ func (s Service) GetGlobalOperational(ctx context.Context, opts ...core.GetOptio
 func (s Service) GetGlobalDetailByMAC(
 	ctx context.Context,
 	macAddr string, opts ...core.GetOption,
-) (*RFIDEmltdData, error) {
-	if err := validation.ValidateMACAddress(macAddr); err != nil {
+) (*CiscoIOSXEWirelessRFIDGlobalOperRFIDDataDetail, error) {
+	normalizedMAC, err := service.RequireMACAddress(macAddr)
+	if err != nil {
 		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, macAddr)
-	return core.Get[RFIDEmltdData](ctx, s.Client(), url, opts...)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataDetailQueryPath, normalizedMAC)
+	return core.Get[CiscoIOSXEWirelessRFIDGlobalOperRFIDDataDetail](ctx, s.Client(), url, opts...)
 }
 
 // GetRadioInfo retrieves RFID radio information by radio key combination.
@@ -52,21 +55,23 @@ func (s Service) GetRadioInfo(
 	ctx context.Context,
 	macAddr, apMACAddr string,
 	slot int, opts ...core.GetOption,
-) (*RFIDRadioData, error) {
-	if err := validation.ValidateMACAddress(macAddr); err != nil {
+) (*CiscoIOSXEWirelessRFIDGlobalOperRFIDRadioData, error) {
+	normalizedMAC, err := service.RequireMACAddress(macAddr)
+	if err != nil {
 		return nil, err
 	}
-	if err := validation.ValidateMACAddress(apMACAddr); err != nil {
+	normalizedAPMAC, err := service.RequireMACAddress(apMACAddr)
+	if err != nil {
 		return nil, err
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
 		routes.RFIDRadioDataPath,
-		macAddr,
-		apMACAddr,
+		normalizedMAC,
+		normalizedAPMAC,
 		slot,
 	)
-	return core.Get[RFIDRadioData](ctx, s.Client(), url, opts...)
+	return core.Get[CiscoIOSXEWirelessRFIDGlobalOperRFIDRadioData](ctx, s.Client(), url, opts...)
 }
 
 // GetOperational retrieves RFID operational data.
@@ -75,11 +80,15 @@ func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*C
 }
 
 // GetDetailByMAC retrieves specific RFID data based on MAC address.
-func (s Service) GetDetailByMAC(ctx context.Context, macAddr string, opts ...core.GetOption) (*RFIDData, error) {
-	if err := validation.ValidateMACAddress(macAddr); err != nil {
+func (s Service) GetDetailByMAC(
+	ctx context.Context,
+	macAddr string, opts ...core.GetOption,
+) (*CiscoIOSXEWirelessRFIDOperRFIDData, error) {
+	normalizedMAC, err := service.RequireMACAddress(macAddr)
+	if err != nil {
 		return nil, err
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataQueryPath, macAddr)
-	return core.Get[RFIDData](ctx, s.Client(), url, opts...)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.RFIDDataQueryPath, normalizedMAC)
+	return core.Get[CiscoIOSXEWirelessRFIDOperRFIDData](ctx, s.Client(), url, opts...)
 }

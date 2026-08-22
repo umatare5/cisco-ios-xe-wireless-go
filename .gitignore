@@ -3,7 +3,11 @@ tmp/
 vendor/
 
 # Test data files
+# testdata is the name the go tool itself ignores, and it is the only one this
+# tree writes. test_data covers captures left by older runs and can be dropped
+# once none remain.
 testdata/
+test_data/
 
 # Build artifacts
 *.exe

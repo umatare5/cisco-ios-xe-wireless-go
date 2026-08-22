@@ -2,13 +2,16 @@ package wlan
 
 // CiscoIOSXEWirelessWlanCfg represents the complete WLAN configuration.
 type CiscoIOSXEWirelessWlanCfg struct {
-	CiscoIOSXEWirelessWlanCfgData struct {
-		WlanCfgEntries           *WlanCfgEntries          `json:"wlan-cfg-entries"`            // WLAN configuration parameters (Live: IOS-XE 17.12.6a)
-		WlanPolicies             *WlanPolicies            `json:"wlan-policies"`               // WLAN policy configuration (Live: IOS-XE 17.12.6a)
-		PolicyListEntries        PolicyListEntries        `json:"policy-list-entries"`         // Policy list configuration (Live: IOS-XE 17.12.6a)
-		WirelessAaaPolicyConfigs WirelessAaaPolicyConfigs `json:"wireless-aaa-policy-configs"` // Wireless AAA policy configurations (Live: IOS-XE 17.12.6a)
-		Dot11beProfiles          *Dot11beProfiles         `json:"dot11be-profiles"`            // 802.11be profile parameters (Live: IOS-XE 17.15.4b)
-	} `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"` // WLAN configuration data container
+	CiscoIOSXEWirelessWlanCfgData *CiscoIOSXEWirelessWlanCfgData `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"` // WLAN configuration data container
+}
+
+// CiscoIOSXEWirelessWlanCfgData represents WLAN configuration data container.
+type CiscoIOSXEWirelessWlanCfgData struct {
+	WlanCfgEntries           *WlanCfgEntries           `json:"wlan-cfg-entries"`                      // WLAN configuration parameters (Live: IOS-XE 17.12.6a)
+	WlanPolicies             *WlanPolicies             `json:"wlan-policies"`                         // WLAN policy configuration (Live: IOS-XE 17.12.6a)
+	PolicyListEntries        *PolicyListEntries        `json:"policy-list-entries,omitempty"`         // Policy list configuration (Live: IOS-XE 17.12.6a)
+	WirelessAaaPolicyConfigs *WirelessAaaPolicyConfigs `json:"wireless-aaa-policy-configs,omitempty"` // Wireless AAA policy configurations (Live: IOS-XE 17.12.6a)
+	Dot11beProfiles          *Dot11beProfiles          `json:"dot11be-profiles"`                      // 802.11be profile parameters (Live: IOS-XE 17.15.4b)
 }
 
 // CiscoIOSXEWirelessWlanCfgWlanCfgEntries represents the WLAN configuration entries.
@@ -19,6 +22,13 @@ type CiscoIOSXEWirelessWlanCfgWlanCfgEntries struct {
 // CiscoIOSXEWirelessWlanCfgPolicyListEntries represents the policy list entries.
 type CiscoIOSXEWirelessWlanCfgPolicyListEntries struct {
 	PolicyListEntries *PolicyListEntries `json:"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entries"`
+}
+
+// CiscoIOSXEWirelessWlanCfgPolicyListEntry represents the response to a keyed read of one policy
+// list entry. A keyed list read answers with the singular node name and a list of one record,
+// measured on a controller, which is why the sole field is a slice.
+type CiscoIOSXEWirelessWlanCfgPolicyListEntry struct {
+	PolicyListEntry []PolicyListEntry `json:"Cisco-IOS-XE-wireless-wlan-cfg:policy-list-entry"`
 }
 
 // CiscoIOSXEWirelessWlanCfgWirelessAaaPolicyConfigs represents the wireless AAA policy configurations.
@@ -63,15 +73,15 @@ type WlanCfgEntry struct {
 	AuthKeyMgmtPsk         bool               `json:"auth-key-mgmt-psk,omitempty"`          // Authentication key management PSK (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtDot1x       bool               `json:"auth-key-mgmt-dot1x,omitempty"`        // Authentication key management type 802.1x (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtDot1xSha256 bool               `json:"auth-key-mgmt-dot1x-sha256,omitempty"` // Authentication key management type 802.1x SHA256 (Live: IOS-XE 17.12.6a)
-	PSK                    string             `json:"psk,omitempty"`                        // Authentication pre-shared key (Live: IOS-XE 17.12.6a)
+	PSK                    string             `json:"psk,omitempty"`                        // Authentication pre-shared key — secret, never log (Live: IOS-XE 17.12.6a)
 	PSKType                string             `json:"psk-type,omitempty"`                   // Pre-shared key encryption type (Live: IOS-XE 17.12.6a)
 	FTMode                 string             `json:"ft-mode,omitempty"`                    // Configures Fast Transition Adaptive support (Live: IOS-XE 17.12.6a)
 	PMFOptions             string             `json:"pmf-options,omitempty"`                // Configures PMF as optional/required (Live: IOS-XE 17.12.6a)
-	WPA2Enabled            bool               `json:"wpa2-enabled,omitempty"`               // Configures WPA2 support (Live: IOS-XE 17.12.6a)
+	WPA2Enabled            *bool              `json:"wpa2-enabled,omitempty"`               // Configures WPA2 support (Live: IOS-XE 17.12.6a)
 	WPA3Enabled            bool               `json:"wpa3-enabled,omitempty"`               // Configures WPA3 support (Live: IOS-XE 17.12.6a)
 	LoadBalance            bool               `json:"load-balance,omitempty"`               // Allow/Disallow Load Balance on a WLAN (Live: IOS-XE 17.12.6a)
 	AuthenticationList     string             `json:"authentication-list,omitempty"`        // Enter the Authentication list name (Live: IOS-XE 17.12.6a)
-	Wlan11kNeighList       bool               `json:"wlan-11k-neigh-list,omitempty"`        // Indicates 11k Neighbor List enabled (YANG: IOS-XE 17.12.1)
+	Wlan11kNeighList       *bool              `json:"wlan-11k-neigh-list,omitempty"`        // Indicates 11k Neighbor List enabled (YANG: IOS-XE 17.12.1)
 	MulticastBufferValue   int                `json:"multicast-buffer-value,omitempty"`     // Configure Multicast Buffer Tuning (YANG: IOS-XE 17.12.1)
 	APFVapIDData           *APFVapIDData      `json:"apf-vap-id-data,omitempty"`            // Virtual AP interface data (Live: IOS-XE 17.12.6a)
 	APFVap80211vData       *APFVap80211vData  `json:"apf-vap-802-11v-data,omitempty"`       // 802.11v wireless management configuration (Live: IOS-XE 17.12.6a)
@@ -83,13 +93,13 @@ type WlanCfgEntry struct {
 
 // APFVapIDData represents virtual AP interface identification data.
 type APFVapIDData struct {
-	SSID       string `json:"ssid"`        // Service Set Identifier (Live: IOS-XE 17.12.6a)
-	WlanStatus bool   `json:"wlan-status"` // WLAN administrative status (Live: IOS-XE 17.12.6a)
+	SSID       string `json:"ssid"`                  // Service Set Identifier (Live: IOS-XE 17.12.6a)
+	WlanStatus *bool  `json:"wlan-status,omitempty"` // WLAN administrative status (Live: IOS-XE 17.12.6a)
 }
 
 // APFVap80211vData represents 802.11v wireless management configuration.
 type APFVap80211vData struct {
-	Dot11vDms bool `json:"dot11v-dms"` // 802.11v Directed Multicast Service enabled (Live: IOS-XE 17.12.6a)
+	Dot11vDms *bool `json:"dot11v-dms,omitempty"` // 802.11v Directed Multicast Service enabled (Live: IOS-XE 17.12.6a)
 }
 
 // WlanRadioPolicies represents WLAN radio band policy configuration.
@@ -122,15 +132,17 @@ type WlanPolicy struct {
 
 // WlanSwitchingPolicy represents WLAN switching policy configuration.
 type WlanSwitchingPolicy struct {
-	CentralSwitching      bool `json:"central-switching,omitempty"`      // Central switching enabled (Live: IOS-XE 17.12.6a)
-	CentralAuthentication bool `json:"central-authentication,omitempty"` // Central authentication enabled (Live: IOS-XE 17.12.6a)
-	CentralDHCP           bool `json:"central-dhcp,omitempty"`           // Central dhcp for locally switched clients (Live: IOS-XE 17.12.6a)
-	CentralAssocEnable    bool `json:"central-assoc-enable,omitempty"`   // Central association enabled (Live: IOS-XE 17.12.6a)
+	CentralSwitching      *bool `json:"central-switching,omitempty"`      // Central switching enabled (Live: IOS-XE 17.12.6a)
+	CentralAuthentication *bool `json:"central-authentication,omitempty"` // Central authentication enabled (Live: IOS-XE 17.12.6a)
+	CentralDHCP           *bool `json:"central-dhcp,omitempty"`           // Central dhcp for locally switched clients (Live: IOS-XE 17.12.6a)
+	CentralAssocEnable    *bool `json:"central-assoc-enable,omitempty"`   // Central association enabled (Live: IOS-XE 17.12.6a)
 }
 
 // WlanTimeout represents WLAN timeout configuration.
 type WlanTimeout struct {
-	SessionTimeout int `json:"session-timeout,omitempty"` // Session timeout in seconds (Live: IOS-XE 17.12.6a)
+	SessionTimeout *int `json:"session-timeout,omitempty"` // Session timeout in seconds (Live: IOS-XE 17.12.6a)
+	IdleTimeout    *int `json:"idle-timeout,omitempty"`    // Client idle timeout (Live: IOS-XE 17.12.7a)
+	IdleThreshold  *int `json:"idle-threshold,omitempty"`  // Client idle traffic threshold (Live: IOS-XE 17.12.7a)
 }
 
 // PerSsidQos represents per-SSID QoS configuration.
@@ -232,8 +244,8 @@ type Dot11beProfiles struct {
 type Dot11beProfile struct {
 	ProfileName       string `json:"profile-name"`                  // 802.11be profile name (Live: IOS-XE 17.15.4b)
 	Description       string `json:"description,omitempty"`         // 802.11be profile description (Live: IOS-XE 17.15.4b)
-	EhtOfdmaDownlink  bool   `json:"eht-ofdma-downlink,omitempty"`  // 802.11be OFDMA downlink (YANG: IOS-XE 17.18.1)
-	EhtOfdmaUplink    bool   `json:"eht-ofdma-uplink,omitempty"`    // 802.11be OFDMA uplink (YANG: IOS-XE 17.18.1)
+	EhtOfdmaDownlink  *bool  `json:"eht-ofdma-downlink,omitempty"`  // 802.11be OFDMA downlink; schema default true, so absence is not false (YANG: IOS-XE 17.18.1)
+	EhtOfdmaUplink    *bool  `json:"eht-ofdma-uplink,omitempty"`    // 802.11be OFDMA uplink; schema default true, so absence is not false (YANG: IOS-XE 17.18.1)
 	EhtMumimoDownlink bool   `json:"eht-mumimo-downlink,omitempty"` // 802.11be MU-MIMO downlink (YANG: IOS-XE 17.18.1)
 	EhtMumimoUplink   bool   `json:"eht-mumimo-uplink,omitempty"`   // 802.11be MU-MIMO uplink (YANG: IOS-XE 17.18.1)
 	EhtOfdmaMultiRu   bool   `json:"eht-ofdma-multi-ru,omitempty"`  // 802.11be OFDMA multiple resource unit (YANG: IOS-XE 17.18.1)
@@ -246,25 +258,25 @@ type Dot11beProfile struct {
 }
 
 // MloGroup24Ghz represents Multi-link group configuration for 2.4GHz link (YANG: IOS-XE 17.18.1).
+//
+// The container holds one leaf of the same name, carrying the enumeration spelling
+// "24ghz-enable" or "24ghz-disable". The group identifier and enable flag this type
+// declared before are not nodes the controller sends.
 type MloGroup24Ghz struct {
-	GroupID int  `json:"group-id,omitempty"` // MLO group identifier (YANG: IOS-XE 17.18.1)
-	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
+	Mlo24Ghz *string `json:"mlo-24ghz,omitempty"` // 802.11be MLO state for the 2.4GHz link (YANG: IOS-XE 17.18.1)
 }
 
 // MloGroup5Ghz represents Multi-link group configuration for primary 5GHz link (YANG: IOS-XE 17.18.1).
 type MloGroup5Ghz struct {
-	GroupID int  `json:"group-id,omitempty"` // MLO group identifier (YANG: IOS-XE 17.18.1)
-	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
+	Mlo5Ghz *string `json:"mlo-5ghz,omitempty"` // 802.11be MLO state for the primary 5GHz link (YANG: IOS-XE 17.18.1)
 }
 
 // MloGroup5GhzSec represents Multi-link group configuration for secondary 5GHz link (YANG: IOS-XE 17.18.1).
 type MloGroup5GhzSec struct {
-	GroupID int  `json:"group-id,omitempty"` // MLO group identifier (YANG: IOS-XE 17.18.1)
-	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
+	Mlo5GhzSec *string `json:"mlo-5ghz-sec,omitempty"` // 802.11be MLO state for the secondary 5GHz link (YANG: IOS-XE 17.18.1)
 }
 
 // MloGroup6Ghz represents Multi-link group configuration for 6GHz link (YANG: IOS-XE 17.18.1).
 type MloGroup6Ghz struct {
-	GroupID int  `json:"group-id,omitempty"` // MLO group identifier (YANG: IOS-XE 17.18.1)
-	Enable  bool `json:"enable,omitempty"`   // MLO group enable status (YANG: IOS-XE 17.18.1)
+	Mlo6Ghz *string `json:"mlo-6ghz,omitempty"` // 802.11be MLO state for the 6GHz link (YANG: IOS-XE 17.18.1)
 }

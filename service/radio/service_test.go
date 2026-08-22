@@ -86,16 +86,6 @@ func TestRadioServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("ListProfileConfigs", func(t *testing.T) {
-		result, err := service.ListProfileConfigs(ctx)
-		if err != nil {
-			t.Errorf("ListProfileConfigs returned unexpected error: %v", err)
-		}
-		if result == nil {
-			t.Error("ListProfileConfigs returned nil result")
-		}
-	})
-
 	t.Run("ListRadioProfiles", func(t *testing.T) {
 		result, err := service.ListRadioProfiles(ctx)
 		if err != nil {
@@ -130,16 +120,6 @@ func TestRadioServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 		}
 	})
 
-	t.Run("ListProfileConfigs_404Error", func(t *testing.T) {
-		result, err := service.ListProfileConfigs(ctx)
-		if err == nil {
-			t.Error("Expected error for ListProfileConfigs, got nil")
-		}
-		if result != nil {
-			t.Error("Expected nil result on error, got non-nil result")
-		}
-	})
-
 	t.Run("ListRadioProfiles_404Error", func(t *testing.T) {
 		result, err := service.ListRadioProfiles(ctx)
 		if err == nil {
@@ -160,19 +140,6 @@ func TestRadioServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 		ctx := testutil.TestContext(t)
 
 		result, err := service.GetConfig(ctx)
-		if err == nil {
-			t.Error("Expected error for nil client")
-		}
-		if result != nil {
-			t.Error("Expected nil result for error case")
-		}
-	})
-
-	t.Run("ListProfileConfigs_NilClient", func(t *testing.T) {
-		service := radio.NewService(nil)
-		ctx := testutil.TestContext(t)
-
-		result, err := service.ListProfileConfigs(ctx)
 		if err == nil {
 			t.Error("Expected error for nil client")
 		}

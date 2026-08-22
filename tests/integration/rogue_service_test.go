@@ -34,34 +34,6 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 				LogResult: true,
 			},
 			{
-				Name: "GetOperClientData",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetOperClientData(ctx)
-				},
-				LogResult: true,
-			},
-			{
-				Name: "GetOperData",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetOperData(ctx)
-				},
-				LogResult: true,
-			},
-			{
-				Name: "GetRLDPStats",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetRLDPStats(ctx)
-				},
-				LogResult: true,
-			},
-			{
-				Name: "GetOperStats",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetOperStats(ctx)
-				},
-				LogResult: true,
-			},
-			{
 				Name: "ListRogues",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(rogue.Service).ListRogues(ctx)
@@ -82,6 +54,13 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 				},
 				LogResult: true,
 			},
+			{
+				Name: "GetRLDPStats",
+				Method: func(ctx context.Context, service any) (any, error) {
+					return service.(rogue.Service).GetRLDPStats(ctx)
+				},
+				LogResult: true,
+			},
 		},
 		FilterMethods: []integration.TestMethod{
 			{
@@ -99,42 +78,27 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 				},
 				ExpectNotFound: true,
 			},
-			{
-				Name: "GetOperByRogueAddress",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetOperByRogueAddress(ctx, integration.TestClientMac())
-				},
-				LogResult:      true,
-				ExpectNotFound: true, // Test rogue address may not exist unless WNC_CLIENT_MAC_ADDR is set
-			},
-			{
-				Name: "GetOperByRogueClientAddress",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetOperByRogueClientAddress(ctx, "00:11:22:33:44:66")
-				},
-				ExpectNotFound: true,
-			},
 			// Note: GetOperByClassType and GetOperByContainmentLevel are disabled
 			// because these query parameters are not supported by the API (returns HTTP 400)
 		},
 		ValidationTests: []integration.ValidationTestMethod{
 			{
-				Name: "GetOperByRogueAddress_EmptyAddress",
+				Name: "GetRogueByMAC_EmptyAddress",
 				Method: func(ctx context.Context, service any) error {
-					_, err := service.(rogue.Service).GetOperByRogueAddress(ctx, "")
+					_, err := service.(rogue.Service).GetRogueByMAC(ctx, "")
 					return err
 				},
 				ExpectedError: true,
-				ErrorKeywords: []string{"404", "not found"},
+				ErrorKeywords: []string{"resource", "not found"},
 			},
 			{
-				Name: "GetOperByRogueClientAddress_EmptyAddress",
+				Name: "GetRogueClientByMAC_EmptyAddress",
 				Method: func(ctx context.Context, service any) error {
-					_, err := service.(rogue.Service).GetOperByRogueClientAddress(ctx, "")
+					_, err := service.(rogue.Service).GetRogueClientByMAC(ctx, "")
 					return err
 				},
 				ExpectedError: true,
-				ErrorKeywords: []string{"404", "not found"},
+				ErrorKeywords: []string{"resource", "not found"},
 			},
 			// Note: GetOperByClassType and GetOperByContainmentLevel validation tests
 			// are also disabled because these query parameters are not supported

@@ -306,7 +306,7 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 			{
 				Name: "GetWLANClientStatsByWLANID",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetWLANClientStatsByWLANID(ctx, 1)
+					return service.(ap.Service).GetWLANClientStatsByWLANID(ctx, 5)
 				},
 				LogResult: true,
 			},
@@ -330,7 +330,7 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 			{
 				Name: "GetWtpSlotWlanStatsByWTPMACSlotAndWLANID",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, integration.TestAPMac(), 0, 1)
+					return service.(ap.Service).GetWtpSlotWlanStatsByWTPMACSlotAndWLANID(ctx, integration.TestAPMac(), 0, 5)
 				},
 				LogResult: true,
 			},

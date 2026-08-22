@@ -34,13 +34,6 @@ func TestMeshServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 				LogResult: true,
 			},
 			{
-				Name: "GetOperationalData",
-				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(mesh.Service).GetOperationalData(ctx)
-				},
-				LogResult: true,
-			},
-			{
 				Name: "GetConfig",
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(mesh.Service).GetConfig(ctx)

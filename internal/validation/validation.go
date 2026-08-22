@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+	"net"
 	"strings"
 	"time"
 )
@@ -55,6 +56,16 @@ const (
 // IsValidController checks if controller address is valid (non-empty).
 func IsValidController(controller string) bool {
 	return IsNonEmptyString(controller)
+}
+
+// NormalizeHost trims surrounding whitespace and brackets a bare IPv6 literal, so the
+// host stays a valid authority once the URL builder concatenates it after the scheme.
+func NormalizeHost(host string) string {
+	host = strings.TrimSpace(host)
+	if net.ParseIP(host) != nil && strings.Contains(host, ":") {
+		return "[" + host + "]"
+	}
+	return host
 }
 
 // IsValidAccessToken checks if access token is valid (non-empty).

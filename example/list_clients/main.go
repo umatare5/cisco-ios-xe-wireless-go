@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -21,7 +22,8 @@ type ClientInfo struct {
 
 // run performs the core logic; separated for testing.
 func run(controller, token string, logger *slog.Logger) ([]ClientInfo, error) {
-	client, err := wnc.NewClient(controller, token,
+	client, err := wnc.NewClient(
+		controller, token,
 		wnc.WithTimeout(30*time.Second),
 		wnc.WithInsecureSkipVerify(true), // lab only
 		wnc.WithLogger(logger),
@@ -37,6 +39,10 @@ func run(controller, token string, logger *slog.Logger) ([]ClientInfo, error) {
 	clientData, err := client.Client().GetOperational(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("client oper request: %w", err)
+	}
+
+	if clientData == nil || clientData.CiscoIOSXEWirelessClientOperData == nil {
+		return nil, errors.New("controller returned no client operational data")
 	}
 
 	var clients []ClientInfo

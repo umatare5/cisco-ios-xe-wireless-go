@@ -126,26 +126,27 @@ func WithTesting(t *testing.T) MockServerOption {
 }
 
 // NewTestClient creates a test client for the given mock server.
+//
+// Any MockServer will do: the URL is all a client needs, so a test that has to supply
+// its own handler can wrap it with NewMockServerFromHTTP instead of being turned away.
 func NewTestClient(server MockServer) TestClient {
-	// Create a minimal test client without requiring *testing.T
-	serverImpl, ok := server.(*mockServerImpl)
-	if !ok {
-		panic("testutil: server must be created with NewMockServer()")
-	}
-
-	// Parse the server URL to get the host
-	u, err := url.Parse(serverImpl.server.URL)
+	u, err := url.Parse(server.URL())
 	if err != nil {
 		panic("testutil: failed to parse server URL: " + err.Error())
 	}
 
-	// Create core client using the mock server host
 	client, err := core.New(u.Host, "test-token", core.WithInsecureSkipVerify(true))
 	if err != nil {
 		panic("testutil: failed to create test client: " + err.Error())
 	}
 
 	return &testClientImpl{client: client}
+}
+
+// NewMockServerFromHTTP adapts an httptest.Server, so a test needing its own handler —
+// a recording one, say — can still build a client with NewTestClient.
+func NewMockServerFromHTTP(server *httptest.Server) MockServer {
+	return &mockServerImpl{server: server}
 }
 
 // NewMockServer creates a mock RESTCONF server with functional options.

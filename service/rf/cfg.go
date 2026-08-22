@@ -2,18 +2,41 @@ package rf
 
 // CiscoIOSXEWirelessRFCfg represents RF configuration data response structure.
 type CiscoIOSXEWirelessRFCfg struct {
-	CiscoIOSXEWirelessRFCfgData struct {
-		MultiBssidProfiles      MultiBssidProfiles      `json:"multi-bssid-profiles"`       // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.6a)
-		AtfPolicies             AtfPolicies             `json:"atf-policies"`               // Air Time Fairness policy configurations (Live: IOS-XE 17.12.6a)
-		RFTags                  RFTags                  `json:"rf-tags"`                    // RF tag configuration data (Live: IOS-XE 17.12.6a)
-		RFProfiles              RFProfiles              `json:"rf-profiles"`                // RF profile configuration data (Live: IOS-XE 17.12.6a)
-		RFProfileDefaultEntries RFProfileDefaultEntries `json:"rf-profile-default-entries"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
-	} `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"` // RF configuration data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessRFCfgData *CiscoIOSXEWirelessRFCfgData `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data"` // RF configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessRFCfgData represents RF configuration data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessRFCfgData struct {
+	MultiBssidProfiles      *MultiBssidProfiles      `json:"multi-bssid-profiles,omitempty"`       // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.6a)
+	AtfPolicies             *AtfPolicies             `json:"atf-policies,omitempty"`               // Air Time Fairness policy configurations (Live: IOS-XE 17.12.6a)
+	RFTags                  *RFTags                  `json:"rf-tags,omitempty"`                    // RF tag configuration data (Live: IOS-XE 17.12.6a)
+	RFProfiles              *RFProfiles              `json:"rf-profiles,omitempty"`                // RF profile configuration data (Live: IOS-XE 17.12.6a)
+	RFProfileDefaultEntries *RFProfileDefaultEntries `json:"rf-profile-default-entries,omitempty"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
 }
 
 // CiscoIOSXEWirelessRFCfgRFTags represents RF tags list response structure.
 type CiscoIOSXEWirelessRFCfgRFTags struct {
-	RFTags RFTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
+	RFTags *RFTags `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-tags"`
+}
+
+// CiscoIOSXEWirelessRFCfgRFProfiles represents RF profiles list response structure.
+type CiscoIOSXEWirelessRFCfgRFProfiles struct {
+	RFProfiles *RFProfiles `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-profiles"` // RF profile configuration data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessRFCfgMultiBssidProfiles represents Multi-BSSID profiles list response structure.
+type CiscoIOSXEWirelessRFCfgMultiBssidProfiles struct {
+	MultiBssidProfiles *MultiBssidProfiles `json:"Cisco-IOS-XE-wireless-rf-cfg:multi-bssid-profiles"` // 802.11ax Multi BSSID profile configuration (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessRFCfgAtfPolicies represents ATF policies list response structure.
+type CiscoIOSXEWirelessRFCfgAtfPolicies struct {
+	AtfPolicies *AtfPolicies `json:"Cisco-IOS-XE-wireless-rf-cfg:atf-policies"` // Air Time Fairness policy configurations (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessRFCfgRFProfileDefaultEntries represents RF profile default entries list response structure.
+type CiscoIOSXEWirelessRFCfgRFProfileDefaultEntries struct {
+	RFProfileDefaultEntries *RFProfileDefaultEntries `json:"Cisco-IOS-XE-wireless-rf-cfg:rf-profile-default-entries"` // Default RF profile entries (YANG: IOS-XE 17.12.1)
 }
 
 // MultiBssidProfiles represents Multi-BSSID profiles collection.

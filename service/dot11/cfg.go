@@ -9,14 +9,7 @@ type Dot11CfgData struct {
 
 // CiscoIOSXEWirelessDot11Cfg represents the 802.11 configuration data container.
 type CiscoIOSXEWirelessDot11Cfg struct {
-	CiscoIOSXEWirelessDot11CfgData Dot11CfgData `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"` // 802.11 configuration data (Live: IOS-XE 17.12.6a)
-}
-
-// CiscoIOSXEWirelessDot11CfgFilter represents filtered 802.11 configuration data container.
-type CiscoIOSXEWirelessDot11CfgFilter struct {
-	ConfiguredCountry []Dot11ConfiguredCountry `json:"Cisco-IOS-XE-wireless-dot11-cfg:configured-country,omitempty"`
-	Dot11Entry        []Dot11Entry             `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-entry,omitempty"`
-	Dot11acMcsEntry   []Dot11acMcsEntry        `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11ac-mcs-entry,omitempty"`
+	CiscoIOSXEWirelessDot11CfgData *Dot11CfgData `json:"Cisco-IOS-XE-wireless-dot11-cfg:dot11-cfg-data"` // 802.11 configuration data (Live: IOS-XE 17.12.6a)
 }
 
 // CiscoIOSXEWirelessDot11CfgConfiguredCountries represents the configured countries wrapper.

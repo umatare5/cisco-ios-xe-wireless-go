@@ -2,10 +2,13 @@ package afc
 
 // CiscoIOSXEWirelessAFCOper represents AFC operational data container.
 type CiscoIOSXEWirelessAFCOper struct {
-	CiscoIOSXEWirelessAFCOperData struct {
-		EwlcAFCApResp []EwlcAFCApResp `json:"ewlc-afc-ap-resp"`          // AFC response list (Live: IOS-XE 17.12.6a)
-		EwlcAFCApReq  []EwlcAFCApReq  `json:"ewlc-afc-ap-req,omitempty"` // AFC request list (YANG: IOS-XE 17.18.1)
-	} `json:"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"` // AFC operational data (Live: IOS-XE 17.12.6a)
+	CiscoIOSXEWirelessAFCOperData *CiscoIOSXEWirelessAFCOperData `json:"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data"` // AFC operational data (Live: IOS-XE 17.12.6a)
+}
+
+// CiscoIOSXEWirelessAFCOperData represents AFC operational data (Live: IOS-XE 17.12.6a).
+type CiscoIOSXEWirelessAFCOperData struct {
+	EwlcAFCApResp []EwlcAFCApResp `json:"ewlc-afc-ap-resp"`          // AFC response list (Live: IOS-XE 17.12.6a)
+	EwlcAFCApReq  []EwlcAFCApReq  `json:"ewlc-afc-ap-req,omitempty"` // AFC request list (YANG: IOS-XE 17.13.1)
 }
 
 // CiscoIOSXEWirelessAFCOperEwlcAFCApResp represents AFC AP response data container.
@@ -20,87 +23,87 @@ type CiscoIOSXEWirelessAFCOperEwlcAFCApReq struct {
 
 // EwlcAFCApReq represents AFC request information from access point.
 type EwlcAFCApReq struct {
-	ApMAC           string          `json:"ap-mac"`                      // Access point MAC address (YANG: IOS-XE 17.18.1)
-	ReqData         *AFCRequestData `json:"req-data,omitempty"`          // AFC request data structure (YANG: IOS-XE 17.18.1)
-	RequestStatus   string          `json:"request-status,omitempty"`    // AFC request status (YANG: IOS-XE 17.18.1)
-	RequestStatusTS string          `json:"request-status-ts,omitempty"` // Request status timestamp (YANG: IOS-XE 17.18.1)
-	ReqIDSent       *uint64         `json:"req-id-sent,omitempty"`       // Sent request ID (YANG: IOS-XE 17.18.1)
+	ApMAC           string          `json:"ap-mac"`                      // Access point MAC address (YANG: IOS-XE 17.13.1)
+	ReqData         *AFCRequestData `json:"req-data,omitempty"`          // AFC request data structure (YANG: IOS-XE 17.13.1)
+	RequestStatus   string          `json:"request-status,omitempty"`    // AFC request status (YANG: IOS-XE 17.13.1)
+	RequestStatusTS string          `json:"request-status-ts,omitempty"` // Request status timestamp (YANG: IOS-XE 17.13.1)
+	ReqIDSent       *string         `json:"req-id-sent,omitempty"`       // Sent request ID (YANG: IOS-XE 17.13.1)
 }
 
 // AFCRequestData represents AFC request data structure.
 type AFCRequestData struct {
-	Device          *AFCDeviceDescriptor `json:"device,omitempty"`            // AFC device descriptor (YANG: IOS-XE 17.18.1)
-	Location        *AFCLocation         `json:"location,omitempty"`          // AFC device location information (YANG: IOS-XE 17.18.1)
-	Band20          *AFCBandRequest      `json:"band20,omitempty"`            // 20MHz band request (YANG: IOS-XE 17.18.1)
-	Band40          *AFCBandRequest      `json:"band40,omitempty"`            // 40MHz band request (YANG: IOS-XE 17.18.1)
-	Band80          *AFCBandRequest      `json:"band80,omitempty"`            // 80MHz band request (YANG: IOS-XE 17.18.1)
-	Band160         *AFCBandRequest      `json:"band160,omitempty"`           // 160MHz band request (YANG: IOS-XE 17.18.1)
-	Band80Plus      *AFCBandRequest      `json:"band80plus,omitempty"`        // 80+ MHz band request (YANG: IOS-XE 17.18.1)
-	MinDesiredPower *float64             `json:"min-desired-power,omitempty"` // Minimum desired power level (YANG: IOS-XE 17.18.1)
+	Device          *AFCDeviceDescriptor `json:"device,omitempty"`            // AFC device descriptor (YANG: IOS-XE 17.13.1)
+	Location        *AFCLocation         `json:"location,omitempty"`          // AFC device location information (YANG: IOS-XE 17.13.1)
+	Band20          *AFCBandRequest      `json:"band20,omitempty"`            // 20MHz band request (YANG: IOS-XE 17.13.1)
+	Band40          *AFCBandRequest      `json:"band40,omitempty"`            // 40MHz band request (YANG: IOS-XE 17.13.1)
+	Band80          *AFCBandRequest      `json:"band80,omitempty"`            // 80MHz band request (YANG: IOS-XE 17.13.1)
+	Band160         *AFCBandRequest      `json:"band160,omitempty"`           // 160MHz band request (YANG: IOS-XE 17.13.1)
+	Band80Plus      *AFCBandRequest      `json:"band80plus,omitempty"`        // 80+ MHz band request (YANG: IOS-XE 17.13.1)
+	MinDesiredPower *string              `json:"min-desired-power,omitempty"` // Minimum desired power level (YANG: IOS-XE 17.13.1)
 
-	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
+	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.15.1)
 	Band320 *AFCBandRequest `json:"band320"` // 320MHz band request (Live: IOS-XE 17.15.4b)
 }
 
 // AFCDeviceDescriptor represents AFC device descriptor information.
 type AFCDeviceDescriptor struct {
-	SerialNumber string      `json:"serial-number,omitempty"` // Device serial number (YANG: IOS-XE 17.18.1)
-	CertID       []AFCCertID `json:"cert-id,omitempty"`       // Certification ID list (YANG: IOS-XE 17.18.1)
+	SerialNumber string      `json:"serial-number,omitempty"` // Device serial number (YANG: IOS-XE 17.13.1)
+	CertID       []AFCCertID `json:"cert-id,omitempty"`       // Certification ID list (YANG: IOS-XE 17.13.1)
 }
 
 // AFCCertID represents AFC certification identifier.
 type AFCCertID struct {
-	ID        string `json:"id,omitempty"`         // Certification ID (YANG: IOS-XE 17.18.1)
-	RulesetID string `json:"ruleset-id,omitempty"` // Ruleset identifier (YANG: IOS-XE 17.18.1)
+	ID        string `json:"id,omitempty"`         // Certification ID (YANG: IOS-XE 17.13.1)
+	RulesetID string `json:"ruleset-id,omitempty"` // Ruleset identifier (YANG: IOS-XE 17.13.1)
 }
 
 // AFCLocation represents AFC device location information.
 type AFCLocation struct {
-	LocType           string            `json:"loc-type,omitempty"`            // Location type (YANG: IOS-XE 17.18.1)
-	Ellipse           *AFCEllipse       `json:"ellipse,omitempty"`             // Ellipse location data (YANG: IOS-XE 17.18.1)
-	LinearPol         *AFCLinearPolygon `json:"linear-pol,omitempty"`          // Linear polygon location data (YANG: IOS-XE 17.18.1)
-	Elevation         *AFCElevation     `json:"elevation,omitempty"`           // Device elevation data (YANG: IOS-XE 17.18.1)
-	Deployment        string            `json:"deployment,omitempty"`          // Deployment type (YANG: IOS-XE 17.18.1)
-	AreaOfUncertainty *uint32           `json:"area-of-uncertainty,omitempty"` // Area of uncertainty in meters (YANG: IOS-XE 17.18.1)
+	LocType           string            `json:"loc-type,omitempty"`            // Location type (YANG: IOS-XE 17.13.1)
+	Ellipse           *AFCEllipse       `json:"ellipse,omitempty"`             // Ellipse location data (YANG: IOS-XE 17.13.1)
+	LinearPol         *AFCLinearPolygon `json:"linear-pol,omitempty"`          // Linear polygon location data (YANG: IOS-XE 17.13.1)
+	Elevation         *AFCElevation     `json:"elevation,omitempty"`           // Device elevation data (YANG: IOS-XE 17.13.1)
+	Deployment        string            `json:"deployment,omitempty"`          // Deployment type (YANG: IOS-XE 17.13.1)
+	AreaOfUncertainty *uint32           `json:"area-of-uncertainty,omitempty"` // Area of uncertainty in square meters (YANG: IOS-XE 17.13.1)
 }
 
 // AFCEllipse represents device ellipse location coordinates.
 type AFCEllipse struct {
-	Center      *AFCPoint `json:"center,omitempty"`      // Ellipse center point (YANG: IOS-XE 17.18.1)
-	MajorAxis   *uint16   `json:"major-axis,omitempty"`  // Major axis length (YANG: IOS-XE 17.18.1)
-	MinorAxis   *uint16   `json:"minor-axis,omitempty"`  // Minor axis length (YANG: IOS-XE 17.18.1)
-	Orientation *float64  `json:"orientation,omitempty"` // Ellipse orientation angle (YANG: IOS-XE 17.18.1)
+	Center      *AFCPoint `json:"center,omitempty"`      // Ellipse center point (YANG: IOS-XE 17.13.1)
+	MajorAxis   *uint16   `json:"major-axis,omitempty"`  // Major axis length (YANG: IOS-XE 17.13.1)
+	MinorAxis   *uint16   `json:"minor-axis,omitempty"`  // Minor axis length (YANG: IOS-XE 17.13.1)
+	Orientation *string   `json:"orientation,omitempty"` // Ellipse orientation angle (YANG: IOS-XE 17.13.1)
 }
 
 // AFCLinearPolygon represents device linear polygon location.
 type AFCLinearPolygon struct {
-	Points []AFCPoint `json:"points,omitempty"` // Polygon boundary points (YANG: IOS-XE 17.18.1)
+	Points []AFCPoint `json:"points,omitempty"` // Polygon boundary points (YANG: IOS-XE 17.13.1)
 }
 
 // AFCPoint represents AFC geographic point coordinates.
 type AFCPoint struct {
-	Longitude *float64 `json:"longitude,omitempty"` // Longitude coordinate (YANG: IOS-XE 17.18.1)
-	Latitude  *float64 `json:"latitude,omitempty"`  // Latitude coordinate (YANG: IOS-XE 17.18.1)
+	Longitude *string `json:"longitude,omitempty"` // Longitude coordinate (YANG: IOS-XE 17.13.1)
+	Latitude  *string `json:"latitude,omitempty"`  // Latitude coordinate (YANG: IOS-XE 17.13.1)
 }
 
 // AFCElevation represents device elevation information.
 type AFCElevation struct {
-	Height      *int16  `json:"height,omitempty"`      // Height in meters (YANG: IOS-XE 17.18.1)
-	HeightType  string  `json:"height-type,omitempty"` // Height measurement type (YANG: IOS-XE 17.18.1)
-	Uncertainty *uint16 `json:"uncertainty,omitempty"` // Height uncertainty in meters (YANG: IOS-XE 17.18.1)
+	Height      *int16  `json:"height,omitempty"`      // Height in meters (YANG: IOS-XE 17.13.1)
+	HeightType  string  `json:"height-type,omitempty"` // Height measurement type (YANG: IOS-XE 17.13.1)
+	Uncertainty *uint16 `json:"uncertainty,omitempty"` // Height uncertainty in meters (YANG: IOS-XE 17.13.1)
 }
 
 // AFCBandRequest represents AFC frequency band request parameters.
 type AFCBandRequest struct {
-	GlobalOperClass *uint16  `json:"global-oper-class,omitempty"` // Global operating class (YANG: IOS-XE 17.18.1)
-	ChannelCFI      []uint16 `json:"channel-cfi,omitempty"`       // Channel center frequency indices (YANG: IOS-XE 17.18.1)
-	Enabled         *bool    `json:"enabled,omitempty"`           // Band request enabled status (YANG: IOS-XE 17.18.1)
+	GlobalOperClass *uint16  `json:"global-oper-class,omitempty"` // Global operating class (YANG: IOS-XE 17.13.1)
+	ChannelCFI      []uint16 `json:"channel-cfi,omitempty"`       // Channel center frequency indices (YANG: IOS-XE 17.13.1)
+	Enabled         *bool    `json:"enabled,omitempty"`           // Band request enabled status (YANG: IOS-XE 17.13.1)
 }
 
 // AFCChannelResponse represents AFC channel response information.
 type AFCChannelResponse struct {
-	AvailChannelCFI *uint16  `json:"avail-channel-cfi,omitempty"` // Available channel center frequency index (YANG: IOS-XE 17.18.1)
-	MaxEIRP         *float64 `json:"max-eirp,omitempty"`          // Maximum effective isotropic radiated power (YANG: IOS-XE 17.18.1)
+	AvailChannelCFI *uint16 `json:"avail-channel-cfi,omitempty"` // Available channel center frequency index (YANG: IOS-XE 17.13.1)
+	MaxEIRP         *string `json:"max-eirp,omitempty"`          // Maximum effective isotropic radiated power (YANG: IOS-XE 17.13.1)
 }
 
 // EwlcAFCApResp represents AFC response from access point.

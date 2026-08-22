@@ -3,17 +3,28 @@ package testutil
 import (
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"strings"
+	"sync"
 	"testing"
 )
 
 // HandlerMap represents the handler mapping structure for mock servers.
 type HandlerMap[T any] = map[string]map[string]T
 
+// RecordedRequest is one request a RESTCONFServer answered.
+type RecordedRequest struct {
+	Method   string
+	Path     string
+	RawQuery string
+}
+
 // RESTCONFServer provides a flexible mock RESTCONF server for testing.
 type RESTCONFServer struct {
 	*httptest.Server
 	handlers HandlerMap[func() (int, string)] // method -> path -> handler
+	mu       sync.Mutex
+	requests []RecordedRequest
 }
 
 // NewRESTCONFSuccessServer creates an HTTPS test server that returns 200 OK with the provided
@@ -72,15 +83,6 @@ func NewRESTCONFServer(t *testing.T) *RESTCONFServer {
 		return path
 	}
 
-	findHandler := func(path string, methodHandlers map[string]func() (int, string)) func() (int, string) {
-		for pathPrefix, handler := range methodHandlers {
-			if strings.Contains(path, pathPrefix) {
-				return handler
-			}
-		}
-		return nil
-	}
-
 	writeResponse := func(w http.ResponseWriter, status int, body string) {
 		w.WriteHeader(status)
 		if body != "" {
@@ -89,14 +91,9 @@ func NewRESTCONFServer(t *testing.T) *RESTCONFServer {
 	}
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		path := normalizePath(r.URL.Path)
-		methodHandlers, ok := server.handlers[r.Method]
-		if !ok {
-			http.NotFound(w, r)
-			return
-		}
+		server.record(r)
 
-		if handler := findHandler(path, methodHandlers); handler != nil {
+		if handler := server.handlerFor(r.Method, normalizePath(r.URL.Path)); handler != nil {
 			status, body := handler()
 			writeResponse(w, status, body)
 			return
@@ -110,7 +107,14 @@ func NewRESTCONFServer(t *testing.T) *RESTCONFServer {
 }
 
 // AddHandler adds a handler for a specific HTTP method and path pattern.
+//
+// The handler map is written under the same lock the request log uses, so a server may be
+// given handlers while it is answering: guarding only one of the two would leave the type
+// looking concurrency-safe while a race remained.
 func (s *RESTCONFServer) AddHandler(method, pathPrefix string, handler func() (int, string)) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	if s.handlers == nil {
 		s.handlers = make(HandlerMap[func() (int, string)])
 	}
@@ -118,4 +122,53 @@ func (s *RESTCONFServer) AddHandler(method, pathPrefix string, handler func() (i
 		s.handlers[method] = make(map[string]func() (int, string))
 	}
 	s.handlers[method][pathPrefix] = handler
+}
+
+// handlerFor resolves a request to its handler, holding the lock across the lookup and
+// releasing it before the handler runs so a handler may call back into the server.
+func (s *RESTCONFServer) handlerFor(method, path string) func() (int, string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	methodHandlers, ok := s.handlers[method]
+	if !ok {
+		return nil
+	}
+	return findHandler(path, methodHandlers)
+}
+
+// findHandler returns the handler whose registered prefix matches path most closely.
+//
+// The longest match wins because map iteration order is unspecified: with both a parent
+// and a child path registered, a first-match loop serves a different body per run.
+func findHandler(path string, methodHandlers map[string]func() (int, string)) func() (int, string) {
+	var best string
+	var found func() (int, string)
+
+	for pathPrefix, handler := range methodHandlers {
+		if strings.Contains(path, pathPrefix) && len(pathPrefix) > len(best) {
+			best, found = pathPrefix, handler
+		}
+	}
+
+	return found
+}
+
+// record keeps a request for a later assertion. The query is recorded although the
+// handler lookup ignores it, which is what makes a GetOption observable.
+func (s *RESTCONFServer) record(r *http.Request) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.requests = append(s.requests, RecordedRequest{
+		Method:   r.Method,
+		Path:     r.URL.Path,
+		RawQuery: r.URL.RawQuery,
+	})
+}
+
+// Requests returns the requests the server answered, oldest first.
+func (s *RESTCONFServer) Requests() []RecordedRequest {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return slices.Clone(s.requests)
 }

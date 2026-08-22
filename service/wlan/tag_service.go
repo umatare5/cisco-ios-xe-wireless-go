@@ -23,33 +23,39 @@ func NewPolicyTagService(c *core.Client) *PolicyTagService {
 }
 
 // GetPolicyTag retrieves a specific policy tag configuration.
-func (s *PolicyTagService) GetPolicyTag(ctx context.Context, tagName string) (*PolicyListEntry, error) {
+func (s *PolicyTagService) GetPolicyTag(
+	ctx context.Context,
+	tagName string,
+	opts ...core.GetOption,
+) (*PolicyListEntry, error) {
 	if err := s.validateTagName(tagName); err != nil {
 		return nil, err
 	}
 
-	// Get all policy tags and find the specific one
-	allTags, err := s.ListPolicyTags(ctx)
+	// Read the keyed URL rather than filtering the whole container client-side. Filtering would
+	// make a GetOption that prunes tag-name, or one that cuts the list depth, report an existing
+	// tag as absent with a nil error.
+	result, err := core.Get[CiscoIOSXEWirelessWlanCfgPolicyListEntry](
+		ctx, s.Client(), s.buildTagURL(tagName), opts...,
+	)
 	if err != nil {
 		return nil, err
 	}
-
-	// Find the tag with the matching name
-	for _, tag := range allTags {
-		if tag.TagName == tagName {
-			return &tag, nil
-		}
+	if result == nil || len(result.PolicyListEntry) == 0 {
+		return nil, nil
 	}
 
-	// Tag not found
-	return nil, nil
+	return &result.PolicyListEntry[0], nil
 }
 
 // ListPolicyTags retrieves all policy tag configurations.
-func (s *PolicyTagService) ListPolicyTags(ctx context.Context) ([]PolicyListEntry, error) {
+func (s *PolicyTagService) ListPolicyTags(
+	ctx context.Context,
+	opts ...core.GetOption,
+) ([]PolicyListEntry, error) {
 	wlanService := NewService(s.Client())
 
-	result, err := wlanService.ListCfgPolicyListEntries(ctx)
+	result, err := wlanService.ListCfgPolicyListEntries(ctx, opts...)
 	if err != nil {
 		return nil, err
 	}

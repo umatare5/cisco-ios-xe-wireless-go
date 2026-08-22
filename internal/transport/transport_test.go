@@ -2,6 +2,7 @@ package transport
 
 import (
 	"testing"
+	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
 )
@@ -60,7 +61,7 @@ func TestTransportUnit_NewTransport_Success(t *testing.T) {
 
 func TestTransportUnit_DefaultHeaders_Success(t *testing.T) {
 	token := "test-token-123"
-	headers := DefaultHeaders(token)
+	headers := DefaultHeaders(token, "")
 
 	testutil.AssertNotNil(t, headers, "DefaultHeaders result")
 
@@ -79,7 +80,7 @@ func TestTransportUnit_DefaultHeaders_Success(t *testing.T) {
 }
 
 func TestTransportUnit_DefaultHeadersWithEmptyToken_Success(t *testing.T) {
-	headers := DefaultHeaders("")
+	headers := DefaultHeaders("", "")
 
 	auth := headers.Get(HTTPHeaderKeyAuthorization)
 	expectedAuth := HTTPHeaderValueBasicPrefix + ""
@@ -108,4 +109,49 @@ func TestTransportUnit_NewTransportDetailsConfiguration_Success(t *testing.T) {
 		DefaultMaxIdleConnsPerHost,
 		"MaxIdleConnsPerHost",
 	)
+}
+
+func TestTransportUnit_DefaultHeadersUserAgent_Success(t *testing.T) {
+	testutil.AssertStringEquals(t, HTTPHeaderUserAgent, "cisco-ios-xe-wireless-go",
+		"the default User-Agent names the module")
+
+	headers := DefaultHeaders("test-token-123", "cisco-wnc-exporter/1.2.3")
+	testutil.AssertStringEquals(t, headers.Get(HTTPHeaderKeyUserAgent),
+		"cisco-wnc-exporter/1.2.3", "custom User-Agent header")
+
+	fallback := DefaultHeaders("test-token-123", "")
+	testutil.AssertStringEquals(t, fallback.Get(HTTPHeaderKeyUserAgent),
+		HTTPHeaderUserAgent, "User-Agent falls back to the constant")
+}
+
+func TestTransportUnit_NewTransportDialContext_Success(t *testing.T) {
+	tr := NewTransport(false)
+	testutil.AssertTrue(t, tr.DialContext != nil, "DialContext")
+	testutil.AssertDurationEquals(t, DefaultDialTimeout, 30*time.Second, "DefaultDialTimeout")
+	testutil.AssertDurationEquals(t, DefaultDialKeepAlive, 30*time.Second, "DefaultDialKeepAlive")
+}
+
+// TestTransportUnit_ConstantValues_Success pins the value behind every transport default, not the
+// name. The assertions elsewhere in this file compare a built transport's field against the same
+// constant that set it, so they hold whatever the constant becomes: changing QuickTimeout from 5 s
+// to 500 s leaves them all green. These fail instead.
+func TestTransportUnit_ConstantValues_Success(t *testing.T) {
+	testutil.AssertDurationEquals(t, QuickTimeout, 5*time.Second, "QuickTimeout")
+	testutil.AssertDurationEquals(t, StandardTimeout, 30*time.Second, "StandardTimeout")
+	testutil.AssertDurationEquals(t, ExtendedTimeout, 90*time.Second, "ExtendedTimeout")
+
+	testutil.AssertDurationEquals(t, DefaultTLSHandshakeTimeout, 5*time.Second,
+		"DefaultTLSHandshakeTimeout")
+	testutil.AssertDurationEquals(t, DefaultResponseHeaderTimeout, 5*time.Second,
+		"DefaultResponseHeaderTimeout")
+	testutil.AssertDurationEquals(t, DefaultIdleConnTimeout, 90*time.Second,
+		"DefaultIdleConnTimeout")
+
+	testutil.AssertIntEquals(t, DefaultMaxIdleConns, 100, "DefaultMaxIdleConns")
+	testutil.AssertIntEquals(t, DefaultMaxIdleConnsPerHost, 10, "DefaultMaxIdleConnsPerHost")
+
+	testutil.AssertStringEquals(t, HTTPHeaderValueYANGData, "application/yang-data+json",
+		"HTTPHeaderValueYANGData")
+	testutil.AssertStringEquals(t, HTTPHeaderValueBasicPrefix, "Basic ",
+		"HTTPHeaderValueBasicPrefix")
 }
