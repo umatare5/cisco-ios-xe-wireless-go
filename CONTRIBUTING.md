@@ -166,7 +166,9 @@ Adding a variadic parameter is source-breaking for consumer-defined interfaces a
 
 Mark every breaking change with a Conventional Commits `!`. The release notes group those commits under **Breaking Changes**.
 
-Before `v1.0.0` this SDK ships no deprecation window. An accessor is removed in the release that repairs the resource it reads — whether it never decoded the node it names, or it merely duplicates the accessor that does — and the release notes name every removed symbol.
+Before `v1.0.0` this SDK ships no deprecation window for an accessor. An accessor is removed in the release that repairs the resource it reads — whether it never decoded the node it names, or it merely duplicates the accessor that does — and the release notes name every removed symbol.
+
+An escape hatch is the exception, because a consumer may have no replacement to move to. One is marked `Deprecated:` naming its removal release, and that release is a ceiling: removing it earlier breaks a promise a published tag already made.
 
 ### Toolchain Requirement
 
@@ -227,7 +229,7 @@ A new service must satisfy the six conventions below. The 45 accessors this rele
 - Name the envelope `CiscoIOSXEWireless<Module><Node>`, give it exactly one field, and tag that field with the module-qualified node the route ends in. See [service/ap/global_oper.go](./service/ap/global_oper.go#L22-L24) and [service/wlan/cfg.go](./service/wlan/cfg.go#L18-L20).
 - **Qualify only that outermost tag.** A same-module child takes the bare node name; a module prefix below the top level never matches, so the field stays at its zero value while its siblings decode.
 - Annotate each leaf comment `(Live: IOS-XE <version>)` when the leaf was seen in a controller response, and `(YANG: IOS-XE <version>)` otherwise. A YANG model is a design document, not the implementation.
-- These rules are enforced by [tests/contract](./tests/contract); a violation fails `make test-unit`.
+- The envelope rules above are enforced by [tests/contract](./tests/contract); a violation fails `make test-unit`. The annotation rule is not gated — it is reviewed.
 
 #### 5. Leaf typing
 
