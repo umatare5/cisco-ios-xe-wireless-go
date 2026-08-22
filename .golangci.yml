@@ -178,6 +178,13 @@ linters:
           - staticcheck
           - ineffassign
           - unused
+      # Every service method reads through the deprecated promoted accessor, so the marker that
+      # tells a consumer where to go instead reports 320 findings against this module's own use of
+      # it. Scoped to the one identifier so a future deprecation is still reported here.
+      - path: ^service/
+        text: '\.Client is deprecated'
+        linters:
+          - staticcheck
 
 ########################
 # 6. Code formatters

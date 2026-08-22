@@ -72,8 +72,7 @@ func start() int {
 	}))
 
 	logger.Info("starting client listing tool",
-		slog.String("operation", "list_clients"),
-		slog.String("version", "v1.0.0"))
+		slog.String("operation", "list_clients"))
 
 	controller := os.Getenv("WNC_CONTROLLER")
 	if controller == "" {

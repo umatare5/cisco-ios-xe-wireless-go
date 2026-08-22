@@ -20,19 +20,13 @@ const payloadSuffix = "Payload"
 // TestEveryLevelZeroNodeIsNilable holds every response wrapper this tree declares to the one shape
 // that can tell an empty node from an absent one.
 //
-// It is TestEveryEnvelopeFieldCanBeAbsent with one word changed: that gate iterates
-// decodeTypes(pkg), the types a core.Get call site names, and this one iterates every struct type
-// declared under service/. The difference is not cosmetic. A wrapper type no accessor targets is
-// invisible to the decode-type walker, and this tree carries six of them — three in
-// service/ap/cfg.go, two in service/ap/global_oper.go and one in service/mesh/global_oper.go —
-// every one of which held its node as a value while every route-reachable gate passed.
+// It walks every struct type declared under service/, not only the types a core.Get call site
+// names. A wrapper no accessor targets is invisible to a walk that starts from the call sites, and
+// such a wrapper can hold its node as a value while every route-reachable gate passes.
 //
-// The base type is not examined because it does not need to be. Every module-qualified field but
-// one has a struct base, named or anonymous; the exception is
-// controller.CiscoIOSXEDeviceHardwareOperBootTime, whose route reads a single leaf and whose base
-// is therefore the qualified type time.Time. That wrapper is the level-0 leaf shape this comment
-// once predicted, and the rule caught it: holding the instant as a value failed here, because a
-// read answered with no body would have decoded to the year 1 rather than to an absent reading.
+// The base type is not examined. A module-qualified field holds either a struct or, where the route
+// reads a single leaf, a qualified scalar; both fail the same way when held as a value, because a
+// read answered with no body decodes to the zero value rather than to an absent reading.
 func TestEveryLevelZeroNodeIsNilable(t *testing.T) {
 	pkgs, _ := loadTree(t)
 
@@ -116,20 +110,15 @@ type shape struct {
 // that is nil-able in one decode path must be nil-able in every other decode path that shares its
 // Go type.
 //
-// The rule needs no list of routes, because the tree already answers that in its own shapes. A node
-// readable on its own route has a wrapper type whose sole member holds it, and that member is a
-// pointer. So within one package, once any field decoding a node into type T is a pointer, every
-// other field decoding the same node into the same T has the same absence contract to honor and
-// must be able to hold it.
+// The rule needs no list of routes. A node readable on its own route has a wrapper whose sole
+// member is a pointer, so within one package, once any field decodes that node into a pointer of
+// type T, every other field decoding the same node into T carries the same absence contract. The
+// predicate is symmetric and so covers both orders.
 //
-// It is symmetric, which is why one predicate covers both directions: a value nested in a parent
-// envelope beside a pointer wrapper, and a value wrapper beside a pointer parent.
-//
-// It deliberately does not condemn a node held as a value on every side. That is a sweep over the
-// whole tree rather than a contract, and this tree keeps value-held containers below the envelope on
-// purpose — absence_test.go says so in its own words. It also leaves scalar leaves to the absence
-// gates: a local name like "state" or "description" names a different leaf under each parent, so
-// comparing leaves by name would manufacture findings out of a coincidence of spelling.
+// Two exclusions. A node held as a value on every side is left alone, because value-held containers
+// below the envelope are intended here. Scalar leaves are left to the absence gates, because a local
+// name such as "state" names a different leaf under each parent and comparing by name would
+// manufacture findings out of a coincidence of spelling.
 func TestEveryNodeIsNilableWhereverItIsDecoded(t *testing.T) {
 	pkgs, _ := loadTree(t)
 

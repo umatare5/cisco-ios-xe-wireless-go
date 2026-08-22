@@ -101,8 +101,7 @@ func start() int {
 	}))
 
 	logger.Info("starting WLAN listing tool",
-		slog.String("operation", "list_wlans"),
-		slog.String("version", "v1.0.0"))
+		slog.String("operation", "list_wlans"))
 
 	controller := os.Getenv("WNC_CONTROLLER")
 	if controller == "" {

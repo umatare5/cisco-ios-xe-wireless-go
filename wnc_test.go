@@ -539,10 +539,10 @@ func TestClientUntyped_VerbMethods_ReachTheWire(t *testing.T) {
 	}
 }
 
-// TestClientUntyped_Request_SendsTheMethodAsGiven holds the general method to its contract: the
-// method reaches the wire unchanged, which is what makes an unforeseen verb reachable, and the
-// path chooses its RESTCONF root.
-func TestClientUntyped_Request_SendsTheMethodAsGiven(t *testing.T) {
+// TestClientUntyped_Request_RoutesByPath holds the general method to its contract: the path chooses
+// its RESTCONF root, the method reaches the wire unchanged on the data root, which is what makes an
+// unforeseen verb reachable, and the operations root takes POST alone.
+func TestClientUntyped_Request_RoutesByPath(t *testing.T) {
 	client, seen := newRecorder(t)
 	ctx := context.Background()
 
@@ -568,6 +568,20 @@ func TestClientUntyped_Request_SendsTheMethodAsGiven(t *testing.T) {
 
 		if got := last(t, seen); got.path != "/restconf/operations/Cisco-IOS-XE-x:rpc" {
 			t.Errorf("Path mismatch: got %s", got.path)
+		}
+	})
+
+	t.Run("another method on an operations path is refused, not replaced", func(t *testing.T) {
+		sent := len(*seen)
+
+		if _, err := client.Request(ctx, http.MethodPut, "/restconf/operations/Cisco-IOS-XE-x:rpc", nil); err == nil {
+			t.Fatal("Expected an error for PUT on an operations path, got nil")
+		}
+
+		// doRPC would have sent POST whatever the caller wrote, so a request that reached the wire
+		// at all would have invoked the operation rather than replaced a node.
+		if len(*seen) != sent {
+			t.Errorf("Expected no request to reach the wire, got %s", last(t, seen).method)
 		}
 	})
 
