@@ -115,12 +115,14 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			]
 		}`,
 
+		// A list, as the controller answers it. The parent-route fixture above already sends an
+		// array for the same node; this one sent an object until the shapes were reconciled.
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-client-stats": `{
-			"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats": {
+			"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-stats": [{
 				"mm-mblty-stats": {"mm-mblty-tx-pkts": 100, "mm-mblty-rx-pkts": 200},
 				"ipc-stats": [],
 				"dgram-stats": []
-			}
+			}]
 		}`,
 
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-global-dtls-stats": `{
@@ -269,6 +271,11 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}
 		if result == nil {
 			t.Fatal("ListClientStats returned nil result")
+		}
+		// Counting the records is what holds the node to a list. A nil check alone passes on a
+		// decode type that cannot hold more than one, which is the defect this replaced.
+		if got := len(result.MobilityClientStats); got != 1 {
+			t.Errorf("ListClientStats decoded %d records, want 1", got)
 		}
 	})
 
