@@ -1,4 +1,3 @@
-// Package wlan provides WLAN domain services for Cisco IOS-XE Wireless Network Controller API.
 package wlan
 
 import (

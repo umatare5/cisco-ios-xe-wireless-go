@@ -1,4 +1,3 @@
-// Package transport provides HTTP client utilities and request creation functions.
 package transport
 
 import (

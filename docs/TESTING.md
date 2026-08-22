@@ -251,7 +251,7 @@ go test -cover ./...
 | Unreachable controller | Verify DNS/IP connectivity                                                               |
 | TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only                |
 | Auth failures          | Ensure token is Base64 of `user:pass`                                                    |
-| TestClient creation    | Use `testutil.NewTestClient(mockServer)` to create test clients for service construction |
+| TestClient creation    | Use `testutil.NewTestClient(mockServer)` in-module — from outside, use `wnc.NewClient`   |
 
 ### References
 

@@ -1,4 +1,3 @@
-// Package wnc provides a unified client for the Cisco Wireless Network Controller API.
 package wnc
 
 import (
@@ -57,6 +56,20 @@ var (
 
 // APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
 type APIError = core.APIError
+
+// RadioBand names the radio a band-scoped accessor acts on (re-export of internal
+// core.RadioBand), so a consumer can declare one in a variable, a struct field or a test double
+// rather than passing an untyped literal.
+type RadioBand = core.RadioBand
+
+const (
+	// RadioBand24GHz is the 2.4 GHz radio.
+	RadioBand24GHz = core.RadioBand24GHz
+	// RadioBand5GHz is the 5 GHz radio.
+	RadioBand5GHz = core.RadioBand5GHz
+	// RadioBand6GHz is the 6 GHz radio.
+	RadioBand6GHz = core.RadioBand6GHz
+)
 
 // Client represents the unified WNC API client with access to all domain services.
 // This provides a single-import approach to accessing all wireless controller functionality.
@@ -127,15 +140,6 @@ func WithFields(expression string) GetOption { return core.WithFields(expression
 // decodes to a zero value; bound the depth to what the caller reads.
 func WithDepth(levels int) GetOption { return core.WithDepth(levels) }
 
-// Core returns the underlying core.Client for advanced use cases.
-//
-// Deprecated: the returned type lives in an internal package, so no consumer can name
-// it in a signature or a test double. Use GetData for an untyped read and a service
-// accessor for everything else. Removed in v0.9.0.
-func (c *Client) Core() *core.Client {
-	return c.core
-}
-
 // GetData performs a GET on a RESTCONF data path and returns the body as received, for
 // a container this package has no typed accessor for. The path may be given with or
 // without the /restconf/data prefix, and GetOption values apply as they do to a typed
@@ -155,6 +159,62 @@ func (c *Client) Core() *core.Client {
 // early and reads a different node with no error to show for it.
 func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([]byte, error) {
 	return core.GetRaw(ctx, c.core, path, opts...)
+}
+
+// The untyped request methods below are this package's escape hatch. They exist because the
+// controller's schema moves between releases: a node or an operation this package has no typed
+// accessor for still has to be reachable without waiting for one. Each returns the body as the
+// controller sent it, and each reports an *APIError the way every typed accessor does.
+//
+// A payload is marshaled with encoding/json, as every typed write in this package marshals its
+// own, so an SDK config struct or a map may be passed directly. A []byte or a json.RawMessage is
+// the exception: it is sent as written, having been checked for well-formed JSON, which is how a
+// body read with GetData is edited and sent back. A nil payload sends no body and no Content-Type.
+//
+// A write is answered with the edited node, with an RPC-style output, or with nothing at all, so
+// an empty return with a nil error is a success.
+
+// PostData creates a node under a RESTCONF data path (RFC 8040 4.4).
+func (c *Client) PostData(ctx context.Context, path string, payload any) ([]byte, error) {
+	return core.EditRaw(ctx, c.core, http.MethodPost, path, payload)
+}
+
+// PutData replaces a node at a RESTCONF data path (RFC 8040 4.5). A PUT replaces the whole node,
+// so a leaf omitted from the payload is removed rather than left alone.
+func (c *Client) PutData(ctx context.Context, path string, payload any) ([]byte, error) {
+	return core.EditRaw(ctx, c.core, http.MethodPut, path, payload)
+}
+
+// PatchData merges a payload into a node at a RESTCONF data path (RFC 8040 4.6). A merge PATCH
+// omits an empty value, so a field cannot be cleared by sending its zero.
+func (c *Client) PatchData(ctx context.Context, path string, payload any) ([]byte, error) {
+	return core.EditRaw(ctx, c.core, http.MethodPatch, path, payload)
+}
+
+// DeleteData removes a node at a RESTCONF data path (RFC 8040 4.7). A path carrying no list key
+// deletes the whole list rather than one entry.
+func (c *Client) DeleteData(ctx context.Context, path string) ([]byte, error) {
+	return core.EditRaw(ctx, c.core, http.MethodDelete, path, nil)
+}
+
+// PostRPC invokes an operation on a RESTCONF operations path (RFC 8040 3.6 and 4.4.2), which is
+// the only method that tree accepts. The path is the RPC name, module-qualified as the controller
+// publishes it, with or without the /restconf/operations prefix, and the payload is normally an
+// object under a single "input" key.
+func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte, error) {
+	return core.CallRPCRaw(ctx, c.core, path, payload)
+}
+
+// Request performs a request with the given method on the path as the caller wrote it, for
+// whatever the verb methods above cannot express: a method RESTCONF gains later, a bodiless probe
+// such as HEAD, or a query parameter this package has no option for.
+//
+// The method is sent as given and is checked against neither the path nor the payload; the one
+// value rejected is the empty string, which net/http reads as GET. A path already under
+// /restconf/operations is sent to the operations root and anything else to the data root, which
+// passes a /restconf/data-prefixed path through and prefixes a bare one.
+func (c *Client) Request(ctx context.Context, method, path string, payload any) ([]byte, error) {
+	return core.RequestRaw(ctx, c.core, method, path, payload)
 }
 
 // Domain service accessors - each returns a service instance for the respective domain

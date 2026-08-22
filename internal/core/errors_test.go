@@ -114,34 +114,6 @@ func TestAPIErrorEdgeCases(t *testing.T) {
 		"APIError with zero status code should return expected format")
 }
 
-// TestHTTPStatusConstants tests HTTP status code constants.
-func TestHTTPStatusConstants(t *testing.T) {
-	testCases := []struct {
-		name     string
-		constant int
-		expected int
-	}{
-		{"StatusOK", StatusOK, 200},
-		{"StatusBadRequest", StatusBadRequest, 400},
-		{"StatusUnauthorized", StatusUnauthorized, 401},
-		{"StatusForbidden", StatusForbidden, 403},
-		{"StatusNotFound", StatusNotFound, 404},
-		{"StatusMethodNotAllowed", StatusMethodNotAllowed, 405},
-		{"StatusConflict", StatusConflict, 409},
-		{"StatusUnprocessableEntity", StatusUnprocessableEntity, 422},
-		{"StatusInternalServerError", StatusInternalServerError, 500},
-		{"StatusBadGateway", StatusBadGateway, 502},
-		{"StatusServiceUnavailable", StatusServiceUnavailable, 503},
-		{"StatusGatewayTimeout", StatusGatewayTimeout, 504},
-	}
-
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
-			testutil.AssertIntEquals(t, tt.constant, tt.expected, "HTTP status constant should match expected value")
-		})
-	}
-}
-
 // TestIsNotFoundError tests the IsNotFoundError function.
 func TestIsNotFoundError(t *testing.T) {
 	testCases := []struct {

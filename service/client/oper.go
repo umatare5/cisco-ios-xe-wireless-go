@@ -1,5 +1,3 @@
-// Package client provides Cisco WNC client operational data models.
-// Contains complete client operational data structure definitions for RESTCONF API.
 package client
 
 import "time"

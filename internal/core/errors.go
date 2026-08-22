@@ -6,27 +6,6 @@ import (
 	"net/http"
 )
 
-// HTTP status code constants.
-const (
-	// Success status codes.
-	StatusOK = http.StatusOK
-
-	// Client error status codes.
-	StatusBadRequest          = http.StatusBadRequest
-	StatusUnauthorized        = http.StatusUnauthorized
-	StatusForbidden           = http.StatusForbidden
-	StatusNotFound            = http.StatusNotFound
-	StatusMethodNotAllowed    = http.StatusMethodNotAllowed
-	StatusConflict            = http.StatusConflict
-	StatusUnprocessableEntity = http.StatusUnprocessableEntity
-
-	// Server error status codes.
-	StatusInternalServerError = http.StatusInternalServerError
-	StatusBadGateway          = http.StatusBadGateway
-	StatusServiceUnavailable  = http.StatusServiceUnavailable
-	StatusGatewayTimeout      = http.StatusGatewayTimeout
-)
-
 // Custom error types for better error handling and debugging.
 var (
 	// ErrAuthenticationFailed indicates that authentication with the WNC failed due to invalid credentials.

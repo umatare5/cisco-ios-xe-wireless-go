@@ -9,6 +9,11 @@ import (
 )
 
 // TestClient represents a test client with core functionality hidden.
+//
+// It is a seam for this module's own tests. The concrete type behind Core is *core.Client, which
+// lives in an internal package, so only a test inside this module can assert it back and pass it
+// to a service constructor. A test outside the module builds a client with wnc.NewClient against
+// a MockServer's URL instead, and reaches an untyped node through the root client's GetData.
 type TestClient interface {
 	// Core returns the underlying core client for service initialization.
 	// The concrete type is *core.Client but returned as interface{} to hide internals.

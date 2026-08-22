@@ -125,14 +125,20 @@ func leafOf(fields []tagged, tag string) (tagged, bool) {
 	return tagged{}, false
 }
 
-// scalarKinds is the set of predeclared types a leaf decodes into. A pointer to one of these is
-// how this tree says "the controller may not have sent this"; anything else is a container or a
-// slice, whose nil-ness the envelope gate owns.
+// scalarKinds is the set of types a leaf decodes into. A pointer to one of these is how this tree
+// says "the controller may not have sent this"; anything else is a container or a slice, whose
+// nil-ness the envelope gate owns.
+//
+// time.Time is here with the predeclared types because the wire carries it as one value, an RFC
+// 3339 string, whatever Go spells it as. It is the only qualified type this tree binds to a leaf;
+// the other qualified type in field position is the embedded service.BaseService, which carries no
+// tag and is dropped before this map is consulted.
 var scalarKinds = map[string]bool{
 	"string": true, "bool": true,
 	"int": true, "int8": true, "int16": true, "int32": true, "int64": true,
 	"uint": true, "uint8": true, "uint16": true, "uint32": true, "uint64": true,
 	"float32": true, "float64": true,
+	"time.Time": true,
 }
 
 // TestEveryPointerLeafCanBeOmitted holds a property that needs no list to maintain: a leaf the
@@ -142,7 +148,8 @@ var scalarKinds = map[string]bool{
 //
 // It does not subsume TestEveryPublishedLeafCanBeAbsent. This gate says nothing about which
 // leaves must be pointers, so reverting a publish-path leaf to a value passes here and fails
-// there. Both were measured to hold before this release as well, at 268 leaves against 319 now.
+// there. Read the count this gate logs rather than a figure written here, which rots on every
+// release that pointerises a leaf.
 func TestEveryPointerLeafCanBeOmitted(t *testing.T) {
 	pkgs, _ := loadTree(t)
 

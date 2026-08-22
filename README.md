@@ -177,6 +177,25 @@ entries, err := client.WLAN().ListWlanCfgEntries(ctx, wnc.WithDefaults(wnc.Repor
 >
 > A pruned leaf is absent from the answer, and an absent leaf decodes to a zero value, so `WithFields` and `WithDepth` should name every node the caller reads: a pruned counter cannot be told from a counter reading zero.
 
+### Untyped Requests
+
+Every node this SDK types has an accessor. For one it does not — a container a later IOS-XE release adds, or an RPC with no typed wrapper — the root client carries untyped methods that share the client's credentials, TLS settings, timeouts and `*APIError` typing.
+
+| Method | RESTCONF resource | Notes |
+| ------------------------------------------------ | ---------------------- | ---------------------------------------------------- |
+| `GetData(ctx, path, opts...)` | `/restconf/data` | Read; takes the same `GetOption` values a typed read does |
+| `PostData` / `PutData` / `PatchData` / `DeleteData` | `/restconf/data` | Edit; the verb is fixed at the call site |
+| `PostRPC(ctx, path, payload)` | `/restconf/operations` | Invoke; POST is the only method that tree accepts |
+| `Request(ctx, method, path, payload)` | either | Anything the above cannot express, method sent as given |
+
+```go
+body, err := client.PatchData(ctx, "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries/wlan-cfg-entry=1,demo", payload)
+```
+
+> [!WARNING]
+>
+> These methods send what they are given. A `PUT` replaces the whole node, so a leaf omitted from the payload is removed; a merge `PATCH` omits an empty value, so a field cannot be cleared by sending its zero; and a `DELETE` on a path carrying no list key deletes the whole list. A payload is marshaled with `encoding/json`, except a `[]byte` or a `json.RawMessage`, which is checked for well-formed JSON and then sent as written — which is how a body read with `GetData` is edited and sent back.
+
 ### Supported Services
 
 Please refer to the Go Reference for the complete reference.

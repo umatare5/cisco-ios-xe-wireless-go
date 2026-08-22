@@ -4,7 +4,8 @@
 // It provides methods for SXP profile management and network segmentation configurations.
 //
 // RESTCONF Endpoints:
-// - Configuration: /restconf/data/Cisco-IOS-XE-wireless-cts-cfg:cts-cfg-data
+// - Configuration: /restconf/data/Cisco-IOS-XE-wireless-cts-sxp-cfg:cts-sxp-cfg-data
+// - Operational: /restconf/data/Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data
 //
 // YANG References:
 // - Cisco-IOS-XE-wireless-cts-sxp-cfg.yang (17.12.1, 17.15.1, 17.18.1)

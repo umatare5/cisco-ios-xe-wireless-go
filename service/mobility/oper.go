@@ -1,4 +1,3 @@
-// Package mobility provides data models for mobility operational data.
 package mobility
 
 // CiscoIOSXEWirelessMobilityOper represents the root mobility operational data container.
