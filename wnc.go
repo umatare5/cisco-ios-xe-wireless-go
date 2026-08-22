@@ -206,10 +206,13 @@ func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte,
 // whatever the verb methods above cannot express: a method RESTCONF gains later, a bodiless probe
 // such as HEAD, or a query parameter this package has no option for.
 //
-// The method is sent as given and is checked against neither the path nor the payload; the one
-// value rejected is the empty string, which net/http reads as GET. A path already under
-// /restconf/operations is sent to the operations root and anything else to the data root, which
-// passes a /restconf/data-prefixed path through and prefixes a bare one.
+// A path already under /restconf/operations is sent to the operations root and anything else to
+// the data root, which passes a /restconf/data-prefixed path through and prefixes a bare one.
+//
+// On the data root the method is sent as given and is checked against neither the path nor the
+// payload; the one value rejected is the empty string, which net/http reads as GET. The operations
+// root takes POST alone, and another method there is refused rather than replaced: this package
+// would send POST regardless, invoking the operation instead of doing what was asked.
 func (c *Client) Request(ctx context.Context, method, path string, payload any) ([]byte, error) {
 	return core.RequestRaw(ctx, c.core, method, path, payload)
 }
