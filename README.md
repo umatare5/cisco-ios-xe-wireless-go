@@ -144,17 +144,15 @@ To create a new client, use the `wnc.NewClient` function with the controller add
 
 There are several options to customize the client behavior.
 
-| Option                         | Type            | Default                    | Description                |
-| ------------------------------ | --------------- | -------------------------- | -------------------------- |
-| `WithTimeout(d)`               | `time.Duration` | `60s`                      | Sets HTTP request timeout. |
-| `WithResponseHeaderTimeout(d)` | `time.Duration` | `5s`                       | Bounds the header wait.    |
-| `WithTLSHandshakeTimeout(d)`   | `time.Duration` | `5s`                       | Bounds the TLS handshake.  |
-| `WithInsecureSkipVerify(b)`    | `bool`          | `false`                    | Skips TLS verify.          |
-| `WithProxy(fn)`                | `func`          | `nil`                      | Sets the proxy resolver.   |
-| `WithLogger(l)`                | `*slog.Logger`  | `slog.Default()`           | Sets structured logger.    |
-| `WithUserAgent(ua)`            | `string`        | `cisco-ios-xe-wireless-go` | Custom User-Agent.         |
-
-`WithProxy` takes a `func(*http.Request) (*url.URL, error)`.
+| Option                         | Type            | Default                    | Description          |
+| ------------------------------ | --------------- | -------------------------- | -------------------- |
+| `WithTimeout(d)`               | `time.Duration` | `60s`                      | HTTP request timeout |
+| `WithResponseHeaderTimeout(d)` | `time.Duration` | `5s`                       | Header wait timeout  |
+| `WithTLSHandshakeTimeout(d)`   | `time.Duration` | `5s`                       | TLS handshake wait   |
+| `WithInsecureSkipVerify(b)`    | `bool`          | `false`                    | Skip TLS verify      |
+| `WithProxy(fn)`                | `func`          | `nil`                      | Proxy resolver       |
+| `WithLogger(l)`                | `*slog.Logger`  | `slog.Default()`           | Structured logger    |
+| `WithUserAgent(ua)`            | `string`        | `cisco-ios-xe-wireless-go` | Custom User-Agent    |
 
 ### Request Options
 
@@ -181,12 +179,12 @@ Every node this SDK types has an accessor.
 
 For one it does not — a container a later IOS-XE release adds, or an RPC with no typed wrapper — the root client carries untyped methods that share the client's credentials, TLS settings, timeouts and `*APIError` typing.
 
-| Method                                              | RESTCONF resource      | Notes                                  |
-| --------------------------------------------------- | ---------------------- | -------------------------------------- |
-| `GetData(ctx, path, opts...)`                       | `/restconf/data`       | Read, with the same `GetOption` values |
-| `PostData` / `PutData` / `PatchData` / `DeleteData` | `/restconf/data`       | Edit, verb fixed at the call site      |
-| `PostRPC(ctx, path, payload)`                       | `/restconf/operations` | Invoke                                 |
-| `Request(ctx, method, path, payload)`               | either                 | Anything the above cannot express      |
+| Method                                              | RESTCONF resource      | Notes                      |
+| --------------------------------------------------- | ---------------------- | -------------------------- |
+| `GetData(ctx, path, opts...)`                       | `/restconf/data`       | Read with same `GetOption` |
+| `PostData` / `PutData` / `PatchData` / `DeleteData` | `/restconf/data`       | Edit via fixed call verb   |
+| `PostRPC(ctx, path, payload)`                       | `/restconf/operations` | Invoke RPC                 |
+| `Request(ctx, method, path, payload)`               | either                 | Fallback for custom calls  |
 
 ```go
 body, err := client.PatchData(ctx, "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries/wlan-cfg-entry=1,demo", payload)
