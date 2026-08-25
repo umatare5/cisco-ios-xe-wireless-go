@@ -2213,6 +2213,27 @@ func (r *tagRecorder) written(t *testing.T) (siteTag, policyTag, rfTag string) {
 	return payload.ApTag.SiteTag, payload.ApTag.PolicyTag, payload.ApTag.RFTag
 }
 
+// primingProfile returns the priming profile the recorded write carried.
+func (r *tagRecorder) primingProfile(t *testing.T) string {
+	t.Helper()
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if r.body == "" {
+		t.Fatal("no write reached the server")
+	}
+
+	var payload struct {
+		ApTag struct {
+			PrimingProfile string `json:"priming-profile"`
+		} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
+	}
+	if err := json.Unmarshal([]byte(r.body), &payload); err != nil {
+		t.Fatalf("Failed to decode the recorded write: %v", err)
+	}
+	return payload.ApTag.PrimingProfile
+}
+
 // newTagRecorderService answers a tag read with entry and records the write that follows. An
 // empty entry makes the read a 404, which is the AP-has-no-entry case.
 func newTagRecorderService(t *testing.T, entry string) (ap.Service, *tagRecorder) {
@@ -2355,4 +2376,41 @@ func TestApServiceUnit_AssignTags_MergeSemantics(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestApServiceUnit_AssignTags_KeepsPrimingProfile tests that the replacing write carries a
+// priming profile the caller never named, which the write body did not declare before.
+func TestApServiceUnit_AssignTags_KeepsPrimingProfile(t *testing.T) {
+	const apMAC = "aa:bb:cc:dd:ee:ff"
+	const entry = `{
+		"Cisco-IOS-XE-wireless-ap-cfg:ap-tag": [{
+			"ap-mac": "aa:bb:cc:dd:ee:ff",
+			"site-tag": "existing-site",
+			"policy-tag": "existing-policy",
+			"rf-tag": "existing-rf",
+			"priming-profile": "existing-priming"
+		}]
+	}`
+
+	t.Run("an existing priming profile survives", func(t *testing.T) {
+		service, recorder := newTagRecorderService(t, entry)
+
+		if err := service.AssignSiteTag(context.Background(), apMAC, "new-site"); err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+		if got := recorder.primingProfile(t); got != "existing-priming" {
+			t.Errorf("priming-profile = %q, want %q", got, "existing-priming")
+		}
+	})
+
+	t.Run("no priming profile is invented", func(t *testing.T) {
+		service, recorder := newTagRecorderService(t, testAPTagEntry)
+
+		if err := service.AssignSiteTag(context.Background(), apMAC, "new-site"); err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+		if got := recorder.primingProfile(t); got != "" {
+			t.Errorf("priming-profile = %q, want it absent", got)
+		}
+	})
 }

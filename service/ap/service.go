@@ -966,9 +966,10 @@ func (s Service) resolveAPTagData(
 	// through the defaults: the controller rejects a payload naming a tag with an empty string.
 	existing := current.ApTag[0]
 	return buildAPCfgApTagData(normalizedMAC, ApTag{
-		SiteTag:   validation.SelectNonEmptyValue(tags.SiteTag, existing.SiteTag),
-		PolicyTag: validation.SelectNonEmptyValue(tags.PolicyTag, existing.PolicyTag),
-		RFTag:     validation.SelectNonEmptyValue(tags.RFTag, existing.RFTag),
+		SiteTag:        validation.SelectNonEmptyValue(tags.SiteTag, existing.SiteTag),
+		PolicyTag:      validation.SelectNonEmptyValue(tags.PolicyTag, existing.PolicyTag),
+		RFTag:          validation.SelectNonEmptyValue(tags.RFTag, existing.RFTag),
+		PrimingProfile: existing.PrimingProfile,
 	}), nil
 }
 
@@ -998,9 +999,10 @@ func findAPByMAC(capwapData *CiscoIOSXEWirelessApOperCAPWAPData, apMAC string) (
 // buildAPCfgApTagData constructs the payload for tag assignment requests.
 func buildAPCfgApTagData(normalizedMAC string, tags ApTag) APCfgApTagData {
 	return APCfgApTagData{
-		APMac:     normalizedMAC,
-		SiteTag:   validation.SelectNonEmptyValue(tags.SiteTag, validation.DefaultSiteTag),
-		PolicyTag: validation.SelectNonEmptyValue(tags.PolicyTag, validation.DefaultPolicyTag),
-		RFTag:     validation.SelectNonEmptyValue(tags.RFTag, validation.DefaultRFTag),
+		APMac:          normalizedMAC,
+		SiteTag:        validation.SelectNonEmptyValue(tags.SiteTag, validation.DefaultSiteTag),
+		PolicyTag:      validation.SelectNonEmptyValue(tags.PolicyTag, validation.DefaultPolicyTag),
+		RFTag:          validation.SelectNonEmptyValue(tags.RFTag, validation.DefaultRFTag),
+		PrimingProfile: tags.PrimingProfile,
 	}
 }
