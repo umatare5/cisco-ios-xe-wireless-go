@@ -32,6 +32,9 @@ type APCfgApTagData struct {
 	SiteTag   string `json:"site-tag"`   // Site tag assigned to the AP
 	PolicyTag string `json:"policy-tag"` // Policy tag assigned to the AP
 	RFTag     string `json:"rf-tag"`     // RF tag assigned to the AP
+	// PrimingProfile is carried so the replacing write does not drop an assignment the caller
+	// never named; it is omitted unless the read that precedes the write returned one.
+	PrimingProfile string `json:"priming-profile,omitempty"`
 }
 
 // APConfigRPCInput represents input structure for AP configuration RPC calls.

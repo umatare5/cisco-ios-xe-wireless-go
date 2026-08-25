@@ -53,7 +53,7 @@ func executeStandardRFTagWorkflow(t *testing.T, tsc *scenario.TagContext, servic
 	if err := service.CreateRFTag(tsc.Ctx, &rf.RFTag{
 		TagName:     tsc.TestTagName,
 		Description: expectedRFTagDescription,
-		RFTagRadioProfiles: rf.RFTagRadioProfiles{
+		RFTagRadioProfiles: &rf.RFTagRadioProfiles{
 			RFTagRadioProfile: []rf.RFTagRadioProfile{
 				{
 					SlotID: "slot-0",
