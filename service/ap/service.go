@@ -933,14 +933,43 @@ func (s Service) assignTags(ctx context.Context, apMAC string, tags ApTag) error
 	if err != nil {
 		return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
 	}
+	tagData, err := s.resolveAPTagData(ctx, normalizedMAC, tags)
+	if err != nil {
+		return err
+	}
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
-	tagData := buildAPCfgApTagData(normalizedMAC, tags)
 
 	// Execute operation with direct error propagation
 	if err := core.PutVoid(ctx, s.Client(), url, APTagPayload{ApTag: tagData}); err != nil {
 		return ierrors.ServiceOperationError("assign", "AP", "tags", err)
 	}
 	return nil
+}
+
+// resolveAPTagData returns the entry to write. The request replaces the whole entry, so a tag
+// the caller did not name is carried over from the AP's current one; the defaults apply only
+// where the AP has no entry to carry over.
+func (s Service) resolveAPTagData(
+	ctx context.Context,
+	normalizedMAC string,
+	tags ApTag,
+) (APCfgApTagData, error) {
+	current, err := s.GetTagConfigByMAC(ctx, normalizedMAC)
+	if err != nil && !core.IsNotFoundError(err) {
+		return APCfgApTagData{}, ierrors.ServiceOperationError("assign", "AP", "tags", err)
+	}
+	if err != nil || current == nil || len(current.ApTag) == 0 {
+		return buildAPCfgApTagData(normalizedMAC, tags), nil
+	}
+
+	// A tag holding its default is omitted from the read, so the carried-over value still goes
+	// through the defaults: the controller rejects a payload naming a tag with an empty string.
+	existing := current.ApTag[0]
+	return buildAPCfgApTagData(normalizedMAC, ApTag{
+		SiteTag:   validation.SelectNonEmptyValue(tags.SiteTag, existing.SiteTag),
+		PolicyTag: validation.SelectNonEmptyValue(tags.PolicyTag, existing.PolicyTag),
+		RFTag:     validation.SelectNonEmptyValue(tags.RFTag, existing.RFTag),
+	}), nil
 }
 
 // reload is the internal helper function for AP reload operations.

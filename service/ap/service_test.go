@@ -1,6 +1,13 @@
 package ap_test
 
 import (
+	"context"
+	"encoding/json"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"sync"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -2160,4 +2167,185 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 			t.Error("Expected error for failed tag assignment RPC call, got nil")
 		}
 	})
+}
+
+// tagRecorder captures the body of the write a tag assignment sent. The mocks in pkg/testutil
+// record the method, path and query of a request but not its body, which is what decides
+// whether a tag the caller did not name survived.
+type tagRecorder struct {
+	mu   sync.Mutex
+	body string
+}
+
+func (r *tagRecorder) set(body string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.body = body
+}
+
+// written returns the three tags the recorded write carried.
+func (r *tagRecorder) written(t *testing.T) (siteTag, policyTag, rfTag string) {
+	t.Helper()
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if r.body == "" {
+		t.Fatal("no write reached the server")
+	}
+
+	var payload struct {
+		ApTag struct {
+			SiteTag   string `json:"site-tag"`
+			PolicyTag string `json:"policy-tag"`
+			RFTag     string `json:"rf-tag"`
+		} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
+	}
+	if err := json.Unmarshal([]byte(r.body), &payload); err != nil {
+		t.Fatalf("Failed to decode the recorded write: %v", err)
+	}
+	return payload.ApTag.SiteTag, payload.ApTag.PolicyTag, payload.ApTag.RFTag
+}
+
+// newTagRecorderService answers a tag read with entry and records the write that follows. An
+// empty entry makes the read a 404, which is the AP-has-no-entry case.
+func newTagRecorderService(t *testing.T, entry string) (ap.Service, *tagRecorder) {
+	t.Helper()
+
+	recorder := &tagRecorder{}
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			if entry == "" {
+				http.NotFound(w, r)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte(entry))
+			return
+		}
+
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Errorf("Failed to read the request body: %v", err)
+		}
+		recorder.set(string(body))
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	t.Cleanup(server.Close)
+
+	parsed, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatalf("Failed to parse the test server URL: %v", err)
+	}
+
+	client, err := core.New(parsed.Host, "test-token", core.WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("Failed to create the client: %v", err)
+	}
+
+	return ap.NewService(client), recorder
+}
+
+const testAPTagEntry = `{
+	"Cisco-IOS-XE-wireless-ap-cfg:ap-tag": [{
+		"ap-mac": "aa:bb:cc:dd:ee:ff",
+		"site-tag": "existing-site",
+		"policy-tag": "existing-policy",
+		"rf-tag": "existing-rf"
+	}]
+}`
+
+// testAPTagEntryAtDefault is the entry of an AP whose policy and RF tags hold their default, which
+// the controller omits from the read.
+const testAPTagEntryAtDefault = `{
+	"Cisco-IOS-XE-wireless-ap-cfg:ap-tag": [{
+		"ap-mac": "aa:bb:cc:dd:ee:ff",
+		"site-tag": "existing-site"
+	}]
+}`
+
+// TestApServiceUnit_AssignTags_MergeSemantics tests that a tag assignment preserves the tags
+// the caller did not name, because the write replaces the whole entry.
+func TestApServiceUnit_AssignTags_MergeSemantics(t *testing.T) {
+	const apMAC = "aa:bb:cc:dd:ee:ff"
+
+	tests := []struct {
+		name              string
+		entry             string
+		assign            func(ctx context.Context, s ap.Service) error
+		expectedSiteTag   string
+		expectedPolicyTag string
+		expectedRFTag     string
+	}{
+		{
+			name:  "site tag assignment keeps the other two",
+			entry: testAPTagEntry,
+			assign: func(ctx context.Context, s ap.Service) error {
+				return s.AssignSiteTag(ctx, apMAC, "new-site")
+			},
+			expectedSiteTag:   "new-site",
+			expectedPolicyTag: "existing-policy",
+			expectedRFTag:     "existing-rf",
+		},
+		{
+			name:  "policy tag assignment keeps the other two",
+			entry: testAPTagEntry,
+			assign: func(ctx context.Context, s ap.Service) error {
+				return s.AssignPolicyTag(ctx, apMAC, "new-policy")
+			},
+			expectedSiteTag:   "existing-site",
+			expectedPolicyTag: "new-policy",
+			expectedRFTag:     "existing-rf",
+		},
+		{
+			name:  "RF tag assignment keeps the other two",
+			entry: testAPTagEntry,
+			assign: func(ctx context.Context, s ap.Service) error {
+				return s.AssignRFTag(ctx, apMAC, "new-rf")
+			},
+			expectedSiteTag:   "existing-site",
+			expectedPolicyTag: "existing-policy",
+			expectedRFTag:     "new-rf",
+		},
+		{
+			name:  "a tag the read omits falls back to its default, not an empty leaf",
+			entry: testAPTagEntryAtDefault,
+			assign: func(ctx context.Context, s ap.Service) error {
+				return s.AssignPolicyTag(ctx, apMAC, "new-policy")
+			},
+			expectedSiteTag:   "existing-site",
+			expectedPolicyTag: "new-policy",
+			expectedRFTag:     "default-rf-tag",
+		},
+		{
+			name:  "no entry falls back to the defaults",
+			entry: "",
+			assign: func(ctx context.Context, s ap.Service) error {
+				return s.AssignSiteTag(ctx, apMAC, "new-site")
+			},
+			expectedSiteTag:   "new-site",
+			expectedPolicyTag: "default-policy-tag",
+			expectedRFTag:     "default-rf-tag",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			service, recorder := newTagRecorderService(t, tt.entry)
+
+			if err := tt.assign(context.Background(), service); err != nil {
+				t.Fatalf("Unexpected error: %v", err)
+			}
+
+			siteTag, policyTag, rfTag := recorder.written(t)
+			if siteTag != tt.expectedSiteTag {
+				t.Errorf("site-tag = %q, want %q", siteTag, tt.expectedSiteTag)
+			}
+			if policyTag != tt.expectedPolicyTag {
+				t.Errorf("policy-tag = %q, want %q", policyTag, tt.expectedPolicyTag)
+			}
+			if rfTag != tt.expectedRFTag {
+				t.Errorf("rf-tag = %q, want %q", rfTag, tt.expectedRFTag)
+			}
+		})
+	}
 }
