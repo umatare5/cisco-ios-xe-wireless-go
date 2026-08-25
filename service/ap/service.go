@@ -937,7 +937,7 @@ func (s Service) assignTags(ctx context.Context, apMAC string, tags ApTag) error
 	if err != nil {
 		return err
 	}
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagPath, normalizedMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APTagQueryPath, normalizedMAC)
 
 	// Execute operation with direct error propagation
 	if err := core.PutVoid(ctx, s.Client(), url, APTagPayload{ApTag: tagData}); err != nil {

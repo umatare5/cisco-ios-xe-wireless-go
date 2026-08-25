@@ -1861,7 +1861,14 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state":      `{"status": "success"}`,
 		"Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state": `{"status": "success"}`,
 		"Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset":                `{"status": "success"}`,
-		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff":  `{"status": "success"}`,
+		"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag=aa:bb:cc:dd:ee:ff": `{
+			"Cisco-IOS-XE-wireless-ap-cfg:ap-tag": [{
+				"ap-mac": "aa:bb:cc:dd:ee:ff",
+				"site-tag": "existing-site",
+				"policy-tag": "existing-policy",
+				"rf-tag": "existing-rf"
+			}]
+		}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
@@ -2124,7 +2131,7 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 			},
 		),
 		testutil.WithCustomResponse(
-			"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag=aa:bb:cc:dd:ee:ff", testutil.ResponseConfig{
+			"Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag=aa:bb:cc:dd:ee:ff", testutil.ResponseConfig{
 				StatusCode: 400,
 				Body:       "Invalid request",
 			},
