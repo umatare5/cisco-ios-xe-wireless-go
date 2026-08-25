@@ -13,9 +13,6 @@ const (
 	// APTagsPath retrieves access point tag configurations.
 	APTagsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags"
 
-	// APTagPath retrieves access point tag configurations.
-	APTagPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tag"
-
 	// TagSourcePriorityConfigsPath retrieves tag source priority configurations.
 	APTagSourcePriorityConfigsPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/tag-source-priority-configs"
 )
