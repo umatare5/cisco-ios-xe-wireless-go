@@ -85,12 +85,12 @@ type AtfPolicyDetail struct {
 
 // RFTag represents RF tag configuration.
 type RFTag struct {
-	TagName             string             `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.6a)
-	Description         string             `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.6a)
-	Dot11ARfProfileName string             `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.6a)
-	Dot11BRfProfileName string             `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.6a)
-	Dot116GhzRFProfName string             `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.6a)
-	RFTagRadioProfiles  RFTagRadioProfiles `json:"rf-tag-radio-profiles"`             // RF tag radio profiles data (Live: IOS-XE 17.12.6a)
+	TagName             string              `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.6a)
+	Description         string              `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.6a)
+	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.6a)
+	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.6a)
+	Dot116GhzRFProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.6a)
+	RFTagRadioProfiles  *RFTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.6a)
 }
 
 // RFTagRadioProfiles represents RF tag radio profiles collection.
