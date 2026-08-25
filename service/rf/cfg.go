@@ -95,7 +95,7 @@ type RFTag struct {
 
 // RFTagRadioProfiles represents RF tag radio profiles collection.
 type RFTagRadioProfiles struct {
-	RFTagRadioProfile []RFTagRadioProfile `json:"rf-tag-radio-profile"` // Slot specific radio profile list (Live: IOS-XE 17.12.6a)
+	RFTagRadioProfile []RFTagRadioProfile `json:"rf-tag-radio-profile,omitempty"` // Slot specific radio profile list (Live: IOS-XE 17.12.6a)
 }
 
 // RFTagRadioProfile represents RF tag radio profile configuration.
