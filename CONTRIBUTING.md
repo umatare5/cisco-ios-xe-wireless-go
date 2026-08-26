@@ -66,9 +66,9 @@ For detailed testing instructions, see **[TESTING.md](./docs/TESTING.md)**.
 
 ## 📜 Scripts
 
-This repository contains useful debugging and development scripts in the `scripts/` directory.
+Every Make target above runs one script from the `scripts/` directory.
 
-They use `curl` to access WNC, so they are independent of Go. For detailed usage, see **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
+Each takes no arguments and wraps the Go toolchain, so `make` is the only entry point you need. For what each one does, see **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
 
 ## ♻️ Change Review Process: For Maintainers
 
@@ -132,7 +132,7 @@ octocov badge coverage --out docs/assets/coverage.svg # generates coverage badge
 
 Commit coverage artifacts and badge:
 
-- `coverage/report.out` - coverprofile for CI
+- `coverage/report.out` - coverprofile `.octocov.yml` reads to build the badge
 - `coverage/report.html` - human-readable report
 - `docs/assets/coverage.svg` - coverage badge
 

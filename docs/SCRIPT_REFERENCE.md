@@ -13,43 +13,27 @@ Following is a summary of available scripts:
 | --------------------------------------------------------------- | ------------------------------------- | -------------------- |
 | [help.sh](#help.sh)                                             | Show command help overview            | `help`               |
 | [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`               |
-| [clean_artifacts.sh](#clean_artifacts.sh)                       | Remove caches / temp / coverage files | `clean`              |
 | [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`               |
-| [test_unit.sh](#test_unit.sh)                                   | Run unit tests with unified coverage  | `test-unit`          |
+| [test_unit.sh](#test_unit.sh)                                   | Run unit tests                        | `test-unit`          |
+| [test_coverage.sh](#test_coverage.sh)                           | Unit tests with coverage and a report | `test-unit-coverage` |
 | [test_integration.sh](#test_integration.sh)                     | Run integration tests with coverage   | `test-integration`   |
-| [get_yang_models.sh](#get_yang_models.sh)                       | List available YANG models            | `yang-list`          |
-| [get_yang_model_details.sh](#get_yang_model_details.sh)         | Fetch a YANG module definition        | `yang-model`         |
-| [get_yang_statement_details.sh](#get_yang_statement_details.sh) | Fetch a YANG subtree (RESTCONF)       | `yang-statement`     |
-| [pre_commit_hook.sh](#pre_commit_hook.sh)                       | Run pre-commit validations            | `pre-commit-test`    |
 
 ## 🗂️ Structure
 
-Scripts share a consistent bootstrap pattern:
+One entry script per Make target, each owning the work only it performs:
 
-- Source `lib/bootstrap.sh` in the entry script.
-- Call `init_wnc_libraries(<script_dir>, <module_dir>)` to load the target module (e.g., `lib/testing`).
-- Expose common predicates, formatters, and validators in the current shell.
-- Invoke exactly one exported `run_*_operation` function.
-- Keep entry points thin — behavior is centralized under `scripts/lib/`.
-- Output goes through the shared `show_*` helpers and `printf`, never `echo -e`.
-- `--insecure` appends `-k` to a curl call only where it is requested.
+- Each entry script `source`s the `lib/` modules it needs, by name — there is no loader.
+- A module lands in `lib/` only when more than one command calls into it.
+- Log lines go through `lib/log.sh`, the only file that spells an ANSI escape.
+- No script parses flags. Only `test_coverage.sh` takes arguments, and they are positional.
 
 ```plaintext
 scripts/
-├── <command>.sh            # Thin entry point(s)
-└── lib/                    # Reusable modules (loaded via bootstrap)
-    ├── bootstrap.sh        # Loader + init
-    ├── artifacts/          # Cleanup operations
-    ├── coverage/           # Coverage + HTML generation
-    ├── dependencies/       # Dependency install/update
-    ├── lint/               # Lint operations
-    ├── output/             # Banners + formatting helpers
-    ├── share/              # Shared libraries across modules
-    │   └── testing/        # Unified testing operations (core.sh)
-    ├── testing/            # go test orchestration
-    ├── utils/              # generic predicates (jq detection, etc.)
-    ├── validation/         # git / branch protection helpers
-    └── yang/               # RESTCONF + YANG data utilities
+├── <command>.sh            # One entry point per Make target
+└── lib/
+    ├── log.sh              # Colour decision, log lines, banner
+    ├── env.sh              # Toolchain and project-directory checks
+    └── gotest.sh           # The gotestsum runs behind the test targets
 ```
 
 ## 📦 Development Scripts
@@ -60,25 +44,7 @@ install_dependencies.sh installs or updates development tools required for the p
 
 #### Usage
 
-```bash
-❯ scripts/install_dependencies.sh --help
-
-USAGE: install_dependencies [OPTIONS]
-
-OPTIONS:
-  -p, --project <DIR>            Project root directory [default: .]
-      --golangci-lint <VERSION>  golangci-lint version [default: latest]
-      --gotestsum <VERSION>      gotestsum version [default: latest]
-  -v, --verbose                  Enable verbose output
-  -c, --clean                    Clean module cache before installing
-  -u, --update                   Update all dependencies to latest versions
-      --force                    Force reinstall even if exists
-      --download-only            Download dependencies without installing
-      --verify                   Verify dependencies after installation
-      --no-color                 Disable colored output
-  -h, --help                     Print help
-  -V, --version                  Print version
-```
+Takes no arguments. Every tool is installed at `@latest`.
 
 #### Sample Output
 
@@ -86,18 +52,17 @@ OPTIONS:
 
 ```bash
 ❯ scripts/install_dependencies.sh
-Validating CLI tools (level: standard)...
-✓ curl
-<snip>
+Validating CLI tools (level: minimal)...
+✓ go
 
-✓ All 4 required CLI tools are available
+✓ All 1 required CLI tools are available
 ======================================
         Cisco WNC Dependencies
           Module Management
 ======================================
 
 ℹ Dependencies Info: Using Go version: go1.25.1
-[2] Downloading dependencies...
+[1] Downloading dependencies...
 ✓ Dependencies Success: Dependencies tidied
 ✓ Dependencies Success: Dependencies downloaded
 
@@ -106,84 +71,15 @@ Validating CLI tools (level: standard)...
 
 </details>
 
-### clean_artifacts.sh <a id="clean_artifacts.sh"></a> <!-- anchor for internal links -->
-
-clean_artifacts.sh removes build artifacts, temporary files, and caches to restore a clean working tree. It supports granular flags or a single --all sweep.
-
-#### Usage
-
-```bash
-❯ scripts/clean_artifacts.sh --help
-
-USAGE: clean_artifacts [OPTIONS]
-
-OPTIONS:
-  -p, --project <DIR>  Project root directory [default: .]
-  -v, --verbose        Enable verbose output
-  -f, --force          Force removal without confirmation
-      --go-cache       Clean Go build cache
-      --go-modules     Clean Go module cache
-      --temp-files     Clean temporary files (./tmp)
-      --test-files     Clean test artifacts (.test binaries, coverage files)
-      --all            Clean all artifacts [default: true]
-      --dry-run        Show what would be cleaned without actually cleaning
-      --no-color       Disable colored output
-  -h, --help           Print help
-  -V, --version        Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/clean_artifacts.sh
-Validating CLI tools (level: minimal)...
-✓ go
-
-✓ All 1 required CLI tools are available
-======================================
-         Cisco WNC Artifacts
-           Cleanup Utility
-======================================
-
-[1] Cleaning Go build cache...
-✓ Cleanup Success: Go build cache cleaned ( 12K freed)
-[2] Cleaning Go module cache...
-✓ Cleanup Success: Go module cache cleaned (330M freed)
-[3] Cleaning temporary files...
-ℹ Cleanup Info: No temporary directory found: ./tmp
-[4] Cleaning test artifacts...
-ℹ Cleanup Info: No test artifacts found to clean
-[✓] Artifacts cleanup completed successfully
-```
-
-</details>
-
 ## 🧪 Testing Scripts
 
 ### test_unit.sh <a id="test_unit.sh"></a> <!-- anchor for internal links -->
 
-Runs unit tests with unified coverage support.
+Runs the unit tests. Coverage and the HTML report belong to `test_coverage.sh`.
 
 #### Usage
 
-```bash
-❯ scripts/test_unit.sh --help
-
-USAGE: test_unit [OPTIONS]
-
-OPTIONS:
-  -p, --project <DIR>       Project root directory [default: .]
-  -v, --verbose             Enable verbose test output
-  -s, --short               Run tests in short mode (skip long-running tests)
-  -c, --coverage            Generate coverage data
-  -o, --output <FILE>       Coverage output file [default: ./tmp/coverage.out]
-  -t, --timeout <DURATION>  Test timeout duration [default: 30s]
-      --no-color            Disable colored output
-  -h, --help                Print help
-  -V, --version             Print version
-```
+Takes no arguments. `lib/gotest.sh` sets the 30s timeout.
 
 #### Sample Output
 
@@ -194,10 +90,9 @@ OPTIONS:
 ❯ export WNC_ACCESS_TOKEN=""
 ❯ scripts/test_unit.sh
 Validating CLI tools (level: standard)...
-✓ curl
 <snip>
 
-✓ All 4 required CLI tools are available
+✓ All 5 required CLI tools are available
 ======================================
          Cisco WNC Unit Tests
          Go Testing Framework
@@ -219,29 +114,71 @@ DONE 932 tests, 77 skipped in 8.463s
 
 </details>
 
+### test_coverage.sh <a id="test_coverage.sh"></a> <!-- anchor for internal links -->
+
+Runs the unit tests with a coverprofile, then renders the HTML report and the artifact
+`.octocov.yml` reads for the README badge.
+
+#### Usage
+
+Three optional positional arguments, so a verification run can redirect every output away
+from the tracked defaults.
+
+```bash
+scripts/test_coverage.sh [coverprofile] [html] [report]
+```
+
+| Position | Default                 |
+| -------- | ----------------------- |
+| 1        | `./tmp/coverage.out`    |
+| 2        | `./coverage/report.html`|
+| 3        | `./coverage/report.out` |
+
+#### Sample Output
+
+<details><summary>Click to expand sample output</summary>
+
+```bash
+❯ scripts/test_coverage.sh
+Validating CLI tools (level: standard)...
+<snip>
+
+✓ All 5 required CLI tools are available
+======================================
+       Cisco WNC Coverage Tests
+         Go Testing Framework
+======================================
+
+→ Starting coverage tests...
+<snip>
+
+-----------------------------------------
+✓ Coverage tests completed successfully
+ℹ Info: Duration: 4s
+-----------------------------------------
+
+ℹ Info: Coverage report generated: ./tmp/coverage.out
+ℹ Info: Total coverage: 91.0%
+→ Generating HTML coverage report...
+
+✓ HTML coverage report generated successfully
+ℹ Info: Report location: ./coverage/report.html
+ℹ Info: Report size: 322732 bytes
+
+ℹ Info: To view the report:
+  open ./coverage/report.html
+✓ Coverage report generated successfully
+```
+
+</details>
+
 ### test_integration.sh <a id="test_integration.sh"></a> <!-- anchor for internal links -->
 
 Runs integration tests against a live Cisco C9800 controller. Requires `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN`.
 
 #### Usage
 
-```bash
-❯ scripts/test_integration.sh --help
-
-USAGE: test_integration [OPTIONS]
-
-OPTIONS:
-  -p, --project <DIR>       Project root directory [default: .]
-  -v, --verbose             Enable verbose test output
-      --race                Enable race detection [default: true]
-  -o, --output <FILE>       Coverage output file [default: ./tmp/coverage.out]
-  -t, --timeout <DURATION>  Test timeout [default: 10m]
-      --package <PATTERN>   Package pattern to test [default: ./...]
-      --check-env-only      Only check environment without running tests
-      --no-color            Disable colored output
-  -h, --help                Print help
-  -V, --version             Print version
-```
+Takes no arguments. `lib/gotest.sh` sets the 10m timeout.
 
 #### Sample Output
 
@@ -252,10 +189,9 @@ OPTIONS:
 ❯ export WNC_ACCESS_TOKEN="<base64-username:password>"
 ❯ scripts/test_integration.sh
 Validating CLI tools (level: standard)...
-✓ curl
 <snip>
 
-✓ All 4 required CLI tools are available
+✓ All 5 required CLI tools are available
 ======================================
      Cisco WNC Integration Tests
          Go Testing Framework
@@ -281,13 +217,11 @@ DONE 1004 tests, 21 skipped in 4.215s
 
 ### lint.sh <a id="lint.sh"></a> <!-- anchor for internal links -->
 
-Runs golangci-lint using the repo configuration. Supports optional auto-fix.
+Formats the working tree with goimports and gofumpt, then lints Go, shell and Markdown.
 
 #### Usage
 
-`scripts/lint.sh` only supports execution with no arguments.
-
-````plaintext
+Takes no arguments. The project root is the directory above `scripts/`.
 
 #### Sample Output
 
@@ -296,237 +230,30 @@ Runs golangci-lint using the repo configuration. Supports optional auto-fix.
 ```bash
 ❯ scripts/lint.sh
 Validating CLI tools (level: standard)...
-✓ curl
 <snip>
 
-✓ All 4 required CLI tools are available
+✓ All 5 required CLI tools are available
 ======================================
         Cisco WNC Code Linter
       golangci-lint Integration
 ======================================
 
+Validating Go module...
+✓ Go module validated
 ℹ Info: Starting code linting...
-0 issues.
-
-✓ Code linting completed successfully
-````
-
-</details>
-
-### pre_commit_hook.sh <a id="pre_commit_hook.sh"></a> <!-- anchor for internal links -->
-
-Runs repository pre-commit validations (formatting, build, tests). Intended to be wired to git hooks or run ad-hoc.
-
-#### Usage
-
-`pre_commit_hook.sh` only supports execution with no arguments.
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/pre_commit_hook.sh
-Validating CLI tools (level: minimal)...
-✓ go
-
-✓ All 1 required CLI tools are available
-======================================
-        Pre-commit Validation
-          Branch Protection
-======================================
-
-
-ℹ Info: Current branch: umatare5/road_to_0.2.0
-⚠ Warning: No staged changes found
-ℹ Info: Use 'git add <files>' to stage changes before committing
-✓ Success: Pre-commit validation passed
-ℹ Info: Proceeding with commit on branch 'umatare5/road_to_0.2.0'
-```
-
-</details>
-
-## 📡 YANG Operation Scripts
-
-### get_yang_models.sh <a id="get_yang_models.sh"></a> <!-- anchor for internal links -->
-
-Lists available Cisco wireless YANG models from the controller.
-
-#### Usage
-
-```bash
-❯ scripts/get_yang_models.sh --help
-
-USAGE: get_yang_models [OPTIONS]
-
-OPTIONS:
-  -c, --controller <HOST>    WNC controller hostname or IP (required unless WNC_CONTROLLER set)
-  -t, --token <TOKEN>        Basic auth token (or use WNC_ACCESS_TOKEN env var)
-  -p, --protocol <PROTOCOL>  Protocol: http or https [default: https] [choices: http,https]
-  -k, --insecure             Skip TLS certificate verification
-  -v, --verbose              Enable verbose output
-      --no-color             Disable colored output
-  -h, --help                 Print help
-  -V, --version              Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/get_yang_models.sh --insecure
-Validating CLI tools (level: strict)...
-✓ bc
+Running formatting operations...
 <snip>
 
-======================================
-      Cisco WNC YANG Operations
-       RESTCONF API Integration
-======================================
+--- Formatting Summary ---
+All formatting operations completed successfully
 
-→ Fetching YANG models list...
-{
-  "ietf-yang-library:modules-state": {
-    "module-set-id": "e3bbc332e0aa187acc8c9d9862f42c30",
-    "module": [
-      {
-        "name": "ATM-FORUM-TC-MIB",
-        "revision": "",
-        "schema": "https://192.168.122.48:443/restconf/tailf/modules/ATM-FORUM-TC-MIB",
-        "namespace": "urn:ietf:params:xml:ns:yang:smiv2:ATM-FORUM-TC-MIB",
-        "conformance-type": "import"
-      },
-      <snip>
-      {
-        "name": "tailf-yang-patch",
-        "revision": "2023-01.25",
-        "schema": "https://192.168.122.48:443/restconf/tailf/modules/tailf-yang-patch/2023-01.25",
-        "namespace": "http://tail-f.com/ns/tailf-yang-patch",
-        "conformance-type": "implement"
-      }
-    ]
-  }
-}
-
-✓ YANG models listing completed successfully
-```
-
-</details>
-
-### get_yang_model_details.sh <a id="get_yang_model_details.sh"></a> <!-- anchor for internal links -->
-
-Fetches and prints details for a specific YANG model.
-
-#### Usage
-
-```bash
-❯ scripts/get_yang_model_details.sh --help
-
-USAGE: get_yang_model_details [OPTIONS]
-
-OPTIONS:
-  -c, --controller <HOST>       WNC controller hostname or IP (required unless WNC_CONTROLLER set)
-  -t, --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
-  -p, --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
-  -f, --format <FORMAT>        Output format: json or xml [default: json] [choices: json,xml]
-  -r, --revision <REVISION>    YANG model revision (YYYY-MM-DD) [default: 2023-08-01]
-  -m, --model <MODEL>          YANG model name to retrieve details for (required)
-  -k, --insecure               Skip TLS certificate verification
-  -v, --verbose                Enable verbose output
-  -R, --raw                    Output raw response without formatting
-      --no-color               Disable colored output
-  -h, --help                   Print help
-  -V, --version                Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ ./scripts/get_yang_model_details.sh --model Cisco-IOS-XE-wireless-access-point-oper --insecure
-Validating CLI tools (level: strict)...
-✓ bc
+Running linting operations...
 <snip>
 
-✓ All 6 required CLI tools are available
-======================================
-      Cisco WNC YANG Operations
-       RESTCONF API Integration
-======================================
+--- Linting Summary ---
+All linting checks passed successfully
 
-→ Fetching YANG model details for: Cisco-IOS-XE-wireless-access-point-oper (rev: 2023-08-01)
-module Cisco-IOS-XE-wireless-access-point-oper {
-  yang-version 1.1;
-  namespace "http://cisco.com/ns/yang/Cisco-IOS-XE-wireless-access-point-oper";
-  prefix wireless-access-point-oper;
-
-  import Cisco-IOS-XE-event-history-types {
-    prefix event-history-types;
-  }
-  <snip>
-  }
-}
-✓ YANG model retrieval completed successfully
-ℹ Info: Target: Cisco-IOS-XE-wireless-access-point-oper
-```
-
-</details>
-
-### get_yang_statement_details.sh <a id="get_yang_statement_details.sh"></a> <!-- anchor for internal links -->
-
-Retrieves details for a specific statement under a given YANG model.
-
-#### Usage
-
-```bash
-❯ scripts/get_yang_statement_details.sh --help
-
-USAGE: get_yang_statement_details [OPTIONS]
-
-OPTIONS:
-  -c, --controller <HOST>      WNC controller hostname or IP (required unless WNC_CONTROLLER set)
-  -t, --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
-  -p, --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
-  -f, --format <FORMAT>        Output format: json or xml [default: json] [choices: json,xml]
-  -m, --model <MODEL>          YANG model name (required)
-  -s, --statement <STATEMENT>  YANG statement name (required)
-  -k, --insecure               Skip TLS certificate verification
-  -v, --verbose                Enable verbose output
-      --no-color               Disable colored output
-  -h, --help                   Print help
-  -V, --version                Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ ./scripts/get_yang_statement_details.sh --model Cisco-IOS-XE-wireless-access-point-oper --statement access-point-oper-data --insecure
-Validating CLI tools (level: strict)...
-✓ bc
-<snip>
-
-✓ All 6 required CLI tools are available
-======================================
-      Cisco WNC YANG Operations
-       RESTCONF API Integration
-======================================
-
-→ Fetching YANG statement details for: Cisco-IOS-XE-wireless-access-point-oper/access-point-oper-data
-{
-  "Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": {
-    "ap-radio-neighbor": [
-      <snip>
-    ]
-  }
-}
-
-✓ YANG statement retrieval completed successfully
-ℹ Info: Target: Cisco-IOS-XE-wireless-access-point-oper/access-point-oper-data
-
+✓ Success: Lint passed for .
 ```
 
 </details>
@@ -557,18 +284,12 @@ USAGE:
 
 COMMON DEVELOPMENT TARGETS:
     help                Show this help message
-    clean               Clean build artifacts and temporary files
     deps                Install development dependencies
     lint                Run code linting tools
     build               Verify build compilation
     test-unit           Run unit tests only
     test-integration    Run integration tests (requires environment)
-    test-coverage       Run tests with coverage analysis
-
-YANG MODEL DEVELOPMENT:
-    yang-list           List all available YANG models
-    yang-model          Get YANG model details (MODEL=model-name)
-    yang-statement      Get YANG statement details (MODEL=model-name STATEMENT=statement-name)
+    test-unit-coverage  Run unit tests with coverage analysis
 
 ENVIRONMENT VARIABLES:
     WNC_CONTROLLER      Controller hostname/IP for integration tests
@@ -582,41 +303,28 @@ EXAMPLES:
     make test-unit-coverage # Run unit tests with coverage
     make build              # Verify compilation
 
-    # YANG development
-    make yang-list                                    # List models
-    make yang-model MODEL=wireless-access-point      # Get model details
-    make yang-statement MODEL=wireless-client STATEMENT=active # Get statement details
-
     # Integration testing (requires environment setup)
     export WNC_CONTROLLER="<controller-host-or-ip>"
     export WNC_ACCESS_TOKEN="<base64-username:password>"
     make test-integration
 
 SCRIPT DETAILS:
-    For specific script options and advanced usage:
-    ./scripts/<script_name>.sh --help
+    Every script takes no arguments.
 
     Available scripts:
-    - clean_artifacts.sh      Clean build artifacts
     - install_dependencies.sh Install Go dependencies
     - lint.sh                Run golangci-lint
-    - test_unit.sh           Run unit tests (supports --coverage)
+    - test_unit.sh           Run unit tests
+    - test_coverage.sh       Run unit tests with coverage and an HTML report
     - test_integration.sh    Run integration tests
-    - pre_commit_hook.sh     Pre-commit validation hook
-    - get_yang_models.sh     List YANG models
-    - get_yang_model_details.sh Get model details
-    - get_yang_statement_details.sh Get statement details
 
 PROJECT STRUCTURE:
     scripts/                Script directory
-    +-- lib/               Shared libraries
-    |   +-- bootstrap.sh   Bootstrap library loader
-    |   +-- coverage/      Coverage report functions
-    |   +-- dependencies/  Dependency management
-    |   +-- output/        Output formatting utilities
-    |   +-- testing/       Test utilities
-    |   +-- utils/         Utility functions
-    |   +-- validation/    Git commit validation
+    +-- <command>.sh       One entry point per Make target
+    +-- lib/               Sourced explicitly by the entry points
+        +-- log.sh         Colour, log lines and the banner
+        +-- env.sh         Toolchain and project-directory checks
+        +-- gotest.sh      The gotestsum runs behind the test targets
 ````
 
 </details>

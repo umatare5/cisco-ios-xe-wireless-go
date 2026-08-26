@@ -1,15 +1,51 @@
 #!/usr/bin/env bash
 #
-# Pre-commit Hook - Prevent Direct Pushes to Main Branch
-# This hook prevents direct commits to the main branch and enforces
-# proper development workflow through feature branches.
+# Pre-commit gate. A secret is the only finding a later gate cannot undo, so that is what runs
+# here; format and lint belong to CI, which pins its own golangci-lint version.
 #
 
 set -euo pipefail
 
-# Get script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+die() {
+    printf 'pre-commit: %s\n' "$*" >&2
+    exit 1
+}
 
-# Delegate to the main validation script
-# Adjusted path: scripts lives at repo root, not under .githooks/scripts
-exec "${SCRIPT_DIR}/../scripts/pre_commit_hook.sh" "$@"
+# A merge, rebase or cherry-pick commits on the current branch legitimately, so the branch
+# guard must stand aside for them or a conflicted merge cannot be completed without --no-verify.
+sequencer_in_progress() {
+    local git_dir
+    git_dir=$(git rev-parse --git-dir)
+
+    [[ -e "${git_dir}/MERGE_HEAD" ]] ||
+        [[ -e "${git_dir}/CHERRY_PICK_HEAD" ]] ||
+        [[ -d "${git_dir}/rebase-merge" ]] ||
+        [[ -d "${git_dir}/rebase-apply" ]]
+}
+
+# Courtesy, not control: a hook is bypassable and uninstalled by default, so the real gate is
+# branch protection on the remote.
+assert_branch() {
+    local branch
+
+    if sequencer_in_progress; then
+        return 0
+    fi
+
+    # A detached HEAD moves no branch, so there is nothing to protect.
+    branch=$(git symbolic-ref --quiet --short HEAD) || return 0
+
+    [[ "${branch}" != 'main' ]] || die 'main takes merges only - commit to a branch'
+}
+
+# The only check here that reads the index rather than the working tree.
+check_secrets() {
+    gitleaks git --staged --no-banner --redact=100
+}
+
+main() {
+    assert_branch
+    check_secrets
+}
+
+main "$@"
