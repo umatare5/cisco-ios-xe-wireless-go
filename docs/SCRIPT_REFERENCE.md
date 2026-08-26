@@ -13,7 +13,6 @@ Following is a summary of available scripts:
 | --------------------------------------------------------------- | ------------------------------------- | -------------------- |
 | [help.sh](#help.sh)                                             | Show command help overview            | `help`               |
 | [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`               |
-| [clean_artifacts.sh](#clean_artifacts.sh)                       | Remove caches / temp / coverage files | `clean`              |
 | [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`               |
 | [test_unit.sh](#test_unit.sh)                                   | Run unit tests with unified coverage  | `test-unit`          |
 | [test_integration.sh](#test_integration.sh)                     | Run integration tests with coverage   | `test-integration`   |
@@ -28,14 +27,12 @@ Scripts share a consistent bootstrap pattern:
 - Invoke exactly one exported `run_*_operation` function.
 - Keep entry points thin — behavior is centralized under `scripts/lib/`.
 - Output goes through the shared `show_*` helpers and `printf`, never `echo -e`.
-- `--insecure` appends `-k` to a curl call only where it is requested.
 
 ```plaintext
 scripts/
 ├── <command>.sh            # Thin entry point(s)
 └── lib/                    # Reusable modules (loaded via bootstrap)
     ├── bootstrap.sh        # Loader + init
-    ├── artifacts/          # Cleanup operations
     ├── coverage/           # Coverage + HTML generation
     ├── dependencies/       # Dependency install/update
     ├── lint/               # Lint operations
@@ -43,7 +40,7 @@ scripts/
     ├── share/              # Shared libraries across modules
     │   └── testing/        # Unified testing operations (core.sh)
     ├── testing/            # go test orchestration
-    └── utils/              # generic predicates (jq detection, etc.)
+    └── utils/              # Tool install, build, and CLI validation
 ```
 
 ## 📦 Development Scripts
@@ -96,60 +93,6 @@ Validating CLI tools (level: standard)...
 ✓ Dependencies Success: Dependencies downloaded
 
 [✓] Dependencies management completed
-```
-
-</details>
-
-### clean_artifacts.sh <a id="clean_artifacts.sh"></a> <!-- anchor for internal links -->
-
-clean_artifacts.sh removes build artifacts, temporary files, and caches to restore a clean working tree. It supports granular flags or a single --all sweep.
-
-#### Usage
-
-```bash
-❯ scripts/clean_artifacts.sh --help
-
-USAGE: clean_artifacts [OPTIONS]
-
-OPTIONS:
-  -p, --project <DIR>  Project root directory [default: .]
-  -v, --verbose        Enable verbose output
-  -f, --force          Force removal without confirmation
-      --go-cache       Clean Go build cache
-      --go-modules     Clean Go module cache
-      --temp-files     Clean temporary files (./tmp)
-      --test-files     Clean test artifacts (.test binaries, coverage files)
-      --all            Clean all artifacts [default: true]
-      --dry-run        Show what would be cleaned without actually cleaning
-      --no-color       Disable colored output
-  -h, --help           Print help
-  -V, --version        Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/clean_artifacts.sh
-Validating CLI tools (level: minimal)...
-✓ go
-
-✓ All 1 required CLI tools are available
-======================================
-         Cisco WNC Artifacts
-           Cleanup Utility
-======================================
-
-[1] Cleaning Go build cache...
-✓ Cleanup Success: Go build cache cleaned ( 12K freed)
-[2] Cleaning Go module cache...
-✓ Cleanup Success: Go module cache cleaned (330M freed)
-[3] Cleaning temporary files...
-ℹ Cleanup Info: No temporary directory found: ./tmp
-[4] Cleaning test artifacts...
-ℹ Cleanup Info: No test artifacts found to clean
-[✓] Artifacts cleanup completed successfully
 ```
 
 </details>
@@ -333,13 +276,12 @@ USAGE:
 
 COMMON DEVELOPMENT TARGETS:
     help                Show this help message
-    clean               Clean build artifacts and temporary files
     deps                Install development dependencies
     lint                Run code linting tools
     build               Verify build compilation
     test-unit           Run unit tests only
     test-integration    Run integration tests (requires environment)
-    test-coverage       Run tests with coverage analysis
+    test-unit-coverage  Run unit tests with coverage analysis
 
 ENVIRONMENT VARIABLES:
     WNC_CONTROLLER      Controller hostname/IP for integration tests
@@ -363,7 +305,6 @@ SCRIPT DETAILS:
     ./scripts/<script_name>.sh --help
 
     Available scripts:
-    - clean_artifacts.sh      Clean build artifacts
     - install_dependencies.sh Install Go dependencies
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)

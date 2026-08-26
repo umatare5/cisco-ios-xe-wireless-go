@@ -37,7 +37,6 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 - `make lint` — `golangci-lint run` + `go mod tidy`
 - `make test-unit` — Run unit tests with coverage
 - `make test-integration` — Run `tests/integration/` against a live controller; needs `WNC_CONTROLLER` and `WNC_ACCESS_TOKEN`
-- `make clean` — Remove build artifacts and `.bak*` files
 
 ## Code Style
 

@@ -13,7 +13,6 @@ Following is a summary of available Make targets:
 | ---------------------- | ------------------------------------------ | --------------------------------------- |
 | `help`                 | Show command help overview                 | `scripts/help.sh`                       |
 | `deps`                 | Install / update dev tools                 | `scripts/install_dependencies.sh`       |
-| `clean`                | Remove caches / temp / coverage files      | `scripts/clean_artifacts.sh`            |
 | `lint`                 | Run golangci-lint                          | `scripts/lint.sh`                       |
 | `build`                | Verify build (`go build ./...`)            | (inline)                                |
 | `test-unit`            | Unit + table + fail-fast                   | `scripts/test_unit.sh`                  |

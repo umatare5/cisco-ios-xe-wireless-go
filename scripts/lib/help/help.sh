@@ -12,13 +12,12 @@ USAGE:
 
 COMMON DEVELOPMENT TARGETS:
     help                Show this help message
-    clean               Clean build artifacts and temporary files
     deps                Install development dependencies
     lint                Run code linting tools
     build               Verify build compilation
     test-unit           Run unit tests only
     test-integration    Run integration tests (requires environment)
-    test-coverage       Run tests with coverage analysis
+    test-unit-coverage  Run unit tests with coverage analysis
 
 ENVIRONMENT VARIABLES:
     WNC_CONTROLLER      Controller hostname/IP for integration tests
@@ -42,7 +41,6 @@ SCRIPT DETAILS:
     ./scripts/<script_name>.sh --help
 
     Available scripts:
-    - clean_artifacts.sh      Clean build artifacts
     - install_dependencies.sh Install Go dependencies
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)

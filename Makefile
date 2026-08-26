@@ -6,16 +6,12 @@
 # For comprehensive help, use: make help
 # For specific script options, use: ./scripts/<script_name>.sh --help
 
-.PHONY: help clean deps lint test-unit test-unit-coverage test-integration \
+.PHONY: help deps lint test-unit test-unit-coverage test-integration \
 	build pre-commit-install pre-commit-test pre-commit-uninstall
 
 # Default target
 help:
 	@./scripts/help.sh
-
-# Clean build artifacts
-clean:
-	@./scripts/clean_artifacts.sh
 
 # Install development dependencies
 deps:
