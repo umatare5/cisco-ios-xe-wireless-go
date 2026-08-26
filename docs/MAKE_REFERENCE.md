@@ -23,7 +23,7 @@ Following is a summary of available Make targets:
 | `yang-model`           | Fetch a YANG module definition             | `scripts/get_yang_model_details.sh`     |
 | `yang-statement`       | Fetch a YANG subtree (RESTCONF)            | `scripts/get_yang_statement_details.sh` |
 | `pre-commit-install`   | Install pre-commit hook with symlink       | (inline)                                |
-| `pre-commit-test`      | Test pre-commit hook without installing    | `scripts/pre_commit_hook.sh`            |
+| `pre-commit-test`      | Test pre-commit hook without installing    | `.githooks/pre-commit`                  |
 | `pre-commit-uninstall` | Remove a symlink to pre-commit hook        | (inline)                                |
 
 > [!TIP]

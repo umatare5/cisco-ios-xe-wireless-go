@@ -74,7 +74,6 @@ wnc_banner_coverage() { wnc_banner "Coverage HTML Generator" "Go Tool Cover Inte
 wnc_banner_yang() { wnc_banner "Cisco WNC YANG Operations" "RESTCONF API Integration"; }
 wnc_banner_dependencies() { wnc_banner "Cisco WNC Dependencies" "Module Management"; }
 wnc_banner_artifacts() { wnc_banner "Cisco WNC Artifacts" "Cleanup Utility"; }
-wnc_banner_pre_commit() { wnc_banner "Pre-commit Validation" "Branch Protection"; }
 
 export -f wnc_banner \
   wnc_banner_lint \
@@ -82,5 +81,4 @@ export -f wnc_banner \
   wnc_banner_coverage \
   wnc_banner_yang \
   wnc_banner_dependencies \
-  wnc_banner_artifacts \
-  wnc_banner_pre_commit
+  wnc_banner_artifacts

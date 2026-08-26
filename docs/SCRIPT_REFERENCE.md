@@ -20,14 +20,13 @@ Following is a summary of available scripts:
 | [get_yang_models.sh](#get_yang_models.sh)                       | List available YANG models            | `yang-list`          |
 | [get_yang_model_details.sh](#get_yang_model_details.sh)         | Fetch a YANG module definition        | `yang-model`         |
 | [get_yang_statement_details.sh](#get_yang_statement_details.sh) | Fetch a YANG subtree (RESTCONF)       | `yang-statement`     |
-| [pre_commit_hook.sh](#pre_commit_hook.sh)                       | Run pre-commit validations            | `pre-commit-test`    |
 
 ## 🗂️ Structure
 
 Scripts share a consistent bootstrap pattern:
 
 - Source `lib/bootstrap.sh` in the entry script.
-- Call `init_wnc_libraries(<script_dir>, <module_dir>)` to load the target module (e.g., `lib/testing`).
+- Call `init_wnc_libraries(<module_dir>)` to load the target module (e.g., `lib/testing`).
 - Expose common predicates, formatters, and validators in the current shell.
 - Invoke exactly one exported `run_*_operation` function.
 - Keep entry points thin — behavior is centralized under `scripts/lib/`.
@@ -48,7 +47,6 @@ scripts/
     │   └── testing/        # Unified testing operations (core.sh)
     ├── testing/            # go test orchestration
     ├── utils/              # generic predicates (jq detection, etc.)
-    ├── validation/         # git / branch protection helpers
     └── yang/               # RESTCONF + YANG data utilities
 ```
 
@@ -313,39 +311,6 @@ Validating CLI tools (level: standard)...
 
 </details>
 
-### pre_commit_hook.sh <a id="pre_commit_hook.sh"></a> <!-- anchor for internal links -->
-
-Runs repository pre-commit validations (formatting, build, tests). Intended to be wired to git hooks or run ad-hoc.
-
-#### Usage
-
-`pre_commit_hook.sh` only supports execution with no arguments.
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/pre_commit_hook.sh
-Validating CLI tools (level: minimal)...
-✓ go
-
-✓ All 1 required CLI tools are available
-======================================
-        Pre-commit Validation
-          Branch Protection
-======================================
-
-
-ℹ Info: Current branch: umatare5/road_to_0.2.0
-⚠ Warning: No staged changes found
-ℹ Info: Use 'git add <files>' to stage changes before committing
-✓ Success: Pre-commit validation passed
-ℹ Info: Proceeding with commit on branch 'umatare5/road_to_0.2.0'
-```
-
-</details>
-
 ## 📡 YANG Operation Scripts
 
 ### get_yang_models.sh <a id="get_yang_models.sh"></a> <!-- anchor for internal links -->
@@ -602,7 +567,6 @@ SCRIPT DETAILS:
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)
     - test_integration.sh    Run integration tests
-    - pre_commit_hook.sh     Pre-commit validation hook
     - get_yang_models.sh     List YANG models
     - get_yang_model_details.sh Get model details
     - get_yang_statement_details.sh Get statement details

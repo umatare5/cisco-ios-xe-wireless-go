@@ -63,12 +63,12 @@ yang-statement:
 # Pre-commit Hook Management
 # Install pre-commit hook to prevent direct commits to main branch
 pre-commit-install:
-	@ln -sf ../../scripts/pre_commit_hook.sh .git/hooks/pre-commit
+	@ln -sf ../../.githooks/pre-commit .git/hooks/pre-commit
 	@echo "✓ Pre-commit hook installed"
 
 # Test pre-commit hook without installing
 pre-commit-test:
-	@./scripts/pre_commit_hook.sh
+	@./.githooks/pre-commit
 
 # Uninstall pre-commit hook
 pre-commit-uninstall:

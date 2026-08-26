@@ -57,7 +57,6 @@ SCRIPT DETAILS:
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)
     - test_integration.sh    Run integration tests
-    - pre_commit_hook.sh     Pre-commit validation hook
     - get_yang_models.sh     List YANG models
     - get_yang_model_details.sh Get model details
     - get_yang_statement_details.sh Get statement details

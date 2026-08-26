@@ -27,7 +27,8 @@ source "${SCRIPT_DIR}/lib/bootstrap.sh"
 init_wnc_libraries "${SCRIPT_DIR}/lib/install_dependencies"
 
 # Validate required CLI tools
-validate_required_cli_tools "standard"
+# Only Go: this script installs the rest, so requiring them here cannot bootstrap.
+validate_required_cli_tools "minimal"
 
 # Entrypoint: install/update/verify dependencies
 main() {

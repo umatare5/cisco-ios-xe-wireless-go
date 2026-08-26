@@ -10,6 +10,8 @@ readonly DEFAULT_GOLANGCI_LINT_VERSION
 readonly DEFAULT_GORELEASER_VERSION
 : "${DEFAULT_GOTESTSUM_VERSION:=latest}"
 readonly DEFAULT_GOTESTSUM_VERSION
+: "${DEFAULT_GITLEAKS_VERSION:=latest}"
+readonly DEFAULT_GITLEAKS_VERSION
 
 # Run linting operations for Go code, shell scripts, and markdown files
 run_lints() {
@@ -221,6 +223,28 @@ install_gotestsum() {
     printf '✓ %s\n' "gotestsum installed successfully"
 }
 
+# Install gitleaks secret scanner with specified version
+# The module declares its path under the former org name, so the import path is not
+# github.com/gitleaks and go install rejects that spelling.
+install_gitleaks() {
+    local version="${1:-$DEFAULT_GITLEAKS_VERSION}"
+
+    if command_exists gitleaks; then
+        printf '✓ %s\n' "gitleaks is already installed"
+        return 0
+    fi
+
+    printf 'Installing gitleaks@%s...\n' "${version}"
+    go install "github.com/zricethezav/gitleaks/v8@${version}"
+
+    if ! command_exists gitleaks; then
+        printf '✗ %s\n' "Failed to install gitleaks" >&2
+        return 1
+    fi
+
+    printf '✓ %s\n' "gitleaks installed successfully"
+}
+
 # Install all required development dependencies for the Go project
 install_dev_dependencies() {
     printf '%s\n' "Installing development dependencies..."
@@ -229,6 +253,7 @@ install_dev_dependencies() {
     install_golangci_lint "$DEFAULT_GOLANGCI_LINT_VERSION"
     install_goreleaser "$DEFAULT_GORELEASER_VERSION"
     install_gotestsum "$DEFAULT_GOTESTSUM_VERSION"
+    install_gitleaks "$DEFAULT_GITLEAKS_VERSION"
 
     printf '✓ %s\n' "All development dependencies installed!"
 }

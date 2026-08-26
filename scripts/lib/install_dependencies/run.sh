@@ -28,6 +28,7 @@ run_dependencies_operation() {
   }
 
   # Execute dependency management operations in sequence
+  install_dev_dependencies || return 1
   execute_dependencies_clean "$clean" || return 1
   execute_dependencies_download "$download_only" "$verbose" || return 1
   execute_dependencies_update "$update" "$verbose" || return 1
