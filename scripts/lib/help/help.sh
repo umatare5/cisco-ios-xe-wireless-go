@@ -20,11 +20,6 @@ COMMON DEVELOPMENT TARGETS:
     test-integration    Run integration tests (requires environment)
     test-coverage       Run tests with coverage analysis
 
-YANG MODEL DEVELOPMENT:
-    yang-list           List all available YANG models
-    yang-model          Get YANG model details (MODEL=model-name)
-    yang-statement      Get YANG statement details (MODEL=model-name STATEMENT=statement-name)
-
 ENVIRONMENT VARIABLES:
     WNC_CONTROLLER      Controller hostname/IP for integration tests
     WNC_ACCESS_TOKEN    Base64 encoded credentials for integration tests
@@ -36,11 +31,6 @@ EXAMPLES:
     make test-unit          # Run unit tests
     make test-unit-coverage # Run unit tests with coverage
     make build              # Verify compilation
-
-    # YANG development
-    make yang-list                                    # List models
-    make yang-model MODEL=wireless-access-point      # Get model details
-    make yang-statement MODEL=wireless-client STATEMENT=active # Get statement details
 
     # Integration testing (requires environment setup)
     export WNC_CONTROLLER="<controller-host-or-ip>"
@@ -57,9 +47,6 @@ SCRIPT DETAILS:
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)
     - test_integration.sh    Run integration tests
-    - get_yang_models.sh     List YANG models
-    - get_yang_model_details.sh Get model details
-    - get_yang_statement_details.sh Get statement details
 
 PROJECT STRUCTURE:
     scripts/                Script directory
@@ -70,6 +57,5 @@ PROJECT STRUCTURE:
     |   +-- output/        Output formatting utilities
     |   +-- testing/       Test utilities
     |   +-- utils/         Utility functions
-    |   +-- validation/    Git commit validation
 EOF
 }

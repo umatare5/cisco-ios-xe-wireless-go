@@ -17,9 +17,6 @@ Following is a summary of available scripts:
 | [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`               |
 | [test_unit.sh](#test_unit.sh)                                   | Run unit tests with unified coverage  | `test-unit`          |
 | [test_integration.sh](#test_integration.sh)                     | Run integration tests with coverage   | `test-integration`   |
-| [get_yang_models.sh](#get_yang_models.sh)                       | List available YANG models            | `yang-list`          |
-| [get_yang_model_details.sh](#get_yang_model_details.sh)         | Fetch a YANG module definition        | `yang-model`         |
-| [get_yang_statement_details.sh](#get_yang_statement_details.sh) | Fetch a YANG subtree (RESTCONF)       | `yang-statement`     |
 
 ## 🗂️ Structure
 
@@ -46,8 +43,7 @@ scripts/
     ├── share/              # Shared libraries across modules
     │   └── testing/        # Unified testing operations (core.sh)
     ├── testing/            # go test orchestration
-    ├── utils/              # generic predicates (jq detection, etc.)
-    └── yang/               # RESTCONF + YANG data utilities
+    └── utils/              # generic predicates (jq detection, etc.)
 ```
 
 ## 📦 Development Scripts
@@ -311,191 +307,6 @@ Validating CLI tools (level: standard)...
 
 </details>
 
-## 📡 YANG Operation Scripts
-
-### get_yang_models.sh <a id="get_yang_models.sh"></a> <!-- anchor for internal links -->
-
-Lists available Cisco wireless YANG models from the controller.
-
-#### Usage
-
-```bash
-❯ scripts/get_yang_models.sh --help
-
-USAGE: get_yang_models [OPTIONS]
-
-OPTIONS:
-  -c, --controller <HOST>    WNC controller hostname or IP (required unless WNC_CONTROLLER set)
-  -t, --token <TOKEN>        Basic auth token (or use WNC_ACCESS_TOKEN env var)
-  -p, --protocol <PROTOCOL>  Protocol: http or https [default: https] [choices: http,https]
-  -k, --insecure             Skip TLS certificate verification
-  -v, --verbose              Enable verbose output
-      --no-color             Disable colored output
-  -h, --help                 Print help
-  -V, --version              Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ scripts/get_yang_models.sh --insecure
-Validating CLI tools (level: strict)...
-✓ bc
-<snip>
-
-======================================
-      Cisco WNC YANG Operations
-       RESTCONF API Integration
-======================================
-
-→ Fetching YANG models list...
-{
-  "ietf-yang-library:modules-state": {
-    "module-set-id": "e3bbc332e0aa187acc8c9d9862f42c30",
-    "module": [
-      {
-        "name": "ATM-FORUM-TC-MIB",
-        "revision": "",
-        "schema": "https://192.168.122.48:443/restconf/tailf/modules/ATM-FORUM-TC-MIB",
-        "namespace": "urn:ietf:params:xml:ns:yang:smiv2:ATM-FORUM-TC-MIB",
-        "conformance-type": "import"
-      },
-      <snip>
-      {
-        "name": "tailf-yang-patch",
-        "revision": "2023-01.25",
-        "schema": "https://192.168.122.48:443/restconf/tailf/modules/tailf-yang-patch/2023-01.25",
-        "namespace": "http://tail-f.com/ns/tailf-yang-patch",
-        "conformance-type": "implement"
-      }
-    ]
-  }
-}
-
-✓ YANG models listing completed successfully
-```
-
-</details>
-
-### get_yang_model_details.sh <a id="get_yang_model_details.sh"></a> <!-- anchor for internal links -->
-
-Fetches and prints details for a specific YANG model.
-
-#### Usage
-
-```bash
-❯ scripts/get_yang_model_details.sh --help
-
-USAGE: get_yang_model_details [OPTIONS]
-
-OPTIONS:
-  -c, --controller <HOST>       WNC controller hostname or IP (required unless WNC_CONTROLLER set)
-  -t, --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
-  -p, --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
-  -f, --format <FORMAT>        Output format: json or xml [default: json] [choices: json,xml]
-  -r, --revision <REVISION>    YANG model revision (YYYY-MM-DD) [default: 2023-08-01]
-  -m, --model <MODEL>          YANG model name to retrieve details for (required)
-  -k, --insecure               Skip TLS certificate verification
-  -v, --verbose                Enable verbose output
-  -R, --raw                    Output raw response without formatting
-      --no-color               Disable colored output
-  -h, --help                   Print help
-  -V, --version                Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ ./scripts/get_yang_model_details.sh --model Cisco-IOS-XE-wireless-access-point-oper --insecure
-Validating CLI tools (level: strict)...
-✓ bc
-<snip>
-
-✓ All 6 required CLI tools are available
-======================================
-      Cisco WNC YANG Operations
-       RESTCONF API Integration
-======================================
-
-→ Fetching YANG model details for: Cisco-IOS-XE-wireless-access-point-oper (rev: 2023-08-01)
-module Cisco-IOS-XE-wireless-access-point-oper {
-  yang-version 1.1;
-  namespace "http://cisco.com/ns/yang/Cisco-IOS-XE-wireless-access-point-oper";
-  prefix wireless-access-point-oper;
-
-  import Cisco-IOS-XE-event-history-types {
-    prefix event-history-types;
-  }
-  <snip>
-  }
-}
-✓ YANG model retrieval completed successfully
-ℹ Info: Target: Cisco-IOS-XE-wireless-access-point-oper
-```
-
-</details>
-
-### get_yang_statement_details.sh <a id="get_yang_statement_details.sh"></a> <!-- anchor for internal links -->
-
-Retrieves details for a specific statement under a given YANG model.
-
-#### Usage
-
-```bash
-❯ scripts/get_yang_statement_details.sh --help
-
-USAGE: get_yang_statement_details [OPTIONS]
-
-OPTIONS:
-  -c, --controller <HOST>      WNC controller hostname or IP (required unless WNC_CONTROLLER set)
-  -t, --token <TOKEN>          Basic auth token (or use WNC_ACCESS_TOKEN env var)
-  -p, --protocol <PROTOCOL>    Protocol: http or https [default: https] [choices: http,https]
-  -f, --format <FORMAT>        Output format: json or xml [default: json] [choices: json,xml]
-  -m, --model <MODEL>          YANG model name (required)
-  -s, --statement <STATEMENT>  YANG statement name (required)
-  -k, --insecure               Skip TLS certificate verification
-  -v, --verbose                Enable verbose output
-      --no-color               Disable colored output
-  -h, --help                   Print help
-  -V, --version                Print version
-```
-
-#### Sample Output
-
-<details><summary>Click to expand sample output</summary>
-
-```bash
-❯ ./scripts/get_yang_statement_details.sh --model Cisco-IOS-XE-wireless-access-point-oper --statement access-point-oper-data --insecure
-Validating CLI tools (level: strict)...
-✓ bc
-<snip>
-
-✓ All 6 required CLI tools are available
-======================================
-      Cisco WNC YANG Operations
-       RESTCONF API Integration
-======================================
-
-→ Fetching YANG statement details for: Cisco-IOS-XE-wireless-access-point-oper/access-point-oper-data
-{
-  "Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": {
-    "ap-radio-neighbor": [
-      <snip>
-    ]
-  }
-}
-
-✓ YANG statement retrieval completed successfully
-ℹ Info: Target: Cisco-IOS-XE-wireless-access-point-oper/access-point-oper-data
-
-```
-
-</details>
-
 ## 🆘 Help Script
 
 ### help.sh <a id="help.sh"></a> <!-- anchor for internal links -->
@@ -530,11 +341,6 @@ COMMON DEVELOPMENT TARGETS:
     test-integration    Run integration tests (requires environment)
     test-coverage       Run tests with coverage analysis
 
-YANG MODEL DEVELOPMENT:
-    yang-list           List all available YANG models
-    yang-model          Get YANG model details (MODEL=model-name)
-    yang-statement      Get YANG statement details (MODEL=model-name STATEMENT=statement-name)
-
 ENVIRONMENT VARIABLES:
     WNC_CONTROLLER      Controller hostname/IP for integration tests
     WNC_ACCESS_TOKEN    Base64 encoded credentials for integration tests
@@ -546,11 +352,6 @@ EXAMPLES:
     make test-unit          # Run unit tests
     make test-unit-coverage # Run unit tests with coverage
     make build              # Verify compilation
-
-    # YANG development
-    make yang-list                                    # List models
-    make yang-model MODEL=wireless-access-point      # Get model details
-    make yang-statement MODEL=wireless-client STATEMENT=active # Get statement details
 
     # Integration testing (requires environment setup)
     export WNC_CONTROLLER="<controller-host-or-ip>"
@@ -567,9 +368,6 @@ SCRIPT DETAILS:
     - lint.sh                Run golangci-lint
     - test_unit.sh           Run unit tests (supports --coverage)
     - test_integration.sh    Run integration tests
-    - get_yang_models.sh     List YANG models
-    - get_yang_model_details.sh Get model details
-    - get_yang_statement_details.sh Get statement details
 
 PROJECT STRUCTURE:
     scripts/                Script directory
@@ -580,7 +378,6 @@ PROJECT STRUCTURE:
     |   +-- output/        Output formatting utilities
     |   +-- testing/       Test utilities
     |   +-- utils/         Utility functions
-    |   +-- validation/    Git commit validation
 ````
 
 </details>
