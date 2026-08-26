@@ -4,7 +4,7 @@
 # located in the scripts/ directory for focused development tasks.
 #
 # For comprehensive help, use: make help
-# For specific script options, use: ./scripts/<script_name>.sh --help
+# Every script takes no arguments; see docs/SCRIPT_REFERENCE.md for details.
 
 .PHONY: help deps lint test-unit test-unit-coverage test-integration \
 	build pre-commit-install pre-commit-test pre-commit-uninstall
@@ -27,7 +27,7 @@ test-unit:
 
 # Run unit tests with coverage analysis
 test-unit-coverage:
-	@./scripts/test_unit.sh --coverage --report
+	@./scripts/test_coverage.sh
 
 # Run integration tests (requires environment variables)
 test-integration:

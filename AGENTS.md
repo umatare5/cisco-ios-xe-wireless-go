@@ -108,4 +108,4 @@ curl -k -X POST \
 - [docs/TESTING.md](docs/TESTING.md) — The four test tiers and how to run each
 - [docs/SECURITY.md](docs/SECURITY.md) — Vulnerability reporting and credential handling
 - [docs/MAKE_REFERENCE.md](docs/MAKE_REFERENCE.md) — Every Make target
-- [docs/SCRIPT_REFERENCE.md](docs/SCRIPT_REFERENCE.md) — The `scripts/` bootstrap and module system
+- [docs/SCRIPT_REFERENCE.md](docs/SCRIPT_REFERENCE.md) — Every script behind a Make target

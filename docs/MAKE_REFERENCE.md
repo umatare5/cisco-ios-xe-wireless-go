@@ -17,7 +17,7 @@ Following is a summary of available Make targets:
 | `build`                | Verify build (`go build ./...`)            | (inline)                                |
 | `test-unit`            | Unit + table + fail-fast                   | `scripts/test_unit.sh`                  |
 | `test-integration`     | Integration tests (tests/integration only) | `scripts/test_integration.sh`           |
-| `test-unit-coverage`   | Unit tests with coverage analysis          | `scripts/test_unit.sh --coverage`       |
+| `test-unit-coverage`   | Unit tests with coverage analysis          | `scripts/test_coverage.sh`              |
 | `pre-commit-install`   | Install pre-commit hook with symlink       | (inline)                                |
 | `pre-commit-test`      | Test pre-commit hook without installing    | `.githooks/pre-commit`                  |
 | `pre-commit-uninstall` | Remove a symlink to pre-commit hook        | (inline)                                |
