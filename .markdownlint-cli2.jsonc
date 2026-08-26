@@ -14,10 +14,10 @@
   "ignores": [
     "tmp/**",
     "vendor/**",
-    ".copilot_reports/**",
-    ".github/instructions/**",
     ".github/prompts/**",
-    ".github/copilot-instructions.md"
+    ".github/copilot-instructions.md",
+    ".claude/CLAUDE.md",
+    ".claude/skills/**"
   ],
   "globs": [
     "**/*.md"

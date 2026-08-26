@@ -24,9 +24,12 @@ coverage/*
 !coverage/report.out
 !coverage/report.html
 
+# Agent skills are local tooling; only the symlink to AGENTS.md is tracked
+.claude/*
+!.claude/CLAUDE.md
+
 # IDE files
 .idea/
-.copilot_reports/
 *.swp
 *.swo
 .env
