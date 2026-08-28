@@ -89,7 +89,8 @@ func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *PolicyLi
 	return core.PostVoid(ctx, s.Client(), routes.WLANPolicyListEntriesPath, payload)
 }
 
-// SetPolicyTag configures a policy tag on the wireless controller using PUT operation.
+// SetPolicyTag applies a policy tag with a merge PATCH, so a leaf the payload omits keeps the
+// value the controller already holds instead of being cleared.
 func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *PolicyListEntry) error {
 	if config == nil {
 		return errors.New("config cannot be nil")

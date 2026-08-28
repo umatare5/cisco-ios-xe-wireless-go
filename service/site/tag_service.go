@@ -100,7 +100,10 @@ func (s *SiteTagService) SetAPJoinProfile(ctx context.Context, siteTagName, apJo
 	return s.setSiteTag(ctx, config)
 }
 
-// SetFlexProfile sets the flex profile for a site tag.
+// SetFlexProfile sets the flex profile for a site tag and writes is-local-site false in the same
+// PATCH: the schema declares flex-profile only when is-local-site is false, and is-local-site
+// defaults to true. Apply it LAST — every setter here re-sends the whole entry, so a later
+// SetLocalSite(true) would carry the flex profile back with is-local-site true.
 func (s *SiteTagService) SetFlexProfile(ctx context.Context, siteTagName, flexProfile string) error {
 	config, err := s.GetSiteTag(ctx, siteTagName)
 	if err != nil {
@@ -113,7 +116,7 @@ func (s *SiteTagService) SetFlexProfile(ctx context.Context, siteTagName, flexPr
 			fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
 	}
 
-	isLocalSite := false // Explicitly set to false for flex-profile compatibility
+	isLocalSite := false
 	config.IsLocalSite = &isLocalSite
 	config.FlexProfile = &flexProfile
 	return s.setSiteTag(ctx, config)
