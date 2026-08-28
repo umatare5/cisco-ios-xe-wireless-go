@@ -99,9 +99,15 @@ type RFTagRadioProfiles struct {
 }
 
 // RFTagRadioProfile represents RF tag radio profile configuration.
+//
+// slot-id and band-id are the list keys and are always sent; radio-profile-name is the override
+// itself, and a plain read omits it whenever it holds its default. Read with
+// core.WithDefaults(core.DefaultsReportAll) to get the name in force, and treat nil as unread
+// rather than as a slot with no override.
 type RFTagRadioProfile struct {
-	SlotID string `json:"slot-id"` // Radio slot identifier (Live: IOS-XE 17.12.6a)
-	BandID string `json:"band-id"` // Radio band identifier (Live: IOS-XE 17.12.6a)
+	SlotID           string  `json:"slot-id"`                      // Radio slot identifier (Live: IOS-XE 17.12.6a)
+	BandID           string  `json:"band-id"`                      // Radio band identifier (Live: IOS-XE 17.12.6a)
+	RadioProfileName *string `json:"radio-profile-name,omitempty"` // Radio profile this slot overrides to; omitted by a plain read (Live: IOS-XE 17.12.8)
 }
 
 // RFProfileDetail represents RF profile configuration details.
