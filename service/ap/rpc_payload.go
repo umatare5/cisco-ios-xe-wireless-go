@@ -46,8 +46,9 @@ type APConfigRPCInput struct {
 
 // APSlotConfigRPCInput represents input structure for AP slot configuration RPC calls.
 type APSlotConfigRPCInput struct {
-	Mode    string `json:"mode"`     // Configuration mode
-	SlotID  int    `json:"slot-id"`  // Radio slot identifier; the RPC pairs it with band, and only band 1 fixes it
-	Band    string `json:"band"`     // Radio band specification
-	MACAddr string `json:"mac-addr"` // AP MAC address
+	Mode    string `json:"mode"`               // Configuration mode
+	SlotID  int    `json:"slot-id"`            // Radio slot identifier; the RPC pairs it with band, and only band 1 fixes it
+	Band    string `json:"band"`               // Band number the RPC takes for the radio type in that slot, 1..4; sent quoted, and the controller takes either form
+	MACAddr string `json:"mac-addr,omitempty"` // AP MAC address — one arm of the input's mandatory choice
+	APName  string `json:"ap-name,omitempty"`  // AP name — the other arm
 }
