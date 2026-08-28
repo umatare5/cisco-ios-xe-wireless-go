@@ -103,6 +103,7 @@ const (
 				"radio-slot-id": 0,
 				"slot-id": 0,
 				"radio-type": "radio-80211abgn",
+				"current-band-id": 0,
 				"radio-band-info": [
 					{
 						"band-id": 0,
@@ -381,6 +382,30 @@ func TestApServiceUnit_OmittedSlotLeaf_MockSuccess(t *testing.T) {
 
 		if radio.SlotID != nil {
 			t.Errorf("slot-id = %d, want nil rather than radio 0", *radio.SlotID)
+		}
+	})
+}
+
+// TestApServiceUnit_OmittedBandLeaf_MockSuccess tests that the withheld band index stays nil while
+// a sent 0 still decodes, because 0 is a genuine reading — 2.4 GHz — and not an absence sentinel.
+func TestApServiceUnit_OmittedBandLeaf_MockSuccess(t *testing.T) {
+	t.Run("SentZeroDecodes", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperAllLeavesSent)
+
+		if radio.CurrentBandID == nil || *radio.CurrentBandID != 0 {
+			t.Errorf("current-band-id = %v, want a non-nil 0: 0 is 2.4 GHz, not an absence", radio.CurrentBandID)
+		}
+	})
+
+	t.Run("OmittedLeafStaysNil", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperPublishedLeavesOmitted)
+
+		if radio.RadioType != ap.RadioTypeRemoteLAN {
+			t.Fatalf("radio-type = %q, so the record was not decoded", radio.RadioType)
+		}
+
+		if radio.CurrentBandID != nil {
+			t.Errorf("current-band-id = %d, want nil rather than a value 2.4 GHz also reads as", *radio.CurrentBandID)
 		}
 	})
 }

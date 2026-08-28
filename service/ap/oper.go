@@ -349,9 +349,9 @@ type RadioOperData struct {
 	// Band and channel information
 
 	// Band index from 0, one below the enm-ewlc-dot11-radio-band number for the same band, so this
-	// 0 is 2.4 GHz where the enum's 0 is invalid. Withheld on a radio-remote-lan radio, where this
-	// value field then reads 0. (Live: IOS-XE 17.12.6a)
-	CurrentBandID     int    `json:"current-band-id,omitempty"`
+	// 0 is 2.4 GHz where the enum's 0 is invalid. Withheld on a radio-remote-lan radio; nil is
+	// that absence, so a decoded 0 stays a 2.4 GHz reading. (Live: IOS-XE 17.12.6a)
+	CurrentBandID     *int   `json:"current-band-id,omitempty"`
 	CurrentActiveBand string `json:"current-active-band,omitempty"` // Active frequency band (Live: IOS-XE 17.12.6a)
 
 	// Protocol capabilities
