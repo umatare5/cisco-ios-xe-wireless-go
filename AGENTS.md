@@ -5,7 +5,7 @@
 
 ## Tech Stack
 
-- Go 1.26+ (see [go.mod](go.mod))
+- Go 1.27+ (see [go.mod](go.mod))
 - **No third-party dependencies** — `go.mod` carries no `require` block and there is no `go.sum`, in production and in test code
 - [`golangci-lint`](https://golangci-lint.run/) — the authority for lint, formatting, and suppressions; exits non-zero on any finding (see [.golangci.yml](.golangci.yml))
 - [`goreleaser`](https://goreleaser.com/) v2 — cross-platform release builds (see [.goreleaser.yml](.goreleaser.yml))

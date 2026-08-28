@@ -40,7 +40,7 @@ Cisco Catalyst 9800 Wireless Network Controller running on:
 
 ## 📦 Installation
 
-This SDK requires Go 1.26 or newer.
+This SDK requires Go 1.27 or newer.
 
 ```bash
 go get github.com/umatare5/cisco-ios-xe-wireless-go
