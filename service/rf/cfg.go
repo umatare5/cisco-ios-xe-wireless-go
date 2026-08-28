@@ -84,12 +84,17 @@ type AtfPolicyDetail struct {
 }
 
 // RFTag represents RF tag configuration.
+//
+// The optional leaves are pointers so a caller can name one without naming a value: setRFTag
+// re-sends the whole entry, and a value field cannot tell a leaf the caller never named from one
+// it set to the empty string. It is the shape site.SiteListEntry and wlan.PolicyListEntry already
+// have, and under those services' merge PATCH it is what leaves an unnamed leaf alone.
 type RFTag struct {
 	TagName             string              `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.6a)
-	Description         string              `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.6a)
-	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.6a)
-	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.6a)
-	Dot116GhzRFProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.6a)
+	Description         *string             `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.6a)
+	Dot11ARfProfileName *string             `json:"dot11a-rf-profile-name,omitempty"`  // 5 GHz RF profile name, written by SetDot11ARfProfile (Live: IOS-XE 17.12.6a)
+	Dot11BRfProfileName *string             `json:"dot11b-rf-profile-name,omitempty"`  // 2.4 GHz RF profile name, written by SetDot11BRfProfile (Live: IOS-XE 17.12.6a)
+	Dot116GhzRFProfName *string             `json:"dot11-6ghz-rf-prof-name,omitempty"` // 6 GHz RF profile name, written by SetDot116GhzRFProfile (Live: IOS-XE 17.12.6a)
 	RFTagRadioProfiles  *RFTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.6a)
 }
 

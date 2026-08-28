@@ -88,7 +88,7 @@ func (s *RFTagService) DeleteRFTag(ctx context.Context, tagName string) error {
 func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfileName string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
-			payload.Dot11ARfProfileName = rfProfileName
+			payload.Dot11ARfProfileName = &rfProfileName
 		}
 	})
 }
@@ -97,7 +97,7 @@ func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfil
 func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfileName string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
-			payload.Dot11BRfProfileName = rfProfileName
+			payload.Dot11BRfProfileName = &rfProfileName
 		}
 	})
 }
@@ -106,7 +106,7 @@ func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfil
 func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfProfileName string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
-			payload.Dot116GhzRFProfName = rfProfileName
+			payload.Dot116GhzRFProfName = &rfProfileName
 		}
 	})
 }
@@ -115,7 +115,7 @@ func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfPro
 func (s *RFTagService) SetDescription(ctx context.Context, tagName, description string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
-			payload.Description = description
+			payload.Description = &description
 		}
 	})
 }

@@ -175,10 +175,10 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	t.Run("CreateRFTag", func(t *testing.T) {
 		newTag := &RFTag{
 			TagName:             "new-rf-tag",
-			Dot11ARfProfileName: "5ghz-profile",
-			Dot11BRfProfileName: "24ghz-profile",
-			Dot116GhzRFProfName: "6ghz-profile",
-			Description:         "New test RF tag",
+			Dot11ARfProfileName: strPtr("5ghz-profile"),
+			Dot11BRfProfileName: strPtr("24ghz-profile"),
+			Dot116GhzRFProfName: strPtr("6ghz-profile"),
+			Description:         strPtr("New test RF tag"),
 		}
 
 		err := rfTagService.CreateRFTag(ctx, newTag)
@@ -540,4 +540,9 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 			t.Error("Expected validation error for empty tag name")
 		}
 	})
+}
+
+// Helper function for pointer creation.
+func strPtr(s string) *string {
+	return &s
 }
