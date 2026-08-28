@@ -72,7 +72,7 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 - **A read-modify-write must route a carried value through the default builder, never into `""`.** Because the read omits a leaf holding its default, writing the omitted value back as an empty string is what the controller rejects.
 - **For a replacing `PUT` the write type must cover every leaf the read type declares.** A leaf the write type omits is deleted from the entry, and no test compares the two types — see the repair in `db757c7`.
 - **An optional container must be a pointer with `omitempty`.** A non-pointer struct always marshals, so the payload carries `"list": null` and the controller answers `400`.
-- **Tag writes are the only place this SDK mutates a controller.** The YANG tag-name cap is 32 characters, enforced today only in [service/wlan/tag_service.go](service/wlan/tag_service.go) — treat the other two as a gap, not as intended behaviour.
+- **Tag writes are the only place this SDK mutates a controller.** The three tag list key leaves declare the pattern `[!-~]([ -~]*[!-~])?` and no length on 17.12, 17.15 and 17.18 alike, while the controller caps a name at 32 characters on every kind, measured on 17.12.8, so `validation.ValidateTagName` enforces both and each tag service calls it.
 
 ### RESTCONF Access Patterns
 

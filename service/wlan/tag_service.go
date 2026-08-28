@@ -8,6 +8,7 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // PolicyTagService provides Policy Tag management operations.
@@ -28,7 +29,7 @@ func (s *PolicyTagService) GetPolicyTag(
 	tagName string,
 	opts ...core.GetOption,
 ) (*PolicyListEntry, error) {
-	if err := s.validateTagName(tagName); err != nil {
+	if err := validation.ValidateTagName(tagName); err != nil {
 		return nil, err
 	}
 
@@ -78,10 +79,7 @@ func (s *PolicyTagService) CreatePolicyTag(ctx context.Context, config *PolicyLi
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
-	if config.TagName == "" {
-		return errors.New("policy tag name cannot be empty")
-	}
-	if err := s.validateTagName(config.TagName); err != nil {
+	if err := validation.ValidateTagName(config.TagName); err != nil {
 		return err
 	}
 
@@ -95,10 +93,7 @@ func (s *PolicyTagService) SetPolicyTag(ctx context.Context, config *PolicyListE
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
-	if config.TagName == "" {
-		return errors.New("policy tag name cannot be empty")
-	}
-	if err := s.validateTagName(config.TagName); err != nil {
+	if err := validation.ValidateTagName(config.TagName); err != nil {
 		return err
 	}
 
@@ -171,22 +166,10 @@ func (s *PolicyTagService) SetDescription(ctx context.Context, tagName, descript
 
 // DeletePolicyTag deletes a policy tag configuration.
 func (s *PolicyTagService) DeletePolicyTag(ctx context.Context, tagName string) error {
-	if err := s.validateTagName(tagName); err != nil {
+	if err := validation.ValidateTagName(tagName); err != nil {
 		return err
 	}
 	return core.Delete(ctx, s.Client(), s.buildTagURL(tagName))
-}
-
-// validateTagName validates policy tag name.
-func (s *PolicyTagService) validateTagName(tagName string) error {
-	if tagName == "" {
-		return errors.New("policy tag name cannot be empty")
-	}
-	if len(tagName) > 32 {
-		return fmt.Errorf("policy tag validation failed: %w",
-			fmt.Errorf("tag name length validation failed: name too long (max 32 characters): '%s'", tagName))
-	}
-	return nil
 }
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.

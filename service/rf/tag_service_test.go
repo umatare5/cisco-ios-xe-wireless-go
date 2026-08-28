@@ -280,8 +280,8 @@ func TestRfTagServiceUnit_ValidationErrors_EmptyInputs(t *testing.T) {
 		if err == nil {
 			t.Error("Expected error for whitespace tag name")
 		}
-		if !strings.Contains(err.Error(), "invalid tag name format") {
-			t.Errorf("Expected 'invalid tag name format' error, got: %v", err)
+		if !strings.Contains(err.Error(), "must not begin or end with a space") {
+			t.Errorf("Expected 'must not begin or end with a space' error, got: %v", err)
 		}
 	})
 

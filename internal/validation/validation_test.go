@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -287,6 +288,47 @@ func TestValidationUnit_ValidateHost_Error(t *testing.T) {
 	for name, in := range cases {
 		t.Run(name, func(t *testing.T) {
 			testutil.AssertError(t, ValidateHost(NormalizeHost(in)), name)
+		})
+	}
+}
+
+// TestValidationUnit_ValidateTagName_Success pins the tag names the three key leaves accept.
+func TestValidationUnit_ValidateTagName_Success(t *testing.T) {
+	cases := []string{
+		"a",
+		"default-site-tag",
+		"tag with interior spaces",
+		"!#$%&",
+		strings.Repeat("x", TagNameMaxLength),
+	}
+	for _, in := range cases {
+		t.Run(in, func(t *testing.T) {
+			testutil.AssertNoError(t, ValidateTagName(in), in)
+		})
+	}
+}
+
+// TestValidationUnit_ValidateTagName_Error pins the tag names the key leaf pattern and the
+// controller's own 32-character cap refuse.
+func TestValidationUnit_ValidateTagName_Error(t *testing.T) {
+	cases := map[string]string{
+		"empty":           "",
+		"one space":       " ",
+		"whitespace only": "   ",
+		"leading space":   " tag",
+		"trailing space":  "tag ",
+		"tab":             "tag\ttag",
+		"newline":         "tag\ntag",
+		"carriage return": "tag\rtag",
+		"NUL":             "tag\x00tag",
+		"DEL":             "tag\x7ftag",
+		"CJK rune":        "タグ",
+		"Latin-1 rune":    "tág",
+		"above the cap":   strings.Repeat("x", TagNameMaxLength+1),
+	}
+	for name, in := range cases {
+		t.Run(name, func(t *testing.T) {
+			testutil.AssertError(t, ValidateTagName(in), name)
 		})
 	}
 }
