@@ -5,7 +5,6 @@ package ap_test
 import (
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
@@ -117,15 +116,15 @@ func TestAPServiceScenario_RadioStateManagement_Success(t *testing.T) {
 
 	// Step 2: Disable radio admin state
 	t.Logf("Step 2: Disabling radio admin state for AP %s Slot %d", apMac, slotID)
-	radioBand := getRadioBandForSlot(slotID)
-	if err := service.DisableRadio(ctx, apMac, radioBand); err != nil {
+	radioType := radioTypeForSlot(initialState, apMac, slotID)
+	if err := service.DisableRadioByMAC(ctx, apMac, slotID, radioType); err != nil {
 		t.Fatalf("Failed to disable radio for AP %s Slot %d: %v", apMac, slotID, err)
 	}
 	t.Logf("Successfully disabled radio admin state for AP %s Slot %d", apMac, slotID)
 
 	// Step 3: Enable radio admin state
 	t.Logf("Step 3: Enabling radio admin state for AP %s Slot %d", apMac, slotID)
-	if err := service.EnableRadio(ctx, apMac, radioBand); err != nil {
+	if err := service.EnableRadioByMAC(ctx, apMac, slotID, radioType); err != nil {
 		t.Fatalf("Failed to enable radio for AP %s Slot %d: %v", apMac, slotID, err)
 	}
 	t.Logf("Successfully enabled radio admin state for AP %s Slot %d", apMac, slotID)
@@ -146,18 +145,19 @@ func TestAPServiceScenario_RadioStateManagement_Success(t *testing.T) {
 // Helper Functions
 // ============================
 
-// getRadioBandForSlot returns the appropriate radio band for a given slot ID.
-func getRadioBandForSlot(slotID int) core.RadioBand {
-	switch slotID {
-	case 0:
-		return core.RadioBand24GHz
-	case 1:
-		return core.RadioBand5GHz
-	case 2:
-		return core.RadioBand5GHz // Use 5GHz for slot 2 as 6GHz may not be available
-	default:
-		return core.RadioBand24GHz // Default to 2.4GHz for unknown slots
+// radioTypeForSlot returns the radio-type leaf the controller reports for this slot, which is the
+// vocabulary the slot-admin write takes. An absent record leaves it empty, and the write refuses
+// an empty type rather than guessing a band from the slot.
+func radioTypeForSlot(status *ap.CiscoIOSXEWirelessApOperRadioOperData, apMac string, slotID int) ap.RadioType {
+	if status == nil {
+		return ""
 	}
+
+	if radioData := findRadioDataByMACAndSlot(status.RadioOperData, apMac, slotID); radioData != nil {
+		return radioData.RadioType
+	}
+
+	return ""
 }
 
 // logAPCapwapStatus logs the AP CAPWAP status information with admin state.

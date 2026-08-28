@@ -807,20 +807,29 @@ func (s Service) DisableAPByName(ctx context.Context, apName string) error {
 	return s.setAPAdminStateByName(ctx, apName, false)
 }
 
-// EnableRadio enables a radio on an Access Point using MAC address.
-func (s Service) EnableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error {
-	if err := validation.ValidateMACAddress(apMAC); err != nil {
-		return err
-	}
-	return s.updateRadioState(ctx, apMAC, &radioBand, true)
+// EnableRadioByMAC enables one radio on the access point with this address.
+//
+// slotID is the radio-slot-id the controller reports for that radio and radioType is the
+// radio-type leaf of the same record. The RPC's band follows the radio the slot holds rather than
+// the band it is serving, so both come from the record and neither is derived from the other;
+// whether the controller accepts the pair is the controller's to answer.
+func (s Service) EnableRadioByMAC(ctx context.Context, apMAC string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByMAC(ctx, apMAC, slotID, radioType, true)
 }
 
-// DisableRadio disables a radio on an Access Point using MAC address.
-func (s Service) DisableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error {
-	if err := validation.ValidateMACAddress(apMAC); err != nil {
-		return err
-	}
-	return s.updateRadioState(ctx, apMAC, &radioBand, false)
+// DisableRadioByMAC disables one radio on the access point with this address.
+func (s Service) DisableRadioByMAC(ctx context.Context, apMAC string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByMAC(ctx, apMAC, slotID, radioType, false)
+}
+
+// EnableRadioByName enables one radio on the access point with this name.
+func (s Service) EnableRadioByName(ctx context.Context, apName string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByName(ctx, apName, slotID, radioType, true)
+}
+
+// DisableRadioByName disables one radio on the access point with this name.
+func (s Service) DisableRadioByName(ctx context.Context, apName string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByName(ctx, apName, slotID, radioType, false)
 }
 
 // AssignSiteTag assigns a site tag to an Access Point using MAC address.
@@ -912,34 +921,100 @@ func (s Service) updateAPState(ctx context.Context, input APConfigRPCInput) erro
 	return nil
 }
 
-// updateRadioState handles radio-level state changes.
-func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *core.RadioBand, enabled bool) error {
-	if radioBand == nil {
-		return ierrors.RequiredParameterError("radio band")
-	}
+// The band numbers set-ap-slot-admin-state declares, identical on 17.12, 17.15 and 17.18.
+const (
+	radioBand24GHz = 1
+	radioBand5GHz  = 2
+	radioBandDual  = 3
+	radioBand6GHz  = 4
+)
 
+// radioBandNumber returns the band number set-ap-slot-admin-state takes for a radio type, and
+// false when this SDK has no number for it.
+//
+// The RPC's band leaf names a kind of radio and not a frequency — 1 is 2.4 GHz, 2 is 5 GHz, 3 is
+// dual band and 4 is 6 GHz — and its must clause admits seven (band, slot-id) pairs. Which of
+// them a given access point accepts is the controller's to arbitrate, so nothing here refuses a
+// slot: a dual-band radio in slot 0 takes band 3 where the served band would derive band 1.
+//
+// radio-invalid, radio-uwb and radio-remote-lan have no number because the leaf's domain is 1..4
+// and none of the four names them. radio-80211-xor-24-6ghz has none either: both the dual-band 3
+// and the 6 GHz 4 fit a 2.4/6 GHz XOR radio and no controller has been asked which.
+func radioBandNumber(radioType RadioType) (int, bool) {
+	switch radioType {
+	case RadioType80211BG:
+		return radioBand24GHz, true
+	case RadioType80211A:
+		return radioBand5GHz, true
+	case RadioType80211ABGN, RadioTypeXOR5And6GHz:
+		return radioBandDual, true
+	case RadioType6GHz:
+		return radioBand6GHz, true
+	default:
+		return 0, false
+	}
+}
+
+// setRadioAdminStateByMAC fills the input's mac-addr arm.
+func (s Service) setRadioAdminStateByMAC(
+	ctx context.Context,
+	apMAC string, slotID int, radioType RadioType, enabled bool,
+) error {
 	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
 	if err != nil {
 		return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
 	}
 
-	radioBandInfo, err := core.GetRadioBandInfo(int(*radioBand))
+	input, err := buildSlotAdminInput(slotID, radioType, enabled)
 	if err != nil {
 		return err
 	}
+	input.MACAddr = normalizedMAC
 
-	payload := APSlotConfigRPCPayload{
-		Input: APSlotConfigRPCInput{
-			Mode:    core.GetAdminStateMode(enabled),
-			SlotID:  int(radioBandInfo.SlotID),
-			Band:    strconv.Itoa(int(radioBandInfo.Band)),
-			MACAddr: normalizedMAC,
-		},
+	return s.updateRadioState(ctx, input)
+}
+
+// setRadioAdminStateByName fills the input's ap-name arm.
+func (s Service) setRadioAdminStateByName(
+	ctx context.Context,
+	apName string, slotID int, radioType RadioType, enabled bool,
+) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
 	}
+
+	input, err := buildSlotAdminInput(slotID, radioType, enabled)
+	if err != nil {
+		return err
+	}
+	input.APName = apName
+
+	return s.updateRadioState(ctx, input)
+}
+
+// buildSlotAdminInput fills every leaf but the arm, which the caller sets.
+func buildSlotAdminInput(slotID int, radioType RadioType, enabled bool) (APSlotConfigRPCInput, error) {
+	band, ok := radioBandNumber(radioType)
+	if !ok {
+		return APSlotConfigRPCInput{}, ierrors.ValidationError("radio type", string(radioType))
+	}
+
+	return APSlotConfigRPCInput{
+		Mode:   core.GetAdminStateMode(enabled),
+		SlotID: slotID,
+		Band:   strconv.Itoa(band),
+	}, nil
+}
+
+// updateRadioState posts one slot-admin RPC. The arm is the caller's: the input's choice is
+// mandatory, and an input carrying both names two access points.
+func (s Service) updateRadioState(ctx context.Context, input APSlotConfigRPCInput) error {
+	payload := APSlotConfigRPCPayload{Input: input}
 
 	if err := core.PostRPCVoid(ctx, s.Client(), routes.APSetApSlotAdminStateRPC, payload); err != nil {
 		return ierrors.ServiceOperationError("set", "AP radio", "state", err)
 	}
+
 	return nil
 }
 

@@ -2,6 +2,40 @@ package ap
 
 import "time"
 
+// RadioType represents the enm-radio-type enumeration.
+type RadioType string
+
+// enm-radio-type members. The first eight are served on 17.12, 17.15 and 17.18 alike;
+// radio-80211-xor-24-6ghz arrives at 17.18.
+const (
+	// RadioTypeInvalid is the enumeration's own invalid member.
+	RadioTypeInvalid RadioType = "radio-invalid"
+
+	// RadioType80211BG is a dedicated 2.4 GHz radio.
+	RadioType80211BG RadioType = "radio-80211bg"
+
+	// RadioType80211A is a dedicated 5 GHz radio.
+	RadioType80211A RadioType = "radio-80211a"
+
+	// RadioType80211ABGN is a 2.4/5 GHz XOR radio.
+	RadioType80211ABGN RadioType = "radio-80211abgn"
+
+	// RadioTypeUWB is an ultra-wideband radio.
+	RadioTypeUWB RadioType = "radio-uwb"
+
+	// RadioTypeRemoteLAN is a remote-LAN port, listed in radio-oper-data with no band of its own.
+	RadioTypeRemoteLAN RadioType = "radio-remote-lan"
+
+	// RadioType6GHz is a dedicated 6 GHz radio.
+	RadioType6GHz RadioType = "radio-80211-6ghz"
+
+	// RadioTypeXOR5And6GHz is a 5/6 GHz XOR radio.
+	RadioTypeXOR5And6GHz RadioType = "radio-80211-xor-5-6ghz"
+
+	// RadioTypeXOR24And6GHz is a 2.4/6 GHz XOR radio, served from IOS-XE 17.18.
+	RadioTypeXOR24And6GHz RadioType = "radio-80211-xor-24-6ghz"
+)
+
 // CiscoIOSXEWirelessAPOper represents access point operational data response.
 type CiscoIOSXEWirelessAPOper struct {
 	CiscoIOSXEWirelessAPOperData *CiscoIOSXEWirelessAPOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.6a)
@@ -231,16 +265,16 @@ type ApRadioNeighbor struct {
 
 // RadioOperData represents radio operational data.
 type RadioOperData struct {
-	WtpMAC       string `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.6a)
-	RadioSlotID  int    `json:"radio-slot-id"`            // Radio slot identifier (Live: IOS-XE 17.12.6a)
-	SlotID       int    `json:"slot-id,omitempty"`        // Physical slot identifier (Live: IOS-XE 17.12.6a)
-	RadioType    string `json:"radio-type,omitempty"`     // Radio hardware type (Live: IOS-XE 17.12.6a)
-	AdminState   string `json:"admin-state,omitempty"`    // Administrative state (Live: IOS-XE 17.12.6a)
-	OperState    string `json:"oper-state,omitempty"`     // Operational state (Live: IOS-XE 17.12.6a)
-	RadioMode    string `json:"radio-mode,omitempty"`     // Radio operational mode (Live: IOS-XE 17.12.6a)
-	RadioSubMode string `json:"radio-sub-mode,omitempty"` // Radio sub-mode details (Live: IOS-XE 17.12.6a)
-	RadioSubtype string `json:"radio-subtype,omitempty"`  // Radio hardware subtype (Live: IOS-XE 17.12.6a)
-	RadioSubband string `json:"radio-subband,omitempty"`  // Radio frequency subband (Live: IOS-XE 17.12.6a)
+	WtpMAC       string    `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.6a)
+	RadioSlotID  int       `json:"radio-slot-id"`            // Radio slot identifier (Live: IOS-XE 17.12.6a)
+	SlotID       int       `json:"slot-id,omitempty"`        // Physical slot identifier (Live: IOS-XE 17.12.6a)
+	RadioType    RadioType `json:"radio-type,omitempty"`     // Radio hardware type; the band a radio write takes follows it (Live: IOS-XE 17.12.6a)
+	AdminState   string    `json:"admin-state,omitempty"`    // Administrative state (Live: IOS-XE 17.12.6a)
+	OperState    string    `json:"oper-state,omitempty"`     // Operational state (Live: IOS-XE 17.12.6a)
+	RadioMode    string    `json:"radio-mode,omitempty"`     // Radio operational mode (Live: IOS-XE 17.12.6a)
+	RadioSubMode string    `json:"radio-sub-mode,omitempty"` // Radio sub-mode details (Live: IOS-XE 17.12.6a)
+	RadioSubtype string    `json:"radio-subtype,omitempty"`  // Radio hardware subtype (Live: IOS-XE 17.12.6a)
+	RadioSubband string    `json:"radio-subband,omitempty"`  // Radio frequency subband (Live: IOS-XE 17.12.6a)
 
 	// Band and channel information
 

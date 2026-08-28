@@ -1909,18 +1909,18 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	// Test radio state operations (using core.RadioBand constants)
-	t.Run("EnableRadio", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz)
+	// Test radio state operations
+	t.Run("EnableRadioByMAC", func(t *testing.T) {
+		err := service.EnableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 0, ap.RadioType80211BG)
 		if err != nil {
-			t.Errorf("Expected no error for EnableRadio, got: %v", err)
+			t.Errorf("Expected no error for EnableRadioByMAC, got: %v", err)
 		}
 	})
 
-	t.Run("DisableRadio", func(t *testing.T) {
-		err := service.DisableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand5GHz)
+	t.Run("DisableRadioByMAC", func(t *testing.T) {
+		err := service.DisableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 1, ap.RadioType80211A)
 		if err != nil {
-			t.Errorf("Expected no error for DisableRadio, got: %v", err)
+			t.Errorf("Expected no error for DisableRadioByMAC, got: %v", err)
 		}
 	})
 
@@ -1995,15 +1995,15 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	})
 
 	// Test invalid MAC validation for radio operations
-	t.Run("EnableRadio_InvalidMAC", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "invalid-mac", core.RadioBand24GHz)
+	t.Run("EnableRadioByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.EnableRadioByMAC(ctx, "invalid-mac", 0, ap.RadioType80211BG)
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
 	})
 
-	t.Run("DisableRadio_InvalidMAC", func(t *testing.T) {
-		err := service.DisableRadio(ctx, "invalid-mac", core.RadioBand5GHz)
+	t.Run("DisableRadioByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.DisableRadioByMAC(ctx, "invalid-mac", 1, ap.RadioType80211A)
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
@@ -2178,17 +2178,17 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 
 	// Test updateRadioState error handling
 	t.Run("UpdateRadioState_RPCError", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz)
+		err := service.EnableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 0, ap.RadioType80211BG)
 		if err == nil {
 			t.Error("Expected error for failed radio RPC call, got nil")
 		}
 	})
 
-	// Test updateRadioState with invalid radio band
-	t.Run("UpdateRadioState_InvalidRadioBand", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand(999)) // Invalid band
+	// Test updateRadioState with a radio type the RPC has no band number for
+	t.Run("UpdateRadioState_UnnumberedRadioType", func(t *testing.T) {
+		err := service.EnableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 0, ap.RadioTypeUWB)
 		if err == nil {
-			t.Error("Expected error for invalid radio band, got nil")
+			t.Error("Expected error for an unnumbered radio type, got nil")
 		}
 	})
 
@@ -2485,30 +2485,74 @@ func TestApServiceUnit_AssignTags_KeepsPrimingProfile(t *testing.T) {
 	})
 }
 
-// TestApServiceUnit_EnableRadio_RPCInput_Success pins every leaf the radio admin RPC puts on the
-// wire, so a payload field that lost its omitempty is a failure here rather than a 400 on a
-// controller: the RPC's target is a mandatory choice, and the arm the caller did not name must
-// be absent from the body, not present at its zero value.
-func TestApServiceUnit_EnableRadio_RPCInput_Success(t *testing.T) {
-	server := testutil.NewRESTCONFServer(t)
-	t.Cleanup(server.Close)
-	server.AddHandler(http.MethodPost, slotAdminNode, func() (int, string) {
-		return http.StatusNoContent, ""
-	})
-
-	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
-	service := ap.NewService(testClient.Core().(*core.Client))
-
-	if err := service.EnableRadio(t.Context(), "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz); err != nil {
-		t.Fatalf("EnableRadio() error = %v", err)
+// TestApServiceUnit_SetRadioAdminState_RPCInput_Success pins every leaf the radio-admin RPC puts
+// on the wire for each arm, and the band each radio type maps to. The band is what the previous
+// shape derived from the slot: an XOR radio in slot 0 takes 3, not the 1 its served band implies.
+func TestApServiceUnit_SetRadioAdminState_RPCInput_Success(t *testing.T) {
+	tests := []struct {
+		name      string
+		radioType ap.RadioType
+		slotID    int
+		wantBand  string
+	}{
+		{name: "dedicated 2.4 GHz", radioType: ap.RadioType80211BG, slotID: 0, wantBand: "1"},
+		{name: "dedicated 5 GHz", radioType: ap.RadioType80211A, slotID: 1, wantBand: "2"},
+		{name: "2.4/5 GHz XOR in slot 0", radioType: ap.RadioType80211ABGN, slotID: 0, wantBand: "3"},
+		{name: "5/6 GHz XOR in slot 2", radioType: ap.RadioTypeXOR5And6GHz, slotID: 2, wantBand: "3"},
+		{name: "dedicated 6 GHz in slot 3", radioType: ap.RadioType6GHz, slotID: 3, wantBand: "4"},
 	}
 
-	assertRPCInputLeaves(t, server, map[string]any{
-		"mode":     "admin-state-enabled",
-		"slot-id":  float64(0),
-		"band":     "1",
-		"mac-addr": "aa:bb:cc:dd:ee:ff",
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			service, server := newRPCService(t, slotAdminNode)
+			err := service.DisableRadioByMAC(t.Context(), "aa:bb:cc:dd:ee:ff", tt.slotID, tt.radioType)
+			if err != nil {
+				t.Fatalf("DisableRadioByMAC() error = %v", err)
+			}
+
+			assertRPCInputLeaves(t, server, map[string]any{
+				"mode":     "admin-state-disabled",
+				"slot-id":  float64(tt.slotID),
+				"band":     tt.wantBand,
+				"mac-addr": "aa:bb:cc:dd:ee:ff",
+			})
+		})
+	}
+
+	t.Run("ByName", func(t *testing.T) {
+		service, server := newRPCService(t, slotAdminNode)
+		err := service.EnableRadioByName(t.Context(), "TEST-AP01", 2, ap.RadioTypeXOR5And6GHz)
+		if err != nil {
+			t.Fatalf("EnableRadioByName() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{
+			"mode":    "admin-state-enabled",
+			"slot-id": float64(2),
+			"band":    "3",
+			"ap-name": "TEST-AP01",
+		})
 	})
+}
+
+// TestApServiceUnit_RadioBandNumber_UnnumberedTypes_Error holds the four members the RPC's 1..4
+// band domain has no number for, so a table row added without a measurement fails here.
+func TestApServiceUnit_RadioBandNumber_UnnumberedTypes_Error(t *testing.T) {
+	unnumbered := []ap.RadioType{
+		ap.RadioTypeInvalid,
+		ap.RadioTypeUWB,
+		ap.RadioTypeRemoteLAN,
+		ap.RadioTypeXOR24And6GHz,
+	}
+
+	for _, radioType := range unnumbered {
+		t.Run(string(radioType), func(t *testing.T) {
+			service, _ := newRPCService(t, slotAdminNode)
+			if err := service.EnableRadioByMAC(t.Context(), "aa:bb:cc:dd:ee:ff", 0, radioType); err == nil {
+				t.Errorf("EnableRadioByMAC(%s) error = nil, want a refusal", radioType)
+			}
+		})
+	}
 }
 
 // TestApServiceUnit_SetAPAdminState_RPCInput_Success pins every leaf the admin-state RPC puts on

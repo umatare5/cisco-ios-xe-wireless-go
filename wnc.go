@@ -57,20 +57,6 @@ var (
 // APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
 type APIError = core.APIError
 
-// RadioBand names the radio a band-scoped accessor acts on (re-export of internal
-// core.RadioBand), so a consumer can declare one in a variable, a struct field or a test double
-// rather than passing an untyped literal.
-type RadioBand = core.RadioBand
-
-const (
-	// RadioBand24GHz is the 2.4 GHz radio.
-	RadioBand24GHz = core.RadioBand24GHz
-	// RadioBand5GHz is the 5 GHz radio.
-	RadioBand5GHz = core.RadioBand5GHz
-	// RadioBand6GHz is the 6 GHz radio.
-	RadioBand6GHz = core.RadioBand6GHz
-)
-
 // Client represents the unified WNC API client with access to all domain services.
 // This provides a single-import approach to accessing all wireless controller functionality.
 type Client struct {
