@@ -208,11 +208,8 @@ func (s Service) GetNameMACMapByWTPName(
 	ctx context.Context,
 	wtpName string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApNameMACMap, error) {
-	if wtpName == "" {
-		return nil, core.ErrResourceNotFound
-	}
-	if strings.TrimSpace(wtpName) == "" {
-		return nil, core.ErrResourceNotFound
+	if err := service.RequireAPName(wtpName); err != nil {
+		return nil, err
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
@@ -786,14 +783,28 @@ func (s Service) ListApNhGlobalData(
 	return core.Get[CiscoIOSXEWirelessApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath, opts...)
 }
 
-// EnableAP enables the administrative state of an access point.
-func (s Service) EnableAP(ctx context.Context, mac string) error {
-	return s.updateAPState(ctx, mac, "admin-state-enabled")
+// EnableAPByMAC enables the administrative state of the access point with this address.
+//
+// The By suffix names the arm of the RPC's mandatory choice this fills rather than a list key,
+// which is why the tag writes on this service carry no suffix: ap-mac is their list key and there
+// is nothing to choose.
+func (s Service) EnableAPByMAC(ctx context.Context, apMAC string) error {
+	return s.setAPAdminStateByMAC(ctx, apMAC, true)
 }
 
-// DisableAP disables the administrative state of an access point.
-func (s Service) DisableAP(ctx context.Context, mac string) error {
-	return s.updateAPState(ctx, mac, "admin-state-disabled")
+// DisableAPByMAC disables the administrative state of the access point with this address.
+func (s Service) DisableAPByMAC(ctx context.Context, apMAC string) error {
+	return s.setAPAdminStateByMAC(ctx, apMAC, false)
+}
+
+// EnableAPByName enables the administrative state of the access point with this name.
+func (s Service) EnableAPByName(ctx context.Context, apName string) error {
+	return s.setAPAdminStateByName(ctx, apName, true)
+}
+
+// DisableAPByName disables the administrative state of the access point with this name.
+func (s Service) DisableAPByName(ctx context.Context, apName string) error {
+	return s.setAPAdminStateByName(ctx, apName, false)
 }
 
 // EnableRadio enables a radio on an Access Point using MAC address.
@@ -864,23 +875,35 @@ func (s Service) Reload(ctx context.Context, apMAC string) error {
 	return s.reload(ctx, apName)
 }
 
-// updateAPState handles AP admin state changes with mac and mode parameters.
-func (s Service) updateAPState(ctx context.Context, mac, mode string) error {
-	if err := validation.ValidateMACAddress(mac); err != nil {
-		return fmt.Errorf("invalid AP MAC address: %s", mac)
-	}
-
-	normalizedMAC, err := validation.NormalizeMACAddress(mac)
+// setAPAdminStateByMAC fills the input's mac-addr arm.
+func (s Service) setAPAdminStateByMAC(ctx context.Context, apMAC string, enabled bool) error {
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
 	if err != nil {
-		return fmt.Errorf("invalid AP MAC address: %s", mac)
+		return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
 	}
 
-	payload := APConfigRPCPayload{
-		Input: APConfigRPCInput{
-			Mode:    mode,
-			MACAddr: normalizedMAC,
-		},
+	return s.updateAPState(ctx, APConfigRPCInput{
+		Mode:    core.GetAdminStateMode(enabled),
+		MACAddr: normalizedMAC,
+	})
+}
+
+// setAPAdminStateByName fills the input's ap-name arm.
+func (s Service) setAPAdminStateByName(ctx context.Context, apName string, enabled bool) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
 	}
+
+	return s.updateAPState(ctx, APConfigRPCInput{
+		Mode:   core.GetAdminStateMode(enabled),
+		APName: apName,
+	})
+}
+
+// updateAPState posts one admin-state RPC. The arm is the caller's: the input's choice is
+// mandatory, and an input carrying both names two access points.
+func (s Service) updateAPState(ctx context.Context, input APConfigRPCInput) error {
+	payload := APConfigRPCPayload{Input: input}
 
 	if err := core.PostRPCVoid(ctx, s.Client(), routes.APSetApAdminStateRPC, payload); err != nil {
 		return ierrors.ServiceOperationError("update", "AP", "admin state", err)

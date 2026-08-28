@@ -3,6 +3,7 @@ package ap_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"testing"
 
@@ -1880,17 +1881,31 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test AP admin state operations
-	t.Run("EnableAP", func(t *testing.T) {
-		err := service.EnableAP(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("EnableAPByMAC", func(t *testing.T) {
+		err := service.EnableAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for EnableAP, got: %v", err)
+			t.Errorf("Expected no error for EnableAPByMAC, got: %v", err)
 		}
 	})
 
-	t.Run("DisableAP", func(t *testing.T) {
-		err := service.DisableAP(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("DisableAPByMAC", func(t *testing.T) {
+		err := service.DisableAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for DisableAP, got: %v", err)
+			t.Errorf("Expected no error for DisableAPByMAC, got: %v", err)
+		}
+	})
+
+	t.Run("EnableAPByName", func(t *testing.T) {
+		err := service.EnableAPByName(ctx, "TEST-AP01")
+		if err != nil {
+			t.Errorf("Expected no error for EnableAPByName, got: %v", err)
+		}
+	})
+
+	t.Run("DisableAPByName", func(t *testing.T) {
+		err := service.DisableAPByName(ctx, "TEST-AP01")
+		if err != nil {
+			t.Errorf("Expected no error for DisableAPByName, got: %v", err)
 		}
 	})
 
@@ -1951,17 +1966,31 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test invalid MAC validation for AP state operations
-	t.Run("EnableAP_InvalidMAC", func(t *testing.T) {
-		err := service.EnableAP(ctx, "invalid-mac")
+	t.Run("EnableAPByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.EnableAPByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
 	})
 
-	t.Run("DisableAP_InvalidMAC", func(t *testing.T) {
-		err := service.DisableAP(ctx, "invalid-mac")
+	t.Run("DisableAPByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.DisableAPByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	t.Run("EnableAPByName_BlankName", func(t *testing.T) {
+		err := service.EnableAPByName(ctx, "")
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
+		}
+	})
+
+	t.Run("DisableAPByName_BlankName", func(t *testing.T) {
+		err := service.DisableAPByName(ctx, " ")
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
 		}
 	})
 
@@ -2141,7 +2170,7 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 
 	// Test updateAPState error handling
 	t.Run("UpdateAPState_RPCError", func(t *testing.T) {
-		err := service.EnableAP(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.EnableAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed RPC call, got nil")
 		}
@@ -2178,6 +2207,9 @@ const apTagNode = "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag"
 
 // slotAdminNode is the node the radio admin RPC posts to.
 const slotAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state"
+
+// apAdminNode is the node the AP admin RPC posts to.
+const apAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state"
 
 // writtenBody returns the body of the first recorded request made with method, and fails if
 // none was. The read that precedes a write is recorded too, so the write is selected by
@@ -2288,6 +2320,21 @@ func newTagRecorderService(t *testing.T, entry string) (ap.Service, *testutil.RE
 		})
 	}
 	server.AddHandler(http.MethodPut, apTagNode, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+
+	return ap.NewService(testClient.Core().(*core.Client)), server
+}
+
+// newRPCService answers node with 204 and records what reached it.
+func newRPCService(t *testing.T, node string) (ap.Service, *testutil.RESTCONFServer) {
+	t.Helper()
+
+	server := testutil.NewRESTCONFServer(t)
+	t.Cleanup(server.Close)
+	server.AddHandler(http.MethodPost, node, func() (int, string) {
 		return http.StatusNoContent, ""
 	})
 
@@ -2461,5 +2508,33 @@ func TestApServiceUnit_EnableRadio_RPCInput_Success(t *testing.T) {
 		"slot-id":  float64(0),
 		"band":     "1",
 		"mac-addr": "aa:bb:cc:dd:ee:ff",
+	})
+}
+
+// TestApServiceUnit_SetAPAdminState_RPCInput_Success pins every leaf the admin-state RPC puts on
+// the wire for each arm, so an arm the caller never named is a failure here rather than a 400.
+func TestApServiceUnit_SetAPAdminState_RPCInput_Success(t *testing.T) {
+	t.Run("ByMAC", func(t *testing.T) {
+		service, server := newRPCService(t, apAdminNode)
+		if err := service.DisableAPByMAC(t.Context(), "AA-BB-CC-DD-EE-FF"); err != nil {
+			t.Fatalf("DisableAPByMAC() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{
+			"mode":     "admin-state-disabled",
+			"mac-addr": "aa:bb:cc:dd:ee:ff",
+		})
+	})
+
+	t.Run("ByName", func(t *testing.T) {
+		service, server := newRPCService(t, apAdminNode)
+		if err := service.EnableAPByName(t.Context(), "TEST-AP01"); err != nil {
+			t.Fatalf("EnableAPByName() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{
+			"mode":    "admin-state-enabled",
+			"ap-name": "TEST-AP01",
+		})
 	})
 }

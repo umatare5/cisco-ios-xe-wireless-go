@@ -52,14 +52,14 @@ func TestAPServiceScenario_AdminStateManagement_Success(t *testing.T) {
 
 	// Step 2: Disable AP admin state
 	t.Logf("Step 2: Disabling AP admin state for AP %s", apMac)
-	if err := service.DisableAP(ctx, apMac); err != nil {
+	if err := service.DisableAPByMAC(ctx, apMac); err != nil {
 		t.Fatalf("Failed to disable AP %s: %v", apMac, err)
 	}
 	t.Logf("Successfully disabled AP admin state for AP %s", apMac)
 
 	// Step 3: Enable AP admin state
 	t.Logf("Step 3: Enabling AP admin state for AP %s", apMac)
-	if err := service.EnableAP(ctx, apMac); err != nil {
+	if err := service.EnableAPByMAC(ctx, apMac); err != nil {
 		t.Fatalf("Failed to enable AP %s: %v", apMac, err)
 	}
 	t.Logf("Successfully enabled AP admin state for AP %s", apMac)
