@@ -2,10 +2,13 @@ package wnc
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"io"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -752,4 +755,90 @@ func TestClientUntyped_Faults_AreReportedBeforeSending(t *testing.T) {
 			t.Errorf("Expected no body, got %q", got.body)
 		}
 	})
+}
+
+// TestClient_CloseIdleConnections_ReleasesThePool holds the one lever this package publishes over
+// the connection pool, in the only terms a caller can observe it: whether the next request reuses
+// the socket or dials a new one.
+//
+// Counting dials is what makes this more than a call that cannot fail. Without the close in the
+// middle, the third request reuses the first connection and the count stays at 1.
+func TestClient_CloseIdleConnections_ReleasesThePool(t *testing.T) {
+	var (
+		mu    sync.Mutex
+		dials int
+	)
+
+	// Unstarted, because ConnState has to be in place before the first connection: setting it on
+	// an already-serving httptest.Server races with the serving goroutine, which -race reports.
+	server := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	server.Config.ConnState = func(_ net.Conn, state http.ConnState) {
+		if state == http.StateNew {
+			mu.Lock()
+			dials++
+			mu.Unlock()
+		}
+	}
+	server.StartTLS()
+	t.Cleanup(server.Close)
+
+	count := func() int {
+		mu.Lock()
+		defer mu.Unlock()
+		return dials
+	}
+
+	parsed, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatalf("parsing the server URL: %v", err)
+	}
+
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("NewClient() error = %v", err)
+	}
+
+	read := func(what string) {
+		if _, err := client.GetData(context.Background(), "Cisco-IOS-XE-x:probe"); err != nil {
+			t.Fatalf("%s: %v", what, err)
+		}
+	}
+
+	read("first read")
+	read("second read")
+
+	if got := count(); got != 1 {
+		t.Fatalf("dials after two reads = %d, want 1: the pool is not reusing the connection, so"+
+			" this test cannot observe the close", got)
+	}
+
+	client.CloseIdleConnections()
+
+	read("third read")
+
+	if got := count(); got != 2 {
+		t.Errorf("dials after the close and a third read = %d, want 2: the idle connection was"+
+			" not released", got)
+	}
+}
+
+// TestClient_TLSOptionWrappers_ReachTheCore holds the two one-line re-export wrappers, which would
+// otherwise compile while pointing at the wrong core option and be exercised by nothing here.
+func TestClient_TLSOptionWrappers_ReachTheCore(t *testing.T) {
+	host := "wnc1.example.internal"
+
+	if _, err := NewClient(host, "test-token-123", WithRootCAs(nil)); !errors.Is(err, ErrInvalidConfiguration) {
+		t.Errorf("WithRootCAs(nil) error = %v, want ErrInvalidConfiguration", err)
+	}
+
+	_, err := NewClient(host, "test-token-123", WithClientCertificate(tls.Certificate{}))
+	if !errors.Is(err, ErrInvalidConfiguration) {
+		t.Errorf("WithClientCertificate(zero) error = %v, want ErrInvalidConfiguration", err)
+	}
+
+	if _, err := NewClient(host, "test-token-123", WithRootCAs(x509.NewCertPool())); err != nil {
+		t.Errorf("WithRootCAs(pool) error = %v, want nil", err)
+	}
 }

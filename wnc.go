@@ -2,6 +2,8 @@ package wnc
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -98,6 +100,15 @@ func WithTimeout(d time.Duration) Option { return core.WithTimeout(d) }
 
 // WithInsecureSkipVerify controls TLS certificate verification (lab/testing only).
 func WithInsecureSkipVerify(skip bool) Option { return core.WithInsecureSkipVerify(skip) }
+
+// WithRootCAs verifies the controller's certificate against pool instead of the host's roots
+// (re-export wrapper). Prefer it to WithInsecureSkipVerify where the controller presents a
+// certificate from a private CA: the certificate is then verified rather than unverified.
+func WithRootCAs(pool *x509.CertPool) Option { return core.WithRootCAs(pool) }
+
+// WithClientCertificate presents cert to the controller (re-export wrapper), for a deployment
+// that authenticates the client with mTLS as well as with the Authorization header.
+func WithClientCertificate(cert tls.Certificate) Option { return core.WithClientCertificate(cert) }
 
 // WithProxy routes requests through the proxy the resolver returns (re-export wrapper).
 func WithProxy(fn func(*http.Request) (*url.URL, error)) Option { return core.WithProxy(fn) }
@@ -239,6 +250,13 @@ func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte,
 // would send POST regardless, invoking the operation instead of doing what was asked.
 func (c *Client) Request(ctx context.Context, method, path string, payload any) ([]byte, error) {
 	return core.RequestRaw(ctx, c.core, method, path, payload)
+}
+
+// CloseIdleConnections closes the pooled connections that have no request on them, releasing the
+// sockets a long-lived process would otherwise hold open after its last read. A connection in use
+// is left alone and the client stays usable afterwards: the next request dials again.
+func (c *Client) CloseIdleConnections() {
+	c.core.CloseIdleConnections()
 }
 
 // Domain service accessors - each returns a service instance for the respective domain

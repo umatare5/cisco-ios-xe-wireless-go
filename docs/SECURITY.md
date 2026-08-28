@@ -8,7 +8,7 @@ This section lists essential security checks for pre‑deployment and ongoing re
 
 ### ✅ Pre‑Deployment
 
-- [ ] Enable TLS certificate verification and set `InsecureSkipVerify` to false. → See [TLS Verification](#tls-verification)
+- [ ] Enable TLS certificate verification and set `InsecureSkipVerify` to false, supplying a private CA with `WithRootCAs` where one is needed. → See [TLS Verification](#tls-verification)
 - [ ] Store authentication tokens in a secure credential manager. → See [Secure Storage](#token-storage)
 - [ ] Ensure no credentials are hardcoded in source code. → See [Environment Variables](#token-env)
 - [ ] Separate configurations for dev, staging, and production. → See [Environment Isolation](#environment-isolation)
@@ -38,7 +38,14 @@ insecureClient, err := wnc.NewClient(
     "wnc1.example.internal", token,
     wnc.WithInsecureSkipVerify(true), // LAB ONLY
 )
+
+privateCAClient, err := wnc.NewClient(
+    "wnc1.example.internal", token,
+    wnc.WithRootCAs(pool), // pool holds the private CA certificate
+)
 ```
+
+`wnc.WithRootCAs` is what a private CA calls for: the certificate is verified against the pool instead of the host's roots, so the deployment keeps verification rather than turning it off. `wnc.WithClientCertificate` presents a client certificate where the controller authenticates the client with mTLS as well as with the `Authorization` header.
 
 > [!CAUTION]
 > The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.

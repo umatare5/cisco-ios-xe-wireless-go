@@ -2,6 +2,8 @@ package core
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"errors"
 	"fmt"
 	"io"
@@ -73,6 +75,37 @@ func WithTimeout(timeout time.Duration) Option {
 func WithInsecureSkipVerify(skip bool) Option {
 	return func(c *Client) error {
 		c.httpTransport.TLSClientConfig.InsecureSkipVerify = skip //nolint:gosec
+		return nil
+	}
+}
+
+// WithRootCAs verifies the controller's certificate against pool instead of the host's roots.
+//
+// This is the option to reach for where WithInsecureSkipVerify would otherwise be used: a
+// controller presenting a certificate from a private CA is verified rather than unverified. A nil
+// pool is refused, because assigning one would silently mean "use the host's roots" and read at
+// the call site as the opposite.
+func WithRootCAs(pool *x509.CertPool) Option {
+	return func(c *Client) error {
+		if pool == nil {
+			return errors.New("root CA pool cannot be nil")
+		}
+		c.httpTransport.TLSClientConfig.RootCAs = pool
+		return nil
+	}
+}
+
+// WithClientCertificate presents cert to the controller, for a deployment that authenticates the
+// client with mTLS as well as with the Authorization header.
+//
+// A certificate carrying no chain is refused: appending the zero tls.Certificate would leave the
+// handshake to fail on the wire rather than here.
+func WithClientCertificate(cert tls.Certificate) Option {
+	return func(c *Client) error {
+		if len(cert.Certificate) == 0 {
+			return errors.New("client certificate carries no certificate chain")
+		}
+		c.httpTransport.TLSClientConfig.Certificates = []tls.Certificate{cert}
 		return nil
 	}
 }
@@ -338,6 +371,19 @@ func classifyTransportError(err error) error {
 		return fmt.Errorf("%w: %w", ErrRequestTimeout, err)
 	}
 	return err
+}
+
+// CloseIdleConnections closes the pooled connections that have no request on them, releasing the
+// sockets a long-lived process would otherwise hold for DefaultIdleConnTimeout after its last read.
+//
+// A connection in use is left alone and the client stays usable afterwards: the next request dials
+// again. It is the one lever this package publishes over the pool, because the transport itself
+// stays unexported.
+func (c *Client) CloseIdleConnections() {
+	if c == nil {
+		return
+	}
+	c.httpClient.CloseIdleConnections()
 }
 
 // RESTCONFBuilder returns the RESTCONF URL builder for the client.

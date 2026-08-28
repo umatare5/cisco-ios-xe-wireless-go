@@ -2,9 +2,16 @@ package core
 
 import (
 	"context"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/tls"
+	"crypto/x509"
+	"crypto/x509/pkix"
 	"errors"
 	"fmt"
 	"io"
+	"math/big"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -263,6 +270,9 @@ func TestCoreClientUnit_Validation_NilClient(t *testing.T) {
 	testutil.AssertStringContains(t, err.Error(),
 		"client cannot be nil",
 		"Error message should contain expected text about nil client")
+
+	// Held by not panicking: CloseIdleConnections returns on a nil receiver.
+	nilClient.CloseIdleConnections()
 }
 
 // TestCoreClientUnit_ErrorHandling_ResponseBodyClose tests error handling in closeResponseBody.
@@ -844,4 +854,95 @@ func TestCoreClientUnit_DefaultBudgets_Success(t *testing.T) {
 		testutil.AssertDurationEquals(t, client.httpTransport.TLSHandshakeTimeout,
 			DefaultTLSHandshakeTimeout, "handshake budget is unchanged")
 	})
+}
+
+// TestCoreClientUnit_TLSOptions_Success holds the two TLS options against a real handshake, which
+// is the only thing that separates them from an assignment to an unexported field.
+//
+// The first subtest is the reason WithRootCAs exists: the same server, the same client, and the
+// only difference is whether the certificate is trusted or verification is off.
+func TestCoreClientUnit_TLSOptions_Success(t *testing.T) {
+	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
+
+	// peerCommonName records the client certificate the server was presented, which is the only
+	// place the WithClientCertificate assertion below can read it from.
+	var peerCommonName string
+
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		peerCommonName = ""
+		if len(r.TLS.PeerCertificates) > 0 {
+			peerCommonName = r.TLS.PeerCertificates[0].Subject.CommonName
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	server.TLS.ClientAuth = tls.RequestClientCert
+	defer server.Close()
+
+	host := strings.TrimPrefix(server.URL, "https://")
+
+	pool := x509.NewCertPool()
+	pool.AddCert(server.Certificate())
+
+	t.Run("APrivateCAIsTrustedWithoutDisablingVerification", func(t *testing.T) {
+		client, err := New(host, "test-token-123", WithRootCAs(pool))
+		testutil.AssertClientCreated(t, client, err, "WithRootCAs")
+
+		// Discard the first return: this commit precedes the Request retype, so do returns
+		// []byte here and *Response afterwards, and the discard form compiles either way.
+		_, err = client.do(context.Background(), http.MethodGet, path)
+		testutil.AssertNoError(t, err, "a read verified against the supplied pool")
+	})
+
+	t.Run("TheSameServerIsRefusedWithoutThePool", func(t *testing.T) {
+		client, err := New(host, "test-token-123")
+		testutil.AssertClientCreated(t, client, err, "no TLS option")
+
+		_, err = client.do(context.Background(), http.MethodGet, path)
+		testutil.AssertError(t, err, "the same certificate against the host's roots")
+	})
+
+	t.Run("TheClientCertificateReachesTheServer", func(t *testing.T) {
+		cert := selfSignedCertificate(t, "probe-client")
+		client, err := New(host, "test-token-123", WithRootCAs(pool), WithClientCertificate(cert))
+		testutil.AssertClientCreated(t, client, err, "WithClientCertificate")
+
+		_, err = client.do(context.Background(), http.MethodGet, path)
+		testutil.AssertNoError(t, err, "a read presenting the client certificate")
+		testutil.AssertStringEquals(t, peerCommonName, "probe-client",
+			"the certificate the server was presented")
+	})
+
+	t.Run("Rejections", func(t *testing.T) {
+		_, err := New(host, "test-token-123", WithRootCAs(nil))
+		testutil.AssertClientCreationError(t, err, "a nil root CA pool")
+		testutil.AssertTrue(t, errors.Is(err, ErrInvalidConfiguration),
+			"a refused option is a configuration error")
+		_, err = New(host, "test-token-123", WithClientCertificate(tls.Certificate{}))
+		testutil.AssertClientCreationError(t, err, "a certificate with no chain")
+		testutil.AssertTrue(t, errors.Is(err, ErrInvalidConfiguration),
+			"a refused option is a configuration error")
+	})
+}
+
+// selfSignedCertificate builds a throwaway certificate for the mTLS handshake above. The key is
+// generated per run rather than checked in, so no key material lives in this repository.
+func selfSignedCertificate(t *testing.T, commonName string) tls.Certificate {
+	t.Helper()
+
+	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	testutil.AssertNoError(t, err, "generating a key")
+
+	template := &x509.Certificate{
+		SerialNumber: big.NewInt(1),
+		Subject:      pkix.Name{CommonName: commonName},
+		NotBefore:    time.Now().Add(-time.Hour),
+		NotAfter:     time.Now().Add(time.Hour),
+		KeyUsage:     x509.KeyUsageDigitalSignature,
+		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
+	}
+
+	der, err := x509.CreateCertificate(rand.Reader, template, template, &key.PublicKey, key)
+	testutil.AssertNoError(t, err, "creating a certificate")
+
+	return tls.Certificate{Certificate: [][]byte{der}, PrivateKey: key}
 }
