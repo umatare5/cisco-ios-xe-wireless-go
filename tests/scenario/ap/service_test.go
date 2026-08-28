@@ -209,7 +209,7 @@ func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *ap.Ci
 			t.Logf("  Available radio data for other APs/slots:")
 			for i, radioData := range status.RadioOperData {
 				t.Logf("    [%d] WTP MAC: %s, Slot: %d, Admin: %s, Oper: %s",
-					i, radioData.WtpMAC, radioData.SlotID, radioData.AdminState, radioData.OperState)
+					i, radioData.WtpMAC, radioData.RadioSlotID, radioData.AdminState, radioData.OperState)
 			}
 		}
 	}
@@ -275,9 +275,12 @@ func findCAPWAPDataByMAC(capwapDataList []ap.CAPWAPData, apMac string) *ap.CAPWA
 }
 
 // findRadioDataByMACAndSlot finds radio data for a specific AP MAC and slot ID.
+//
+// The join is on radio-slot-id, the list key the keyed read above is issued with. slot-id is
+// withheld on a radio-remote-lan radio, so joining on it matched another radio's row.
 func findRadioDataByMACAndSlot(radioDataList []ap.RadioOperData, apMac string, slotID int) *ap.RadioOperData {
 	for _, radioData := range radioDataList {
-		if radioData.WtpMAC == apMac && radioData.SlotID == slotID {
+		if radioData.WtpMAC == apMac && radioData.RadioSlotID == slotID {
 			return &radioData
 		}
 	}

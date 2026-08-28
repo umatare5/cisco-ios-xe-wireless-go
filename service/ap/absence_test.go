@@ -101,6 +101,8 @@ const (
 			{
 				"wtp-mac": "00:00:00:00:00:01",
 				"radio-slot-id": 0,
+				"slot-id": 0,
+				"radio-type": "radio-80211abgn",
 				"radio-band-info": [
 					{
 						"band-id": 0,
@@ -122,6 +124,7 @@ const (
 			{
 				"wtp-mac": "00:00:00:00:00:01",
 				"radio-slot-id": 0,
+				"radio-type": "radio-remote-lan",
 				"radio-band-info": [
 					{
 						"band-id": 0,
@@ -350,6 +353,52 @@ func soleRadioBandCfgData(t *testing.T, body string) ap.PhyTxPwrLvlCfgData {
 	}
 
 	return result.RadioOperData[0].RadioBandInfo[0].PhyTxPwrLvlCfg.CfgData
+}
+
+// TestApServiceUnit_OmittedSlotLeaf_MockSuccess tests that the withheld physical slot stays nil
+// while the list key beside it still decodes, so a join cannot silently land on radio 0.
+func TestApServiceUnit_OmittedSlotLeaf_MockSuccess(t *testing.T) {
+	t.Run("SentLeafDecodes", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperAllLeavesSent)
+
+		if radio.SlotID == nil || *radio.SlotID != 0 {
+			t.Errorf("slot-id = %v, want a non-nil 0", radio.SlotID)
+		}
+	})
+
+	t.Run("OmittedLeafStaysNil", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperPublishedLeavesOmitted)
+
+		if radio.RadioType != ap.RadioTypeRemoteLAN {
+			t.Fatalf("radio-type = %q, so the record was not decoded", radio.RadioType)
+		}
+
+		if radio.RadioSlotID != 0 {
+			t.Errorf("radio-slot-id = %d, want the list key to keep decoding", radio.RadioSlotID)
+		}
+
+		if radio.SlotID != nil {
+			t.Errorf("slot-id = %d, want nil rather than radio 0", *radio.SlotID)
+		}
+	})
+}
+
+// soleRadioRecord serves body from the radio-oper-data endpoint and returns the one radio it holds.
+func soleRadioRecord(t *testing.T, body string) ap.RadioOperData {
+	t.Helper()
+
+	service, ctx := absenceService(t, radioOperEndpoint, body)
+
+	result, err := service.ListRadioData(ctx)
+	if err != nil {
+		t.Fatalf("ListRadioData failed: %v", err)
+	}
+
+	if len(result.RadioOperData) != 1 {
+		t.Fatalf("decoded %d records, want 1", len(result.RadioOperData))
+	}
+
+	return result.RadioOperData[0]
 }
 
 // absenceService stands up a server that answers endpoint alone, so a body that fails to match

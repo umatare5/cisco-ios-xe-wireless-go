@@ -285,8 +285,8 @@ type ApRadioNeighbor struct {
 // RadioOperData represents radio operational data.
 type RadioOperData struct {
 	WtpMAC       string    `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.6a)
-	RadioSlotID  int       `json:"radio-slot-id"`            // Radio slot identifier (Live: IOS-XE 17.12.6a)
-	SlotID       int       `json:"slot-id,omitempty"`        // Physical slot identifier (Live: IOS-XE 17.12.6a)
+	RadioSlotID  int       `json:"radio-slot-id"`            // Radio slot identifier and the list key, always sent (Live: IOS-XE 17.12.6a)
+	SlotID       *int      `json:"slot-id,omitempty"`        // Physical slot identifier, withheld on a radio-remote-lan radio; nil is that absence and not slot 0 (Live: IOS-XE 17.12.6a)
 	RadioType    RadioType `json:"radio-type,omitempty"`     // Radio hardware type; the band a radio write takes follows it (Live: IOS-XE 17.12.6a)
 	AdminState   string    `json:"admin-state,omitempty"`    // Administrative state (Live: IOS-XE 17.12.6a)
 	OperState    string    `json:"oper-state,omitempty"`     // Operational state (Live: IOS-XE 17.12.6a)
