@@ -3,6 +3,7 @@ package testutil
 import (
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"testing"
 
@@ -277,4 +278,36 @@ func TestTestUtilUnit_RESTCONFServer_ConcurrentAddHandler_Success(t *testing.T) 
 	wg.Wait()
 
 	testutil.AssertTrue(t, len(server.Requests()) == 24, "every request is recorded")
+}
+
+// TestTestUtilUnit_RESTCONFServer_RecordsBody_Success pins the body the recorder keeps. The
+// second assertion is the load-bearing one: a request that carried no body records an empty
+// one rather than inheriting the body of the request before it.
+func TestTestUtilUnit_RESTCONFServer_RecordsBody_Success(t *testing.T) {
+	const payload = `{"leaf": "value"}`
+
+	server := NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodPut, "probe", func() (int, string) { return http.StatusNoContent, "" })
+	server.AddHandler(http.MethodGet, "probe", func() (int, string) { return http.StatusOK, `{}` })
+
+	client := server.Client()
+	endpoint := server.URL + "/restconf/data/probe"
+
+	written, err := http.NewRequestWithContext(t.Context(), http.MethodPut, endpoint, strings.NewReader(payload))
+	testutil.AssertNoError(t, err, "Failed to build the PUT request")
+	resp, err := client.Do(written)
+	testutil.AssertNoError(t, err, "Failed to make PUT request")
+	resp.Body.Close()
+
+	read, err := http.NewRequestWithContext(t.Context(), http.MethodGet, endpoint, http.NoBody)
+	testutil.AssertNoError(t, err, "Failed to build the GET request")
+	resp, err = client.Do(read)
+	testutil.AssertNoError(t, err, "Failed to make GET request")
+	resp.Body.Close()
+
+	recorded := server.Requests()
+	testutil.AssertIntEquals(t, len(recorded), 2, "Requests() count")
+	testutil.AssertStringEquals(t, recorded[0].Body, payload, "recorded PUT body")
+	testutil.AssertStringEquals(t, recorded[1].Body, "", "recorded GET body")
 }
