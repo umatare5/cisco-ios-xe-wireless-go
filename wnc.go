@@ -42,8 +42,17 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan"
 )
 
-// DefaultTimeout is the default request timeout (re-export of core.DefaultTimeout).
-const DefaultTimeout = core.DefaultTimeout
+// Default request budgets. A request is bounded by all three, and WithTimeout sets only the first.
+const (
+	// DefaultTimeout is the default whole-request timeout (re-export of core.DefaultTimeout).
+	DefaultTimeout = core.DefaultTimeout
+	// DefaultResponseHeaderTimeout is the default budget for the response headers, five seconds,
+	// which WithTimeout does not lift; raise it with WithResponseHeaderTimeout.
+	DefaultResponseHeaderTimeout = core.DefaultResponseHeaderTimeout
+	// DefaultTLSHandshakeTimeout is the default budget for the TLS handshake, five seconds, which
+	// WithTimeout does not lift; raise it with WithTLSHandshakeTimeout.
+	DefaultTLSHandshakeTimeout = core.DefaultTLSHandshakeTimeout
+)
 
 // Error sentinels re-exported for consumer side error handling with errors.Is.
 var (
@@ -81,7 +90,10 @@ func NewClient(host, token string, opts ...Option) (*Client, error) {
 // This allows end users to supply options without importing the internal/core package.
 type Option = core.Option
 
-// WithTimeout sets the request timeout (re-export wrapper).
+// WithTimeout sets the whole-request timeout (re-export wrapper). It lifts neither
+// DefaultResponseHeaderTimeout nor DefaultTLSHandshakeTimeout, so a caller that raises this
+// alone is still capped at five seconds for the headers, which is when a busy controller is
+// slowest. Raise those with WithResponseHeaderTimeout and WithTLSHandshakeTimeout.
 func WithTimeout(d time.Duration) Option { return core.WithTimeout(d) }
 
 // WithInsecureSkipVerify controls TLS certificate verification (lab/testing only).

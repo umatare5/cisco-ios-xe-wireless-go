@@ -813,3 +813,35 @@ func TestCoreClientUnit_ConstructionSentinel_Error(t *testing.T) {
 		})
 	}
 }
+
+// TestCoreClientUnit_DefaultBudgets_Success pins the three budgets a fresh client carries to the
+// constants that name them, and pins that WithTimeout moves the whole-request one alone.
+//
+// The second subtest is the assertion the doc comments rest on: bundling the three into
+// WithTimeout would pass every other test in this package and fail here.
+func TestCoreClientUnit_DefaultBudgets_Success(t *testing.T) {
+	controller := "test.example.com"
+	token := "test-token-123"
+
+	t.Run("ConstantsNameWhatTheTransportCarries", func(t *testing.T) {
+		client, err := New(controller, token)
+		testutil.AssertClientCreated(t, client, err, "ConstantsNameWhatTheTransportCarries")
+
+		testutil.AssertDurationEquals(t, client.httpClient.Timeout, DefaultTimeout, "DefaultTimeout")
+		testutil.AssertDurationEquals(t, client.httpTransport.ResponseHeaderTimeout,
+			DefaultResponseHeaderTimeout, "DefaultResponseHeaderTimeout")
+		testutil.AssertDurationEquals(t, client.httpTransport.TLSHandshakeTimeout,
+			DefaultTLSHandshakeTimeout, "DefaultTLSHandshakeTimeout")
+	})
+
+	t.Run("WithTimeoutLiftsNeitherOtherBudget", func(t *testing.T) {
+		client, err := New(controller, token, WithTimeout(2*time.Minute))
+		testutil.AssertClientCreated(t, client, err, "WithTimeoutLiftsNeitherOtherBudget")
+
+		testutil.AssertDurationEquals(t, client.httpClient.Timeout, 2*time.Minute, "raised whole-request budget")
+		testutil.AssertDurationEquals(t, client.httpTransport.ResponseHeaderTimeout,
+			DefaultResponseHeaderTimeout, "header budget is unchanged")
+		testutil.AssertDurationEquals(t, client.httpTransport.TLSHandshakeTimeout,
+			DefaultTLSHandshakeTimeout, "handshake budget is unchanged")
+	})
+}

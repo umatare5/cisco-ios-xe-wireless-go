@@ -18,10 +18,18 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
-// Default timeout constant.
+// Default request budgets. A request is bounded by all three, and WithTimeout sets only the first.
 const (
 	// DefaultTimeout is the default timeout for API requests.
 	DefaultTimeout = 60 * time.Second
+
+	// DefaultResponseHeaderTimeout is the default budget for the response headers
+	// (re-export of transport.DefaultResponseHeaderTimeout).
+	DefaultResponseHeaderTimeout = transport.DefaultResponseHeaderTimeout
+
+	// DefaultTLSHandshakeTimeout is the default budget for the TLS handshake
+	// (re-export of transport.DefaultTLSHandshakeTimeout).
+	DefaultTLSHandshakeTimeout = transport.DefaultTLSHandshakeTimeout
 )
 
 // maxLoggedBodyBytes bounds the error body copied into the log line and into
@@ -43,6 +51,13 @@ type Client struct {
 type Option func(*Client) error
 
 // WithTimeout sets the timeout duration for HTTP requests.
+//
+// It bounds the whole request and lifts neither of the transport's other two budgets:
+// DefaultResponseHeaderTimeout still ends the wait for the response headers and
+// DefaultTLSHandshakeTimeout still ends the handshake. Raise those with
+// WithResponseHeaderTimeout and WithTLSHandshakeTimeout. They stay separate deliberately —
+// every option here mutates one shared transport in place, so one option setting all three
+// would overwrite a smaller budget an earlier option had set, with no compile error.
 func WithTimeout(timeout time.Duration) Option {
 	return func(c *Client) error {
 		if !validation.IsValidTimeout(timeout) {

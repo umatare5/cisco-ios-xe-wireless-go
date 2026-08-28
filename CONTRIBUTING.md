@@ -209,3 +209,5 @@ Copy the shape of an existing service, then satisfy each rule below. [tests/cont
 ### HTTP Transport
 
 `NewTransport` tunes the transport for a single controller rather than copying `http.DefaultTransport`: HTTP/2 is off, and the handshake and header budgets are 5 s each. It uses no proxy by default, so pass `WithProxy(http.ProxyFromEnvironment)` to route through one.
+
+Those two budgets are `DefaultTLSHandshakeTimeout` and `DefaultResponseHeaderTimeout`, and `WithTimeout` lifts neither: it bounds the whole request. Raise them with `WithTLSHandshakeTimeout` and `WithResponseHeaderTimeout`, one option each — every option mutates one shared transport in place, so a single option setting all three would overwrite a smaller budget an earlier option had set.
