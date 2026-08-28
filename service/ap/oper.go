@@ -36,6 +36,25 @@ const (
 	RadioTypeXOR24And6GHz RadioType = "radio-80211-xor-24-6ghz"
 )
 
+// ApMisconfig represents the ap-misconfig enumeration.
+type ApMisconfig string
+
+// ap-misconfig members. The first three are served on 17.15 and 17.18; lic-no-comp arrives at
+// 17.18, and the leaf itself is not declared on 17.12.
+const (
+	// ApMisconfigNone is the member the controller sends when nothing is misconfigured.
+	ApMisconfigNone ApMisconfig = "apmgr-no-misconfig"
+
+	// ApMisconfigCountry reports a country code the controller and the AP disagree on.
+	ApMisconfigCountry ApMisconfig = "country-misconfig"
+
+	// ApMisconfigWorldWideMode reports an AP fallen back to world-wide mode.
+	ApMisconfigWorldWideMode ApMisconfig = "world-wide-mode"
+
+	// ApMisconfigLicenseNotCompliant reports an AP the license does not cover, served from 17.18.
+	ApMisconfigLicenseNotCompliant ApMisconfig = "lic-no-comp"
+)
+
 // CiscoIOSXEWirelessAPOper represents access point operational data response.
 type CiscoIOSXEWirelessAPOper struct {
 	CiscoIOSXEWirelessAPOperData *CiscoIOSXEWirelessAPOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.6a)
@@ -865,6 +884,7 @@ type TagInfo struct {
 	RFTag             RFTag           `json:"rf-tag"`                        // RF tag configuration (Live: IOS-XE 17.12.6a)
 	FilterInfo        FilterInfo      `json:"filter-info"`                   // Access control filter information (Live: IOS-XE 17.12.6a)
 	IsDTLSLscFbkAp    bool            `json:"is-dtls-lsc-fbk-ap"`            // DTLS LSC fallback AP designation (Live: IOS-XE 17.12.6a)
+	ApMisconfig       *ApMisconfig    `json:"ap-misconfig,omitempty"`        // Reason the AP is misconfigured; sent even at ApMisconfigNone, so nil is a controller that does not serve the leaf (Live: IOS-XE 17.15.6)
 }
 
 // ResolvedTagInfo represents resolved tag information.

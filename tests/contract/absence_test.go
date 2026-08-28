@@ -45,6 +45,7 @@ var publishedLeaves = map[string]map[string][]string{
 		},
 		"TagInfo": {
 			"is-ap-misconfigured",
+			"ap-misconfig",
 		},
 	},
 }
@@ -52,7 +53,7 @@ var publishedLeaves = map[string]map[string][]string{
 // publishedLeafCount is how many leaves the list above holds. Checking it stops the gate from
 // passing because an entry was dropped: every other assertion here is made per leaf, so a list
 // that loses one loses the finding with it.
-const publishedLeafCount = 23
+const publishedLeafCount = 24
 
 // TestEveryPublishedLeafCanBeAbsent holds the leaves a consumer publishes as a metric to the one
 // shape that can tell the controller's silence from a reading: a pointer with omitempty. A zero

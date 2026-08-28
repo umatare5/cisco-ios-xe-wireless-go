@@ -70,11 +70,19 @@ const (
 		"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [
 			{
 				"wtp-mac": "00:00:00:00:00:01",
-				"tag-info": {"tag-source": "TAG-CONTROL", "is-ap-misconfigured": true}
+				"tag-info": {
+					"tag-source": "TAG-CONTROL",
+					"is-ap-misconfigured": true,
+					"ap-misconfig": "country-misconfig"
+				}
 			},
 			{
 				"wtp-mac": "00:00:00:00:00:02",
-				"tag-info": {"tag-source": "TAG-CONTROL", "is-ap-misconfigured": false}
+				"tag-info": {
+					"tag-source": "TAG-CONTROL",
+					"is-ap-misconfigured": false,
+					"ap-misconfig": "apmgr-no-misconfig"
+				}
 			}
 		]
 	}`
@@ -229,6 +237,16 @@ func TestApServiceUnit_OmittedMisconfiguredLeaf_MockSuccess(t *testing.T) {
 		if records[1].TagInfo.IsApMisconfigured == nil || *records[1].TagInfo.IsApMisconfigured {
 			t.Error("is-ap-misconfigured: want an explicit false to decode to a non-nil false")
 		}
+
+		if records[0].TagInfo.ApMisconfig == nil || *records[0].TagInfo.ApMisconfig != ap.ApMisconfigCountry {
+			t.Errorf("ap-misconfig: want a non-nil %q", ap.ApMisconfigCountry)
+		}
+
+		// The no-misconfiguration member is the one the controller sends on a healthy AP, so it
+		// has to decode to a non-nil value rather than reading like an absent leaf.
+		if records[1].TagInfo.ApMisconfig == nil || *records[1].TagInfo.ApMisconfig != ap.ApMisconfigNone {
+			t.Errorf("ap-misconfig: want a non-nil %q", ap.ApMisconfigNone)
+		}
 	})
 
 	t.Run("OmittedLeafStaysNil", func(t *testing.T) {
@@ -243,6 +261,10 @@ func TestApServiceUnit_OmittedMisconfiguredLeaf_MockSuccess(t *testing.T) {
 
 		if records[0].TagInfo.IsApMisconfigured != nil {
 			t.Error("is-ap-misconfigured: want nil rather than an AP reported as correctly configured")
+		}
+
+		if records[0].TagInfo.ApMisconfig != nil {
+			t.Error("ap-misconfig: want nil, which is the controller not serving the leaf")
 		}
 	})
 }
