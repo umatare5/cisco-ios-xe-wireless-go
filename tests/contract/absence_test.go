@@ -189,18 +189,28 @@ var trueByDefaultLeaves = map[string]map[string][]string{
 	"wlan": {
 		"WlanCfgEntry": {
 			"auth-key-mgmt-dot1x",
+			"okc",
+			"security-wpa",
 			"wlan-11k-neigh-list",
+			"wpa2-aes",
 			"wpa2-enabled",
 		},
-		"APFVap80211vData":    {"dot11v-dms"},
-		"UmbrellaFlexParams":  {"dhcp-dns-option-enable"},
-		"WlanSwitchingPolicy": {"central-assoc-enable", "central-authentication"},
+		"APFVapIDData":       {"broadcast-ssid"},
+		"APFVap80211vData":   {"dot11v-dms"},
+		"Dot11beProfile":     {"eht-ofdma-downlink", "eht-ofdma-uplink"},
+		"UmbrellaFlexParams": {"dhcp-dns-option-enable"},
+		"WlanSwitchingPolicy": {
+			"central-assoc-enable",
+			"central-authentication",
+			"central-dhcp",
+			"central-switching",
+		},
 	},
 }
 
 // trueByDefaultLeafCount is how many leaves the list above holds, for the same reason
 // publishedLeafCount exists: a dropped entry would take its finding with it.
-const trueByDefaultLeafCount = 7
+const trueByDefaultLeafCount = 15
 
 // TestEveryTrueByDefaultLeafIsNilable holds the leaves whose schema default is true to a pointer
 // with omitempty. It is not the same property as TestEveryPublishedLeafCanBeAbsent: that gate asks
@@ -208,9 +218,9 @@ const trueByDefaultLeafCount = 7
 // all. A default-false leaf is deliberately absent from the list — decoding its absence as false
 // gives the right answer, so pointerising it would be symmetry rather than a fix.
 //
-// Three of the seven were already pointers before this gate existed, which is what makes a pass
-// meaningful: they are the positive control that the predicate matches the shape the tree already
-// treats as correct, so the gate cannot pass by asserting nothing.
+// Most of the leaves listed were already pointers before this gate existed, which is what makes a
+// pass meaningful: they are the positive control that the predicate matches the shape the tree
+// already treats as correct, so the gate cannot pass by asserting nothing.
 func TestEveryTrueByDefaultLeafIsNilable(t *testing.T) {
 	pkgs, _ := loadTree(t)
 

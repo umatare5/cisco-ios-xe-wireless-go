@@ -298,14 +298,17 @@ func TestWlanServiceUnit_OmittedSecurityLeaf_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries": `{
 			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {
 				"wlan-cfg-entry": [
-					{"wlan-id": 1, "profile-name": "profile-default"},
+					{"wlan-id": 1, "profile-name": "profile-default", "apf-vap-id-data": {"ssid": "ssid-default"}},
 					{
 						"wlan-id": 2,
 						"profile-name": "profile-explicit",
 						"wpa2-enabled": false,
+						"wpa2-aes": false,
+						"security-wpa": false,
+						"okc": false,
 						"wlan-11k-neigh-list": false,
 						"apf-vap-802-11v-data": {"dot11v-dms": false},
-						"apf-vap-id-data": {"ssid": "ssid-explicit", "wlan-status": false}
+						"apf-vap-id-data": {"ssid": "ssid-explicit", "wlan-status": false, "broadcast-ssid": false}
 					}
 				]
 			}
@@ -352,6 +355,123 @@ func TestWlanServiceUnit_OmittedSecurityLeaf_MockSuccess(t *testing.T) {
 	}
 	if *entries[1].APFVapIDData.WlanStatus {
 		t.Error("Expected the explicit false for wlan-status")
+	}
+
+	// The three default-true leaves this type gains on the entry are read through one map per
+	// direction, so a failure names its leaf rather than its line.
+	for leaf, got := range map[string]*bool{
+		"security-wpa": entries[0].SecurityWPA,
+		"wpa2-aes":     entries[0].WPA2AES,
+		"okc":          entries[0].OKC,
+	} {
+		if got != nil {
+			t.Errorf("Expected an omitted %s to stay nil: the default in force is not false", leaf)
+		}
+	}
+
+	for leaf, got := range map[string]*bool{
+		"security-wpa": entries[1].SecurityWPA,
+		"wpa2-aes":     entries[1].WPA2AES,
+		"okc":          entries[1].OKC,
+	} {
+		if got == nil || *got {
+			t.Errorf("Expected an explicit false %s to decode to a non-nil false", leaf)
+		}
+	}
+
+	// broadcast-ssid's absence is read off a container that did arrive, with ssid as the control: a
+	// nil container would leave the leaf itself unasserted.
+	if entries[0].APFVapIDData == nil || entries[0].APFVapIDData.SSID != "ssid-default" {
+		t.Fatalf("Expected the first record to carry apf-vap-id-data with ssid, got %+v",
+			entries[0].APFVapIDData)
+	}
+	if entries[0].APFVapIDData.BroadcastSSID != nil {
+		t.Error("Expected an omitted broadcast-ssid to stay nil")
+	}
+	if entries[1].APFVapIDData.BroadcastSSID == nil || *entries[1].APFVapIDData.BroadcastSSID {
+		t.Error("Expected an explicit false broadcast-ssid to decode to a non-nil false")
+	}
+}
+
+// TestWlanServiceUnit_SecurityLeafTags_MockSuccess reaches every security leaf this type declares
+// as a value, which no nil-check can reach: a value field decodes an absent leaf and a misspelled
+// tag to the same zero, so the tag is only exercised by a body that sets the leaf to its non-zero.
+func TestWlanServiceUnit_SecurityLeafTags_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries": `{
+			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {
+				"wlan-cfg-entry": [
+					{
+						"wlan-id": 3,
+						"profile-name": "profile-every-leaf",
+						"auth-key-mgmt-psk-sha256": true,
+						"auth-key-mgmt-cckm": true,
+						"auth-key-mgmt-sae": true,
+						"auth-key-mgmt-ft-psk": true,
+						"auth-key-mgmt-ft-dot1x": true,
+						"auth-key-mgmt-ft-sae": true,
+						"auth-key-mgmt-suite-b": true,
+						"auth-key-mgmt-suite-b-192": true,
+						"akm-owe": true,
+						"akm-sae-ext-key": true,
+						"akm-ft-sae-ext-key": true,
+						"wpa1-enabled": true,
+						"wep-enabled": true,
+						"osen": true,
+						"dot11-auth-type": "apf-vap-80211-auth-open",
+						"apf-vap-id-data": {
+							"ssid": "ssid-every-leaf",
+							"p2p-block-action": "p2p-blocking-action-drop"
+						}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.ListWlanCfgEntries(ctx)
+	if err != nil {
+		t.Fatalf("ListWlanCfgEntries failed: %v", err)
+	}
+	if result.WlanCfgEntries == nil || len(result.WlanCfgEntries.WlanCfgEntry) != 1 {
+		t.Fatalf("Expected 1 entry, got %+v", result.WlanCfgEntries)
+	}
+
+	entry := result.WlanCfgEntries.WlanCfgEntry[0]
+
+	for leaf, got := range map[string]bool{
+		"auth-key-mgmt-psk-sha256":  entry.AuthKeyMgmtPskSha256,
+		"auth-key-mgmt-cckm":        entry.AuthKeyMgmtCckm,
+		"auth-key-mgmt-sae":         entry.AuthKeyMgmtSae,
+		"auth-key-mgmt-ft-psk":      entry.AuthKeyMgmtFtPsk,
+		"auth-key-mgmt-ft-dot1x":    entry.AuthKeyMgmtFtDot1x,
+		"auth-key-mgmt-ft-sae":      entry.AuthKeyMgmtFtSae,
+		"auth-key-mgmt-suite-b":     entry.AuthKeyMgmtSuiteB,
+		"auth-key-mgmt-suite-b-192": entry.AuthKeyMgmtSuiteB192,
+		"akm-owe":                   entry.AkmOwe,
+		"akm-sae-ext-key":           entry.AkmSaeExtKey,
+		"akm-ft-sae-ext-key":        entry.AkmFtSaeExtKey,
+		"wpa1-enabled":              entry.WPA1Enabled,
+		"wep-enabled":               entry.WEPEnabled,
+		"osen":                      entry.OSEN,
+	} {
+		if !got {
+			t.Errorf("%s decoded to false, so the field does not carry that tag", leaf)
+		}
+	}
+
+	if entry.Dot11AuthType != "apf-vap-80211-auth-open" {
+		t.Errorf("dot11-auth-type decoded to %q, so the field does not carry that tag",
+			entry.Dot11AuthType)
+	}
+	if entry.APFVapIDData == nil || entry.APFVapIDData.P2PBlockAction != "p2p-blocking-action-drop" {
+		t.Errorf("p2p-block-action did not decode, so the field does not carry that tag: %+v",
+			entry.APFVapIDData)
 	}
 }
 
