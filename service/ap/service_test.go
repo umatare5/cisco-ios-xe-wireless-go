@@ -2220,6 +2220,9 @@ const slotAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-ad
 // apAdminNode is the node the AP admin RPC posts to.
 const apAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state"
 
+// capwapResetNode is the node the CAPWAP reset RPC posts to.
+const capwapResetNode = "Cisco-IOS-XE-wireless-access-point-cmd-rpc:set-rad-capwap-reset"
+
 // writtenBody returns the body of the first recorded request made with method, and fails if
 // none was. The read that precedes a write is recorded too, so the write is selected by
 // method rather than by position.
@@ -2589,5 +2592,38 @@ func TestApServiceUnit_SetAPAdminState_RPCInput_Success(t *testing.T) {
 			"mode":    "admin-state-enabled",
 			"ap-name": "TEST-AP01",
 		})
+	})
+}
+
+// TestApServiceUnit_ResetCAPWAP_RPCInput_Success pins every leaf the CAPWAP-reset RPC puts on the
+// wire for each arm. The input's choice is mandatory, so the arm the caller did not name must be
+// absent rather than present at an empty string.
+func TestApServiceUnit_ResetCAPWAP_RPCInput_Success(t *testing.T) {
+	t.Run("ByName", func(t *testing.T) {
+		service, server := newRPCService(t, capwapResetNode)
+		if err := service.ResetCAPWAPByName(t.Context(), "TEST-AP01"); err != nil {
+			t.Fatalf("ResetCAPWAPByName() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{"ap-name": "TEST-AP01"})
+	})
+
+	t.Run("ByMAC", func(t *testing.T) {
+		service, server := newRPCService(t, capwapResetNode)
+		if err := service.ResetCAPWAPByMAC(t.Context(), "AABBCCDDEEFF"); err != nil {
+			t.Fatalf("ResetCAPWAPByMAC() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{"mac-addr": "aa:bb:cc:dd:ee:ff"})
+	})
+
+	t.Run("BlankArguments", func(t *testing.T) {
+		service, _ := newRPCService(t, capwapResetNode)
+		if err := service.ResetCAPWAPByName(t.Context(), " "); !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("ResetCAPWAPByName(blank) error = %v, want core.ErrResourceNotFound", err)
+		}
+		if err := service.ResetCAPWAPByMAC(t.Context(), ""); !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("ResetCAPWAPByMAC(blank) error = %v, want core.ErrResourceNotFound", err)
+		}
 	})
 }

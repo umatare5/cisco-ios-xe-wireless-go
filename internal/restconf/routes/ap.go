@@ -142,6 +142,11 @@ const (
 
 	// APApResetRPC defines the RPC for AP reset operations.
 	APApResetRPC = RESTCONFOperationsPath + "/Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset"
+
+	// APSetRadCAPWAPResetRPC defines the RPC that re-establishes an AP's CAPWAP session without
+	// rebooting the AP.
+	APSetRadCAPWAPResetRPC = RESTCONFOperationsPath +
+		"/Cisco-IOS-XE-wireless-access-point-cmd-rpc:set-rad-capwap-reset"
 )
 
 // AP Query Paths.

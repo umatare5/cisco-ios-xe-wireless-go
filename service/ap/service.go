@@ -899,6 +899,47 @@ func (s Service) ReloadByName(ctx context.Context, apName string) error {
 	return core.PostRPCVoid(ctx, s.Client(), routes.APApResetRPC, payload)
 }
 
+// ResetCAPWAPByMAC tears down and re-establishes the CAPWAP session of the access point with this
+// address, which does not reboot it.
+//
+// The address arm is what the RPC declares and what this sends; no completed write through it is
+// on record, only the controller naming mac-addr in its own refusal of an input carrying neither
+// arm. ResetCAPWAPByName is the arm that has been measured.
+func (s Service) ResetCAPWAPByMAC(ctx context.Context, apMAC string) error {
+	normalizedMAC, err := service.RequireMACAddress(apMAC)
+	if err != nil {
+		return err
+	}
+
+	return s.resetCAPWAP(ctx, APCAPWAPResetRPCInput{MACAddr: normalizedMAC})
+}
+
+// ResetCAPWAPByName tears down and re-establishes the CAPWAP session of the access point with this
+// name, which does not reboot it.
+//
+// Measured on 17.12.8 and again on 17.18: the access point leaves within five seconds and rejoins
+// within ten, and boot-time moves by about a second because the controller re-derives it from the
+// access point's uptime at join.
+func (s Service) ResetCAPWAPByName(ctx context.Context, apName string) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
+	}
+
+	return s.resetCAPWAP(ctx, APCAPWAPResetRPCInput{APName: apName})
+}
+
+// resetCAPWAP posts one CAPWAP-reset RPC. The arm is the caller's: the input's choice is
+// mandatory, and an input carrying neither is refused with 400.
+func (s Service) resetCAPWAP(ctx context.Context, input APCAPWAPResetRPCInput) error {
+	payload := APCAPWAPResetRPCPayload{Input: input}
+
+	if err := core.PostRPCVoid(ctx, s.Client(), routes.APSetRadCAPWAPResetRPC, payload); err != nil {
+		return ierrors.ServiceOperationError("reset", "AP", "CAPWAP session", err)
+	}
+
+	return nil
+}
+
 // setAPAdminStateByMAC fills the input's mac-addr arm.
 func (s Service) setAPAdminStateByMAC(ctx context.Context, apMAC string, enabled bool) error {
 	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)

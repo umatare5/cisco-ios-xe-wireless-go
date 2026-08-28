@@ -10,6 +10,11 @@ type APTagPayload struct {
 	ApTag APCfgApTagData `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
 }
 
+// APCAPWAPResetRPCPayload represents complete payload for AP CAPWAP reset RPC calls.
+type APCAPWAPResetRPCPayload struct {
+	Input APCAPWAPResetRPCInput `json:"input"`
+}
+
 // APConfigRPCPayload represents complete payload for AP configuration RPC calls.
 type APConfigRPCPayload struct {
 	Input APConfigRPCInput `json:"Cisco-IOS-XE-wireless-access-point-cfg-rpc:input"`
@@ -22,6 +27,12 @@ type APSlotConfigRPCPayload struct {
 
 // APReloadRPCInput represents input structure for AP reload RPC calls.
 type APReloadRPCInput struct {
+	APName  string `json:"ap-name,omitempty"`  // AP name identifier
+	MACAddr string `json:"mac-addr,omitempty"` // AP MAC address identifier
+}
+
+// APCAPWAPResetRPCInput represents input structure for AP CAPWAP reset RPC calls.
+type APCAPWAPResetRPCInput struct {
 	APName  string `json:"ap-name,omitempty"`  // AP name identifier
 	MACAddr string `json:"mac-addr,omitempty"` // AP MAC address identifier
 }
