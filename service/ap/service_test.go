@@ -1866,7 +1866,7 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 				"rf-tag": "existing-rf"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"name": "TEST-AP01"
@@ -1947,10 +1947,10 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	})
 
 	// Test AP reload operation
-	t.Run("Reload", func(t *testing.T) {
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("ReloadByMAC", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for Reload, got: %v", err)
+			t.Errorf("Expected no error for ReloadByMAC, got: %v", err)
 		}
 	})
 }
@@ -2040,10 +2040,17 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	})
 
 	// Test reload with invalid MAC
-	t.Run("Reload_InvalidMAC", func(t *testing.T) {
-		err := service.Reload(ctx, "invalid-mac")
+	t.Run("ReloadByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	t.Run("ReloadByName_BlankName", func(t *testing.T) {
+		err := service.ReloadByName(ctx, "\t")
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
 		}
 	})
 }
@@ -2052,7 +2059,7 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 	// Create mock server with specific responses for edge cases
 	responses := map[string]string{
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": []
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset": `{"status": "success"}`,
@@ -2065,8 +2072,8 @@ func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test reload with empty CAPWAP data
-	t.Run("Reload_EmptyCAPWAPData", func(t *testing.T) {
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("ReloadByMAC_EmptyCAPWAPData", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}
@@ -2076,7 +2083,7 @@ func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 // TestApServiceUnit_DoOperations_ErrorHandling tests nil CAPWAP data handling.
 func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(
-		[]string{"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data"},
+		[]string{"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff"},
 		500,
 	))
 	defer mockServer.Close()
@@ -2086,8 +2093,8 @@ func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test reload with failed CAPWAP data retrieval
-	t.Run("Reload_FailedCAPWAPDataRetrieval", func(t *testing.T) {
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("ReloadByMAC_FailedCAPWAPDataRetrieval", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed CAPWAP data retrieval, got nil")
 		}
@@ -2097,9 +2104,9 @@ func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 // TestApServiceUnit_Reload_EdgeCases tests specific edge cases for Reload function to achieve 100% coverage.
 func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 	// Test Reload with nil CAPWAP data response
-	t.Run("Reload_NilCAPWAPResponse", func(t *testing.T) {
+	t.Run("ReloadByMAC_NilCAPWAPResponse", func(t *testing.T) {
 		responses := map[string]string{
-			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `null`,
+			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `null`,
 		}
 		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
@@ -2108,16 +2115,18 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for nil CAPWAP response, got nil")
 		}
 	})
 
-	// Test Reload with AP not found in CAPWAP data
-	t.Run("Reload_APNotFoundInCAPWAP", func(t *testing.T) {
+	// The record IS the one this address keys, so nothing here exercises an absence: the mock
+	// serves no ap-reset node, and the refusal comes from the write the resolve leads to. The
+	// genuine absence is covered by ReloadByMAC_EmptyCAPWAPData and by the 404 arm.
+	t.Run("ReloadByMAC_ResetNotServed", func(t *testing.T) {
 		responses := map[string]string{
-			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 				"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
 					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"name": "Different-AP"
@@ -2131,7 +2140,7 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}

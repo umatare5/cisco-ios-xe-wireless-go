@@ -859,29 +859,44 @@ func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error {
 	return s.assignTags(ctx, apMAC, tags)
 }
 
-// Reload restarts an Access Point by MAC address causing temporary service interruption.
-func (s Service) Reload(ctx context.Context, apMAC string) error {
-	// findAPByMAC compares against the colon form the controller reports, so a dotted or
-	// upper-case address has to be normalized here or it matches no joined AP.
-	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+// ReloadByMAC restarts the access point with this address, interrupting service on it.
+//
+// The RPC accepts a name or an address and this resolves the name, because the address arm has
+// never been observed to complete. The resolve is the keyed capwap-data read and carries no
+// fields expression: the record is one row either way, and pruning to name alone would drop the
+// wtp-mac this address was matched on.
+func (s Service) ReloadByMAC(ctx context.Context, apMAC string) error {
+	normalizedMAC, err := service.RequireMACAddress(apMAC)
 	if err != nil {
-		return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
+		return err
 	}
 
-	resp, err := s.ListCAPWAPData(ctx)
+	resp, err := s.GetCAPWAPDataByWTPMAC(ctx, normalizedMAC)
+	if core.IsNotFoundError(err) {
+		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
+	}
 	if err != nil {
 		return fmt.Errorf(ErrFailedGetCAPWAPData, err)
 	}
 	if resp == nil {
 		return errors.New(ErrCAPWAPDataUnavailable)
 	}
-
-	apName, found := findAPByMAC(resp, normalizedMAC)
-	if !found {
+	if len(resp.CAPWAPData) == 0 {
 		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
 	}
 
-	return s.reload(ctx, apName)
+	return s.ReloadByName(ctx, resp.CAPWAPData[0].Name)
+}
+
+// ReloadByName restarts the access point with this name, interrupting service on it.
+func (s Service) ReloadByName(ctx context.Context, apName string) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
+	}
+
+	payload := APReloadRPCPayload{Input: APReloadRPCInput{APName: apName}}
+
+	return core.PostRPCVoid(ctx, s.Client(), routes.APApResetRPC, payload)
 }
 
 // setAPAdminStateByMAC fills the input's mac-addr arm.
@@ -1069,29 +1084,6 @@ func (s Service) resolveAPTagData(
 		RFTag:          validation.SelectNonEmptyValue(tags.RFTag, existing.RFTag),
 		PrimingProfile: existing.PrimingProfile,
 	}), nil
-}
-
-// reload is the internal helper function for AP reload operations.
-func (s Service) reload(ctx context.Context, apName string) error {
-	requestBody := APReloadRPCPayload{
-		Input: APReloadRPCInput{
-			APName: apName,
-		},
-	}
-	return core.PostRPCVoid(ctx, s.Client(), routes.APApResetRPC, requestBody)
-}
-
-// findAPByMAC searches for an AP with the given MAC address in CAPWAP data.
-func findAPByMAC(capwapData *CiscoIOSXEWirelessApOperCAPWAPData, apMAC string) (string, bool) {
-	if capwapData == nil {
-		return "", false
-	}
-	for _, data := range capwapData.CAPWAPData {
-		if data.WtpMAC == apMAC {
-			return data.Name, true
-		}
-	}
-	return "", false
 }
 
 // buildAPCfgApTagData constructs the payload for tag assignment requests.
