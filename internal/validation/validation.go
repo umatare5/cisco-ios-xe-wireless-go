@@ -1,8 +1,11 @@
 package validation
 
 import (
+	"errors"
 	"fmt"
 	"net"
+	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -53,11 +56,6 @@ const (
 
 // Core validation functions
 
-// IsValidController checks if controller address is valid (non-empty).
-func IsValidController(controller string) bool {
-	return IsNonEmptyString(controller)
-}
-
 // NormalizeHost trims surrounding whitespace and brackets a bare IPv6 literal, so the
 // host stays a valid authority once the URL builder concatenates it after the scheme.
 func NormalizeHost(host string) string {
@@ -66,6 +64,53 @@ func NormalizeHost(host string) string {
 		return "[" + host + "]"
 	}
 	return host
+}
+
+// Controller authority bounds.
+const (
+	// MinControllerPort is the lowest port a controller authority may name; port 0 is reserved.
+	MinControllerPort = 1
+
+	// MaxControllerPort is the highest port a controller authority may name.
+	MaxControllerPort = 65535
+)
+
+// ValidateHost reports why host is not the bare authority the RESTCONF URL builder needs.
+//
+// The builder concatenates the value after the scheme without parsing it, so a scheme prefix,
+// userinfo, a path, a query, a fragment, an IPv6 zone id or an out-of-range port would build a URL
+// that reads a different node and answer with no error. Call it on the NormalizeHost result: the
+// bracketed form is what the builder concatenates.
+func ValidateHost(host string) error {
+	if !IsNonEmptyString(host) {
+		return errors.New("controller address is empty")
+	}
+
+	parsed, err := url.Parse("https://" + host)
+	if err != nil {
+		return fmt.Errorf("controller address %q is not a host: %w", host, err)
+	}
+	if parsed.Host != host {
+		return fmt.Errorf("controller address %q must be host or host:port and nothing else"+
+			" (a scheme, userinfo, a path, a query, a fragment or an IPv6 zone id addresses"+
+			" another node)", host)
+	}
+	if parsed.Hostname() == "" {
+		return fmt.Errorf("controller address %q names a port with no host", host)
+	}
+
+	port := parsed.Port()
+	if port == "" {
+		return nil
+	}
+
+	number, err := strconv.Atoi(port)
+	if err != nil || number < MinControllerPort || number > MaxControllerPort {
+		return fmt.Errorf("controller address %q has port %s outside %d-%d",
+			host, port, MinControllerPort, MaxControllerPort)
+	}
+
+	return nil
 }
 
 // IsValidAccessToken checks if access token is valid (non-empty).

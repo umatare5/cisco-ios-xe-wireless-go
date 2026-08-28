@@ -787,3 +787,29 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 			"a deadline that fires during the body read is still a timeout")
 	})
 }
+
+// TestCoreClientUnit_ConstructionSentinel_Error pins the one sentinel every construction failure
+// carries, a refused option included: the option path used to report a bare string that matched
+// no sentinel at all.
+func TestCoreClientUnit_ConstructionSentinel_Error(t *testing.T) {
+	cases := map[string]struct {
+		host, token string
+		opts        []Option
+	}{
+		"malformed authority": {host: "https://wnc.example.internal", token: "test-token-123"},
+		"empty host":          {host: "   ", token: "test-token-123"},
+		"empty token":         {host: "wnc.example.internal", token: "   "},
+		"option refused":      {host: "wnc.example.internal", token: "test-token-123", opts: []Option{WithTimeout(0)}},
+	}
+
+	for name, tc := range cases {
+		t.Run(name, func(t *testing.T) {
+			client, err := New(tc.host, tc.token, tc.opts...)
+			testutil.AssertError(t, err, name)
+			testutil.AssertTrue(t, errors.Is(err, ErrInvalidConfiguration), name)
+			if client != nil {
+				t.Fatalf("%s: expected no client, got %#v", name, client)
+			}
+		})
+	}
+}

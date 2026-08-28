@@ -23,9 +23,9 @@ func TestValidationUnit_Constructor_Success(t *testing.T) {
 // TestValidationUnit_GetOperations_Success tests basic validation functions.
 func TestValidationUnit_GetOperations_Success(t *testing.T) {
 	// Controller validation
-	testutil.AssertBoolEquals(t, IsValidController("core.example.com"), true, "valid controller")
-	testutil.AssertBoolEquals(t, IsValidController(""), false, "empty controller")
-	testutil.AssertBoolEquals(t, IsValidController("192.168.1.100"), true, "IP controller")
+	testutil.AssertNoError(t, ValidateHost("core.example.com"), "valid controller")
+	testutil.AssertError(t, ValidateHost(""), "empty controller")
+	testutil.AssertNoError(t, ValidateHost("192.168.1.100"), "IP controller")
 
 	// Token validation
 	testutil.AssertBoolEquals(t, IsValidAccessToken("valid-token"), true, "valid token")
@@ -127,7 +127,7 @@ func TestValidationUnit_ValidationErrors_Success(t *testing.T) {
 	)
 
 	// Single character validation
-	testutil.AssertBoolEquals(t, IsValidController("a"), true, "single character controller should be valid")
+	testutil.AssertNoError(t, ValidateHost("a"), "single character controller should be valid")
 	testutil.AssertBoolEquals(
 		t,
 		IsValidAccessToken("a"),
@@ -140,7 +140,7 @@ func TestValidationUnit_ValidationErrors_Success(t *testing.T) {
 	token := "test-token"
 	testutil.AssertBoolEquals(
 		t,
-		IsValidController(controller) && IsValidAccessToken(token),
+		ValidateHost(controller) == nil && IsValidAccessToken(token),
 		true,
 		"valid controller and token",
 	)
@@ -148,7 +148,7 @@ func TestValidationUnit_ValidationErrors_Success(t *testing.T) {
 	emptyController := ""
 	testutil.AssertBoolEquals(
 		t,
-		IsValidController(emptyController) && IsValidAccessToken(token),
+		ValidateHost(emptyController) == nil && IsValidAccessToken(token),
 		false,
 		"empty controller fails composite",
 	)
@@ -227,5 +227,66 @@ func TestValidationUnit_NormalizeHost_Success(t *testing.T) {
 	}
 	for _, tc := range cases {
 		testutil.AssertStringEquals(t, NormalizeHost(tc.in), tc.want, tc.in)
+	}
+}
+
+// TestValidationUnit_ValidateHost_Success pins the authority forms construction accepts,
+// each judged in the form NormalizeHost hands to the URL builder.
+func TestValidationUnit_ValidateHost_Success(t *testing.T) {
+	cases := []string{
+		"a",
+		"wnc1.example.internal",
+		"WNC.Example.Internal",
+		"localhost",
+		"192.0.2.10",
+		"192.0.2.10:443",
+		"example.com:8443",
+		"test.example.com",
+		"nonexistent.invalid",
+		"[2001:db8::1]",
+		"[2001:db8::1]:443",
+		" 192.0.2.10\n",
+		"2001:db8::1",
+		"::ffff:192.0.2.10",
+	}
+	for _, in := range cases {
+		t.Run(in, func(t *testing.T) {
+			testutil.AssertNoError(t, ValidateHost(NormalizeHost(in)), in)
+		})
+	}
+}
+
+// TestValidationUnit_ValidateHost_Error pins the authority forms construction refuses,
+// each of which the URL builder would otherwise concatenate into a URL for another node.
+func TestValidationUnit_ValidateHost_Error(t *testing.T) {
+	cases := map[string]string{
+		"empty":                  "",
+		"whitespace only":        "   ",
+		"https scheme":           "https://h",
+		"http scheme":            "http://h",
+		"path":                   "h/restconf/data",
+		"trailing slash":         "h/",
+		"parent path":            "h/../x",
+		"port and path":          "h:443/restconf/data",
+		"query":                  "h?with-defaults=report-all",
+		"fragment":               "h#frag",
+		"userinfo":               "user@h",
+		"userinfo with password": "user:pass@h",
+		"escaped zone id":        "[fe80::1%25eth0]",
+		"scheme relative":        "//h",
+		"bracketed zone id":      "[fe80::1%eth0]",
+		"bare zone id":           "fe80::1%eth0",
+		"negative port":          "h:-1",
+		"non-numeric port":       "h:abc",
+		"two ports":              "h:443:443",
+		"space in host":          "wnc example.internal",
+		"port above range":       "h:99999",
+		"port zero":              "h:0",
+		"port with no host":      ":443",
+	}
+	for name, in := range cases {
+		t.Run(name, func(t *testing.T) {
+			testutil.AssertError(t, ValidateHost(NormalizeHost(in)), name)
+		})
 	}
 }
