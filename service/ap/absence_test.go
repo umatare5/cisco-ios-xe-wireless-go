@@ -114,7 +114,8 @@ const (
 							}
 						}
 					}
-				]
+				],
+				"phy-ht-cfg": {"cfg-data": {"curr-freq": 1, "chan-width": 20, "freq-string": "(1)"}}
 			}
 		]
 	}`
@@ -130,7 +131,8 @@ const (
 						"band-id": 0,
 						"phy-tx-pwr-lvl-cfg": {"cfg-data": {"num-supp-power-levels": 8}}
 					}
-				]
+				],
+				"phy-ht-cfg": {"cfg-data": {"chan-width": 20, "freq-string": "(1)"}}
 			}
 		]
 	}`
@@ -381,6 +383,55 @@ func TestApServiceUnit_OmittedSlotLeaf_MockSuccess(t *testing.T) {
 			t.Errorf("slot-id = %d, want nil rather than radio 0", *radio.SlotID)
 		}
 	})
+}
+
+// TestApServiceUnit_OmittedChannelLeaf_MockSuccess tests the pair the controller withholds one at
+// a time: the container arrives on a monitor-mode radio with curr-freq gone and chan-width still
+// there, so a nil check on phy-ht-cfg would report a channel of 0.
+//
+// No contract gate holds these two: neither is a leaf a consumer publishes as a metric and neither
+// has a schema default of true, so this test is the only thing a revert to a value int fails.
+func TestApServiceUnit_OmittedChannelLeaf_MockSuccess(t *testing.T) {
+	t.Run("SentLeavesDecode", func(t *testing.T) {
+		cfg := soleRadioChannelCfg(t, radioOperAllLeavesSent)
+
+		if cfg.CurrFreq == nil || *cfg.CurrFreq != 1 {
+			t.Errorf("curr-freq = %v, want a non-nil 1", cfg.CurrFreq)
+		}
+
+		if cfg.ChanWidth == nil || *cfg.ChanWidth != 20 {
+			t.Errorf("chan-width = %v, want a non-nil 20", cfg.ChanWidth)
+		}
+	})
+
+	t.Run("OmittedChannelStaysNilBesideItsWidth", func(t *testing.T) {
+		cfg := soleRadioChannelCfg(t, radioOperPublishedLeavesOmitted)
+
+		if cfg.FreqString != "(1)" {
+			t.Fatalf("freq-string = %q, so cfg-data was not decoded", cfg.FreqString)
+		}
+
+		if cfg.CurrFreq != nil {
+			t.Errorf("curr-freq = %d, want nil rather than channel 0", *cfg.CurrFreq)
+		}
+
+		if cfg.ChanWidth == nil || *cfg.ChanWidth != 20 {
+			t.Errorf("chan-width = %v, want the width the same radio still reported", cfg.ChanWidth)
+		}
+	})
+}
+
+// soleRadioChannelCfg serves body from the radio-oper-data endpoint and returns the HT
+// configuration of the one radio it holds.
+func soleRadioChannelCfg(t *testing.T, body string) ap.PhyHtCfgData {
+	t.Helper()
+
+	radio := soleRadioRecord(t, body)
+	if radio.PhyHtCfg == nil {
+		t.Fatal("phy-ht-cfg is nil, so the container the leaves sit in was not decoded")
+	}
+
+	return radio.PhyHtCfg.CfgData
 }
 
 // soleRadioRecord serves body from the radio-oper-data endpoint and returns the one radio it holds.

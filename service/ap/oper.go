@@ -672,11 +672,16 @@ type PhyHtCfg struct {
 }
 
 // PhyHtCfgData represents PHY HT configuration data.
+//
+// The container arrives on a radio in monitor mode with curr-freq withheld — measured on 17.15,
+// where the same radio still reported its width — so a check on phy-ht-cfg cannot stand in for a
+// check on the leaf. Both leaves are pointers for that reason: the two that carry the channel are
+// read the same way, and each is withheld on its own.
 type PhyHtCfgData struct {
 	HtEnable               int    `json:"ht-enable"`                 // 802.11n HT protocol enablement (Live: IOS-XE 17.12.6a)
 	PhyHtCfgConfigType     string `json:"phy-ht-cfg-config-type"`    // Physical layer HT configuration type designation (Live: IOS-XE 17.12.6a)
-	CurrFreq               int    `json:"curr-freq"`                 // Current channel number, not a frequency; FreqString renders it with the bonded channels (Live: IOS-XE 17.12.6a)
-	ChanWidth              int    `json:"chan-width"`                // Channel bandwidth width in MHz (20/40/80/160) (Live: IOS-XE 17.12.6a)
+	CurrFreq               *int   `json:"curr-freq,omitempty"`       // Current channel number, not a frequency; withheld on a radio in monitor mode, while FreqString still renders the bonded channels (Live: IOS-XE 17.12.6a)
+	ChanWidth              *int   `json:"chan-width,omitempty"`      // Channel bandwidth in MHz, 20/40/80/160; sent on a monitor-mode radio whose channel was withheld (Live: IOS-XE 17.12.6a)
 	ExtChan                int    `json:"ext-chan"`                  // Extension channel for 40MHz bonding (Live: IOS-XE 17.12.6a)
 	VhtEnable              bool   `json:"vht-enable"`                // 802.11ac Very High Throughput protocol enablement (Live: IOS-XE 17.12.6a)
 	LegTxBfEnabled         int    `json:"leg-tx-bf-enabled"`         // Legacy TX beamforming enablement (Live: IOS-XE 17.12.6a)
