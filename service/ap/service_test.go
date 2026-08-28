@@ -1453,11 +1453,11 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 				"device-id": "Switch1"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh=aa:bb:cc:dd:ee:ff": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh=aa:bb:cc:dd:ee:ff,11:22:33:44:55:66": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:lldp-neigh": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
-				"local-intf-name": "GigabitEthernet0",
-				"device-id": "Switch1"
+				"neigh-mac": "11:22:33:44:55:66",
+				"local-port": "GigabitEthernet0"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/disc-data=aa:bb:cc:dd:ee:ff": `{
@@ -1533,13 +1533,13 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("GetLldpNeighByWTPMAC", func(t *testing.T) {
-		result, err := service.GetLldpNeighByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("GetLldpNeighByWTPMACAndNeighMAC", func(t *testing.T) {
+		result, err := service.GetLldpNeighByWTPMACAndNeighMAC(ctx, "aa:bb:cc:dd:ee:ff", "11:22:33:44:55:66")
 		if err != nil {
-			t.Errorf("Expected no error for GetLldpNeighByWTPMAC, got: %v", err)
+			t.Errorf("Expected no error for GetLldpNeighByWTPMACAndNeighMAC, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected result for GetLldpNeighByWTPMAC, got nil")
+			t.Error("Expected result for GetLldpNeighByWTPMACAndNeighMAC, got nil")
 		}
 	})
 
@@ -1787,10 +1787,17 @@ func TestApServiceUnit_GetOperations_ValidationErrors(t *testing.T) {
 		}
 	})
 
-	t.Run("GetLldpNeighByWTPMAC_EmptyMAC", func(t *testing.T) {
-		_, err := service.GetLldpNeighByWTPMAC(ctx, "")
+	t.Run("GetLldpNeighByWTPMACAndNeighMAC_EmptyWTPMAC", func(t *testing.T) {
+		_, err := service.GetLldpNeighByWTPMACAndNeighMAC(ctx, "", "11:22:33:44:55:66")
 		if err == nil {
 			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetLldpNeighByWTPMACAndNeighMAC_EmptyNeighMAC", func(t *testing.T) {
+		_, err := service.GetLldpNeighByWTPMACAndNeighMAC(ctx, "aa:bb:cc:dd:ee:ff", "")
+		if err == nil {
+			t.Error("Expected error for empty neighbor MAC address, got nil")
 		}
 	})
 

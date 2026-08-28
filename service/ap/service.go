@@ -654,24 +654,31 @@ func (s Service) ListLldpNeigh(
 	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), routes.APLldpNeighPath, opts...)
 }
 
-// GetLldpNeighByWTPMAC retrieves LLDP neighbor information for a specific WTP MAC address.
-func (s Service) GetLldpNeighByWTPMAC(
-	ctx context.Context, wtpMAC string, opts ...core.GetOption,
+// GetLldpNeighByWTPMACAndNeighMAC retrieves the LLDP neighbor one AP interface reported.
+// This follows the YANG model key structure: "wtp-mac neigh-mac".
+//
+// Both keys are required because the list has two. A read keyed on wtp-mac alone is not a key at
+// all and the controller answers 404, so pass ListLldpNeigh and filter where the neighbor address
+// is not known in advance.
+func (s Service) GetLldpNeighByWTPMACAndNeighMAC(
+	ctx context.Context, wtpMAC, neighMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperLldpNeigh, error) {
-	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
-		return nil, core.ErrResourceNotFound
-	}
-
-	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+	normalizedWTPMAC, err := service.RequireMACAddress(wtpMAC)
+	if err != nil {
 		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
 	}
 
-	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	normalizedNeighMAC, err := service.RequireMACAddress(neighMAC)
 	if err != nil {
-		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+		return nil, fmt.Errorf("invalid neighbor MAC address: %w", err)
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APLldpNeighPath, normalizedMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APLldpNeighPath,
+		normalizedWTPMAC,
+		normalizedNeighMAC,
+	)
+
 	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), url, opts...)
 }
 
