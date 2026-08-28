@@ -145,6 +145,28 @@ func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([
 	return core.GetRaw(ctx, c.core, path, opts...)
 }
 
+// GetDataInto reads a RESTCONF data path this package has no typed accessor for and decodes it
+// into T, applying the envelope check every typed accessor gets: the response must carry exactly
+// one top-level key, module-qualified and naming the node the path asked for, and T must declare a
+// field for that key. GetData leaves all of that to the caller.
+//
+// T is the envelope type, so it must be a struct whose outermost tag is the module-qualified node
+// name — the shape every Cisco…Data type in this module's service packages has. A map or any other
+// non-struct is refused, because the check asks whether T can consume the key rather than trusting
+// it to. The check is top-level only: a tag below the top naming a node the response does not
+// carry still decodes to nothing.
+//
+// It is a function rather than a method on Client because a generic method, which this toolchain
+// does accept, may not be declared in an interface and is invisible to reflect — so a consumer
+// could neither put this behind a seam of its own nor reach it by reflection.
+func GetDataInto[T any](ctx context.Context, c *Client, path string, opts ...GetOption) (*T, error) {
+	if c == nil {
+		return core.Get[T](ctx, nil, path, opts...)
+	}
+
+	return core.Get[T](ctx, c.core, path, opts...)
+}
+
 // The untyped request methods below are this package's escape hatch. They exist because the
 // controller's schema moves between releases: a node or an operation this package has no typed
 // accessor for still has to be reachable without waiting for one. Each returns the body as the

@@ -216,6 +216,65 @@ func TestGetDataReturnsBodyUnchecked(t *testing.T) {
 	}
 }
 
+// probeEnvelope is the envelope shape GetDataInto takes: one field, tagged with the
+// module-qualified node the path reads.
+type probeEnvelope struct {
+	Probe *struct {
+		Leaf int `json:"leaf"`
+	} `json:"a:probe"`
+}
+
+// wrongKeyEnvelope names a node the response does not carry.
+type wrongKeyEnvelope struct {
+	Other *struct{} `json:"a:other"`
+}
+
+// TestGetDataIntoAppliesTheEnvelopeCheck pins what GetDataInto adds over GetData. The two-key
+// body is the same fixture GetData hands back intact, so the pair is the before and after.
+func TestGetDataIntoAppliesTheEnvelopeCheck(t *testing.T) {
+	t.Run("SoleKeyDecodes", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:probe":{"leaf":7}}`)
+
+		got, err := GetDataInto[probeEnvelope](context.Background(), client, "probe")
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+		if got.Probe == nil || got.Probe.Leaf != 7 {
+			t.Errorf("Probe = %+v, want a node holding leaf 7", got.Probe)
+		}
+	})
+
+	t.Run("TwoTopLevelKeysAreRefused", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:one":{"x":1},"a:two":{"y":2}}`)
+
+		if _, err := GetDataInto[probeEnvelope](context.Background(), client, "probe"); err == nil {
+			t.Error("Expected an error for a body carrying two top-level keys")
+		}
+	})
+
+	t.Run("UnclaimedKeyIsRefused", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:probe":{"leaf":7}}`)
+
+		if _, err := GetDataInto[wrongKeyEnvelope](context.Background(), client, "probe"); err == nil {
+			t.Error("Expected an error for a T declaring no field for the response key")
+		}
+	})
+
+	t.Run("NonStructIsRefused", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:probe":{"leaf":7}}`)
+
+		if _, err := GetDataInto[map[string]any](context.Background(), client, "probe"); err == nil {
+			t.Error("Expected an error for a non-struct T")
+		}
+	})
+
+	t.Run("NilClientIsReported", func(t *testing.T) {
+		if _, err := GetDataInto[probeEnvelope](context.Background(), nil, "probe"); err == nil {
+			t.Error("Expected an error for a nil client")
+		}
+	})
+}
+
 // TestGetDataWireQuery pins the re-exported options on the wire through the unified
 // client. WithFields and WithDepth have no other route to a consumer.
 func TestGetDataWireQuery(t *testing.T) {

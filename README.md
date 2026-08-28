@@ -182,9 +182,12 @@ For one it does not — a container a later IOS-XE release adds, or an RPC with 
 | Method                                              | RESTCONF resource      | Notes                      |
 | --------------------------------------------------- | ---------------------- | -------------------------- |
 | `GetData(ctx, path, opts...)`                       | `/restconf/data`       | Read with same `GetOption` |
+| `GetDataInto[T](ctx, client, path, opts...)`        | `/restconf/data`       | Read into a typed envelope |
 | `PostData` / `PutData` / `PatchData` / `DeleteData` | `/restconf/data`       | Edit via fixed call verb   |
 | `PostRPC(ctx, path, payload)`                       | `/restconf/operations` | Invoke RPC                 |
 | `Request(ctx, method, path, payload)`               | either                 | Fallback for custom calls  |
+
+`GetDataInto` is the one entry above that validates the envelope, so it takes a `T` whose outermost tag is the module-qualified node the path reads. It is a function rather than a method because a generic method may not be declared in an interface and is invisible to `reflect`.
 
 ```go
 body, err := client.PatchData(ctx, "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries/wlan-cfg-entry=1,demo", payload)
