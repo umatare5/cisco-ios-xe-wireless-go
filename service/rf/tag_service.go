@@ -151,9 +151,14 @@ func (s *RFTagService) setRFTag(ctx context.Context, config *RFTag) error {
 		return err
 	}
 
-	// Build payload directly from config
+	// A merge PATCH, as the site and policy tag services already use. Measured on 17.12.8 as a
+	// paired contrast on one probe tag: PATCH left a top-level leaf and a nested-list non-key leaf
+	// at the values that had been set, while a PUT with identical omissions demoted both to their
+	// schema defaults. A node this struct cannot represent needs that — 17.18 serves ap-beam-state
+	// and a urwb container on every rf-tag and RFTag declares neither, so the replacing PUT demoted
+	// them on every write. The contrast has not been repeated on 17.15.6 or 17.18.4a.
 	payload := s.buildPayload(config)
-	return core.PutVoid(ctx, s.Client(), s.buildTagURL(config.TagName), payload)
+	return core.PatchVoid(ctx, s.Client(), s.buildTagURL(config.TagName), payload)
 }
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.
