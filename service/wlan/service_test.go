@@ -1,10 +1,15 @@
 package wlan
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strings"
 	"sync"
 	"testing"
 
@@ -188,6 +193,65 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	}
 
 	t.Logf("All get operations returned valid WLAN data")
+}
+
+// TestWlanServiceUnit_SecretRedaction_Success pins the three methods that keep a pre-shared key
+// out of a log and the two paths that still carry it. Each direction is a separate assertion
+// because each is held by a different method: dropping Secret.LogValue leaves the JSON handler
+// leaking the field, and dropping WlanCfgEntry.LogValue leaves it leaking the whole entry.
+func TestWlanServiceUnit_SecretRedaction_Success(t *testing.T) {
+	const key = "not-a-real-key"
+
+	entry := WlanCfgEntry{WlanID: 7, ProfileName: "profile-redaction", PSK: Secret(key)}
+
+	if got := entry.PSK.String(); got != redacted {
+		t.Errorf("Secret.String() = %q, want %q", got, redacted)
+	}
+	if got := entry.PSK.Reveal(); got != key {
+		t.Errorf("Secret.Reveal() = %q, want the key back", got)
+	}
+	if got := fmt.Sprintf("%+v", entry); strings.Contains(got, key) {
+		t.Errorf("%%+v of the entry carried the key: %s", got)
+	}
+
+	// The entry is held by WlanCfgEntry.LogValue, which renders the identifying leaves and no
+	// configuration at all, so the assertion is absence of the key rather than presence of the
+	// redaction. Without that method the handler renders the entry through json.Marshal.
+	if got := logJSON(t, "entry", entry); strings.Contains(got, key) {
+		t.Errorf("slog.JSONHandler carried the key for the entry: %s", got)
+	}
+
+	// The field on its own is held by Secret.LogValue, which does render the redaction.
+	got := logJSON(t, "psk", entry.PSK)
+	if strings.Contains(got, key) {
+		t.Errorf("slog.JSONHandler carried the key for the field: %s", got)
+	}
+	if !strings.Contains(got, redacted) {
+		t.Errorf("slog.JSONHandler rendered no redaction for the field: %s", got)
+	}
+
+	// The two residuals, asserted in the direction they must keep: json.Marshal is how this type
+	// reaches a write payload, and %#v prints the underlying string of any named type.
+	body, err := json.Marshal(entry)
+	if err != nil {
+		t.Fatalf("json.Marshal failed: %v", err)
+	}
+	if !strings.Contains(string(body), key) {
+		t.Errorf("json.Marshal dropped the key, so the type can no longer be written: %s", body)
+	}
+	if got := fmt.Sprintf("%#v", entry); !strings.Contains(got, key) {
+		t.Errorf("%%#v redacted, so the doc comment naming it a residual is now wrong")
+	}
+}
+
+// logJSON returns the one record a slog.JSONHandler writes for a single attribute.
+func logJSON(t *testing.T, key string, value any) string {
+	t.Helper()
+
+	var buf bytes.Buffer
+	slog.New(slog.NewJSONHandler(&buf, nil)).Info("redaction", key, value)
+
+	return buf.String()
 }
 
 func TestWlanServiceUnit_ErrorHandling_NilClient(t *testing.T) {

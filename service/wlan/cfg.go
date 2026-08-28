@@ -1,5 +1,7 @@
 package wlan
 
+import "log/slog"
+
 // CiscoIOSXEWirelessWlanCfg represents the complete WLAN configuration.
 type CiscoIOSXEWirelessWlanCfg struct {
 	CiscoIOSXEWirelessWlanCfgData *CiscoIOSXEWirelessWlanCfgData `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"` // WLAN configuration data container
@@ -66,14 +68,39 @@ type WirelessAaaPolicyConfigs struct {
 	WirelessAaaPolicyConfig []WirelessAaaPolicyConfig `json:"wireless-aaa-policy-config"` // List of wireless AAA policy configurations
 }
 
+// Secret holds key material. Its String and LogValue redact, so a formatted struct and a slog
+// record carry no key; call Reveal where the value is needed.
+//
+// MarshalJSON is deliberately not implemented: encoding/json is how this type reaches a write
+// payload. So json.Marshal, encoding/json/v2 and the %#v verb still render the key, and they are
+// the three paths a caller has to keep out of a log.
+type Secret string
+
+// String returns the redaction, which is what keeps the key out of every fmt verb but %#v.
+func (s Secret) String() string { return redacted }
+
+// LogValue returns the redaction. String is not enough on its own: slog.JSONHandler renders a
+// KindAny value through json.Marshal, which honors json.Marshaler and ignores fmt.Stringer.
+func (s Secret) LogValue() slog.Value { return slog.StringValue(redacted) }
+
+// Reveal returns the key itself, for the one caller that needs it.
+func (s Secret) Reveal() string { return string(s) }
+
+// redacted is what String and LogValue render in place of key material.
+const redacted = "[REDACTED]"
+
 // WlanCfgEntry represents a single WLAN configuration entry.
+//
+// LogValue reduces the entry to the two leaves that identify it, because slog resolves LogValuer
+// on the Attr's own value and never on a field inside it: without it, slog.JSONHandler renders the
+// whole entry through json.Marshal and the key goes to the log.
 type WlanCfgEntry struct {
 	WlanID                 int                `json:"wlan-id"`                              // WLAN identifier (Live: IOS-XE 17.12.6a)
 	ProfileName            string             `json:"profile-name"`                         // WLAN profile name (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtPsk         bool               `json:"auth-key-mgmt-psk,omitempty"`          // Authentication key management PSK (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtDot1x       *bool              `json:"auth-key-mgmt-dot1x,omitempty"`        // Authentication key management type 802.1x (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtDot1xSha256 bool               `json:"auth-key-mgmt-dot1x-sha256,omitempty"` // Authentication key management type 802.1x SHA256 (Live: IOS-XE 17.12.6a)
-	PSK                    string             `json:"psk,omitempty"`                        // Authentication pre-shared key — secret, never log (Live: IOS-XE 17.12.6a)
+	PSK                    Secret             `json:"psk,omitempty"`                        // Authentication pre-shared key — secret, never log (Live: IOS-XE 17.12.6a)
 	PSKType                string             `json:"psk-type,omitempty"`                   // Pre-shared key encryption type (Live: IOS-XE 17.12.6a)
 	FTMode                 string             `json:"ft-mode,omitempty"`                    // Configures Fast Transition Adaptive support (Live: IOS-XE 17.12.6a)
 	PMFOptions             string             `json:"pmf-options,omitempty"`                // Configures PMF as optional/required (Live: IOS-XE 17.12.6a)
@@ -89,6 +116,16 @@ type WlanCfgEntry struct {
 	WlanRadioPolicies      *WlanRadioPolicies `json:"wlan-radio-policies,omitempty"`        // WLAN radio policy (Live: IOS-XE 17.12.6a)
 	ClientSteering         bool               `json:"client-steering,omitempty"`            // Enable/disable 6Ghz client steering (YANG: IOS-XE 17.12.1)
 	WepKeyIndex            int                `json:"wep-key-index,omitempty"`              // WEP key index for Static WEP Authentication (Live: IOS-XE 17.12.6a)
+}
+
+// LogValue returns the leaves that identify this WLAN. The entry is not rendered whole: a slog
+// record built from it would otherwise carry every configuration leaf, the pre-shared key
+// included, whenever the handler is a JSONHandler.
+func (e WlanCfgEntry) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.Int("wlan-id", e.WlanID),
+		slog.String("profile-name", e.ProfileName),
+	)
 }
 
 // APFVapIDData represents virtual AP interface identification data.
