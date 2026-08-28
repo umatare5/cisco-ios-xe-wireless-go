@@ -11,6 +11,88 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/client"
 )
 
+// TestClientServiceUnit_RadioVocabularies_MockSuccess tests that the two client radio vocabularies
+// decode into their own named types from one record.
+//
+// The inversion is the reason this test exists: ms-radio-type carries a PHY generation and
+// radio-type carries a band, so a constant whose spelling drifts to the other domain would compile
+// and read empty. The bare siblings are the control — they prove the record was decoded.
+func TestClientServiceUnit_RadioVocabularies_MockSuccess(t *testing.T) {
+	t.Parallel()
+
+	body := `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data": {
+			"common-oper-data": [
+				{
+					"ap-name": "TEST-AP01",
+					"ms-radio-type": "client-dot11be-6ghz-prot"
+				}
+			],
+			"dot11-oper-data": [
+				{
+					"radio-type": "dot11-radio-type-6ghz",
+					"ewlc-ms-phy-type": "client-dot11be-6ghz-prot",
+					"multilink-info": [
+						{
+							"sta-mac": "aa:bb:cc:dd:ee:ff",
+							"band": "dot11-6-ghz-band",
+							"radio-type": "dot11-radio-type-6ghz"
+						}
+					]
+				}
+			]
+		}
+	}`
+
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data": body,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := client.NewService(testClient.Core().(*core.Client))
+
+	result, err := service.GetOperational(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("GetOperational returned unexpected error: %v", err)
+	}
+
+	data := result.CiscoIOSXEWirelessClientOperData
+	if data == nil || len(data.CommonOperData) != 1 || len(data.Dot11OperData) != 1 {
+		t.Fatalf("client-oper-data did not decode one common and one dot11 record")
+	}
+
+	common := data.CommonOperData[0]
+	dot11 := data.Dot11OperData[0]
+
+	if common.ApName != "TEST-AP01" {
+		t.Fatalf("ap-name = %q, so common-oper-data was not decoded", common.ApName)
+	}
+	if len(dot11.MultilinkInfo) != 1 {
+		t.Fatalf("decoded %d multilink-info entries, want 1", len(dot11.MultilinkInfo))
+	}
+	if dot11.MultilinkInfo[0].Band != "dot11-6-ghz-band" {
+		t.Fatalf("band = %q, so multilink-info was not decoded", dot11.MultilinkInfo[0].Band)
+	}
+
+	if common.MsRadioType != client.PHYRadioTypeDot11be6GHz {
+		t.Errorf("ms-radio-type = %q, want %q", common.MsRadioType, client.PHYRadioTypeDot11be6GHz)
+	}
+	if dot11.EwlcMsPhyType != client.PHYRadioTypeDot11be6GHz {
+		t.Errorf("ewlc-ms-phy-type = %q, want %q", dot11.EwlcMsPhyType, client.PHYRadioTypeDot11be6GHz)
+	}
+	if dot11.RadioType != client.RadioBandType6GHz {
+		t.Errorf("radio-type = %q, want %q", dot11.RadioType, client.RadioBandType6GHz)
+	}
+	if dot11.MultilinkInfo[0].RadioType != client.RadioBandType6GHz {
+		t.Errorf("multilink-info radio-type = %q, want %q",
+			dot11.MultilinkInfo[0].RadioType, client.RadioBandType6GHz)
+	}
+	if dot11.MultilinkInfo[0].StaMAC == "" {
+		t.Errorf("multilink-info sta-mac is empty, so LinkInfo dropped the link's own MAC")
+	}
+}
+
 // TestClientServiceUnit_Constructor_Success tests service constructor functionality.
 func TestClientServiceUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
