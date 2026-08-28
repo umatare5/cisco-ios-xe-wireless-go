@@ -223,7 +223,7 @@ func validateAPCapwapEnabled(t *testing.T, apMac string, status *ap.CiscoIOSXEWi
 	}
 
 	if capwapData := findCAPWAPDataByMAC(status.CAPWAPData, apMac); capwapData != nil {
-		expectedAdminState := "adminstate-enabled"
+		expectedAdminState := ap.APAdminStateEnabled
 		if capwapData.ApState.ApAdminState == expectedAdminState {
 			t.Logf("✅ AP Admin State correctly shows '%s'", expectedAdminState)
 		} else {

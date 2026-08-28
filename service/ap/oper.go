@@ -55,6 +55,57 @@ const (
 	ApMisconfigLicenseNotCompliant ApMisconfig = "lic-no-comp"
 )
 
+// APAdminState represents the admin-state enumeration.
+type APAdminState string
+
+// admin-state members, unchanged on 17.12, 17.15 and 17.18. The enumeration declares no third
+// member, and the admin-state-* spelling the write RPCs send belongs to a different typedef,
+// enm-admin-status, whose own members are admin-state-enabled and admin-state-disabled.
+const (
+	// APAdminStateEnabled is an administratively enabled access point.
+	APAdminStateEnabled APAdminState = "adminstate-enabled"
+
+	// APAdminStateDisabled is an administratively disabled access point.
+	APAdminStateDisabled APAdminState = "adminstate-disabled"
+)
+
+// WtpMode represents the enm-ewlc-spam-ap-modes enumeration.
+type WtpMode string
+
+// enm-ewlc-spam-ap-modes members, unchanged on 17.12, 17.15 and 17.18. Only the first carries no
+// mode- prefix, so stripping one produces a wrong name for exactly that member.
+const (
+	// WtpModeLocal is an access point in local mode.
+	WtpModeLocal WtpMode = "local-mode"
+
+	// WtpModeMonitor is an access point in monitor mode.
+	WtpModeMonitor WtpMode = "mode-monitor"
+
+	// WtpModeFlexConnect is an access point in FlexConnect mode.
+	WtpModeFlexConnect WtpMode = "mode-flex-connect"
+
+	// WtpModeRogueDetector is an access point in rogue-detector mode.
+	WtpModeRogueDetector WtpMode = "mode-rogue-detector"
+
+	// WtpModeSniffer is an access point in sniffer mode.
+	WtpModeSniffer WtpMode = "mode-sniffer"
+
+	// WtpModeBridge is an access point in bridge mode.
+	WtpModeBridge WtpMode = "mode-bridge"
+
+	// WtpModeSEConnect is an access point in Spectrum Expert Connect mode.
+	WtpModeSEConnect WtpMode = "mode-se-connect"
+
+	// WtpModeRemoteBridge is an access point in remote-bridge mode.
+	WtpModeRemoteBridge WtpMode = "mode-remote-bridge"
+
+	// WtpModeHybridFlexConnect is an access point in hybrid FlexConnect mode.
+	WtpModeHybridFlexConnect WtpMode = "mode-hybrid-flexconnect"
+
+	// WtpModeSensor is an access point in sensor mode.
+	WtpModeSensor WtpMode = "mode-sensor"
+)
+
 // CiscoIOSXEWirelessAPOper represents access point operational data response.
 type CiscoIOSXEWirelessAPOper struct {
 	CiscoIOSXEWirelessAPOperData *CiscoIOSXEWirelessAPOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.6a)
@@ -565,8 +616,8 @@ type GnssInfo struct {
 
 // ApState represents AP state information.
 type ApState struct {
-	ApAdminState     string `json:"ap-admin-state"`     // AP admin state (enabled/disabled/shutdown) (Live: IOS-XE 17.12.6a)
-	ApOperationState string `json:"ap-operation-state"` // AP operational state (Live: IOS-XE 17.12.6a)
+	ApAdminState     APAdminState `json:"ap-admin-state"`     // AP admin state, adminstate-enabled or adminstate-disabled (Live: IOS-XE 17.12.6a)
+	ApOperationState string       `json:"ap-operation-state"` // AP operational state (Live: IOS-XE 17.12.6a)
 }
 
 // ApModeData represents AP mode related information.
@@ -574,7 +625,7 @@ type ApModeData struct {
 	HomeApEnabled bool         `json:"home-ap-enabled"` // Home AP feature enablement (Live: IOS-XE 17.12.6a)
 	ClearMode     bool         `json:"clear-mode"`      // Clear mode status (Live: IOS-XE 17.12.6a)
 	ApSubMode     string       `json:"ap-sub-mode"`     // AP operational sub-mode (Live: IOS-XE 17.12.6a)
-	WtpMode       string       `json:"wtp-mode"`        // WTP mode (local/flexconnect/monitor) (Live: IOS-XE 17.12.6a)
+	WtpMode       WtpMode      `json:"wtp-mode"`        // WTP mode, one of ten members whose first carries no mode- prefix (Live: IOS-XE 17.12.6a)
 	ApFabricData  ApFabricData `json:"ap-fabric-data"`  // SDA fabric integration attributes (Live: IOS-XE 17.12.6a)
 }
 

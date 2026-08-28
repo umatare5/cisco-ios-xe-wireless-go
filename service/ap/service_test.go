@@ -2627,3 +2627,45 @@ func TestApServiceUnit_ResetCAPWAP_RPCInput_Success(t *testing.T) {
 		}
 	})
 }
+
+func TestApServiceUnit_StateVocabularies_MockSuccess(t *testing.T) {
+	t.Parallel()
+
+	body := `{
+		"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [
+			{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"ap-state": {"ap-admin-state": "adminstate-disabled", "ap-operation-state": "registered"},
+				"ap-mode-data": {"wtp-mode": "local-mode", "ap-sub-mode": "not-configured"}
+			}
+		]
+	}`
+
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": body,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := ap.NewService(testClient.Core().(*core.Client))
+
+	result, err := service.ListCAPWAPData(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("ListCAPWAPData returned unexpected error: %v", err)
+	}
+	if len(result.CAPWAPData) != 1 {
+		t.Fatalf("decoded %d records, want 1", len(result.CAPWAPData))
+	}
+
+	record := result.CAPWAPData[0]
+
+	if record.ApModeData.ApSubMode != "not-configured" {
+		t.Fatalf("ap-sub-mode = %q, so ap-mode-data was not decoded", record.ApModeData.ApSubMode)
+	}
+	if record.ApState.ApAdminState != ap.APAdminStateDisabled {
+		t.Errorf("ap-admin-state = %q, want %q", record.ApState.ApAdminState, ap.APAdminStateDisabled)
+	}
+	if record.ApModeData.WtpMode != ap.WtpModeLocal {
+		t.Errorf("wtp-mode = %q, want %q", record.ApModeData.WtpMode, ap.WtpModeLocal)
+	}
+}
