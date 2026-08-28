@@ -84,7 +84,7 @@ func (s *RFTagService) DeleteRFTag(ctx context.Context, tagName string) error {
 	return core.Delete(ctx, s.Client(), s.buildTagURL(tagName))
 }
 
-// SetDot11ARfProfile sets the 5GHz RF profile for an RF tag.
+// SetDot11ARfProfile sets the 5 GHz RF profile for an RF tag, the dot11a-rf-profile-name leaf.
 func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfileName string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
@@ -93,7 +93,7 @@ func (s *RFTagService) SetDot11ARfProfile(ctx context.Context, tagName, rfProfil
 	})
 }
 
-// SetDot11BRfProfile sets the 2.4GHz RF profile for an RF tag.
+// SetDot11BRfProfile sets the 2.4 GHz RF profile for an RF tag, the dot11b-rf-profile-name leaf.
 func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfileName string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
@@ -102,7 +102,7 @@ func (s *RFTagService) SetDot11BRfProfile(ctx context.Context, tagName, rfProfil
 	})
 }
 
-// SetDot116GhzRFProfile sets the 6GHz RF profile for an RF tag.
+// SetDot116GhzRFProfile sets the 6 GHz RF profile for an RF tag, the dot11-6ghz-rf-prof-name leaf.
 func (s *RFTagService) SetDot116GhzRFProfile(ctx context.Context, tagName, rfProfileName string) error {
 	return s.updateTagField(ctx, tagName, func(payload *RFTag) {
 		if payload != nil {
