@@ -842,3 +842,75 @@ func TestClient_TLSOptionWrappers_ReachTheCore(t *testing.T) {
 		t.Errorf("WithRootCAs(pool) error = %v, want nil", err)
 	}
 }
+
+// TestClientUntyped_Request_CarriesTheStatus holds the half of Request's contract the body cannot
+// carry. RESTCONF answers a create, a delete and a read of a node holding nothing with no body at
+// all, so the three are one answer to a caller reading bytes and three to one reading the status.
+func TestClientUntyped_Request_CarriesTheStatus(t *testing.T) {
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, "created"):
+			w.WriteHeader(http.StatusCreated)
+		case strings.HasSuffix(r.URL.Path, "emptied"):
+			w.WriteHeader(http.StatusNoContent)
+		case strings.HasSuffix(r.URL.Path, "nothing"):
+			w.WriteHeader(http.StatusOK)
+		default:
+			w.WriteHeader(http.StatusBadRequest)
+		}
+	}))
+	t.Cleanup(server.Close)
+
+	parsed, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatalf("parsing the server URL: %v", err)
+	}
+
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("NewClient() error = %v", err)
+	}
+
+	ctx := context.Background()
+
+	tests := []struct {
+		name   string
+		method string
+		path   string
+		want   int
+	}{
+		{name: "a create reports 201", method: http.MethodPost, path: "x:created", want: http.StatusCreated},
+		{name: "a delete reports 204", method: http.MethodDelete, path: "x:emptied", want: http.StatusNoContent},
+		{name: "an empty read reports 200", method: http.MethodGet, path: "x:nothing", want: http.StatusOK},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			resp, err := client.Request(ctx, tt.method, tt.path, nil)
+			if err != nil {
+				t.Fatalf("Request() error = %v", err)
+			}
+			if resp.StatusCode != tt.want {
+				t.Errorf("StatusCode = %d, want %d", resp.StatusCode, tt.want)
+			}
+			if len(resp.Body) != 0 {
+				t.Errorf("Body = %q, want empty: the status is the only thing separating the three", resp.Body)
+			}
+		})
+	}
+
+	t.Run("a rejection is an APIError and no Response", func(t *testing.T) {
+		resp, err := client.Request(ctx, http.MethodPost, "Cisco-IOS-XE-x:refused", nil)
+		if resp != nil {
+			t.Errorf("Response = %+v, want nil beside an error", resp)
+		}
+
+		var apiErr *APIError
+		if !errors.As(err, &apiErr) {
+			t.Fatalf("error = %v, want an *APIError", err)
+		}
+		if apiErr.StatusCode != http.StatusBadRequest {
+			t.Errorf("APIError.StatusCode = %d, want %d", apiErr.StatusCode, http.StatusBadRequest)
+		}
+	})
+}

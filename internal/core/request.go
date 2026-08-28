@@ -15,6 +15,21 @@ import (
 // Generic HTTP Operation Functions for Service Layer
 // These functions provide a consistent interface for HTTP operations across all services.
 
+// Response is what one request returned, for the callers that need the status as well as the body.
+//
+// The status is what separates a node that holds nothing from a create, an update and a body this
+// package could not parse: RESTCONF answers all of 201, 204 and an empty 200 with no body at all,
+// so the body alone cannot tell them apart. A status of 400 or above never arrives here — it is
+// reported as an *APIError instead — so every status a Response carries is a success.
+//
+// It is non-nil exactly when the error is nil.
+type Response struct {
+	// StatusCode is the HTTP status the controller answered with.
+	StatusCode int
+	// Body is the response body as the controller sent it, non-nil and empty for a bodiless answer.
+	Body []byte
+}
+
 // Get is a generic helper reducing boilerplate in service GET methods.
 //
 // The response is validated before it is decoded: a body whose sole top-level key is not the
@@ -28,17 +43,17 @@ func Get[T any](ctx context.Context, c *Client, endpoint string, opts ...GetOpti
 
 	endpoint = applyGetOptions(endpoint, opts)
 
-	body, err := c.do(ctx, http.MethodGet, endpoint)
+	resp, err := c.do(ctx, http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(body) == 0 {
+	if len(resp.Body) == 0 {
 		var out T
 		return &out, nil
 	}
 
-	return decodeSoleKey[T](body, endpoint)
+	return decodeSoleKey[T](resp.Body, endpoint)
 }
 
 // GetRaw performs a GET and returns the response body as the controller sent it.
@@ -53,7 +68,12 @@ func GetRaw(ctx context.Context, c *Client, endpoint string, opts ...GetOption) 
 		return nil, errors.New(ierrors.ErrClientNil)
 	}
 
-	return c.do(ctx, http.MethodGet, applyGetOptions(endpoint, opts))
+	resp, err := c.do(ctx, http.MethodGet, applyGetOptions(endpoint, opts))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Body, nil
 }
 
 // Faults in an untyped request, reported before anything is sent.
@@ -82,7 +102,12 @@ func EditRaw(ctx context.Context, c *Client, method, endpoint string, payload an
 		return nil, err
 	}
 
-	return c.doWithPayload(ctx, method, endpoint, body)
+	resp, err := c.doWithPayload(ctx, method, endpoint, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Body, nil
 }
 
 // CallRPCRaw posts an RPC input to a RESTCONF operations path and returns the output body as the
@@ -97,7 +122,12 @@ func CallRPCRaw(ctx context.Context, c *Client, rpcEndpoint string, payload any)
 		return nil, err
 	}
 
-	return c.doRPC(ctx, rpcEndpoint, body)
+	resp, err := c.doRPC(ctx, rpcEndpoint, body)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Body, nil
 }
 
 // RequestRaw performs a request with the caller's method on the path the caller wrote, routed to
@@ -108,13 +138,13 @@ func CallRPCRaw(ctx context.Context, c *Client, rpcEndpoint string, payload any)
 // for still has to be reachable without waiting for a release. A path already under
 // /restconf/operations goes to the operations root; anything else goes to the data root, which
 // passes a /restconf/data-prefixed path through and prefixes a bare one.
-func RequestRaw(ctx context.Context, c *Client, method, path string, payload any) ([]byte, error) {
-	if strings.HasPrefix(path, routes.RESTCONFOperationsPath) {
-		body, err := prepareUntypedRequest(c, method, payload)
-		if err != nil {
-			return nil, err
-		}
+func RequestRaw(ctx context.Context, c *Client, method, path string, payload any) (*Response, error) {
+	body, err := prepareUntypedRequest(c, method, payload)
+	if err != nil {
+		return nil, err
+	}
 
+	if strings.HasPrefix(path, routes.RESTCONFOperationsPath) {
 		if method != http.MethodPost {
 			return nil, errOperationsMethod
 		}
@@ -122,7 +152,7 @@ func RequestRaw(ctx context.Context, c *Client, method, path string, payload any
 		return c.doRPC(ctx, path, body)
 	}
 
-	return EditRaw(ctx, c, method, path, payload)
+	return c.doWithPayload(ctx, method, path, body)
 }
 
 // prepareUntypedRequest checks what every untyped route checks and returns the payload in the shape
@@ -186,12 +216,12 @@ func Post[T any](ctx context.Context, c *Client, endpoint string, payload any) (
 		return nil, errors.New(ierrors.ErrClientNil)
 	}
 
-	body, err := c.doWithPayload(ctx, http.MethodPost, endpoint, payload)
+	resp, err := c.doWithPayload(ctx, http.MethodPost, endpoint, payload)
 	if err != nil {
 		return nil, err
 	}
 
-	return decode[T](body)
+	return decode[T](resp.Body)
 }
 
 // PostVoid is a generic helper for POST operations without expecting a response body.
@@ -218,12 +248,12 @@ func Put[T any](ctx context.Context, c *Client, endpoint string, payload any) (*
 		return nil, errors.New(ierrors.ErrClientNil)
 	}
 
-	body, err := c.doWithPayload(ctx, http.MethodPut, endpoint, payload)
+	resp, err := c.doWithPayload(ctx, http.MethodPut, endpoint, payload)
 	if err != nil {
 		return nil, err
 	}
 
-	return decode[T](body)
+	return decode[T](resp.Body)
 }
 
 // PutVoid is a generic helper for PUT operations without expecting a response body.
@@ -241,12 +271,12 @@ func Patch[T any](ctx context.Context, c *Client, endpoint string, payload any) 
 		return nil, errors.New(ierrors.ErrClientNil)
 	}
 
-	body, err := c.doWithPayload(ctx, http.MethodPatch, endpoint, payload)
+	resp, err := c.doWithPayload(ctx, http.MethodPatch, endpoint, payload)
 	if err != nil {
 		return nil, err
 	}
 
-	return decode[T](body)
+	return decode[T](resp.Body)
 }
 
 // PatchVoid is a generic helper for PATCH operations without expecting a response body.

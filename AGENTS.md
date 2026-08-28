@@ -13,7 +13,7 @@
 
 ## Repository Structure
 
-- `wnc.go` — Public entry point; `NewClient(host, token, opts...)`, 42 service accessors, and the untyped `GetData`/`PostData`/`PutData`/`PatchData`/`DeleteData`/`PostRPC` escape hatches
+- `wnc.go` — Public entry point; `NewClient(host, token, opts...)`, 42 service accessors, and the untyped `GetData`/`PostData`/`PutData`/`PatchData`/`DeleteData`/`PostRPC`/`Request` escape hatches, of which `Request` alone returns a `*Response` carrying the status
 - `service/` — 32 service packages, one per YANG feature area. **No service imports another**; the invariant holds across all 32 and nothing enforces it, because `depguard` runs `list-mode: lax`
 - `internal/core/` — Request execution and the five error sentinels ([errors.go](internal/core/errors.go)); a service package never defines its own sentinel, and `IsNotFoundError` is the intended predicate
 - `internal/restconf/` — URL builders reached as `s.Client().RESTCONFBuilder()`; `routes/` is the single source for endpoint strings

@@ -223,7 +223,7 @@ func New(host, token string, opts ...Option) (*Client, error) {
 // The transport methods are unexported so that the root client's untyped methods are the only
 // route out of the typed API. A value reached through a service constructor can build URLs and
 // services with it, and nothing else.
-func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) {
+func (c *Client) do(ctx context.Context, method, path string) (*Response, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -233,17 +233,17 @@ func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) {
 		return nil, err
 	}
 
-	body, err := c.execute(req)
+	resp, err := c.execute(req)
 	if err != nil {
 		return nil, err
 	}
 
 	c.logger.Debug("Successfully processed API response", "path", path)
-	return body, nil
+	return resp, nil
 }
 
 // doWithPayload performs an HTTP request with a payload and returns the response body.
-func (c *Client) doWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) {
+func (c *Client) doWithPayload(ctx context.Context, method, path string, payload any) (*Response, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -253,19 +253,19 @@ func (c *Client) doWithPayload(ctx context.Context, method, path string, payload
 		return nil, err
 	}
 
-	body, err := c.execute(req)
+	resp, err := c.execute(req)
 	if err != nil {
 		return nil, err
 	}
 
 	c.logger.Debug("Successfully processed API response", "path", path)
-	return body, nil
+	return resp, nil
 }
 
 // doRPC posts an RPC input to rpcPath and returns the output body. RFC 8040 4.4.2 invokes an
 // operation with POST and nothing else, so the method is not a parameter; RequestRaw refuses
 // another method on an operations path rather than routing it here.
-func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte, error) {
+func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) (*Response, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -275,17 +275,17 @@ func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte
 		return nil, err
 	}
 
-	body, err := c.execute(req)
+	resp, err := c.execute(req)
 	if err != nil {
 		return nil, err
 	}
 
 	c.logger.Debug("Successfully processed RPC response", "rpcPath", rpcPath)
-	return body, nil
+	return resp, nil
 }
 
-// execute sends req and returns its body once the status has been checked.
-func (c *Client) execute(req *http.Request) ([]byte, error) {
+// execute sends req and returns its status and body once the status has been checked.
+func (c *Client) execute(req *http.Request) (*Response, error) {
 	resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
 	if err != nil {
 		return nil, classifyTransportError(err)
@@ -301,7 +301,7 @@ func (c *Client) execute(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 
-	return body, nil
+	return &Response{StatusCode: resp.StatusCode, Body: body}, nil
 }
 
 // validateDoParameters validates input parameters for the Do method.

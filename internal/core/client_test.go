@@ -156,9 +156,9 @@ func TestCoreClientUnit_DoOperations_Success(t *testing.T) {
 	defer cancel()
 
 	t.Run("GET_GeneralOper", func(t *testing.T) {
-		body, err := client.do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
+		resp, err := client.do(ctx, http.MethodGet, "Cisco-IOS-XE-wireless-general-oper:general-oper-data")
 		testutil.AssertNoError(t, err, "GET request should succeed with mock server")
-		testutil.AssertTrue(t, len(body) > 0, "Response body should not be empty")
+		testutil.AssertTrue(t, len(resp.Body) > 0, "Response body should not be empty")
 	})
 
 	t.Run("InvalidMethod", func(t *testing.T) {
@@ -437,10 +437,10 @@ func TestCoreClientUnit_doWithPayload(t *testing.T) {
 
 	ctx := context.Background()
 	payload := map[string]string{"test": "data"}
-	body, err := client.doWithPayload(ctx, "POST", "/restconf/data/test", payload)
+	resp, err := client.doWithPayload(ctx, "POST", "/restconf/data/test", payload)
 
 	testutil.AssertNoError(t, err, "doWithPayload should succeed")
-	testutil.AssertTrue(t, len(body) > 0, "Response body should not be empty")
+	testutil.AssertTrue(t, len(resp.Body) > 0, "Response body should not be empty")
 }
 
 // TestCoreClientUnit_GenericRequests tests generic request functions.

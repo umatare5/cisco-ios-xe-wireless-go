@@ -68,6 +68,11 @@ var (
 // APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
 type APIError = core.APIError
 
+// Response is what Request returned: the controller's status and the body as it sent it
+// (re-export of internal core.Response). An alias rather than a distinct type, so a caller can
+// name it in a variable, a struct field or a test double.
+type Response = core.Response
+
 // Client represents the unified WNC API client with access to all domain services.
 // This provides a single-import approach to accessing all wireless controller functionality.
 type Client struct {
@@ -248,7 +253,12 @@ func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte,
 // payload; the one value rejected is the empty string, which net/http reads as GET. The operations
 // root takes POST alone, and another method there is refused rather than replaced: this package
 // would send POST regardless, invoking the operation instead of doing what was asked.
-func (c *Client) Request(ctx context.Context, method, path string, payload any) ([]byte, error) {
+//
+// This is the one method here that returns the status as well as the body, because it is the one
+// with no fixed verb: 201, 204 and an empty 200 all answer with no body, so the body alone cannot
+// say whether the node held nothing, was created or was replaced. The Response is non-nil exactly
+// when the error is nil, and a status of 400 or above arrives as an *APIError rather than in it.
+func (c *Client) Request(ctx context.Context, method, path string, payload any) (*Response, error) {
 	return core.RequestRaw(ctx, c.core, method, path, payload)
 }
 
