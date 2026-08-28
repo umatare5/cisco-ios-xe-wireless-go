@@ -148,7 +148,7 @@ Push the coverage artifacts and badge to the PR.
 
 To release a new version:
 
-- **Update the version** in the `VERSION` file.
+- **Update the version** in the `VERSION` file and in `internal/version.Version` (`internal/version/version.go`) — `version_test.go` fails unless both move in the same commit.
 - **Submit a pull request** with the updated `VERSION` file.
 
 Once merged, GitHub Actions will automatically release the new version using [Release Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-release.yml).
@@ -181,6 +181,7 @@ Type every field from a measured response, never from the YANG model.
 | Enumeration | `string`, or a named `string` type |
 
 - Retype a leaf only when that leaf was measured. Two `uint64` siblings in one struct can differ.
+- One leaf that will not decode fails the whole read: `encoding/json` refuses an out-of-range integer and both decode paths discard the partly-filled value, at `internal/core/envelope.go:37-40` on a read and `internal/core/request.go:206-208` on a write response. Narrowing a numeric type therefore risks a collection, not a field.
 - Do not add `,string` to a numeric field, and do not introduce a third numeric convention for a single leaf.
 - Pointerize any leaf whose absence carries meaning, and give it `,omitempty`.
 - An omitted configuration leaf means its default is in force, and that default is often `true`.

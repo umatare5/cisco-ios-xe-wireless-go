@@ -124,7 +124,8 @@ func WithResponseHeaderTimeout(d time.Duration) Option { return core.WithRespons
 // WithTLSHandshakeTimeout bounds the TLS handshake (re-export wrapper).
 func WithTLSHandshakeTimeout(d time.Duration) Option { return core.WithTLSHandshakeTimeout(d) }
 
-// WithLogger sets a custom slog.Logger.
+// WithLogger sets a custom slog.Logger. Unset, the client logs to slog.Default(), so pass
+// WithLogger(slog.New(slog.DiscardHandler)) where the SDK should write nothing.
 func WithLogger(l *slog.Logger) Option { return core.WithLogger(l) }
 
 // WithUserAgent sets a custom User-Agent header value.

@@ -148,6 +148,13 @@ func WithTLSHandshakeTimeout(timeout time.Duration) Option {
 }
 
 // WithLogger sets a custom logger for the client.
+//
+// Unset, the client logs to slog.Default(), so a process that never passed a logger still gets
+// this package's Debug and Error lines — an HTTP error line among them, carrying up to
+// maxLoggedBodyBytes of the controller's rejection document. Pass
+// WithLogger(slog.New(slog.DiscardHandler)) to silence the SDK; the default is left as
+// slog.Default() because changing it would take logging away from an existing caller with no
+// compile error and nothing to notice.
 func WithLogger(logger *slog.Logger) Option {
 	return func(c *Client) error {
 		if logger == nil {
