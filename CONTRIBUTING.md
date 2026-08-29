@@ -119,7 +119,10 @@ Run the example application listed in the [README.md](../README.md#-usecases) **
 
 > [!Warning]
 >
-> `example/reset_ap` and `example/reload_controller` will reboot the AP and controller. This causes downtime.
+> **About Destructive Examples**
+>
+> - `example/reset_ap` and `example/reload_controller` will reboot the AP and controller. This causes downtime.
+> - `example/save_config` overwrites the startup configuration, which cannot be undone.
 
 #### 5. Generate Coverage Reports and Badge
 
@@ -157,12 +160,12 @@ Once merged, GitHub Actions will automatically release the new version using [Re
 
 While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**. A PATCH release may add to the exported API but never changes or removes what is already there.
 
-| Change | Bump | Release notes must name |
-| :--- | :--- | :--- |
-| Added exported symbol | PATCH | The new symbols |
-| Added variadic parameter | MINOR | The broken forms and the recovery path |
-| Changed or removed symbol | MINOR | Every affected symbol |
-| No exported API change | PATCH | Nothing |
+| Change                    | Bump  | Release notes must name                |
+| :------------------------ | :---- | :------------------------------------- |
+| Added exported symbol     | PATCH | The new symbols                        |
+| Added variadic parameter  | MINOR | The broken forms and the recovery path |
+| Changed or removed symbol | MINOR | Every affected symbol                  |
+| No exported API change    | PATCH | Nothing                                |
 
 ### Toolchain Requirement
 
@@ -174,11 +177,11 @@ This platform encodes **per leaf, not per container**: one body carries bare num
 
 Type every field from a measured response, never from the YANG model.
 
-| Wire form | Go type |
-| :--- | :--- |
+| Wire form                                  | Go type                               |
+| :----------------------------------------- | :------------------------------------ |
 | Quoted number: `decimal64`, 64-bit counter | `string`, or `*string` when omittable |
-| Bare number: `uint32` and narrower | `int` or `uintN`, `*T` when omittable |
-| Enumeration | `string`, or a named `string` type |
+| Bare number: `uint32` and narrower         | `int` or `uintN`, `*T` when omittable |
+| Enumeration                                | `string`, or a named `string` type    |
 
 - Retype a leaf only when that leaf was measured. Two `uint64` siblings in one struct can differ.
 - One leaf that will not decode fails the whole read: `encoding/json` refuses an out-of-range integer and both decode paths discard the partly-filled value, at `internal/core/envelope.go:37-40` on a read and `internal/core/request.go:206-208` on a write response. Narrowing a numeric type therefore risks a collection, not a field.
