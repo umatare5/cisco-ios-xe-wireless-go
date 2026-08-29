@@ -897,3 +897,128 @@ func TestClientServiceUnit_ReadFailure_ReturnsError(t *testing.T) {
 		})
 	}
 }
+
+// TestClientServiceUnit_DeauthenticateWireForm pins the payload each arm puts on the wire.
+//
+// The input key is the reason this test exists: this module spells it plain "input" while the
+// access-point cfg-rpc module qualifies it, so a copied payload type compiles and is refused by
+// the controller. It also holds each call to one arm — the choice is mandatory and the controller
+// resolves the first arm it finds.
+func TestClientServiceUnit_DeauthenticateWireForm(t *testing.T) {
+	t.Parallel()
+
+	const path = "/restconf/operations/Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all"
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodPost, "Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all",
+		func() (int, string) { return http.StatusNoContent, "" })
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	calls := []struct {
+		name string
+		call func() error
+		want string
+	}{
+		{
+			name: "ByMAC",
+			call: func() error { return service.DeauthenticateByMAC(ctx, "AA:BB:CC:DD:EE:55") },
+			want: `{"input":{"mac-addr":"aa:bb:cc:dd:ee:55"}}`,
+		},
+		{
+			name: "ByIP",
+			call: func() error { return service.DeauthenticateByIP(ctx, "192.0.2.10") },
+			want: `{"input":{"ip-addr":"192.0.2.10"}}`,
+		},
+		{
+			name: "ByUsername",
+			call: func() error { return service.DeauthenticateByUsername(ctx, "someone@example.com") },
+			want: `{"input":{"user-name":"someone@example.com"}}`,
+		},
+	}
+
+	for _, c := range calls {
+		if err := c.call(); err != nil {
+			t.Fatalf("%s unexpected error: %v", c.name, err)
+		}
+	}
+
+	recorded := server.Requests()
+	if len(recorded) != len(calls) {
+		t.Fatalf("Recorded %d requests, want %d", len(recorded), len(calls))
+	}
+	for i, c := range calls {
+		if got := recorded[i].Path; got != path {
+			t.Errorf("%s wire path = %q, want %q", c.name, got, path)
+		}
+		if got := recorded[i].Body; got != c.want {
+			t.Errorf("%s wire body = %q, want %q", c.name, got, c.want)
+		}
+	}
+}
+
+// TestClientServiceUnit_DeauthenticateRejectsBadInput_Error tests that an unusable identifier is
+// refused before a request is built, and that the refusal is not a not-found sentinel: the
+// operation cannot observe whether the client existed, so answering with one would be a claim.
+func TestClientServiceUnit_DeauthenticateRejectsBadInput_Error(t *testing.T) {
+	t.Parallel()
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	refusals := map[string]func() error{
+		"malformed MAC":  func() error { return service.DeauthenticateByMAC(ctx, "not-a-mac") },
+		"empty MAC":      func() error { return service.DeauthenticateByMAC(ctx, "") },
+		"empty IP":       func() error { return service.DeauthenticateByIP(ctx, "   ") },
+		"empty username": func() error { return service.DeauthenticateByUsername(ctx, "") },
+	}
+
+	for name, call := range refusals {
+		err := call()
+		if err == nil {
+			t.Errorf("%s: expected an error", name)
+			continue
+		}
+		if errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("%s: refusal matched ErrResourceNotFound: %v", name, err)
+		}
+	}
+
+	if got := len(server.Requests()); got != 0 {
+		t.Errorf("Recorded %d requests, want 0 — a refused identifier must not reach the wire", got)
+	}
+}
+
+// TestClientServiceUnit_DeauthenticateOnAbsentRelease_Error tests the answer a release before
+// 17.15 gives. The path is absent rather than the resource, so the controller answers 400 and the
+// error must not match a not-found sentinel.
+func TestClientServiceUnit_DeauthenticateOnAbsentRelease_Error(t *testing.T) {
+	t.Parallel()
+
+	const body = `{"ietf-restconf:errors":{"error":[{"error-type":"application",` +
+		`"error-tag":"malformed-message","error-message":"invalid path"}]}}`
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodPost, "Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all",
+		func() (int, string) { return http.StatusBadRequest, body })
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	err := service.DeauthenticateByMAC(ctx, "00:11:22:33:44:55")
+	if err == nil {
+		t.Fatal("Expected an error for a 400 answer")
+	}
+	if errors.Is(err, core.ErrResourceNotFound) {
+		t.Errorf("A 400 matched ErrResourceNotFound: %v", err)
+	}
+}
