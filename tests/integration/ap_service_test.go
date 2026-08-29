@@ -425,7 +425,8 @@ func TestAPServiceIntegration_GlobalOperations_Success(t *testing.T) {
 				Method: func(ctx context.Context, service any) (any, error) {
 					return service.(ap.Service).ListEwlcMewlcPredownloadRec(ctx)
 				},
-				LogResult: true,
+				LogResult:      true,
+				ExpectNotFound: true, // Presence container: answered on 17.12, 404 from 17.15 on
 			},
 			{
 				Name: "ListApNhGlobalData",
