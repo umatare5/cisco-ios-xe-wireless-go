@@ -866,13 +866,13 @@ func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error {
 	return s.assignTags(ctx, apMAC, tags)
 }
 
-// ReloadByMAC restarts the access point with this address, interrupting service on it.
+// ResetAPByMAC reboots the access point with this address, interrupting service on it.
 //
 // The RPC accepts a name or an address and this resolves the name, because the address arm has
 // never been observed to complete. The resolve is the keyed capwap-data read and carries no
 // fields expression: the record is one row either way, and pruning to name alone would drop the
 // wtp-mac this address was matched on.
-func (s Service) ReloadByMAC(ctx context.Context, apMAC string) error {
+func (s Service) ResetAPByMAC(ctx context.Context, apMAC string) error {
 	normalizedMAC, err := service.RequireMACAddress(apMAC)
 	if err != nil {
 		return err
@@ -892,16 +892,16 @@ func (s Service) ReloadByMAC(ctx context.Context, apMAC string) error {
 		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
 	}
 
-	return s.ReloadByName(ctx, resp.CAPWAPData[0].Name)
+	return s.ResetAPByName(ctx, resp.CAPWAPData[0].Name)
 }
 
-// ReloadByName restarts the access point with this name, interrupting service on it.
-func (s Service) ReloadByName(ctx context.Context, apName string) error {
+// ResetAPByName reboots the access point with this name, interrupting service on it.
+func (s Service) ResetAPByName(ctx context.Context, apName string) error {
 	if err := service.RequireAPName(apName); err != nil {
 		return err
 	}
 
-	payload := APReloadRPCPayload{Input: APReloadRPCInput{APName: apName}}
+	payload := APResetRPCPayload{Input: APResetRPCInput{APName: apName}}
 
 	return core.PostRPCVoid(ctx, s.Client(), routes.APApResetRPC, payload)
 }

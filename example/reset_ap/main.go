@@ -1,6 +1,6 @@
 //go:build example
 
-// Package main in example/reload_ap demonstrates how to restart an access point managed by a Cisco IOS-XE Wireless Network Controller.
+// Package main in example/reset_ap demonstrates how to reboot an access point managed by a Cisco IOS-XE Wireless Network Controller.
 package main
 
 import (
@@ -32,10 +32,10 @@ func main() {
 		Level: slog.LevelInfo,
 	}))
 
-	logger.Info("starting AP reload tool",
-		slog.String("operation", "reload_ap"))
+	logger.Info("starting AP reset tool",
+		slog.String("operation", "reset_ap"))
 
-	fmt.Println("=== Access Point Reload Tool ===")
+	fmt.Println("=== Access Point Reset Tool ===")
 	fmt.Println("WARNING: This tool will restart access points causing service interruption!")
 	fmt.Println("Use only in controlled environments with proper authorization.")
 	fmt.Println()
@@ -127,29 +127,29 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
 
-	// 7. Reload execution
-	logger.Info("initiating AP reload",
+	// 7. Reset execution
+	logger.Info("initiating AP reset",
 		slog.String("ap_mac", apMac),
 		slog.String("controller", controller))
 
-	fmt.Printf("Executing AP reload for MAC %s\n", apMac)
+	fmt.Printf("Executing AP reset for MAC %s\n", apMac)
 	fmt.Println("WARNING: AP will become unavailable and disconnect all clients during restart...")
 
-	err = apService.ReloadByMAC(ctx, apMac)
+	err = apService.ResetAPByMAC(ctx, apMac)
 	if err != nil {
-		logger.Error("AP reload failed",
+		logger.Error("AP reset failed",
 			slog.String("ap_mac", apMac),
 			slog.String("controller", controller),
 			slog.String("error", err.Error()))
-		log.Printf("AP reload failed: %v", err)
+		log.Printf("AP reset failed: %v", err)
 		return
 	}
 
-	logger.Info("AP reload command sent successfully",
+	logger.Info("AP reset command sent successfully",
 		slog.String("ap_mac", apMac),
 		slog.String("controller", controller))
 
-	fmt.Printf("✓ AP reload command sent successfully for MAC: %s\n", apMac)
+	fmt.Printf("✓ AP reset command sent successfully for MAC: %s\n", apMac)
 	fmt.Println("Note: AP is now restarting and will be temporarily unavailable")
 	fmt.Println("Clients will need to reconnect after AP restart completes")
 }
