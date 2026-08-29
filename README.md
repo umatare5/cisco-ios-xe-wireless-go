@@ -430,7 +430,8 @@ Executing configuration save...
 
 ## 📦 Used By
 
-- [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.4.2](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.4.2))
+- [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.11.1](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.11.1))
+- [cisco-wnc-cli](https://github.com/umatare5/wnc) - A CLI tool for Cisco C9800 Wireless Network Controller ([v0.11.1](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.11.1))
 
 ## 🤝 Contributing
 
