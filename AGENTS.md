@@ -21,7 +21,7 @@
 - `internal/{errors,service,validation}/` — Message templates, the service base type and MAC helpers, and input validation
 - `pkg/testutil/` — `NewMockServer` with functional options; the mock server both tests and consumers use
 - `tests/` — `contract/`, `integration/` (`//go:build integration`, read-only), `scenario/` (`//go:build scenario`, **writes to a controller**), and shared `testutil/`
-- `example/` — Six runnable programs; the only place the public API is exercised as a consumer would
+- `example/` — Seven runnable programs; the only place the public API is exercised as a consumer would
 
 ## Setup and Commands
 
@@ -73,7 +73,7 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 - **For a replacing `PUT` the write type must cover every leaf the read type declares.** A leaf the write type omits is deleted from the entry, and no test compares the two types — see the repair in `db757c7`.
 - **An optional container must be a pointer with `omitempty`.** A non-pointer struct always marshals, so the payload carries `"list": null` and the controller answers `400`.
 - **A secret-bearing leaf is a named type, and the redaction has to sit on the field type and on the entry.** `wlan.Secret` redacts through `String` and `LogValue`, which covers every `fmt` verb but `%#v`. `slog.JSONHandler` renders a struct value through `json.Marshal`, which honors `json.Marshaler` and ignores `fmt.Stringer`, so `WlanCfgEntry.LogValue` is what keeps the key out of a record built from the whole entry, and `Secret.MarshalJSON` is what keeps it out of the containers above the entry, which have no `LogValue` of their own.
-- **Tag writes, the AP write RPCs and the controller reload RPC are the only places this SDK mutates a controller.** The three tag list key leaves declare the pattern `[!-~]([ -~]*[!-~])?` and no length on 17.12, 17.15 and 17.18 alike, while the controller caps a name at 32 characters on every kind, measured on 17.12.8, so `validation.ValidateTagName` enforces both and each tag service calls it.
+- **Tag writes, the AP write RPCs, the client deauthentication RPC and the controller reload and save-config RPCs are the only places this SDK mutates a controller.** The save is the one whose effect no read here can observe, because no release in scope exposes the startup datastore over RESTCONF. The three tag list key leaves declare the pattern `[!-~]([ -~]*[!-~])?` and no length on 17.12, 17.15 and 17.18 alike, while the controller caps a name at 32 characters on every kind, measured on 17.12.8, so `validation.ValidateTagName` enforces both and each tag service calls it.
 - **An AP write RPC's input is a mandatory choice, and the accessor's `By` suffix names the arm it fills.** Both arms carry `omitempty`, so the arm the caller did not name is absent rather than sent empty. The slot-admin RPC's `band` selects a radio type and not a frequency, so the caller supplies the slot and the `radio-type` leaf and the controller arbitrates the pair.
 
 ### RESTCONF Access Patterns

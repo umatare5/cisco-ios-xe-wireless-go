@@ -63,7 +63,7 @@
 				
 				<option value="file3">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/get_options.go (100.0%)</option>
 				
-				<option value="file4">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/request.go (89.9%)</option>
+				<option value="file4">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/request.go (86.7%)</option>
 				
 				<option value="file5">github.com/umatare5/cisco-ios-xe-wireless-go/internal/core/wireless.go (100.0%)</option>
 				
@@ -1072,6 +1072,20 @@ func PostVoid(ctx context.Context, c *Client, endpoint string, payload any) erro
 </span>        }
         <span class="cov5" title="3">_, err := c.doWithPayload(ctx, http.MethodPost, endpoint, payload)
         return err</span>
+}
+
+// PostRPC is a generic helper for RPC POST operations that expect a response body.
+func PostRPC[T any](ctx context.Context, c *Client, rpcEndpoint string, payload any) (*T, error) {
+        <span class="cov1" title="1">if c == nil </span>{
+                <span class="cov1" title="1">return nil, errors.New(ierrors.ErrClientNil)
+</span>        }
+
+        <span class="cov0" title="0">resp, err := c.doRPC(ctx, rpcEndpoint, payload)
+        if err != nil </span>{
+                <span class="cov0" title="0">return nil, err
+</span>        }
+
+        <span class="cov0" title="0">return decode[T](resp.Body)</span>
 }
 
 // PostRPCVoid is a generic helper for RPC POST operations without expecting a response body.
@@ -4468,7 +4482,7 @@ type Service struct {
 
 // NewService creates a new Controller service instance with the provided client.
 func NewService(client *core.Client) Service {
-        <span class="cov10" title="8">return Service{BaseService: service.NewBaseService(client)}
+        <span class="cov10" title="11">return Service{BaseService: service.NewBaseService(client)}
 </span>}
 
 // GetBootTime retrieves the instant at which the controller last booted.
@@ -4481,32 +4495,32 @@ func (s Service) GetBootTime(
 
 // Reload restarts the WNC controller causing temporary service interruption.
 func (s Service) Reload(ctx context.Context, reason string, force bool) error {
-        <span class="cov7" title="4">if strings.TrimSpace(reason) == "" </span>{
-                <span class="cov4" title="2">return errors.New(ErrInvalidReloadReason)
+        <span class="cov6" title="4">if strings.TrimSpace(reason) == "" </span>{
+                <span class="cov3" title="2">return errors.New(ErrInvalidReloadReason)
 </span>        }
 
-        <span class="cov4" title="2">return s.reload(ctx, reason, &amp;force)</span>
+        <span class="cov3" title="2">return s.reload(ctx, reason, &amp;force)</span>
 }
 
 // ReloadWithReason restarts the WNC controller with the specified reason only.
 func (s Service) ReloadWithReason(ctx context.Context, reason string) error {
-        <span class="cov7" title="4">if strings.TrimSpace(reason) == "" </span>{
-                <span class="cov4" title="2">return errors.New(ErrInvalidReloadReason)
+        <span class="cov6" title="4">if strings.TrimSpace(reason) == "" </span>{
+                <span class="cov3" title="2">return errors.New(ErrInvalidReloadReason)
 </span>        }
 
-        <span class="cov4" title="2">return s.reload(ctx, reason, nil)</span>
+        <span class="cov3" title="2">return s.reload(ctx, reason, nil)</span>
 }
 
 // reload is the internal helper function for WNC controller reload operations.
 func (s Service) reload(ctx context.Context, reason string, force *bool) error {
-        <span class="cov7" title="4">requestBody := WNCReloadRPCPayload{
+        <span class="cov6" title="4">requestBody := WNCReloadRPCPayload{
                 Input: WNCReloadRPCInput{
                         Reason: reason,
                         Force:  force,
                 },
 </span>        }
 
-        <span class="cov7" title="4">err := core.PostRPCVoid(ctx, s.Client(), routes.ControllerReloadRPC, requestBody)
+        <span class="cov6" title="4">err := core.PostRPCVoid(ctx, s.Client(), routes.ControllerReloadRPC, requestBody)
         if err != nil </span>{
                 <span class="cov1" title="1">return fmt.Errorf("controller reload operation failed: %w",
                         fmt.Errorf("reload RPC execution failed: %w", err))
@@ -4514,6 +4528,17 @@ func (s Service) reload(ctx context.Context, reason string, force *bool) error {
 
         <span class="cov5" title="3">return nil</span>
 }
+
+// SaveConfig copies the running configuration to the startup configuration, which has no rollback.
+//
+// Output.Result is the controller's own account of the save — "Save running-config successful" on
+// 17.12.8, 17.15.6 and 17.18.4a alike — and nothing here matches it, because a release wording it
+// differently must not turn a completed save into a failure. The save took 2.5 to 3.7 seconds when
+// measured, against a five-second response-header budget WithTimeout does not lift; raise it with
+// WithResponseHeaderTimeout.
+func (s Service) SaveConfig(ctx context.Context) (*SaveConfigRPCOutput, error) {
+        <span class="cov5" title="3">return core.PostRPC[SaveConfigRPCOutput](ctx, s.Client(), routes.ControllerSaveConfigRPC, nil)
+</span>}
 </pre>
 		
 		<pre class="file" id="file26" style="display: none">package cts
