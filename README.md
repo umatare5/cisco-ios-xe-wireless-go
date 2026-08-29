@@ -50,7 +50,7 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 You have to enable RESTCONF and HTTPS on the C9800 before using this SDK. Please see:
 
-- [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432)
+- [Cisco IOS XE 17.15 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1715/b_1715_programmability_cg/restconf_protocol.html#id_125840)
 
 ### 1. Generate a Basic Auth token
 
