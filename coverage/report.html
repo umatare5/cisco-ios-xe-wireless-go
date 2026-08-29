@@ -4148,10 +4148,13 @@ func (s Service) ListBLEMgmtCmx(
 
 import (
         "context"
+        "errors"
+        "fmt"
 
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
         "github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+        "github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // Service provides wireless client operations for Cisco IOS-XE Wireless LAN Controller.
@@ -4161,12 +4164,12 @@ type Service struct {
 
 // NewService creates a new Client service instance with the provided client.
 func NewService(client *core.Client) Service {
-        <span class="cov10" title="14">return Service{BaseService: service.NewBaseService(client)}
+        <span class="cov10" title="17">return Service{BaseService: service.NewBaseService(client)}
 </span>}
 
 // GetOperational retrieves the complete client operational data.
 func (s Service) GetOperational(ctx context.Context, opts ...core.GetOption) (*CiscoIOSXEWirelessClientOper, error) {
-        <span class="cov8" title="8">return core.Get[CiscoIOSXEWirelessClientOper](ctx, s.Client(), routes.ClientOperPath, opts...)
+        <span class="cov7" title="8">return core.Get[CiscoIOSXEWirelessClientOper](ctx, s.Client(), routes.ClientOperPath, opts...)
 </span>}
 
 // ListCommonInfo retrieves common operational data for clients.
@@ -4186,12 +4189,12 @@ func (s Service) ListCommonInfo(
 func (s Service) GetCommonInfoByMAC(
         ctx context.Context, mac string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperCommonOperData, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(mac)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(mac)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, normalizedMAC)
+        <span class="cov6" title="6">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientCommonOperDataPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperCommonOperData](ctx, s.Client(), url, opts...)</span>
 }
 
@@ -4206,12 +4209,12 @@ func (s Service) GetDCInfoByMAC(
         clientMAC string,
         opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperDcInfo, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDcInfoPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDcInfoPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperDcInfo](ctx, s.Client(), endpoint, opts...)</span>
 }
 
@@ -4233,12 +4236,12 @@ func (s Service) GetDot11InfoByMAC(
         ctx context.Context,
         mac string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperDot11OperData, error) {
-        <span class="cov10" title="14">normalizedMAC, err := service.RequireMACAddress(mac)
+        <span class="cov9" title="14">normalizedMAC, err := service.RequireMACAddress(mac)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov9" title="11">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, normalizedMAC)
+        <span class="cov8" title="11">url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientDot11OperDataPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperDot11OperData](ctx, s.Client(), url, opts...)</span>
 }
 
@@ -4260,12 +4263,12 @@ func (s Service) GetMMIFClientHistoryByMAC(
         ctx context.Context,
         clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperMmIfClientHistory, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientHistoryPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperMmIfClientHistory](ctx, s.Client(), endpoint, opts...)</span>
 }
 
@@ -4287,12 +4290,12 @@ func (s Service) GetMMIFClientStatsByMAC(
         ctx context.Context,
         clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperMmIfClientStats, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMmIfClientStatsPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperMmIfClientStats](ctx, s.Client(), endpoint, opts...)</span>
 }
 
@@ -4314,12 +4317,12 @@ func (s Service) GetMobilityInfoByMAC(
         ctx context.Context,
         clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperMobilityOperData, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientMobilityOperDataPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperMobilityOperData](ctx, s.Client(), endpoint, opts...)</span>
 }
 
@@ -4336,12 +4339,12 @@ func (s Service) GetPolicyInfoByMAC(
         ctx context.Context,
         clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperPolicyData, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientPolicyDataPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientPolicyDataPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperPolicyData](ctx, s.Client(), endpoint, opts...)</span>
 }
 
@@ -4359,12 +4362,12 @@ func (s Service) GetSISFDBByMAC(
         clientMAC string,
         opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperSisfDBMac, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientSisfDBMacPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperSisfDBMac](ctx, s.Client(), endpoint, opts...)</span>
 }
 
@@ -4386,14 +4389,63 @@ func (s Service) GetTrafficStatsByMAC(
         ctx context.Context,
         clientMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessClientOperTrafficStatsData, error) {
-        <span class="cov8" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
+        <span class="cov7" title="9">normalizedMAC, err := service.RequireMACAddress(clientMAC)
         if err != nil </span>{
                 <span class="cov4" title="3">return nil, err
 </span>        }
 
-        <span class="cov7" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, normalizedMAC)
+        <span class="cov6" title="6">endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, normalizedMAC)
         return core.Get[CiscoIOSXEWirelessClientOperTrafficStatsData](ctx, s.Client(), endpoint, opts...)</span>
 }
+
+// DeauthenticateByMAC drops the session of the client with this address.
+//
+// The By suffix names the arm of the RPC's mandatory choice this fills. The controller answers 204
+// whether or not the address matched a client, so a caller that needs to know reads the client
+// first; measured on 17.15.6, an address matching nothing and one matching a live client are
+// indistinguishable. The client reassociates on its own, so this forces a reassociation rather
+// than removing anything, and it leaves the PMK cache intact.
+//
+// The operation is declared from module revision 2024-03-01, which 17.15 is the first release to
+// serve. An earlier release answers 400 with "invalid path" rather than 404.
+func (s Service) DeauthenticateByMAC(ctx context.Context, clientMAC string) error {
+        <span class="cov5" title="4">normalizedMAC, err := validation.NormalizeMACAddress(clientMAC)
+        if err != nil </span>{
+                <span class="cov3" title="2">return fmt.Errorf(ErrInvalidClientMACFormat, clientMAC)
+</span>        }
+
+        <span class="cov3" title="2">return s.deauthenticate(ctx, ClientDeauthRPCInput{MACAddr: normalizedMAC})</span>
+}
+
+// DeauthenticateByIP drops the session of the client holding this address.
+//
+// The address is resolved within zone 0, which is the only zone the payload names. A client holds
+// one IPv4 binding and may hold several IPv6 bindings, so an address names one client while a
+// client does not name one address.
+func (s Service) DeauthenticateByIP(ctx context.Context, clientIP string) error {
+        <span class="cov3" title="2">if !validation.IsNonEmptyString(clientIP) </span>{
+                <span class="cov1" title="1">return errors.New(ErrEmptyClientIPAddr)
+</span>        }
+
+        <span class="cov1" title="1">return s.deauthenticate(ctx, ClientDeauthRPCInput{IPAddr: clientIP})</span>
+}
+
+// DeauthenticateByUsername drops the session of the client authenticated under this username.
+//
+// A username is not measured to select one client: the lab estate carries one session per
+// username, so nothing establishes what the controller does when a username holds several.
+func (s Service) DeauthenticateByUsername(ctx context.Context, username string) error {
+        <span class="cov3" title="2">if !validation.IsNonEmptyString(username) </span>{
+                <span class="cov1" title="1">return errors.New(ErrEmptyClientUsername)
+</span>        }
+
+        <span class="cov1" title="1">return s.deauthenticate(ctx, ClientDeauthRPCInput{Username: username})</span>
+}
+
+// deauthenticate posts one arm of the deauthentication RPC's choice.
+func (s Service) deauthenticate(ctx context.Context, input ClientDeauthRPCInput) error {
+        <span class="cov5" title="4">return core.PostRPCVoid(ctx, s.Client(), routes.ClientDeauthRPC, ClientDeauthRPCPayload{Input: input})
+</span>}
 </pre>
 		
 		<pre class="file" id="file25" style="display: none">package controller
@@ -6733,12 +6785,9 @@ type WirelessAaaPolicyConfigs struct {
         WirelessAaaPolicyConfig []WirelessAaaPolicyConfig `json:"wireless-aaa-policy-config"` // List of wireless AAA policy configurations
 }
 
-// Secret holds key material. Its String and LogValue redact, so a formatted struct and a slog
-// record carry no key; call Reveal where the value is needed.
-//
-// MarshalJSON is deliberately not implemented: encoding/json is how this type reaches a write
-// payload. So json.Marshal, encoding/json/v2 and the %#v verb still render the key, and they are
-// the three paths a caller has to keep out of a log.
+// Secret holds key material. String, LogValue and MarshalJSON redact, so %#v is the one path left
+// that renders the key, and a write payload has to carry Reveal's result in a plain string field
+// because this type cannot encode it.
 type Secret string
 
 // String returns the redaction, which is what keeps the key out of every fmt verb but %#v.
@@ -6751,7 +6800,18 @@ func (s Secret) LogValue() slog.Value { <span class="cov1" title="1">return slog
 // Reveal returns the key itself, for the one caller that needs it.
 func (s Secret) Reveal() string { <span class="cov1" title="1">return string(s) }</span>
 
-// redacted is what String and LogValue render in place of key material.
+// MarshalJSON returns the redaction, and returns an empty Secret unchanged: encoding/json/v2
+// applies omitempty to the encoded JSON rather than to the Go value, so redacting an empty one
+// would put a psk on a WLAN whose schema default left the leaf empty.
+func (s Secret) MarshalJSON() ([]byte, error) {
+        <span class="cov10" title="2">if s == "" </span>{
+                <span class="cov1" title="1">return []byte(`""`), nil
+</span>        }
+
+        <span class="cov1" title="1">return []byte(`"` + redacted + `"`), nil</span>
+}
+
+// redacted is what String, LogValue and MarshalJSON render in place of key material.
 const redacted = "[REDACTED]"
 
 // WlanCfgEntry represents a single WLAN configuration entry.
