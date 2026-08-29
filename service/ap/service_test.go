@@ -198,7 +198,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"device-detail": {
 						"static-info": {
 							"board-data": {
-								"wtp-serial-num": "FGL2209B05T",
+								"wtp-serial-num": "TST0000AP01",
 								"wtp-enet-mac": "aa:bb:cc:dd:ee:12"
 							}
 						}
@@ -299,7 +299,7 @@ func TestApServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"device-detail": {
 					"static-info": {
 						"board-data": {
-							"wtp-serial-num": "FGL2209B05T",
+							"wtp-serial-num": "TST0000AP01",
 							"wtp-enet-mac": "aa:bb:cc:dd:ee:12"
 						}
 					}

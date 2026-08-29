@@ -107,7 +107,9 @@ The first octet `0xaa` has the I/G bit clear and the U/L bit set, so no fixture 
 multicast address or collide with a real vendor assignment. The other identities follow the same
 rule: `TEST-APnn` for access points, `wnc1.example.internal` for the controller, `test-token-123`
 for the access token, `192.168.1.0/24` for addresses, and `test-` prefixed names for tags,
-profiles and SSIDs.
+profiles and SSIDs. A serial number cannot take that prefix and keep its shape, so it reads
+`TST0000APnn` — a valid `[A-Z]{3}[0-9]{4}[A-Z0-9]{4}` that no site code and no week 00 of year
+00 can collide with.
 
 Two categories are deliberately outside this scheme. **Format tests** — `internal/validation`,
 `internal/service/mac_test.go`, and the spelling table in `service/client` — assert how a MAC is
@@ -115,9 +117,10 @@ parsed and normalized rather than which device it names, so they keep `00:11:22:
 hyphen, dotted and bare spellings. **Absence tests** in `service/ap` use `00:00:00:00:00:01` and
 the `-CONTROL` name suffix to mark the control group that proves a container was reached.
 
-Never paste a MAC, hostname, SSID, tag name or timestamp straight from a capture into a committed
-fixture. `tests/testutil/integration` redacts captures it writes, but a value pasted by hand
-bypasses it.
+Never paste a MAC, serial number, hostname, SSID, tag name or timestamp straight from a capture
+into a committed fixture. `tests/testutil/integration` redacts every one of those in the captures
+it writes -- `captureSerial` alone matches the shape a Cisco serial takes -- but a value pasted by
+hand reaches the tree without passing through it.
 
 ## 🧰 Prerequisites
 
