@@ -1,0 +1,10 @@
+# Fingerprints of findings that survive only in history. Format is
+# <commit>:<file>:<rule>:<line>, so an entry is pinned to one commit and cannot silence the
+# same value in a later one. Live placeholders are scoped by path in .gitleaks.toml instead.
+#
+# Every value below is a WNC_ACCESS_TOKEN documentation example or a test fixture.
+84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/get_yang_model_details.sh:generic-api-key:80
+84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/get_yang_statement_details.sh:generic-api-key:78
+84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/list_yang_models.sh:generic-api-key:51
+f6921e398189cf6547f646b3caa8f38dfd3b6841:docs/SECURITY.md:generic-api-key:13
+fb8dff9d31669e9acd08b23b268d191a2859808d:internal/validation/validation_test.go:generic-api-key:73

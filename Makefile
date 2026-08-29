@@ -38,16 +38,16 @@ build:
 	@go build ./...
 
 # Pre-commit Hook Management
-# Install pre-commit hook to prevent direct commits to main branch
+# Install the pre-commit hooks declared in .pre-commit-config.yaml
 pre-commit-install:
-	@ln -sf ../../.githooks/pre-commit .git/hooks/pre-commit
-	@echo "✓ Pre-commit hook installed"
+	@command -v pre-commit >/dev/null 2>&1 || \
+		{ echo "✗ pre-commit not found - see https://pre-commit.com/#install"; exit 1; }
+	@pre-commit install --allow-missing-config
 
-# Test pre-commit hook without installing
+# Run every hook across the whole tree without committing
 pre-commit-test:
-	@./.githooks/pre-commit
+	@pre-commit run --all-files
 
 # Uninstall pre-commit hook
 pre-commit-uninstall:
-	@rm -f .git/hooks/pre-commit
-	@echo "✓ Pre-commit hook uninstalled"
+	@pre-commit uninstall

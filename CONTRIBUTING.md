@@ -37,6 +37,10 @@ make deps                # Install build and test dependencies
 make pre-commit-install  # Set up pre-commit hooks for code quality
 ```
 
+`make deps` installs Go tooling only, so install [pre-commit](https://pre-commit.com/#install) yourself first. `make pre-commit-install` then registers the hooks declared in [.pre-commit-config.yaml](./.pre-commit-config.yaml).
+
+Every commit is gated on `golangci-lint`, `gitleaks`, `markdownlint-cli2` and a guard that keeps `main` free of direct commits. Run `make pre-commit-test` to check the whole tree without committing.
+
 ### Quick Build & Tests
 
 ```bash
