@@ -5,12 +5,8 @@
 [extend]
 useDefault = true
 
-# No live allowlist. WNC_ACCESS_TOKEN is base64 of "username:password", so a documented example
-# value reads as a generic API key and used to need one exception per placeholder. The docs now
-# derive the token instead of printing it -- README.md and docs/SECURITY.md show
-# `export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"` -- and every fixture
-# carries the low-entropy `test-token-123`, so nothing in the tree reads as a secret.
-#
-# Keep it that way: a base64 literal added back here would need an allowlist entry, and an entry
-# scoped to a path silences that value for every future commit to it. Findings that survive only
-# in history are pinned by fingerprint in .gitleaksignore, which cannot mask a future commit.
+[[allowlists]]
+description = "admin:your-password, the README quick-start example"
+condition = "AND"
+paths = ['''^README\.md$''']
+regexes = ['''^YWRtaW46eW91ci1wYXNzd29yZA==$''']

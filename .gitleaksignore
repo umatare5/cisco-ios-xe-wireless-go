@@ -14,7 +14,6 @@
 84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/list_yang_models.sh:generic-api-key:51
 
 # base64("admin:your-password") -- the README quick-start and credential-handling examples
-3a320026f110001bb15c1db90f7ade0eaf38003a:README.md:generic-api-key:57
 3a320026f110001bb15c1db90f7ade0eaf38003a:README.md:generic-api-key:130
 5ce01b7d671fbcd33eed516feb2b43ee8ab9c858:README.md:generic-api-key:114
 f6921e398189cf6547f646b3caa8f38dfd3b6841:docs/SECURITY.md:generic-api-key:13

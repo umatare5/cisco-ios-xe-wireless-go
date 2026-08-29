@@ -57,8 +57,9 @@ You have to enable RESTCONF and HTTPS on the C9800 before using this SDK. Please
 Encode your controller credentials as Base64.
 
 ```bash
-# The access token is base64("username:password")
-export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"
+# username:password → Base64
+echo -n "admin:your-password" | base64
+# Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
 ### 2. Create a sample application
@@ -117,7 +118,7 @@ func main() {
 ```bash
 # Set environment variables
 export WNC_CONTROLLER="wnc1.example.internal"
-export WNC_ACCESS_TOKEN="test-token-123"
+export WNC_ACCESS_TOKEN="YWRtaW46eW91ci1wYXNzd29yZA=="
 
 # Run the application
 go run main.go
@@ -141,19 +142,19 @@ To create a new client, use the `wnc.NewClient` function with the controller add
 
 ### Client Options
 
-There are several options to customize the client behavior.
+There are several options to customize the client behavior. Each argument type is in the [package documentation](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main#section-documentation).
 
-| Option                         | Type              | Default                              | Description           |
-| ------------------------------ | ----------------- | ------------------------------------ | --------------------- |
-| `WithTimeout(d)`               | `time.Duration`   | `60s`                                | Whole-request timeout |
-| `WithResponseHeaderTimeout(d)` | `time.Duration`   | `5s`                                 | Header wait timeout   |
-| `WithTLSHandshakeTimeout(d)`   | `time.Duration`   | `5s`                                 | TLS handshake wait    |
-| `WithRootCAs(pool)`            | `*x509.CertPool`  | host roots                           | Trust a private CA    |
-| `WithClientCertificate(c)`     | `tls.Certificate` | none                                 | Present a client cert |
-| `WithInsecureSkipVerify(b)`    | `bool`            | `false`                              | Skip TLS verify       |
-| `WithProxy(fn)`                | `func`            | `nil`                                | Proxy resolver        |
-| `WithLogger(l)`                | `*slog.Logger`    | `slog.Default()`                     | Structured logger     |
-| `WithUserAgent(ua)`            | `string`          | `cisco-ios-xe-wireless-go/<version>` | Custom User-Agent     |
+| Option                         | Default                              | Description           |
+| ------------------------------ | ------------------------------------ | --------------------- |
+| `WithTimeout(d)`               | `60s`                                | Whole-request timeout |
+| `WithResponseHeaderTimeout(d)` | `5s`                                 | Header wait timeout   |
+| `WithTLSHandshakeTimeout(d)`   | `5s`                                 | TLS handshake wait    |
+| `WithRootCAs(pool)`            | host roots                           | Trust a private CA    |
+| `WithClientCertificate(cert)`  | none                                 | Present a client cert |
+| `WithInsecureSkipVerify(skip)` | `false`                              | Skip TLS verify       |
+| `WithProxy(fn)`                | `nil`                                | Proxy resolver        |
+| `WithLogger(l)`                | `slog.Default()`                     | Structured logger     |
+| `WithUserAgent(ua)`            | `cisco-ios-xe-wireless-go/<version>` | Custom User-Agent     |
 
 ### Request Options
 
@@ -430,7 +431,8 @@ Executing configuration save...
 
 ## 📦 Used By
 
-- [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.4.2](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.4.2))
+- [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.11.1](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.11.1))
+- [cisco-wnc-cli](https://github.com/umatare5/wnc) - A CLI tool for Cisco C9800 Wireless Network Controller ([v0.11.1](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.11.1))
 
 ## 🤝 Contributing
 
