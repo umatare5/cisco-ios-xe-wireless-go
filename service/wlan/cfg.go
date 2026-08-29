@@ -68,12 +68,9 @@ type WirelessAaaPolicyConfigs struct {
 	WirelessAaaPolicyConfig []WirelessAaaPolicyConfig `json:"wireless-aaa-policy-config"` // List of wireless AAA policy configurations
 }
 
-// Secret holds key material. Its String and LogValue redact, so a formatted struct and a slog
-// record carry no key; call Reveal where the value is needed.
-//
-// MarshalJSON is deliberately not implemented: encoding/json is how this type reaches a write
-// payload. So json.Marshal, encoding/json/v2 and the %#v verb still render the key, and they are
-// the three paths a caller has to keep out of a log.
+// Secret holds key material. String, LogValue and MarshalJSON redact, so %#v is the one path left
+// that renders the key, and a write payload has to carry Reveal's result in a plain string field
+// because this type cannot encode it.
 type Secret string
 
 // String returns the redaction, which is what keeps the key out of every fmt verb but %#v.
@@ -86,7 +83,18 @@ func (s Secret) LogValue() slog.Value { return slog.StringValue(redacted) }
 // Reveal returns the key itself, for the one caller that needs it.
 func (s Secret) Reveal() string { return string(s) }
 
-// redacted is what String and LogValue render in place of key material.
+// MarshalJSON returns the redaction, and returns an empty Secret unchanged: encoding/json/v2
+// applies omitempty to the encoded JSON rather than to the Go value, so redacting an empty one
+// would put a psk on a WLAN whose schema default left the leaf empty.
+func (s Secret) MarshalJSON() ([]byte, error) {
+	if s == "" {
+		return []byte(`""`), nil
+	}
+
+	return []byte(`"` + redacted + `"`), nil
+}
+
+// redacted is what String, LogValue and MarshalJSON render in place of key material.
 const redacted = "[REDACTED]"
 
 // WlanCfgEntry represents a single WLAN configuration entry.

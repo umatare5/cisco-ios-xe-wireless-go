@@ -164,7 +164,7 @@ Ordinary reads populate twelve typed fields, so a log path that dumps a decoded 
 
 **Nine arrive on a configuration read and three on an operational one** — an operational read is not a safe read.
 
-`wlan.WlanCfgEntry.PSK` is the one of the twelve typed `wlan.Secret`, whose `String` and `LogValue` redact and whose `Reveal` returns the key; `WlanCfgEntry.LogValue` keeps it out of a record built from the whole entry. `json.Marshal` and the `%#v` verb still render it, which is what keeps the type usable in a write payload. The other eleven fields are plain strings.
+`wlan.WlanCfgEntry.PSK` is the one of the twelve typed `wlan.Secret`, whose `String` and `LogValue` redact and whose `Reveal` returns the key; `WlanCfgEntry.LogValue` keeps it out of a record built from the whole entry. `Secret.MarshalJSON` redacts the JSON path too, so the `%#v` verb is the one that still renders it, and a write payload has to take the key from `Reveal`. The other eleven fields are plain strings.
 
 | Field                                        | Route                                                            |
 | -------------------------------------------- | ---------------------------------------------------------------- |

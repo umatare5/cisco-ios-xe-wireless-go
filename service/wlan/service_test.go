@@ -195,8 +195,8 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	t.Logf("All get operations returned valid WLAN data")
 }
 
-// TestWlanServiceUnit_SecretRedaction_Success pins the three methods that keep a pre-shared key
-// out of a log and the two paths that still carry it. Each direction is a separate assertion
+// TestWlanServiceUnit_SecretRedaction_Success pins the four methods that keep a pre-shared key
+// out of a log and the one verb that still carries it. Each direction is a separate assertion
 // because each is held by a different method: dropping Secret.LogValue leaves the JSON handler
 // leaking the field, and dropping WlanCfgEntry.LogValue leaves it leaking the whole entry.
 func TestWlanServiceUnit_SecretRedaction_Success(t *testing.T) {
@@ -230,15 +230,31 @@ func TestWlanServiceUnit_SecretRedaction_Success(t *testing.T) {
 		t.Errorf("slog.JSONHandler rendered no redaction for the field: %s", got)
 	}
 
-	// The two residuals, asserted in the direction they must keep: json.Marshal is how this type
-	// reaches a write payload, and %#v prints the underlying string of any named type.
+	// The JSON path is held by Secret.MarshalJSON, which covers the containers above the entry
+	// as well: WlanCfgEntries and the response wrapper have no LogValue of their own.
 	body, err := json.Marshal(entry)
 	if err != nil {
 		t.Fatalf("json.Marshal failed: %v", err)
 	}
-	if !strings.Contains(string(body), key) {
-		t.Errorf("json.Marshal dropped the key, so the type can no longer be written: %s", body)
+	if strings.Contains(string(body), key) {
+		t.Errorf("json.Marshal carried the key: %s", body)
 	}
+	if !strings.Contains(string(body), redacted) {
+		t.Errorf("json.Marshal rendered no redaction: %s", body)
+	}
+
+	// The empty case is asserted on the bare value because encoding/json omits an empty omitempty
+	// field without calling the marshaler, so the struct cannot show what the method returns.
+	empty, err := json.Marshal(Secret(""))
+	if err != nil {
+		t.Fatalf("json.Marshal of an empty Secret failed: %v", err)
+	}
+	if string(empty) != `""` {
+		t.Errorf("json.Marshal of an empty Secret = %s, want an empty string", empty)
+	}
+
+	// The one residual, asserted in the direction it must keep: %#v prints the underlying string
+	// of any named type.
 	if got := fmt.Sprintf("%#v", entry); !strings.Contains(got, key) {
 		t.Errorf("%%#v redacted, so the doc comment naming it a residual is now wrong")
 	}
