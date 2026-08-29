@@ -32,8 +32,8 @@ const (
 
 // TestCoreClientUnit_Constructor_Success tests the new core client creation.
 func TestCoreClientUnit_Constructor_Success(t *testing.T) {
-	controller := "test.example.com"
-	token := "dGVzdDp0ZXN0"
+	controller := "wnc1.example.internal"
+	token := "test-token-123"
 
 	t.Run("ValidClient", func(t *testing.T) {
 		client, err := New(controller, token)
@@ -53,8 +53,8 @@ func TestCoreClientUnit_Constructor_Success(t *testing.T) {
 
 // TestCoreClientUnit_Options_Success tests functional options.
 func TestCoreClientUnit_Options_Success(t *testing.T) {
-	controller := "test.example.com"
-	token := "dGVzdDp0ZXN0"
+	controller := "wnc1.example.internal"
+	token := "test-token-123"
 
 	t.Run("WithTimeout", func(t *testing.T) {
 		client, err := New(controller, token, WithTimeout(testTimeout))
@@ -79,8 +79,8 @@ func TestCoreClientUnit_Options_Success(t *testing.T) {
 
 // TestCoreClientUnit_WithProxy_Success tests the proxy resolver option.
 func TestCoreClientUnit_WithProxy_Success(t *testing.T) {
-	controller := "test.example.com"
-	token := "dGVzdDp0ZXN0"
+	controller := "wnc1.example.internal"
+	token := "test-token-123"
 
 	t.Run("DefaultLeavesProxyUnset", func(t *testing.T) {
 		client, err := New(controller, token)
@@ -149,7 +149,7 @@ func TestCoreClientUnit_DoOperations_Success(t *testing.T) {
 
 	// Create client with mock server
 	serverURL := strings.TrimPrefix(mockServer.URL, "https://")
-	client, err := New(serverURL, "test-token", WithInsecureSkipVerify(true), WithTimeout(testTimeout))
+	client, err := New(serverURL, "test-token-123", WithInsecureSkipVerify(true), WithTimeout(testTimeout))
 	testutil.AssertNoError(t, err, "Failed to create client")
 
 	ctx, cancel := context.WithTimeout(context.Background(), testTimeout)
@@ -331,7 +331,7 @@ func TestCoreClientUnit_PostOperations_Success(t *testing.T) {
 	})
 
 	t.Run("Post_marshal_error", func(t *testing.T) {
-		client, err := New("test.example.com", "test-token")
+		client, err := New("wnc1.example.internal", "test-token-123")
 		testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 		// Use a payload that cannot be marshaled to JSON
@@ -341,7 +341,7 @@ func TestCoreClientUnit_PostOperations_Success(t *testing.T) {
 	})
 
 	t.Run("Post_context_canceled", func(t *testing.T) {
-		client, err := New("test.example.com", "test-token")
+		client, err := New("wnc1.example.internal", "test-token-123")
 		testutil.AssertClientCreated(t, client, err, "Failed to create client")
 
 		ctx, cancel := context.WithCancel(context.Background())
@@ -371,7 +371,7 @@ func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 
 	// Create test client
 	serverURL := strings.TrimPrefix(server.URL, "http://")
-	testClient, err := New(serverURL, "test-token", WithInsecureSkipVerify(true))
+	testClient, err := New(serverURL, "test-token-123", WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, testClient, err, "Failed to create test client")
 
 	ctx := context.Background()
@@ -405,8 +405,8 @@ func TestCoreClientUnit_RPCOperations_WithPayload(t *testing.T) {
 // TestCoreClientUnit_RESTCONFBuilder tests RESTCONFBuilder method.
 func TestCoreClientUnit_RESTCONFBuilder(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
-		controller := "test.example.com"
-		token := "test-token"
+		controller := "wnc1.example.internal"
+		token := "test-token-123"
 		client, err := New(controller, token)
 
 		testutil.AssertNoError(t, err, "Client creation should succeed")
@@ -432,7 +432,7 @@ func TestCoreClientUnit_doWithPayload(t *testing.T) {
 	}))
 	defer mockServer.Close()
 
-	client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
+	client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token-123", WithInsecureSkipVerify(true))
 	testutil.AssertNoError(t, err, "Client creation should succeed")
 
 	ctx := context.Background()
@@ -453,7 +453,7 @@ func TestCoreClientUnit_GenericRequests(t *testing.T) {
 	}))
 	defer mockServer.Close()
 
-	client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
+	client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token-123", WithInsecureSkipVerify(true))
 	testutil.AssertNoError(t, err, "Client creation should succeed")
 
 	ctx := context.Background()
@@ -513,7 +513,7 @@ func TestCoreClientUnit_VoidRequests(t *testing.T) {
 	}))
 	defer mockServer.Close()
 
-	client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token", WithInsecureSkipVerify(true))
+	client, err := New(strings.TrimPrefix(mockServer.URL, "https://"), "test-token-123", WithInsecureSkipVerify(true))
 	testutil.AssertNoError(t, err, "Client creation should succeed")
 
 	ctx := context.Background()
@@ -554,8 +554,8 @@ func TestAPIErrorMethod(t *testing.T) {
 // TestCoreClientUnit_TransportOptions_Success pins the transport-level options against
 // the option-order dependency the wholesale Transport replacement created.
 func TestCoreClientUnit_TransportOptions_Success(t *testing.T) {
-	controller := "test.example.com"
-	token := "dGVzdDp0ZXN0"
+	controller := "wnc1.example.internal"
+	token := "test-token-123"
 
 	t.Run("SurvivesLaterInsecureSkipVerify", func(t *testing.T) {
 		client, err := New(controller, token,
@@ -590,7 +590,7 @@ func TestCoreClientUnit_TransportOptions_Success(t *testing.T) {
 func TestCoreClientUnit_UserAgentReachesRequest_Success(t *testing.T) {
 	const path = "Cisco-IOS-XE-wireless-general-oper:general-oper-data"
 
-	client, err := New("test.example.com", "dGVzdDp0ZXN0", WithUserAgent("  probe-agent/9.9  "))
+	client, err := New("wnc1.example.internal", "test-token-123", WithUserAgent("  probe-agent/9.9  "))
 	testutil.AssertClientCreated(t, client, err, "WithUserAgent")
 
 	req, err := client.requestBuilder.CreateRequest(context.Background(), http.MethodGet, path)
@@ -609,7 +609,7 @@ func TestCoreClientUnit_HeaderTimeout_Error(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+	client, err := New(strings.TrimPrefix(server.URL, "https://"), "test-token-123",
 		WithInsecureSkipVerify(true), WithResponseHeaderTimeout(20*time.Millisecond))
 	testutil.AssertClientCreated(t, client, err, "HeaderTimeoutClient")
 
@@ -630,7 +630,7 @@ func TestCoreClientUnit_ConstructionInputNormalization_Success(t *testing.T) {
 	defer server.Close()
 
 	host := strings.TrimPrefix(server.URL, "https://")
-	client, err := New(" "+host+"\n", "dGVzdDp0ZXN0\n", WithInsecureSkipVerify(true))
+	client, err := New(" "+host+"\n", "test-token-123\n", WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, client, err, "padded host and newline-terminated token")
 
 	_, err = client.do(context.Background(), http.MethodGet, path)
@@ -649,7 +649,7 @@ func TestCoreClientUnit_ErrorBodyTruncation_Error(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+	client, err := New(strings.TrimPrefix(server.URL, "https://"), "test-token-123",
 		WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncation")
 
@@ -687,7 +687,7 @@ func TestCoreClientUnit_ErrorBodyTruncationBoundary_Error(t *testing.T) {
 			}))
 			defer server.Close()
 
-			client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+			client, err := New(strings.TrimPrefix(server.URL, "https://"), "test-token-123",
 				WithInsecureSkipVerify(true))
 			testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncationBoundary")
 
@@ -720,7 +720,7 @@ func TestCoreClientUnit_ErrorBodyTruncationUTF8_Error(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+	client, err := New(strings.TrimPrefix(server.URL, "https://"), "test-token-123",
 		WithInsecureSkipVerify(true))
 	testutil.AssertClientCreated(t, client, err, "ErrorBodyTruncationUTF8")
 
@@ -741,7 +741,7 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+		client, err := New(strings.TrimPrefix(server.URL, "https://"), "test-token-123",
 			WithInsecureSkipVerify(true))
 		testutil.AssertClientCreated(t, client, err, "CanceledIsNotTimeout")
 
@@ -764,7 +764,7 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 		addr := listener.Addr().String()
 		testutil.AssertNoError(t, listener.Close(), "close listener")
 
-		client, err := New(addr, "dGVzdDp0ZXN0", WithInsecureSkipVerify(true))
+		client, err := New(addr, "test-token-123", WithInsecureSkipVerify(true))
 		testutil.AssertClientCreated(t, client, err, "RefusedIsNotTimeout")
 
 		_, err = client.do(context.Background(), http.MethodGet,
@@ -786,7 +786,7 @@ func TestCoreClientUnit_TransportErrorClassification_Error(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client, err := New(strings.TrimPrefix(server.URL, "https://"), "dGVzdDp0ZXN0",
+		client, err := New(strings.TrimPrefix(server.URL, "https://"), "test-token-123",
 			WithInsecureSkipVerify(true), WithTimeout(300*time.Millisecond))
 		testutil.AssertClientCreated(t, client, err, "BodyReadTimeout")
 
@@ -806,10 +806,10 @@ func TestCoreClientUnit_ConstructionSentinel_Error(t *testing.T) {
 		host, token string
 		opts        []Option
 	}{
-		"malformed authority": {host: "https://wnc.example.internal", token: "test-token-123"},
+		"malformed authority": {host: "https://wnc1.example.internal", token: "test-token-123"},
 		"empty host":          {host: "   ", token: "test-token-123"},
-		"empty token":         {host: "wnc.example.internal", token: "   "},
-		"option refused":      {host: "wnc.example.internal", token: "test-token-123", opts: []Option{WithTimeout(0)}},
+		"empty token":         {host: "wnc1.example.internal", token: "   "},
+		"option refused":      {host: "wnc1.example.internal", token: "test-token-123", opts: []Option{WithTimeout(0)}},
 	}
 
 	for name, tc := range cases {
@@ -830,7 +830,7 @@ func TestCoreClientUnit_ConstructionSentinel_Error(t *testing.T) {
 // The second subtest is the assertion the doc comments rest on: bundling the three into
 // WithTimeout would pass every other test in this package and fail here.
 func TestCoreClientUnit_DefaultBudgets_Success(t *testing.T) {
-	controller := "test.example.com"
+	controller := "wnc1.example.internal"
 	token := "test-token-123"
 
 	t.Run("ConstantsNameWhatTheTransportCarries", func(t *testing.T) {

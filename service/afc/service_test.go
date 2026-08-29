@@ -52,13 +52,13 @@ func TestAfcServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-resp": `{
 			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp": [{
-				"ap-mac": "aa:bb:cc:dd:ee:ff",
+				"ap-mac": "aa:bb:cc:dd:ee:01",
 				"response-status": "success"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-req": `{
 			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-req": [{
-				"ap-mac": "aa:bb:cc:dd:ee:ff",
+				"ap-mac": "aa:bb:cc:dd:ee:01",
 				"request-status": "pending"
 			}]
 		}`,
@@ -198,7 +198,7 @@ func TestAfcServiceUnit_QuotedDecimal64_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-req": `{
 			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-req": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"req-id-sent": "18446744073709551615",
 					"req-data": {
 						"min-desired-power": "-12.5",
@@ -258,7 +258,7 @@ func TestAfcServiceUnit_QuotedMaxEIRP_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data/ewlc-afc-ap-resp": `{
 			"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"slot": 2,
 					"resp-data": {
 						"request-id": "1",

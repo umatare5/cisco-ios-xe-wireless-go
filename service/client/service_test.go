@@ -34,7 +34,7 @@ func TestClientServiceUnit_RadioVocabularies_MockSuccess(t *testing.T) {
 					"ewlc-ms-phy-type": "client-dot11be-6ghz-prot",
 					"multilink-info": [
 						{
-							"sta-mac": "aa:bb:cc:dd:ee:ff",
+							"sta-mac": "aa:bb:cc:dd:ee:01",
 							"band": "dot11-6-ghz-band",
 							"radio-type": "dot11-radio-type-6ghz"
 						}
@@ -129,7 +129,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data": `{
 			"Cisco-IOS-XE-wireless-client-oper:client-oper-data": {
 				"common-oper-data": [{
-					"client-mac": "02:40:f1:f7:f7:87",
+					"client-mac": "aa:bb:cc:dd:ee:a1",
 					"ap-name": "TEST-AP01",
 					"ms-ap-slot-id": 0,
 					"ms-radio-type": "client-dot11ax-24ghz-prot",
@@ -168,7 +168,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/common-oper-data": `{
 			"Cisco-IOS-XE-wireless-client-oper:common-oper-data": [{
-				"client-mac": "02:40:f1:f7:f7:87",
+				"client-mac": "aa:bb:cc:dd:ee:a1",
 				"ap-name": "TEST-AP01",
 				"ms-ap-slot-id": 0,
 				"ms-radio-type": "client-dot11ax-24ghz-prot",
@@ -204,9 +204,9 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"vrf-name": ""
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/common-oper-data=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/common-oper-data=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:common-oper-data": [{
-				"client-mac": "02:40:f1:f7:f7:87",
+				"client-mac": "aa:bb:cc:dd:ee:a1",
 				"ap-name": "TEST-AP01",
 				"ms-ap-slot-id": 0,
 				"ms-radio-type": "client-dot11ax-24ghz-prot",
@@ -220,20 +220,20 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/dot11-oper-data": `{
 			"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data": [{
-				"ms-mac-address": "02:40:f1:f7:f7:87",
+				"ms-mac-address": "aa:bb:cc:dd:ee:a1",
 				"dot11-state": "associated",
-				"ms-bssid": "f0:d8:05:2c:41:21",
-				"ap-mac-address": "c4:14:a2:c9:02:70",
+				"ms-bssid": "aa:bb:cc:dd:ee:b1",
+				"ap-mac-address": "aa:bb:cc:dd:ee:02",
 				"current-channel": 11,
 				"ms-wlan-id": 1,
-				"vap-ssid": "labo-wlan",
-				"policy-profile": "labo-wlan-profile",
+				"vap-ssid": "test-wlan",
+				"policy-profile": "test-wlan-profile",
 				"ms-ap-slot-id": 0,
 				"radio-type": "dot11-radio-type-bg",
 				"ms-association-id": 8,
 				"ms-auth-alg-num": "open-system",
 				"ms-reason-code": "reason-none",
-				"ms-assoc-time": "2025-09-17T10:50:37.41636+00:00",
+				"ms-assoc-time": "2024-01-15T10:39:00.416360+00:00",
 				"is-11g-client": true,
 				"ms-supported-rates-str": "54.0",
 				"ms-wifi": {
@@ -257,11 +257,11 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mobility-oper-data": `{
 			"Cisco-IOS-XE-wireless-client-oper:mobility-oper-data": [{
-				"ms-mac-addr": "02:40:f1:f7:f7:87",
+				"ms-mac-addr": "aa:bb:cc:dd:ee:a1",
 				"mm-client-role": "mm-client-role-local",
 				"mm-client-roam-type": "mm-roam-type-none",
 				"mm-instance": 0,
-				"mm-complete-timestamp": "2025-09-17T10:50:37+00:00",
+				"mm-complete-timestamp": "2024-01-15T10:39:00+00:00",
 				"mm-remote-tunnel-ip": "0.0.0.0",
 				"mm-remote-tunnel-sec-ip": "0.0.0.0",
 				"mm-remote-platform-id": 0,
@@ -271,18 +271,18 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/policy-data": `{
 			"Cisco-IOS-XE-wireless-client-oper:policy-data": [{
-				"mac": "02:40:f1:f7:f7:87",
+				"mac": "aa:bb:cc:dd:ee:a1",
 				"res-vlan-id": 800,
 				"res-vlan-name": "LAB-INTERNAL"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/sisf-db-mac": `{
 			"Cisco-IOS-XE-wireless-client-oper:sisf-db-mac": [{
-				"mac-addr": "02:40:f1:f7:f7:87",
+				"mac-addr": "aa:bb:cc:dd:ee:a1",
 				"ipv4-binding": {
 					"ip-key": {
 						"zone-id": 0,
-						"ip-addr": "192.168.0.37"
+						"ip-addr": "192.168.1.101"
 					}
 				},
 				"ipv6-binding": [{
@@ -295,7 +295,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/traffic-stats": `{
 			"Cisco-IOS-XE-wireless-client-oper:traffic-stats": [{
-				"ms-mac-address": "02:40:f1:f7:f7:87",
+				"ms-mac-address": "aa:bb:cc:dd:ee:a1",
 				"bytes-rx": "37085614",
 				"bytes-tx": "291727367",
 				"policy-errs": "0",
@@ -323,53 +323,53 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			}]
 		}`,
 		// Add MAC query responses for all *ByMAC functions with real WNC data
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/dc-info=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/dc-info=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:dc-info": []
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/dot11-oper-data=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/dot11-oper-data=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data": [{
-				"ms-mac-address": "02:40:f1:f7:f7:87",
+				"ms-mac-address": "aa:bb:cc:dd:ee:a1",
 				"dot11-state": "associated",
 				"current-channel": 11,
 				"ms-wlan-id": 1,
-				"vap-ssid": "labo-wlan",
-				"policy-profile": "labo-wlan-profile"
+				"vap-ssid": "test-wlan",
+				"policy-profile": "test-wlan-profile"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-history=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-history=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:mm-if-client-history": []
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-stats=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mm-if-client-stats=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:mm-if-client-stats": []
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mobility-oper-data=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/mobility-oper-data=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:mobility-oper-data": [{
-				"ms-mac-addr": "02:40:f1:f7:f7:87",
+				"ms-mac-addr": "aa:bb:cc:dd:ee:a1",
 				"mm-client-role": "mm-client-role-local",
 				"mm-client-roam-type": "mm-roam-type-none"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/policy-data=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/policy-data=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:policy-data": [{
-				"mac": "02:40:f1:f7:f7:87",
+				"mac": "aa:bb:cc:dd:ee:a1",
 				"res-vlan-id": 800,
 				"res-vlan-name": "LAB-INTERNAL"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/sisf-db-mac=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/sisf-db-mac=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:sisf-db-mac": [{
-				"mac-addr": "02:40:f1:f7:f7:87",
+				"mac-addr": "aa:bb:cc:dd:ee:a1",
 				"ipv4-binding": {
 					"ip-key": {
 						"zone-id": 0,
-						"ip-addr": "192.168.0.37"
+						"ip-addr": "192.168.1.101"
 					}
 				}
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/traffic-stats=02:40:f1:f7:f7:87": `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/traffic-stats=aa:bb:cc:dd:ee:a1": `{
 			"Cisco-IOS-XE-wireless-client-oper:traffic-stats": [{
-				"ms-mac-address": "02:40:f1:f7:f7:87",
+				"ms-mac-address": "aa:bb:cc:dd:ee:a1",
 				"bytes-rx": "37085614",
 				"bytes-tx": "291727367",
 				"most-recent-rssi": -42,
@@ -408,7 +408,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	}
 
 	// Test GetCommonInfoByMAC with real WNC MAC address
-	commonByMAC, err := service.GetCommonInfoByMAC(ctx, "02:40:f1:f7:f7:87")
+	commonByMAC, err := service.GetCommonInfoByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetCommonInfoByMAC failed: %v", err)
 	}
@@ -482,7 +482,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	}
 
 	// Test all *ByMAC functions with real WNC MAC address
-	dcByMAC, err := service.GetDCInfoByMAC(ctx, "02:40:f1:f7:f7:87")
+	dcByMAC, err := service.GetDCInfoByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetDCInfoByMAC failed: %v", err)
 	}
@@ -490,7 +490,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetDCInfoByMAC")
 	}
 
-	dot11ByMAC, err := service.GetDot11InfoByMAC(ctx, "02:40:f1:f7:f7:87")
+	dot11ByMAC, err := service.GetDot11InfoByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetDot11InfoByMAC failed: %v", err)
 	}
@@ -498,7 +498,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetDot11InfoByMAC")
 	}
 
-	mmifHistoryByMAC, err := service.GetMMIFClientHistoryByMAC(ctx, "02:40:f1:f7:f7:87")
+	mmifHistoryByMAC, err := service.GetMMIFClientHistoryByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetMMIFClientHistoryByMAC failed: %v", err)
 	}
@@ -506,7 +506,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetMMIFClientHistoryByMAC")
 	}
 
-	mmifStatsByMAC, err := service.GetMMIFClientStatsByMAC(ctx, "02:40:f1:f7:f7:87")
+	mmifStatsByMAC, err := service.GetMMIFClientStatsByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetMMIFClientStatsByMAC failed: %v", err)
 	}
@@ -514,7 +514,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetMMIFClientStatsByMAC")
 	}
 
-	mobilityByMAC, err := service.GetMobilityInfoByMAC(ctx, "02:40:f1:f7:f7:87")
+	mobilityByMAC, err := service.GetMobilityInfoByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetMobilityInfoByMAC failed: %v", err)
 	}
@@ -522,7 +522,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetMobilityInfoByMAC")
 	}
 
-	policyByMAC, err := service.GetPolicyInfoByMAC(ctx, "02:40:f1:f7:f7:87")
+	policyByMAC, err := service.GetPolicyInfoByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetPolicyInfoByMAC failed: %v", err)
 	}
@@ -530,7 +530,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetPolicyInfoByMAC")
 	}
 
-	sisfByMAC, err := service.GetSISFDBByMAC(ctx, "02:40:f1:f7:f7:87")
+	sisfByMAC, err := service.GetSISFDBByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetSISFDBByMAC failed: %v", err)
 	}
@@ -538,7 +538,7 @@ func TestClientServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		t.Error("Expected non-nil result from GetSISFDBByMAC")
 	}
 
-	trafficByMAC, err := service.GetTrafficStatsByMAC(ctx, "02:40:f1:f7:f7:87")
+	trafficByMAC, err := service.GetTrafficStatsByMAC(ctx, "aa:bb:cc:dd:ee:a1")
 	if err != nil {
 		t.Errorf("GetTrafficStatsByMAC failed: %v", err)
 	}
@@ -741,14 +741,14 @@ func TestClientServiceUnit_ByMAC_WireForm(t *testing.T) {
 		"00-11-22-33-44-55",
 		"0011.2233.4455",
 		"001122334455",
-		"AA:BB:CC:DD:EE:55",
+		"AA:BB:CC:DD:EE:A2",
 	}
 	wants := map[string]string{
 		"00:11:22:33:44:55": "00:11:22:33:44:55",
 		"00-11-22-33-44-55": "00:11:22:33:44:55",
 		"0011.2233.4455":    "00:11:22:33:44:55",
 		"001122334455":      "00:11:22:33:44:55",
-		"AA:BB:CC:DD:EE:55": "aa:bb:cc:dd:ee:55",
+		"AA:BB:CC:DD:EE:A2": "aa:bb:cc:dd:ee:a2",
 	}
 
 	for _, lookup := range lookups {
@@ -784,11 +784,11 @@ func TestClientServiceUnit_Dot11Operations_MockSuccess(t *testing.T) {
 	responses := map[string]string{
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data": `{
 			"Cisco-IOS-XE-wireless-client-oper:client-oper-data": {
-				"common-oper-data": [{"ms-mac": "aa:bb:cc:dd:ee:ff"}]
+				"common-oper-data": [{"ms-mac": "aa:bb:cc:dd:ee:01"}]
 			}
 		}`,
 		"Cisco-IOS-XE-wireless-client-oper:client-oper-data/dot11-oper-data": `{
-			"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data": [{"ms-mac": "aa:bb:cc:dd:ee:ff"}]
+			"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data": [{"ms-mac": "aa:bb:cc:dd:ee:01"}]
 		}`,
 	}
 
@@ -887,7 +887,7 @@ func TestClientServiceUnit_ReadFailure_ReturnsError(t *testing.T) {
 				t.Error("Expected nil result from ListDot11Info")
 			}
 
-			dot11ByMAC, err := service.GetDot11InfoByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+			dot11ByMAC, err := service.GetDot11InfoByMAC(ctx, "aa:bb:cc:dd:ee:01")
 			if err == nil {
 				t.Error("Expected error from GetDot11InfoByMAC, got nil")
 			}
@@ -925,8 +925,8 @@ func TestClientServiceUnit_DeauthenticateWireForm(t *testing.T) {
 	}{
 		{
 			name: "ByMAC",
-			call: func() error { return service.DeauthenticateByMAC(ctx, "AA:BB:CC:DD:EE:55") },
-			want: `{"input":{"mac-addr":"aa:bb:cc:dd:ee:55"}}`,
+			call: func() error { return service.DeauthenticateByMAC(ctx, "AA:BB:CC:DD:EE:A2") },
+			want: `{"input":{"mac-addr":"aa:bb:cc:dd:ee:a2"}}`,
 		},
 		{
 			name: "ByIP",

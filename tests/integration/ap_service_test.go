@@ -50,7 +50,7 @@ func TestAPServiceIntegration_GetConfigOperations_Success(t *testing.T) {
 			{
 				Name: "GetTagConfigByMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).GetTagConfigByMAC(ctx, "28:ac:9e:11:48:10")
+					return service.(ap.Service).GetTagConfigByMAC(ctx, "aa:bb:cc:dd:ee:02")
 				},
 				LogResult: true,
 			},
@@ -292,7 +292,7 @@ func TestAPServiceIntegration_GetOperationalOperations_Success(t *testing.T) {
 			{
 				Name: "ListAPHistoryByEthernetMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(ap.Service).ListAPHistoryByEthernetMAC(ctx, "28:ac:9e:11:48:10")
+					return service.(ap.Service).ListAPHistoryByEthernetMAC(ctx, "aa:bb:cc:dd:ee:02")
 				},
 				LogResult: true,
 			},
@@ -473,7 +473,7 @@ func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
 				Name: "GetRadioNeighborByAPMACSlotAndBSSID_EmptyMAC",
 				Method: func(ctx context.Context, service any) error {
 					_, err := service.(ap.Service).GetRadioNeighborByAPMACSlotAndBSSID(
-						ctx, "", 0, "aa:bb:cc:dd:ee:ff")
+						ctx, "", 0, "aa:bb:cc:dd:ee:01")
 					return err
 				},
 				ExpectedError: true,
@@ -493,7 +493,7 @@ func TestAPServiceIntegration_AdvancedFilterOperations_Success(t *testing.T) {
 				Name: "GetRadioNeighborByAPMACSlotAndBSSID_InvalidMAC",
 				Method: func(ctx context.Context, service any) error {
 					_, err := service.(ap.Service).GetRadioNeighborByAPMACSlotAndBSSID(
-						ctx, "invalid-mac", 0, "aa:bb:cc:dd:ee:ff")
+						ctx, "invalid-mac", 0, "aa:bb:cc:dd:ee:01")
 					return err
 				},
 				ExpectedError: true,

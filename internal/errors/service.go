@@ -116,8 +116,8 @@ func EmptyParameterError(parameter string) error {
 //
 // Example:
 //
-//	err := NotFoundError("AP", "28:ac:9e:11:48:10")
-//	// Result: "AP with 28:ac:9e:11:48:10 not found"
+//	err := NotFoundError("AP", "aa:bb:cc:dd:ee:02")
+//	// Result: "AP with aa:bb:cc:dd:ee:02 not found"
 func NotFoundError(entityType, identifier string) error {
 	return fmt.Errorf(ErrEntityNotFoundTemplate, entityType, identifier)
 }

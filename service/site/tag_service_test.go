@@ -79,8 +79,8 @@ func TestSiteTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-site-cfg:site-tag-config": [{
 				"site-tag-name": "test-site",
 				"description": "Test Site for Operations",
-				"ap-join-profile": "labo-common",
-				"flex-profile": "labo-flex",
+				"ap-join-profile": "test-common",
+				"flex-profile": "test-flex",
 				"is-local-site": false
 			}]
 		}`,
@@ -89,8 +89,8 @@ func TestSiteTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 				"site-tag-config": [{
 					"site-tag-name": "test-site",
 					"description": "Test Site for Operations",
-					"ap-join-profile": "labo-common",
-					"flex-profile": "labo-flex",
+					"ap-join-profile": "test-common",
+					"flex-profile": "test-flex",
 					"is-local-site": false
 				}]
 			}
@@ -236,9 +236,9 @@ func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 			"Cisco-IOS-XE-wireless-site-cfg:site-tag-configs": {
 				"site-tag-config": [
 					{
-						"site-tag-name": "labo-site-flex",
-						"flex-profile": "labo-flex",
-						"ap-join-profile": "labo-common",
+						"site-tag-name": "test-site-flex",
+						"flex-profile": "test-flex",
+						"ap-join-profile": "test-common",
 						"is-local-site": false
 					},
 					{
@@ -250,11 +250,11 @@ func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 				]
 			}
 		}`,
-		"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs/site-tag-config=labo-site-flex": `{
+		"Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs/site-tag-config=test-site-flex": `{
 			"Cisco-IOS-XE-wireless-site-cfg:site-tag-config": [{
-				"site-tag-name": "labo-site-flex",
-				"flex-profile": "labo-flex",
-				"ap-join-profile": "labo-common",
+				"site-tag-name": "test-site-flex",
+				"flex-profile": "test-flex",
+				"ap-join-profile": "test-common",
 				"is-local-site": false
 			}]
 		}`,
@@ -280,16 +280,16 @@ func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	t.Run("GetSiteTag_RealDataStructure", func(t *testing.T) {
-		// Test with labo-site-flex (has flex-profile)
-		result, err := siteTagService.GetSiteTag(ctx, "labo-site-flex")
+		// Test with test-site-flex (has flex-profile)
+		result, err := siteTagService.GetSiteTag(ctx, "test-site-flex")
 		if err != nil {
-			t.Errorf("GetSiteTag failed for labo-site-flex: %v", err)
+			t.Errorf("GetSiteTag failed for test-site-flex: %v", err)
 		}
 		if result == nil {
 			t.Error("Expected site tag result, got nil")
 		}
-		if result != nil && result.SiteTagName != "labo-site-flex" {
-			t.Errorf("Expected site tag name 'labo-site-flex', got %s", result.SiteTagName)
+		if result != nil && result.SiteTagName != "test-site-flex" {
+			t.Errorf("Expected site tag name 'test-site-flex', got %s", result.SiteTagName)
 		}
 
 		// Test with default-site-tag (has description)
@@ -323,13 +323,13 @@ func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 		}
 
 		// Verify real data structure fields
-		hasLaboSite := false
+		hasFlexSite := false
 		hasDefaultSite := false
 		for _, tag := range results {
-			if tag.SiteTagName == "labo-site-flex" {
-				hasLaboSite = true
-				if tag.FlexProfile == nil || *tag.FlexProfile != "labo-flex" {
-					t.Error("Expected labo-site-flex to have flex-profile 'labo-flex'")
+			if tag.SiteTagName == "test-site-flex" {
+				hasFlexSite = true
+				if tag.FlexProfile == nil || *tag.FlexProfile != "test-flex" {
+					t.Error("Expected test-site-flex to have flex-profile 'test-flex'")
 				}
 			}
 			if tag.SiteTagName == "default-site-tag" {
@@ -339,8 +339,8 @@ func TestSiteTagServiceUnit_GetOperations_RealWNCData(t *testing.T) {
 				}
 			}
 		}
-		if !hasLaboSite {
-			t.Error("Expected to find labo-site-flex in results")
+		if !hasFlexSite {
+			t.Error("Expected to find test-site-flex in results")
 		}
 		if !hasDefaultSite {
 			t.Error("Expected to find default-site-tag in results")
@@ -416,8 +416,8 @@ func TestSiteTagServiceUnit_SetOperations_AdvancedScenarios(t *testing.T) {
 			"Cisco-IOS-XE-wireless-site-cfg:site-tag-config": [{
 				"site-tag-name": "test-site",
 				"description": "Test Site for Operations",
-				"ap-join-profile": "labo-common",
-				"flex-profile": "labo-flex",
+				"ap-join-profile": "test-common",
+				"flex-profile": "test-flex",
 				"is-local-site": false
 			}]
 		}`,
@@ -426,8 +426,8 @@ func TestSiteTagServiceUnit_SetOperations_AdvancedScenarios(t *testing.T) {
 				"site-tag-config": [{
 					"site-tag-name": "test-site",
 					"description": "Test Site for Operations",
-					"ap-join-profile": "labo-common",
-					"flex-profile": "labo-flex",
+					"ap-join-profile": "test-common",
+					"flex-profile": "test-flex",
 					"is-local-site": false
 				}]
 			}

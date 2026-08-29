@@ -56,7 +56,7 @@ func TestCtsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data": {
 				"flex-mode-ap-sxp-connection-status": [
 					{
-						"wtp-mac": "00:11:22:33:44:55",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"peer-ip": "192.168.1.1",
 						"conn-mode": "listener"
 					}
@@ -66,7 +66,7 @@ func TestCtsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-cts-sxp-oper:cts-sxp-oper-data/flex-mode-ap-sxp-connection-status": `{
 			"Cisco-IOS-XE-wireless-cts-sxp-oper:flex-mode-ap-sxp-connection-status": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"peer-ip": "192.168.1.1",
 					"conn-mode": "listener"
 				}

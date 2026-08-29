@@ -140,7 +140,7 @@ func NewTestClient(server MockServer) TestClient {
 		panic("testutil: failed to parse server URL: " + err.Error())
 	}
 
-	client, err := core.New(u.Host, "test-token", core.WithInsecureSkipVerify(true))
+	client, err := core.New(u.Host, "test-token-123", core.WithInsecureSkipVerify(true))
 	if err != nil {
 		panic("testutil: failed to create test client: " + err.Error())
 	}

@@ -43,37 +43,37 @@ func TestRogueServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				},
 				"rogue-data": [
 					{
-						"rogue-address": "00:25:36:57:ed:cb",
+						"rogue-address": "aa:bb:cc:dd:ee:f1",
 						"rogue-class-type": "rogue-classtype-unclassified",
 						"rogue-mode": "rogue-state-alert",
 						"rogue-containment-level": 0,
 						"contained": false,
-						"rogue-first-timestamp": "2025-09-10T16:27:41.521656+00:00",
-						"rogue-last-timestamp": "2025-09-10T16:54:41.506309+00:00",
+						"rogue-first-timestamp": "2024-01-15T10:33:00.000000+00:00",
+						"rogue-last-timestamp": "2024-01-15T10:35:00.000000+00:00",
 						"max-detected-rssi": -67,
-						"ssid-max-rssi": "rt500k-57ed8b-3"
+						"ssid-max-rssi": "test-rogue-02"
 					},
 					{
-						"rogue-address": "08:10:86:bf:07:e3",
+						"rogue-address": "aa:bb:cc:dd:ee:f4",
 						"rogue-class-type": "rogue-classtype-unclassified",
 						"rogue-mode": "rogue-state-alert",
 						"rogue-containment-level": 0,
 						"contained": false,
-						"rogue-first-timestamp": "2025-09-09T10:55:03.573664+00:00",
-						"rogue-last-timestamp": "2025-09-10T17:04:41.502126+00:00",
+						"rogue-first-timestamp": "2024-01-15T10:32:00.000000+00:00",
+						"rogue-last-timestamp": "2024-01-15T10:37:00.000000+00:00",
 						"max-detected-rssi": -56,
-						"ssid-max-rssi": "aterm-b5acbb-g"
+						"ssid-max-rssi": "test-rogue-01"
 					}
 				],
 				"rogue-client-data": [
 					{
-						"rogue-client-address": "2a:c5:50:5d:6b:9c",
-						"rogue-client-bssid": "1c:61:b4:10:0e:7f",
+						"rogue-client-address": "aa:bb:cc:dd:ee:f3",
+						"rogue-client-bssid": "aa:bb:cc:dd:ee:f2",
 						"rogue-client-state": "rogue-state-alert",
 						"rogue-client-containment-level": 0,
 						"contained": false,
-						"rogue-client-first-timestamp": "2025-09-10T16:32:41.518791+00:00",
-						"rogue-client-last-timestamp": "2025-09-10T17:05:41.501647+00:00"
+						"rogue-client-first-timestamp": "2024-01-15T10:34:00.000000+00:00",
+						"rogue-client-last-timestamp": "2024-01-15T10:38:00.000000+00:00"
 					}
 				]
 			}
@@ -107,28 +107,28 @@ func TestRogueServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-data": [
 				{
-					"rogue-address": "00:25:36:57:ed:cb",
+					"rogue-address": "aa:bb:cc:dd:ee:f1",
 					"rogue-class-type": "rogue-classtype-unclassified",
 					"rogue-mode": "rogue-state-alert",
 					"rogue-containment-level": 0,
 					"contained": false,
-					"rogue-first-timestamp": "2025-09-10T16:27:41.521656+00:00",
-					"rogue-last-timestamp": "2025-09-10T16:54:41.506309+00:00",
+					"rogue-first-timestamp": "2024-01-15T10:33:00.000000+00:00",
+					"rogue-last-timestamp": "2024-01-15T10:35:00.000000+00:00",
 					"max-detected-rssi": -67,
-					"ssid-max-rssi": "rt500k-57ed8b-3"
+					"ssid-max-rssi": "test-rogue-02"
 				}
 			]
 		}`,
 		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-client-data": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-client-data": [
 				{
-					"rogue-client-address": "2a:c5:50:5d:6b:9c",
-					"rogue-client-bssid": "1c:61:b4:10:0e:7f",
+					"rogue-client-address": "aa:bb:cc:dd:ee:f3",
+					"rogue-client-bssid": "aa:bb:cc:dd:ee:f2",
 					"rogue-client-state": "rogue-state-alert",
 					"rogue-client-containment-level": 0,
 					"contained": false,
-					"rogue-client-first-timestamp": "2025-09-10T16:32:41.518791+00:00",
-					"rogue-client-last-timestamp": "2025-09-10T17:05:41.501647+00:00"
+					"rogue-client-first-timestamp": "2024-01-15T10:34:00.000000+00:00",
+					"rogue-client-last-timestamp": "2024-01-15T10:38:00.000000+00:00"
 				}
 			]
 		}`,
@@ -190,31 +190,31 @@ func TestRogueServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 func TestRogueServiceUnit_GetByMACOperations_MockSuccess(t *testing.T) {
 	// Using real WNC rogue data structure
 	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
-		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data=00:25:36:57:ed:cb": `{
+		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-data=aa:bb:cc:dd:ee:f1": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-data": [
 				{
-					"rogue-address": "00:25:36:57:ed:cb",
+					"rogue-address": "aa:bb:cc:dd:ee:f1",
 					"rogue-class-type": "rogue-classtype-unclassified",
 					"rogue-mode": "rogue-state-alert",
 					"rogue-containment-level": 0,
 					"contained": false,
-					"rogue-first-timestamp": "2025-09-10T16:27:41.521656+00:00",
-					"rogue-last-timestamp": "2025-09-10T16:54:41.506309+00:00",
+					"rogue-first-timestamp": "2024-01-15T10:33:00.000000+00:00",
+					"rogue-last-timestamp": "2024-01-15T10:35:00.000000+00:00",
 					"max-detected-rssi": -67,
-					"ssid-max-rssi": "rt500k-57ed8b-3"
+					"ssid-max-rssi": "test-rogue-02"
 				}
 			]
 		}`,
-		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-client-data=2a:c5:50:5d:6b:9c": `{
+		"Cisco-IOS-XE-wireless-rogue-oper:rogue-oper-data/rogue-client-data=aa:bb:cc:dd:ee:f3": `{
 			"Cisco-IOS-XE-wireless-rogue-oper:rogue-client-data": [
 				{
-					"rogue-client-address": "2a:c5:50:5d:6b:9c",
-					"rogue-client-bssid": "1c:61:b4:10:0e:7f",
+					"rogue-client-address": "aa:bb:cc:dd:ee:f3",
+					"rogue-client-bssid": "aa:bb:cc:dd:ee:f2",
 					"rogue-client-state": "rogue-state-alert",
 					"rogue-client-containment-level": 0,
 					"contained": false,
-					"rogue-client-first-timestamp": "2025-09-10T16:32:41.518791+00:00",
-					"rogue-client-last-timestamp": "2025-09-10T17:05:41.501647+00:00"
+					"rogue-client-first-timestamp": "2024-01-15T10:34:00.000000+00:00",
+					"rogue-client-last-timestamp": "2024-01-15T10:38:00.000000+00:00"
 				}
 			]
 		}`,
@@ -226,7 +226,7 @@ func TestRogueServiceUnit_GetByMACOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test GetRogueByMAC with valid MAC
-	rogueData, err := service.GetRogueByMAC(ctx, "00:25:36:57:ed:cb")
+	rogueData, err := service.GetRogueByMAC(ctx, "aa:bb:cc:dd:ee:f1")
 	if err != nil {
 		t.Errorf("GetRogueByMAC failed: %v", err)
 		return
@@ -238,7 +238,7 @@ func TestRogueServiceUnit_GetByMACOperations_MockSuccess(t *testing.T) {
 	}
 
 	// Test GetRogueClientByMAC with valid MAC
-	clientData, err := service.GetRogueClientByMAC(ctx, "2a:c5:50:5d:6b:9c")
+	clientData, err := service.GetRogueClientByMAC(ctx, "aa:bb:cc:dd:ee:f3")
 	if err != nil {
 		t.Errorf("GetRogueClientByMAC failed: %v", err)
 		return
@@ -315,10 +315,10 @@ func TestRogueServiceUnit_ByMAC_WireForm(t *testing.T) {
 	service := rogue.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	if _, err := service.GetRogueByMAC(ctx, "00-11-22-33-44-55"); err != nil {
+	if _, err := service.GetRogueByMAC(ctx, "aa-bb-cc-dd-ee-01"); err != nil {
 		t.Fatalf("GetRogueByMAC unexpected error: %v", err)
 	}
-	if _, err := service.GetRogueClientByMAC(ctx, "0011.2233.4466"); err != nil {
+	if _, err := service.GetRogueClientByMAC(ctx, "aabb.ccdd.ee02"); err != nil {
 		t.Fatalf("GetRogueClientByMAC unexpected error: %v", err)
 	}
 
@@ -326,10 +326,10 @@ func TestRogueServiceUnit_ByMAC_WireForm(t *testing.T) {
 	if len(recorded) != 2 {
 		t.Fatalf("Recorded %d requests, want 2", len(recorded))
 	}
-	if got, want := recorded[0].Path, "/restconf/data/"+rogueRoute+"=00:11:22:33:44:55"; got != want {
+	if got, want := recorded[0].Path, "/restconf/data/"+rogueRoute+"=aa:bb:cc:dd:ee:01"; got != want {
 		t.Errorf("GetRogueByMAC wire path = %q, want %q", got, want)
 	}
-	if got, want := recorded[1].Path, "/restconf/data/"+clientRoute+"=00:11:22:33:44:66"; got != want {
+	if got, want := recorded[1].Path, "/restconf/data/"+clientRoute+"=aa:bb:cc:dd:ee:02"; got != want {
 		t.Errorf("GetRogueClientByMAC wire path = %q, want %q", got, want)
 	}
 }
@@ -369,13 +369,13 @@ func TestRogueServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	}
 
 	// Test GetRogueByMAC with nil client
-	_, err = service.GetRogueByMAC(ctx, "00:25:36:57:ed:cb")
+	_, err = service.GetRogueByMAC(ctx, "aa:bb:cc:dd:ee:f1")
 	if err == nil {
 		t.Error("Expected error with nil client for GetRogueByMAC, got nil")
 	}
 
 	// Test GetRogueClientByMAC with nil client
-	_, err = service.GetRogueClientByMAC(ctx, "2a:c5:50:5d:6b:9c")
+	_, err = service.GetRogueClientByMAC(ctx, "aa:bb:cc:dd:ee:f3")
 	if err == nil {
 		t.Error("Expected error with nil client for GetRogueClientByMAC, got nil")
 	}

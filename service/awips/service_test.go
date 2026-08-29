@@ -46,7 +46,7 @@ func TestAwipsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data": {
 				"awips-per-ap-info": [
 					{
-						"ap-mac": "00:11:22:33:44:55",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"awips-status": "enabled",
 						"alarm-count": "0",
 						"forensic-capture-status": "disabled"
@@ -66,7 +66,7 @@ func TestAwipsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-per-ap-info": `{
 			"Cisco-IOS-XE-wireless-awips-oper:awips-per-ap-info": [
 				{
-					"ap-mac": "00:11:22:33:44:55",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"awips-status": "enabled",
 					"alarm-count": "0",
 					"forensic-capture-status": "disabled"
@@ -87,7 +87,7 @@ func TestAwipsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-awips-oper:awips-oper-data/awips-ap-dwld-status": `{
 			"Cisco-IOS-XE-wireless-awips-oper:awips-ap-dwld-status": [
 				{
-					"ap-mac": "00:11:22:33:44:55",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"status": "success"
 				}
 			]

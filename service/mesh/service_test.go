@@ -62,7 +62,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data": {
 				"mesh-q-stats": [
 					{
-						"wtp-mac": "00:11:22:33:44:55",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"q-type": "data",
 						"peak-length": 100,
 						"average-len": 50,
@@ -71,8 +71,8 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				],
 				"mesh-dr-stats": [
 					{
-						"wtp-mac": "00:11:22:33:44:55",
-						"neigh-ap-mac": "00:66:77:88:99:aa",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
+						"neigh-ap-mac": "aa:bb:cc:dd:ee:02",
 						"data-rate-index": 1,
 						"tx-success": 1000,
 						"tx-attempts": 1050
@@ -80,7 +80,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				],
 				"mesh-sec-stats": [
 					{
-						"wtp-mac": "00:11:22:33:44:55",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"tx-pkts-total": 5000,
 						"rx-pkts-total": 4800,
 						"rx-pkts-error": 5
@@ -88,7 +88,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				],
 				"mesh-oper-data": [
 					{
-						"wtp-mac": "00:11:22:33:44:55",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"bhaul-slot-id": 0,
 						"configured-role": "MAP",
 						"ap-mode": "bridge"
@@ -99,7 +99,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-q-stats": `{
 			"Cisco-IOS-XE-wireless-mesh-oper:mesh-q-stats": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"q-type": "data",
 					"peak-length": 100,
 					"average-len": 50,
@@ -110,8 +110,8 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-dr-stats": `{
 			"Cisco-IOS-XE-wireless-mesh-oper:mesh-dr-stats": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
-					"neigh-ap-mac": "00:66:77:88:99:aa",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
+					"neigh-ap-mac": "aa:bb:cc:dd:ee:02",
 					"data-rate-index": 1,
 					"tx-success": 1000,
 					"tx-attempts": 1050
@@ -121,7 +121,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-sec-stats": `{
 			"Cisco-IOS-XE-wireless-mesh-oper:mesh-sec-stats": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"tx-pkts-total": 5000,
 					"rx-pkts-total": 4800,
 					"rx-pkts-error": 5
@@ -131,7 +131,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data/mesh-oper-data": `{
 			"Cisco-IOS-XE-wireless-mesh-oper:mesh-oper-data": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"bhaul-slot-id": 0,
 					"configured-role": "MAP",
 					"ap-mode": "bridge"
@@ -166,7 +166,7 @@ func TestMeshServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-tree-data": [
 				{
 					"sector-number": 1,
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"mesh-ap-count": 5,
 					"rap-count": 2,
 					"map-count": 3,

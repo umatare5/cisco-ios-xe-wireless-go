@@ -46,7 +46,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data": {
 				"ble-ltx-ap-antenna": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:f0",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"ble-slot-id": 0,
 						"ble-antenna-id": 1,
 						"is-ble-antenna-present": true
@@ -54,7 +54,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				],
 				"ble-ltx-ap": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:f0",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"admin": {
 							"enable": true
 						}
@@ -66,7 +66,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ble-ltx-ap": `{
 			"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"admin": {
 						"enable": true
 					}
@@ -76,7 +76,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data/ble-ltx-ap-antenna": `{
 			"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap-antenna": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"ble-slot-id": 0,
 					"ble-antenna-id": 1,
 					"is-ble-antenna-present": true
@@ -90,7 +90,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data": {
 				"ble-mgmt-ap": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:f0",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"is-new": false,
 						"cmx-id": "1",
 						"oper-state": true
@@ -108,7 +108,7 @@ func TestBleServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-oper-data/ble-mgmt-ap": `{
 			"Cisco-IOS-XE-wireless-ble-mgmt-oper:ble-mgmt-ap": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"is-new": false,
 					"cmx-id": "1",
 					"oper-state": true

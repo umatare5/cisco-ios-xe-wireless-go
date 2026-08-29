@@ -32,41 +32,41 @@ func TestNewClient(t *testing.T) {
 		{
 			name:        "ValidClient",
 			host:        "192.168.1.100",
-			token:       "YWRtaW46cGFzc3dvcmQ=", // base64 encoded "admin:password"
+			token:       "test-token-123", // base64 encoded "admin:password"
 			opts:        nil,
 			expectError: false,
 		},
 		{
 			name:        "ValidClientWithOptions",
-			host:        "wnc.example.internal",
-			token:       "YWRtaW46cGFzc3dvcmQ=",
+			host:        "wnc1.example.internal",
+			token:       "test-token-123",
 			opts:        []Option{WithTimeout(30 * time.Second), WithInsecureSkipVerify(true)},
 			expectError: false,
 		},
 		{
 			name:        "ValidClientWithLoggerAndUserAgent",
-			host:        "controller.example.internal",
-			token:       "YWRtaW46cGFzc3dvcmQ=",
+			host:        "wnc1.example.internal",
+			token:       "test-token-123",
 			opts:        []Option{WithLogger(slog.New(slog.DiscardHandler)), WithUserAgent("custom-agent/1.0")},
 			expectError: false,
 		},
 		{
 			name:        "InvalidHost",
 			host:        "",
-			token:       "YWRtaW46cGFzc3dvcmQ=",
+			token:       "test-token-123",
 			opts:        nil,
 			expectError: true,
 		},
 		{
 			name:        "InvalidToken",
-			host:        "controller.example.com",
+			host:        "wnc1.example.internal",
 			token:       "",
 			opts:        nil,
 			expectError: true,
 		},
 		{
 			name:  "ValidClientWithTransportOptions",
-			host:  "controller.example.internal",
+			host:  "wnc1.example.internal",
 			token: "test-token-123",
 			opts: []Option{
 				WithProxy(http.ProxyFromEnvironment),
@@ -77,7 +77,7 @@ func TestNewClient(t *testing.T) {
 		},
 		{
 			name:  "RejectsNonPositiveResponseHeaderTimeout",
-			host:  "controller.example.internal",
+			host:  "wnc1.example.internal",
 			token: "test-token-123",
 			opts: []Option{
 				WithResponseHeaderTimeout(0),
@@ -86,7 +86,7 @@ func TestNewClient(t *testing.T) {
 		},
 		{
 			name:  "RejectsNonPositiveTLSHandshakeTimeout",
-			host:  "controller.example.internal",
+			host:  "wnc1.example.internal",
 			token: "test-token-123",
 			opts: []Option{
 				WithTLSHandshakeTimeout(-1 * time.Second),
@@ -95,7 +95,7 @@ func TestNewClient(t *testing.T) {
 		},
 		{
 			name:  "NilProxyResolverIsAccepted",
-			host:  "controller.example.internal",
+			host:  "wnc1.example.internal",
 			token: "test-token-123",
 			opts: []Option{
 				WithProxy(nil),
@@ -129,7 +129,7 @@ func TestNewClient(t *testing.T) {
 
 // TestClientServiceAccessors tests that all service accessors return non-nil services.
 func TestClientServiceAccessors(t *testing.T) {
-	client, err := NewClient("controller.example.com", "dGVzdDp0ZXN0")
+	client, err := NewClient("wnc1.example.internal", "test-token-123")
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
@@ -195,7 +195,7 @@ func newRecordingClient(t *testing.T, body string) (*Client, *mock.RESTCONFServe
 		t.Fatalf("Failed to parse test server URL: %v", err)
 	}
 
-	client, err := NewClient(parsed.Host, "dGVzdDp0ZXN0", WithInsecureSkipVerify(true))
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
@@ -434,7 +434,7 @@ func TestWithDefaultsWireQuery(t *testing.T) {
 		t.Fatalf("Failed to parse test server URL: %v", err)
 	}
 
-	client, err := NewClient(parsed.Host, "dGVzdDp0ZXN0", WithInsecureSkipVerify(true))
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
@@ -514,7 +514,7 @@ func newRecorder(t *testing.T) (*Client, *[]seenRequest) {
 		t.Fatalf("parsing the recorder URL: %v", err)
 	}
 
-	client, err := NewClient(parsed.Host, "dGVzdDp0ZXN0", WithInsecureSkipVerify(true))
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
 	if err != nil {
 		t.Fatalf("building a client against the recorder: %v", err)
 	}

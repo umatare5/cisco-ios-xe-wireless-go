@@ -29,7 +29,7 @@ func TestValidationUnit_GetOperations_Success(t *testing.T) {
 	testutil.AssertNoError(t, ValidateHost("192.168.1.100"), "IP controller")
 
 	// Token validation
-	testutil.AssertBoolEquals(t, IsValidAccessToken("valid-token"), true, "valid token")
+	testutil.AssertBoolEquals(t, IsValidAccessToken("test-token-123"), true, "valid token")
 	testutil.AssertBoolEquals(t, IsValidAccessToken(""), false, "empty token")
 	testutil.AssertBoolEquals(t, IsValidAccessToken("short"), true, "short token is valid (only checks non-empty)")
 
@@ -137,8 +137,8 @@ func TestValidationUnit_ValidationErrors_Success(t *testing.T) {
 	)
 
 	// Composite validation scenarios
-	controller := "test.cisco.com"
-	token := "test-token"
+	controller := "wnc1.example.internal"
+	token := "test-token-123"
 	testutil.AssertBoolEquals(
 		t,
 		ValidateHost(controller) == nil && IsValidAccessToken(token),

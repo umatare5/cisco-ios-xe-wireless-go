@@ -74,7 +74,7 @@ func TestRogueServiceIntegration_GetOperationalOperations_Success(t *testing.T) 
 			{
 				Name: "GetRogueClientByMAC",
 				Method: func(ctx context.Context, service any) (any, error) {
-					return service.(rogue.Service).GetRogueClientByMAC(ctx, "00:11:22:33:44:66")
+					return service.(rogue.Service).GetRogueClientByMAC(ctx, "aa:bb:cc:dd:ee:02")
 				},
 				ExpectNotFound: true,
 			},

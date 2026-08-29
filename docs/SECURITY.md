@@ -75,8 +75,7 @@ Handle authentication tokens securely with isolated storage, periodic rotation, 
 
    ```bash
     # Generate token manually (ad-hoc only)
-   echo -n "admin:your-secure-password" | base64
-   # Output: YWRtaW46eW91ci1zZWN1cmUtcGFzc3dvcmQ=
+   export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-secure-password' | base64)"
 
     # Prefer central secret store, not ad-hoc scripts
    ```

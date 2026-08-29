@@ -49,7 +49,7 @@ func TestGeolocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"num-ap-gnss": 0,
 					"num-ap-man-height": 0,
 					"num-ap-derived": 0,
-					"last-derivation-timestamp": "2025-09-10T17:04:29.717868+00:00"
+					"last-derivation-timestamp": "2024-01-15T10:36:00.000000+00:00"
 				}
 			}
 		}`,
@@ -58,13 +58,13 @@ func TestGeolocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"num-ap-gnss": 0,
 				"num-ap-man-height": 0,
 				"num-ap-derived": 0,
-				"last-derivation-timestamp": "2025-09-10T17:04:29.717868+00:00"
+				"last-derivation-timestamp": "2024-01-15T10:36:00.000000+00:00"
 			}
 		}`,
 		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data": `{
 			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"ap-mac": "aa:bb:cc:dd:ee:02",
 					"loc": {
 						"source": "manual",
 						"ellipse": {
@@ -114,7 +114,7 @@ func TestGeolocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	}
 
 	// Test GetAPGeolocationDataByMAC operation (may return 404 if not configured)
-	macResult, err := service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
+	macResult, err := service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:02")
 	if err != nil {
 		// Geolocation data endpoints may not be supported by all WNC configurations
 		t.Logf("GetAPGeolocationDataByMAC failed (expected for unconfigured geolocation): %v", err)
@@ -141,7 +141,7 @@ func TestGeolocationServiceUnit_GetOperations_IndividualEndpoints(t *testing.T) 
 						"num-ap-gnss": 0,
 						"num-ap-man-height": 0,
 						"num-ap-derived": 1,
-						"last-derivation-timestamp": "2025-09-10T17:04:29.717868+00:00"
+						"last-derivation-timestamp": "2024-01-15T10:36:00.000000+00:00"
 					}
 				}
 			}`,
@@ -157,7 +157,7 @@ func TestGeolocationServiceUnit_GetOperations_IndividualEndpoints(t *testing.T) 
 					"num-ap-gnss": 0,
 					"num-ap-man-height": 0,
 					"num-ap-derived": 1,
-					"last-derivation-timestamp": "2025-09-10T17:04:29.717868+00:00"
+					"last-derivation-timestamp": "2024-01-15T10:36:00.000000+00:00"
 				}
 			}`,
 			testFunction: func(service geolocation.Service, ctx context.Context) (interface{}, error) {
@@ -170,7 +170,7 @@ func TestGeolocationServiceUnit_GetOperations_IndividualEndpoints(t *testing.T) 
 			response: `{
 				"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:f0",
+						"ap-mac": "aa:bb:cc:dd:ee:02",
 						"loc": {
 							"source": "manual",
 							"ellipse": {
@@ -241,7 +241,7 @@ func TestGeolocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 	}
 
 	// Test that GetAPGeolocationDataByMAC properly handles 404 errors
-	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
+	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:02")
 	if err == nil {
 		t.Error("Expected error for 404 response, got nil")
 	}
@@ -251,10 +251,10 @@ func TestGeolocationServiceUnit_GetOperations_ErrorHandling(t *testing.T) {
 func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testing.T) {
 	responses := map[string]string{
 		// Exact path that BuildQueryURL will construct
-		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:f0": `{
+		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:02": `{
 			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"ap-mac": "aa:bb:cc:dd:ee:02",
 					"loc": {
 						"source": "manual",
 						"ellipse": {
@@ -267,10 +267,10 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 				}
 			]
 		}`,
-		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:ff": `{
+		"/restconf/data/Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:01": `{
 			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"loc": {
 						"source": "derived",
 						"ellipse": {
@@ -284,10 +284,10 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 			]
 		}`,
 		// Also support simplified paths for the mock server
-		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:f0": `{
+		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:02": `{
 			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:f0",
+					"ap-mac": "aa:bb:cc:dd:ee:02",
 					"loc": {
 						"source": "manual",
 						"ellipse": {
@@ -300,10 +300,10 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 				}
 			]
 		}`,
-		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:ff": `{
+		"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data/ap-geo-loc-data=aa:bb:cc:dd:ee:01": `{
 			"Cisco-IOS-XE-wireless-geolocation-oper:ap-geo-loc-data": [
 				{
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"loc": {
 						"source": "derived",
 						"ellipse": {
@@ -325,7 +325,7 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 	ctx := testutil.TestContext(t)
 
 	// Test successful GetAPGeolocationDataByMAC with colon format
-	result, err := service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
+	result, err := service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:02")
 	if err != nil {
 		t.Errorf("Expected success for valid MAC, got error: %v", err)
 	}
@@ -334,7 +334,7 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 	}
 
 	// Test successful GetAPGeolocationDataByMAC with different MAC format normalization
-	result, err = service.GetAPGeolocationDataByMAC(ctx, "aa-bb-cc-dd-ee-ff")
+	result, err = service.GetAPGeolocationDataByMAC(ctx, "aa-bb-cc-dd-ee-01")
 	if err != nil {
 		t.Errorf("Expected success for dash-separated MAC, got error: %v", err)
 	}
@@ -343,7 +343,7 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 	}
 
 	// Test successful GetAPGeolocationDataByMAC with uppercase no-separator format
-	result, err = service.GetAPGeolocationDataByMAC(ctx, "AABBCCDDEEFF")
+	result, err = service.GetAPGeolocationDataByMAC(ctx, "AABBCCDDEE01")
 	if err != nil {
 		t.Errorf("Expected success for uppercase no-separator MAC, got error: %v", err)
 	}
@@ -353,10 +353,10 @@ func TestGeolocationServiceUnit_GetOperations_GetAPGeolocationDataByMAC(t *testi
 
 	// Test MAC normalization validation path coverage
 	testMACs := []string{
-		"aA:bB:cC:dD:eE:fF", // Mixed case
-		"28-ac-9e-bb-3c-80", // Dash format
-		"28AC9EBB3C80",      // No separators uppercase
-		"28ac9ebb3c80",      // No separators lowercase
+		"aA:bB:cC:dD:eE:01", // Mixed case
+		"aa-bb-cc-dd-ee-02", // Dash format
+		"AABBCCDDEE02",      // No separators uppercase
+		"aabbccddee02",      // No separators lowercase
 	}
 
 	for _, mac := range testMACs {
@@ -446,7 +446,7 @@ func TestGeolocationServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	}
 
 	// Test that GetAPGeolocationDataByMAC handles nil client
-	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:f0")
+	_, err = service.GetAPGeolocationDataByMAC(ctx, "aa:bb:cc:dd:ee:02")
 	if err == nil {
 		t.Error("Expected error with nil client for GetAPGeolocationDataByMAC, got nil")
 	}
@@ -460,7 +460,7 @@ func TestGeolocationServiceUnit_QuotedDecimal64_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data": {
 				"ap-geo-loc-data": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"loc": {
 							"source": "gnss",
 							"area-of-uncertainty": 12,
@@ -524,7 +524,7 @@ func TestGeolocationServiceUnit_DeclaredWidths_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-geolocation-oper:geolocation-oper-data": {
 				"ap-geo-loc-data": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"loc": {
 							"area-of-uncertainty": 4294967295,
 							"ellipse": {"major-axis": 65535, "minor-axis": 65535}

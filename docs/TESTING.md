@@ -88,6 +88,37 @@ TestXServiceIntegration_GetConfigurationOperations_Success // Live WNC configura
 - `TestApServiceUnit_SetOperations_ValidationErrors` - AP SET validation and edge cases
 - `TestClientServiceIntegration_GetOperationalOperations_Success` - Client GET against a live controller
 
+### Fixture Identities
+
+Mock payloads take their **shape** from a real controller response, but every identity in them is
+synthetic. MAC addresses come from one locally administered block, `aa:bb:cc:dd:ee:00/40`, whose
+last octet encodes the role of the device, so a fixture reads without cross-referencing anything:
+
+| Range       | Role                                                    |
+| ----------- | ------------------------------------------------------- |
+| `:00`       | Controller management interface                         |
+| `:01`-`:0f` | AP radio base MAC — `TEST-APnn` pairs with `:nn`        |
+| `:11`-`:1f` | AP Ethernet MAC — `TEST-APnn` pairs with `:1n`          |
+| `:a1`-`:af` | Associated client stations                              |
+| `:b1`-`:bf` | BSSIDs advertised by fixture APs                        |
+| `:f1`-`:ff` | Rogue and otherwise unmanaged devices                   |
+
+The first octet `0xaa` has the I/G bit clear and the U/L bit set, so no fixture address can be a
+multicast address or collide with a real vendor assignment. The other identities follow the same
+rule: `TEST-APnn` for access points, `wnc1.example.internal` for the controller, `test-token-123`
+for the access token, `192.168.1.0/24` for addresses, and `test-` prefixed names for tags,
+profiles and SSIDs.
+
+Two categories are deliberately outside this scheme. **Format tests** — `internal/validation`,
+`internal/service/mac_test.go`, and the spelling table in `service/client` — assert how a MAC is
+parsed and normalized rather than which device it names, so they keep `00:11:22:33:44:55` and its
+hyphen, dotted and bare spellings. **Absence tests** in `service/ap` use `00:00:00:00:00:01` and
+the `-CONTROL` name suffix to mark the control group that proves a container was reached.
+
+Never paste a MAC, hostname, SSID, tag name or timestamp straight from a capture into a committed
+fixture. `tests/testutil/integration` redacts captures it writes, but a value pasted by hand
+bypasses it.
+
 ## 🧰 Prerequisites
 
 ### For Unit Tests (Layers 1-3)
@@ -107,14 +138,14 @@ Integration and E2E tests require a real Cisco Catalyst 9800 WNC. Please refer t
 
 #### 2. Environment Variables
 
-| Variable                | Description            | Example                 |
-| ----------------------- | ---------------------- | ----------------------- |
-| `WNC_CONTROLLER`        | Controller host/IP     | `wnc1.example.internal` |
-| `WNC_ACCESS_TOKEN`      | Base64 `user:pass`     | `YWRtaW46cGFzc3dvcmQ=`  |
-| `WNC_AP_MAC_ADDR`       | Test AP's Radio MAC    | `aa:bb:cc:dd:ee:f0`     |
-| `WNC_CLIENT_MAC_ADDR`   | Test Client MAC        | `11:22:33:aa:bb:cc`     |
-| `WNC_AP_WLAN_BSSID`     | Test AP WLAN BSSID     | `aa:bb:cc:dd:ee:f1`     |
-| `WNC_AP_NEIGHBOR_BSSID` | Test AP Neighbor BSSID | `11:22:33:dd:ee:ff`     |
+| Variable                | Description            | Example                             |
+| ----------------------- | ---------------------- | ----------------------------------- |
+| `WNC_CONTROLLER`        | Controller host/IP     | `wnc1.example.internal`             |
+| `WNC_ACCESS_TOKEN`      | Base64 `user:pass`     | `$(echo -n 'admin:pass' \| base64)` |
+| `WNC_AP_MAC_ADDR`       | Test AP's Radio MAC    | `aa:bb:cc:dd:ee:01`                 |
+| `WNC_CLIENT_MAC_ADDR`   | Test Client MAC        | `aa:bb:cc:dd:ee:a1`                 |
+| `WNC_AP_WLAN_BSSID`     | Test AP WLAN BSSID     | `aa:bb:cc:dd:ee:b1`                 |
+| `WNC_AP_NEIGHBOR_BSSID` | Test AP Neighbor BSSID | `aa:bb:cc:dd:ee:b2`                 |
 
 <details><summary>Environment setup</summary>
 
