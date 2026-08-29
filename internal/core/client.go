@@ -122,20 +122,20 @@ func WithUserAgent(userAgent string) Option {
 }
 
 // New creates a new WNC client with the specified host, token, and options.
+//
+// host is an authority and nothing else — "wnc1.example.internal", "192.0.2.10:443" or a bare IPv6
+// literal this brackets for you. Every error New returns matches ErrInvalidConfiguration.
 func New(host, token string, opts ...Option) (*Client, error) {
 	// Normalize before validating: the trimmed and bracketed form is both what the
 	// validator judges and what reaches the Authorization header and the request URL.
 	host = validation.NormalizeHost(host)
 	token = strings.TrimSpace(token)
 
-	// Validate inputs using existing validation functions
-	if !validation.IsValidController(host) {
-		return nil, fmt.Errorf("client initialization failed: %w",
-			fmt.Errorf("controller address validation failed: invalid format %s", host))
+	if err := validation.ValidateHost(host); err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrInvalidConfiguration, err)
 	}
 	if !validation.IsValidAccessToken(token) {
-		return nil, fmt.Errorf("client initialization failed: %w",
-			errors.New("access token validation failed: token is empty or invalid format"))
+		return nil, fmt.Errorf("%w: access token is empty", ErrInvalidConfiguration)
 	}
 
 	// Create HTTP client with transport
@@ -160,7 +160,7 @@ func New(host, token string, opts ...Option) (*Client, error) {
 	// Apply options
 	for _, opt := range opts {
 		if err := opt(client); err != nil {
-			return nil, fmt.Errorf("failed to apply option: %w", err)
+			return nil, fmt.Errorf("%w: %w", ErrInvalidConfiguration, err)
 		}
 	}
 

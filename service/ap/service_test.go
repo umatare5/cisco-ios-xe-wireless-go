@@ -3,11 +3,7 @@ package ap_test
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"sync"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -2176,29 +2172,42 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 	})
 }
 
-// tagRecorder captures the body of the write a tag assignment sent. The mocks in pkg/testutil
-// record the method, path and query of a request but not its body, which is what decides
-// whether a tag the caller did not name survived.
-type tagRecorder struct {
-	mu   sync.Mutex
-	body string
-}
+// apTagNode is the node both the tag read and the tag write end at, which is what the mock
+// server matches a handler on. The list key the URL appends is not part of the match.
+const apTagNode = "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag"
 
-func (r *tagRecorder) set(body string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.body = body
-}
+// slotAdminNode is the node the radio admin RPC posts to.
+const slotAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state"
 
-// written returns the three tags the recorded write carried.
-func (r *tagRecorder) written(t *testing.T) (siteTag, policyTag, rfTag string) {
+// writtenBody returns the body of the first recorded request made with method, and fails if
+// none was. The read that precedes a write is recorded too, so the write is selected by
+// method rather than by position.
+func writtenBody(t *testing.T, server *testutil.RESTCONFServer, method string) string {
 	t.Helper()
-	r.mu.Lock()
-	defer r.mu.Unlock()
 
-	if r.body == "" {
-		t.Fatal("no write reached the server")
+	for _, recorded := range server.Requests() {
+		if recorded.Method == method {
+			return recorded.Body
+		}
 	}
+
+	t.Fatalf("no %s reached the server", method)
+
+	return ""
+}
+
+// decodeWrittenTag decodes the body of the write a tag assignment sent into payload.
+func decodeWrittenTag(t *testing.T, server *testutil.RESTCONFServer, payload any) {
+	t.Helper()
+
+	if err := json.Unmarshal([]byte(writtenBody(t, server, http.MethodPut)), payload); err != nil {
+		t.Fatalf("Failed to decode the recorded write: %v", err)
+	}
+}
+
+// writtenTags returns the three tags the recorded write carried.
+func writtenTags(t *testing.T, server *testutil.RESTCONFServer) (siteTag, policyTag, rfTag string) {
+	t.Helper()
 
 	var payload struct {
 		ApTag struct {
@@ -2207,70 +2216,84 @@ func (r *tagRecorder) written(t *testing.T) (siteTag, policyTag, rfTag string) {
 			RFTag     string `json:"rf-tag"`
 		} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
 	}
-	if err := json.Unmarshal([]byte(r.body), &payload); err != nil {
-		t.Fatalf("Failed to decode the recorded write: %v", err)
-	}
+	decodeWrittenTag(t, server, &payload)
+
 	return payload.ApTag.SiteTag, payload.ApTag.PolicyTag, payload.ApTag.RFTag
 }
 
-// primingProfile returns the priming profile the recorded write carried.
-func (r *tagRecorder) primingProfile(t *testing.T) string {
+// writtenPrimingProfile returns the priming profile the recorded write carried.
+func writtenPrimingProfile(t *testing.T, server *testutil.RESTCONFServer) string {
 	t.Helper()
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	if r.body == "" {
-		t.Fatal("no write reached the server")
-	}
 
 	var payload struct {
 		ApTag struct {
 			PrimingProfile string `json:"priming-profile"`
 		} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
 	}
-	if err := json.Unmarshal([]byte(r.body), &payload); err != nil {
-		t.Fatalf("Failed to decode the recorded write: %v", err)
-	}
+	decodeWrittenTag(t, server, &payload)
+
 	return payload.ApTag.PrimingProfile
 }
 
-// newTagRecorderService answers a tag read with entry and records the write that follows. An
-// empty entry makes the read a 404, which is the AP-has-no-entry case.
-func newTagRecorderService(t *testing.T, entry string) (ap.Service, *tagRecorder) {
+// writtenRPCInput returns the leaves the recorded RPC input carried, keyed by leaf name. The
+// input is decoded into a map so a leaf the caller never named is visible: a mandatory choice
+// is answered by the arm that is PRESENT, and a struct with a missing omitempty puts the other
+// arm on the wire at its zero value, which an assertion on the wanted arm alone cannot see.
+func writtenRPCInput(t *testing.T, server *testutil.RESTCONFServer) map[string]any {
 	t.Helper()
 
-	recorder := &tagRecorder{}
-	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			if entry == "" {
-				http.NotFound(w, r)
-				return
-			}
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte(entry))
-			return
-		}
+	var payload map[string]map[string]any
+	if err := json.Unmarshal([]byte(writtenBody(t, server, http.MethodPost)), &payload); err != nil {
+		t.Fatalf("Failed to decode the recorded RPC: %v", err)
+	}
+	if len(payload) != 1 {
+		t.Fatalf("the RPC body carried %d top-level keys, want 1", len(payload))
+	}
 
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			t.Errorf("Failed to read the request body: %v", err)
+	for _, input := range payload {
+		return input
+	}
+
+	return nil
+}
+
+// assertRPCInputLeaves fails unless the recorded RPC input carried exactly want.
+func assertRPCInputLeaves(t *testing.T, server *testutil.RESTCONFServer, want map[string]any) {
+	t.Helper()
+
+	got := writtenRPCInput(t, server)
+	for leaf, value := range want {
+		if got[leaf] != value {
+			t.Errorf("input[%q] = %v, want %v", leaf, got[leaf], value)
 		}
-		recorder.set(string(body))
-		w.WriteHeader(http.StatusNoContent)
-	}))
+	}
+	for leaf := range got {
+		if _, ok := want[leaf]; !ok {
+			t.Errorf("input carried %q = %v, which the caller never named", leaf, got[leaf])
+		}
+	}
+}
+
+// newTagRecorderService answers a tag read with entry and lets the server record the write that
+// follows. An empty entry makes the read a 404, which is the AP-has-no-entry case.
+func newTagRecorderService(t *testing.T, entry string) (ap.Service, *testutil.RESTCONFServer) {
+	t.Helper()
+
+	server := testutil.NewRESTCONFServer(t)
 	t.Cleanup(server.Close)
 
-	parsed, err := url.Parse(server.URL)
-	if err != nil {
-		t.Fatalf("Failed to parse the test server URL: %v", err)
+	if entry != "" {
+		server.AddHandler(http.MethodGet, apTagNode, func() (int, string) {
+			return http.StatusOK, entry
+		})
 	}
+	server.AddHandler(http.MethodPut, apTagNode, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
 
-	client, err := core.New(parsed.Host, "test-token", core.WithInsecureSkipVerify(true))
-	if err != nil {
-		t.Fatalf("Failed to create the client: %v", err)
-	}
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
 
-	return ap.NewService(client), recorder
+	return ap.NewService(testClient.Core().(*core.Client)), server
 }
 
 const testAPTagEntry = `{
@@ -2358,13 +2381,13 @@ func TestApServiceUnit_AssignTags_MergeSemantics(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			service, recorder := newTagRecorderService(t, tt.entry)
+			service, server := newTagRecorderService(t, tt.entry)
 
 			if err := tt.assign(context.Background(), service); err != nil {
 				t.Fatalf("Unexpected error: %v", err)
 			}
 
-			siteTag, policyTag, rfTag := recorder.written(t)
+			siteTag, policyTag, rfTag := writtenTags(t, server)
 			if siteTag != tt.expectedSiteTag {
 				t.Errorf("site-tag = %q, want %q", siteTag, tt.expectedSiteTag)
 			}
@@ -2393,24 +2416,50 @@ func TestApServiceUnit_AssignTags_KeepsPrimingProfile(t *testing.T) {
 	}`
 
 	t.Run("an existing priming profile survives", func(t *testing.T) {
-		service, recorder := newTagRecorderService(t, entry)
+		service, server := newTagRecorderService(t, entry)
 
 		if err := service.AssignSiteTag(context.Background(), apMAC, "new-site"); err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
-		if got := recorder.primingProfile(t); got != "existing-priming" {
+		if got := writtenPrimingProfile(t, server); got != "existing-priming" {
 			t.Errorf("priming-profile = %q, want %q", got, "existing-priming")
 		}
 	})
 
 	t.Run("no priming profile is invented", func(t *testing.T) {
-		service, recorder := newTagRecorderService(t, testAPTagEntry)
+		service, server := newTagRecorderService(t, testAPTagEntry)
 
 		if err := service.AssignSiteTag(context.Background(), apMAC, "new-site"); err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
-		if got := recorder.primingProfile(t); got != "" {
+		if got := writtenPrimingProfile(t, server); got != "" {
 			t.Errorf("priming-profile = %q, want it absent", got)
 		}
+	})
+}
+
+// TestApServiceUnit_EnableRadio_RPCInput_Success pins every leaf the radio admin RPC puts on the
+// wire, so a payload field that lost its omitempty is a failure here rather than a 400 on a
+// controller: the RPC's target is a mandatory choice, and the arm the caller did not name must
+// be absent from the body, not present at its zero value.
+func TestApServiceUnit_EnableRadio_RPCInput_Success(t *testing.T) {
+	server := testutil.NewRESTCONFServer(t)
+	t.Cleanup(server.Close)
+	server.AddHandler(http.MethodPost, slotAdminNode, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := ap.NewService(testClient.Core().(*core.Client))
+
+	if err := service.EnableRadio(t.Context(), "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz); err != nil {
+		t.Fatalf("EnableRadio() error = %v", err)
+	}
+
+	assertRPCInputLeaves(t, server, map[string]any{
+		"mode":     "admin-state-enabled",
+		"slot-id":  float64(0),
+		"band":     "1",
+		"mac-addr": "aa:bb:cc:dd:ee:ff",
 	})
 }

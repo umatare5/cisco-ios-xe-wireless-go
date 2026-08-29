@@ -243,7 +243,11 @@ type RadioOperData struct {
 	RadioSubband string `json:"radio-subband,omitempty"`  // Radio frequency subband (Live: IOS-XE 17.12.6a)
 
 	// Band and channel information
-	CurrentBandID     int    `json:"current-band-id,omitempty"`     // Active band ID (Live: IOS-XE 17.12.6a)
+
+	// Band index from 0, one below the enm-ewlc-dot11-radio-band number for the same band, so this
+	// 0 is 2.4 GHz where the enum's 0 is invalid. Withheld on a radio-remote-lan radio, where this
+	// value field then reads 0. (Live: IOS-XE 17.12.6a)
+	CurrentBandID     int    `json:"current-band-id,omitempty"`
 	CurrentActiveBand string `json:"current-active-band,omitempty"` // Active frequency band (Live: IOS-XE 17.12.6a)
 
 	// Protocol capabilities
@@ -323,7 +327,8 @@ type QosClientData struct {
 	} `json:"aaa-qos-params"` // AAA QoS parameters (Live: IOS-XE 17.12.6a)
 }
 
-// CAPWAPData represents CAPWAP data.
+// CAPWAPData represents CAPWAP data. A container the controller omits decodes here the same as
+// one sent with every child zero, because the children are held by value.
 type CAPWAPData struct {
 	WtpMAC       string       `json:"wtp-mac"`       // WTP MAC address for CAPWAP session (Live: IOS-XE 17.12.6a)
 	IPAddr       string       `json:"ip-addr"`       // AP management IP address (Live: IOS-XE 17.12.6a)
@@ -395,9 +400,11 @@ type CAPWAPData struct {
 	WtpIP                string `json:"wtp-ip"`                            // WTP IP address (Live: IOS-XE 17.12.6a)
 }
 
-// ApTimeInfo represents AP time related information.
+// ApTimeInfo represents AP time related information. Only join-time carries a fractional second
+// and its width varies between access points, so a hand-rolled fixed layout blanks some of them;
+// time.RFC3339 parsed every value read.
 type ApTimeInfo struct {
-	BootTime      string `json:"boot-time"`       // Last AP reboot timestamp (Live: IOS-XE 17.12.6a)
+	BootTime      string `json:"boot-time"`       // Last AP reboot time, re-derived from the AP uptime at join, so a CAPWAP re-establishment moves it about a second with no reboot (Live: IOS-XE 17.12.6a)
 	JoinTime      string `json:"join-time"`       // AP join timestamp to controller (Live: IOS-XE 17.12.6a)
 	JoinTimeTaken uint32 `json:"join-time-taken"` // AP join process duration in seconds (Live: IOS-XE 17.12.6a)
 }
@@ -615,7 +622,7 @@ type PhyHtCfg struct {
 type PhyHtCfgData struct {
 	HtEnable               int    `json:"ht-enable"`                 // 802.11n HT protocol enablement (Live: IOS-XE 17.12.6a)
 	PhyHtCfgConfigType     string `json:"phy-ht-cfg-config-type"`    // Physical layer HT configuration type designation (Live: IOS-XE 17.12.6a)
-	CurrFreq               int    `json:"curr-freq"`                 // Current operating frequency (MHz) (Live: IOS-XE 17.12.6a)
+	CurrFreq               int    `json:"curr-freq"`                 // Current channel number, not a frequency; FreqString renders it with the bonded channels (Live: IOS-XE 17.12.6a)
 	ChanWidth              int    `json:"chan-width"`                // Channel bandwidth width in MHz (20/40/80/160) (Live: IOS-XE 17.12.6a)
 	ExtChan                int    `json:"ext-chan"`                  // Extension channel for 40MHz bonding (Live: IOS-XE 17.12.6a)
 	VhtEnable              bool   `json:"vht-enable"`                // 802.11ac Very High Throughput protocol enablement (Live: IOS-XE 17.12.6a)

@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // RFTagService provides RF tag management functionality.
@@ -30,7 +30,7 @@ func (s *RFTagService) GetConfig(ctx context.Context, opts ...core.GetOption) (*
 
 // GetRFTag retrieves an RF tag configuration by name.
 func (s *RFTagService) GetRFTag(ctx context.Context, tagName string, opts ...core.GetOption) (*RFTag, error) {
-	if err := s.validateTagName(tagName); err != nil {
+	if err := validation.ValidateTagName(tagName); err != nil {
 		return nil, err
 	}
 
@@ -68,11 +68,7 @@ func (s *RFTagService) CreateRFTag(ctx context.Context, config *RFTag) error {
 	if config == nil {
 		return errors.New("RF tag config cannot be nil")
 	}
-	if config.TagName == "" {
-		return errors.New("RF tag name cannot be empty")
-	}
-
-	if err := s.validateTagName(config.TagName); err != nil {
+	if err := validation.ValidateTagName(config.TagName); err != nil {
 		return err
 	}
 
@@ -82,7 +78,7 @@ func (s *RFTagService) CreateRFTag(ctx context.Context, config *RFTag) error {
 
 // DeleteRFTag deletes an RF tag configuration.
 func (s *RFTagService) DeleteRFTag(ctx context.Context, tagName string) error {
-	if err := s.validateTagName(tagName); err != nil {
+	if err := validation.ValidateTagName(tagName); err != nil {
 		return err
 	}
 	return core.Delete(ctx, s.Client(), s.buildTagURL(tagName))
@@ -151,29 +147,13 @@ func (s *RFTagService) setRFTag(ctx context.Context, config *RFTag) error {
 	if config == nil {
 		return errors.New("RF tag config cannot be nil")
 	}
-	if config.TagName == "" {
-		return errors.New("RF tag name cannot be empty")
-	}
-
-	if err := s.validateTagName(config.TagName); err != nil {
+	if err := validation.ValidateTagName(config.TagName); err != nil {
 		return err
 	}
 
 	// Build payload directly from config
 	payload := s.buildPayload(config)
 	return core.PutVoid(ctx, s.Client(), s.buildTagURL(config.TagName), payload)
-}
-
-// validateTagName validates RF tag name.
-func (s *RFTagService) validateTagName(tagName string) error {
-	if tagName == "" {
-		return errors.New("RF tag name cannot be empty")
-	}
-	if strings.TrimSpace(tagName) == "" {
-		return fmt.Errorf("RF tag validation failed: %w",
-			fmt.Errorf("invalid tag name format: '%s'", tagName))
-	}
-	return nil
 }
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.

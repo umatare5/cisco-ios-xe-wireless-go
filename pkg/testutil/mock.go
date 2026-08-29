@@ -1,6 +1,7 @@
 package testutil
 
 import (
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"slices"
@@ -13,10 +14,15 @@ import (
 type HandlerMap[T any] = map[string]map[string]T
 
 // RecordedRequest is one request a RESTCONFServer answered.
+//
+// Body is recorded although no handler reads it: whether a replacing write carried a leaf the
+// caller never named is decided by the body, and the handler signature cannot report it. It is a
+// string rather than a []byte so Requests' copy cannot be edited through the slice it returns.
 type RecordedRequest struct {
 	Method   string
 	Path     string
 	RawQuery string
+	Body     string
 }
 
 // RESTCONFServer provides a flexible mock RESTCONF server for testing.
@@ -156,13 +162,20 @@ func findHandler(path string, methodHandlers map[string]func() (int, string)) fu
 
 // record keeps a request for a later assertion. The query is recorded although the
 // handler lookup ignores it, which is what makes a GetOption observable.
+//
+// The body is read before the lock is taken, so the mutex the handler map shares is not held
+// across a read from the connection. A read failure records an empty body, which the assertion
+// on Body is what reports.
 func (s *RESTCONFServer) record(r *http.Request) {
+	body, _ := io.ReadAll(r.Body)
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.requests = append(s.requests, RecordedRequest{
 		Method:   r.Method,
 		Path:     r.URL.Path,
 		RawQuery: r.URL.RawQuery,
+		Body:     string(body),
 	})
 }
 

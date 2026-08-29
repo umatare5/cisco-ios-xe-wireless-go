@@ -413,7 +413,7 @@ func TestWlanPolicyTagServiceUnit_ValidationErrors_AdvancedScenarios(t *testing.
 		policyTagService := service.PolicyTag()
 		ctx := testutil.TestContext(t)
 
-		// Test validateTagName with whitespace-only string
+		// Whitespace-only is refused by validation.ValidateTagName, not by the 404 that follows
 		_, err := policyTagService.GetPolicyTag(ctx, "   ")
 		if err == nil {
 			t.Error("Expected validation error for whitespace-only tag name")

@@ -418,7 +418,7 @@ func TestWithDefaultsWireQuery(t *testing.T) {
 }
 
 // seenRequest is what the recorder keeps: the three things the untyped methods are responsible
-// for, and the body, which the shared mock server in pkg/testutil does not record.
+// for, the body, and the Content-Type, which RecordedRequest deliberately does not carry.
 type seenRequest struct {
 	method      string
 	path        string

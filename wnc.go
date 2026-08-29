@@ -79,6 +79,10 @@ type Client struct {
 
 // NewClient creates a new unified WNC client with the specified host, token, and options.
 // This is the main entry point for all wireless controller operations.
+//
+// host is an authority and nothing else — "wnc1.example.internal" or "192.0.2.10:443". A scheme, a
+// path, a query, a fragment, userinfo or an IPv6 zone id is refused with ErrInvalidConfiguration
+// rather than concatenated into a URL that reads another node.
 func NewClient(host, token string, opts ...Option) (*Client, error) {
 	coreClient, err := core.New(host, token, opts...)
 	if err != nil {

@@ -20,16 +20,17 @@ const (
 	// RadioBand5GHzValue represents the band value for 5 GHz radio.
 	RadioBand5GHzValue = 2
 
-	// RadioBand6GHzValue represents the band value for 6 GHz radio.
+	// RadioBand6GHzValue is the band this SDK sends for RadioBand6GHz. The RPC's band names a
+	// radio type, not a frequency: 3 is its dual-band selector and 4 its 6 GHz one.
 	RadioBand6GHzValue = 3
 
-	// RadioSlot24GHz represents the slot ID for 2.4 GHz radio.
+	// RadioSlot24GHz is the slot this SDK sends with band 1.
 	RadioSlot24GHz = 0
 
-	// RadioSlot5GHz represents the slot ID for 5 GHz radio.
+	// RadioSlot5GHz is the slot this SDK sends with band 2, which the RPC also admits on slot 2.
 	RadioSlot5GHz = 1
 
-	// RadioSlot6GHz represents the slot ID for 6 GHz radio.
+	// RadioSlot6GHz is the slot this SDK sends with band 3, which the RPC also admits on slot 0.
 	RadioSlot6GHz = 2
 
 	// AdminStateEnabled represents the enabled admin state.
@@ -46,11 +47,11 @@ const (
 )
 
 const (
-	// RadioBand24GHz represents 2.4GHz band (slot 0).
+	// RadioBand24GHz selects band 1 and slot 0.
 	RadioBand24GHz RadioBand = RadioBand24GHzEnum
-	// RadioBand5GHz represents 5GHz band (slot 1).
+	// RadioBand5GHz selects band 2 and slot 1.
 	RadioBand5GHz RadioBand = RadioBand5GHzEnum
-	// RadioBand6GHz represents 6GHz band (slot 2).
+	// RadioBand6GHz selects band 3 and slot 2.
 	RadioBand6GHz RadioBand = RadioBand6GHzEnum
 )
 
@@ -61,6 +62,10 @@ type RadioBandInfo struct {
 }
 
 // GetRadioBandInfo converts RadioBand enum to band and slot-id values.
+//
+// The RPC pairs a band with a slot rather than deriving one from the other: its must clause
+// admits seven (band, slot-id) pairs and only band 1 has a single slot, so the three pairs
+// returned here are the three this enum can name, not the seven the RPC admits.
 func GetRadioBandInfo(radioBand int) (RadioBandInfo, error) {
 	switch radioBand {
 	case RadioBand24GHzEnum:
