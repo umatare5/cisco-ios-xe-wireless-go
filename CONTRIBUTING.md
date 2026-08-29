@@ -119,7 +119,7 @@ Run the example application listed in the [README.md](../README.md#-usecases) **
 
 > [!Warning]
 >
-> `example/reload_ap` and `example/reload_controller` will reboot the AP and controller. This causes downtime.
+> `example/reset_ap` and `example/reload_controller` will reboot the AP and controller. This causes downtime.
 
 #### 5. Generate Coverage Reports and Badge
 

@@ -1,8 +1,8 @@
 package ap
 
-// APReloadRPCPayload represents complete payload for AP reload RPC calls.
-type APReloadRPCPayload struct {
-	Input APReloadRPCInput `json:"input"`
+// APResetRPCPayload represents complete payload for AP reset RPC calls.
+type APResetRPCPayload struct {
+	Input APResetRPCInput `json:"input"`
 }
 
 // APTagPayload represents complete payload for AP tag assignment.
@@ -25,8 +25,8 @@ type APSlotConfigRPCPayload struct {
 	Input APSlotConfigRPCInput `json:"Cisco-IOS-XE-wireless-access-point-cfg-rpc:input"`
 }
 
-// APReloadRPCInput represents input structure for AP reload RPC calls.
-type APReloadRPCInput struct {
+// APResetRPCInput represents input structure for AP reset RPC calls.
+type APResetRPCInput struct {
 	APName  string `json:"ap-name,omitempty"`  // AP name identifier
 	MACAddr string `json:"mac-addr,omitempty"` // AP MAC address identifier
 }

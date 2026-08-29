@@ -1953,11 +1953,11 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 		}
 	})
 
-	// Test AP reload operation
-	t.Run("ReloadByMAC", func(t *testing.T) {
-		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+	// Test AP reset operation
+	t.Run("ResetAPByMAC", func(t *testing.T) {
+		err := service.ResetAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for ReloadByMAC, got: %v", err)
+			t.Errorf("Expected no error for ResetAPByMAC, got: %v", err)
 		}
 	})
 }
@@ -2046,16 +2046,16 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 		}
 	})
 
-	// Test reload with invalid MAC
-	t.Run("ReloadByMAC_InvalidMAC", func(t *testing.T) {
-		err := service.ReloadByMAC(ctx, "invalid-mac")
+	// Test reset with invalid MAC
+	t.Run("ResetAPByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.ResetAPByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
 	})
 
-	t.Run("ReloadByName_BlankName", func(t *testing.T) {
-		err := service.ReloadByName(ctx, "\t")
+	t.Run("ResetAPByName_BlankName", func(t *testing.T) {
+		err := service.ResetAPByName(ctx, "\t")
 		if !errors.Is(err, core.ErrResourceNotFound) {
 			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
 		}
@@ -2078,9 +2078,9 @@ func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 	service := ap.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	// Test reload with empty CAPWAP data
-	t.Run("ReloadByMAC_EmptyCAPWAPData", func(t *testing.T) {
-		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+	// Test reset with empty CAPWAP data
+	t.Run("ResetAPByMAC_EmptyCAPWAPData", func(t *testing.T) {
+		err := service.ResetAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}
@@ -2099,19 +2099,19 @@ func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 	service := ap.NewService(testClient.Core().(*core.Client))
 	ctx := testutil.TestContext(t)
 
-	// Test reload with failed CAPWAP data retrieval
-	t.Run("ReloadByMAC_FailedCAPWAPDataRetrieval", func(t *testing.T) {
-		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+	// Test reset with failed CAPWAP data retrieval
+	t.Run("ResetAPByMAC_FailedCAPWAPDataRetrieval", func(t *testing.T) {
+		err := service.ResetAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed CAPWAP data retrieval, got nil")
 		}
 	})
 }
 
-// TestApServiceUnit_Reload_EdgeCases tests specific edge cases for Reload function to achieve 100% coverage.
-func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
-	// Test Reload with nil CAPWAP data response
-	t.Run("ReloadByMAC_NilCAPWAPResponse", func(t *testing.T) {
+// TestApServiceUnit_ResetAP_EdgeCases tests specific edge cases for ResetAP function to achieve 100% coverage.
+func TestApServiceUnit_ResetAP_EdgeCases(t *testing.T) {
+	// Test Reset with nil CAPWAP data response
+	t.Run("ResetAPByMAC_NilCAPWAPResponse", func(t *testing.T) {
 		responses := map[string]string{
 			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `null`,
 		}
@@ -2122,7 +2122,7 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.ResetAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for nil CAPWAP response, got nil")
 		}
@@ -2130,8 +2130,8 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 
 	// The record IS the one this address keys, so nothing here exercises an absence: the mock
 	// serves no ap-reset node, and the refusal comes from the write the resolve leads to. The
-	// genuine absence is covered by ReloadByMAC_EmptyCAPWAPData and by the 404 arm.
-	t.Run("ReloadByMAC_ResetNotServed", func(t *testing.T) {
+	// genuine absence is covered by ResetAPByMAC_EmptyCAPWAPData and by the 404 arm.
+	t.Run("ResetAPByMAC_RPCNotServed", func(t *testing.T) {
 		responses := map[string]string{
 			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 				"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
@@ -2147,7 +2147,7 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.ResetAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}

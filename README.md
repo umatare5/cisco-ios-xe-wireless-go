@@ -347,16 +347,16 @@ TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 | 
 
 ### Destructive Operation
 
-#### Usecase 1: Reload an AP
+#### Usecase 1: Reset an AP
 
-[`example/reload_ap/main.go`](./example/reload_ap/main.go) reloads a specified AP by its MAC address.
+[`example/reset_ap/main.go`](./example/reset_ap/main.go) resets a specified AP by its MAC address.
 
 <details><summary><u>Click to show example</u></summary><p>
 
 ```bash
-❯ go run example/reload_ap/main.go
+❯ go run example/reset_ap/main.go
 
-=== Access Point Reload Tool ===
+=== Access Point Reset Tool ===
 WARNING: This tool will restart access points causing service interruption!
 Use only in controlled environments with proper authorization.
 
@@ -366,10 +366,10 @@ Target AP MAC: aa:bb:ff:dd:ee:a0
 This will restart the specified Access Point(s). Type 'YES' to confirm: YES
 
 ✓ WNC client created successfully
-Executing AP reload for MAC aa:bb:ff:dd:ee:a0
+Executing AP reset for MAC aa:bb:ff:dd:ee:a0
 WARNING: AP will become unavailable and disconnect all clients during restart...
 
-✓ AP reload command sent successfully for MAC: aa:bb:ff:dd:ee:a0
+✓ AP reset command sent successfully for MAC: aa:bb:ff:dd:ee:a0
 Note: AP is now restarting and will be temporarily unavailable
 Clients will need to reconnect after AP restart completes
 ```

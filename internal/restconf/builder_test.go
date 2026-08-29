@@ -139,13 +139,13 @@ func TestRESTCONFBuilderUnit_BuildOperationsURL_Success(t *testing.T) {
 		},
 		{
 			name:     "RPC path without leading slash",
-			rpcPath:  "cisco-wireless:ap-reload",
-			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-reload",
+			rpcPath:  "cisco-wireless:ap-reset",
+			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-reset",
 		},
 		{
 			name:     "RPC path with leading slash",
-			rpcPath:  "/cisco-wireless:ap-reload",
-			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-reload",
+			rpcPath:  "/cisco-wireless:ap-reset",
+			expected: "https://192.168.1.1/restconf/operations/cisco-wireless:ap-reset",
 		},
 	}
 
