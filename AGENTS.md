@@ -21,7 +21,7 @@
 - `internal/{errors,service,validation}/` — Message templates, the service base type and MAC helpers, and input validation
 - `pkg/testutil/` — `NewMockServer` with functional options; the mock server both tests and consumers use
 - `tests/` — `contract/`, `integration/` (`//go:build integration`, read-only), `scenario/` (`//go:build scenario`, **writes to a controller**), and shared `testutil/`
-- `example/` — Six runnable programs; the only place the public API is exercised as a consumer would
+- `example/` — Seven runnable programs; the only place the public API is exercised as a consumer would
 
 ## Setup and Commands
 

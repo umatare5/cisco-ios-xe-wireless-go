@@ -404,6 +404,31 @@ Wait for controller to complete restart before attempting reconnection
 
 </p></details>
 
+#### Usecase 3: Save the Configuration
+
+[`example/save_config/main.go`](./example/save_config/main.go) copies the running configuration to the startup configuration.
+
+<details><summary><u>Click to show example</u></summary><p>
+
+```bash
+❯ go run example/save_config/main.go
+
+=== WNC Configuration Save Tool ===
+WARNING: This tool overwrites the startup configuration and cannot be undone!
+Use only in controlled environments with proper authorization.
+
+Target Controller: wnc1.example.internal
+
+This will overwrite the startup configuration. Type 'YES' to confirm: YES
+
+✓ WNC client created successfully
+Executing configuration save...
+
+✓ Save running-config successful
+```
+
+</p></details>
+
 ## 📦 Used By
 
 - [cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter) - Prometheus exporter for Cisco C9800 Wireless Network Controller metrics ([v0.4.2](https://github.com/umatare5/cisco-ios-xe-wireless-go/releases/tag/v0.4.2))
