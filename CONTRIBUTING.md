@@ -155,11 +155,11 @@ Once merged, GitHub Actions will automatically release the new version using [Re
 
 ### Versioning Rules
 
-While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**. A PATCH release never changes the exported API.
+While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**. A PATCH release may add to the exported API but never changes or removes what is already there.
 
 | Change | Bump | Release notes must name |
 | :--- | :--- | :--- |
-| Added exported symbol | MINOR | The new symbols |
+| Added exported symbol | PATCH | The new symbols |
 | Added variadic parameter | MINOR | The broken forms and the recovery path |
 | Changed or removed symbol | MINOR | Every affected symbol |
 | No exported API change | PATCH | Nothing |

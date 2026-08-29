@@ -2,10 +2,13 @@ package client
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // Service provides wireless client operations for Cisco IOS-XE Wireless LAN Controller.
@@ -247,4 +250,53 @@ func (s Service) GetTrafficStatsByMAC(
 
 	endpoint := s.Client().RESTCONFBuilder().BuildQueryURL(routes.ClientTrafficStatsPath, normalizedMAC)
 	return core.Get[CiscoIOSXEWirelessClientOperTrafficStatsData](ctx, s.Client(), endpoint, opts...)
+}
+
+// DeauthenticateByMAC drops the session of the client with this address.
+//
+// The By suffix names the arm of the RPC's mandatory choice this fills. The controller answers 204
+// whether or not the address matched a client, so a caller that needs to know reads the client
+// first; measured on 17.15.6, an address matching nothing and one matching a live client are
+// indistinguishable. The client reassociates on its own, so this forces a reassociation rather
+// than removing anything, and it leaves the PMK cache intact.
+//
+// The operation is declared from module revision 2024-03-01, which 17.15 is the first release to
+// serve. An earlier release answers 400 with "invalid path" rather than 404.
+func (s Service) DeauthenticateByMAC(ctx context.Context, clientMAC string) error {
+	normalizedMAC, err := validation.NormalizeMACAddress(clientMAC)
+	if err != nil {
+		return fmt.Errorf(ErrInvalidClientMACFormat, clientMAC)
+	}
+
+	return s.deauthenticate(ctx, ClientDeauthRPCInput{MACAddr: normalizedMAC})
+}
+
+// DeauthenticateByIP drops the session of the client holding this address.
+//
+// The address is resolved within zone 0, which is the only zone the payload names. A client holds
+// one IPv4 binding and may hold several IPv6 bindings, so an address names one client while a
+// client does not name one address.
+func (s Service) DeauthenticateByIP(ctx context.Context, clientIP string) error {
+	if !validation.IsNonEmptyString(clientIP) {
+		return errors.New(ErrEmptyClientIPAddr)
+	}
+
+	return s.deauthenticate(ctx, ClientDeauthRPCInput{IPAddr: clientIP})
+}
+
+// DeauthenticateByUsername drops the session of the client authenticated under this username.
+//
+// A username is not measured to select one client: the lab estate carries one session per
+// username, so nothing establishes what the controller does when a username holds several.
+func (s Service) DeauthenticateByUsername(ctx context.Context, username string) error {
+	if !validation.IsNonEmptyString(username) {
+		return errors.New(ErrEmptyClientUsername)
+	}
+
+	return s.deauthenticate(ctx, ClientDeauthRPCInput{Username: username})
+}
+
+// deauthenticate posts one arm of the deauthentication RPC's choice.
+func (s Service) deauthenticate(ctx context.Context, input ClientDeauthRPCInput) error {
+	return core.PostRPCVoid(ctx, s.Client(), routes.ClientDeauthRPC, ClientDeauthRPCPayload{Input: input})
 }
