@@ -1,10 +1,26 @@
 # Fingerprints of findings that survive only in history. Format is
 # <commit>:<file>:<rule>:<line>, so an entry is pinned to one commit and cannot silence the
-# same value in a later one. Live placeholders are scoped by path in .gitleaks.toml instead.
+# same value in a later one. Nothing in the tree needs a live exception, so .gitleaks.toml
+# carries no allowlist -- see the note there before adding one.
 #
-# Every value below is a WNC_ACCESS_TOKEN documentation example or a test fixture.
+# Every entry is a WNC_ACCESS_TOKEN example, which is base64 of "username:password". The heading
+# above each group is what that group's value decodes to. A comment has to stand on its own line:
+# gitleaks reads the whole line as the fingerprint, so a trailing "# ..." breaks the match and
+# the finding comes back.
+
+# base64("user:password") -- the script usage examples
 84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/get_yang_model_details.sh:generic-api-key:80
 84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/get_yang_statement_details.sh:generic-api-key:78
 84df69e7d9beb81a513042df3d61c88294f46bc6:scripts/list_yang_models.sh:generic-api-key:51
+
+# base64("admin:your-password") -- the README quick-start and credential-handling examples
+3a320026f110001bb15c1db90f7ade0eaf38003a:README.md:generic-api-key:57
+3a320026f110001bb15c1db90f7ade0eaf38003a:README.md:generic-api-key:130
+5ce01b7d671fbcd33eed516feb2b43ee8ab9c858:README.md:generic-api-key:114
 f6921e398189cf6547f646b3caa8f38dfd3b6841:docs/SECURITY.md:generic-api-key:13
+
+# base64("admin:password") -- the test-setup example
+34b1ed53b46cf1901102168cb5cb0f660daf8ada:docs/TESTING.md:generic-api-key:43
+
+# base64("admin:password1234567890") -- the token-length validation case
 fb8dff9d31669e9acd08b23b268d191a2859808d:internal/validation/validation_test.go:generic-api-key:73

@@ -5,32 +5,12 @@
 [extend]
 useDefault = true
 
-# WNC_ACCESS_TOKEN is base64 of "username:password", so every documented example reads as a
-# generic API key. Each block below pairs one placeholder with the files it belongs in, under
-# condition = "AND": the value is allowed there and nowhere else, so the same string committed
-# to a new file is still reported. Findings that survive only in history are pinned by
-# fingerprint in .gitleaksignore instead, which cannot mask a future commit.
-
-[[allowlists]]
-description = "admin:your-password, the README quick-start example"
-condition = "AND"
-paths = ['''^README\.md$''']
-regexes = ['''^YWRtaW46eW91ci1wYXNzd29yZA==$''']
-
-[[allowlists]]
-description = "admin:your-secure-password, the credential-handling example"
-condition = "AND"
-paths = ['''^docs/SECURITY\.md$''']
-regexes = ['''^YWRtaW46eW91ci1zZWN1cmUtcGFzc3dvcmQ=$''']
-
-[[allowlists]]
-description = "admin:password, the test-setup example"
-condition = "AND"
-paths = ['''^docs/TESTING\.md$''', '''^wnc_test\.go$''']
-regexes = ['''^YWRtaW46cGFzc3dvcmQ=$''']
-
-[[allowlists]]
-description = "test:test, the unit-test fixture token"
-condition = "AND"
-paths = ['''^internal/core/client_test\.go$''', '''^wnc_test\.go$''']
-regexes = ['''^dGVzdDp0ZXN0$''']
+# No live allowlist. WNC_ACCESS_TOKEN is base64 of "username:password", so a documented example
+# value reads as a generic API key and used to need one exception per placeholder. The docs now
+# derive the token instead of printing it -- README.md and docs/SECURITY.md show
+# `export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"` -- and every fixture
+# carries the low-entropy `test-token-123`, so nothing in the tree reads as a secret.
+#
+# Keep it that way: a base64 literal added back here would need an allowlist entry, and an entry
+# scoped to a path silences that value for every future commit to it. Findings that survive only
+# in history are pinned by fingerprint in .gitleaksignore, which cannot mask a future commit.
