@@ -57,8 +57,9 @@ You have to enable RESTCONF and HTTPS on the C9800 before using this SDK. Please
 Encode your controller credentials as Base64.
 
 ```bash
-# The access token is base64("username:password")
-export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"
+# username:password → Base64
+echo -n "admin:your-password" | base64
+# Output: YWRtaW46eW91ci1wYXNzd29yZA==
 ```
 
 ### 2. Create a sample application
@@ -117,7 +118,7 @@ func main() {
 ```bash
 # Set environment variables
 export WNC_CONTROLLER="wnc1.example.internal"
-export WNC_ACCESS_TOKEN="test-token-123"
+export WNC_ACCESS_TOKEN="YWRtaW46eW91ci1wYXNzd29yZA=="
 
 # Run the application
 go run main.go
