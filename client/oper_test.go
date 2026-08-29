@@ -116,15 +116,15 @@ func TestClientOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-client-oper:common-oper-data": [
 					{
-						"ms-mac-address": "aa:bb:cc:dd:ee:ff",
-						"ap-mac-address": "11:22:33:44:55:66",
-						"wtp-mac": "11:22:33:44:55:66",
+						"ms-mac-address": "aa:bb:cc:dd:ee:a1",
+						"ap-mac-address": "aa:bb:cc:dd:ee:01",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"station-type": "associated",
 						"client-state": "associated",
 						"policy-profile": "default-policy",
-						"ssid": "TestSSID",
+						"ssid": "TEST-SSID",
 						"vlan-id": 100,
-						"ap-name": "AP-Floor1-001",
+						"ap-name": "TEST-AP01",
 						"connected-time": 3600,
 						"client-username": "testuser"
 					}
@@ -137,8 +137,8 @@ func TestClientOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-client-oper:dot11-oper-data": [
 					{
-						"ms-mac-address": "aa:bb:cc:dd:ee:ff",
-						"ap-mac-address": "11:22:33:44:55:66",
+						"ms-mac-address": "aa:bb:cc:dd:ee:a1",
+						"ap-mac-address": "aa:bb:cc:dd:ee:01",
 						"radio-type": "dot11ac",
 						"channel": 36,
 						"rssi": -45,
@@ -156,7 +156,7 @@ func TestClientOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-client-oper:mobility-oper-data": [
 					{
-						"ms-mac-address": "aa:bb:cc:dd:ee:ff",
+						"ms-mac-address": "aa:bb:cc:dd:ee:a1",
 						"mobility-state": "local",
 						"anchor-controller": "192.168.1.10",
 						"foreign-controller": "",
@@ -172,7 +172,7 @@ func TestClientOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-client-oper:traffic-stats": [
 					{
-						"ms-mac-address": "aa:bb:cc:dd:ee:ff",
+						"ms-mac-address": "aa:bb:cc:dd:ee:a1",
 						"bytes-tx": "1024000",
 						"bytes-rx": "2048000",
 						"pkts-tx": "1000",

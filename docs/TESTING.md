@@ -31,16 +31,16 @@ Integration tests require a real Cisco Catalyst 9800 WNC. For instructions on se
 
 Integration tests also require the following environment variables:
 
-| Variable           | Description                | Example                |
-| ------------------ | -------------------------- | ---------------------- |
-| `WNC_CONTROLLER`   | WNC IP address or hostname | `192.168.1.100`        |
-| `WNC_ACCESS_TOKEN` | Base64 encoded credentials | `YWRtaW46cGFzc3dvcmQ=` |
+| Variable           | Description                | Example                             |
+| ------------------ | -------------------------- | ----------------------------------- |
+| `WNC_CONTROLLER`   | WNC IP address or hostname | `192.168.1.100`                     |
+| `WNC_ACCESS_TOKEN` | Base64 encoded credentials | `$(echo -n 'admin:pass' \| base64)` |
 
 <details><summary>Environment Variable Configuration</summary>
 
 ```bash
-export WNC_CONTROLLER="192.168.1.100"          # Your WNC IP address
-export WNC_ACCESS_TOKEN="YWRtaW46cGFzc3dvcmQ=" # Base64 encoded username:password
+export WNC_CONTROLLER="192.168.1.100"  # Your WNC IP address
+export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"
 ```
 
 </details>

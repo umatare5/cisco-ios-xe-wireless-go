@@ -202,7 +202,7 @@ func TestApGlobalOperDataStructures(t *testing.T) {
 					"@type": "ApHistoryResponse",
 					"ap-history": [
 						{
-							"wtp-mac": "aa:bb:cc:dd:ee:ff",
+							"wtp-mac": "aa:bb:cc:dd:ee:01",
 							"ap-name": "` + wnc.TestAPName + `",
 							"event-type": "join",
 							"timestamp": "` + wnc.TestTimestamp + `"
@@ -264,26 +264,26 @@ func TestApGlobalOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-ap-global-oper:ap-join-stats": [
 					{
-						"wtp-mac": "28:ac:9e:bb:3c:80",
+						"wtp-mac": "aa:bb:cc:dd:ee:02",
 						"ap-join-info": {
-							"ap-ip-addr": "192.168.255.11",
-							"ap-ethernet-mac": "28:ac:9e:11:48:10",
-							"ap-name": "lab2-ap1815-06f-02",
+							"ap-ip-addr": "192.168.1.12",
+							"ap-ethernet-mac": "aa:bb:cc:dd:ee:12",
+							"ap-name": "TEST-AP02",
 							"is-joined": true,
 							"num-join-req-recvd": 2,
 							"num-config-req-recvd": 6,
 							"last-join-failure-type": "jf-none",
 							"last-config-failure-type": "cf-none",
 							"last-error-type": "ap-con-failure-run",
-							"last-error-time": "2025-06-14T06:12:11.467356+00:00",
+							"last-error-time": "2024-01-15T10:30:00.000000+00:00",
 							"last-msg-decr-fail-reason": "",
 							"num-succ-join-resp-sent": 2,
 							"num-unsucc-join-req-procn": 0,
 							"num-succ-conf-resp-sent": 6,
 							"num-unsucc-conf-req-procn": 0,
-							"last-succ-join-atmpt-time": "2025-06-14T06:16:43.721684+00:00",
+							"last-succ-join-atmpt-time": "2024-01-15T10:31:00.000000+00:00",
 							"last-fail-join-atmpt-time": "1970-01-01T00:00:00+00:00",
-							"last-succ-conf-atmpt-time": "2025-06-14T06:16:45.410469+00:00",
+							"last-succ-conf-atmpt-time": "2024-01-15T10:31:02.000000+00:00",
 							"last-fail-conf-atmpt-time": "1970-01-01T00:00:00+00:00"
 						    },
 						"ap-disconnect-reason": "Wtp reset config cmd sent",

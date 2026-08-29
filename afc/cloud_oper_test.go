@@ -85,12 +85,12 @@ func TestAfcCloudOperDataStructures(t *testing.T) {
 						"afc-msg-pending": 2,
 						"last-msg-sent": {
 							"request-id": "req-12345",
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"msg-timestamp": "2024-01-01T12:00:00.000Z"
 						},
 						"last-msg-rcvd": {
 							"request-id": "req-12344",
-							"ap-mac": "aa:bb:cc:dd:ee:fe",
+							"ap-mac": "aa:bb:cc:dd:ee:02",
 							"msg-timestamp": "2024-01-01T12:00:01.000Z"
 						},
 						"min-msg-rtt": "50ms",
@@ -122,12 +122,12 @@ func TestAfcCloudOperDataStructures(t *testing.T) {
 					"afc-msg-pending": 2,
 					"last-msg-sent": {
 						"request-id": "req-12345",
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"msg-timestamp": "2024-01-01T12:00:00.000Z"
 					},
 					"last-msg-rcvd": {
 						"request-id": "req-12344",
-						"ap-mac": "aa:bb:cc:dd:ee:fe",
+						"ap-mac": "aa:bb:cc:dd:ee:02",
 						"msg-timestamp": "2024-01-01T12:00:01.000Z"
 					},
 					"min-msg-rtt": "50ms",

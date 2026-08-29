@@ -192,19 +192,19 @@ func TestRrmOperDataStructures(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data": {
 			"ap-auto-rf-dot11-data": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"neighbor-radio-info": {
 						"neighbor-radio-list": [
 							{
 								"neighbor-radio-info": {
-									"neighbor-radio-mac": "f0:d8:05:2c:41:20",
+									"neighbor-radio-mac": "aa:bb:cc:dd:ee:02",
 									"neighbor-radio-slot-id": 0,
 									"rssi": -15,
 									"snr": 67,
 									"channel": 11,
 									"power": 18,
-									"group-leader-ip": "192.168.255.1",
+									"group-leader-ip": "192.168.1.10",
 									"chan-width": "radio-neighbor-chan-width-20-mhz",
 									"sensor-covered": false
 								}
@@ -215,14 +215,14 @@ func TestRrmOperDataStructures(t *testing.T) {
 			],
 			"ap-dot11-radar-data": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"last-radar-on-radio": "2024-01-15T10:30:00Z"
 				}
 			],
 			"ap-dot11-spectrum-data": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"config": {
 						"spectrum-intelligence-enable": true,
@@ -238,7 +238,7 @@ func TestRrmOperDataStructures(t *testing.T) {
 			],
 			"rrm-measurement": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"foreign": {
 						"foreign": {
@@ -276,7 +276,7 @@ func TestRrmOperDataStructures(t *testing.T) {
 			],
 			"radio-slot": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"radio-data": {
 						"best-tx-pwr-level": 1,
@@ -302,32 +302,32 @@ func TestRrmOperDataStructures(t *testing.T) {
 					"phy-type": "dot11-2-dot-4-ghz-band",
 					"grp": {
 						"current-state": "rrm-leader-idle",
-						"last-run": "2025-06-24T08:19:23.783802+00:00",
+						"last-run": "2024-01-15T10:30:00.100000+00:00",
 						"dca": {
-							"dca-last-run": "2025-06-24T08:19:23.783436+00:00"
+							"dca-last-run": "2024-01-15T10:30:00.200000+00:00"
 						},
 						"txpower": {
-							"dpc-last-run": "2025-06-24T08:19:23.783799+00:00",
+							"dpc-last-run": "2024-01-15T10:30:00.300000+00:00",
 							"run-time": 0
 						},
 						"current-grouping-mode": "rrm-automatic-mode",
 						"join-protocol-ver": 100,
 						"current-grouping-role": "rrm-group-auto-leader",
-						"cntrlr-name": "lab2-cat98wlc-06f-01a",
-						"cntrlr-ip-addr": "192.168.255.1",
+						"cntrlr-name": "wnc1",
+						"cntrlr-ip-addr": "192.168.1.10",
 						"cntrlr-secondary-ip-addr": "::",
 						"is-static-member": "rrm-auto-member-config"
 					},
-					"rf-name": "labo"
+					"rf-name": "default"
 				}
 			],
 			"spectrum-device-table": [
 				{
-					"device-id": "05:2c:41:20:b3:92",
-					"cluster-id": "e2:00:00:00:10:63",
-					"last-updated-time": "2025-06-24T08:22:55.004316+00:00",
+					"device-id": "aa:bb:cc:dd:ee:f3",
+					"cluster-id": "aa:bb:cc:dd:ee:c1",
+					"last-updated-time": "2024-01-15T10:35:00.000000+00:00",
 					"idr-data": {
-						"detecting-ap-mac": "f0:d8:05:2c:41:20",
+						"detecting-ap-mac": "aa:bb:cc:dd:ee:02",
 						"affected-channel-list": "1,2",
 						"is-persistent": false,
 						"class-type-enum": "pmac-dev-id-bt"
@@ -336,9 +336,9 @@ func TestRrmOperDataStructures(t *testing.T) {
 			],
 			"spectrum-aq-table": [
 				{
-					"wtp-mac": "f0:d8:05:2c:41:20",
+					"wtp-mac": "aa:bb:cc:dd:ee:02",
 					"band": "dot11-2-dot-4-ghz-band",
-					"reporting-ap-name": "lab2-ap9166-06f-01"
+					"reporting-ap-name": "TEST-AP02"
 				}
 			],
 			"reg-domain-oper": {
@@ -361,8 +361,8 @@ func TestRrmOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one AP auto RF data entry")
 	} else {
 		autoRf := operData.ApAutoRfDot11Data[0]
-		if autoRf.WtpMac != "00:11:22:33:44:55" {
-			t.Errorf("Expected WTP MAC '00:11:22:33:44:55', got '%s'", autoRf.WtpMac)
+		if autoRf.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", autoRf.WtpMac)
 		}
 		if autoRf.RadioSlotID != 1 {
 			t.Errorf("Expected radio slot ID 1, got %d", autoRf.RadioSlotID)
@@ -374,8 +374,8 @@ func TestRrmOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one radar data entry")
 	} else {
 		radar := operData.ApDot11RadarData[0]
-		if radar.WtpMac != "00:11:22:33:44:55" {
-			t.Errorf("Expected WTP MAC '00:11:22:33:44:55', got '%s'", radar.WtpMac)
+		if radar.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", radar.WtpMac)
 		}
 		if radar.RadioSlotID != 1 {
 			t.Errorf("Expected radio slot ID 1, got %d", radar.RadioSlotID)
@@ -387,8 +387,8 @@ func TestRrmOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one spectrum data entry")
 	} else {
 		spectrum := operData.ApDot11SpectrumData[0]
-		if spectrum.WtpMac != "00:11:22:33:44:55" {
-			t.Errorf("Expected WTP MAC '00:11:22:33:44:55', got '%s'", spectrum.WtpMac)
+		if spectrum.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", spectrum.WtpMac)
 		}
 		if !spectrum.Config.SpectrumIntelligenceEnable {
 			t.Error("Expected spectrum intelligence enable to be true")
@@ -403,8 +403,8 @@ func TestRrmOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one RRM measurement entry")
 	} else {
 		measurement := operData.RrmMeasurement[0]
-		if measurement.WtpMac != "00:11:22:33:44:55" {
-			t.Errorf("Expected WTP MAC '00:11:22:33:44:55', got '%s'", measurement.WtpMac)
+		if measurement.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", measurement.WtpMac)
 		}
 		if measurement.RadioSlotID != 1 {
 			t.Errorf("Expected radio slot ID 1, got %d", measurement.RadioSlotID)
@@ -416,8 +416,8 @@ func TestRrmOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one radio slot entry")
 	} else {
 		slot := operData.RadioSlot[0]
-		if slot.WtpMac != "00:11:22:33:44:55" {
-			t.Errorf("Expected WTP MAC '00:11:22:33:44:55', got '%s'", slot.WtpMac)
+		if slot.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", slot.WtpMac)
 		}
 		if slot.RadioSlotID != 1 {
 			t.Errorf("Expected radio slot ID 1, got %d", slot.RadioSlotID)

@@ -162,8 +162,8 @@ func TestMeshGlobalOperDataStructures(t *testing.T) {
 					    },
 					"mesh-ap-tree-data": [
 						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
-							"parent-mac": "11:22:33:44:55:66",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
+							"parent-mac": "aa:bb:cc:dd:ee:02",
 							"children-count": 2,
 							"hop-count": 1,
 							"link-quality": 85
@@ -191,8 +191,8 @@ func TestMeshGlobalOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-mesh-global-oper:mesh-ap-tree-data": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
-						"parent-mac": "11:22:33:44:55:66",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
+						"parent-mac": "aa:bb:cc:dd:ee:02",
 						"children-count": 2,
 						"hop-count": 1,
 						"link-quality": 85

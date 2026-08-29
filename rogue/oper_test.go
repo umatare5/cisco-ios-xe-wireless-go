@@ -73,7 +73,7 @@ func TestRogueOperDataStructures(t *testing.T) {
 					"rogue-data": [
 						{
 							"rogue-key": {
-								"mac-addr": "aa:bb:cc:dd:ee:ff"
+								"mac-addr": "aa:bb:cc:dd:ee:f1"
 							},
 							"rogue-first-timestamp": "2024-01-01T00:00:00Z",
 							"rogue-last-timestamp": "2024-01-01T01:00:00Z",
@@ -83,7 +83,7 @@ func TestRogueOperDataStructures(t *testing.T) {
 					"rogue-client-data": [
 						{
 							"rogue-client-key": {
-								"rogue-client-mac": "aa:bb:cc:dd:ee:00"
+								"rogue-client-mac": "aa:bb:cc:dd:ee:f2"
 							},
 							"rogue-client-first-timestamp": "2024-01-01T00:00:00Z",
 							"rogue-client-last-timestamp": "2024-01-01T01:00:00Z",
@@ -115,7 +115,7 @@ func TestRogueOperDataStructures(t *testing.T) {
 				"Cisco-IOS-XE-wireless-rogue-oper:rogue-data": [
 					{
 						"rogue-key": {
-							"mac-addr": "aa:bb:cc:dd:ee:ff"
+							"mac-addr": "aa:bb:cc:dd:ee:f1"
 						},
 						"rogue-first-timestamp": "2024-01-01T00:00:00Z",
 						"rogue-last-timestamp": "2024-01-01T01:00:00Z",
@@ -131,7 +131,7 @@ func TestRogueOperDataStructures(t *testing.T) {
 				"Cisco-IOS-XE-wireless-rogue-oper:rogue-client-data": [
 					{
 						"rogue-client-key": {
-							"rogue-client-mac": "aa:bb:cc:dd:ee:00"
+							"rogue-client-mac": "aa:bb:cc:dd:ee:f2"
 						},
 						"rogue-client-first-timestamp": "2024-01-01T00:00:00Z",
 						"rogue-client-last-timestamp": "2024-01-01T01:00:00Z",

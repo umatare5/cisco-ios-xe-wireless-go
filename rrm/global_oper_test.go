@@ -407,7 +407,7 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 			"spectrum-aq-worst-table": [
 				{
 					"band-id": 5,
-					"detecting-ap-name": "AP001",
+					"detecting-ap-name": "TEST-AP01",
 					"channel-num": 36,
 					"min-aqi": 65,
 					"aqi": 75,
@@ -418,9 +418,9 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 			],
 			"radio-oper-data-24g": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 0,
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"slot-id": 0,
 					"name": "2.4GHz-Radio",
 					"spectrum-capable": ["CleanAir"],
@@ -432,9 +432,9 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 			],
 			"radio-oper-data-5g": [
 				{
-					"wtp-mac": "00:11:22:33:44:55",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"slot-id": 1,
 					"name": "5GHz-Radio",
 					"spectrum-capable": ["CleanAir"],
@@ -456,8 +456,8 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 			"radio-oper-data-dualband": [],
 			"rrm-client-data": [
 				{
-					"client-mac": "11:22:33:44:55:66",
-					"ap-mac": "aa:bb:cc:dd:ee:ff",
+					"client-mac": "aa:bb:cc:dd:ee:a1",
+					"ap-mac": "aa:bb:cc:dd:ee:01",
 					"slot-id": 1,
 					"rssi": -45,
 					"snr": 35
@@ -475,7 +475,7 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 			    },
 			"rrm-coverage": [
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"failed-client-count": 2,
 					"snr-info": []
@@ -530,8 +530,8 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 		if entry.BandID != 5 {
 			t.Errorf("Expected band ID 5, got %d", entry.BandID)
 		}
-		if entry.DetectingApName != "AP001" {
-			t.Errorf("Expected detecting AP name 'AP001', got '%s'", entry.DetectingApName)
+		if entry.DetectingApName != "TEST-AP01" {
+			t.Errorf("Expected detecting AP name 'TEST-AP01', got '%s'", entry.DetectingApName)
 		}
 		if entry.Aqi != 75 {
 			t.Errorf("Expected AQI 75, got %d", entry.Aqi)
@@ -543,8 +543,8 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one 2.4GHz radio operational data entry")
 	} else {
 		radio := operData.RadioOperData24G[0]
-		if radio.WtpMac != "00:11:22:33:44:55" {
-			t.Errorf("Expected WTP MAC '00:11:22:33:44:55', got '%s'", radio.WtpMac)
+		if radio.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", radio.WtpMac)
 		}
 		if radio.RadioSlotID != 0 {
 			t.Errorf("Expected radio slot ID 0, got %d", radio.RadioSlotID)
@@ -578,8 +578,8 @@ func TestRrmGlobalOperDataStructures(t *testing.T) {
 		t.Error("Expected at least one RRM coverage entry")
 	} else {
 		coverage := operData.RrmCoverage[0]
-		if coverage.WtpMac != "aa:bb:cc:dd:ee:ff" {
-			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:ff', got '%s'", coverage.WtpMac)
+		if coverage.WtpMac != "aa:bb:cc:dd:ee:01" {
+			t.Errorf("Expected WTP MAC 'aa:bb:cc:dd:ee:01', got '%s'", coverage.WtpMac)
 		}
 		if coverage.FailedClientCount != 2 {
 			t.Errorf("Expected failed client count 2, got %d", coverage.FailedClientCount)

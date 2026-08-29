@@ -53,24 +53,24 @@ Discovers and lists all available Cisco wireless YANG models from the WNC contro
 
 ### Flags
 
-| Flag               | Description                | Example                     |
-| ------------------ | -------------------------- | --------------------------- |
-| `-c, --controller` | WNC controller hostname/IP | `-c wnc1.example.com`       |
-| `-t, --token`      | Basic auth token           | `-t "dXNlcjpwYXNzd29yZA=="` |
-| `-p, --protocol`   | Protocol (http/https)      | `-p https`                  |
-| `-k, --insecure`   | Skip TLS verification      | `-k`                        |
-| `-h, --help`       | Show help                  | `-h`                        |
+| Flag               | Description                | Example                             |
+| ------------------ | -------------------------- | ----------------------------------- |
+| `-c, --controller` | WNC controller hostname/IP | `-c wnc1.example.internal`          |
+| `-t, --token`      | Basic auth token           | `-t "test-token-123"`               |
+| `-p, --protocol`   | Protocol (http/https)      | `-p https`                          |
+| `-k, --insecure`   | Skip TLS verification      | `-k`                                |
+| `-h, --help`       | Show help                  | `-h`                                |
 
 ### Common Usage Patterns
 
 ```bash
 # Basic usage with environment variables
-export WNC_CONTROLLER="wnc1.example.com"
+export WNC_CONTROLLER="wnc1.example.internal"
 export WNC_ACCESS_TOKEN="your-token-here"
 ./scripts/list_yang_models.sh -k
 
 # Explicit controller and token
-./scripts/list_yang_models.sh -c wnc1.example.com -t "dXNlcjpwYXNzd29yZA==" -k
+./scripts/list_yang_models.sh -c wnc1.example.internal -t "test-token-123" -k
 
 # Using HTTP instead of HTTPS
 ./scripts/list_yang_models.sh -p http -c 192.168.1.100
@@ -132,34 +132,34 @@ Retrieves complete YANG model definitions including structure, types, and docume
 
 ### Flags
 
-| Flag               | Description                 | Default                                   | Example               |
-| ------------------ | --------------------------- | ----------------------------------------- | --------------------- |
-| `-c, --controller` | WNC controller hostname/IP  | -                                         | `-c wnc1.example.com` |
-| `-t, --token`      | Basic auth token            | -                                         | `-t "token..."`       |
-| `-p, --protocol`   | Protocol (http/https)       | `https`                                   | `-p https`            |
-| `-m, --model`      | YANG model name             | `Cisco-IOS-XE-wireless-access-point-oper` | `-m "model-name"`     |
-| `-r, --revision`   | Model revision (YYYY-MM-DD) | `2023-08-01`                              | `-r "2023-03-01"`     |
-| `-k, --insecure`   | Skip TLS verification       | -                                         | `-k`                  |
-| `-v, --verbose`    | Verbose output              | -                                         | `-v`                  |
-| `-f, --format`     | Output format               | `pretty`                                  | `-f json`             |
-| `-h, --help`       | Show help                   | -                                         | `-h`                  |
+| Flag               | Description                 | Default                                   | Example                    |
+| ------------------ | --------------------------- | ----------------------------------------- | -------------------------- |
+| `-c, --controller` | WNC controller hostname/IP  | -                                         | `-c wnc1.example.internal` |
+| `-t, --token`      | Basic auth token            | -                                         | `-t "token..."`            |
+| `-p, --protocol`   | Protocol (http/https)       | `https`                                   | `-p https`                 |
+| `-m, --model`      | YANG model name             | `Cisco-IOS-XE-wireless-access-point-oper` | `-m "model-name"`          |
+| `-r, --revision`   | Model revision (YYYY-MM-DD) | `2023-08-01`                              | `-r "2023-03-01"`          |
+| `-k, --insecure`   | Skip TLS verification       | -                                         | `-k`                       |
+| `-v, --verbose`    | Verbose output              | -                                         | `-v`                       |
+| `-f, --format`     | Output format               | `pretty`                                  | `-f json`                  |
+| `-h, --help`       | Show help                   | -                                         | `-h`                       |
 
 ### Common Usage Patterns
 
 ```bash
 # Get default access point operational model
-./scripts/get_yang_model_details.sh -c wnc1.example.com -k
+./scripts/get_yang_model_details.sh -c wnc1.example.internal -k
 
 # Get specific model with custom revision
-./scripts/get_yang_model_details.sh -c wnc1.example.com \
+./scripts/get_yang_model_details.sh -c wnc1.example.internal \
   -m "Cisco-IOS-XE-wireless-wlan-cfg" -r "2023-03-01" -k
 
 # Get raw YANG output for processing
-./scripts/get_yang_model_details.sh -c wnc1.example.com \
+./scripts/get_yang_model_details.sh -c wnc1.example.internal \
   -f raw -k > model.yang
 
 # Verbose debugging mode
-./scripts/get_yang_model_details.sh -c wnc1.example.com -v -k
+./scripts/get_yang_model_details.sh -c wnc1.example.internal -v -k
 ```
 
 <details>
@@ -222,34 +222,34 @@ Queries real-time operational data from the WNC controller using YANG model path
 
 ### Flags
 
-| Flag               | Description                | Default                                   | Example                 |
-| ------------------ | -------------------------- | ----------------------------------------- | ----------------------- |
-| `-c, --controller` | WNC controller hostname/IP | -                                         | `-c wnc1.example.com`   |
-| `-t, --token`      | Basic auth token           | -                                         | `-t "token..."`         |
-| `-p, --protocol`   | Protocol (http/https)      | `https`                                   | `-p https`              |
-| `-m, --model`      | YANG model name            | `Cisco-IOS-XE-wireless-access-point-oper` | `-m "model-name"`       |
-| `-i, --id`         | YANG model identifier      | `access-point-oper-data`                  | `-i "client-oper-data"` |
-| `-k, --insecure`   | Skip TLS verification      | -                                         | `-k`                    |
-| `-v, --verbose`    | Verbose output             | -                                         | `-v`                    |
-| `-f, --format`     | Output format              | `pretty`                                  | `-f json`               |
-| `-h, --help`       | Show help                  | -                                         | `-h`                    |
+| Flag               | Description                | Default                                   | Example                    |
+| ------------------ | -------------------------- | ----------------------------------------- | -------------------------- |
+| `-c, --controller` | WNC controller hostname/IP | -                                         | `-c wnc1.example.internal` |
+| `-t, --token`      | Basic auth token           | -                                         | `-t "token..."`            |
+| `-p, --protocol`   | Protocol (http/https)      | `https`                                   | `-p https`                 |
+| `-m, --model`      | YANG model name            | `Cisco-IOS-XE-wireless-access-point-oper` | `-m "model-name"`          |
+| `-i, --id`         | YANG model identifier      | `access-point-oper-data`                  | `-i "client-oper-data"`    |
+| `-k, --insecure`   | Skip TLS verification      | -                                         | `-k`                       |
+| `-v, --verbose`    | Verbose output             | -                                         | `-v`                       |
+| `-f, --format`     | Output format              | `pretty`                                  | `-f json`                  |
+| `-h, --help`       | Show help                  | -                                         | `-h`                       |
 
 ### Common Usage Patterns
 
 ```bash
 # Get access point operational data (default)
-./scripts/get_yang_statement_details.sh -c wnc1.example.com -k
+./scripts/get_yang_statement_details.sh -c wnc1.example.internal -k
 
 # Get client operational data
-./scripts/get_yang_statement_details.sh -c wnc1.example.com \
+./scripts/get_yang_statement_details.sh -c wnc1.example.internal \
   -m "Cisco-IOS-XE-wireless-client-oper" -i "client-oper-data" -k
 
 # Get JSON output for processing
-./scripts/get_yang_statement_details.sh -c wnc1.example.com \
+./scripts/get_yang_statement_details.sh -c wnc1.example.internal \
   -f json -k > ap_data.json
 
 # Get general wireless operational status
-./scripts/get_yang_statement_details.sh -c wnc1.example.com \
+./scripts/get_yang_statement_details.sh -c wnc1.example.internal \
   -m "Cisco-IOS-XE-wireless-general-oper" -i "general-oper-data" -v -k
 ```
 
@@ -272,14 +272,14 @@ Verbose mode: false
   "Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data": {
     "ap-radio-neighbor": [
       {
-        "ap-mac": "28:ac:9e:bb:3c:80",
+        "ap-mac": "aa:bb:cc:dd:ee:01",
         "slot-id": 0,
-        "bssid": "08:10:86:bf:07:e3",
-        "ssid": "aterm-b5acbb-g",
+        "bssid": "aa:bb:cc:dd:ee:b1",
+        "ssid": "TEST-SSID",
         "rssi": -61,
         "channel": 0,
         "primary-channel": 4,
-        "last-update-rcvd": "2025-06-25T14:35:59.306155+00:00"
+        "last-update-rcvd": "2024-01-15T10:30:00.000000+00:00"
       }
     ],
     "country-list": [
@@ -332,10 +332,10 @@ Operation completed successfully.
 
 ## 🔥 Troubleshooting
 
-| Problem                   | Solution                                             |
-| ------------------------- | ---------------------------------------------------- |
-| `curl: command not found` | Install curl: `brew install curl`                    |
-| `jq: command not found`   | Install jq: `brew install jq`                        |
-| "Failed to fetch data"    | Check controller hostname, network, auth token       |
-| TLS certificate errors    | Use `-k` flag to skip verification                   |
-| "Invalid YANG model"      | Ensure format: `Cisco-IOS-XE-wireless-*-(oper\|cfg)` |
+| Problem                   | Solution                                             |       |
+| ------------------------- | ---------------------------------------------------- |       |
+| `curl: command not found` | Install curl: `brew install curl`                    |       |
+| `jq: command not found`   | Install jq: `brew install jq`                        |       |
+| "Failed to fetch data"    | Check controller hostname, network, auth token       |       |
+| TLS certificate errors    | Use `-k` flag to skip verification                   |       |
+| "Invalid YANG model"      | Ensure format: `Cisco-IOS-XE-wireless-*-(oper\       | cfg)` |

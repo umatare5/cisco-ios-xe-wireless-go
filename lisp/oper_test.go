@@ -358,7 +358,7 @@ func TestLispAgentOperDataStructures(t *testing.T) {
 					},
 					"lisp-ap-capabilities": [
 						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"lisp-capable": true,
 							"version": "1.0",
 							"features": ["mapping", "tunneling"]
@@ -397,7 +397,7 @@ func TestLispAgentOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-lisp-agent-oper:lisp-ap-capabilities": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"lisp-capable": true,
 						"version": "1.0",
 						"features": ["mapping", "tunneling"]

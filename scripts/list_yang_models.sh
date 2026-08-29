@@ -48,13 +48,13 @@ EXAMPLES:
     # Generate authentication token first
     wnc generate token -u admin -p password123
     # Export the generated token
-    export WNC_ACCESS_TOKEN="dXNlcjpwYXNzd29yZA=="
+    export WNC_ACCESS_TOKEN="test-token-123"
 
     # Using environment variable
     $0
 
     # Using command line options
-    $0 -c wnc1.example.internal -t "dXNlcjpwYXNzd29yZA=="
+    $0 -c wnc1.example.internal -t "test-token-123"
 
     # Using HTTP instead of HTTPS
     $0 -p http -c 192.168.1.100

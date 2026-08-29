@@ -82,26 +82,31 @@ const (
 	ExampleControllerIPAddress = "192.168.1.100"
 
 	// ExampleControllerHostname is used in documentation examples
-	ExampleControllerHostname = "wnc.example.local"
+	ExampleControllerHostname = "wnc1.example.internal"
 
-	// ExampleAccessToken is used in documentation examples
-	ExampleAccessToken = "your-token"
+	// ExampleAccessToken is used in documentation examples. A real token is
+	// base64("username:password") for HTTP Basic; see README for how to build one.
+	ExampleAccessToken = "test-token-123"
 
 	// ExampleTimeoutSeconds is used in documentation examples
 	ExampleTimeoutSeconds = 20
 
 	// ExampleTestHostname is used in test examples
-	ExampleTestHostname = "test.local"
+	ExampleTestHostname = "wnc1.example.internal"
 )
 
 // Test constants
 const (
-	// TestAccessTokenValue is a base64 encoded test token for "test:test"
-	TestAccessTokenValue = "dGVzdDp0ZXN0"
+	// TestAccessTokenValue is the access token used by every unit test fixture.
+	// The controller expects base64("user:password") for HTTP Basic auth, but no
+	// unit test decodes or transmits this value, so a readable placeholder is used.
+	TestAccessTokenValue = "test-token-123"
 
 	// TestTimestamp defines a standard test timestamp
 	TestTimestamp = "2024-01-01T00:00:00.000Z"
 
-	// TestAPName defines a standard test access point name
-	TestAPName = "test-ap-01"
+	// TestAPName defines a standard test access point name.
+	// Fixture access points are named TEST-APnn; the nn suffix matches the last
+	// octet of the AP radio MAC address used in the same fixture.
+	TestAPName = "TEST-AP01"
 )

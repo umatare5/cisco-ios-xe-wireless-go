@@ -59,7 +59,7 @@ func TestAfcOperDataStructures(t *testing.T) {
 				"Cisco-IOS-XE-wireless-afc-oper:afc-oper-data": {
 					"ewlc-afc-ap-resp": [
 						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"resp-data": {
 								"request-id": "req-12345",
 								"ruleset-id": "rule-67890",
@@ -98,7 +98,7 @@ func TestAfcOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-afc-oper:ewlc-afc-ap-resp": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"resp-data": {
 							"request-id": "req-12345",
 							"ruleset-id": "rule-67890",

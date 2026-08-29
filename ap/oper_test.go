@@ -54,9 +54,9 @@ func TestApOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-access-point-oper:ap-radio-neighbor": [
 					{
-						"wtp-mac": "aa:bb:cc:dd:ee:ff",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"radio-slot-id": 0,
-						"neighbor-ap-mac": "11:22:33:44:55:66",
+						"neighbor-ap-mac": "aa:bb:cc:dd:ee:02",
 						"neighbor-slot-id": 0,
 						"rssi": -45,
 						"neighbor-freq": 2437
@@ -70,7 +70,7 @@ func TestApOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-access-point-oper:radio-oper-data": [
 					{
-						"wtp-mac": "aa:bb:cc:dd:ee:ff",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"radio-slot-id": 0,
 						"phy-type": 7,
 						"antenna-mode": "dual",
@@ -89,7 +89,7 @@ func TestApOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [
 					{
-						"wtp-mac": "aa:bb:cc:dd:ee:ff",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"capwap-state": "run",
 						"join-time": "2024-01-01T12:00:00.000Z",
 						"last-heartbeat": "2024-01-01T12:05:00.000Z",
@@ -105,9 +105,9 @@ func TestApOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-access-point-oper:ap-name-mac-map": [
 					{
-						"wtp-mac": "aa:bb:cc:dd:ee:ff",
-						"ap-name": "AP-Floor1-001",
-						"ethernet-mac": "aa:bb:cc:dd:ee:fe"
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
+						"ap-name": "TEST-AP01",
+						"ethernet-mac": "aa:bb:cc:dd:ee:11"
 					    }
 				]
 			    }`,

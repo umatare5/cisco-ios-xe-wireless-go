@@ -43,7 +43,7 @@ func TestGeneralOperDataStructures(t *testing.T) {
 						"intf-id": 100,
 						"mgmt-ip": "192.168.1.10",
 						"net-mask": "255.255.255.0",
-						"mgmt-mac": "aa:bb:cc:dd:ee:ff"
+						"mgmt-mac": "aa:bb:cc:dd:ee:00"
 					}
 				}
 			}`,
@@ -58,7 +58,7 @@ func TestGeneralOperDataStructures(t *testing.T) {
 					"intf-id": 100,
 					"mgmt-ip": "192.168.1.10",
 					"net-mask": "255.255.255.0",
-					"mgmt-mac": "aa:bb:cc:dd:ee:ff"
+					"mgmt-mac": "aa:bb:cc:dd:ee:00"
 				}
 			}`,
 			dataType: &GeneralOperMgmtIntfDataResponse{},

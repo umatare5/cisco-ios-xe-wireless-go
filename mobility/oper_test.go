@@ -411,7 +411,7 @@ func TestMobilityOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-data": [
 					{
-						"client-mac": "aa:bb:cc:dd:ee:ff",
+						"client-mac": "aa:bb:cc:dd:ee:a1",
 						"mobility-state": "local",
 						"anchor-controller": "192.168.1.10",
 						"foreign-controller": "",

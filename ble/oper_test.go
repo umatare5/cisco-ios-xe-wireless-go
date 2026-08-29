@@ -128,7 +128,7 @@ func TestBleLtxOperDataStructures(t *testing.T) {
 				"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-oper-data": {
 					"ble-ltx-ap-antenna": [
 						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"ble-slot-id": 2,
 							"ble-antenna-id": 1,
 							"is-ble-antenna-present": true,
@@ -142,7 +142,7 @@ func TestBleLtxOperDataStructures(t *testing.T) {
 					],
 					"ble-ltx-ap": [
 						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"ble-slot-id": 2,
 							"ble-admin-state": "enabled",
 							"ble-oper-state": "up",
@@ -160,7 +160,7 @@ func TestBleLtxOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap-antenna": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"ble-slot-id": 2,
 						"ble-antenna-id": 1,
 						"is-ble-antenna-present": true,
@@ -180,7 +180,7 @@ func TestBleLtxOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-ble-ltx-oper:ble-ltx-ap": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"ble-slot-id": 2,
 						"ble-admin-state": "enabled",
 						"ble-oper-state": "up",

@@ -70,7 +70,7 @@ func TestAWIPSOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-awips-oper:awips-per-ap-info": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"awips-status": "enabled",
 						"alarm-count": "0",
 						"forensic-capture-status": "disabled"
@@ -101,7 +101,7 @@ func TestAWIPSOperDataStructures(t *testing.T) {
 			jsonData: `{
 				"Cisco-IOS-XE-wireless-awips-oper:awips-ap-dwld-status": [
 					{
-						"ap-mac": "aa:bb:cc:dd:ee:ff",
+						"ap-mac": "aa:bb:cc:dd:ee:01",
 						"dwld-status": "success",
 						"file-version": 1,
 						"file-hash": "abc123"
@@ -301,8 +301,8 @@ func TestAWIPSComprehensiveOperations(t *testing.T) {
 func TestAWIPSOperClientInterfaceCompliance(t *testing.T) {
 	// Create a properly initialized client for interface compliance testing
 	config := wnc.Config{
-		Controller:  "test.local",
-		AccessToken: "test-token",
+		Controller:  wnc.ExampleTestHostname,
+		AccessToken: wnc.TestAccessTokenValue,
 	}
 	client, err := wnc.NewClient(config)
 	if err != nil {

@@ -9,16 +9,16 @@ By default, the library enforces strict TLS certificate verification:
 ```go
 // Secure connection (default)
 config := wnc.Config{
-    Controller:  "wnc.example.com",
-    AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
+    Controller:  "wnc1.example.internal",
+    AccessToken: "test-token-123",
     // InsecureSkipVerify: false (default)
 }
 client, err := wnc.NewClient(config)
 
 // Skip verification only for development/testing
 config := wnc.Config{
-    Controller:         "wnc-dev.local",
-    AccessToken:        "YWRtaW46ZGV2LXBhc3N3b3Jk",
+    Controller:         "wnc-dev.example.internal",
+    AccessToken:        "test-token-123",
     InsecureSkipVerify: true, // Only for development
 }
 client, err := wnc.NewClient(config)
@@ -49,8 +49,7 @@ client, err := wnc.NewClient(config)
 
    ```bash
    # Generate token manually (not recommended for automation)
-   echo -n "admin:your-secure-password" | base64
-   # Output: YWRtaW46eW91ci1zZWN1cmUtcGFzc3dvcmQ=
+   export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-secure-password' | base64)"
 
    # Better: Use the wnc CLI tool for token generation
    wnc generate token -u admin -p "$SECURE_PASSWORD"
@@ -127,7 +126,7 @@ logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 }))
 
 config := wnc.Config{
-    Controller:  "wnc.example.com",
+    Controller:  "wnc1.example.internal",
     AccessToken: os.Getenv("WNC_ACCESS_TOKEN"),
     Logger:      logger,
 }
@@ -140,7 +139,7 @@ config := wnc.Config{
 ```go
 // Development environment
 devConfig := wnc.Config{
-    Controller:         "wnc-dev.local",
+    Controller:         "wnc-dev.example.internal",
     AccessToken:        os.Getenv("WNC_DEV_TOKEN"),
     InsecureSkipVerify: true, // Only acceptable in dev
     Timeout:            5 * time.Second,
@@ -148,14 +147,14 @@ devConfig := wnc.Config{
 
 // Staging environment
 stagingConfig := wnc.Config{
-    Controller:  "wnc-staging.company.com",
+    Controller:  "wnc-staging.example.internal",
     AccessToken: os.Getenv("WNC_STAGING_TOKEN"),
     Timeout:     15 * time.Second,
 }
 
 // Production environment
 prodConfig := wnc.Config{
-    Controller:  "wnc-prod.company.com",
+    Controller:  "wnc-prod.example.internal",
     AccessToken: os.Getenv("WNC_PROD_TOKEN"),
     Timeout:     30 * time.Second,
     // InsecureSkipVerify: false (never set to true in production)

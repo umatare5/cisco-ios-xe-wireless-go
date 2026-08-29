@@ -31,8 +31,8 @@ const (
 // Example usage:
 //
 //	config := wnc.Config{
-//		Controller:         "controller.example.com",
-//		AccessToken:        "your-access-token",
+//		Controller:         "wnc1.example.internal",
+//		AccessToken:        "test-token-123",
 //		Timeout:            15 * time.Second,
 //		InsecureSkipVerify: true,
 //		Logger:             customLogger,
@@ -49,8 +49,8 @@ func NewClient(config Config) (*Client, error) {
 // Example usage:
 //
 //	config := wnc.Config{
-//		Controller:         "controller.example.com",
-//		AccessToken:        "your-access-token",
+//		Controller:         "wnc1.example.internal",
+//		AccessToken:        "test-token-123",
 //		Timeout:            15 * time.Second,
 //		InsecureSkipVerify: true,
 //		Logger:             customLogger,

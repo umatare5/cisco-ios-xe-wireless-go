@@ -30,9 +30,8 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 You must create a Basic Auth token using your Cisco WNC credentials before using the client.
 
 ```bash
-# Create token for username:password
-echo -n "admin:your-password" | base64
-# Output: YWRtaW46eW91ci1wYXNzd29yZA==
+# The access token is base64("username:password")
+export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"
 ```
 
 ### 🔧 Basic Usage
@@ -54,7 +53,7 @@ func main() {
     // Create configuration
     config := wnc.Config{
         Controller:  "192.168.1.100",
-        AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
+        AccessToken: "test-token-123",
         Timeout:     30 * time.Second,
     }
 
@@ -94,7 +93,7 @@ import (
 // Create client with custom configuration
 config := wnc.Config{
     Controller:         "192.168.1.100",
-    AccessToken:        "YWRtaW46eW91ci1wYXNzd29yZA==",
+    AccessToken:        "test-token-123",
     Timeout:            30 * time.Second,
     InsecureSkipVerify: true, // Only for development
 }
@@ -127,7 +126,7 @@ logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 
 config := wnc.Config{
     Controller:  "192.168.1.100",
-    AccessToken: "YWRtaW46eW91ci1wYXNzd29yZA==",
+    AccessToken: "test-token-123",
     Logger:      logger,
 }
 

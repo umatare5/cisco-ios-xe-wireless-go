@@ -75,7 +75,7 @@ EXAMPLES:
     # Generate authentication token first
     wnc generate token -u admin -p password123
     # Export the generated token
-    export WNC_ACCESS_TOKEN="dXNlcjpwYXNzd29yZA=="
+    export WNC_ACCESS_TOKEN="test-token-123"
 
     # Basic usage with environment variable
     $0 -c wnc1.example.internal

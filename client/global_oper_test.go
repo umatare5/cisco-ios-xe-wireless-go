@@ -207,8 +207,8 @@ func TestClientGlobalOperDataStructures(t *testing.T) {
 					"client-summary": [
 						{
 							"wtp-mac": "aa:bb:cc:dd:ee:01",
-							"client-mac": "11:22:33:44:55:66",
-							"ap-name": "ap-01",
+							"client-mac": "aa:bb:cc:dd:ee:a1",
+							"ap-name": "TEST-AP01",
 							"client-state": "associated",
 							"client-username": "user1"
 						}

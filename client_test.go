@@ -336,7 +336,9 @@ func TestContextCancellation(t *testing.T) {
 // TestInvalidEndpoint tests requests to an invalid controller
 func TestInvalidEndpoint(t *testing.T) {
 	config := Config{
-		Controller:  "invalid.controller.local",
+		// RFC 6761 reserves .invalid, so this name is guaranteed never to resolve.
+		// Deliberately not the canonical fixture hostname: this test needs a failure.
+		Controller:  "wnc1.invalid",
 		AccessToken: TestAccessTokenValue,
 		Timeout:     quickTestTimeout,
 	}

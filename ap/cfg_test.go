@@ -112,7 +112,7 @@ func TestApCfgDataStructures(t *testing.T) {
 					"ap-tags": {
 						"ap-tag": [
 							{
-								"ap-mac": "aa:bb:cc:dd:ee:ff",
+								"ap-mac": "aa:bb:cc:dd:ee:01",
 								"policy-tag": "default-policy",
 								"site-tag": "site-01",
 								"rf-tag": "rf-default"
@@ -151,13 +151,13 @@ func TestApCfgDataStructures(t *testing.T) {
 				"Cisco-IOS-XE-wireless-ap-cfg:ap-tags": {
 					"ap-tag": [
 						{
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"policy-tag": "default-policy",
 							"site-tag": "site-01",
 							"rf-tag": "rf-default"
 						},
 						{
-							"ap-mac": "11:22:33:44:55:66",
+							"ap-mac": "aa:bb:cc:dd:ee:02",
 							"policy-tag": "guest-policy",
 							"site-tag": "site-02"
 						}
