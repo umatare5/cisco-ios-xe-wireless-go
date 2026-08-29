@@ -64,3 +64,14 @@ func (s Service) reload(ctx context.Context, reason string, force *bool) error {
 
 	return nil
 }
+
+// SaveConfig copies the running configuration to the startup configuration, which has no rollback.
+//
+// Output.Result is the controller's own account of the save — "Save running-config successful" on
+// 17.12.8, 17.15.6 and 17.18.4a alike — and nothing here matches it, because a release wording it
+// differently must not turn a completed save into a failure. The save took 2.5 to 3.7 seconds when
+// measured, against a five-second response-header budget WithTimeout does not lift; raise it with
+// WithResponseHeaderTimeout.
+func (s Service) SaveConfig(ctx context.Context) (*SaveConfigRPCOutput, error) {
+	return core.PostRPC[SaveConfigRPCOutput](ctx, s.Client(), routes.ControllerSaveConfigRPC, nil)
+}

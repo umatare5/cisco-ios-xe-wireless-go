@@ -220,3 +220,67 @@ func TestControllerServiceUnit_ReloadOperations_ValidationErrors(t *testing.T) {
 		t.Error("Expected error for whitespace-only reason, got nil")
 	}
 }
+
+// TestControllerServiceUnit_SaveConfig_MockAnswers tests the three answers the RPC can give.
+func TestControllerServiceUnit_SaveConfig_MockAnswers(t *testing.T) {
+	// The fixture is the body the controller sends, pretty-printed at two spaces: 78 bytes with its
+	// newline, where a compact one would be 63.
+	t.Run("ResultIsDecoded", func(t *testing.T) {
+		responses := map[string]string{
+			"cisco-ia:save-config": `{
+  "cisco-ia:output": {
+    "result": "Save running-config successful"
+  }
+}
+`,
+		}
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+		defer mockServer.Close()
+
+		service := controller.NewService(testutil.NewTestClient(mockServer).Core().(*core.Client))
+
+		out, err := service.SaveConfig(testutil.TestContext(t))
+		if err != nil {
+			t.Fatalf("Expected no error for mock save, got: %v", err)
+		}
+		if out == nil || out.Output == nil {
+			t.Fatal("Expected the output container to decode, got nil")
+		}
+		if out.Output.Result != "Save running-config successful" {
+			t.Errorf("Result = %q, want the controller's account", out.Output.Result)
+		}
+	})
+
+	// An answer with no body is a success carrying no account, not an error: decode returns the
+	// zero envelope, so Output stays nil and the caller tests the leaf rather than the error.
+	t.Run("BodilessAnswerLeavesOutputNil", func(t *testing.T) {
+		responses := map[string]string{"cisco-ia:save-config": ""}
+		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
+		defer mockServer.Close()
+
+		service := controller.NewService(testutil.NewTestClient(mockServer).Core().(*core.Client))
+
+		out, err := service.SaveConfig(testutil.TestContext(t))
+		if err != nil {
+			t.Fatalf("Expected no error for a bodiless answer, got: %v", err)
+		}
+		if out == nil {
+			t.Fatal("Expected a non-nil envelope for a bodiless answer, got nil")
+		}
+		if out.Output != nil {
+			t.Errorf("Output = %+v, want nil for a bodiless answer", out.Output)
+		}
+	})
+
+	t.Run("ControllerRefusalIsAnError", func(t *testing.T) {
+		errorPaths := []string{"cisco-ia:save-config"}
+		mockServer := testutil.NewMockServer(testutil.WithErrorResponses(errorPaths, 500))
+		defer mockServer.Close()
+
+		service := controller.NewService(testutil.NewTestClient(mockServer).Core().(*core.Client))
+
+		if _, err := service.SaveConfig(testutil.TestContext(t)); err == nil {
+			t.Error("Expected error for 500 response, got nil")
+		}
+	})
+}

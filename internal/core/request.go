@@ -233,6 +233,20 @@ func PostVoid(ctx context.Context, c *Client, endpoint string, payload any) erro
 	return err
 }
 
+// PostRPC is a generic helper for RPC POST operations that expect a response body.
+func PostRPC[T any](ctx context.Context, c *Client, rpcEndpoint string, payload any) (*T, error) {
+	if c == nil {
+		return nil, errors.New(ierrors.ErrClientNil)
+	}
+
+	resp, err := c.doRPC(ctx, rpcEndpoint, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	return decode[T](resp.Body)
+}
+
 // PostRPCVoid is a generic helper for RPC POST operations without expecting a response body.
 func PostRPCVoid(ctx context.Context, c *Client, rpcEndpoint string, payload any) error {
 	if c == nil {

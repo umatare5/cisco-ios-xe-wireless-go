@@ -32,6 +32,12 @@ func TestRequestFunctions(t *testing.T) {
 		testutil.AssertError(t, err, "PostVoid() with nil client should return error")
 	})
 
+	t.Run("PostRPC with nil client", func(t *testing.T) {
+		type TestResponse struct{}
+		_, err := core.PostRPC[TestResponse](ctx, nil, "/test", nil)
+		testutil.AssertError(t, err, "PostRPC() with nil client should return error")
+	})
+
 	t.Run("PostRPCVoid with nil client", func(t *testing.T) {
 		err := core.PostRPCVoid(ctx, nil, "/test", nil)
 		testutil.AssertError(t, err, "PostRPCVoid() with nil client should return error")

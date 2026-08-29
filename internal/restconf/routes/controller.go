@@ -4,13 +4,18 @@ package routes
 //
 // These constants define the RESTCONF API paths for controller management
 // operations such as system reload, restart, and administrative operations.
-// Based on Cisco-IOS-XE-rpc YANG model specifications.
+// Based on the Cisco-IOS-XE-rpc and cisco-ia YANG model specifications.
 
 // Controller RPC Operations.
 const (
 	// ControllerReloadRPC defines the RPC for WNC controller reload operations
 	// This operation follows the Cisco-IOS-XE-rpc:reload YANG model specification.
 	ControllerReloadRPC = RESTCONFOperationsPath + "/Cisco-IOS-XE-rpc:reload"
+
+	// ControllerSaveConfigRPC defines the RPC that copies the running configuration to the startup
+	// configuration. cisco-ia is the one module name here that is neither capitalised nor
+	// Cisco-IOS-XE-* prefixed, and the controller publishes it in that form.
+	ControllerSaveConfigRPC = RESTCONFOperationsPath + "/cisco-ia:save-config"
 )
 
 // Controller Device Operational Data
