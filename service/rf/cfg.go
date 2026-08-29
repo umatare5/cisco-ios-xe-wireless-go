@@ -84,12 +84,17 @@ type AtfPolicyDetail struct {
 }
 
 // RFTag represents RF tag configuration.
+//
+// The optional leaves are pointers so a caller can name one without naming a value: setRFTag
+// re-sends the whole entry, and a value field cannot tell a leaf the caller never named from one
+// it set to the empty string. It is the shape site.SiteListEntry and wlan.PolicyListEntry already
+// have, and under those services' merge PATCH it is what leaves an unnamed leaf alone.
 type RFTag struct {
 	TagName             string              `json:"tag-name"`                          // RF tag name identifier (Live: IOS-XE 17.12.6a)
-	Description         string              `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.6a)
-	Dot11ARfProfileName string              `json:"dot11a-rf-profile-name,omitempty"`  // 802.11a RF profile name (Live: IOS-XE 17.12.6a)
-	Dot11BRfProfileName string              `json:"dot11b-rf-profile-name,omitempty"`  // 802.11b RF profile name (Live: IOS-XE 17.12.6a)
-	Dot116GhzRFProfName string              `json:"dot11-6ghz-rf-prof-name,omitempty"` // 802.11 6GHz RF profile name (Live: IOS-XE 17.12.6a)
+	Description         *string             `json:"description,omitempty"`             // RF tag description (Live: IOS-XE 17.12.6a)
+	Dot11ARfProfileName *string             `json:"dot11a-rf-profile-name,omitempty"`  // 5 GHz RF profile name, written by SetDot11ARfProfile (Live: IOS-XE 17.12.6a)
+	Dot11BRfProfileName *string             `json:"dot11b-rf-profile-name,omitempty"`  // 2.4 GHz RF profile name, written by SetDot11BRfProfile (Live: IOS-XE 17.12.6a)
+	Dot116GhzRFProfName *string             `json:"dot11-6ghz-rf-prof-name,omitempty"` // 6 GHz RF profile name, written by SetDot116GhzRFProfile (Live: IOS-XE 17.12.6a)
 	RFTagRadioProfiles  *RFTagRadioProfiles `json:"rf-tag-radio-profiles,omitempty"`   // RF tag radio profiles data (Live: IOS-XE 17.12.6a)
 }
 
@@ -99,9 +104,15 @@ type RFTagRadioProfiles struct {
 }
 
 // RFTagRadioProfile represents RF tag radio profile configuration.
+//
+// slot-id and band-id are the list keys and are always sent; radio-profile-name is the override
+// itself, and a plain read omits it whenever it holds its default. Read with
+// core.WithDefaults(core.DefaultsReportAll) to get the name in force, and treat nil as unread
+// rather than as a slot with no override.
 type RFTagRadioProfile struct {
-	SlotID string `json:"slot-id"` // Radio slot identifier (Live: IOS-XE 17.12.6a)
-	BandID string `json:"band-id"` // Radio band identifier (Live: IOS-XE 17.12.6a)
+	SlotID           string  `json:"slot-id"`                      // Radio slot identifier (Live: IOS-XE 17.12.6a)
+	BandID           string  `json:"band-id"`                      // Radio band identifier (Live: IOS-XE 17.12.6a)
+	RadioProfileName *string `json:"radio-profile-name,omitempty"` // Radio profile this slot overrides to; omitted by a plain read (Live: IOS-XE 17.12.8)
 }
 
 // RFProfileDetail represents RF profile configuration details.

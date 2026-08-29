@@ -3,11 +3,8 @@ package ap_test
 import (
 	"context"
 	"encoding/json"
-	"io"
+	"errors"
 	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"sync"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -1456,11 +1453,11 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 				"device-id": "Switch1"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh=aa:bb:cc:dd:ee:ff": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/lldp-neigh=aa:bb:cc:dd:ee:ff,11:22:33:44:55:66": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:lldp-neigh": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
-				"local-intf-name": "GigabitEthernet0",
-				"device-id": "Switch1"
+				"neigh-mac": "11:22:33:44:55:66",
+				"local-port": "GigabitEthernet0"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/disc-data=aa:bb:cc:dd:ee:ff": `{
@@ -1536,13 +1533,13 @@ func TestApServiceUnit_GetOperations_FilteredSuccess(t *testing.T) {
 		}
 	})
 
-	t.Run("GetLldpNeighByWTPMAC", func(t *testing.T) {
-		result, err := service.GetLldpNeighByWTPMAC(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("GetLldpNeighByWTPMACAndNeighMAC", func(t *testing.T) {
+		result, err := service.GetLldpNeighByWTPMACAndNeighMAC(ctx, "aa:bb:cc:dd:ee:ff", "11:22:33:44:55:66")
 		if err != nil {
-			t.Errorf("Expected no error for GetLldpNeighByWTPMAC, got: %v", err)
+			t.Errorf("Expected no error for GetLldpNeighByWTPMACAndNeighMAC, got: %v", err)
 		}
 		if result == nil {
-			t.Error("Expected result for GetLldpNeighByWTPMAC, got nil")
+			t.Error("Expected result for GetLldpNeighByWTPMACAndNeighMAC, got nil")
 		}
 	})
 
@@ -1790,10 +1787,17 @@ func TestApServiceUnit_GetOperations_ValidationErrors(t *testing.T) {
 		}
 	})
 
-	t.Run("GetLldpNeighByWTPMAC_EmptyMAC", func(t *testing.T) {
-		_, err := service.GetLldpNeighByWTPMAC(ctx, "")
+	t.Run("GetLldpNeighByWTPMACAndNeighMAC_EmptyWTPMAC", func(t *testing.T) {
+		_, err := service.GetLldpNeighByWTPMACAndNeighMAC(ctx, "", "11:22:33:44:55:66")
 		if err == nil {
 			t.Error("Expected error for empty MAC address, got nil")
+		}
+	})
+
+	t.Run("GetLldpNeighByWTPMACAndNeighMAC_EmptyNeighMAC", func(t *testing.T) {
+		_, err := service.GetLldpNeighByWTPMACAndNeighMAC(ctx, "aa:bb:cc:dd:ee:ff", "")
+		if err == nil {
+			t.Error("Expected error for empty neighbor MAC address, got nil")
 		}
 	})
 
@@ -1869,7 +1873,7 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 				"rf-tag": "existing-rf"
 			}]
 		}`,
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
 				"wtp-mac": "aa:bb:cc:dd:ee:ff",
 				"name": "TEST-AP01"
@@ -1884,32 +1888,46 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test AP admin state operations
-	t.Run("EnableAP", func(t *testing.T) {
-		err := service.EnableAP(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("EnableAPByMAC", func(t *testing.T) {
+		err := service.EnableAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for EnableAP, got: %v", err)
+			t.Errorf("Expected no error for EnableAPByMAC, got: %v", err)
 		}
 	})
 
-	t.Run("DisableAP", func(t *testing.T) {
-		err := service.DisableAP(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("DisableAPByMAC", func(t *testing.T) {
+		err := service.DisableAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for DisableAP, got: %v", err)
+			t.Errorf("Expected no error for DisableAPByMAC, got: %v", err)
 		}
 	})
 
-	// Test radio state operations (using core.RadioBand constants)
-	t.Run("EnableRadio", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz)
+	t.Run("EnableAPByName", func(t *testing.T) {
+		err := service.EnableAPByName(ctx, "TEST-AP01")
 		if err != nil {
-			t.Errorf("Expected no error for EnableRadio, got: %v", err)
+			t.Errorf("Expected no error for EnableAPByName, got: %v", err)
 		}
 	})
 
-	t.Run("DisableRadio", func(t *testing.T) {
-		err := service.DisableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand5GHz)
+	t.Run("DisableAPByName", func(t *testing.T) {
+		err := service.DisableAPByName(ctx, "TEST-AP01")
 		if err != nil {
-			t.Errorf("Expected no error for DisableRadio, got: %v", err)
+			t.Errorf("Expected no error for DisableAPByName, got: %v", err)
+		}
+	})
+
+	// Test radio state operations
+	t.Run("EnableRadioByMAC", func(t *testing.T) {
+		err := service.EnableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 0, ap.RadioType80211BG)
+		if err != nil {
+			t.Errorf("Expected no error for EnableRadioByMAC, got: %v", err)
+		}
+	})
+
+	t.Run("DisableRadioByMAC", func(t *testing.T) {
+		err := service.DisableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 1, ap.RadioType80211A)
+		if err != nil {
+			t.Errorf("Expected no error for DisableRadioByMAC, got: %v", err)
 		}
 	})
 
@@ -1936,10 +1954,10 @@ func TestApServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	})
 
 	// Test AP reload operation
-	t.Run("Reload", func(t *testing.T) {
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("ReloadByMAC", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err != nil {
-			t.Errorf("Expected no error for Reload, got: %v", err)
+			t.Errorf("Expected no error for ReloadByMAC, got: %v", err)
 		}
 	})
 }
@@ -1955,30 +1973,44 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test invalid MAC validation for AP state operations
-	t.Run("EnableAP_InvalidMAC", func(t *testing.T) {
-		err := service.EnableAP(ctx, "invalid-mac")
+	t.Run("EnableAPByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.EnableAPByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
 	})
 
-	t.Run("DisableAP_InvalidMAC", func(t *testing.T) {
-		err := service.DisableAP(ctx, "invalid-mac")
+	t.Run("DisableAPByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.DisableAPByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	t.Run("EnableAPByName_BlankName", func(t *testing.T) {
+		err := service.EnableAPByName(ctx, "")
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
+		}
+	})
+
+	t.Run("DisableAPByName_BlankName", func(t *testing.T) {
+		err := service.DisableAPByName(ctx, " ")
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
 		}
 	})
 
 	// Test invalid MAC validation for radio operations
-	t.Run("EnableRadio_InvalidMAC", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "invalid-mac", core.RadioBand24GHz)
+	t.Run("EnableRadioByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.EnableRadioByMAC(ctx, "invalid-mac", 0, ap.RadioType80211BG)
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
 	})
 
-	t.Run("DisableRadio_InvalidMAC", func(t *testing.T) {
-		err := service.DisableRadio(ctx, "invalid-mac", core.RadioBand5GHz)
+	t.Run("DisableRadioByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.DisableRadioByMAC(ctx, "invalid-mac", 1, ap.RadioType80211A)
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
 		}
@@ -2015,10 +2047,17 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 	})
 
 	// Test reload with invalid MAC
-	t.Run("Reload_InvalidMAC", func(t *testing.T) {
-		err := service.Reload(ctx, "invalid-mac")
+	t.Run("ReloadByMAC_InvalidMAC", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "invalid-mac")
 		if err == nil {
 			t.Error("Expected error for invalid MAC address, got nil")
+		}
+	})
+
+	t.Run("ReloadByName_BlankName", func(t *testing.T) {
+		err := service.ReloadByName(ctx, "\t")
+		if !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("Expected core.ErrResourceNotFound for a blank AP name, got: %v", err)
 		}
 	})
 }
@@ -2027,7 +2066,7 @@ func TestApServiceUnit_SetOperations_ValidationErrors(t *testing.T) {
 func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 	// Create mock server with specific responses for edge cases
 	responses := map[string]string{
-		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 			"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": []
 		}`,
 		"Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset": `{"status": "success"}`,
@@ -2040,8 +2079,8 @@ func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test reload with empty CAPWAP data
-	t.Run("Reload_EmptyCAPWAPData", func(t *testing.T) {
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("ReloadByMAC_EmptyCAPWAPData", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}
@@ -2051,7 +2090,7 @@ func TestApServiceUnit_DoOperations_MockSuccess(t *testing.T) {
 // TestApServiceUnit_DoOperations_ErrorHandling tests nil CAPWAP data handling.
 func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 	mockServer := testutil.NewMockServer(testutil.WithErrorResponses(
-		[]string{"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data"},
+		[]string{"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff"},
 		500,
 	))
 	defer mockServer.Close()
@@ -2061,8 +2100,8 @@ func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 	ctx := testutil.TestContext(t)
 
 	// Test reload with failed CAPWAP data retrieval
-	t.Run("Reload_FailedCAPWAPDataRetrieval", func(t *testing.T) {
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+	t.Run("ReloadByMAC_FailedCAPWAPDataRetrieval", func(t *testing.T) {
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed CAPWAP data retrieval, got nil")
 		}
@@ -2072,9 +2111,9 @@ func TestApServiceUnit_DoOperations_ErrorHandling(t *testing.T) {
 // TestApServiceUnit_Reload_EdgeCases tests specific edge cases for Reload function to achieve 100% coverage.
 func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 	// Test Reload with nil CAPWAP data response
-	t.Run("Reload_NilCAPWAPResponse", func(t *testing.T) {
+	t.Run("ReloadByMAC_NilCAPWAPResponse", func(t *testing.T) {
 		responses := map[string]string{
-			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `null`,
+			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `null`,
 		}
 		mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(responses))
 		defer mockServer.Close()
@@ -2083,16 +2122,18 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for nil CAPWAP response, got nil")
 		}
 	})
 
-	// Test Reload with AP not found in CAPWAP data
-	t.Run("Reload_APNotFoundInCAPWAP", func(t *testing.T) {
+	// The record IS the one this address keys, so nothing here exercises an absence: the mock
+	// serves no ap-reset node, and the refusal comes from the write the resolve leads to. The
+	// genuine absence is covered by ReloadByMAC_EmptyCAPWAPData and by the 404 arm.
+	t.Run("ReloadByMAC_ResetNotServed", func(t *testing.T) {
 		responses := map[string]string{
-			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": `{
+			"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:ff": `{
 				"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [{
 					"wtp-mac": "aa:bb:cc:dd:ee:ff",
 					"name": "Different-AP"
@@ -2106,7 +2147,7 @@ func TestApServiceUnit_Reload_EdgeCases(t *testing.T) {
 		service := ap.NewService(testClient.Core().(*core.Client))
 		ctx := testutil.TestContext(t)
 
-		err := service.Reload(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.ReloadByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for AP not found in CAPWAP data, got nil")
 		}
@@ -2145,7 +2186,7 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 
 	// Test updateAPState error handling
 	t.Run("UpdateAPState_RPCError", func(t *testing.T) {
-		err := service.EnableAP(ctx, "aa:bb:cc:dd:ee:ff")
+		err := service.EnableAPByMAC(ctx, "aa:bb:cc:dd:ee:ff")
 		if err == nil {
 			t.Error("Expected error for failed RPC call, got nil")
 		}
@@ -2153,17 +2194,17 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 
 	// Test updateRadioState error handling
 	t.Run("UpdateRadioState_RPCError", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand24GHz)
+		err := service.EnableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 0, ap.RadioType80211BG)
 		if err == nil {
 			t.Error("Expected error for failed radio RPC call, got nil")
 		}
 	})
 
-	// Test updateRadioState with invalid radio band
-	t.Run("UpdateRadioState_InvalidRadioBand", func(t *testing.T) {
-		err := service.EnableRadio(ctx, "aa:bb:cc:dd:ee:ff", core.RadioBand(999)) // Invalid band
+	// Test updateRadioState with a radio type the RPC has no band number for
+	t.Run("UpdateRadioState_UnnumberedRadioType", func(t *testing.T) {
+		err := service.EnableRadioByMAC(ctx, "aa:bb:cc:dd:ee:ff", 0, ap.RadioTypeUWB)
 		if err == nil {
-			t.Error("Expected error for invalid radio band, got nil")
+			t.Error("Expected error for an unnumbered radio type, got nil")
 		}
 	})
 
@@ -2176,29 +2217,48 @@ func TestApTagServiceUnit_SetOperations_ErrorHandling(t *testing.T) {
 	})
 }
 
-// tagRecorder captures the body of the write a tag assignment sent. The mocks in pkg/testutil
-// record the method, path and query of a request but not its body, which is what decides
-// whether a tag the caller did not name survived.
-type tagRecorder struct {
-	mu   sync.Mutex
-	body string
-}
+// apTagNode is the node both the tag read and the tag write end at, which is what the mock
+// server matches a handler on. The list key the URL appends is not part of the match.
+const apTagNode = "Cisco-IOS-XE-wireless-ap-cfg:ap-cfg-data/ap-tags/ap-tag"
 
-func (r *tagRecorder) set(body string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.body = body
-}
+// slotAdminNode is the node the radio admin RPC posts to.
+const slotAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-slot-admin-state"
 
-// written returns the three tags the recorded write carried.
-func (r *tagRecorder) written(t *testing.T) (siteTag, policyTag, rfTag string) {
+// apAdminNode is the node the AP admin RPC posts to.
+const apAdminNode = "Cisco-IOS-XE-wireless-access-point-cfg-rpc:set-ap-admin-state"
+
+// capwapResetNode is the node the CAPWAP reset RPC posts to.
+const capwapResetNode = "Cisco-IOS-XE-wireless-access-point-cmd-rpc:set-rad-capwap-reset"
+
+// writtenBody returns the body of the first recorded request made with method, and fails if
+// none was. The read that precedes a write is recorded too, so the write is selected by
+// method rather than by position.
+func writtenBody(t *testing.T, server *testutil.RESTCONFServer, method string) string {
 	t.Helper()
-	r.mu.Lock()
-	defer r.mu.Unlock()
 
-	if r.body == "" {
-		t.Fatal("no write reached the server")
+	for _, recorded := range server.Requests() {
+		if recorded.Method == method {
+			return recorded.Body
+		}
 	}
+
+	t.Fatalf("no %s reached the server", method)
+
+	return ""
+}
+
+// decodeWrittenTag decodes the body of the write a tag assignment sent into payload.
+func decodeWrittenTag(t *testing.T, server *testutil.RESTCONFServer, payload any) {
+	t.Helper()
+
+	if err := json.Unmarshal([]byte(writtenBody(t, server, http.MethodPut)), payload); err != nil {
+		t.Fatalf("Failed to decode the recorded write: %v", err)
+	}
+}
+
+// writtenTags returns the three tags the recorded write carried.
+func writtenTags(t *testing.T, server *testutil.RESTCONFServer) (siteTag, policyTag, rfTag string) {
+	t.Helper()
 
 	var payload struct {
 		ApTag struct {
@@ -2207,70 +2267,99 @@ func (r *tagRecorder) written(t *testing.T) (siteTag, policyTag, rfTag string) {
 			RFTag     string `json:"rf-tag"`
 		} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
 	}
-	if err := json.Unmarshal([]byte(r.body), &payload); err != nil {
-		t.Fatalf("Failed to decode the recorded write: %v", err)
-	}
+	decodeWrittenTag(t, server, &payload)
+
 	return payload.ApTag.SiteTag, payload.ApTag.PolicyTag, payload.ApTag.RFTag
 }
 
-// primingProfile returns the priming profile the recorded write carried.
-func (r *tagRecorder) primingProfile(t *testing.T) string {
+// writtenPrimingProfile returns the priming profile the recorded write carried.
+func writtenPrimingProfile(t *testing.T, server *testutil.RESTCONFServer) string {
 	t.Helper()
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	if r.body == "" {
-		t.Fatal("no write reached the server")
-	}
 
 	var payload struct {
 		ApTag struct {
 			PrimingProfile string `json:"priming-profile"`
 		} `json:"Cisco-IOS-XE-wireless-ap-cfg:ap-tag"`
 	}
-	if err := json.Unmarshal([]byte(r.body), &payload); err != nil {
-		t.Fatalf("Failed to decode the recorded write: %v", err)
-	}
+	decodeWrittenTag(t, server, &payload)
+
 	return payload.ApTag.PrimingProfile
 }
 
-// newTagRecorderService answers a tag read with entry and records the write that follows. An
-// empty entry makes the read a 404, which is the AP-has-no-entry case.
-func newTagRecorderService(t *testing.T, entry string) (ap.Service, *tagRecorder) {
+// writtenRPCInput returns the leaves the recorded RPC input carried, keyed by leaf name. The
+// input is decoded into a map so a leaf the caller never named is visible: a mandatory choice
+// is answered by the arm that is PRESENT, and a struct with a missing omitempty puts the other
+// arm on the wire at its zero value, which an assertion on the wanted arm alone cannot see.
+func writtenRPCInput(t *testing.T, server *testutil.RESTCONFServer) map[string]any {
 	t.Helper()
 
-	recorder := &tagRecorder{}
-	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			if entry == "" {
-				http.NotFound(w, r)
-				return
-			}
-			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte(entry))
-			return
-		}
+	var payload map[string]map[string]any
+	if err := json.Unmarshal([]byte(writtenBody(t, server, http.MethodPost)), &payload); err != nil {
+		t.Fatalf("Failed to decode the recorded RPC: %v", err)
+	}
+	if len(payload) != 1 {
+		t.Fatalf("the RPC body carried %d top-level keys, want 1", len(payload))
+	}
 
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			t.Errorf("Failed to read the request body: %v", err)
+	for _, input := range payload {
+		return input
+	}
+
+	return nil
+}
+
+// assertRPCInputLeaves fails unless the recorded RPC input carried exactly want.
+func assertRPCInputLeaves(t *testing.T, server *testutil.RESTCONFServer, want map[string]any) {
+	t.Helper()
+
+	got := writtenRPCInput(t, server)
+	for leaf, value := range want {
+		if got[leaf] != value {
+			t.Errorf("input[%q] = %v, want %v", leaf, got[leaf], value)
 		}
-		recorder.set(string(body))
-		w.WriteHeader(http.StatusNoContent)
-	}))
+	}
+	for leaf := range got {
+		if _, ok := want[leaf]; !ok {
+			t.Errorf("input carried %q = %v, which the caller never named", leaf, got[leaf])
+		}
+	}
+}
+
+// newTagRecorderService answers a tag read with entry and lets the server record the write that
+// follows. An empty entry makes the read a 404, which is the AP-has-no-entry case.
+func newTagRecorderService(t *testing.T, entry string) (ap.Service, *testutil.RESTCONFServer) {
+	t.Helper()
+
+	server := testutil.NewRESTCONFServer(t)
 	t.Cleanup(server.Close)
 
-	parsed, err := url.Parse(server.URL)
-	if err != nil {
-		t.Fatalf("Failed to parse the test server URL: %v", err)
+	if entry != "" {
+		server.AddHandler(http.MethodGet, apTagNode, func() (int, string) {
+			return http.StatusOK, entry
+		})
 	}
+	server.AddHandler(http.MethodPut, apTagNode, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
 
-	client, err := core.New(parsed.Host, "test-token", core.WithInsecureSkipVerify(true))
-	if err != nil {
-		t.Fatalf("Failed to create the client: %v", err)
-	}
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
 
-	return ap.NewService(client), recorder
+	return ap.NewService(testClient.Core().(*core.Client)), server
+}
+
+// newRPCService answers node with 204 and records what reached it.
+func newRPCService(t *testing.T, node string) (ap.Service, *testutil.RESTCONFServer) {
+	t.Helper()
+
+	server := testutil.NewRESTCONFServer(t)
+	t.Cleanup(server.Close)
+	server.AddHandler(http.MethodPost, node, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+
+	return ap.NewService(testClient.Core().(*core.Client)), server
 }
 
 const testAPTagEntry = `{
@@ -2358,13 +2447,13 @@ func TestApServiceUnit_AssignTags_MergeSemantics(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			service, recorder := newTagRecorderService(t, tt.entry)
+			service, server := newTagRecorderService(t, tt.entry)
 
 			if err := tt.assign(context.Background(), service); err != nil {
 				t.Fatalf("Unexpected error: %v", err)
 			}
 
-			siteTag, policyTag, rfTag := recorder.written(t)
+			siteTag, policyTag, rfTag := writtenTags(t, server)
 			if siteTag != tt.expectedSiteTag {
 				t.Errorf("site-tag = %q, want %q", siteTag, tt.expectedSiteTag)
 			}
@@ -2393,24 +2482,197 @@ func TestApServiceUnit_AssignTags_KeepsPrimingProfile(t *testing.T) {
 	}`
 
 	t.Run("an existing priming profile survives", func(t *testing.T) {
-		service, recorder := newTagRecorderService(t, entry)
+		service, server := newTagRecorderService(t, entry)
 
 		if err := service.AssignSiteTag(context.Background(), apMAC, "new-site"); err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
-		if got := recorder.primingProfile(t); got != "existing-priming" {
+		if got := writtenPrimingProfile(t, server); got != "existing-priming" {
 			t.Errorf("priming-profile = %q, want %q", got, "existing-priming")
 		}
 	})
 
 	t.Run("no priming profile is invented", func(t *testing.T) {
-		service, recorder := newTagRecorderService(t, testAPTagEntry)
+		service, server := newTagRecorderService(t, testAPTagEntry)
 
 		if err := service.AssignSiteTag(context.Background(), apMAC, "new-site"); err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}
-		if got := recorder.primingProfile(t); got != "" {
+		if got := writtenPrimingProfile(t, server); got != "" {
 			t.Errorf("priming-profile = %q, want it absent", got)
 		}
 	})
+}
+
+// TestApServiceUnit_SetRadioAdminState_RPCInput_Success pins every leaf the radio-admin RPC puts
+// on the wire for each arm, and the band each radio type maps to. The band is what the previous
+// shape derived from the slot: an XOR radio in slot 0 takes 3, not the 1 its served band implies.
+func TestApServiceUnit_SetRadioAdminState_RPCInput_Success(t *testing.T) {
+	tests := []struct {
+		name      string
+		radioType ap.RadioType
+		slotID    int
+		wantBand  string
+	}{
+		{name: "dedicated 2.4 GHz", radioType: ap.RadioType80211BG, slotID: 0, wantBand: "1"},
+		{name: "dedicated 5 GHz", radioType: ap.RadioType80211A, slotID: 1, wantBand: "2"},
+		{name: "2.4/5 GHz XOR in slot 0", radioType: ap.RadioType80211ABGN, slotID: 0, wantBand: "3"},
+		{name: "5/6 GHz XOR in slot 2", radioType: ap.RadioTypeXOR5And6GHz, slotID: 2, wantBand: "3"},
+		{name: "dedicated 6 GHz in slot 3", radioType: ap.RadioType6GHz, slotID: 3, wantBand: "4"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			service, server := newRPCService(t, slotAdminNode)
+			err := service.DisableRadioByMAC(t.Context(), "aa:bb:cc:dd:ee:ff", tt.slotID, tt.radioType)
+			if err != nil {
+				t.Fatalf("DisableRadioByMAC() error = %v", err)
+			}
+
+			assertRPCInputLeaves(t, server, map[string]any{
+				"mode":     "admin-state-disabled",
+				"slot-id":  float64(tt.slotID),
+				"band":     tt.wantBand,
+				"mac-addr": "aa:bb:cc:dd:ee:ff",
+			})
+		})
+	}
+
+	t.Run("ByName", func(t *testing.T) {
+		service, server := newRPCService(t, slotAdminNode)
+		err := service.EnableRadioByName(t.Context(), "TEST-AP01", 2, ap.RadioTypeXOR5And6GHz)
+		if err != nil {
+			t.Fatalf("EnableRadioByName() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{
+			"mode":    "admin-state-enabled",
+			"slot-id": float64(2),
+			"band":    "3",
+			"ap-name": "TEST-AP01",
+		})
+	})
+}
+
+// TestApServiceUnit_RadioBandNumber_UnnumberedTypes_Error holds the four members the RPC's 1..4
+// band domain has no number for, so a table row added without a measurement fails here.
+func TestApServiceUnit_RadioBandNumber_UnnumberedTypes_Error(t *testing.T) {
+	unnumbered := []ap.RadioType{
+		ap.RadioTypeInvalid,
+		ap.RadioTypeUWB,
+		ap.RadioTypeRemoteLAN,
+		ap.RadioTypeXOR24And6GHz,
+	}
+
+	for _, radioType := range unnumbered {
+		t.Run(string(radioType), func(t *testing.T) {
+			service, _ := newRPCService(t, slotAdminNode)
+			if err := service.EnableRadioByMAC(t.Context(), "aa:bb:cc:dd:ee:ff", 0, radioType); err == nil {
+				t.Errorf("EnableRadioByMAC(%s) error = nil, want a refusal", radioType)
+			}
+		})
+	}
+}
+
+// TestApServiceUnit_SetAPAdminState_RPCInput_Success pins every leaf the admin-state RPC puts on
+// the wire for each arm, so an arm the caller never named is a failure here rather than a 400.
+func TestApServiceUnit_SetAPAdminState_RPCInput_Success(t *testing.T) {
+	t.Run("ByMAC", func(t *testing.T) {
+		service, server := newRPCService(t, apAdminNode)
+		if err := service.DisableAPByMAC(t.Context(), "AA-BB-CC-DD-EE-FF"); err != nil {
+			t.Fatalf("DisableAPByMAC() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{
+			"mode":     "admin-state-disabled",
+			"mac-addr": "aa:bb:cc:dd:ee:ff",
+		})
+	})
+
+	t.Run("ByName", func(t *testing.T) {
+		service, server := newRPCService(t, apAdminNode)
+		if err := service.EnableAPByName(t.Context(), "TEST-AP01"); err != nil {
+			t.Fatalf("EnableAPByName() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{
+			"mode":    "admin-state-enabled",
+			"ap-name": "TEST-AP01",
+		})
+	})
+}
+
+// TestApServiceUnit_ResetCAPWAP_RPCInput_Success pins every leaf the CAPWAP-reset RPC puts on the
+// wire for each arm. The input's choice is mandatory, so the arm the caller did not name must be
+// absent rather than present at an empty string.
+func TestApServiceUnit_ResetCAPWAP_RPCInput_Success(t *testing.T) {
+	t.Run("ByName", func(t *testing.T) {
+		service, server := newRPCService(t, capwapResetNode)
+		if err := service.ResetCAPWAPByName(t.Context(), "TEST-AP01"); err != nil {
+			t.Fatalf("ResetCAPWAPByName() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{"ap-name": "TEST-AP01"})
+	})
+
+	t.Run("ByMAC", func(t *testing.T) {
+		service, server := newRPCService(t, capwapResetNode)
+		if err := service.ResetCAPWAPByMAC(t.Context(), "AABBCCDDEEFF"); err != nil {
+			t.Fatalf("ResetCAPWAPByMAC() error = %v", err)
+		}
+
+		assertRPCInputLeaves(t, server, map[string]any{"mac-addr": "aa:bb:cc:dd:ee:ff"})
+	})
+
+	t.Run("BlankArguments", func(t *testing.T) {
+		service, _ := newRPCService(t, capwapResetNode)
+		if err := service.ResetCAPWAPByName(t.Context(), " "); !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("ResetCAPWAPByName(blank) error = %v, want core.ErrResourceNotFound", err)
+		}
+		if err := service.ResetCAPWAPByMAC(t.Context(), ""); !errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("ResetCAPWAPByMAC(blank) error = %v, want core.ErrResourceNotFound", err)
+		}
+	})
+}
+
+func TestApServiceUnit_StateVocabularies_MockSuccess(t *testing.T) {
+	t.Parallel()
+
+	body := `{
+		"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [
+			{
+				"wtp-mac": "aa:bb:cc:dd:ee:ff",
+				"ap-state": {"ap-admin-state": "adminstate-disabled", "ap-operation-state": "registered"},
+				"ap-mode-data": {"wtp-mode": "local-mode", "ap-sub-mode": "not-configured"}
+			}
+		]
+	}`
+
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data": body,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := ap.NewService(testClient.Core().(*core.Client))
+
+	result, err := service.ListCAPWAPData(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("ListCAPWAPData returned unexpected error: %v", err)
+	}
+	if len(result.CAPWAPData) != 1 {
+		t.Fatalf("decoded %d records, want 1", len(result.CAPWAPData))
+	}
+
+	record := result.CAPWAPData[0]
+
+	if record.ApModeData.ApSubMode != "not-configured" {
+		t.Fatalf("ap-sub-mode = %q, so ap-mode-data was not decoded", record.ApModeData.ApSubMode)
+	}
+	if record.ApState.ApAdminState != ap.APAdminStateDisabled {
+		t.Errorf("ap-admin-state = %q, want %q", record.ApState.ApAdminState, ap.APAdminStateDisabled)
+	}
+	if record.ApModeData.WtpMode != ap.WtpModeLocal {
+		t.Errorf("wtp-mode = %q, want %q", record.ApModeData.WtpMode, ap.WtpModeLocal)
+	}
 }

@@ -170,7 +170,7 @@ type NoiseDataItem struct {
 type Load struct {
 	RxUtilPercentage          int `json:"rx-util-percentage"`           // Receive utilization percentage (Live: IOS-XE 17.12.6a)
 	TxUtilPercentage          int `json:"tx-util-percentage"`           // Transmit utilization percentage (Live: IOS-XE 17.12.6a)
-	CcaUtilPercentage         int `json:"cca-util-percentage"`          // Clear Channel Assessment utilization percentage (Live: IOS-XE 17.12.6a)
+	CcaUtilPercentage         int `json:"cca-util-percentage"`          // Clear Channel Assessment utilization percentage, sent even at 0, so 0 is a reading (Live: IOS-XE 17.12.6a)
 	Stations                  int `json:"stations"`                     // Number of associated stations (Live: IOS-XE 17.12.6a)
 	RxNoiseChannelUtilization int `json:"rx-noise-channel-utilization"` // Receive noise channel utilization (Live: IOS-XE 17.12.6a)
 	NonWifiInter              int `json:"non-wifi-inter"`               // Non-WiFi interference level (Live: IOS-XE 17.12.6a)

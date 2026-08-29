@@ -21,9 +21,6 @@ const (
 	// ErrAtLeastOneTagRequired is the error message when no tags are specified.
 	ErrAtLeastOneTagRequired = ierrors.ErrAtLeastOneTagRequired
 
-	// ErrRadioBandNegative is the error message when radio band is negative.
-	ErrRadioBandNegative = "radio band cannot be negative"
-
 	// ErrEitherMACOrNameRequired is the error message when neither MAC nor name is provided.
 	ErrEitherMACOrNameRequired = "either AP MAC address or AP name must be provided"
 
@@ -32,9 +29,6 @@ const (
 
 	// ErrAPMacRequired is the error message when AP MAC address is required.
 	ErrAPMacRequired = "AP MAC address is required"
-
-	// ErrRadioBandRequired is the error message when radio band is required.
-	ErrRadioBandRequired = "radio band is required for radio operations"
 
 	// ErrCAPWAPDataUnavailable is the error message when CAPWAP data is not available.
 	ErrCAPWAPDataUnavailable = "no control protocol data available" // nosec: G101 - This is not a credential

@@ -1,10 +1,12 @@
 package transport
 
 import (
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/testutil"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/version"
 )
 
 func TestTransportUnit_NewTransport_Success(t *testing.T) {
@@ -112,8 +114,10 @@ func TestTransportUnit_NewTransportDetailsConfiguration_Success(t *testing.T) {
 }
 
 func TestTransportUnit_DefaultHeadersUserAgent_Success(t *testing.T) {
-	testutil.AssertStringEquals(t, HTTPHeaderUserAgent, "cisco-ios-xe-wireless-go",
-		"the default User-Agent names the module")
+	testutil.AssertStringEquals(t, HTTPHeaderUserAgent, "cisco-ios-xe-wireless-go/"+version.Version,
+		"the default User-Agent names the module and the release")
+	testutil.AssertTrue(t, strings.HasSuffix(HTTPHeaderUserAgent, "/"+version.Version),
+		"the version is the product-version token, so a controller's log parser can read it")
 
 	headers := DefaultHeaders("test-token-123", "cisco-wnc-exporter/1.2.3")
 	testutil.AssertStringEquals(t, headers.Get(HTTPHeaderKeyUserAgent),

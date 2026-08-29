@@ -50,9 +50,10 @@ func executeStandardRFTagWorkflow(t *testing.T, tsc *scenario.TagContext, servic
 
 	// Step 2: Create test tag
 	t.Logf("Step 2: Creating test RF tag: %s", tsc.TestTagName)
+	description := expectedRFTagDescription
 	if err := service.CreateRFTag(tsc.Ctx, &rf.RFTag{
 		TagName:     tsc.TestTagName,
-		Description: expectedRFTagDescription,
+		Description: &description,
 		RFTagRadioProfiles: &rf.RFTagRadioProfiles{
 			RFTagRadioProfile: []rf.RFTagRadioProfile{
 				{
@@ -137,25 +138,35 @@ func validateRFTagConfig(t *testing.T, tsc *scenario.TagContext, config *rf.RFTa
 		t.Errorf("Expected tag name %s, got %s", tsc.TestTagName, config.TagName)
 	}
 
-	if config.Description != expectedRFTagDescription {
-		t.Errorf("Expected description %s, got %s", expectedRFTagDescription, config.Description)
+	if valueOf(config.Description) != expectedRFTagDescription {
+		t.Errorf("Expected description %s, got %s", expectedRFTagDescription, valueOf(config.Description))
 	}
 
 	// Validate 2.4GHz profile
-	if config.Dot11BRfProfileName != testRF24GHzProfile {
-		t.Errorf("2.4GHz RF profile validation: expected '%s', got '%s'", testRF24GHzProfile, config.Dot11BRfProfileName)
+	if valueOf(config.Dot11BRfProfileName) != testRF24GHzProfile {
+		t.Errorf("2.4GHz RF profile validation: expected '%s', got '%s'", testRF24GHzProfile, valueOf(config.Dot11BRfProfileName))
 	}
 
 	// Validate 5GHz profile
-	if config.Dot11ARfProfileName != testRF5GHzProfile {
-		t.Errorf("5GHz RF profile validation: expected '%s', got '%s'", testRF5GHzProfile, config.Dot11ARfProfileName)
+	if valueOf(config.Dot11ARfProfileName) != testRF5GHzProfile {
+		t.Errorf("5GHz RF profile validation: expected '%s', got '%s'", testRF5GHzProfile, valueOf(config.Dot11ARfProfileName))
 	}
 
 	// Validate 6GHz profile (may be empty in some environments)
-	if config.Dot116GhzRFProfName != testRF6GHzProfile {
+	if valueOf(config.Dot116GhzRFProfName) != testRF6GHzProfile {
 		t.Logf("Warning: Expected 6GHz profile '%s', got '%s' (this might be expected in some environments due to the default profile doesn't show in the response)",
-			testRF6GHzProfile, config.Dot116GhzRFProfName)
+			testRF6GHzProfile, valueOf(config.Dot116GhzRFProfName))
 	}
+}
+
+// valueOf reads an optional leaf: a nil one compares as the empty string, which is what an
+// omitted leaf means to this test rather than a value the controller reported.
+func valueOf(profileName *string) string {
+	if profileName == nil {
+		return ""
+	}
+
+	return *profileName
 }
 
 // validateRFTagDeletion ensures the test tag was properly deleted

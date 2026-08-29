@@ -148,18 +148,18 @@ Push the coverage artifacts and badge to the PR.
 
 To release a new version:
 
-- **Update the version** in the `VERSION` file.
+- **Update the version** in the `VERSION` file and in `internal/version.Version` (`internal/version/version.go`) — `version_test.go` fails unless both move in the same commit.
 - **Submit a pull request** with the updated `VERSION` file.
 
 Once merged, GitHub Actions will automatically release the new version using [Release Workflow](https://github.com/umatare5/cisco-ios-xe-wireless-go/actions/workflows/go-release.yml).
 
 ### Versioning Rules
 
-While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**. A PATCH release never changes the exported API.
+While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**. A PATCH release may add to the exported API but never changes or removes what is already there.
 
 | Change | Bump | Release notes must name |
 | :--- | :--- | :--- |
-| Added exported symbol | MINOR | The new symbols |
+| Added exported symbol | PATCH | The new symbols |
 | Added variadic parameter | MINOR | The broken forms and the recovery path |
 | Changed or removed symbol | MINOR | Every affected symbol |
 | No exported API change | PATCH | Nothing |
@@ -181,6 +181,7 @@ Type every field from a measured response, never from the YANG model.
 | Enumeration | `string`, or a named `string` type |
 
 - Retype a leaf only when that leaf was measured. Two `uint64` siblings in one struct can differ.
+- One leaf that will not decode fails the whole read: `encoding/json` refuses an out-of-range integer and both decode paths discard the partly-filled value, at `internal/core/envelope.go:37-40` on a read and `internal/core/request.go:206-208` on a write response. Narrowing a numeric type therefore risks a collection, not a field.
 - Do not add `,string` to a numeric field, and do not introduce a third numeric convention for a single leaf.
 - Pointerize any leaf whose absence carries meaning, and give it `,omitempty`.
 - An omitted configuration leaf means its default is in force, and that default is often `true`.
@@ -209,3 +210,5 @@ Copy the shape of an existing service, then satisfy each rule below. [tests/cont
 ### HTTP Transport
 
 `NewTransport` tunes the transport for a single controller rather than copying `http.DefaultTransport`: HTTP/2 is off, and the handshake and header budgets are 5 s each. It uses no proxy by default, so pass `WithProxy(http.ProxyFromEnvironment)` to route through one.
+
+Those two budgets are `DefaultTLSHandshakeTimeout` and `DefaultResponseHeaderTimeout`, and `WithTimeout` lifts neither: it bounds the whole request. Raise them with `WithTLSHandshakeTimeout` and `WithResponseHeaderTimeout`, one option each — every option mutates one shared transport in place, so a single option setting all three would overwrite a smaller budget an earlier option had set.

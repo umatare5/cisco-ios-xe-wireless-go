@@ -15,6 +15,8 @@ var (
 	// ErrResourceNotFound indicates that the requested resource or endpoint was not found.
 	ErrResourceNotFound = errors.New("resource not found")
 	// ErrInvalidConfiguration indicates that the client configuration is invalid or incomplete.
+	// Every error New returns wraps it: a malformed authority, an empty token, or an option that
+	// refused its argument.
 	ErrInvalidConfiguration = errors.New("invalid client configuration")
 	// ErrRequestTimeout indicates that the request exceeded the configured timeout period.
 	ErrRequestTimeout = errors.New("request timeout")

@@ -37,3 +37,14 @@ const (
 	// ClientDcInfoPath retrieves discovery client information.
 	ClientDcInfoPath = RESTCONFDataPath + "/Cisco-IOS-XE-wireless-client-oper:client-oper-data/dc-info"
 )
+
+// Client RPC Operations
+//
+// Based on Cisco-IOS-XE-wireless-client-rpc YANG model specifications.
+
+// Client RPC Operations.
+const (
+	// ClientDeauthRPC deauthenticates one wireless client. The module declares it from revision
+	// 2024-03-01, so 17.12 answers 400 rather than 404 — the path is absent, not the resource.
+	ClientDeauthRPC = RESTCONFOperationsPath + "/Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all"
+)

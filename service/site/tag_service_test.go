@@ -483,7 +483,7 @@ func TestSiteTagServiceUnit_ErrorHandling_ComprehensiveScenarios(t *testing.T) {
 		siteTagService := service.SiteTag()
 		ctx := testutil.TestContext(t)
 
-		// Test validateTagName with whitespace-only string
+		// Whitespace-only is refused by validation.ValidateTagName, not by the 404 that follows
 		_, err := siteTagService.GetSiteTag(ctx, "   ")
 		if err == nil {
 			t.Error("Expected validation error for whitespace-only tag name")

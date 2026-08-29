@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/restconf/routes"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/service"
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
 // SiteTagService provides site tag management operations.
@@ -29,7 +29,7 @@ func (s *SiteTagService) GetSiteTag(
 	tagName string,
 	opts ...core.GetOption,
 ) (*SiteListEntry, error) {
-	if err := s.validateTagName(tagName); err != nil {
+	if err := validation.ValidateTagName(tagName); err != nil {
 		return nil, err
 	}
 
@@ -73,10 +73,7 @@ func (s *SiteTagService) CreateSiteTag(ctx context.Context, config *SiteListEntr
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
-	if config.SiteTagName == "" {
-		return errors.New("site tag name cannot be empty")
-	}
-	if err := s.validateTagName(config.SiteTagName); err != nil {
+	if err := validation.ValidateTagName(config.SiteTagName); err != nil {
 		return err
 	}
 
@@ -100,7 +97,10 @@ func (s *SiteTagService) SetAPJoinProfile(ctx context.Context, siteTagName, apJo
 	return s.setSiteTag(ctx, config)
 }
 
-// SetFlexProfile sets the flex profile for a site tag.
+// SetFlexProfile sets the flex profile for a site tag and writes is-local-site false in the same
+// PATCH: the schema declares flex-profile only when is-local-site is false, and is-local-site
+// defaults to true. Apply it LAST — every setter here re-sends the whole entry, so a later
+// SetLocalSite(true) would carry the flex profile back with is-local-site true.
 func (s *SiteTagService) SetFlexProfile(ctx context.Context, siteTagName, flexProfile string) error {
 	config, err := s.GetSiteTag(ctx, siteTagName)
 	if err != nil {
@@ -113,7 +113,7 @@ func (s *SiteTagService) SetFlexProfile(ctx context.Context, siteTagName, flexPr
 			fmt.Errorf("tag '%s' not found in controller configuration", siteTagName))
 	}
 
-	isLocalSite := false // Explicitly set to false for flex-profile compatibility
+	isLocalSite := false
 	config.IsLocalSite = &isLocalSite
 	config.FlexProfile = &flexProfile
 	return s.setSiteTag(ctx, config)
@@ -154,7 +154,7 @@ func (s *SiteTagService) SetDescription(ctx context.Context, siteTagName, descri
 
 // DeleteSiteTag deletes a site tag configuration.
 func (s *SiteTagService) DeleteSiteTag(ctx context.Context, siteTagName string) error {
-	if err := s.validateTagName(siteTagName); err != nil {
+	if err := validation.ValidateTagName(siteTagName); err != nil {
 		return err
 	}
 	return core.Delete(ctx, s.Client(), s.buildTagURL(siteTagName))
@@ -165,27 +165,12 @@ func (s *SiteTagService) setSiteTag(ctx context.Context, config *SiteListEntry) 
 	if config == nil {
 		return errors.New("config cannot be nil")
 	}
-	if config.SiteTagName == "" {
-		return errors.New("site tag name cannot be empty")
-	}
-	if err := s.validateTagName(config.SiteTagName); err != nil {
+	if err := validation.ValidateTagName(config.SiteTagName); err != nil {
 		return err
 	}
 
 	payload := s.buildPayload(*config)
 	return core.PatchVoid(ctx, s.Client(), s.buildTagURL(config.SiteTagName), payload)
-}
-
-// validateTagName validates site tag name.
-func (s *SiteTagService) validateTagName(tagName string) error {
-	if tagName == "" {
-		return errors.New("site tag name cannot be empty")
-	}
-	if strings.TrimSpace(tagName) == "" {
-		return fmt.Errorf("site tag validation failed: %w",
-			fmt.Errorf("invalid tag name format: '%s'", tagName))
-	}
-	return nil
 }
 
 // buildTagURL builds URL for specific tag operations using RESTCONF builder.

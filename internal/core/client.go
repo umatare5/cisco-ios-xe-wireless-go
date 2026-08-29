@@ -2,6 +2,8 @@ package core
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"errors"
 	"fmt"
 	"io"
@@ -18,10 +20,18 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/validation"
 )
 
-// Default timeout constant.
+// Default request budgets. A request is bounded by all three, and WithTimeout sets only the first.
 const (
 	// DefaultTimeout is the default timeout for API requests.
 	DefaultTimeout = 60 * time.Second
+
+	// DefaultResponseHeaderTimeout is the default budget for the response headers
+	// (re-export of transport.DefaultResponseHeaderTimeout).
+	DefaultResponseHeaderTimeout = transport.DefaultResponseHeaderTimeout
+
+	// DefaultTLSHandshakeTimeout is the default budget for the TLS handshake
+	// (re-export of transport.DefaultTLSHandshakeTimeout).
+	DefaultTLSHandshakeTimeout = transport.DefaultTLSHandshakeTimeout
 )
 
 // maxLoggedBodyBytes bounds the error body copied into the log line and into
@@ -43,6 +53,13 @@ type Client struct {
 type Option func(*Client) error
 
 // WithTimeout sets the timeout duration for HTTP requests.
+//
+// It bounds the whole request and lifts neither of the transport's other two budgets:
+// DefaultResponseHeaderTimeout still ends the wait for the response headers and
+// DefaultTLSHandshakeTimeout still ends the handshake. Raise those with
+// WithResponseHeaderTimeout and WithTLSHandshakeTimeout. They stay separate deliberately —
+// every option here mutates one shared transport in place, so one option setting all three
+// would overwrite a smaller budget an earlier option had set, with no compile error.
 func WithTimeout(timeout time.Duration) Option {
 	return func(c *Client) error {
 		if !validation.IsValidTimeout(timeout) {
@@ -58,6 +75,37 @@ func WithTimeout(timeout time.Duration) Option {
 func WithInsecureSkipVerify(skip bool) Option {
 	return func(c *Client) error {
 		c.httpTransport.TLSClientConfig.InsecureSkipVerify = skip //nolint:gosec
+		return nil
+	}
+}
+
+// WithRootCAs verifies the controller's certificate against pool instead of the host's roots.
+//
+// This is the option to reach for where WithInsecureSkipVerify would otherwise be used: a
+// controller presenting a certificate from a private CA is verified rather than unverified. A nil
+// pool is refused, because assigning one would silently mean "use the host's roots" and read at
+// the call site as the opposite.
+func WithRootCAs(pool *x509.CertPool) Option {
+	return func(c *Client) error {
+		if pool == nil {
+			return errors.New("root CA pool cannot be nil")
+		}
+		c.httpTransport.TLSClientConfig.RootCAs = pool
+		return nil
+	}
+}
+
+// WithClientCertificate presents cert to the controller, for a deployment that authenticates the
+// client with mTLS as well as with the Authorization header.
+//
+// A certificate carrying no chain is refused: appending the zero tls.Certificate would leave the
+// handshake to fail on the wire rather than here.
+func WithClientCertificate(cert tls.Certificate) Option {
+	return func(c *Client) error {
+		if len(cert.Certificate) == 0 {
+			return errors.New("client certificate carries no certificate chain")
+		}
+		c.httpTransport.TLSClientConfig.Certificates = []tls.Certificate{cert}
 		return nil
 	}
 }
@@ -100,6 +148,13 @@ func WithTLSHandshakeTimeout(timeout time.Duration) Option {
 }
 
 // WithLogger sets a custom logger for the client.
+//
+// Unset, the client logs to slog.Default(), so a process that never passed a logger still gets
+// this package's Debug and Error lines — an HTTP error line among them, carrying up to
+// maxLoggedBodyBytes of the controller's rejection document. Pass
+// WithLogger(slog.New(slog.DiscardHandler)) to silence the SDK; the default is left as
+// slog.Default() because changing it would take logging away from an existing caller with no
+// compile error and nothing to notice.
 func WithLogger(logger *slog.Logger) Option {
 	return func(c *Client) error {
 		if logger == nil {
@@ -122,20 +177,20 @@ func WithUserAgent(userAgent string) Option {
 }
 
 // New creates a new WNC client with the specified host, token, and options.
+//
+// host is an authority and nothing else — "wnc1.example.internal", "192.0.2.10:443" or a bare IPv6
+// literal this brackets for you. Every error New returns matches ErrInvalidConfiguration.
 func New(host, token string, opts ...Option) (*Client, error) {
 	// Normalize before validating: the trimmed and bracketed form is both what the
 	// validator judges and what reaches the Authorization header and the request URL.
 	host = validation.NormalizeHost(host)
 	token = strings.TrimSpace(token)
 
-	// Validate inputs using existing validation functions
-	if !validation.IsValidController(host) {
-		return nil, fmt.Errorf("client initialization failed: %w",
-			fmt.Errorf("controller address validation failed: invalid format %s", host))
+	if err := validation.ValidateHost(host); err != nil {
+		return nil, fmt.Errorf("%w: %w", ErrInvalidConfiguration, err)
 	}
 	if !validation.IsValidAccessToken(token) {
-		return nil, fmt.Errorf("client initialization failed: %w",
-			errors.New("access token validation failed: token is empty or invalid format"))
+		return nil, fmt.Errorf("%w: access token is empty", ErrInvalidConfiguration)
 	}
 
 	// Create HTTP client with transport
@@ -160,7 +215,7 @@ func New(host, token string, opts ...Option) (*Client, error) {
 	// Apply options
 	for _, opt := range opts {
 		if err := opt(client); err != nil {
-			return nil, fmt.Errorf("failed to apply option: %w", err)
+			return nil, fmt.Errorf("%w: %w", ErrInvalidConfiguration, err)
 		}
 	}
 
@@ -175,7 +230,7 @@ func New(host, token string, opts ...Option) (*Client, error) {
 // The transport methods are unexported so that the root client's untyped methods are the only
 // route out of the typed API. A value reached through a service constructor can build URLs and
 // services with it, and nothing else.
-func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) {
+func (c *Client) do(ctx context.Context, method, path string) (*Response, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -185,17 +240,17 @@ func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) {
 		return nil, err
 	}
 
-	body, err := c.execute(req)
+	resp, err := c.execute(req)
 	if err != nil {
 		return nil, err
 	}
 
 	c.logger.Debug("Successfully processed API response", "path", path)
-	return body, nil
+	return resp, nil
 }
 
 // doWithPayload performs an HTTP request with a payload and returns the response body.
-func (c *Client) doWithPayload(ctx context.Context, method, path string, payload any) ([]byte, error) {
+func (c *Client) doWithPayload(ctx context.Context, method, path string, payload any) (*Response, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -205,19 +260,19 @@ func (c *Client) doWithPayload(ctx context.Context, method, path string, payload
 		return nil, err
 	}
 
-	body, err := c.execute(req)
+	resp, err := c.execute(req)
 	if err != nil {
 		return nil, err
 	}
 
 	c.logger.Debug("Successfully processed API response", "path", path)
-	return body, nil
+	return resp, nil
 }
 
 // doRPC posts an RPC input to rpcPath and returns the output body. RFC 8040 4.4.2 invokes an
 // operation with POST and nothing else, so the method is not a parameter; RequestRaw refuses
 // another method on an operations path rather than routing it here.
-func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte, error) {
+func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) (*Response, error) {
 	if err := c.validateDoParameters(ctx); err != nil {
 		return nil, err
 	}
@@ -227,17 +282,17 @@ func (c *Client) doRPC(ctx context.Context, rpcPath string, payload any) ([]byte
 		return nil, err
 	}
 
-	body, err := c.execute(req)
+	resp, err := c.execute(req)
 	if err != nil {
 		return nil, err
 	}
 
 	c.logger.Debug("Successfully processed RPC response", "rpcPath", rpcPath)
-	return body, nil
+	return resp, nil
 }
 
-// execute sends req and returns its body once the status has been checked.
-func (c *Client) execute(req *http.Request) ([]byte, error) {
+// execute sends req and returns its status and body once the status has been checked.
+func (c *Client) execute(req *http.Request) (*Response, error) {
 	resp, err := c.requestBuilder.ExecuteRequest(c.httpClient, req)
 	if err != nil {
 		return nil, classifyTransportError(err)
@@ -253,7 +308,7 @@ func (c *Client) execute(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 
-	return body, nil
+	return &Response{StatusCode: resp.StatusCode, Body: body}, nil
 }
 
 // validateDoParameters validates input parameters for the Do method.
@@ -323,6 +378,19 @@ func classifyTransportError(err error) error {
 		return fmt.Errorf("%w: %w", ErrRequestTimeout, err)
 	}
 	return err
+}
+
+// CloseIdleConnections closes the pooled connections that have no request on them, releasing the
+// sockets a long-lived process would otherwise hold for DefaultIdleConnTimeout after its last read.
+//
+// A connection in use is left alone and the client stays usable afterwards: the next request dials
+// again. It is the one lever this package publishes over the pool, because the transport itself
+// stays unexported.
+func (c *Client) CloseIdleConnections() {
+	if c == nil {
+		return
+	}
+	c.httpClient.CloseIdleConnections()
 }
 
 // RESTCONFBuilder returns the RESTCONF URL builder for the client.

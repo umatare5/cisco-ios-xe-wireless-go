@@ -1,10 +1,15 @@
 package wlan
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strings"
 	"sync"
 	"testing"
 
@@ -190,6 +195,81 @@ func TestWlanServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 	t.Logf("All get operations returned valid WLAN data")
 }
 
+// TestWlanServiceUnit_SecretRedaction_Success pins the four methods that keep a pre-shared key
+// out of a log and the one verb that still carries it. Each direction is a separate assertion
+// because each is held by a different method: dropping Secret.LogValue leaves the JSON handler
+// leaking the field, and dropping WlanCfgEntry.LogValue leaves it leaking the whole entry.
+func TestWlanServiceUnit_SecretRedaction_Success(t *testing.T) {
+	const key = "not-a-real-key"
+
+	entry := WlanCfgEntry{WlanID: 7, ProfileName: "profile-redaction", PSK: Secret(key)}
+
+	if got := entry.PSK.String(); got != redacted {
+		t.Errorf("Secret.String() = %q, want %q", got, redacted)
+	}
+	if got := entry.PSK.Reveal(); got != key {
+		t.Errorf("Secret.Reveal() = %q, want the key back", got)
+	}
+	if got := fmt.Sprintf("%+v", entry); strings.Contains(got, key) {
+		t.Errorf("%%+v of the entry carried the key: %s", got)
+	}
+
+	// The entry is held by WlanCfgEntry.LogValue, which renders the identifying leaves and no
+	// configuration at all, so the assertion is absence of the key rather than presence of the
+	// redaction. Without that method the handler renders the entry through json.Marshal.
+	if got := logJSON(t, "entry", entry); strings.Contains(got, key) {
+		t.Errorf("slog.JSONHandler carried the key for the entry: %s", got)
+	}
+
+	// The field on its own is held by Secret.LogValue, which does render the redaction.
+	got := logJSON(t, "psk", entry.PSK)
+	if strings.Contains(got, key) {
+		t.Errorf("slog.JSONHandler carried the key for the field: %s", got)
+	}
+	if !strings.Contains(got, redacted) {
+		t.Errorf("slog.JSONHandler rendered no redaction for the field: %s", got)
+	}
+
+	// The JSON path is held by Secret.MarshalJSON, which covers the containers above the entry
+	// as well: WlanCfgEntries and the response wrapper have no LogValue of their own.
+	body, err := json.Marshal(entry)
+	if err != nil {
+		t.Fatalf("json.Marshal failed: %v", err)
+	}
+	if strings.Contains(string(body), key) {
+		t.Errorf("json.Marshal carried the key: %s", body)
+	}
+	if !strings.Contains(string(body), redacted) {
+		t.Errorf("json.Marshal rendered no redaction: %s", body)
+	}
+
+	// The empty case is asserted on the bare value because encoding/json omits an empty omitempty
+	// field without calling the marshaler, so the struct cannot show what the method returns.
+	empty, err := json.Marshal(Secret(""))
+	if err != nil {
+		t.Fatalf("json.Marshal of an empty Secret failed: %v", err)
+	}
+	if string(empty) != `""` {
+		t.Errorf("json.Marshal of an empty Secret = %s, want an empty string", empty)
+	}
+
+	// The one residual, asserted in the direction it must keep: %#v prints the underlying string
+	// of any named type.
+	if got := fmt.Sprintf("%#v", entry); !strings.Contains(got, key) {
+		t.Errorf("%%#v redacted, so the doc comment naming it a residual is now wrong")
+	}
+}
+
+// logJSON returns the one record a slog.JSONHandler writes for a single attribute.
+func logJSON(t *testing.T, key string, value any) string {
+	t.Helper()
+
+	var buf bytes.Buffer
+	slog.New(slog.NewJSONHandler(&buf, nil)).Info("redaction", key, value)
+
+	return buf.String()
+}
+
 func TestWlanServiceUnit_ErrorHandling_NilClient(t *testing.T) {
 	service := NewService(nil)
 	ctx := testutil.TestContext(t)
@@ -234,14 +314,17 @@ func TestWlanServiceUnit_OmittedSecurityLeaf_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries": `{
 			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {
 				"wlan-cfg-entry": [
-					{"wlan-id": 1, "profile-name": "profile-default"},
+					{"wlan-id": 1, "profile-name": "profile-default", "apf-vap-id-data": {"ssid": "ssid-default"}},
 					{
 						"wlan-id": 2,
 						"profile-name": "profile-explicit",
 						"wpa2-enabled": false,
+						"wpa2-aes": false,
+						"security-wpa": false,
+						"okc": false,
 						"wlan-11k-neigh-list": false,
 						"apf-vap-802-11v-data": {"dot11v-dms": false},
-						"apf-vap-id-data": {"ssid": "ssid-explicit", "wlan-status": false}
+						"apf-vap-id-data": {"ssid": "ssid-explicit", "wlan-status": false, "broadcast-ssid": false}
 					}
 				]
 			}
@@ -288,6 +371,123 @@ func TestWlanServiceUnit_OmittedSecurityLeaf_MockSuccess(t *testing.T) {
 	}
 	if *entries[1].APFVapIDData.WlanStatus {
 		t.Error("Expected the explicit false for wlan-status")
+	}
+
+	// The three default-true leaves this type gains on the entry are read through one map per
+	// direction, so a failure names its leaf rather than its line.
+	for leaf, got := range map[string]*bool{
+		"security-wpa": entries[0].SecurityWPA,
+		"wpa2-aes":     entries[0].WPA2AES,
+		"okc":          entries[0].OKC,
+	} {
+		if got != nil {
+			t.Errorf("Expected an omitted %s to stay nil: the default in force is not false", leaf)
+		}
+	}
+
+	for leaf, got := range map[string]*bool{
+		"security-wpa": entries[1].SecurityWPA,
+		"wpa2-aes":     entries[1].WPA2AES,
+		"okc":          entries[1].OKC,
+	} {
+		if got == nil || *got {
+			t.Errorf("Expected an explicit false %s to decode to a non-nil false", leaf)
+		}
+	}
+
+	// broadcast-ssid's absence is read off a container that did arrive, with ssid as the control: a
+	// nil container would leave the leaf itself unasserted.
+	if entries[0].APFVapIDData == nil || entries[0].APFVapIDData.SSID != "ssid-default" {
+		t.Fatalf("Expected the first record to carry apf-vap-id-data with ssid, got %+v",
+			entries[0].APFVapIDData)
+	}
+	if entries[0].APFVapIDData.BroadcastSSID != nil {
+		t.Error("Expected an omitted broadcast-ssid to stay nil")
+	}
+	if entries[1].APFVapIDData.BroadcastSSID == nil || *entries[1].APFVapIDData.BroadcastSSID {
+		t.Error("Expected an explicit false broadcast-ssid to decode to a non-nil false")
+	}
+}
+
+// TestWlanServiceUnit_SecurityLeafTags_MockSuccess reaches every security leaf this type declares
+// as a value, which no nil-check can reach: a value field decodes an absent leaf and a misspelled
+// tag to the same zero, so the tag is only exercised by a body that sets the leaf to its non-zero.
+func TestWlanServiceUnit_SecurityLeafTags_MockSuccess(t *testing.T) {
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries": `{
+			"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-entries": {
+				"wlan-cfg-entry": [
+					{
+						"wlan-id": 3,
+						"profile-name": "profile-every-leaf",
+						"auth-key-mgmt-psk-sha256": true,
+						"auth-key-mgmt-cckm": true,
+						"auth-key-mgmt-sae": true,
+						"auth-key-mgmt-ft-psk": true,
+						"auth-key-mgmt-ft-dot1x": true,
+						"auth-key-mgmt-ft-sae": true,
+						"auth-key-mgmt-suite-b": true,
+						"auth-key-mgmt-suite-b-192": true,
+						"akm-owe": true,
+						"akm-sae-ext-key": true,
+						"akm-ft-sae-ext-key": true,
+						"wpa1-enabled": true,
+						"wep-enabled": true,
+						"osen": true,
+						"dot11-auth-type": "apf-vap-80211-auth-open",
+						"apf-vap-id-data": {
+							"ssid": "ssid-every-leaf",
+							"p2p-block-action": "p2p-blocking-action-drop"
+						}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	result, err := service.ListWlanCfgEntries(ctx)
+	if err != nil {
+		t.Fatalf("ListWlanCfgEntries failed: %v", err)
+	}
+	if result.WlanCfgEntries == nil || len(result.WlanCfgEntries.WlanCfgEntry) != 1 {
+		t.Fatalf("Expected 1 entry, got %+v", result.WlanCfgEntries)
+	}
+
+	entry := result.WlanCfgEntries.WlanCfgEntry[0]
+
+	for leaf, got := range map[string]bool{
+		"auth-key-mgmt-psk-sha256":  entry.AuthKeyMgmtPskSha256,
+		"auth-key-mgmt-cckm":        entry.AuthKeyMgmtCckm,
+		"auth-key-mgmt-sae":         entry.AuthKeyMgmtSae,
+		"auth-key-mgmt-ft-psk":      entry.AuthKeyMgmtFtPsk,
+		"auth-key-mgmt-ft-dot1x":    entry.AuthKeyMgmtFtDot1x,
+		"auth-key-mgmt-ft-sae":      entry.AuthKeyMgmtFtSae,
+		"auth-key-mgmt-suite-b":     entry.AuthKeyMgmtSuiteB,
+		"auth-key-mgmt-suite-b-192": entry.AuthKeyMgmtSuiteB192,
+		"akm-owe":                   entry.AkmOwe,
+		"akm-sae-ext-key":           entry.AkmSaeExtKey,
+		"akm-ft-sae-ext-key":        entry.AkmFtSaeExtKey,
+		"wpa1-enabled":              entry.WPA1Enabled,
+		"wep-enabled":               entry.WEPEnabled,
+		"osen":                      entry.OSEN,
+	} {
+		if !got {
+			t.Errorf("%s decoded to false, so the field does not carry that tag", leaf)
+		}
+	}
+
+	if entry.Dot11AuthType != "apf-vap-80211-auth-open" {
+		t.Errorf("dot11-auth-type decoded to %q, so the field does not carry that tag",
+			entry.Dot11AuthType)
+	}
+	if entry.APFVapIDData == nil || entry.APFVapIDData.P2PBlockAction != "p2p-blocking-action-drop" {
+		t.Errorf("p2p-block-action did not decode, so the field does not carry that tag: %+v",
+			entry.APFVapIDData)
 	}
 }
 

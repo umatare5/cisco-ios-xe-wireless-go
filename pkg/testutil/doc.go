@@ -13,6 +13,7 @@
 // - Support for custom HTTP methods, status codes, and response bodies
 // - RESTCONF path normalization and prefix handling
 // - Enhanced testing integration with WithTesting option
+// - RESTCONFServer.Requests for asserting the method, path, query and body a request carried
 //
 // # Usage Examples
 //

@@ -2,10 +2,13 @@ package wnc
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"io"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -216,6 +219,65 @@ func TestGetDataReturnsBodyUnchecked(t *testing.T) {
 	}
 }
 
+// probeEnvelope is the envelope shape GetDataInto takes: one field, tagged with the
+// module-qualified node the path reads.
+type probeEnvelope struct {
+	Probe *struct {
+		Leaf int `json:"leaf"`
+	} `json:"a:probe"`
+}
+
+// wrongKeyEnvelope names a node the response does not carry.
+type wrongKeyEnvelope struct {
+	Other *struct{} `json:"a:other"`
+}
+
+// TestGetDataIntoAppliesTheEnvelopeCheck pins what GetDataInto adds over GetData. The two-key
+// body is the same fixture GetData hands back intact, so the pair is the before and after.
+func TestGetDataIntoAppliesTheEnvelopeCheck(t *testing.T) {
+	t.Run("SoleKeyDecodes", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:probe":{"leaf":7}}`)
+
+		got, err := GetDataInto[probeEnvelope](context.Background(), client, "probe")
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+		if got.Probe == nil || got.Probe.Leaf != 7 {
+			t.Errorf("Probe = %+v, want a node holding leaf 7", got.Probe)
+		}
+	})
+
+	t.Run("TwoTopLevelKeysAreRefused", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:one":{"x":1},"a:two":{"y":2}}`)
+
+		if _, err := GetDataInto[probeEnvelope](context.Background(), client, "probe"); err == nil {
+			t.Error("Expected an error for a body carrying two top-level keys")
+		}
+	})
+
+	t.Run("UnclaimedKeyIsRefused", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:probe":{"leaf":7}}`)
+
+		if _, err := GetDataInto[wrongKeyEnvelope](context.Background(), client, "probe"); err == nil {
+			t.Error("Expected an error for a T declaring no field for the response key")
+		}
+	})
+
+	t.Run("NonStructIsRefused", func(t *testing.T) {
+		client, _ := newRecordingClient(t, `{"a:probe":{"leaf":7}}`)
+
+		if _, err := GetDataInto[map[string]any](context.Background(), client, "probe"); err == nil {
+			t.Error("Expected an error for a non-struct T")
+		}
+	})
+
+	t.Run("NilClientIsReported", func(t *testing.T) {
+		if _, err := GetDataInto[probeEnvelope](context.Background(), nil, "probe"); err == nil {
+			t.Error("Expected an error for a nil client")
+		}
+	})
+}
+
 // TestGetDataWireQuery pins the re-exported options on the wire through the unified
 // client. WithFields and WithDepth have no other route to a consumer.
 func TestGetDataWireQuery(t *testing.T) {
@@ -418,7 +480,7 @@ func TestWithDefaultsWireQuery(t *testing.T) {
 }
 
 // seenRequest is what the recorder keeps: the three things the untyped methods are responsible
-// for, and the body, which the shared mock server in pkg/testutil does not record.
+// for, the body, and the Content-Type, which RecordedRequest deliberately does not carry.
 type seenRequest struct {
 	method      string
 	path        string
@@ -691,6 +753,164 @@ func TestClientUntyped_Faults_AreReportedBeforeSending(t *testing.T) {
 
 		if got := last(t, seen); got.body != "" {
 			t.Errorf("Expected no body, got %q", got.body)
+		}
+	})
+}
+
+// TestClient_CloseIdleConnections_ReleasesThePool holds the one lever this package publishes over
+// the connection pool, in the only terms a caller can observe it: whether the next request reuses
+// the socket or dials a new one.
+//
+// Counting dials is what makes this more than a call that cannot fail. Without the close in the
+// middle, the third request reuses the first connection and the count stays at 1.
+func TestClient_CloseIdleConnections_ReleasesThePool(t *testing.T) {
+	var (
+		mu    sync.Mutex
+		dials int
+	)
+
+	// Unstarted, because ConnState has to be in place before the first connection: setting it on
+	// an already-serving httptest.Server races with the serving goroutine, which -race reports.
+	server := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	server.Config.ConnState = func(_ net.Conn, state http.ConnState) {
+		if state == http.StateNew {
+			mu.Lock()
+			dials++
+			mu.Unlock()
+		}
+	}
+	server.StartTLS()
+	t.Cleanup(server.Close)
+
+	count := func() int {
+		mu.Lock()
+		defer mu.Unlock()
+		return dials
+	}
+
+	parsed, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatalf("parsing the server URL: %v", err)
+	}
+
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("NewClient() error = %v", err)
+	}
+
+	read := func(what string) {
+		if _, err := client.GetData(context.Background(), "Cisco-IOS-XE-x:probe"); err != nil {
+			t.Fatalf("%s: %v", what, err)
+		}
+	}
+
+	read("first read")
+	read("second read")
+
+	if got := count(); got != 1 {
+		t.Fatalf("dials after two reads = %d, want 1: the pool is not reusing the connection, so"+
+			" this test cannot observe the close", got)
+	}
+
+	client.CloseIdleConnections()
+
+	read("third read")
+
+	if got := count(); got != 2 {
+		t.Errorf("dials after the close and a third read = %d, want 2: the idle connection was"+
+			" not released", got)
+	}
+}
+
+// TestClient_TLSOptionWrappers_ReachTheCore holds the two one-line re-export wrappers, which would
+// otherwise compile while pointing at the wrong core option and be exercised by nothing here.
+func TestClient_TLSOptionWrappers_ReachTheCore(t *testing.T) {
+	host := "wnc1.example.internal"
+
+	if _, err := NewClient(host, "test-token-123", WithRootCAs(nil)); !errors.Is(err, ErrInvalidConfiguration) {
+		t.Errorf("WithRootCAs(nil) error = %v, want ErrInvalidConfiguration", err)
+	}
+
+	_, err := NewClient(host, "test-token-123", WithClientCertificate(tls.Certificate{}))
+	if !errors.Is(err, ErrInvalidConfiguration) {
+		t.Errorf("WithClientCertificate(zero) error = %v, want ErrInvalidConfiguration", err)
+	}
+
+	if _, err := NewClient(host, "test-token-123", WithRootCAs(x509.NewCertPool())); err != nil {
+		t.Errorf("WithRootCAs(pool) error = %v, want nil", err)
+	}
+}
+
+// TestClientUntyped_Request_CarriesTheStatus holds the half of Request's contract the body cannot
+// carry. RESTCONF answers a create, a delete and a read of a node holding nothing with no body at
+// all, so the three are one answer to a caller reading bytes and three to one reading the status.
+func TestClientUntyped_Request_CarriesTheStatus(t *testing.T) {
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case strings.HasSuffix(r.URL.Path, "created"):
+			w.WriteHeader(http.StatusCreated)
+		case strings.HasSuffix(r.URL.Path, "emptied"):
+			w.WriteHeader(http.StatusNoContent)
+		case strings.HasSuffix(r.URL.Path, "nothing"):
+			w.WriteHeader(http.StatusOK)
+		default:
+			w.WriteHeader(http.StatusBadRequest)
+		}
+	}))
+	t.Cleanup(server.Close)
+
+	parsed, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatalf("parsing the server URL: %v", err)
+	}
+
+	client, err := NewClient(parsed.Host, "test-token-123", WithInsecureSkipVerify(true))
+	if err != nil {
+		t.Fatalf("NewClient() error = %v", err)
+	}
+
+	ctx := context.Background()
+
+	tests := []struct {
+		name   string
+		method string
+		path   string
+		want   int
+	}{
+		{name: "a create reports 201", method: http.MethodPost, path: "x:created", want: http.StatusCreated},
+		{name: "a delete reports 204", method: http.MethodDelete, path: "x:emptied", want: http.StatusNoContent},
+		{name: "an empty read reports 200", method: http.MethodGet, path: "x:nothing", want: http.StatusOK},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			resp, err := client.Request(ctx, tt.method, tt.path, nil)
+			if err != nil {
+				t.Fatalf("Request() error = %v", err)
+			}
+			if resp.StatusCode != tt.want {
+				t.Errorf("StatusCode = %d, want %d", resp.StatusCode, tt.want)
+			}
+			if len(resp.Body) != 0 {
+				t.Errorf("Body = %q, want empty: the status is the only thing separating the three", resp.Body)
+			}
+		})
+	}
+
+	t.Run("a rejection is an APIError and no Response", func(t *testing.T) {
+		resp, err := client.Request(ctx, http.MethodPost, "Cisco-IOS-XE-x:refused", nil)
+		if resp != nil {
+			t.Errorf("Response = %+v, want nil beside an error", resp)
+		}
+
+		var apiErr *APIError
+		if !errors.As(err, &apiErr) {
+			t.Fatalf("error = %v, want an *APIError", err)
+		}
+		if apiErr.StatusCode != http.StatusBadRequest {
+			t.Errorf("APIError.StatusCode = %d, want %d", apiErr.StatusCode, http.StatusBadRequest)
 		}
 	})
 }

@@ -40,7 +40,7 @@ Cisco Catalyst 9800 Wireless Network Controller running on:
 
 ## 📦 Installation
 
-This SDK requires Go 1.26 or newer.
+This SDK requires Go 1.27 or newer.
 
 ```bash
 go get github.com/umatare5/cisco-ios-xe-wireless-go
@@ -50,7 +50,7 @@ go get github.com/umatare5/cisco-ios-xe-wireless-go
 
 You have to enable RESTCONF and HTTPS on the C9800 before using this SDK. Please see:
 
-- [Cisco IOS XE 17.12 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1712/b_1712_programmability_cg/m_1712_prog_restconf.html#id_70432)
+- [Cisco IOS XE 17.15 Programmability Configuration Guide — RESTCONF](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/1715/b_1715_programmability_cg/restconf_protocol.html#id_125840)
 
 ### 1. Generate a Basic Auth token
 
@@ -111,7 +111,7 @@ func main() {
 ```
 
 > [!CAUTION]
-> The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
+> The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security. Where the controller presents a certificate from a private CA, pass `wnc.WithRootCAs(pool)` instead: the certificate is then verified rather than unverified.
 
 ### 3. Run the application with environment variables
 
@@ -144,15 +144,17 @@ To create a new client, use the `wnc.NewClient` function with the controller add
 
 There are several options to customize the client behavior.
 
-| Option                         | Type            | Default                    | Description          |
-| ------------------------------ | --------------- | -------------------------- | -------------------- |
-| `WithTimeout(d)`               | `time.Duration` | `60s`                      | HTTP request timeout |
-| `WithResponseHeaderTimeout(d)` | `time.Duration` | `5s`                       | Header wait timeout  |
-| `WithTLSHandshakeTimeout(d)`   | `time.Duration` | `5s`                       | TLS handshake wait   |
-| `WithInsecureSkipVerify(b)`    | `bool`          | `false`                    | Skip TLS verify      |
-| `WithProxy(fn)`                | `func`          | `nil`                      | Proxy resolver       |
-| `WithLogger(l)`                | `*slog.Logger`  | `slog.Default()`           | Structured logger    |
-| `WithUserAgent(ua)`            | `string`        | `cisco-ios-xe-wireless-go` | Custom User-Agent    |
+| Option                         | Type              | Default                              | Description           |
+| ------------------------------ | ----------------- | ------------------------------------ | --------------------- |
+| `WithTimeout(d)`               | `time.Duration`   | `60s`                                | Whole-request timeout |
+| `WithResponseHeaderTimeout(d)` | `time.Duration`   | `5s`                                 | Header wait timeout   |
+| `WithTLSHandshakeTimeout(d)`   | `time.Duration`   | `5s`                                 | TLS handshake wait    |
+| `WithRootCAs(pool)`            | `*x509.CertPool`  | host roots                           | Trust a private CA    |
+| `WithClientCertificate(c)`     | `tls.Certificate` | none                                 | Present a client cert |
+| `WithInsecureSkipVerify(b)`    | `bool`            | `false`                              | Skip TLS verify       |
+| `WithProxy(fn)`                | `func`            | `nil`                                | Proxy resolver        |
+| `WithLogger(l)`                | `*slog.Logger`    | `slog.Default()`                     | Structured logger     |
+| `WithUserAgent(ua)`            | `string`          | `cisco-ios-xe-wireless-go/<version>` | Custom User-Agent     |
 
 ### Request Options
 
@@ -179,12 +181,15 @@ Every node this SDK types has an accessor.
 
 For one it does not — a container a later IOS-XE release adds, or an RPC with no typed wrapper — the root client carries untyped methods that share the client's credentials, TLS settings, timeouts and `*APIError` typing.
 
-| Method                                              | RESTCONF resource      | Notes                      |
-| --------------------------------------------------- | ---------------------- | -------------------------- |
-| `GetData(ctx, path, opts...)`                       | `/restconf/data`       | Read with same `GetOption` |
-| `PostData` / `PutData` / `PatchData` / `DeleteData` | `/restconf/data`       | Edit via fixed call verb   |
-| `PostRPC(ctx, path, payload)`                       | `/restconf/operations` | Invoke RPC                 |
-| `Request(ctx, method, path, payload)`               | either                 | Fallback for custom calls  |
+| Method                                              | RESTCONF resource      | Notes                        |
+| --------------------------------------------------- | ---------------------- | ---------------------------- |
+| `GetData(ctx, path, opts...)`                       | `/restconf/data`       | Read with same `GetOption`   |
+| `GetDataInto[T](ctx, client, path, opts...)`        | `/restconf/data`       | Read into a typed envelope   |
+| `PostData` / `PutData` / `PatchData` / `DeleteData` | `/restconf/data`       | Edit via fixed call verb     |
+| `PostRPC(ctx, path, payload)`                       | `/restconf/operations` | Invoke RPC                   |
+| `Request(ctx, method, path, payload)`               | either                 | Fallback; carries the status |
+
+`GetDataInto` is the one entry above that validates the envelope, so it takes a `T` whose outermost tag is the module-qualified node the path reads. It is a function rather than a method because a generic method may not be declared in an interface and is invisible to `reflect`.
 
 ```go
 body, err := client.PatchData(ctx, "Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data/wlan-cfg-entries/wlan-cfg-entry=1,demo", payload)

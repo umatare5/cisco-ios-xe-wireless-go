@@ -5,6 +5,8 @@ import (
 	"net"
 	"net/http"
 	"time"
+
+	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/version"
 )
 
 // HTTP header key constants.
@@ -25,8 +27,10 @@ const (
 	HTTPHeaderValueBasicPrefix = "Basic "
 	// HTTPHeaderValueYANGData defines the YANG data content type.
 	HTTPHeaderValueYANGData = "application/yang-data+json"
-	// HTTPHeaderUserAgent defines the default User-Agent string.
-	HTTPHeaderUserAgent = "cisco-ios-xe-wireless-go"
+	// HTTPHeaderUserAgent defines the default User-Agent string. It carries the module version so
+	// a controller's own logs identify which release made a request; version.Version is a constant,
+	// which is what keeps this a constant too.
+	HTTPHeaderUserAgent = "cisco-ios-xe-wireless-go/" + version.Version
 	// HTTPHeaderAccept defines the default Accept header value.
 	HTTPHeaderAccept = HTTPHeaderValueYANGData
 	// HTTPHeaderContentType defines the default Content-Type header value.

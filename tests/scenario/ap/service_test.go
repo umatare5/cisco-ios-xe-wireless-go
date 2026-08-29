@@ -5,7 +5,6 @@ package ap_test
 import (
 	"testing"
 
-	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/ap"
 	"github.com/umatare5/cisco-ios-xe-wireless-go/tests/testutil/integration"
 )
@@ -52,14 +51,14 @@ func TestAPServiceScenario_AdminStateManagement_Success(t *testing.T) {
 
 	// Step 2: Disable AP admin state
 	t.Logf("Step 2: Disabling AP admin state for AP %s", apMac)
-	if err := service.DisableAP(ctx, apMac); err != nil {
+	if err := service.DisableAPByMAC(ctx, apMac); err != nil {
 		t.Fatalf("Failed to disable AP %s: %v", apMac, err)
 	}
 	t.Logf("Successfully disabled AP admin state for AP %s", apMac)
 
 	// Step 3: Enable AP admin state
 	t.Logf("Step 3: Enabling AP admin state for AP %s", apMac)
-	if err := service.EnableAP(ctx, apMac); err != nil {
+	if err := service.EnableAPByMAC(ctx, apMac); err != nil {
 		t.Fatalf("Failed to enable AP %s: %v", apMac, err)
 	}
 	t.Logf("Successfully enabled AP admin state for AP %s", apMac)
@@ -117,15 +116,15 @@ func TestAPServiceScenario_RadioStateManagement_Success(t *testing.T) {
 
 	// Step 2: Disable radio admin state
 	t.Logf("Step 2: Disabling radio admin state for AP %s Slot %d", apMac, slotID)
-	radioBand := getRadioBandForSlot(slotID)
-	if err := service.DisableRadio(ctx, apMac, radioBand); err != nil {
+	radioType := radioTypeForSlot(initialState, apMac, slotID)
+	if err := service.DisableRadioByMAC(ctx, apMac, slotID, radioType); err != nil {
 		t.Fatalf("Failed to disable radio for AP %s Slot %d: %v", apMac, slotID, err)
 	}
 	t.Logf("Successfully disabled radio admin state for AP %s Slot %d", apMac, slotID)
 
 	// Step 3: Enable radio admin state
 	t.Logf("Step 3: Enabling radio admin state for AP %s Slot %d", apMac, slotID)
-	if err := service.EnableRadio(ctx, apMac, radioBand); err != nil {
+	if err := service.EnableRadioByMAC(ctx, apMac, slotID, radioType); err != nil {
 		t.Fatalf("Failed to enable radio for AP %s Slot %d: %v", apMac, slotID, err)
 	}
 	t.Logf("Successfully enabled radio admin state for AP %s Slot %d", apMac, slotID)
@@ -146,18 +145,19 @@ func TestAPServiceScenario_RadioStateManagement_Success(t *testing.T) {
 // Helper Functions
 // ============================
 
-// getRadioBandForSlot returns the appropriate radio band for a given slot ID.
-func getRadioBandForSlot(slotID int) core.RadioBand {
-	switch slotID {
-	case 0:
-		return core.RadioBand24GHz
-	case 1:
-		return core.RadioBand5GHz
-	case 2:
-		return core.RadioBand5GHz // Use 5GHz for slot 2 as 6GHz may not be available
-	default:
-		return core.RadioBand24GHz // Default to 2.4GHz for unknown slots
+// radioTypeForSlot returns the radio-type leaf the controller reports for this slot, which is the
+// vocabulary the slot-admin write takes. An absent record leaves it empty, and the write refuses
+// an empty type rather than guessing a band from the slot.
+func radioTypeForSlot(status *ap.CiscoIOSXEWirelessApOperRadioOperData, apMac string, slotID int) ap.RadioType {
+	if status == nil {
+		return ""
 	}
+
+	if radioData := findRadioDataByMACAndSlot(status.RadioOperData, apMac, slotID); radioData != nil {
+		return radioData.RadioType
+	}
+
+	return ""
 }
 
 // logAPCapwapStatus logs the AP CAPWAP status information with admin state.
@@ -209,7 +209,7 @@ func logRadioStatus(t *testing.T, phase, apMac string, slotID int, status *ap.Ci
 			t.Logf("  Available radio data for other APs/slots:")
 			for i, radioData := range status.RadioOperData {
 				t.Logf("    [%d] WTP MAC: %s, Slot: %d, Admin: %s, Oper: %s",
-					i, radioData.WtpMAC, radioData.SlotID, radioData.AdminState, radioData.OperState)
+					i, radioData.WtpMAC, radioData.RadioSlotID, radioData.AdminState, radioData.OperState)
 			}
 		}
 	}
@@ -223,7 +223,7 @@ func validateAPCapwapEnabled(t *testing.T, apMac string, status *ap.CiscoIOSXEWi
 	}
 
 	if capwapData := findCAPWAPDataByMAC(status.CAPWAPData, apMac); capwapData != nil {
-		expectedAdminState := "adminstate-enabled"
+		expectedAdminState := ap.APAdminStateEnabled
 		if capwapData.ApState.ApAdminState == expectedAdminState {
 			t.Logf("✅ AP Admin State correctly shows '%s'", expectedAdminState)
 		} else {
@@ -275,9 +275,12 @@ func findCAPWAPDataByMAC(capwapDataList []ap.CAPWAPData, apMac string) *ap.CAPWA
 }
 
 // findRadioDataByMACAndSlot finds radio data for a specific AP MAC and slot ID.
+//
+// The join is on radio-slot-id, the list key the keyed read above is issued with. slot-id is
+// withheld on a radio-remote-lan radio, so joining on it matched another radio's row.
 func findRadioDataByMACAndSlot(radioDataList []ap.RadioOperData, apMac string, slotID int) *ap.RadioOperData {
 	for _, radioData := range radioDataList {
-		if radioData.WtpMAC == apMac && radioData.SlotID == slotID {
+		if radioData.WtpMAC == apMac && radioData.RadioSlotID == slotID {
 			return &radioData
 		}
 	}

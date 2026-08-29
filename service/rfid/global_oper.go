@@ -89,7 +89,7 @@ type RFIDEmltdApData struct {
 	SlotID         uint8     `json:"slot-id"`          // Access point slot identifier (YANG: IOS-XE 17.12.1)
 	ApName         string    `json:"ap-name"`          // Access point name (YANG: IOS-XE 17.12.1)
 	LastUpdateRcvd time.Time `json:"last-update-rcvd"` // Last update received timestamp (YANG: IOS-XE 17.12.1)
-	WtpMode        string    `json:"wtp-mode"`         // Wireless termination point mode (YANG: IOS-XE 17.12.1)
+	WtpMode        string    `json:"wtp-mode"`         // Wireless termination point mode; the same vocabulary as ap.WtpMode, left a string because no service package imports another (YANG: IOS-XE 17.12.1)
 }
 
 // RFIDRadioData represents RFID radio detection entry data.

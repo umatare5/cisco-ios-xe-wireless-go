@@ -16,7 +16,7 @@ jobs:
       contents: read
     uses: umatare5/common/.github/workflows/go-test-build.yml@ec6477148fb47ffc8b34a89dfdc2ec725a82863a # v0.18.0
     with:
-      go_version: "1.26.6"
+      go_version: "1.27.0"
       skip_build: true
 
   fmt:
@@ -24,8 +24,8 @@ jobs:
       contents: read
     uses: umatare5/common/.github/workflows/go-test-fmt.yml@ec6477148fb47ffc8b34a89dfdc2ec725a82863a # v0.18.0
     with:
-      go_version: "1.26.6"
-      golangci_lint_version: "v2.12.2"
+      go_version: "1.27.0"
+      golangci_lint_version: "v2.13.1"
       golangci_lint_config: ".golangci.yml"
 
   coverage:
@@ -33,7 +33,7 @@ jobs:
       contents: read
     uses: umatare5/common/.github/workflows/go-test-coverage.yml@ec6477148fb47ffc8b34a89dfdc2ec725a82863a # v0.18.0
     with:
-      go_version: "1.26.6"
+      go_version: "1.27.0"
       coverage_threshold: 90
 
   verify-version:
@@ -96,5 +96,5 @@ jobs:
     needs: [verify-tag]
     uses: umatare5/common/.github/workflows/go-release.yml@ec6477148fb47ffc8b34a89dfdc2ec725a82863a # v0.18.0
     with:
-      go_version: "1.26.6"
+      go_version: "1.27.0"
       goreleaser_version: "v2.17.1"

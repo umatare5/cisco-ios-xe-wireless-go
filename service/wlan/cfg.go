@@ -1,5 +1,7 @@
 package wlan
 
+import "log/slog"
+
 // CiscoIOSXEWirelessWlanCfg represents the complete WLAN configuration.
 type CiscoIOSXEWirelessWlanCfg struct {
 	CiscoIOSXEWirelessWlanCfgData *CiscoIOSXEWirelessWlanCfgData `json:"Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data"` // WLAN configuration data container
@@ -66,22 +68,82 @@ type WirelessAaaPolicyConfigs struct {
 	WirelessAaaPolicyConfig []WirelessAaaPolicyConfig `json:"wireless-aaa-policy-config"` // List of wireless AAA policy configurations
 }
 
+// Secret holds key material. String, LogValue and MarshalJSON redact, so %#v is the one path left
+// that renders the key, and a write payload has to carry Reveal's result in a plain string field
+// because this type cannot encode it.
+type Secret string
+
+// String returns the redaction, which is what keeps the key out of every fmt verb but %#v.
+func (s Secret) String() string { return redacted }
+
+// LogValue returns the redaction. String is not enough on its own: slog.JSONHandler renders a
+// KindAny value through json.Marshal, which honors json.Marshaler and ignores fmt.Stringer.
+func (s Secret) LogValue() slog.Value { return slog.StringValue(redacted) }
+
+// Reveal returns the key itself, for the one caller that needs it.
+func (s Secret) Reveal() string { return string(s) }
+
+// MarshalJSON returns the redaction, and returns an empty Secret unchanged: encoding/json/v2
+// applies omitempty to the encoded JSON rather than to the Go value, so redacting an empty one
+// would put a psk on a WLAN whose schema default left the leaf empty.
+func (s Secret) MarshalJSON() ([]byte, error) {
+	if s == "" {
+		return []byte(`""`), nil
+	}
+
+	return []byte(`"` + redacted + `"`), nil
+}
+
+// redacted is what String, LogValue and MarshalJSON render in place of key material.
+const redacted = "[REDACTED]"
+
 // WlanCfgEntry represents a single WLAN configuration entry.
+//
+// A security leaf the controller omits holds its schema default, so the two Go shapes below are
+// not interchangeable: a leaf whose default is true is a pointer and says so in its own comment,
+// because decoding that absence as false inverts the reading, while a default-false leaf is a
+// value bool because false is what its absence means. An enumeration leaf is a plain string, so an
+// omitted one holds the default spelling its schema declares rather than "" — dot11-auth-type names
+// its own in the comment below. The four leaves marked 17.15.1 are not declared at all on 17.12,
+// where their absence is the release rather than a reading — ask the controller which modules it
+// serves if that distinction matters.
+//
+// LogValue reduces the entry to the two leaves that identify it, because slog resolves LogValuer
+// on the Attr's own value and never on a field inside it: without it, slog.JSONHandler renders the
+// whole entry through json.Marshal and the key goes to the log.
 type WlanCfgEntry struct {
 	WlanID                 int                `json:"wlan-id"`                              // WLAN identifier (Live: IOS-XE 17.12.6a)
 	ProfileName            string             `json:"profile-name"`                         // WLAN profile name (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtPsk         bool               `json:"auth-key-mgmt-psk,omitempty"`          // Authentication key management PSK (Live: IOS-XE 17.12.6a)
-	AuthKeyMgmtDot1x       *bool              `json:"auth-key-mgmt-dot1x,omitempty"`        // Authentication key management type 802.1x (Live: IOS-XE 17.12.6a)
+	AuthKeyMgmtPskSha256   bool               `json:"auth-key-mgmt-psk-sha256,omitempty"`   // Authentication key management PSK SHA256 (YANG: IOS-XE 17.12.1)
+	AuthKeyMgmtDot1x       *bool              `json:"auth-key-mgmt-dot1x,omitempty"`        // Authentication key management type 802.1x; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
 	AuthKeyMgmtDot1xSha256 bool               `json:"auth-key-mgmt-dot1x-sha256,omitempty"` // Authentication key management type 802.1x SHA256 (Live: IOS-XE 17.12.6a)
-	PSK                    string             `json:"psk,omitempty"`                        // Authentication pre-shared key — secret, never log (Live: IOS-XE 17.12.6a)
+	AuthKeyMgmtCckm        bool               `json:"auth-key-mgmt-cckm,omitempty"`         // Authentication key management CCKM; the schema marks the leaf deprecated on 17.12 and 17.15 and not on 17.18 (YANG: IOS-XE 17.12.1)
+	AuthKeyMgmtSae         bool               `json:"auth-key-mgmt-sae,omitempty"`          // Authentication key management SAE (YANG: IOS-XE 17.12.1)
+	AuthKeyMgmtFtPsk       bool               `json:"auth-key-mgmt-ft-psk,omitempty"`       // Authentication key management fast-transition PSK (YANG: IOS-XE 17.12.1)
+	AuthKeyMgmtFtDot1x     bool               `json:"auth-key-mgmt-ft-dot1x,omitempty"`     // Authentication key management fast-transition 802.1x (YANG: IOS-XE 17.12.1)
+	AuthKeyMgmtFtSae       bool               `json:"auth-key-mgmt-ft-sae,omitempty"`       // Authentication key management fast-transition SAE (YANG: IOS-XE 17.12.1)
+	AuthKeyMgmtSuiteB      bool               `json:"auth-key-mgmt-suite-b,omitempty"`      // Authentication key management Suite-B (YANG: IOS-XE 17.15.1)
+	AuthKeyMgmtSuiteB192   bool               `json:"auth-key-mgmt-suite-b-192,omitempty"`  // Authentication key management Suite-B 192-bit (YANG: IOS-XE 17.15.1)
+	AkmOwe                 bool               `json:"akm-owe,omitempty"`                    // Authentication key management Opportunistic Wireless Encryption (YANG: IOS-XE 17.12.1)
+	AkmSaeExtKey           bool               `json:"akm-sae-ext-key,omitempty"`            // Authentication key management SAE with extended key (YANG: IOS-XE 17.15.1)
+	AkmFtSaeExtKey         bool               `json:"akm-ft-sae-ext-key,omitempty"`         // Authentication key management fast-transition SAE with extended key (YANG: IOS-XE 17.15.1)
+	PSK                    Secret             `json:"psk,omitempty"`                        // Authentication pre-shared key — secret, never log (Live: IOS-XE 17.12.6a)
 	PSKType                string             `json:"psk-type,omitempty"`                   // Pre-shared key encryption type (Live: IOS-XE 17.12.6a)
 	FTMode                 string             `json:"ft-mode,omitempty"`                    // Configures Fast Transition Adaptive support (Live: IOS-XE 17.12.6a)
 	PMFOptions             string             `json:"pmf-options,omitempty"`                // Configures PMF as optional/required (Live: IOS-XE 17.12.6a)
-	WPA2Enabled            *bool              `json:"wpa2-enabled,omitempty"`               // Configures WPA2 support (Live: IOS-XE 17.12.6a)
+	SecurityWPA            *bool              `json:"security-wpa,omitempty"`               // WPA security enabled on the WLAN; schema default true, so absence is not false (YANG: IOS-XE 17.12.1)
+	WPA1Enabled            bool               `json:"wpa1-enabled,omitempty"`               // Configures WPA1 support (YANG: IOS-XE 17.12.1)
+	WPA2Enabled            *bool              `json:"wpa2-enabled,omitempty"`               // Configures WPA2 support; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
+	WPA2AES                *bool              `json:"wpa2-aes,omitempty"`                   // WPA2 AES encryption; schema default true, so absence is not false (YANG: IOS-XE 17.12.1)
 	WPA3Enabled            bool               `json:"wpa3-enabled,omitempty"`               // Configures WPA3 support (Live: IOS-XE 17.12.6a)
+	WEPEnabled             bool               `json:"wep-enabled,omitempty"`                // Static WEP enabled on the WLAN (YANG: IOS-XE 17.12.1)
+	OSEN                   bool               `json:"osen,omitempty"`                       // Hotspot 2.0 OSEN enabled (YANG: IOS-XE 17.12.1)
+	OKC                    *bool              `json:"okc,omitempty"`                        // Opportunistic key caching; schema default true, so absence is not false (YANG: IOS-XE 17.12.1)
+	Dot11AuthType          string             `json:"dot11-auth-type,omitempty"`            // 802.11 authentication type; an omitted leaf means the default spelling apf-vap-80211-auth-open, not "" (YANG: IOS-XE 17.12.1)
 	LoadBalance            bool               `json:"load-balance,omitempty"`               // Allow/Disallow Load Balance on a WLAN (Live: IOS-XE 17.12.6a)
 	AuthenticationList     string             `json:"authentication-list,omitempty"`        // Enter the Authentication list name (Live: IOS-XE 17.12.6a)
-	Wlan11kNeighList       *bool              `json:"wlan-11k-neigh-list,omitempty"`        // Indicates 11k Neighbor List enabled (YANG: IOS-XE 17.12.1)
+	Wlan11kNeighList       *bool              `json:"wlan-11k-neigh-list,omitempty"`        // Indicates 11k Neighbor List enabled; schema default true, so absence is not false (YANG: IOS-XE 17.12.1)
 	MulticastBufferValue   int                `json:"multicast-buffer-value,omitempty"`     // Configure Multicast Buffer Tuning (YANG: IOS-XE 17.12.1)
 	APFVapIDData           *APFVapIDData      `json:"apf-vap-id-data,omitempty"`            // Virtual AP interface data (Live: IOS-XE 17.12.6a)
 	APFVap80211vData       *APFVap80211vData  `json:"apf-vap-802-11v-data,omitempty"`       // 802.11v wireless management configuration (Live: IOS-XE 17.12.6a)
@@ -91,15 +153,27 @@ type WlanCfgEntry struct {
 	WepKeyIndex            int                `json:"wep-key-index,omitempty"`              // WEP key index for Static WEP Authentication (Live: IOS-XE 17.12.6a)
 }
 
+// LogValue returns the leaves that identify this WLAN. The entry is not rendered whole: a slog
+// record built from it would otherwise carry every configuration leaf, the pre-shared key
+// included, whenever the handler is a JSONHandler.
+func (e WlanCfgEntry) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.Int("wlan-id", e.WlanID),
+		slog.String("profile-name", e.ProfileName),
+	)
+}
+
 // APFVapIDData represents virtual AP interface identification data.
 type APFVapIDData struct {
-	SSID       string `json:"ssid"`                  // Service Set Identifier (Live: IOS-XE 17.12.6a)
-	WlanStatus *bool  `json:"wlan-status,omitempty"` // WLAN administrative status (Live: IOS-XE 17.12.6a)
+	SSID           string `json:"ssid"`                       // Service Set Identifier (Live: IOS-XE 17.12.6a)
+	WlanStatus     *bool  `json:"wlan-status,omitempty"`      // WLAN administrative status (Live: IOS-XE 17.12.6a)
+	BroadcastSSID  *bool  `json:"broadcast-ssid,omitempty"`   // SSID broadcast in the beacon; schema default true, so absence is not false (YANG: IOS-XE 17.12.1)
+	P2PBlockAction string `json:"p2p-block-action,omitempty"` // Peer-to-peer blocking action; an omitted leaf means the default spelling p2p-blocking-action-none, not "" (YANG: IOS-XE 17.12.1)
 }
 
 // APFVap80211vData represents 802.11v wireless management configuration.
 type APFVap80211vData struct {
-	Dot11vDms *bool `json:"dot11v-dms,omitempty"` // 802.11v Directed Multicast Service enabled (Live: IOS-XE 17.12.6a)
+	Dot11vDms *bool `json:"dot11v-dms,omitempty"` // 802.11v Directed Multicast Service enabled; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
 }
 
 // WlanRadioPolicies represents WLAN radio band policy configuration.
@@ -132,10 +206,10 @@ type WlanPolicy struct {
 
 // WlanSwitchingPolicy represents WLAN switching policy configuration.
 type WlanSwitchingPolicy struct {
-	CentralSwitching      *bool `json:"central-switching,omitempty"`      // Central switching enabled (Live: IOS-XE 17.12.6a)
-	CentralAuthentication *bool `json:"central-authentication,omitempty"` // Central authentication enabled (Live: IOS-XE 17.12.6a)
-	CentralDHCP           *bool `json:"central-dhcp,omitempty"`           // Central dhcp for locally switched clients (Live: IOS-XE 17.12.6a)
-	CentralAssocEnable    *bool `json:"central-assoc-enable,omitempty"`   // Central association enabled (Live: IOS-XE 17.12.6a)
+	CentralSwitching      *bool `json:"central-switching,omitempty"`      // Central switching enabled; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
+	CentralAuthentication *bool `json:"central-authentication,omitempty"` // Central authentication enabled; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
+	CentralDHCP           *bool `json:"central-dhcp,omitempty"`           // Central dhcp for locally switched clients; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
+	CentralAssocEnable    *bool `json:"central-assoc-enable,omitempty"`   // Central association enabled; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
 }
 
 // WlanTimeout represents WLAN timeout configuration.
@@ -158,7 +232,7 @@ type DHCPParams struct {
 
 // UmbrellaFlexParams represents Umbrella Flex parameters configuration.
 type UmbrellaFlexParams struct {
-	DHCPDNSOptionEnable *bool `json:"dhcp-dns-option-enable,omitempty"` // DHCP DNS option for Umbrella enabled (Live: IOS-XE 17.12.6a)
+	DHCPDNSOptionEnable *bool `json:"dhcp-dns-option-enable,omitempty"` // DHCP DNS option for Umbrella enabled; schema default true, so absence is not false (Live: IOS-XE 17.12.6a)
 	ModeForce           bool  `json:"mode-force,omitempty"`             // Force Umbrella mode on the profile (Live: IOS-XE 17.12.7a)
 }
 

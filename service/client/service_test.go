@@ -11,6 +11,88 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/client"
 )
 
+// TestClientServiceUnit_RadioVocabularies_MockSuccess tests that the two client radio vocabularies
+// decode into their own named types from one record.
+//
+// The inversion is the reason this test exists: ms-radio-type carries a PHY generation and
+// radio-type carries a band, so a constant whose spelling drifts to the other domain would compile
+// and read empty. The bare siblings are the control — they prove the record was decoded.
+func TestClientServiceUnit_RadioVocabularies_MockSuccess(t *testing.T) {
+	t.Parallel()
+
+	body := `{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data": {
+			"common-oper-data": [
+				{
+					"ap-name": "TEST-AP01",
+					"ms-radio-type": "client-dot11be-6ghz-prot"
+				}
+			],
+			"dot11-oper-data": [
+				{
+					"radio-type": "dot11-radio-type-6ghz",
+					"ewlc-ms-phy-type": "client-dot11be-6ghz-prot",
+					"multilink-info": [
+						{
+							"sta-mac": "aa:bb:cc:dd:ee:ff",
+							"band": "dot11-6-ghz-band",
+							"radio-type": "dot11-radio-type-6ghz"
+						}
+					]
+				}
+			]
+		}
+	}`
+
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-client-oper:client-oper-data": body,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := client.NewService(testClient.Core().(*core.Client))
+
+	result, err := service.GetOperational(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("GetOperational returned unexpected error: %v", err)
+	}
+
+	data := result.CiscoIOSXEWirelessClientOperData
+	if data == nil || len(data.CommonOperData) != 1 || len(data.Dot11OperData) != 1 {
+		t.Fatalf("client-oper-data did not decode one common and one dot11 record")
+	}
+
+	common := data.CommonOperData[0]
+	dot11 := data.Dot11OperData[0]
+
+	if common.ApName != "TEST-AP01" {
+		t.Fatalf("ap-name = %q, so common-oper-data was not decoded", common.ApName)
+	}
+	if len(dot11.MultilinkInfo) != 1 {
+		t.Fatalf("decoded %d multilink-info entries, want 1", len(dot11.MultilinkInfo))
+	}
+	if dot11.MultilinkInfo[0].Band != "dot11-6-ghz-band" {
+		t.Fatalf("band = %q, so multilink-info was not decoded", dot11.MultilinkInfo[0].Band)
+	}
+
+	if common.MsRadioType != client.PHYRadioTypeDot11be6GHz {
+		t.Errorf("ms-radio-type = %q, want %q", common.MsRadioType, client.PHYRadioTypeDot11be6GHz)
+	}
+	if dot11.EwlcMsPhyType != client.PHYRadioTypeDot11be6GHz {
+		t.Errorf("ewlc-ms-phy-type = %q, want %q", dot11.EwlcMsPhyType, client.PHYRadioTypeDot11be6GHz)
+	}
+	if dot11.RadioType != client.RadioBandType6GHz {
+		t.Errorf("radio-type = %q, want %q", dot11.RadioType, client.RadioBandType6GHz)
+	}
+	if dot11.MultilinkInfo[0].RadioType != client.RadioBandType6GHz {
+		t.Errorf("multilink-info radio-type = %q, want %q",
+			dot11.MultilinkInfo[0].RadioType, client.RadioBandType6GHz)
+	}
+	if dot11.MultilinkInfo[0].StaMAC == "" {
+		t.Errorf("multilink-info sta-mac is empty, so LinkInfo dropped the link's own MAC")
+	}
+}
+
 // TestClientServiceUnit_Constructor_Success tests service constructor functionality.
 func TestClientServiceUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewServiceWithValidClient", func(t *testing.T) {
@@ -813,5 +895,130 @@ func TestClientServiceUnit_ReadFailure_ReturnsError(t *testing.T) {
 				t.Error("Expected nil result from GetDot11InfoByMAC")
 			}
 		})
+	}
+}
+
+// TestClientServiceUnit_DeauthenticateWireForm pins the payload each arm puts on the wire.
+//
+// The input key is the reason this test exists: this module spells it plain "input" while the
+// access-point cfg-rpc module qualifies it, so a copied payload type compiles and is refused by
+// the controller. It also holds each call to one arm — the choice is mandatory and the controller
+// resolves the first arm it finds.
+func TestClientServiceUnit_DeauthenticateWireForm(t *testing.T) {
+	t.Parallel()
+
+	const path = "/restconf/operations/Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all"
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodPost, "Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all",
+		func() (int, string) { return http.StatusNoContent, "" })
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	calls := []struct {
+		name string
+		call func() error
+		want string
+	}{
+		{
+			name: "ByMAC",
+			call: func() error { return service.DeauthenticateByMAC(ctx, "AA:BB:CC:DD:EE:55") },
+			want: `{"input":{"mac-addr":"aa:bb:cc:dd:ee:55"}}`,
+		},
+		{
+			name: "ByIP",
+			call: func() error { return service.DeauthenticateByIP(ctx, "192.0.2.10") },
+			want: `{"input":{"ip-addr":"192.0.2.10"}}`,
+		},
+		{
+			name: "ByUsername",
+			call: func() error { return service.DeauthenticateByUsername(ctx, "someone@example.com") },
+			want: `{"input":{"user-name":"someone@example.com"}}`,
+		},
+	}
+
+	for _, c := range calls {
+		if err := c.call(); err != nil {
+			t.Fatalf("%s unexpected error: %v", c.name, err)
+		}
+	}
+
+	recorded := server.Requests()
+	if len(recorded) != len(calls) {
+		t.Fatalf("Recorded %d requests, want %d", len(recorded), len(calls))
+	}
+	for i, c := range calls {
+		if got := recorded[i].Path; got != path {
+			t.Errorf("%s wire path = %q, want %q", c.name, got, path)
+		}
+		if got := recorded[i].Body; got != c.want {
+			t.Errorf("%s wire body = %q, want %q", c.name, got, c.want)
+		}
+	}
+}
+
+// TestClientServiceUnit_DeauthenticateRejectsBadInput_Error tests that an unusable identifier is
+// refused before a request is built, and that the refusal is not a not-found sentinel: the
+// operation cannot observe whether the client existed, so answering with one would be a claim.
+func TestClientServiceUnit_DeauthenticateRejectsBadInput_Error(t *testing.T) {
+	t.Parallel()
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	refusals := map[string]func() error{
+		"malformed MAC":  func() error { return service.DeauthenticateByMAC(ctx, "not-a-mac") },
+		"empty MAC":      func() error { return service.DeauthenticateByMAC(ctx, "") },
+		"empty IP":       func() error { return service.DeauthenticateByIP(ctx, "   ") },
+		"empty username": func() error { return service.DeauthenticateByUsername(ctx, "") },
+	}
+
+	for name, call := range refusals {
+		err := call()
+		if err == nil {
+			t.Errorf("%s: expected an error", name)
+			continue
+		}
+		if errors.Is(err, core.ErrResourceNotFound) {
+			t.Errorf("%s: refusal matched ErrResourceNotFound: %v", name, err)
+		}
+	}
+
+	if got := len(server.Requests()); got != 0 {
+		t.Errorf("Recorded %d requests, want 0 — a refused identifier must not reach the wire", got)
+	}
+}
+
+// TestClientServiceUnit_DeauthenticateOnAbsentRelease_Error tests the answer a release before
+// 17.15 gives. The path is absent rather than the resource, so the controller answers 400 and the
+// error must not match a not-found sentinel.
+func TestClientServiceUnit_DeauthenticateOnAbsentRelease_Error(t *testing.T) {
+	t.Parallel()
+
+	const body = `{"ietf-restconf:errors":{"error":[{"error-type":"application",` +
+		`"error-tag":"malformed-message","error-message":"invalid path"}]}}`
+
+	server := testutil.NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodPost, "Cisco-IOS-XE-wireless-client-rpc:apf-ms-delete-all",
+		func() (int, string) { return http.StatusBadRequest, body })
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	service := client.NewService(testClient.Core().(*core.Client))
+	ctx := testutil.TestContext(t)
+
+	err := service.DeauthenticateByMAC(ctx, "00:11:22:33:44:55")
+	if err == nil {
+		t.Fatal("Expected an error for a 400 answer")
+	}
+	if errors.Is(err, core.ErrResourceNotFound) {
+		t.Errorf("A 400 matched ErrResourceNotFound: %v", err)
 	}
 }

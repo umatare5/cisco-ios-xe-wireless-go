@@ -2,6 +2,84 @@ package client
 
 import "time"
 
+// PHYRadioType represents the ms-phy-radio-type enumeration.
+type PHYRadioType string
+
+// ms-phy-radio-type members. The first thirteen are served on 17.12, 17.15 and 17.18 alike; the
+// three 802.11be members arrive at 17.15.
+const (
+	// PHYRadioTypeUnknown is the member the controller sends before it has classified the client.
+	PHYRadioTypeUnknown PHYRadioType = "client-unknown-prot"
+
+	// PHYRadioTypeDot11b is an 802.11b client.
+	PHYRadioTypeDot11b PHYRadioType = "client-dot11b"
+
+	// PHYRadioTypeDot11g is an 802.11g client.
+	PHYRadioTypeDot11g PHYRadioType = "client-dot11g"
+
+	// PHYRadioTypeDot11a is an 802.11a client.
+	PHYRadioTypeDot11a PHYRadioType = "client-dot11a"
+
+	// PHYRadioTypeDot11n24GHz is an 802.11n client on 2.4 GHz.
+	PHYRadioTypeDot11n24GHz PHYRadioType = "client-dot11n-24-ghz-prot"
+
+	// PHYRadioTypeDot11n5GHz is an 802.11n client on 5 GHz.
+	PHYRadioTypeDot11n5GHz PHYRadioType = "client-dot11n-5-ghz-prot"
+
+	// PHYRadioTypeDot11ac is an 802.11ac client.
+	PHYRadioTypeDot11ac PHYRadioType = "client-dot11ac"
+
+	// PHYRadioTypeNotApplicable is the member the controller sends where no PHY applies.
+	PHYRadioTypeNotApplicable PHYRadioType = "client-phy-type-notappl"
+
+	// PHYRadioTypeEthernet is a client reached over Ethernet.
+	PHYRadioTypeEthernet PHYRadioType = "client-ethernet"
+
+	// PHYRadioTypeDot11ax5GHz is an 802.11ax client on 5 GHz.
+	PHYRadioTypeDot11ax5GHz PHYRadioType = "client-dot11ax-5ghz-prot"
+
+	// PHYRadioTypeDot11ax24GHz is an 802.11ax client on 2.4 GHz.
+	PHYRadioTypeDot11ax24GHz PHYRadioType = "client-dot11ax-24ghz-prot"
+
+	// PHYRadioTypeDot3 is an 802.3 client, which the controller spells apart from client-ethernet.
+	PHYRadioTypeDot3 PHYRadioType = "client-802-3"
+
+	// PHYRadioTypeDot11ax6GHz is an 802.11ax client on 6 GHz.
+	PHYRadioTypeDot11ax6GHz PHYRadioType = "client-dot11ax-6ghz-prot"
+
+	// PHYRadioTypeDot11be5GHz is an 802.11be client on 5 GHz, served from IOS-XE 17.15.
+	PHYRadioTypeDot11be5GHz PHYRadioType = "client-dot11be-5ghz-prot"
+
+	// PHYRadioTypeDot11be24GHz is an 802.11be client on 2.4 GHz, served from IOS-XE 17.15.
+	PHYRadioTypeDot11be24GHz PHYRadioType = "client-dot11be-24ghz-prot"
+
+	// PHYRadioTypeDot11be6GHz is an 802.11be client on 6 GHz, served from IOS-XE 17.15.
+	PHYRadioTypeDot11be6GHz PHYRadioType = "client-dot11be-6ghz-prot"
+)
+
+// RadioBandType represents the ms-radio-type enumeration.
+//
+// The two client vocabularies are named for the quantity and not for the leaf, because the leaf
+// names are the wrong way round: ms-radio-type carries a PHY generation and radio-type carries a
+// band.
+type RadioBandType string
+
+// ms-radio-type members, unchanged on 17.12, 17.15 and 17.18. The declared numbers are 0, 1, 2 and
+// 16, so the fourth member is not the third's successor and no ordinal arithmetic holds here.
+const (
+	// RadioBandTypeNone is the member the controller sends when no band applies.
+	RadioBandTypeNone RadioBandType = "dot11-radio-type-none"
+
+	// RadioBandTypeBG is the 2.4 GHz band.
+	RadioBandTypeBG RadioBandType = "dot11-radio-type-bg"
+
+	// RadioBandTypeA is the 5 GHz band.
+	RadioBandTypeA RadioBandType = "dot11-radio-type-a"
+
+	// RadioBandType6GHz is the 6 GHz band.
+	RadioBandType6GHz RadioBandType = "dot11-radio-type-6ghz"
+)
+
 // CiscoIOSXEWirelessClientOper represents the complete client operational data root structure.
 type CiscoIOSXEWirelessClientOper struct {
 	CiscoIOSXEWirelessClientOperData *CiscoIOSXEWirelessClientOperData `json:"Cisco-IOS-XE-wireless-client-oper:client-oper-data"` // Client operational data (Live: IOS-XE 17.12.6a)
@@ -69,8 +147,8 @@ type CiscoIOSXEWirelessClientOperDcInfo struct {
 type CommonOperData struct {
 	ClientMAC                string           `json:"client-mac"`                  // MAC address used as network address for wireless stations (Live: IOS-XE 17.12.6a)
 	ApName                   string           `json:"ap-name"`                     // Access Point name client is connected to (Live: IOS-XE 17.12.6a)
-	MsApSlotID               int              `json:"ms-ap-slot-id"`               // Radio slot on AP client is connected to (Live: IOS-XE 17.12.6a)
-	MsRadioType              string           `json:"ms-radio-type"`               // Wireless Radio type client connected with (Live: IOS-XE 17.12.6a)
+	MsApSlotID               int              `json:"ms-ap-slot-id"`               // Radio slot on AP client is connected to; the schema marks 255 invalid, so 0 is a real slot (Live: IOS-XE 17.12.6a)
+	MsRadioType              PHYRadioType     `json:"ms-radio-type"`               // PHY generation the client associated with, despite the leaf name (Live: IOS-XE 17.12.6a)
 	WlanID                   int              `json:"wlan-id"`                     // Unique Wireless LAN identifier client connected to (Live: IOS-XE 17.12.6a)
 	ClientType               string           `json:"client-type"`                 // Wireless network type based on traffic switching mode (Live: IOS-XE 17.12.6a)
 	CoState                  string           `json:"co-state"`                    // Last association phase client completed successfully (Live: IOS-XE 17.12.6a)
@@ -95,22 +173,22 @@ type CommonOperData struct {
 
 // Dot11OperData represents 802.11 operational data.
 type Dot11OperData struct {
-	MsMACAddress        string    `json:"ms-mac-address"`         // Mac Address of the Client (Live: IOS-XE 17.12.6a)
-	Dot11State          string    `json:"dot11-state"`            // DOT11 status for Client (Live: IOS-XE 17.12.6a)
-	MsBssid             string    `json:"ms-bssid"`               // Basic Service Set Identifier client connected to (Live: IOS-XE 17.12.6a)
-	ApMACAddress        string    `json:"ap-mac-address"`         // MAC Address of AP client has joined (Live: IOS-XE 17.12.6a)
-	CurrentChannel      int       `json:"current-channel"`        // Current Channel client communicating on (Live: IOS-XE 17.12.6a)
-	MsWlanID            int       `json:"ms-wlan-id"`             // Wireless LAN ID client connected to (Live: IOS-XE 17.12.6a)
-	VapSsid             string    `json:"vap-ssid"`               // Service Set Identifier of Wireless LAN (Live: IOS-XE 17.12.6a)
-	PolicyProfile       string    `json:"policy-profile"`         // Policy profile applied on WLAN (Live: IOS-XE 17.12.6a)
-	MsApSlotID          int       `json:"ms-ap-slot-id"`          // Slot ID of AP radio client connected on (Live: IOS-XE 17.12.6a)
-	RadioType           string    `json:"radio-type"`             // Type of Radio of AP client associated to (Live: IOS-XE 17.12.6a)
-	MsAssociationID     int       `json:"ms-association-id"`      // Association ID of mobile station (Live: IOS-XE 17.12.6a)
-	MsAuthAlgNum        string    `json:"ms-auth-alg-num"`        // Authentication algorithm (Live: IOS-XE 17.12.6a)
-	MsReasonCode        string    `json:"ms-reason-code"`         // Reason code for deauth/disassoc frames (Live: IOS-XE 17.12.6a)
-	MsAssocTime         time.Time `json:"ms-assoc-time"`          // Time association request received (Live: IOS-XE 17.12.6a)
-	Is11GClient         bool      `json:"is-11g-client"`          // IEEE 802.11g protocol client indicator (Live: IOS-XE 17.12.6a)
-	MsSupportedRatesStr string    `json:"ms-supported-rates-str"` // Supported radio rates by mobile station (Live: IOS-XE 17.12.6a)
+	MsMACAddress        string        `json:"ms-mac-address"`         // Mac Address of the Client (Live: IOS-XE 17.12.6a)
+	Dot11State          string        `json:"dot11-state"`            // DOT11 status for Client (Live: IOS-XE 17.12.6a)
+	MsBssid             string        `json:"ms-bssid"`               // Basic Service Set Identifier client connected to (Live: IOS-XE 17.12.6a)
+	ApMACAddress        string        `json:"ap-mac-address"`         // MAC Address of AP client has joined (Live: IOS-XE 17.12.6a)
+	CurrentChannel      int           `json:"current-channel"`        // Current Channel client communicating on (Live: IOS-XE 17.12.6a)
+	MsWlanID            int           `json:"ms-wlan-id"`             // Wireless LAN ID client connected to (Live: IOS-XE 17.12.6a)
+	VapSsid             string        `json:"vap-ssid"`               // Service Set Identifier of Wireless LAN (Live: IOS-XE 17.12.6a)
+	PolicyProfile       string        `json:"policy-profile"`         // Policy profile applied on WLAN (Live: IOS-XE 17.12.6a)
+	MsApSlotID          int           `json:"ms-ap-slot-id"`          // Slot ID of AP radio client connected on; the schema marks 255 invalid, so 0 is a real slot (Live: IOS-XE 17.12.6a)
+	RadioType           RadioBandType `json:"radio-type"`             // Band of the AP radio the client associated to, despite the leaf name (Live: IOS-XE 17.12.6a)
+	MsAssociationID     int           `json:"ms-association-id"`      // Association ID of mobile station (Live: IOS-XE 17.12.6a)
+	MsAuthAlgNum        string        `json:"ms-auth-alg-num"`        // Authentication algorithm (Live: IOS-XE 17.12.6a)
+	MsReasonCode        string        `json:"ms-reason-code"`         // Reason code for deauth/disassoc frames (Live: IOS-XE 17.12.6a)
+	MsAssocTime         time.Time     `json:"ms-assoc-time"`          // Time association request received (Live: IOS-XE 17.12.6a)
+	Is11GClient         bool          `json:"is-11g-client"`          // IEEE 802.11g protocol client indicator (Live: IOS-XE 17.12.6a)
+	MsSupportedRatesStr string        `json:"ms-supported-rates-str"` // Supported radio rates by mobile station (Live: IOS-XE 17.12.6a)
 	MsWifi              struct {
 		WpaVersion           string `json:"wpa-version"`             // WPA version of the client (Live: IOS-XE 17.12.6a)
 		CipherSuite          string `json:"cipher-suite"`            // IEEE 802.11i Cipher Suite type (Live: IOS-XE 17.12.6a)
@@ -119,16 +197,16 @@ type Dot11OperData struct {
 		GroupCipherSuite     string `json:"group-cipher-suite"`      // IEEE 802.11i Group Cipher Suite (Live: IOS-XE 17.12.6a)
 		PweMode              string `json:"pwe-mode"`                // SAE Password Element Mode (Live: IOS-XE 17.12.6a)
 	} `json:"ms-wifi"`
-	MsWmeEnabled        bool   `json:"ms-wme-enabled"`         // Wireless Multimedia Extensions enabled indicator (Live: IOS-XE 17.12.6a)
-	Dot11WEnabled       bool   `json:"dot11w-enabled"`         // IEEE 802.11w feature enabled indicator (Live: IOS-XE 17.12.6a)
-	EwlcMsPhyType       string `json:"ewlc-ms-phy-type"`       // Radio PHY type client connected to (Live: IOS-XE 17.12.6a)
-	EncryptionType      string `json:"encryption-type"`        // Encryption policy client uses with AP (Live: IOS-XE 17.12.6a)
-	SecurityMode        string `json:"security-mode"`          // Security mode for client association (Live: IOS-XE 17.12.6a)
-	ClientWepPolicyType string `json:"client-wep-policy-type"` // Client Wired Equivalent Privacy policy type (Live: IOS-XE 17.12.6a)
-	BssTransCapable     bool   `json:"bss-trans-capable"`      // IEEE 802.11v capable indicator (Live: IOS-XE 17.12.6a)
-	MsAppleCapable      bool   `json:"ms-apple-capable"`       // Client Fastlane Support indicator (Live: IOS-XE 17.12.6a)
-	WlanProfile         string `json:"wlan-profile"`           // Profile applied on Wireless/Remote/Guest LAN (Live: IOS-XE 17.12.6a)
-	DmsCapable          bool   `json:"dms-capable"`            // Directed Multicast Service capable indicator (Live: IOS-XE 17.12.6a)
+	MsWmeEnabled        bool         `json:"ms-wme-enabled"`         // Wireless Multimedia Extensions enabled indicator (Live: IOS-XE 17.12.6a)
+	Dot11WEnabled       bool         `json:"dot11w-enabled"`         // IEEE 802.11w feature enabled indicator (Live: IOS-XE 17.12.6a)
+	EwlcMsPhyType       PHYRadioType `json:"ewlc-ms-phy-type"`       // PHY generation the client associated with, the same vocabulary as CommonOperData.MsRadioType (Live: IOS-XE 17.12.6a)
+	EncryptionType      string       `json:"encryption-type"`        // Encryption policy client uses with AP (Live: IOS-XE 17.12.6a)
+	SecurityMode        string       `json:"security-mode"`          // Security mode for client association (Live: IOS-XE 17.12.6a)
+	ClientWepPolicyType string       `json:"client-wep-policy-type"` // Client Wired Equivalent Privacy policy type (Live: IOS-XE 17.12.6a)
+	BssTransCapable     bool         `json:"bss-trans-capable"`      // IEEE 802.11v capable indicator (Live: IOS-XE 17.12.6a)
+	MsAppleCapable      bool         `json:"ms-apple-capable"`       // Client Fastlane Support indicator (Live: IOS-XE 17.12.6a)
+	WlanProfile         string       `json:"wlan-profile"`           // Profile applied on Wireless/Remote/Guest LAN (Live: IOS-XE 17.12.6a)
+	DmsCapable          bool         `json:"dms-capable"`            // Directed Multicast Service capable indicator (Live: IOS-XE 17.12.6a)
 	EogreClient         struct {
 		IsEogre             bool   `json:"is-eogre"`              // Whether this is an EoGRE client (Live: IOS-XE 17.12.6a)
 		PreviousMatchReason string `json:"previous-match-reason"` // Previous EoGRE client match process output (Live: IOS-XE 17.12.6a)
@@ -190,27 +268,28 @@ type Dot11OperData struct {
 	Dot116GhzCap    bool `json:"dot11-6ghz-cap"`    // 802.11 6GHz capability (YANG: IOS-XE 17.12.1)
 	LinkLocalEnable bool `json:"link-local-enable"` // Link local enablement (YANG: IOS-XE 17.12.1)
 
-	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.18.1)
-	EhtCapable      bool          `json:"eht-capable,omitempty"`       // EHT capability indicator (YANG: IOS-XE 17.18.1)
-	MultiLinkClient bool          `json:"multi-link-client,omitempty"` // Multi-link client capability (YANG: IOS-XE 17.18.1)
-	MultilinkInfo   []LinkInfo    `json:"multilink-info,omitempty"`    // Multi-link information of the client (YANG: IOS-XE 17.18.1)
-	KnownLinkInfo   []LinkInfoMin `json:"known-link-info,omitempty"`   // Known link information (YANG: IOS-XE 17.18.1)
-	EmlrMode        string        `json:"emlr-mode,omitempty"`         // Enhanced multilink radio operation mode (YANG: IOS-XE 17.18.1)
-	StrCapable      bool          `json:"str-capable,omitempty"`       // Simultaneous transmit and receive capability (YANG: IOS-XE 17.18.1)
+	// Wi-Fi 7 / 802.11be Support (YANG: IOS-XE 17.15.1)
+	EhtCapable      bool          `json:"eht-capable,omitempty"`       // EHT capability indicator (YANG: IOS-XE 17.15.1)
+	MultiLinkClient bool          `json:"multi-link-client,omitempty"` // Multi-link client capability (YANG: IOS-XE 17.15.1)
+	MultilinkInfo   []LinkInfo    `json:"multilink-info,omitempty"`    // Multi-link information of the client (YANG: IOS-XE 17.15.1)
+	KnownLinkInfo   []LinkInfoMin `json:"known-link-info,omitempty"`   // Known link information (YANG: IOS-XE 17.15.1)
+	EmlrMode        string        `json:"emlr-mode,omitempty"`         // Enhanced multilink radio operation mode (YANG: IOS-XE 17.15.1)
+	StrCapable      bool          `json:"str-capable,omitempty"`       // Simultaneous transmit and receive capability (YANG: IOS-XE 17.15.1)
 }
 
 // LinkInfo represents multi-link information for Wi-Fi 7 clients.
 type LinkInfo struct {
-	Band       string `json:"band"`         // Frequency band identifier (YANG: IOS-XE 17.18.1)
-	BssMACAddr string `json:"bss-mac-addr"` // BSS MAC address (YANG: IOS-XE 17.18.1)
-	SlotID     int    `json:"slot-id"`      // Slot identifier (YANG: IOS-XE 17.18.1)
-	RadioType  string `json:"radio-type"`   // Radio type identifier (YANG: IOS-XE 17.18.1)
+	StaMAC     string        `json:"sta-mac"`      // Station or link MAC address of the client (YANG: IOS-XE 17.15.1)
+	Band       string        `json:"band"`         // Radio band of the link, typedef enm-ewlc-dot11-radio-band, left a string because this SDK declares no type for that vocabulary (YANG: IOS-XE 17.15.1)
+	BssMACAddr string        `json:"bss-mac-addr"` // BSS or AP MAC address of the link (YANG: IOS-XE 17.15.1)
+	SlotID     int           `json:"slot-id"`      // Slot identifier of the link (YANG: IOS-XE 17.15.1)
+	RadioType  RadioBandType `json:"radio-type"`   // Band of the link radio, the same vocabulary as Dot11OperData.RadioType (YANG: IOS-XE 17.15.1)
 }
 
 // LinkInfoMin represents minimal multi-link information for Wi-Fi 7 clients.
 type LinkInfoMin struct {
-	StaMAC string `json:"sta-mac"` // Station MAC address (YANG: IOS-XE 17.18.1)
-	Band   string `json:"band"`    // Frequency band identifier (YANG: IOS-XE 17.18.1)
+	StaMAC string `json:"sta-mac"` // Station or link MAC address of the client (YANG: IOS-XE 17.15.1)
+	Band   string `json:"band"`    // Radio band of the link, typedef enm-ewlc-dot11-radio-band, left a string because this SDK declares no type for that vocabulary (YANG: IOS-XE 17.15.1)
 }
 
 // MobilityOperData represents client mobility operational data.
@@ -323,7 +402,7 @@ type TrafficStats struct {
 	MicMismatch              string    `json:"mic-mismatch"`                // Packets with Message Integrity Check mismatch (Live: IOS-XE 17.12.6a)
 	MicMissing               string    `json:"mic-missing"`                 // Packets with Message Integrity Check missing (Live: IOS-XE 17.12.6a)
 	MostRecentRSSI           int       `json:"most-recent-rssi"`            // Last updated Radio Signal Strength indicator (Live: IOS-XE 17.12.6a)
-	MostRecentSNR            int       `json:"most-recent-snr"`             // Last updated Signal To Noise Ratio (Live: IOS-XE 17.12.6a)
+	MostRecentSNR            int       `json:"most-recent-snr"`             // Last updated Signal To Noise Ratio; no invalid marker is declared and the leaf was always sent, so 0 would be a reading (Live: IOS-XE 17.12.6a)
 	TxExcessiveRetries       string    `json:"tx-excessive-retries"`        // Mobile station excessive retries (Live: IOS-XE 17.12.6a)
 	TxRetries                string    `json:"tx-retries"`                  // Frames transmitted with Retry bit set (Live: IOS-XE 17.12.6a)
 	PowerSaveState           int       `json:"power-save-state"`            // Power save state (Live: IOS-XE 17.12.6a)

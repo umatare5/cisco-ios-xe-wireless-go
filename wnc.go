@@ -2,6 +2,8 @@ package wnc
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -42,8 +44,17 @@ import (
 	"github.com/umatare5/cisco-ios-xe-wireless-go/service/wlan"
 )
 
-// DefaultTimeout is the default request timeout (re-export of core.DefaultTimeout).
-const DefaultTimeout = core.DefaultTimeout
+// Default request budgets. A request is bounded by all three, and WithTimeout sets only the first.
+const (
+	// DefaultTimeout is the default whole-request timeout (re-export of core.DefaultTimeout).
+	DefaultTimeout = core.DefaultTimeout
+	// DefaultResponseHeaderTimeout is the default budget for the response headers, five seconds,
+	// which WithTimeout does not lift; raise it with WithResponseHeaderTimeout.
+	DefaultResponseHeaderTimeout = core.DefaultResponseHeaderTimeout
+	// DefaultTLSHandshakeTimeout is the default budget for the TLS handshake, five seconds, which
+	// WithTimeout does not lift; raise it with WithTLSHandshakeTimeout.
+	DefaultTLSHandshakeTimeout = core.DefaultTLSHandshakeTimeout
+)
 
 // Error sentinels re-exported for consumer side error handling with errors.Is.
 var (
@@ -57,19 +68,10 @@ var (
 // APIError is returned for HTTP error responses (type alias to preserve instanceof semantics with errors.As).
 type APIError = core.APIError
 
-// RadioBand names the radio a band-scoped accessor acts on (re-export of internal
-// core.RadioBand), so a consumer can declare one in a variable, a struct field or a test double
-// rather than passing an untyped literal.
-type RadioBand = core.RadioBand
-
-const (
-	// RadioBand24GHz is the 2.4 GHz radio.
-	RadioBand24GHz = core.RadioBand24GHz
-	// RadioBand5GHz is the 5 GHz radio.
-	RadioBand5GHz = core.RadioBand5GHz
-	// RadioBand6GHz is the 6 GHz radio.
-	RadioBand6GHz = core.RadioBand6GHz
-)
+// Response is what Request returned: the controller's status and the body as it sent it
+// (re-export of internal core.Response). An alias rather than a distinct type, so a caller can
+// name it in a variable, a struct field or a test double.
+type Response = core.Response
 
 // Client represents the unified WNC API client with access to all domain services.
 // This provides a single-import approach to accessing all wireless controller functionality.
@@ -79,6 +81,10 @@ type Client struct {
 
 // NewClient creates a new unified WNC client with the specified host, token, and options.
 // This is the main entry point for all wireless controller operations.
+//
+// host is an authority and nothing else — "wnc1.example.internal" or "192.0.2.10:443". A scheme, a
+// path, a query, a fragment, userinfo or an IPv6 zone id is refused with ErrInvalidConfiguration
+// rather than concatenated into a URL that reads another node.
 func NewClient(host, token string, opts ...Option) (*Client, error) {
 	coreClient, err := core.New(host, token, opts...)
 	if err != nil {
@@ -91,11 +97,23 @@ func NewClient(host, token string, opts ...Option) (*Client, error) {
 // This allows end users to supply options without importing the internal/core package.
 type Option = core.Option
 
-// WithTimeout sets the request timeout (re-export wrapper).
+// WithTimeout sets the whole-request timeout (re-export wrapper). It lifts neither
+// DefaultResponseHeaderTimeout nor DefaultTLSHandshakeTimeout, so a caller that raises this
+// alone is still capped at five seconds for the headers, which is when a busy controller is
+// slowest. Raise those with WithResponseHeaderTimeout and WithTLSHandshakeTimeout.
 func WithTimeout(d time.Duration) Option { return core.WithTimeout(d) }
 
 // WithInsecureSkipVerify controls TLS certificate verification (lab/testing only).
 func WithInsecureSkipVerify(skip bool) Option { return core.WithInsecureSkipVerify(skip) }
+
+// WithRootCAs verifies the controller's certificate against pool instead of the host's roots
+// (re-export wrapper). Prefer it to WithInsecureSkipVerify where the controller presents a
+// certificate from a private CA: the certificate is then verified rather than unverified.
+func WithRootCAs(pool *x509.CertPool) Option { return core.WithRootCAs(pool) }
+
+// WithClientCertificate presents cert to the controller (re-export wrapper), for a deployment
+// that authenticates the client with mTLS as well as with the Authorization header.
+func WithClientCertificate(cert tls.Certificate) Option { return core.WithClientCertificate(cert) }
 
 // WithProxy routes requests through the proxy the resolver returns (re-export wrapper).
 func WithProxy(fn func(*http.Request) (*url.URL, error)) Option { return core.WithProxy(fn) }
@@ -106,7 +124,8 @@ func WithResponseHeaderTimeout(d time.Duration) Option { return core.WithRespons
 // WithTLSHandshakeTimeout bounds the TLS handshake (re-export wrapper).
 func WithTLSHandshakeTimeout(d time.Duration) Option { return core.WithTLSHandshakeTimeout(d) }
 
-// WithLogger sets a custom slog.Logger.
+// WithLogger sets a custom slog.Logger. Unset, the client logs to slog.Default(), so pass
+// WithLogger(slog.New(slog.DiscardHandler)) where the SDK should write nothing.
 func WithLogger(l *slog.Logger) Option { return core.WithLogger(l) }
 
 // WithUserAgent sets a custom User-Agent header value.
@@ -153,6 +172,28 @@ func WithDepth(levels int) GetOption { return core.WithDepth(levels) }
 // a different node without error.
 func (c *Client) GetData(ctx context.Context, path string, opts ...GetOption) ([]byte, error) {
 	return core.GetRaw(ctx, c.core, path, opts...)
+}
+
+// GetDataInto reads a RESTCONF data path this package has no typed accessor for and decodes it
+// into T, applying the envelope check every typed accessor gets: the response must carry exactly
+// one top-level key, module-qualified and naming the node the path asked for, and T must declare a
+// field for that key. GetData leaves all of that to the caller.
+//
+// T is the envelope type, so it must be a struct whose outermost tag is the module-qualified node
+// name — the shape every Cisco…Data type in this module's service packages has. A map or any other
+// non-struct is refused, because the check asks whether T can consume the key rather than trusting
+// it to. The check is top-level only: a tag below the top naming a node the response does not
+// carry still decodes to nothing.
+//
+// It is a function rather than a method on Client because a generic method, which this toolchain
+// does accept, may not be declared in an interface and is invisible to reflect — so a consumer
+// could neither put this behind a seam of its own nor reach it by reflection.
+func GetDataInto[T any](ctx context.Context, c *Client, path string, opts ...GetOption) (*T, error) {
+	if c == nil {
+		return core.Get[T](ctx, nil, path, opts...)
+	}
+
+	return core.Get[T](ctx, c.core, path, opts...)
 }
 
 // The untyped request methods below are this package's escape hatch. They exist because the
@@ -213,8 +254,20 @@ func (c *Client) PostRPC(ctx context.Context, path string, payload any) ([]byte,
 // payload; the one value rejected is the empty string, which net/http reads as GET. The operations
 // root takes POST alone, and another method there is refused rather than replaced: this package
 // would send POST regardless, invoking the operation instead of doing what was asked.
-func (c *Client) Request(ctx context.Context, method, path string, payload any) ([]byte, error) {
+//
+// This is the one method here that returns the status as well as the body, because it is the one
+// with no fixed verb: 201, 204 and an empty 200 all answer with no body, so the body alone cannot
+// say whether the node held nothing, was created or was replaced. The Response is non-nil exactly
+// when the error is nil, and a status of 400 or above arrives as an *APIError rather than in it.
+func (c *Client) Request(ctx context.Context, method, path string, payload any) (*Response, error) {
 	return core.RequestRaw(ctx, c.core, method, path, payload)
+}
+
+// CloseIdleConnections closes the pooled connections that have no request on them, releasing the
+// sockets a long-lived process would otherwise hold open after its last read. A connection in use
+// is left alone and the client stays usable afterwards: the next request dials again.
+func (c *Client) CloseIdleConnections() {
+	c.core.CloseIdleConnections()
 }
 
 // Domain service accessors - each returns a service instance for the respective domain
