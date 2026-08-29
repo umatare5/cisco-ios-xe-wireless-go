@@ -1,6 +1,7 @@
 package rf
 
 import (
+	"net/http"
 	"strings"
 	"testing"
 
@@ -175,10 +176,10 @@ func TestRfTagServiceUnit_SetOperations_MockSuccess(t *testing.T) {
 	t.Run("CreateRFTag", func(t *testing.T) {
 		newTag := &RFTag{
 			TagName:             "new-rf-tag",
-			Dot11ARfProfileName: "5ghz-profile",
-			Dot11BRfProfileName: "24ghz-profile",
-			Dot116GhzRFProfName: "6ghz-profile",
-			Description:         "New test RF tag",
+			Dot11ARfProfileName: strPtr("5ghz-profile"),
+			Dot11BRfProfileName: strPtr("24ghz-profile"),
+			Dot116GhzRFProfName: strPtr("6ghz-profile"),
+			Description:         strPtr("New test RF tag"),
 		}
 
 		err := rfTagService.CreateRFTag(ctx, newTag)
@@ -540,4 +541,72 @@ func TestRfTagServiceUnit_ErrorHandling_EdgeCases(t *testing.T) {
 			t.Error("Expected validation error for empty tag name")
 		}
 	})
+}
+
+// Helper function for pointer creation.
+func strPtr(s string) *string {
+	return &s
+}
+
+// TestRfTagServiceUnit_SetProfileWireForm_MockSuccess pins the verb and the body one profile
+// setter puts on the wire.
+//
+// The verb is the assertion that matters. The body re-sends the per-slot list entry by its two key
+// leaves alone, because the fixture omits radio-profile-name the way a plain read does for a slot
+// holding its default: under the replacing PUT this used, a leaf or node the payload left out was
+// demoted to its schema default, and under a merge it is left as it is.
+func TestRfTagServiceUnit_SetProfileWireForm_MockSuccess(t *testing.T) {
+	const tagNode = "Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag"
+
+	server := testutil.NewRESTCONFServer(t)
+	t.Cleanup(server.Close)
+
+	server.AddHandler(http.MethodGet, tagNode, func() (int, string) {
+		return http.StatusOK, `{"Cisco-IOS-XE-wireless-rf-cfg:rf-tag": [{
+			"tag-name": "test-rf-tag",
+			"description": "kept",
+			"rf-tag-radio-profiles": {"rf-tag-radio-profile": [{"slot-id": "slot-0", "band-id": "band-2-dot-4-ghz"}]}
+		}]}`
+	})
+	server.AddHandler(http.MethodPatch, tagNode, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
+
+	// A PUT is answered too, so a revert to the replacing verb fails on the assertion below
+	// rather than on a 404 that says nothing about the verb.
+	server.AddHandler(http.MethodPut, tagNode, func() (int, string) {
+		return http.StatusNoContent, ""
+	})
+
+	testClient := testutil.NewTestClient(testutil.NewMockServerFromHTTP(server.Server))
+	rfTagService := NewService(testClient.Core().(*core.Client)).RFTag()
+
+	err := rfTagService.SetDot11ARfProfile(testutil.TestContext(t), "test-rf-tag", "profile-5ghz")
+	if err != nil {
+		t.Fatalf("SetDot11ARfProfile returned unexpected error: %v", err)
+	}
+
+	var body string
+
+	for _, recorded := range server.Requests() {
+		if recorded.Method == http.MethodPut {
+			t.Fatal("a PUT reached the controller, so the update still replaces the record")
+		}
+		if recorded.Method == http.MethodPatch {
+			body = recorded.Body
+		}
+	}
+
+	if body == "" {
+		t.Fatal("no PATCH reached the controller")
+	}
+	if !strings.Contains(body, `"dot11a-rf-profile-name":"profile-5ghz"`) {
+		t.Errorf("the PATCH body does not carry the leaf that was set: %s", body)
+	}
+	if !strings.Contains(body, `"slot-id":"slot-0"`) {
+		t.Errorf("the PATCH body dropped the per-slot list entry: %s", body)
+	}
+	if strings.Contains(body, "radio-profile-name") {
+		t.Errorf("the PATCH body names radio-profile-name, which the read did not carry: %s", body)
+	}
 }

@@ -251,3 +251,89 @@ func TestRequestFunctionsEmptyBodyIsZeroValue(t *testing.T) {
 		testutil.AssertTrue(t, result != nil, "Post() with an empty body should return a zero result")
 	})
 }
+
+// TestRequestSeamsCarryTheStatus holds the four untyped seams to what each returns: the three that
+// keep handing back bytes, and RequestRaw, which hands back the status beside them.
+//
+// The three statuses are served on three methods because that is the only way to tell them apart:
+// a create, a replace answered with nothing and a read of a node holding nothing all reach the
+// caller with a zero-length body.
+func TestRequestSeamsCarryTheStatus(t *testing.T) {
+	const (
+		patched = `{"a:one":{}}`
+		output  = `{"a:output":{}}`
+	)
+
+	ctx := context.Background()
+
+	server := mock.NewRESTCONFServer(t)
+	defer server.Close()
+	server.AddHandler(http.MethodPatch, "probe", func() (int, string) { return http.StatusOK, patched })
+	server.AddHandler(http.MethodPut, "probe", func() (int, string) { return http.StatusNoContent, "" })
+	server.AddHandler(http.MethodPost, "x:rpc", func() (int, string) { return http.StatusCreated, output })
+
+	client, ok := mock.NewTestClient(mock.NewMockServerFromHTTP(server.Server)).Core().(*core.Client)
+	testutil.AssertTrue(t, ok, "test client should carry a *core.Client")
+
+	t.Run("EditRaw returns the body", func(t *testing.T) {
+		got, err := core.EditRaw(ctx, client, http.MethodPatch, "probe", nil)
+		testutil.AssertNoError(t, err, "EditRaw() should succeed")
+		testutil.AssertStringEquals(t, string(got), patched, "EditRaw() body")
+	})
+
+	t.Run("CallRPCRaw returns the body", func(t *testing.T) {
+		got, err := core.CallRPCRaw(ctx, client, "Cisco-IOS-XE-x:rpc", nil)
+		testutil.AssertNoError(t, err, "CallRPCRaw() should succeed")
+		testutil.AssertStringEquals(t, string(got), output, "CallRPCRaw() body")
+	})
+
+	t.Run("RequestRaw reports the status on the data root", func(t *testing.T) {
+		resp, err := core.RequestRaw(ctx, client, http.MethodPut, "probe", nil)
+		testutil.AssertNoError(t, err, "RequestRaw() should succeed")
+		testutil.AssertIntEquals(t, resp.StatusCode, http.StatusNoContent, "status")
+		testutil.AssertIntEquals(t, len(resp.Body), 0, "body length")
+	})
+
+	t.Run("RequestRaw reports the status on the operations root", func(t *testing.T) {
+		resp, err := core.RequestRaw(ctx, client, http.MethodPost, "/restconf/operations/Cisco-IOS-XE-x:rpc", nil)
+		testutil.AssertNoError(t, err, "RequestRaw() should succeed")
+		testutil.AssertIntEquals(t, resp.StatusCode, http.StatusCreated, "status")
+		testutil.AssertStringEquals(t, string(resp.Body), output, "RequestRaw() body")
+	})
+
+	t.Run("every pre-send fault is refused", func(t *testing.T) {
+		_, err := core.RequestRaw(ctx, nil, http.MethodPut, "probe", nil)
+		testutil.AssertError(t, err, "RequestRaw() with a nil client should be refused")
+
+		// The payload is prepared before the path is routed, so an empty method on an operations
+		// path reports the method rather than the POST-only rule.
+		_, err = core.RequestRaw(ctx, client, "", "/restconf/operations/Cisco-IOS-XE-x:rpc", nil)
+		testutil.AssertErrorContains(t, err, "HTTP method cannot be empty", "RequestRaw() empty method")
+
+		_, err = core.RequestRaw(ctx, client, http.MethodPatch, "probe", []byte("not json"))
+		testutil.AssertError(t, err, "RequestRaw() with non-JSON payload bytes should be refused")
+
+		_, err = core.RequestRaw(ctx, client, http.MethodPut, "/restconf/operations/Cisco-IOS-XE-x:rpc", nil)
+		testutil.AssertErrorContains(t, err, "only POST", "RequestRaw() with PUT on an operations path")
+	})
+
+	t.Run("every seam reports a request failure", func(t *testing.T) {
+		gone := mock.NewRESTCONFServer(t)
+		closed, ok := mock.NewTestClient(mock.NewMockServerFromHTTP(gone.Server)).Core().(*core.Client)
+		testutil.AssertTrue(t, ok, "test client should carry a *core.Client")
+		gone.Close()
+
+		_, err := core.GetRaw(ctx, closed, "probe")
+		testutil.AssertError(t, err, "GetRaw() against a closed server should fail")
+
+		_, err = core.EditRaw(ctx, closed, http.MethodPatch, "probe", nil)
+		testutil.AssertError(t, err, "EditRaw() against a closed server should fail")
+
+		_, err = core.CallRPCRaw(ctx, closed, "Cisco-IOS-XE-x:rpc", nil)
+		testutil.AssertError(t, err, "CallRPCRaw() against a closed server should fail")
+
+		resp, err := core.RequestRaw(ctx, closed, http.MethodPut, "probe", nil)
+		testutil.AssertError(t, err, "RequestRaw() against a closed server should fail")
+		testutil.AssertTrue(t, resp == nil, "RequestRaw() should return no Response beside its error")
+	})
+}

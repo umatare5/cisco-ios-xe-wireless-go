@@ -70,11 +70,19 @@ const (
 		"Cisco-IOS-XE-wireless-access-point-oper:capwap-data": [
 			{
 				"wtp-mac": "00:00:00:00:00:01",
-				"tag-info": {"tag-source": "TAG-CONTROL", "is-ap-misconfigured": true}
+				"tag-info": {
+					"tag-source": "TAG-CONTROL",
+					"is-ap-misconfigured": true,
+					"ap-misconfig": "country-misconfig"
+				}
 			},
 			{
 				"wtp-mac": "00:00:00:00:00:02",
-				"tag-info": {"tag-source": "TAG-CONTROL", "is-ap-misconfigured": false}
+				"tag-info": {
+					"tag-source": "TAG-CONTROL",
+					"is-ap-misconfigured": false,
+					"ap-misconfig": "apmgr-no-misconfig"
+				}
 			}
 		]
 	}`
@@ -93,6 +101,9 @@ const (
 			{
 				"wtp-mac": "00:00:00:00:00:01",
 				"radio-slot-id": 0,
+				"slot-id": 0,
+				"radio-type": "radio-80211abgn",
+				"current-band-id": 0,
 				"radio-band-info": [
 					{
 						"band-id": 0,
@@ -104,7 +115,8 @@ const (
 							}
 						}
 					}
-				]
+				],
+				"phy-ht-cfg": {"cfg-data": {"curr-freq": 1, "chan-width": 20, "freq-string": "(1)"}}
 			}
 		]
 	}`
@@ -114,12 +126,14 @@ const (
 			{
 				"wtp-mac": "00:00:00:00:00:01",
 				"radio-slot-id": 0,
+				"radio-type": "radio-remote-lan",
 				"radio-band-info": [
 					{
 						"band-id": 0,
 						"phy-tx-pwr-lvl-cfg": {"cfg-data": {"num-supp-power-levels": 8}}
 					}
-				]
+				],
+				"phy-ht-cfg": {"cfg-data": {"chan-width": 20, "freq-string": "(1)"}}
 			}
 		]
 	}`
@@ -229,6 +243,16 @@ func TestApServiceUnit_OmittedMisconfiguredLeaf_MockSuccess(t *testing.T) {
 		if records[1].TagInfo.IsApMisconfigured == nil || *records[1].TagInfo.IsApMisconfigured {
 			t.Error("is-ap-misconfigured: want an explicit false to decode to a non-nil false")
 		}
+
+		if records[0].TagInfo.ApMisconfig == nil || *records[0].TagInfo.ApMisconfig != ap.ApMisconfigCountry {
+			t.Errorf("ap-misconfig: want a non-nil %q", ap.ApMisconfigCountry)
+		}
+
+		// The no-misconfiguration member is the one the controller sends on a healthy AP, so it
+		// has to decode to a non-nil value rather than reading like an absent leaf.
+		if records[1].TagInfo.ApMisconfig == nil || *records[1].TagInfo.ApMisconfig != ap.ApMisconfigNone {
+			t.Errorf("ap-misconfig: want a non-nil %q", ap.ApMisconfigNone)
+		}
 	})
 
 	t.Run("OmittedLeafStaysNil", func(t *testing.T) {
@@ -243,6 +267,10 @@ func TestApServiceUnit_OmittedMisconfiguredLeaf_MockSuccess(t *testing.T) {
 
 		if records[0].TagInfo.IsApMisconfigured != nil {
 			t.Error("is-ap-misconfigured: want nil rather than an AP reported as correctly configured")
+		}
+
+		if records[0].TagInfo.ApMisconfig != nil {
+			t.Error("ap-misconfig: want nil, which is the controller not serving the leaf")
 		}
 	})
 }
@@ -328,6 +356,125 @@ func soleRadioBandCfgData(t *testing.T, body string) ap.PhyTxPwrLvlCfgData {
 	}
 
 	return result.RadioOperData[0].RadioBandInfo[0].PhyTxPwrLvlCfg.CfgData
+}
+
+// TestApServiceUnit_OmittedSlotLeaf_MockSuccess tests that the withheld physical slot stays nil
+// while the list key beside it still decodes, so a join cannot silently land on radio 0.
+func TestApServiceUnit_OmittedSlotLeaf_MockSuccess(t *testing.T) {
+	t.Run("SentLeafDecodes", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperAllLeavesSent)
+
+		if radio.SlotID == nil || *radio.SlotID != 0 {
+			t.Errorf("slot-id = %v, want a non-nil 0", radio.SlotID)
+		}
+	})
+
+	t.Run("OmittedLeafStaysNil", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperPublishedLeavesOmitted)
+
+		if radio.RadioType != ap.RadioTypeRemoteLAN {
+			t.Fatalf("radio-type = %q, so the record was not decoded", radio.RadioType)
+		}
+
+		if radio.RadioSlotID != 0 {
+			t.Errorf("radio-slot-id = %d, want the list key to keep decoding", radio.RadioSlotID)
+		}
+
+		if radio.SlotID != nil {
+			t.Errorf("slot-id = %d, want nil rather than radio 0", *radio.SlotID)
+		}
+	})
+}
+
+// TestApServiceUnit_OmittedBandLeaf_MockSuccess tests that the withheld band index stays nil while
+// a sent 0 still decodes, because 0 is a genuine reading — 2.4 GHz — and not an absence sentinel.
+func TestApServiceUnit_OmittedBandLeaf_MockSuccess(t *testing.T) {
+	t.Run("SentZeroDecodes", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperAllLeavesSent)
+
+		if radio.CurrentBandID == nil || *radio.CurrentBandID != 0 {
+			t.Errorf("current-band-id = %v, want a non-nil 0: 0 is 2.4 GHz, not an absence", radio.CurrentBandID)
+		}
+	})
+
+	t.Run("OmittedLeafStaysNil", func(t *testing.T) {
+		radio := soleRadioRecord(t, radioOperPublishedLeavesOmitted)
+
+		if radio.RadioType != ap.RadioTypeRemoteLAN {
+			t.Fatalf("radio-type = %q, so the record was not decoded", radio.RadioType)
+		}
+
+		if radio.CurrentBandID != nil {
+			t.Errorf("current-band-id = %d, want nil rather than a value 2.4 GHz also reads as", *radio.CurrentBandID)
+		}
+	})
+}
+
+// TestApServiceUnit_OmittedChannelLeaf_MockSuccess tests the pair the controller withholds one at
+// a time: the container arrives on a monitor-mode radio with curr-freq gone and chan-width still
+// there, so a nil check on phy-ht-cfg would report a channel of 0.
+//
+// No contract gate holds these two: neither is a leaf a consumer publishes as a metric and neither
+// has a schema default of true, so this test is the only thing a revert to a value int fails.
+func TestApServiceUnit_OmittedChannelLeaf_MockSuccess(t *testing.T) {
+	t.Run("SentLeavesDecode", func(t *testing.T) {
+		cfg := soleRadioChannelCfg(t, radioOperAllLeavesSent)
+
+		if cfg.CurrFreq == nil || *cfg.CurrFreq != 1 {
+			t.Errorf("curr-freq = %v, want a non-nil 1", cfg.CurrFreq)
+		}
+
+		if cfg.ChanWidth == nil || *cfg.ChanWidth != 20 {
+			t.Errorf("chan-width = %v, want a non-nil 20", cfg.ChanWidth)
+		}
+	})
+
+	t.Run("OmittedChannelStaysNilBesideItsWidth", func(t *testing.T) {
+		cfg := soleRadioChannelCfg(t, radioOperPublishedLeavesOmitted)
+
+		if cfg.FreqString != "(1)" {
+			t.Fatalf("freq-string = %q, so cfg-data was not decoded", cfg.FreqString)
+		}
+
+		if cfg.CurrFreq != nil {
+			t.Errorf("curr-freq = %d, want nil rather than channel 0", *cfg.CurrFreq)
+		}
+
+		if cfg.ChanWidth == nil || *cfg.ChanWidth != 20 {
+			t.Errorf("chan-width = %v, want the width the same radio still reported", cfg.ChanWidth)
+		}
+	})
+}
+
+// soleRadioChannelCfg serves body from the radio-oper-data endpoint and returns the HT
+// configuration of the one radio it holds.
+func soleRadioChannelCfg(t *testing.T, body string) ap.PhyHtCfgData {
+	t.Helper()
+
+	radio := soleRadioRecord(t, body)
+	if radio.PhyHtCfg == nil {
+		t.Fatal("phy-ht-cfg is nil, so the container the leaves sit in was not decoded")
+	}
+
+	return radio.PhyHtCfg.CfgData
+}
+
+// soleRadioRecord serves body from the radio-oper-data endpoint and returns the one radio it holds.
+func soleRadioRecord(t *testing.T, body string) ap.RadioOperData {
+	t.Helper()
+
+	service, ctx := absenceService(t, radioOperEndpoint, body)
+
+	result, err := service.ListRadioData(ctx)
+	if err != nil {
+		t.Fatalf("ListRadioData failed: %v", err)
+	}
+
+	if len(result.RadioOperData) != 1 {
+		t.Fatalf("decoded %d records, want 1", len(result.RadioOperData))
+	}
+
+	return result.RadioOperData[0]
 }
 
 // absenceService stands up a server that answers endpoint alone, so a body that fails to match

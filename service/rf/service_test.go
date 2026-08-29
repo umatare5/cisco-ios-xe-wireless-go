@@ -1,6 +1,7 @@
 package rf
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/umatare5/cisco-ios-xe-wireless-go/internal/core"
@@ -276,6 +277,82 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			t.Error("GetRadarDetectionData returned nil result")
 		}
 	})
+}
+
+// TestRfServiceUnit_OmittedRadioProfileName_MockSuccess tests that a slot override read without
+// with-defaults stays nil while an explicit name decodes, and that a nil one is not written.
+//
+// No contract gate holds this field: it is neither a leaf a consumer publishes nor one the schema
+// defaults to true, so this test is the only thing a revert to a value string fails.
+func TestRfServiceUnit_OmittedRadioProfileName_MockSuccess(t *testing.T) {
+	t.Parallel()
+
+	mockServer := testutil.NewMockServer(testutil.WithSuccessResponses(map[string]string{
+		"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags": `{
+			"Cisco-IOS-XE-wireless-rf-cfg:rf-tags": {
+				"rf-tag": [
+					{
+						"tag-name": "tag-plain-read",
+						"rf-tag-radio-profiles": {
+							"rf-tag-radio-profile": [
+								{
+									"slot-id": "slot-0",
+									"band-id": "band-2-dot-4-ghz"
+								}
+							]
+						}
+					},
+					{
+						"tag-name": "tag-report-all",
+						"rf-tag-radio-profiles": {
+							"rf-tag-radio-profile": [
+								{
+									"slot-id": "slot-0",
+									"band-id": "band-2-dot-4-ghz",
+									"radio-profile-name": "profile-slot-0"
+								}
+							]
+						}
+					}
+				]
+			}
+		}`,
+	}))
+	defer mockServer.Close()
+
+	testClient := testutil.NewTestClient(mockServer)
+	service := NewService(testClient.Core().(*core.Client))
+
+	result, err := service.ListRFTags(testutil.TestContext(t))
+	if err != nil {
+		t.Fatalf("ListRFTags failed: %v", err)
+	}
+	if result.RFTags == nil || len(result.RFTags.RFTags) != 2 {
+		t.Fatalf("Expected 2 RF tags, got %+v", result.RFTags)
+	}
+
+	omitted := result.RFTags.RFTags[0].RFTagRadioProfiles.RFTagRadioProfile[0]
+	if omitted.SlotID != "slot-0" {
+		t.Fatalf("slot-id = %q, so the list element was not decoded", omitted.SlotID)
+	}
+	if omitted.RadioProfileName != nil {
+		t.Error("radio-profile-name: want nil, which is a plain read rather than a slot with no override")
+	}
+
+	sent := result.RFTags.RFTags[1].RFTagRadioProfiles.RFTagRadioProfile[0]
+	if sent.RadioProfileName == nil || *sent.RadioProfileName != "profile-slot-0" {
+		t.Errorf("radio-profile-name = %v, want profile-slot-0", sent.RadioProfileName)
+	}
+
+	// The write side: a nil pointer marshals away, so declaring the field sends no new leaf on the
+	// replacing PUT. Asserted on the bytes, because that is what the controller receives.
+	body, err := json.Marshal(omitted)
+	if err != nil {
+		t.Fatalf("json.Marshal failed: %v", err)
+	}
+	if got := string(body); got != `{"slot-id":"slot-0","band-id":"band-2-dot-4-ghz"}` {
+		t.Errorf("a nil radio-profile-name reached the wire: %s", got)
+	}
 }
 
 func TestRfServiceUnit_ErrorHandling_NilClient(t *testing.T) {

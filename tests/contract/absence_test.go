@@ -43,8 +43,13 @@ var publishedLeaves = map[string]map[string][]string{
 			"tx-power-level-1",
 			"curr-tx-power-in-dbm",
 		},
+		"RadioOperData": {
+			"slot-id",
+			"current-band-id",
+		},
 		"TagInfo": {
 			"is-ap-misconfigured",
+			"ap-misconfig",
 		},
 	},
 }
@@ -52,7 +57,7 @@ var publishedLeaves = map[string]map[string][]string{
 // publishedLeafCount is how many leaves the list above holds. Checking it stops the gate from
 // passing because an entry was dropped: every other assertion here is made per leaf, so a list
 // that loses one loses the finding with it.
-const publishedLeafCount = 23
+const publishedLeafCount = 26
 
 // TestEveryPublishedLeafCanBeAbsent holds the leaves a consumer publishes as a metric to the one
 // shape that can tell the controller's silence from a reading: a pointer with omitempty. A zero
@@ -189,18 +194,28 @@ var trueByDefaultLeaves = map[string]map[string][]string{
 	"wlan": {
 		"WlanCfgEntry": {
 			"auth-key-mgmt-dot1x",
+			"okc",
+			"security-wpa",
 			"wlan-11k-neigh-list",
+			"wpa2-aes",
 			"wpa2-enabled",
 		},
-		"APFVap80211vData":    {"dot11v-dms"},
-		"UmbrellaFlexParams":  {"dhcp-dns-option-enable"},
-		"WlanSwitchingPolicy": {"central-assoc-enable", "central-authentication"},
+		"APFVapIDData":       {"broadcast-ssid"},
+		"APFVap80211vData":   {"dot11v-dms"},
+		"Dot11beProfile":     {"eht-ofdma-downlink", "eht-ofdma-uplink"},
+		"UmbrellaFlexParams": {"dhcp-dns-option-enable"},
+		"WlanSwitchingPolicy": {
+			"central-assoc-enable",
+			"central-authentication",
+			"central-dhcp",
+			"central-switching",
+		},
 	},
 }
 
 // trueByDefaultLeafCount is how many leaves the list above holds, for the same reason
 // publishedLeafCount exists: a dropped entry would take its finding with it.
-const trueByDefaultLeafCount = 7
+const trueByDefaultLeafCount = 15
 
 // TestEveryTrueByDefaultLeafIsNilable holds the leaves whose schema default is true to a pointer
 // with omitempty. It is not the same property as TestEveryPublishedLeafCanBeAbsent: that gate asks
@@ -208,9 +223,9 @@ const trueByDefaultLeafCount = 7
 // all. A default-false leaf is deliberately absent from the list — decoding its absence as false
 // gives the right answer, so pointerising it would be symmetry rather than a fix.
 //
-// Three of the seven were already pointers before this gate existed, which is what makes a pass
-// meaningful: they are the positive control that the predicate matches the shape the tree already
-// treats as correct, so the gate cannot pass by asserting nothing.
+// Most of the leaves listed were already pointers before this gate existed, which is what makes a
+// pass meaningful: they are the positive control that the predicate matches the shape the tree
+// already treats as correct, so the gate cannot pass by asserting nothing.
 func TestEveryTrueByDefaultLeafIsNilable(t *testing.T) {
 	pkgs, _ := loadTree(t)
 

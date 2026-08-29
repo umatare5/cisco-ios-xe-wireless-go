@@ -135,7 +135,7 @@ func main() {
 	fmt.Printf("Executing AP reload for MAC %s\n", apMac)
 	fmt.Println("WARNING: AP will become unavailable and disconnect all clients during restart...")
 
-	err = apService.Reload(ctx, apMac)
+	err = apService.ReloadByMAC(ctx, apMac)
 	if err != nil {
 		logger.Error("AP reload failed",
 			slog.String("ap_mac", apMac),

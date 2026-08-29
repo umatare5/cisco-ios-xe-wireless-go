@@ -2,6 +2,110 @@ package ap
 
 import "time"
 
+// RadioType represents the enm-radio-type enumeration.
+type RadioType string
+
+// enm-radio-type members. The first eight are served on 17.12, 17.15 and 17.18 alike;
+// radio-80211-xor-24-6ghz arrives at 17.18.
+const (
+	// RadioTypeInvalid is the enumeration's own invalid member.
+	RadioTypeInvalid RadioType = "radio-invalid"
+
+	// RadioType80211BG is a dedicated 2.4 GHz radio.
+	RadioType80211BG RadioType = "radio-80211bg"
+
+	// RadioType80211A is a dedicated 5 GHz radio.
+	RadioType80211A RadioType = "radio-80211a"
+
+	// RadioType80211ABGN is a 2.4/5 GHz XOR radio.
+	RadioType80211ABGN RadioType = "radio-80211abgn"
+
+	// RadioTypeUWB is an ultra-wideband radio.
+	RadioTypeUWB RadioType = "radio-uwb"
+
+	// RadioTypeRemoteLAN is a remote-LAN port, listed in radio-oper-data with no band of its own.
+	RadioTypeRemoteLAN RadioType = "radio-remote-lan"
+
+	// RadioType6GHz is a dedicated 6 GHz radio.
+	RadioType6GHz RadioType = "radio-80211-6ghz"
+
+	// RadioTypeXOR5And6GHz is a 5/6 GHz XOR radio.
+	RadioTypeXOR5And6GHz RadioType = "radio-80211-xor-5-6ghz"
+
+	// RadioTypeXOR24And6GHz is a 2.4/6 GHz XOR radio, served from IOS-XE 17.18.
+	RadioTypeXOR24And6GHz RadioType = "radio-80211-xor-24-6ghz"
+)
+
+// ApMisconfig represents the ap-misconfig enumeration.
+type ApMisconfig string
+
+// ap-misconfig members. The first three are served on 17.15 and 17.18; lic-no-comp arrives at
+// 17.18, and the leaf itself is not declared on 17.12.
+const (
+	// ApMisconfigNone is the member the controller sends when nothing is misconfigured.
+	ApMisconfigNone ApMisconfig = "apmgr-no-misconfig"
+
+	// ApMisconfigCountry reports a country code the controller and the AP disagree on.
+	ApMisconfigCountry ApMisconfig = "country-misconfig"
+
+	// ApMisconfigWorldWideMode reports an AP fallen back to world-wide mode.
+	ApMisconfigWorldWideMode ApMisconfig = "world-wide-mode"
+
+	// ApMisconfigLicenseNotCompliant reports an AP the license does not cover, served from 17.18.
+	ApMisconfigLicenseNotCompliant ApMisconfig = "lic-no-comp"
+)
+
+// APAdminState represents the admin-state enumeration.
+type APAdminState string
+
+// admin-state members, unchanged on 17.12, 17.15 and 17.18. The enumeration declares no third
+// member, and the admin-state-* spelling the write RPCs send belongs to a different typedef,
+// enm-admin-status, whose own members are admin-state-enabled and admin-state-disabled.
+const (
+	// APAdminStateEnabled is an administratively enabled access point.
+	APAdminStateEnabled APAdminState = "adminstate-enabled"
+
+	// APAdminStateDisabled is an administratively disabled access point.
+	APAdminStateDisabled APAdminState = "adminstate-disabled"
+)
+
+// WtpMode represents the enm-ewlc-spam-ap-modes enumeration.
+type WtpMode string
+
+// enm-ewlc-spam-ap-modes members, unchanged on 17.12, 17.15 and 17.18. Only the first carries no
+// mode- prefix, so stripping one produces a wrong name for exactly that member.
+const (
+	// WtpModeLocal is an access point in local mode.
+	WtpModeLocal WtpMode = "local-mode"
+
+	// WtpModeMonitor is an access point in monitor mode.
+	WtpModeMonitor WtpMode = "mode-monitor"
+
+	// WtpModeFlexConnect is an access point in FlexConnect mode.
+	WtpModeFlexConnect WtpMode = "mode-flex-connect"
+
+	// WtpModeRogueDetector is an access point in rogue-detector mode.
+	WtpModeRogueDetector WtpMode = "mode-rogue-detector"
+
+	// WtpModeSniffer is an access point in sniffer mode.
+	WtpModeSniffer WtpMode = "mode-sniffer"
+
+	// WtpModeBridge is an access point in bridge mode.
+	WtpModeBridge WtpMode = "mode-bridge"
+
+	// WtpModeSEConnect is an access point in Spectrum Expert Connect mode.
+	WtpModeSEConnect WtpMode = "mode-se-connect"
+
+	// WtpModeRemoteBridge is an access point in remote-bridge mode.
+	WtpModeRemoteBridge WtpMode = "mode-remote-bridge"
+
+	// WtpModeHybridFlexConnect is an access point in hybrid FlexConnect mode.
+	WtpModeHybridFlexConnect WtpMode = "mode-hybrid-flexconnect"
+
+	// WtpModeSensor is an access point in sensor mode.
+	WtpModeSensor WtpMode = "mode-sensor"
+)
+
 // CiscoIOSXEWirelessAPOper represents access point operational data response.
 type CiscoIOSXEWirelessAPOper struct {
 	CiscoIOSXEWirelessAPOperData *CiscoIOSXEWirelessAPOperData `json:"Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data"` // Root container of access point operational data (Live: IOS-XE 17.12.6a)
@@ -231,23 +335,23 @@ type ApRadioNeighbor struct {
 
 // RadioOperData represents radio operational data.
 type RadioOperData struct {
-	WtpMAC       string `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.6a)
-	RadioSlotID  int    `json:"radio-slot-id"`            // Radio slot identifier (Live: IOS-XE 17.12.6a)
-	SlotID       int    `json:"slot-id,omitempty"`        // Physical slot identifier (Live: IOS-XE 17.12.6a)
-	RadioType    string `json:"radio-type,omitempty"`     // Radio hardware type (Live: IOS-XE 17.12.6a)
-	AdminState   string `json:"admin-state,omitempty"`    // Administrative state (Live: IOS-XE 17.12.6a)
-	OperState    string `json:"oper-state,omitempty"`     // Operational state (Live: IOS-XE 17.12.6a)
-	RadioMode    string `json:"radio-mode,omitempty"`     // Radio operational mode (Live: IOS-XE 17.12.6a)
-	RadioSubMode string `json:"radio-sub-mode,omitempty"` // Radio sub-mode details (Live: IOS-XE 17.12.6a)
-	RadioSubtype string `json:"radio-subtype,omitempty"`  // Radio hardware subtype (Live: IOS-XE 17.12.6a)
-	RadioSubband string `json:"radio-subband,omitempty"`  // Radio frequency subband (Live: IOS-XE 17.12.6a)
+	WtpMAC       string    `json:"wtp-mac"`                  // Wireless Termination Point MAC address (Live: IOS-XE 17.12.6a)
+	RadioSlotID  int       `json:"radio-slot-id"`            // Radio slot identifier and the list key, always sent (Live: IOS-XE 17.12.6a)
+	SlotID       *int      `json:"slot-id,omitempty"`        // Physical slot identifier, withheld on a radio-remote-lan radio; nil is that absence and not slot 0 (Live: IOS-XE 17.12.6a)
+	RadioType    RadioType `json:"radio-type,omitempty"`     // Radio hardware type; the band a radio write takes follows it (Live: IOS-XE 17.12.6a)
+	AdminState   string    `json:"admin-state,omitempty"`    // Administrative state (Live: IOS-XE 17.12.6a)
+	OperState    string    `json:"oper-state,omitempty"`     // Operational state (Live: IOS-XE 17.12.6a)
+	RadioMode    string    `json:"radio-mode,omitempty"`     // Radio operational mode (Live: IOS-XE 17.12.6a)
+	RadioSubMode string    `json:"radio-sub-mode,omitempty"` // Radio sub-mode details (Live: IOS-XE 17.12.6a)
+	RadioSubtype string    `json:"radio-subtype,omitempty"`  // Radio hardware subtype (Live: IOS-XE 17.12.6a)
+	RadioSubband string    `json:"radio-subband,omitempty"`  // Radio frequency subband (Live: IOS-XE 17.12.6a)
 
 	// Band and channel information
 
 	// Band index from 0, one below the enm-ewlc-dot11-radio-band number for the same band, so this
-	// 0 is 2.4 GHz where the enum's 0 is invalid. Withheld on a radio-remote-lan radio, where this
-	// value field then reads 0. (Live: IOS-XE 17.12.6a)
-	CurrentBandID     int    `json:"current-band-id,omitempty"`
+	// 0 is 2.4 GHz where the enum's 0 is invalid. Withheld on a radio-remote-lan radio; nil is
+	// that absence, so a decoded 0 stays a 2.4 GHz reading. (Live: IOS-XE 17.12.6a)
+	CurrentBandID     *int   `json:"current-band-id,omitempty"`
 	CurrentActiveBand string `json:"current-active-band,omitempty"` // Active frequency band (Live: IOS-XE 17.12.6a)
 
 	// Protocol capabilities
@@ -512,8 +616,8 @@ type GnssInfo struct {
 
 // ApState represents AP state information.
 type ApState struct {
-	ApAdminState     string `json:"ap-admin-state"`     // AP admin state (enabled/disabled/shutdown) (Live: IOS-XE 17.12.6a)
-	ApOperationState string `json:"ap-operation-state"` // AP operational state (Live: IOS-XE 17.12.6a)
+	ApAdminState     APAdminState `json:"ap-admin-state"`     // AP admin state, adminstate-enabled or adminstate-disabled (Live: IOS-XE 17.12.6a)
+	ApOperationState string       `json:"ap-operation-state"` // AP operational state (Live: IOS-XE 17.12.6a)
 }
 
 // ApModeData represents AP mode related information.
@@ -521,7 +625,7 @@ type ApModeData struct {
 	HomeApEnabled bool         `json:"home-ap-enabled"` // Home AP feature enablement (Live: IOS-XE 17.12.6a)
 	ClearMode     bool         `json:"clear-mode"`      // Clear mode status (Live: IOS-XE 17.12.6a)
 	ApSubMode     string       `json:"ap-sub-mode"`     // AP operational sub-mode (Live: IOS-XE 17.12.6a)
-	WtpMode       string       `json:"wtp-mode"`        // WTP mode (local/flexconnect/monitor) (Live: IOS-XE 17.12.6a)
+	WtpMode       WtpMode      `json:"wtp-mode"`        // WTP mode, one of ten members whose first carries no mode- prefix (Live: IOS-XE 17.12.6a)
 	ApFabricData  ApFabricData `json:"ap-fabric-data"`  // SDA fabric integration attributes (Live: IOS-XE 17.12.6a)
 }
 
@@ -619,11 +723,16 @@ type PhyHtCfg struct {
 }
 
 // PhyHtCfgData represents PHY HT configuration data.
+//
+// The container arrives on a radio in monitor mode with curr-freq withheld — measured on 17.15,
+// where the same radio still reported its width — so a check on phy-ht-cfg cannot stand in for a
+// check on the leaf. Both leaves are pointers for that reason: the two that carry the channel are
+// read the same way, and each is withheld on its own.
 type PhyHtCfgData struct {
 	HtEnable               int    `json:"ht-enable"`                 // 802.11n HT protocol enablement (Live: IOS-XE 17.12.6a)
 	PhyHtCfgConfigType     string `json:"phy-ht-cfg-config-type"`    // Physical layer HT configuration type designation (Live: IOS-XE 17.12.6a)
-	CurrFreq               int    `json:"curr-freq"`                 // Current channel number, not a frequency; FreqString renders it with the bonded channels (Live: IOS-XE 17.12.6a)
-	ChanWidth              int    `json:"chan-width"`                // Channel bandwidth width in MHz (20/40/80/160) (Live: IOS-XE 17.12.6a)
+	CurrFreq               *int   `json:"curr-freq,omitempty"`       // Current channel number, not a frequency; withheld on a radio in monitor mode, while FreqString still renders the bonded channels (Live: IOS-XE 17.12.6a)
+	ChanWidth              *int   `json:"chan-width,omitempty"`      // Channel bandwidth in MHz, 20/40/80/160; sent on a monitor-mode radio whose channel was withheld (Live: IOS-XE 17.12.6a)
 	ExtChan                int    `json:"ext-chan"`                  // Extension channel for 40MHz bonding (Live: IOS-XE 17.12.6a)
 	VhtEnable              bool   `json:"vht-enable"`                // 802.11ac Very High Throughput protocol enablement (Live: IOS-XE 17.12.6a)
 	LegTxBfEnabled         int    `json:"leg-tx-bf-enabled"`         // Legacy TX beamforming enablement (Live: IOS-XE 17.12.6a)
@@ -831,6 +940,7 @@ type TagInfo struct {
 	RFTag             RFTag           `json:"rf-tag"`                        // RF tag configuration (Live: IOS-XE 17.12.6a)
 	FilterInfo        FilterInfo      `json:"filter-info"`                   // Access control filter information (Live: IOS-XE 17.12.6a)
 	IsDTLSLscFbkAp    bool            `json:"is-dtls-lsc-fbk-ap"`            // DTLS LSC fallback AP designation (Live: IOS-XE 17.12.6a)
+	ApMisconfig       *ApMisconfig    `json:"ap-misconfig,omitempty"`        // Reason the AP is misconfigured; sent even at ApMisconfigNone, so nil is a controller that does not serve the leaf (Live: IOS-XE 17.15.6)
 }
 
 // ResolvedTagInfo represents resolved tag information.

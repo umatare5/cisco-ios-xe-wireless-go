@@ -13,7 +13,7 @@
 
 ## Repository Structure
 
-- `wnc.go` — Public entry point; `NewClient(host, token, opts...)`, 42 service accessors, and the untyped `GetData`/`PostData`/`PutData`/`PatchData`/`DeleteData`/`PostRPC` escape hatches
+- `wnc.go` — Public entry point; `NewClient(host, token, opts...)`, 42 service accessors, and the untyped `GetData`/`PostData`/`PutData`/`PatchData`/`DeleteData`/`PostRPC`/`Request` escape hatches, of which `Request` alone returns a `*Response` carrying the status
 - `service/` — 32 service packages, one per YANG feature area. **No service imports another**; the invariant holds across all 32 and nothing enforces it, because `depguard` runs `list-mode: lax`
 - `internal/core/` — Request execution and the five error sentinels ([errors.go](internal/core/errors.go)); a service package never defines its own sentinel, and `IsNotFoundError` is the intended predicate
 - `internal/restconf/` — URL builders reached as `s.Client().RESTCONFBuilder()`; `routes/` is the single source for endpoint strings
@@ -72,7 +72,9 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 - **A read-modify-write must route a carried value through the default builder, never into `""`.** Because the read omits a leaf holding its default, writing the omitted value back as an empty string is what the controller rejects.
 - **For a replacing `PUT` the write type must cover every leaf the read type declares.** A leaf the write type omits is deleted from the entry, and no test compares the two types — see the repair in `db757c7`.
 - **An optional container must be a pointer with `omitempty`.** A non-pointer struct always marshals, so the payload carries `"list": null` and the controller answers `400`.
-- **Tag writes are the only place this SDK mutates a controller.** The three tag list key leaves declare the pattern `[!-~]([ -~]*[!-~])?` and no length on 17.12, 17.15 and 17.18 alike, while the controller caps a name at 32 characters on every kind, measured on 17.12.8, so `validation.ValidateTagName` enforces both and each tag service calls it.
+- **A secret-bearing leaf is a named type, and the redaction has to sit on the field type and on the entry.** `wlan.Secret` redacts through `String` and `LogValue`, which covers every `fmt` verb but `%#v`. `slog.JSONHandler` renders a struct value through `json.Marshal`, which honors `json.Marshaler` and ignores `fmt.Stringer`, so `WlanCfgEntry.LogValue` is what keeps the key out of a record built from the whole entry, and `Secret.MarshalJSON` is what keeps it out of the containers above the entry, which have no `LogValue` of their own.
+- **Tag writes, the AP write RPCs and the controller reload RPC are the only places this SDK mutates a controller.** The three tag list key leaves declare the pattern `[!-~]([ -~]*[!-~])?` and no length on 17.12, 17.15 and 17.18 alike, while the controller caps a name at 32 characters on every kind, measured on 17.12.8, so `validation.ValidateTagName` enforces both and each tag service calls it.
+- **An AP write RPC's input is a mandatory choice, and the accessor's `By` suffix names the arm it fills.** Both arms carry `omitempty`, so the arm the caller did not name is absent rather than sent empty. The slot-admin RPC's `band` selects a radio type and not a frequency, so the caller supplies the slot and the `radio-type` leaf and the controller arbitrates the pair.
 
 ### RESTCONF Access Patterns
 

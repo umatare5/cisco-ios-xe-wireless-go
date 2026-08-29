@@ -208,11 +208,8 @@ func (s Service) GetNameMACMapByWTPName(
 	ctx context.Context,
 	wtpName string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperApNameMACMap, error) {
-	if wtpName == "" {
-		return nil, core.ErrResourceNotFound
-	}
-	if strings.TrimSpace(wtpName) == "" {
-		return nil, core.ErrResourceNotFound
+	if err := service.RequireAPName(wtpName); err != nil {
+		return nil, err
 	}
 
 	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APApNameMACMapPath, wtpName)
@@ -657,24 +654,31 @@ func (s Service) ListLldpNeigh(
 	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), routes.APLldpNeighPath, opts...)
 }
 
-// GetLldpNeighByWTPMAC retrieves LLDP neighbor information for a specific WTP MAC address.
-func (s Service) GetLldpNeighByWTPMAC(
-	ctx context.Context, wtpMAC string, opts ...core.GetOption,
+// GetLldpNeighByWTPMACAndNeighMAC retrieves the LLDP neighbor one AP interface reported.
+// This follows the YANG model key structure: "wtp-mac neigh-mac".
+//
+// Both keys are required because the list has two. A read keyed on wtp-mac alone is not a key at
+// all and the controller answers 404, so pass ListLldpNeigh and filter where the neighbor address
+// is not known in advance.
+func (s Service) GetLldpNeighByWTPMACAndNeighMAC(
+	ctx context.Context, wtpMAC, neighMAC string, opts ...core.GetOption,
 ) (*CiscoIOSXEWirelessApOperLldpNeigh, error) {
-	if wtpMAC == "" || strings.TrimSpace(wtpMAC) == "" {
-		return nil, core.ErrResourceNotFound
-	}
-
-	if err := validation.ValidateMACAddress(wtpMAC); err != nil {
+	normalizedWTPMAC, err := service.RequireMACAddress(wtpMAC)
+	if err != nil {
 		return nil, fmt.Errorf("invalid WTP MAC address: %w", err)
 	}
 
-	normalizedMAC, err := validation.NormalizeMACAddress(wtpMAC)
+	normalizedNeighMAC, err := service.RequireMACAddress(neighMAC)
 	if err != nil {
-		return nil, fmt.Errorf("invalid WTP MAC address %s: %w", wtpMAC, err)
+		return nil, fmt.Errorf("invalid neighbor MAC address: %w", err)
 	}
 
-	url := s.Client().RESTCONFBuilder().BuildQueryURL(routes.APLldpNeighPath, normalizedMAC)
+	url := s.Client().RESTCONFBuilder().BuildQueryCompositeURL(
+		routes.APLldpNeighPath,
+		normalizedWTPMAC,
+		normalizedNeighMAC,
+	)
+
 	return core.Get[CiscoIOSXEWirelessApOperLldpNeigh](ctx, s.Client(), url, opts...)
 }
 
@@ -786,30 +790,53 @@ func (s Service) ListApNhGlobalData(
 	return core.Get[CiscoIOSXEWirelessApOperApNhGlobalData](ctx, s.Client(), routes.APApNhGlobalDataPath, opts...)
 }
 
-// EnableAP enables the administrative state of an access point.
-func (s Service) EnableAP(ctx context.Context, mac string) error {
-	return s.updateAPState(ctx, mac, "admin-state-enabled")
+// EnableAPByMAC enables the administrative state of the access point with this address.
+//
+// The By suffix names the arm of the RPC's mandatory choice this fills rather than a list key,
+// which is why the tag writes on this service carry no suffix: ap-mac is their list key and there
+// is nothing to choose.
+func (s Service) EnableAPByMAC(ctx context.Context, apMAC string) error {
+	return s.setAPAdminStateByMAC(ctx, apMAC, true)
 }
 
-// DisableAP disables the administrative state of an access point.
-func (s Service) DisableAP(ctx context.Context, mac string) error {
-	return s.updateAPState(ctx, mac, "admin-state-disabled")
+// DisableAPByMAC disables the administrative state of the access point with this address.
+func (s Service) DisableAPByMAC(ctx context.Context, apMAC string) error {
+	return s.setAPAdminStateByMAC(ctx, apMAC, false)
 }
 
-// EnableRadio enables a radio on an Access Point using MAC address.
-func (s Service) EnableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error {
-	if err := validation.ValidateMACAddress(apMAC); err != nil {
-		return err
-	}
-	return s.updateRadioState(ctx, apMAC, &radioBand, true)
+// EnableAPByName enables the administrative state of the access point with this name.
+func (s Service) EnableAPByName(ctx context.Context, apName string) error {
+	return s.setAPAdminStateByName(ctx, apName, true)
 }
 
-// DisableRadio disables a radio on an Access Point using MAC address.
-func (s Service) DisableRadio(ctx context.Context, apMAC string, radioBand core.RadioBand) error {
-	if err := validation.ValidateMACAddress(apMAC); err != nil {
-		return err
-	}
-	return s.updateRadioState(ctx, apMAC, &radioBand, false)
+// DisableAPByName disables the administrative state of the access point with this name.
+func (s Service) DisableAPByName(ctx context.Context, apName string) error {
+	return s.setAPAdminStateByName(ctx, apName, false)
+}
+
+// EnableRadioByMAC enables one radio on the access point with this address.
+//
+// slotID is the radio-slot-id the controller reports for that radio and radioType is the
+// radio-type leaf of the same record. The RPC's band follows the radio the slot holds rather than
+// the band it is serving, so both come from the record and neither is derived from the other;
+// whether the controller accepts the pair is the controller's to answer.
+func (s Service) EnableRadioByMAC(ctx context.Context, apMAC string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByMAC(ctx, apMAC, slotID, radioType, true)
+}
+
+// DisableRadioByMAC disables one radio on the access point with this address.
+func (s Service) DisableRadioByMAC(ctx context.Context, apMAC string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByMAC(ctx, apMAC, slotID, radioType, false)
+}
+
+// EnableRadioByName enables one radio on the access point with this name.
+func (s Service) EnableRadioByName(ctx context.Context, apName string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByName(ctx, apName, slotID, radioType, true)
+}
+
+// DisableRadioByName disables one radio on the access point with this name.
+func (s Service) DisableRadioByName(ctx context.Context, apName string, slotID int, radioType RadioType) error {
+	return s.setRadioAdminStateByName(ctx, apName, slotID, radioType, false)
 }
 
 // AssignSiteTag assigns a site tag to an Access Point using MAC address.
@@ -839,48 +866,116 @@ func (s Service) AssignRFTag(ctx context.Context, apMAC, rfTag string) error {
 	return s.assignTags(ctx, apMAC, tags)
 }
 
-// Reload restarts an Access Point by MAC address causing temporary service interruption.
-func (s Service) Reload(ctx context.Context, apMAC string) error {
-	// findAPByMAC compares against the colon form the controller reports, so a dotted or
-	// upper-case address has to be normalized here or it matches no joined AP.
-	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+// ReloadByMAC restarts the access point with this address, interrupting service on it.
+//
+// The RPC accepts a name or an address and this resolves the name, because the address arm has
+// never been observed to complete. The resolve is the keyed capwap-data read and carries no
+// fields expression: the record is one row either way, and pruning to name alone would drop the
+// wtp-mac this address was matched on.
+func (s Service) ReloadByMAC(ctx context.Context, apMAC string) error {
+	normalizedMAC, err := service.RequireMACAddress(apMAC)
 	if err != nil {
-		return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
+		return err
 	}
 
-	resp, err := s.ListCAPWAPData(ctx)
+	resp, err := s.GetCAPWAPDataByWTPMAC(ctx, normalizedMAC)
+	if core.IsNotFoundError(err) {
+		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
+	}
 	if err != nil {
 		return fmt.Errorf(ErrFailedGetCAPWAPData, err)
 	}
 	if resp == nil {
 		return errors.New(ErrCAPWAPDataUnavailable)
 	}
-
-	apName, found := findAPByMAC(resp, normalizedMAC)
-	if !found {
+	if len(resp.CAPWAPData) == 0 {
 		return fmt.Errorf(ErrAPNotFoundByMAC, apMAC)
 	}
 
-	return s.reload(ctx, apName)
+	return s.ReloadByName(ctx, resp.CAPWAPData[0].Name)
 }
 
-// updateAPState handles AP admin state changes with mac and mode parameters.
-func (s Service) updateAPState(ctx context.Context, mac, mode string) error {
-	if err := validation.ValidateMACAddress(mac); err != nil {
-		return fmt.Errorf("invalid AP MAC address: %s", mac)
+// ReloadByName restarts the access point with this name, interrupting service on it.
+func (s Service) ReloadByName(ctx context.Context, apName string) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
 	}
 
-	normalizedMAC, err := validation.NormalizeMACAddress(mac)
+	payload := APReloadRPCPayload{Input: APReloadRPCInput{APName: apName}}
+
+	return core.PostRPCVoid(ctx, s.Client(), routes.APApResetRPC, payload)
+}
+
+// ResetCAPWAPByMAC tears down and re-establishes the CAPWAP session of the access point with this
+// address, which does not reboot it.
+//
+// The address arm is what the RPC declares and what this sends; no completed write through it is
+// on record, only the controller naming mac-addr in its own refusal of an input carrying neither
+// arm. ResetCAPWAPByName is the arm that has been measured.
+func (s Service) ResetCAPWAPByMAC(ctx context.Context, apMAC string) error {
+	normalizedMAC, err := service.RequireMACAddress(apMAC)
 	if err != nil {
-		return fmt.Errorf("invalid AP MAC address: %s", mac)
+		return err
 	}
 
-	payload := APConfigRPCPayload{
-		Input: APConfigRPCInput{
-			Mode:    mode,
-			MACAddr: normalizedMAC,
-		},
+	return s.resetCAPWAP(ctx, APCAPWAPResetRPCInput{MACAddr: normalizedMAC})
+}
+
+// ResetCAPWAPByName tears down and re-establishes the CAPWAP session of the access point with this
+// name, which does not reboot it.
+//
+// Measured on 17.12.8 and again on 17.18: the access point leaves within five seconds and rejoins
+// within ten, and boot-time moves by about a second because the controller re-derives it from the
+// access point's uptime at join.
+func (s Service) ResetCAPWAPByName(ctx context.Context, apName string) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
 	}
+
+	return s.resetCAPWAP(ctx, APCAPWAPResetRPCInput{APName: apName})
+}
+
+// resetCAPWAP posts one CAPWAP-reset RPC. The arm is the caller's: the input's choice is
+// mandatory, and an input carrying neither is refused with 400.
+func (s Service) resetCAPWAP(ctx context.Context, input APCAPWAPResetRPCInput) error {
+	payload := APCAPWAPResetRPCPayload{Input: input}
+
+	if err := core.PostRPCVoid(ctx, s.Client(), routes.APSetRadCAPWAPResetRPC, payload); err != nil {
+		return ierrors.ServiceOperationError("reset", "AP", "CAPWAP session", err)
+	}
+
+	return nil
+}
+
+// setAPAdminStateByMAC fills the input's mac-addr arm.
+func (s Service) setAPAdminStateByMAC(ctx context.Context, apMAC string, enabled bool) error {
+	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
+	if err != nil {
+		return fmt.Errorf(ErrInvalidAPMacFormat, apMAC)
+	}
+
+	return s.updateAPState(ctx, APConfigRPCInput{
+		Mode:    core.GetAdminStateMode(enabled),
+		MACAddr: normalizedMAC,
+	})
+}
+
+// setAPAdminStateByName fills the input's ap-name arm.
+func (s Service) setAPAdminStateByName(ctx context.Context, apName string, enabled bool) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
+	}
+
+	return s.updateAPState(ctx, APConfigRPCInput{
+		Mode:   core.GetAdminStateMode(enabled),
+		APName: apName,
+	})
+}
+
+// updateAPState posts one admin-state RPC. The arm is the caller's: the input's choice is
+// mandatory, and an input carrying both names two access points.
+func (s Service) updateAPState(ctx context.Context, input APConfigRPCInput) error {
+	payload := APConfigRPCPayload{Input: input}
 
 	if err := core.PostRPCVoid(ctx, s.Client(), routes.APSetApAdminStateRPC, payload); err != nil {
 		return ierrors.ServiceOperationError("update", "AP", "admin state", err)
@@ -889,34 +984,100 @@ func (s Service) updateAPState(ctx context.Context, mac, mode string) error {
 	return nil
 }
 
-// updateRadioState handles radio-level state changes.
-func (s Service) updateRadioState(ctx context.Context, apMAC string, radioBand *core.RadioBand, enabled bool) error {
-	if radioBand == nil {
-		return ierrors.RequiredParameterError("radio band")
-	}
+// The band numbers set-ap-slot-admin-state declares, identical on 17.12, 17.15 and 17.18.
+const (
+	radioBand24GHz = 1
+	radioBand5GHz  = 2
+	radioBandDual  = 3
+	radioBand6GHz  = 4
+)
 
+// radioBandNumber returns the band number set-ap-slot-admin-state takes for a radio type, and
+// false when this SDK has no number for it.
+//
+// The RPC's band leaf names a kind of radio and not a frequency — 1 is 2.4 GHz, 2 is 5 GHz, 3 is
+// dual band and 4 is 6 GHz — and its must clause admits seven (band, slot-id) pairs. Which of
+// them a given access point accepts is the controller's to arbitrate, so nothing here refuses a
+// slot: a dual-band radio in slot 0 takes band 3 where the served band would derive band 1.
+//
+// radio-invalid, radio-uwb and radio-remote-lan have no number because the leaf's domain is 1..4
+// and none of the four names them. radio-80211-xor-24-6ghz has none either: both the dual-band 3
+// and the 6 GHz 4 fit a 2.4/6 GHz XOR radio and no controller has been asked which.
+func radioBandNumber(radioType RadioType) (int, bool) {
+	switch radioType {
+	case RadioType80211BG:
+		return radioBand24GHz, true
+	case RadioType80211A:
+		return radioBand5GHz, true
+	case RadioType80211ABGN, RadioTypeXOR5And6GHz:
+		return radioBandDual, true
+	case RadioType6GHz:
+		return radioBand6GHz, true
+	default:
+		return 0, false
+	}
+}
+
+// setRadioAdminStateByMAC fills the input's mac-addr arm.
+func (s Service) setRadioAdminStateByMAC(
+	ctx context.Context,
+	apMAC string, slotID int, radioType RadioType, enabled bool,
+) error {
 	normalizedMAC, err := validation.NormalizeMACAddress(apMAC)
 	if err != nil {
 		return fmt.Errorf("invalid AP MAC address %s: %w", apMAC, err)
 	}
 
-	radioBandInfo, err := core.GetRadioBandInfo(int(*radioBand))
+	input, err := buildSlotAdminInput(slotID, radioType, enabled)
 	if err != nil {
 		return err
 	}
+	input.MACAddr = normalizedMAC
 
-	payload := APSlotConfigRPCPayload{
-		Input: APSlotConfigRPCInput{
-			Mode:    core.GetAdminStateMode(enabled),
-			SlotID:  int(radioBandInfo.SlotID),
-			Band:    strconv.Itoa(int(radioBandInfo.Band)),
-			MACAddr: normalizedMAC,
-		},
+	return s.updateRadioState(ctx, input)
+}
+
+// setRadioAdminStateByName fills the input's ap-name arm.
+func (s Service) setRadioAdminStateByName(
+	ctx context.Context,
+	apName string, slotID int, radioType RadioType, enabled bool,
+) error {
+	if err := service.RequireAPName(apName); err != nil {
+		return err
 	}
+
+	input, err := buildSlotAdminInput(slotID, radioType, enabled)
+	if err != nil {
+		return err
+	}
+	input.APName = apName
+
+	return s.updateRadioState(ctx, input)
+}
+
+// buildSlotAdminInput fills every leaf but the arm, which the caller sets.
+func buildSlotAdminInput(slotID int, radioType RadioType, enabled bool) (APSlotConfigRPCInput, error) {
+	band, ok := radioBandNumber(radioType)
+	if !ok {
+		return APSlotConfigRPCInput{}, ierrors.ValidationError("radio type", string(radioType))
+	}
+
+	return APSlotConfigRPCInput{
+		Mode:   core.GetAdminStateMode(enabled),
+		SlotID: slotID,
+		Band:   strconv.Itoa(band),
+	}, nil
+}
+
+// updateRadioState posts one slot-admin RPC. The arm is the caller's: the input's choice is
+// mandatory, and an input carrying both names two access points.
+func (s Service) updateRadioState(ctx context.Context, input APSlotConfigRPCInput) error {
+	payload := APSlotConfigRPCPayload{Input: input}
 
 	if err := core.PostRPCVoid(ctx, s.Client(), routes.APSetApSlotAdminStateRPC, payload); err != nil {
 		return ierrors.ServiceOperationError("set", "AP radio", "state", err)
 	}
+
 	return nil
 }
 
@@ -971,29 +1132,6 @@ func (s Service) resolveAPTagData(
 		RFTag:          validation.SelectNonEmptyValue(tags.RFTag, existing.RFTag),
 		PrimingProfile: existing.PrimingProfile,
 	}), nil
-}
-
-// reload is the internal helper function for AP reload operations.
-func (s Service) reload(ctx context.Context, apName string) error {
-	requestBody := APReloadRPCPayload{
-		Input: APReloadRPCInput{
-			APName: apName,
-		},
-	}
-	return core.PostRPCVoid(ctx, s.Client(), routes.APApResetRPC, requestBody)
-}
-
-// findAPByMAC searches for an AP with the given MAC address in CAPWAP data.
-func findAPByMAC(capwapData *CiscoIOSXEWirelessApOperCAPWAPData, apMAC string) (string, bool) {
-	if capwapData == nil {
-		return "", false
-	}
-	for _, data := range capwapData.CAPWAPData {
-		if data.WtpMAC == apMAC {
-			return data.Name, true
-		}
-	}
-	return "", false
 }
 
 // buildAPCfgApTagData constructs the payload for tag assignment requests.
