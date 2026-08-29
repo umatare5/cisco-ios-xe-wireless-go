@@ -50,7 +50,7 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 
 - Run `make test-unit` before committing.
 - Place unit tests next to the code under test (`*_test.go`) and name them `Test{Service}{Tier}_{Category}_{Scenario}`.
-- **Base a mock payload on a real controller response, never on a YANG model.** 38 files under `service/` carry `Live: IOS-XE` annotations recording the release each shape came from; capturing a new one is a maintainer step.
+- Base a mock payload on a real controller response, never on a YANG model.
 - Assertions use the hand-rolled helpers in `internal/testutil/`, not a third-party library.
 - Simulate a release gap by mocking `404`, not by branching on a version.
 - Coverage threshold is enforced by [.octocov.yml](.octocov.yml); see [docs/TESTING.md](docs/TESTING.md) for the four tiers.
