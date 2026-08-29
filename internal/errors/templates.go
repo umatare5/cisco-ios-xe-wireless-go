@@ -4,7 +4,7 @@ package errors
 const (
 	// ErrOperationFailedTemplate is the generic operation failure message template
 	// Usage: fmt.Sprintf(ErrOperationFailedTemplate, action, entity, entityID)
-	// Example: fmt.Sprintf(ErrOperationFailedTemplate, "get", "AP", "28:ac:9e:11:48:10")
+	// Example: fmt.Sprintf(ErrOperationFailedTemplate, "get", "AP", "aa:bb:cc:dd:ee:02")
 	//         fmt.Sprintf(ErrOperationFailedTemplate, "retrieve", "WLAN", "configuration")
 	ErrOperationFailedTemplate = "failed to %s %s %s: %w"
 
@@ -20,7 +20,7 @@ const (
 
 	// ErrEntityNotFoundTemplate is the entity not found error message template
 	// Usage: fmt.Sprintf(ErrEntityNotFoundTemplate, entityType, identifier)
-	// Example: fmt.Sprintf(ErrEntityNotFoundTemplate, "AP", "28:ac:9e:11:48:10").
+	// Example: fmt.Sprintf(ErrEntityNotFoundTemplate, "AP", "aa:bb:cc:dd:ee:02").
 	ErrEntityNotFoundTemplate = "%s with %s not found"
 
 	// ErrEmptyParameterTemplate is the empty parameter error message template

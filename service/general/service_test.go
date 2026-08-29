@@ -70,7 +70,7 @@ func TestGeneralServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"intf-id": 0,
 					"mgmt-ip": "192.168.1.100",
 					"net-mask": "255.255.255.0",
-					"mgmt-mac": "aa:bb:cc:dd:ee:ff"
+					"mgmt-mac": "aa:bb:cc:dd:ee:01"
 				}
 			}
 		}`,
@@ -136,7 +136,7 @@ func TestGeneralServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"intf-id": 0,
 				"mgmt-ip": "192.168.1.100",
 				"net-mask": "255.255.255.0",
-				"mgmt-mac": "aa:bb:cc:dd:ee:ff"
+				"mgmt-mac": "aa:bb:cc:dd:ee:01"
 			}
 		}`,
 	}

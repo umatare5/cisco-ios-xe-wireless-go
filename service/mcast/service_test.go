@@ -45,19 +45,19 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data": {
 				"flex-mediastream-client-summary": [
 					{
-						"client-mac": "2a:e3:42:8f:06:c8",
+						"client-mac": "aa:bb:cc:dd:ee:a2",
 						"vlan-id": 800,
 						"flex-mcast-client-group": [
 							{
 								"mcast-ip": "224.0.0.251",
 								"stream-name": "-",
-								"ap-mac": "aa:bb:cc:dd:ee:ff",
+								"ap-mac": "aa:bb:cc:dd:ee:01",
 								"is-direct": false
 							},
 							{
 								"mcast-ip": "ff02::fb",
 								"stream-name": "-",
-								"ap-mac": "aa:bb:cc:dd:ee:ff",
+								"ap-mac": "aa:bb:cc:dd:ee:01",
 								"is-direct": false
 							}
 						]
@@ -81,37 +81,37 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/flex-mediastream-client-summary": `{
 			"Cisco-IOS-XE-wireless-mcast-oper:flex-mediastream-client-summary": [
 				{
-					"client-mac": "2a:e3:42:8f:06:c8",
+					"client-mac": "aa:bb:cc:dd:ee:a2",
 					"vlan-id": 800,
 					"flex-mcast-client-group": [
 						{
 							"mcast-ip": "224.0.0.251",
 							"stream-name": "-",
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"is-direct": false
 						},
 						{
 							"mcast-ip": "ff02::fb",
 							"stream-name": "-",
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"is-direct": false
 						}
 					]
 				},
 				{
-					"client-mac": "68:db:f5:0f:84:18",
+					"client-mac": "aa:bb:cc:dd:ee:a3",
 					"vlan-id": 800,
 					"flex-mcast-client-group": [
 						{
 							"mcast-ip": "224.0.0.251",
 							"stream-name": "-",
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"is-direct": false
 						},
 						{
 							"mcast-ip": "ff02::fb",
 							"stream-name": "-",
-							"ap-mac": "aa:bb:cc:dd:ee:ff",
+							"ap-mac": "aa:bb:cc:dd:ee:01",
 							"is-direct": false
 						}
 					]
@@ -163,7 +163,7 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mcast-oper:rrc-history-client-record-data": [
 				{
 					"user-time-stamp": "2023-09-22T15:30:00Z",
-					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"client-mac": "aa:bb:cc:dd:ee:01",
 					"decision": "admit",
 					"reason-code": 0,
 					"stream-name": "test-stream"
@@ -173,7 +173,7 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mcast-oper:mcast-oper-data/rrc-sr-radio-record": `{
 			"Cisco-IOS-XE-wireless-mcast-oper:rrc-sr-radio-record": [
 				{
-					"ap-mac": "11:22:33:44:55:66",
+					"ap-mac": "aa:bb:cc:dd:ee:02",
 					"slot-id": 0,
 					"radio-type": 1,
 					"number-of-admitted": 2
@@ -185,7 +185,7 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				{
 					"stream-name-str": "test-stream",
 					"group-ip": "224.0.1.1",
-					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"client-mac": "aa:bb:cc:dd:ee:01",
 					"decision": "admit"
 				}
 			]
@@ -194,7 +194,7 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-admit-record": [
 				{
 					"last-updated": "2023-09-22T15:30:00Z",
-					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"client-mac": "aa:bb:cc:dd:ee:01",
 					"dest-ip": "224.0.1.1"
 				}
 			]
@@ -203,7 +203,7 @@ func TestMcastServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mcast-oper:rrc-stream-deny-record": [
 				{
 					"last-updated": "2023-09-22T15:30:00Z",
-					"client-mac": "aa:bb:cc:dd:ee:ff",
+					"client-mac": "aa:bb:cc:dd:ee:01",
 					"dest-ip": "224.0.1.1"
 				}
 			]

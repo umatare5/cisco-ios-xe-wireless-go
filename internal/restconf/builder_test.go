@@ -176,20 +176,20 @@ func TestRESTCONFBuilderUnit_BuildQueryURL_Success(t *testing.T) {
 		{
 			name:       "MAC query",
 			endpoint:   "wtp-mac",
-			identifier: "aa:bb:cc:dd:ee:ff",
-			expected:   "wtp-mac=aa:bb:cc:dd:ee:ff",
+			identifier: "aa:bb:cc:dd:ee:01",
+			expected:   "wtp-mac=aa:bb:cc:dd:ee:01",
 		},
 		{
 			name:       "Dotted MAC query",
 			endpoint:   "wtp-mac",
-			identifier: "aabb.ccdd.eeff",
-			expected:   "wtp-mac=aabb.ccdd.eeff",
+			identifier: "aabb.ccdd.ee01",
+			expected:   "wtp-mac=aabb.ccdd.ee01",
 		},
 		{
 			name:       "Bare MAC query",
 			endpoint:   "wtp-mac",
-			identifier: "aabbccddeeff",
-			expected:   "wtp-mac=aabbccddeeff",
+			identifier: "aabbccddee01",
+			expected:   "wtp-mac=aabbccddee01",
 		},
 		{
 			name:       "Profile name carrying a space",
@@ -256,8 +256,8 @@ func TestRESTCONFBuilderUnit_BuildQueryCompositeURL_Success(t *testing.T) {
 		{
 			name:     "Mixed types",
 			endpoint: "query",
-			values:   []interface{}{"aa:bb:cc:dd:ee:ff", 0, true},
-			expected: "query=aa:bb:cc:dd:ee:ff,0,true",
+			values:   []interface{}{"aa:bb:cc:dd:ee:01", 0, true},
+			expected: "query=aa:bb:cc:dd:ee:01,0,true",
 		},
 		{
 			name:     "Single value",

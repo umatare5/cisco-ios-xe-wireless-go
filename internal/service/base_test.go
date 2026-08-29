@@ -11,7 +11,7 @@ func TestServiceBaseUnit_Constructor_Success(t *testing.T) {
 	t.Run("NewBaseService", func(t *testing.T) {
 		t.Run("WithValidClient", func(t *testing.T) {
 			// Create mock client instead of real client
-			mockClient, _ := core.New("localhost", "test-token", core.WithInsecureSkipVerify(true))
+			mockClient, _ := core.New("localhost", "test-token-123", core.WithInsecureSkipVerify(true))
 			service := NewBaseService(mockClient)
 
 			testutil.AssertPointerEquals(
@@ -32,7 +32,7 @@ func TestServiceBaseUnit_Constructor_Success(t *testing.T) {
 	t.Run("Client", func(t *testing.T) {
 		t.Run("ReturnsValidClient", func(t *testing.T) {
 			// Create mock client instead of real client
-			mockClient, _ := core.New("localhost", "test-token", core.WithInsecureSkipVerify(true))
+			mockClient, _ := core.New("localhost", "test-token-123", core.WithInsecureSkipVerify(true))
 			service := NewBaseService(mockClient)
 
 			retrievedClient := service.Client()
@@ -66,7 +66,7 @@ func TestServiceBaseUnit_Constructor_Success(t *testing.T) {
 
 		t.Run("EmbeddingWithValidClient", func(t *testing.T) {
 			// Create mock client instead of real client
-			mockClient, _ := core.New("localhost", "test-token", core.WithInsecureSkipVerify(true))
+			mockClient, _ := core.New("localhost", "test-token-123", core.WithInsecureSkipVerify(true))
 			testService := newTestService(mockClient)
 
 			testutil.AssertPointerEquals(t, testService.Client(), mockClient,

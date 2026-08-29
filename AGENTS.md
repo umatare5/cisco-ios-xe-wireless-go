@@ -91,7 +91,7 @@ GET a single entry by list key (MAC address):
 ```bash
 curl -k -H "Authorization: Basic $WNC_ACCESS_TOKEN" \
         -H "Accept: application/yang-data+json" \
-        "https://$WNC_CONTROLLER/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=00:11:22:33:44:55"
+        "https://$WNC_CONTROLLER/restconf/data/Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data/capwap-data=aa:bb:cc:dd:ee:01"
 ```
 
 POST an RPC operation (`/restconf/operations/`):
@@ -100,7 +100,7 @@ POST an RPC operation (`/restconf/operations/`):
 curl -k -X POST \
         -H "Authorization: Basic $WNC_ACCESS_TOKEN" \
         -H "Content-Type: application/yang-data+json" \
-        -d '{"input": {"ap-name": "AP-NAME"}}' \
+        -d '{"input": {"ap-name": "TEST-AP01"}}' \
         "https://$WNC_CONTROLLER/restconf/operations/Cisco-IOS-XE-wireless-access-point-cmd-rpc:ap-reset"
 ```
 

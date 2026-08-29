@@ -13,7 +13,7 @@ import (
 
 func TestClientUnit_NewRequestBuilder_Success(t *testing.T) {
 	t.Run("ValidParams", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		rb := NewRequestBuilder(restBuilder, "token", "", slog.Default())
 		testutil.AssertNotNil(t, rb, "NewRequestBuilder result")
 	})
@@ -26,7 +26,7 @@ func TestClientUnit_NewRequestBuilder_Success(t *testing.T) {
 
 func TestClientUnit_RequestBuilderCreateRequestWithPayload_Success(t *testing.T) {
 	t.Run("ValidPayload", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -51,7 +51,7 @@ func TestClientUnit_RequestBuilderCreateRequestWithPayload_Success(t *testing.T)
 
 func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing.T) {
 	t.Run("ValidRPCPayload", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -74,7 +74,7 @@ func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing
 	})
 
 	t.Run("InvalidHTTPMethodWithNilPayload", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -87,7 +87,7 @@ func TestClientUnit_RequestBuilderCreateRPCRequestWithPayload_Success(t *testing
 
 func TestClientUnit_RequestBuilderExecuteRequest_Success(t *testing.T) {
 	t.Run("NilRequest", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 		client := &http.Client{}
@@ -104,7 +104,7 @@ func TestClientUnit_RequestBuilderExecuteRequest_Success(t *testing.T) {
 // Test CreateRequest function.
 func TestClientUnit_RequestBuilderCreateRequest_Success(t *testing.T) {
 	t.Run("ValidRequest", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -123,7 +123,7 @@ func TestClientUnit_RequestBuilderCreateRequest_Success(t *testing.T) {
 	})
 
 	t.Run("InvalidHTTPMethod", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -146,7 +146,7 @@ func TestClientUnit_ExecuteRequestWithMockServer_Success(t *testing.T) {
 
 	restBuilder := restconf.NewBuilder("http", mockServer.URL[7:]) // Remove "http://"
 	logger := slog.Default()
-	rb := NewRequestBuilder(restBuilder, "test-token", "", logger)
+	rb := NewRequestBuilder(restBuilder, "test-token-123", "", logger)
 	client := mockServer.Client()
 
 	req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test-endpoint")
@@ -163,7 +163,7 @@ func TestClientUnit_ExecuteRequestWithMockServer_Success(t *testing.T) {
 // Test CreateRequestWithPayload error scenarios.
 func TestClientUnit_CreateRequestWithPayload_ErrorScenarios(t *testing.T) {
 	t.Run("InvalidPayloadSerialization", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -181,7 +181,7 @@ func TestClientUnit_CreateRequestWithPayload_ErrorScenarios(t *testing.T) {
 	})
 
 	t.Run("NilPayload", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -205,7 +205,7 @@ func TestClientUnit_CreateRequestWithPayload_ErrorScenarios(t *testing.T) {
 // Test CreateRPCRequestWithPayload error scenarios.
 func TestClientUnit_CreateRPCRequestWithPayload_ErrorScenarios(t *testing.T) {
 	t.Run("InvalidPayloadSerialization", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -223,7 +223,7 @@ func TestClientUnit_CreateRPCRequestWithPayload_ErrorScenarios(t *testing.T) {
 	})
 
 	t.Run("NilPayload", func(t *testing.T) {
-		restBuilder := restconf.NewBuilder("https", "controller.example.com")
+		restBuilder := restconf.NewBuilder("https", "wnc1.example.internal")
 		logger := slog.Default()
 		rb := NewRequestBuilder(restBuilder, "token", "", logger)
 
@@ -256,7 +256,7 @@ func TestClientUnit_ExecuteRequest_ErrorScenarios(t *testing.T) {
 
 		restBuilder := restconf.NewBuilder("http", mockServer.URL[7:]) // Remove "http://"
 		logger := slog.Default()
-		rb := NewRequestBuilder(restBuilder, "test-token", "", logger)
+		rb := NewRequestBuilder(restBuilder, "test-token-123", "", logger)
 		client := mockServer.Client()
 
 		req, err := rb.CreateRequest(context.Background(), http.MethodGet, "test-endpoint")

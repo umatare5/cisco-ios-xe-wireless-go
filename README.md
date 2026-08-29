@@ -57,9 +57,8 @@ You have to enable RESTCONF and HTTPS on the C9800 before using this SDK. Please
 Encode your controller credentials as Base64.
 
 ```bash
-# username:password → Base64
-echo -n "admin:your-password" | base64
-# Output: YWRtaW46eW91ci1wYXNzd29yZA==
+# The access token is base64("username:password")
+export WNC_ACCESS_TOKEN="$(echo -n 'admin:your-password' | base64)"
 ```
 
 ### 2. Create a sample application
@@ -118,7 +117,7 @@ func main() {
 ```bash
 # Set environment variables
 export WNC_CONTROLLER="wnc1.example.internal"
-export WNC_ACCESS_TOKEN="YWRtaW46eW91ci1wYXNzd29yZA=="
+export WNC_ACCESS_TOKEN="test-token-123"
 
 # Run the application
 go run main.go
@@ -275,8 +274,8 @@ Successfully connected! Found 2 APs
 
 AP Name           | MAC Address         | IP Address       | Status
 ------------------|---------------------|------------------|-----------------
-TEST-AP01         | aa:bb:ff:dd:ee:a0   | 192.168.255.11   | registered
-TEST-AP02         | aa:bb:ff:dd:ee:b0   | 192.168.255.12   | registered
+TEST-AP01         | aa:bb:cc:dd:ee:01   | 192.168.1.11   | registered
+TEST-AP02         | aa:bb:cc:dd:ee:02   | 192.168.1.12   | registered
 ```
 
 </p></details>
@@ -294,10 +293,10 @@ Successfully connected! Found 17 clients
 
 MAC Address           | IP Address
 ----------------------|----------------
-08:84:9d:92:47:00     | 192.168.0.84
-2a:e3:42:8f:06:c8     | 192.168.0.89
-40:23:43:3e:c5:bf     | 192.168.0.62
-40:80:e1:6b:11:16     | 192.168.0.92
+aa:bb:cc:dd:ee:a1     | 192.168.1.101
+aa:bb:cc:dd:ee:a2     | 192.168.1.102
+aa:bb:cc:dd:ee:a3     | 192.168.1.103
+aa:bb:cc:dd:ee:a4     | 192.168.1.104
 <snip>
 ```
 
@@ -316,9 +315,9 @@ Successfully connected! Found 7 WLANs across all APs
 
 AP Name           | AP MAC Address    | Slot | WLAN | BSSID             | SSID
 ------------------|-------------------|------|------|-------------------|-------------------------
-TEST-AP01         | aa:bb:ff:dd:ee:a0 |    0 |    1 | aa:bb:ff:dd:ee:a1 | labo-wlan
-TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    2 | aa:bb:ff:dd:ee:ad | labo-psk
-TEST-AP01         | aa:bb:ff:dd:ee:a0 |    1 |    4 | aa:bb:ff:dd:ee:af | labo-tls
+TEST-AP01         | aa:bb:cc:dd:ee:01 |    0 |    1 | aa:bb:cc:dd:ee:b1 | test-wlan
+TEST-AP01         | aa:bb:cc:dd:ee:01 |    1 |    2 | aa:bb:cc:dd:ee:b2 | test-psk
+TEST-AP01         | aa:bb:cc:dd:ee:01 |    1 |    4 | aa:bb:cc:dd:ee:b3 | test-tls
 <snip>
 ```
 
@@ -337,9 +336,9 @@ Successfully connected! Found 11 AP neighbors
 
 AP Name           | Slot | Neighbor BSSID    | Neighbor SSID          | RSSI  | Channel | Last Heard At
 ------------------|------|-------------------|------------------------|-------|---------|--------------------------
-TEST-AP01         |    0 | d8:21:da:a2:30:f0 | Rogue-WiFi             |   -20 |      11 | 2025-09-12 20:24:57
-TEST-AP01         |    0 | 08:10:86:bf:07:e3 | rogue-abcdef123-g      |   -62 |       4 | 2025-09-13 06:49:59
-TEST-AP01         |    1 | 98:f1:99:c2:03:db | rogue-abcdef123        |   -64 |      36 | 2025-09-13 06:52:57
+TEST-AP01         |    0 | aa:bb:cc:dd:ee:f1 | test-rogue-01         |   -20 |      11 | 2024-01-15 10:40:00
+TEST-AP01         |    0 | aa:bb:cc:dd:ee:f2 | test-rogue-02         |   -62 |       4 | 2024-01-15 10:41:00
+TEST-AP01         |    1 | aa:bb:cc:dd:ee:f3 | test-rogue-03         |   -64 |      36 | 2024-01-15 10:42:00
 <snip>
 ```
 
@@ -361,15 +360,15 @@ WARNING: This tool will restart access points causing service interruption!
 Use only in controlled environments with proper authorization.
 
 Target Controller: wnc1.example.internal
-Enter AP MAC address (format: xx:xx:xx:xx:xx:xx or xx-xx-xx-xx-xx-xx): aa:bb:ff:dd:ee:a0
-Target AP MAC: aa:bb:ff:dd:ee:a0
+Enter AP MAC address (format: xx:xx:xx:xx:xx:xx or xx-xx-xx-xx-xx-xx): aa:bb:cc:dd:ee:01
+Target AP MAC: aa:bb:cc:dd:ee:01
 This will restart the specified Access Point(s). Type 'YES' to confirm: YES
 
 ✓ WNC client created successfully
-Executing AP reset for MAC aa:bb:ff:dd:ee:a0
+Executing AP reset for MAC aa:bb:cc:dd:ee:01
 WARNING: AP will become unavailable and disconnect all clients during restart...
 
-✓ AP reset command sent successfully for MAC: aa:bb:ff:dd:ee:a0
+✓ AP reset command sent successfully for MAC: aa:bb:cc:dd:ee:01
 Note: AP is now restarting and will be temporarily unavailable
 Clients will need to reconnect after AP restart completes
 ```
@@ -394,7 +393,7 @@ Target Controller: wnc1.example.internal
 This will restart the WNC controller. Type 'YES' to confirm: YES
 
 ✓ WNC client created successfully
-Executing controller reload with reason: Manual reload via CLI tool at 2025-09-06T13:11:50+09:00
+Executing controller reload with reason: Manual reload via CLI tool at 2024-01-15T10:30:00+09:00
 WARNING: Controller will become unavailable during restart...
 
 ✓ Controller reload command sent successfully

@@ -46,7 +46,7 @@ func TestHyperlocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data": {
 				"ewlc-hyperlocation-profile": [
 					{
-						"name": "labo-common",
+						"name": "test-common",
 						"hyperlocation-data": {
 							"hyperlocation-enable": true,
 							"pak-rssi-threshold-detection": -100,
@@ -75,7 +75,7 @@ func TestHyperlocationServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-hyperlocation-oper:hyperlocation-oper-data/ewlc-hyperlocation-profile": `{
 			"Cisco-IOS-XE-wireless-hyperlocation-oper:ewlc-hyperlocation-profile": [
 				{
-					"name": "labo-common",
+					"name": "test-common",
 					"hyperlocation-data": {
 						"hyperlocation-enable": true,
 						"pak-rssi-threshold-detection": -100,

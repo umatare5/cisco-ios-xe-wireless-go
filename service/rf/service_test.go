@@ -30,10 +30,10 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"rf-tags": {
 					"rf-tag": [
 						{
-							"tag-name": "labo-inside",
-							"dot11a-rf-profile-name": "labo-rf-5gh-inside",
-							"dot11b-rf-profile-name": "labo-rf-24gh",
-							"dot11-6ghz-rf-prof-name": "labo-rf-6gh"
+							"tag-name": "test-inside",
+							"dot11a-rf-profile-name": "test-rf-5gh-inside",
+							"dot11b-rf-profile-name": "test-rf-24gh",
+							"dot11-6ghz-rf-prof-name": "test-rf-6gh"
 						},
 						{
 							"tag-name": "default-rf-tag",
@@ -44,7 +44,7 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"rf-profiles": {
 					"rf-profile": [
 						{
-							"profile-name": "labo-rf-5gh-inside",
+							"profile-name": "test-rf-5gh-inside",
 							"rf-band": "dot11-5ghz-band",
 							"description": "RF profile for 5GHz indoor"
 						}
@@ -66,10 +66,10 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-tags": {
 				"rf-tag": [
 					{
-						"tag-name": "labo-inside",
-						"dot11a-rf-profile-name": "labo-rf-5gh-inside",
-						"dot11b-rf-profile-name": "labo-rf-24gh",
-						"dot11-6ghz-rf-prof-name": "labo-rf-6gh"
+						"tag-name": "test-inside",
+						"dot11a-rf-profile-name": "test-rf-5gh-inside",
+						"dot11b-rf-profile-name": "test-rf-24gh",
+						"dot11-6ghz-rf-prof-name": "test-rf-6gh"
 					},
 					{
 						"tag-name": "default-rf-tag",
@@ -82,7 +82,7 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-profiles": {
 				"rf-profile": [
 					{
-						"profile-name": "labo-rf-5gh-inside",
+						"profile-name": "test-rf-5gh-inside",
 						"rf-band": "dot11-5ghz-band",
 						"description": "RF profile for 5GHz indoor"
 					}
@@ -109,19 +109,19 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data": {
 				"ap-auto-rf-dot11-data": [
 					{
-						"wtp-mac": "28:ac:9e:bb:3c:80",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"radio-slot-id": 0,
 						"neighbor-radio-info": {
 							"neighbor-radio-list": [
 								{
 									"neighbor-radio-info": {
-										"neighbor-radio-mac": "f0:d8:05:2c:41:20",
+										"neighbor-radio-mac": "aa:bb:cc:dd:ee:02",
 										"neighbor-radio-slot-id": 0,
 										"rssi": -21,
 										"snr": 62,
 										"channel": 11,
 										"power": 18,
-										"group-leader-ip": "192.168.255.4",
+										"group-leader-ip": "192.168.1.100",
 										"chan-width": "radio-neighbor-chan-width-20-mhz",
 										"sensor-covered": false
 									}
@@ -132,7 +132,7 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				],
 				"ap-dot11-radar-data": [
 					{
-						"wtp-mac": "28:ac:9e:bb:3c:80",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"radio-slot-id": 0,
 						"last-radar-on-radio": "1970-01-01T00:00:00+00:00"
 					}
@@ -142,19 +142,19 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data": `{
 			"Cisco-IOS-XE-wireless-rrm-oper:ap-auto-rf-dot11-data": [
 				{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 0,
 					"neighbor-radio-info": {
 						"neighbor-radio-list": [
 							{
 								"neighbor-radio-info": {
-									"neighbor-radio-mac": "f0:d8:05:2c:41:20",
+									"neighbor-radio-mac": "aa:bb:cc:dd:ee:02",
 									"neighbor-radio-slot-id": 0,
 									"rssi": -21,
 									"snr": 62,
 									"channel": 11,
 									"power": 18,
-									"group-leader-ip": "192.168.255.4",
+									"group-leader-ip": "192.168.1.100",
 									"chan-width": "radio-neighbor-chan-width-20-mhz",
 									"sensor-covered": false
 								}
@@ -167,7 +167,7 @@ func TestRfServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-dot11-radar-data": `{
 			"Cisco-IOS-XE-wireless-rrm-oper:ap-dot11-radar-data": [
 				{
-					"wtp-mac": "28:ac:9e:bb:3c:80",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 0,
 					"last-radar-on-radio": "1970-01-01T00:00:00+00:00"
 				}

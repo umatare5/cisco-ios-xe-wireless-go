@@ -26,7 +26,7 @@ func TestCoreEnvelopeUnit_NodeName_Success(t *testing.T) {
 		},
 		{
 			name:     "list key holds colons",
-			endpoint: base + "=aa:bb:cc:dd:ee:ff",
+			endpoint: base + "=aa:bb:cc:dd:ee:01",
 			expected: "common-oper-data",
 		},
 		{
@@ -36,12 +36,12 @@ func TestCoreEnvelopeUnit_NodeName_Success(t *testing.T) {
 		},
 		{
 			name:     "composite list key",
-			endpoint: base + "=aa:bb:cc:dd:ee:ff,1",
+			endpoint: base + "=aa:bb:cc:dd:ee:01,1",
 			expected: "common-oper-data",
 		},
 		{
 			name:     "query follows the list key",
-			endpoint: base + "=aa:bb:cc:dd:ee:ff?with-defaults=report-all",
+			endpoint: base + "=aa:bb:cc:dd:ee:01?with-defaults=report-all",
 			expected: "common-oper-data",
 		},
 		{
@@ -67,9 +67,9 @@ func TestCoreEnvelopeUnit_DecodeSoleKey_Success(t *testing.T) {
 		} `json:"Cisco-IOS-XE-wireless-client-oper:common-oper-data"`
 	}
 
-	body := []byte(`{"Cisco-IOS-XE-wireless-client-oper:common-oper-data":[{"client-mac":"aa:bb:cc:dd:ee:ff"}]}`)
+	body := []byte(`{"Cisco-IOS-XE-wireless-client-oper:common-oper-data":[{"client-mac":"aa:bb:cc:dd:ee:01"}]}`)
 
-	out, err := decodeSoleKey[response](body, endpoint+"=aa:bb:cc:dd:ee:ff")
+	out, err := decodeSoleKey[response](body, endpoint+"=aa:bb:cc:dd:ee:01")
 	testutil.AssertNoError(t, err, "decodeSoleKey() on a keyed read")
 	testutil.AssertIntEquals(t, len(out.CommonOperData), 1, "decoded record count")
 }

@@ -608,7 +608,7 @@ func newRecordingService(t *testing.T, body string) (Service, *queryRecorder) {
 	parsed, err := url.Parse(server.URL)
 	assert.AssertNoError(t, err, "parse test server URL")
 
-	client, err := core.New(parsed.Host, "test-token", core.WithInsecureSkipVerify(true))
+	client, err := core.New(parsed.Host, "test-token-123", core.WithInsecureSkipVerify(true))
 	assert.AssertNoError(t, err, "create core client")
 
 	return NewService(client), recorder

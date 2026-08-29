@@ -46,7 +46,7 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data": {
 				"mobility-config": {
 					"local-group": "test-group",
-					"mac-address": "aa:bb:cc:dd:ee:ff"
+					"mac-address": "aa:bb:cc:dd:ee:01"
 				}
 			}
 		}`,
@@ -54,19 +54,19 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-mobility-cfg:mobility-cfg-data/mobility-config": `{
 			"Cisco-IOS-XE-wireless-mobility-cfg:mobility-config": {
 				"local-group": "test-group",
-				"mac-address": "aa:bb:cc:dd:ee:ff"
+				"mac-address": "aa:bb:cc:dd:ee:01"
 			}
 		}`,
 
 		// Root operational data
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data": {
-				"ap-cache": [{"ap-mac-address": "aa:bb:cc:dd:ee:ff"}],
+				"ap-cache": [{"ap-mac-address": "aa:bb:cc:dd:ee:01"}],
 				"ap-peer-list": [{"peer-ip": "192.168.1.100"}],
 				"mm-global-data": {"tunnel-count": 5},
 				"mm-if-global-msg-stats": {"total-messages": 1000},
 				"mm-if-global-stats": {"total-events": 500},
-				"mobility-client-data": [{"client-mac": "11:22:33:44:55:66"}],
+				"mobility-client-data": [{"client-mac": "aa:bb:cc:dd:ee:a1"}],
 				"mobility-client-stats": [{"client-events": 10}],
 				"mobility-global-dtls-stats": {"dtls-tunnels": 3},
 				"mobility-global-msg-stats": {"messages-sent": 200},
@@ -78,7 +78,7 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 		// Individual endpoint responses
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/ap-cache": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:ap-cache": [
-				{"ap-mac-address": "aa:bb:cc:dd:ee:ff", "mobility-role": "anchor"}
+				{"ap-mac-address": "aa:bb:cc:dd:ee:01", "mobility-role": "anchor"}
 			]
 		}`,
 
@@ -111,7 +111,7 @@ func TestMobilityServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-client-data": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-data": [
-				{"client-mac": "11:22:33:44:55:66", "mobility-status": "local"}
+				{"client-mac": "aa:bb:cc:dd:ee:a1", "mobility-status": "local"}
 			]
 		}`,
 
@@ -440,19 +440,19 @@ func TestMobilityServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 	responses := map[string]string{
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/ap-cache": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:ap-cache": [{
-				"ap-mac": "aa:bb:cc:dd:ee:ff",
+				"ap-mac": "aa:bb:cc:dd:ee:01",
 				"ap-name": "TEST-AP01"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/ap-peer-list": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:ap-peer-list": [{
-				"peer-ip": "192.168.255.1",
+				"peer-ip": "192.168.1.100",
 				"peer-status": "up"
 			}]
 		}`,
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mm-global-data": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:mm-global-data": {
-				"mm-mac-addr": "00:1e:49:96:4c:ff"
+				"mm-mac-addr": "aa:bb:cc:dd:ee:00"
 			}
 		}`,
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mm-if-global-stats": `{
@@ -469,7 +469,7 @@ func TestMobilityServiceUnit_ListOperations_MockSuccess(t *testing.T) {
 		}`,
 		"Cisco-IOS-XE-wireless-mobility-oper:mobility-oper-data/mobility-client-data": `{
 			"Cisco-IOS-XE-wireless-mobility-oper:mobility-client-data": [{
-				"client-mac": "aa:bb:cc:dd:ee:ff",
+				"client-mac": "aa:bb:cc:dd:ee:01",
 				"mobility-state": "local"
 			}]
 		}`,

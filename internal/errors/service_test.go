@@ -120,8 +120,8 @@ func TestErrorsServiceUnit_EmptyParameterError_Success(t *testing.T) {
 
 func TestErrorsServiceUnit_NotFoundError_Success(t *testing.T) {
 	t.Run("APWithMAC", func(t *testing.T) {
-		err := NotFoundError("AP", "28:ac:9e:11:48:10")
-		expected := "AP with 28:ac:9e:11:48:10 not found"
+		err := NotFoundError("AP", "aa:bb:cc:dd:ee:02")
+		expected := "AP with aa:bb:cc:dd:ee:02 not found"
 
 		testutil.AssertErrorMessage(t, err, expected, "NotFoundError should format AP with MAC message correctly")
 	})

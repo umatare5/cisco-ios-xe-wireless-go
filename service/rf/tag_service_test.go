@@ -33,15 +33,15 @@ func TestRfTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				"rf-tags": {
 					"rf-tag": [
 						{
-							"tag-name": "labo-inside",
-							"dot11a-rf-profile-name": "labo-rf-5gh-inside",
-							"dot11b-rf-profile-name": "labo-rf-24gh",
-							"dot11-6ghz-rf-prof-name": "labo-rf-6gh"
+							"tag-name": "test-inside",
+							"dot11a-rf-profile-name": "test-rf-5gh-inside",
+							"dot11b-rf-profile-name": "test-rf-24gh",
+							"dot11-6ghz-rf-prof-name": "test-rf-6gh"
 						},
 						{
-							"tag-name": "labo-outside",
-							"dot11a-rf-profile-name": "labo-rf-5gh-outside",
-							"dot11b-rf-profile-name": "labo-rf-24gh"
+							"tag-name": "test-outside",
+							"dot11a-rf-profile-name": "test-rf-5gh-outside",
+							"dot11b-rf-profile-name": "test-rf-24gh"
 						},
 						{
 							"tag-name": "default-rf-tag",
@@ -55,15 +55,15 @@ func TestRfTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-tags": {
 				"rf-tag": [
 					{
-						"tag-name": "labo-inside",
-						"dot11a-rf-profile-name": "labo-rf-5gh-inside",
-						"dot11b-rf-profile-name": "labo-rf-24gh",
-						"dot11-6ghz-rf-prof-name": "labo-rf-6gh"
+						"tag-name": "test-inside",
+						"dot11a-rf-profile-name": "test-rf-5gh-inside",
+						"dot11b-rf-profile-name": "test-rf-24gh",
+						"dot11-6ghz-rf-prof-name": "test-rf-6gh"
 					},
 					{
-						"tag-name": "labo-outside",
-						"dot11a-rf-profile-name": "labo-rf-5gh-outside",
-						"dot11b-rf-profile-name": "labo-rf-24gh"
+						"tag-name": "test-outside",
+						"dot11a-rf-profile-name": "test-rf-5gh-outside",
+						"dot11b-rf-profile-name": "test-rf-24gh"
 					},
 					{
 						"tag-name": "default-rf-tag",
@@ -72,13 +72,13 @@ func TestRfTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 				]
 			}
 		}`,
-		"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag=labo-inside": `{
+		"Cisco-IOS-XE-wireless-rf-cfg:rf-cfg-data/rf-tags/rf-tag=test-inside": `{
 			"Cisco-IOS-XE-wireless-rf-cfg:rf-tag": [
 				{
-					"tag-name": "labo-inside",
-					"dot11a-rf-profile-name": "labo-rf-5gh-inside",
-					"dot11b-rf-profile-name": "labo-rf-24gh",
-					"dot11-6ghz-rf-prof-name": "labo-rf-6gh"
+					"tag-name": "test-inside",
+					"dot11a-rf-profile-name": "test-rf-5gh-inside",
+					"dot11b-rf-profile-name": "test-rf-24gh",
+					"dot11-6ghz-rf-prof-name": "test-rf-6gh"
 				}
 			]
 		}`,
@@ -101,21 +101,21 @@ func TestRfTagServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 			t.Error("ListRFTags returned empty result")
 		}
 		// Verify first tag from real data
-		if result[0].TagName != "labo-inside" {
-			t.Errorf("Expected tag name 'labo-inside', got '%s'", result[0].TagName)
+		if result[0].TagName != "test-inside" {
+			t.Errorf("Expected tag name 'test-inside', got '%s'", result[0].TagName)
 		}
 	})
 
 	t.Run("GetRFTag", func(t *testing.T) {
-		result, err := rfTagService.GetRFTag(ctx, "labo-inside")
+		result, err := rfTagService.GetRFTag(ctx, "test-inside")
 		if err != nil {
 			t.Errorf("GetRFTag returned unexpected error: %v", err)
 		}
 		if result == nil {
 			t.Error("GetRFTag returned nil result")
 		}
-		if result != nil && result.TagName != "labo-inside" {
-			t.Errorf("Expected tag name 'labo-inside', got '%s'", result.TagName)
+		if result != nil && result.TagName != "test-inside" {
+			t.Errorf("Expected tag name 'test-inside', got '%s'", result.TagName)
 		}
 	})
 

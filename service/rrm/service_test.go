@@ -132,19 +132,19 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 			"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data": {
 				"ap-auto-rf-dot11-data": [
 					{
-						"wtp-mac": "aa:bb:cc:dd:ee:ff",
+						"wtp-mac": "aa:bb:cc:dd:ee:01",
 						"radio-slot-id": 0,
 						"neighbor-radio-info": {
 							"neighbor-radio-list": [
 								{
 									"neighbor-radio-info": {
-										"neighbor-radio-mac": "aa:bb:cc:dd:ee:ff",
+										"neighbor-radio-mac": "aa:bb:cc:dd:ee:01",
 										"neighbor-radio-slot-id": 0,
 										"rssi": -19,
 										"snr": 62,
 										"channel": 11,
 										"power": 18,
-										"group-leader-ip": "192.168.255.1"
+										"group-leader-ip": "192.168.1.100"
 									}
 								}
 							]
@@ -169,7 +169,7 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data/radio-oper-data-24g": `{
 			"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-24g": [
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 0
 				}
 			]
@@ -177,7 +177,7 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data/radio-oper-data-5g": `{
 			"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-5g": [
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1
 				}
 			]
@@ -185,7 +185,7 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-global-oper:rrm-global-oper-data/radio-oper-data-6ghz": `{
 			"Cisco-IOS-XE-wireless-rrm-global-oper:radio-oper-data-6ghz": [
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 2
 				}
 			]
@@ -194,7 +194,7 @@ func TestRrmServiceUnit_GetConfigOperations_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/ap-auto-rf-dot11-data": `{
 			"Cisco-IOS-XE-wireless-rrm-oper:ap-auto-rf-dot11-data": [
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 0
 				}
 			]
@@ -820,12 +820,12 @@ func TestRrmServiceUnit_OmittedVerdict_MockSuccess(t *testing.T) {
 		"Cisco-IOS-XE-wireless-rrm-oper:rrm-oper-data/radio-slot": `{
 			"Cisco-IOS-XE-wireless-rrm-oper:radio-slot": [
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 0,
 					"radio-data": {"load-prof-passed": false, "coverage-overlap-factor": "0.00"}
 				},
 				{
-					"wtp-mac": "aa:bb:cc:dd:ee:ff",
+					"wtp-mac": "aa:bb:cc:dd:ee:01",
 					"radio-slot-id": 1,
 					"radio-data": {
 						"load-prof-passed": true,

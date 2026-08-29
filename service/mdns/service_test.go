@@ -65,7 +65,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 						"any-query": "0",
 						"other-query": "0"
 					},
-					"last-clear-time": "2025-09-06T04:13:50+00:00"
+					"last-clear-time": "2024-01-15T10:30:00+00:00"
 				},
 				"mdns-wlan-stats": [
 					{
@@ -75,7 +75,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 							"pak-received": "0",
 							"pak-dropped": "0"
 						},
-						"last-clear-time": "2025-09-06T04:13:50+00:00"
+						"last-clear-time": "2024-01-15T10:30:00+00:00"
 					},
 					{
 						"wlan-id": 1,
@@ -84,7 +84,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 							"pak-received": "0",
 							"pak-dropped": "0"
 						},
-						"last-clear-time": "2025-09-06T04:14:28+00:00"
+						"last-clear-time": "2024-01-15T10:31:00+00:00"
 					}
 				]
 			}
@@ -120,7 +120,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 					"any-query": "0",
 					"other-query": "0"
 				},
-				"last-clear-time": "2025-09-06T04:13:50+00:00"
+				"last-clear-time": "2024-01-15T10:30:00+00:00"
 			}
 		}`,
 		"Cisco-IOS-XE-wireless-mdns-oper:mdns-oper-data/mdns-wlan-stats": `{
@@ -156,7 +156,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 						"any-query": "0",
 						"other-query": "0"
 					},
-					"last-clear-time": "2025-09-06T04:13:50+00:00"
+					"last-clear-time": "2024-01-15T10:30:00+00:00"
 				},
 				{
 					"wlan-id": 1,
@@ -189,7 +189,7 @@ func TestMdnsServiceUnit_GetOperations_MockSuccess(t *testing.T) {
 						"any-query": "0",
 						"other-query": "0"
 					},
-					"last-clear-time": "2025-09-06T04:14:28+00:00"
+					"last-clear-time": "2024-01-15T10:31:00+00:00"
 				}
 			]
 		}`,
