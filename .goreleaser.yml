@@ -33,9 +33,6 @@ release:
 
     This release contains the Go SDK for interacting with Cisco Catalyst 9800 Wireless Network Controller.
 
-    > [!IMPORTANT]
-    > This SDK is pre-1.0 and a MINOR release may change or remove exported API. Read the notes below before upgrading.
-
     ### 📦 Installation
 
     ```bash
