@@ -1,6 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
-  "dependencyDashboard": false,
-  "pre-commit": { "enabled": true }
+  "extends": ["github>umatare5/common//renovate/go.json"],
+  "packageRules": [
+    {
+      "description": "Review Go version bumps by hand: an SDK's Go version is part of its public contract. groupName is cleared so one held dependency cannot stop the whole batch from merging",
+      "matchDatasources": ["golang-version"],
+      "automerge": false,
+      "groupName": null,
+      "addLabels": ["Update: Go"]
+    }
+  ]
 }
