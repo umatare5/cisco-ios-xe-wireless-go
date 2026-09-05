@@ -2,14 +2,7 @@ name: Notify Workflow Failure
 
 on:
   workflow_run:
-    workflows:
-      [
-        "CodeQL Analysis",
-        "Coverage",
-        "Test and Build",
-        "govulncheck",
-        "Release Snapshot",
-      ]
+    workflows: ["CodeQL Analysis", "Coverage", "Test and Build"]
     types: ["completed"]
 
 permissions:
