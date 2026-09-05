@@ -1,0 +1,26 @@
+name: govulncheck
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "go.mod"
+      - "go.sum"
+      - "**.go"
+      - ".github/workflows/go-vulncheck.yml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "go.mod"
+      - "go.sum"
+      - "**.go"
+      - ".github/workflows/go-vulncheck.yml"
+  schedule:
+    - cron: "30 2 * * 1" # every Monday at 2:30, after the coverage run
+
+permissions:
+  contents: read
+
+jobs:
+  go-vulncheck:
+    uses: umatare5/common/.github/workflows/go-vulncheck.yml@8044b3c0ce0dce6411ec179c3ec0e675219c117f # v0.21.0
