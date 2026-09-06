@@ -215,49 +215,43 @@ The following table summarizes the supported service APIs and their capabilities
 - 🟨 Experimental Supported
 - ⬜️ Not Supported
 
-| API                                                                                                             | `GetOperational()` | `GetConfig()` | Other Functions |
-|-----------------------------------------------------------------------------------------------------------------|:------------------:|:-------------:|:---------------:|
-| [`AFC()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/afc)                     |         ✅️         |      ⬜️       |       ⬜️        |
-| [`AP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/ap)                       |         ✅️         |      ✅️       |       🟩        |
-| [`APF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/apf)                     |         ⬜️         |      ✅️       |       ⬜️        |
-| [`AWIPS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/awips)                 |         ✅️         |      ⬜️       |       ⬜️        |
-| [`BLE()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/ble)                     |         ✅️         |      ⬜️       |       ⬜️        |
-| [`Client()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/client)               |         ✅️         |      ⬜️       |       ⬜️        |
-| [`Controller()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/controller)       |         ⬜️         |      ⬜️       |       🟩        |
-| [`CTS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/cts)                     |         ⬜️         |      ✅️       |       ⬜️        |
-| [`Dot11()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/dot11)                 |         ⬜️         |      ✅️       |       ⬜️        |
-| [`Dot15()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/dot15)                 |         ⬜️         |      ✅️       |       ⬜️        |
-| [`Fabric()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/fabric)               |         ⬜️         |      ✅️       |       ⬜️        |
-| [`Flex()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/flex)                   |         ⬜️         |      ✅️       |       ⬜️        |
-| [`General()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/general)             |         ✅️         |      ✅️       |       ⬜️        |
-| [`Geolocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/geolocation)     |         ✅️         |      ⬜️       |       ⬜️        |
-| [`Hyperlocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/hyperlocation) |         ✅️         |      ⬜️       |       ⬜️        |
-| [`LISP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/lisp)                   |         ✅️         |      ⬜️       |       ⬜️        |
-| [`Location()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/location)           |         ✅️         |      ✅️       |       ⬜️        |
-| [`Mcast()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mcast)                 |         ✅️         |      ⬜️       |       ⬜️        |
-| [`MDNS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mdns)                   |         ✅️         |      ⬜️       |       ⬜️        |
-| [`Mesh()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mesh)                   |         ✅️         |      ✅️       |       ⬜️        |
-| [`Mobility()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mobility)           |         ✅️         |      ⬜️       |       ⬜️        |
-| [`NMSP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/nmsp)                   |         ✅️         |      ⬜️       |       ⬜️        |
-| [`Radio()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/radio)                 |         ⬜️         |      ✅️       |       ⬜️        |
-| [`RF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rf)                       |         ⬜️         |      ✅️       |       ⬜️        |
-| [`RFTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rf)                    |         ⬜️         |      ⬜️       |       🟩        |
-| [`RFID()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rfid)                   |         ✅️         |      ✅️       |       ⬜️        |
-| [`Rogue()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rogue)                 |         ✅️         |      ⬜️       |       ⬜️        |
-| [`RRM()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rrm)                     |         ✅️         |      ✅️       |       ⬜️        |
-| [`Site()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/site)                   |         ✅️         |      ✅️       |       ⬜️        |
-| [`SiteTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/site)                |         ⬜️         |      ⬜️       |       🟩        |
-| [`Spaces()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/spaces)               |         🟨         |      ⬜️       |       ⬜️        |
-| [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/urwb)                   |         🟨         |      🟨       |       ⬜️        |
-| [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wat)                     |         ⬜️         |      🟨       |       ⬜️        |
-| [`WLAN()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wlan)                   |         ✅️         |      ✅️       |       ⬜️        |
-| [`PolicyTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wlan)              |         ⬜️         |      ⬜️       |       🟩        |
-
-Five services carry a release caveat.
-
-- [`AP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/ap) and [`AWIPS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/awips) hit [#47](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues/47) and [#48](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues/48) on 17.15+
-- [`Spaces()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/spaces) requires 17.15+
-- [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/urwb) and [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wat) require 17.18+
+| API                                                                                                             | `GetOperational()` | `GetConfig()` | Other Functions | Notes                                                                                 |
+|-----------------------------------------------------------------------------------------------------------------|:------------------:|:-------------:|:---------------:|---------------------------------------------------------------------------------------|
+| [`AFC()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/afc)                     |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`AP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/ap)                       |         ✅️         |      ✅️       |       🟩        | Issue [#47](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues/47) on 17.15+ |
+| [`APF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/apf)                     |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`AWIPS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/awips)                 |         ✅️         |      ⬜️       |       ⬜️        | Issue [#48](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues/48) on 17.15+ |
+| [`BLE()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/ble)                     |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`Client()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/client)               |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`Controller()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/controller)       |         ⬜️         |      ⬜️       |       🟩        |                                                                                       |
+| [`CTS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/cts)                     |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Dot11()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/dot11)                 |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Dot15()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/dot15)                 |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Fabric()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/fabric)               |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Flex()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/flex)                   |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`General()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/general)             |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Geolocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/geolocation)     |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`Hyperlocation()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/hyperlocation) |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`LISP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/lisp)                   |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`Location()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/location)           |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Mcast()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mcast)                 |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`MDNS()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mdns)                   |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`Mesh()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mesh)                   |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Mobility()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/mobility)           |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`NMSP()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/nmsp)                   |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`Radio()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/radio)                 |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`RF()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rf)                       |         ⬜️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`RFTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rf)                    |         ⬜️         |      ⬜️       |       🟩        |                                                                                       |
+| [`RFID()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rfid)                   |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Rogue()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rogue)                 |         ✅️         |      ⬜️       |       ⬜️        |                                                                                       |
+| [`RRM()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/rrm)                     |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`Site()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/site)                   |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`SiteTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/site)                |         ⬜️         |      ⬜️       |       🟩        |                                                                                       |
+| [`Spaces()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/spaces)               |         🟨         |      ⬜️       |       ⬜️        | Requires 17.15+                                                                       |
+| [`URWB()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/urwb)                   |         🟨         |      🟨       |       ⬜️        | Requires 17.18+                                                                       |
+| [`WAT()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wat)                     |         ⬜️         |      🟨       |       ⬜️        | Requires 17.18+                                                                       |
+| [`WLAN()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wlan)                   |         ✅️         |      ✅️       |       ⬜️        |                                                                                       |
+| [`PolicyTag()`](https://pkg.go.dev/github.com/umatare5/cisco-ios-xe-wireless-go@main/service/wlan)              |         ⬜️         |      ⬜️       |       🟩        |                                                                                       |
 
 > [!TIP]
 >
