@@ -24,8 +24,10 @@ repos:
         pass_filenames: false
         always_run: true
 
+  # Pinned rather than taken from PATH: the MD043 and MD033 overrides this
+  # repository relies on are inert before v0.23, and CI runs 0.23.2 as well
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.23.2
+    hooks:
       - id: markdownlint-cli2
-        name: markdownlint-cli2
-        entry: markdownlint-cli2 --fix
-        language: system
-        types: [markdown]
+        args: ["--fix"]

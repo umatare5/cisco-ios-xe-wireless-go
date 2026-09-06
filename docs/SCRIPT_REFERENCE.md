@@ -1,24 +1,24 @@
-# 📜 Scripts Reference
+# Scripts Reference
 
 This document provides an overview of the development scripts available in this repository.
 
 > [!NOTE]
-> Integration tests require an accessible Cisco C9800 and these variables: See [TESTING.md - Prerequisites](./TESTING.md#-prerequisites)
+> Integration tests require an accessible Cisco C9800 and these variables: See [TESTING.md - Prerequisites](./TESTING.md#prerequisites)
 
-## 🧰 Scripts
+## Scripts
 
 Following is a summary of available scripts:
 
-| Script                                                          | Purpose                               | Upstream Make Target |
-| --------------------------------------------------------------- | ------------------------------------- | -------------------- |
-| [help.sh](#help.sh)                                             | Show command help overview            | `help`               |
-| [install_dependencies.sh](#install_dependencies.sh)             | Install / update dev tools            | `deps`               |
-| [lint.sh](#lint.sh)                                             | Run golangci-lint                     | `lint`               |
-| [test_unit.sh](#test_unit.sh)                                   | Run unit tests                        | `test-unit`          |
-| [test_coverage.sh](#test_coverage.sh)                           | Unit tests with coverage and a report | `test-unit-coverage` |
-| [test_integration.sh](#test_integration.sh)                     | Run integration tests with coverage   | `test-integration`   |
+| Script                                                | Purpose                               | Upstream Make Target |
+| :---------------------------------------------------- | :------------------------------------ | :------------------- |
+| [`help.sh`](#help.sh)                                 | Show command help overview            | `help`               |
+| [`install_dependencies.sh`](#install_dependencies.sh) | Install / update dev tools            | `deps`               |
+| [`lint.sh`](#lint.sh)                                 | Run golangci-lint                     | `lint`               |
+| [`test_unit.sh`](#test_unit.sh)                       | Run unit tests                        | `test-unit`          |
+| [`test_coverage.sh`](#test_coverage.sh)               | Unit tests with coverage and a report | `test-unit-coverage` |
+| [`test_integration.sh`](#test_integration.sh)         | Run integration tests with coverage   | `test-integration`   |
 
-## 🗂️ Structure
+## Structure
 
 One entry script per Make target, each owning the work only it performs:
 
@@ -27,7 +27,7 @@ One entry script per Make target, each owning the work only it performs:
 - Log lines go through `lib/log.sh`, the only file that spells an ANSI escape.
 - No script parses flags. Only `test_coverage.sh` takes arguments, and they are positional.
 
-```plaintext
+```text
 scripts/
 ├── <command>.sh            # One entry point per Make target
 └── lib/
@@ -36,7 +36,7 @@ scripts/
     └── gotest.sh           # The gotestsum runs behind the test targets
 ```
 
-## 📦 Development Scripts
+## Development Scripts
 
 ### install_dependencies.sh <a id="install_dependencies.sh"></a> <!-- anchor for internal links -->
 
@@ -71,7 +71,7 @@ Validating CLI tools (level: minimal)...
 
 </details>
 
-## 🧪 Testing Scripts
+## Testing Scripts
 
 ### test_unit.sh <a id="test_unit.sh"></a> <!-- anchor for internal links -->
 
@@ -128,11 +128,11 @@ from the tracked defaults.
 scripts/test_coverage.sh [coverprofile] [html] [report]
 ```
 
-| Position | Default                 |
-| -------- | ----------------------- |
-| 1        | `./tmp/coverage.out`    |
-| 2        | `./coverage/report.html`|
-| 3        | `./coverage/report.out` |
+| Position | Default                  |
+| :------- | :----------------------- |
+| 1        | `./tmp/coverage.out`     |
+| 2        | `./coverage/report.html` |
+| 3        | `./coverage/report.out`  |
 
 #### Sample Output
 
@@ -213,7 +213,7 @@ DONE 1004 tests, 21 skipped in 4.215s
 
 </details>
 
-## ✅ Quality Scripts
+## Quality Scripts
 
 ### lint.sh <a id="lint.sh"></a> <!-- anchor for internal links -->
 
@@ -258,7 +258,7 @@ All linting checks passed successfully
 
 </details>
 
-## 🆘 Help Script
+## Help Script
 
 ### help.sh <a id="help.sh"></a> <!-- anchor for internal links -->
 
@@ -268,13 +268,11 @@ Prints a consolidated help guide covering common Make targets, environment varia
 
 `scripts/help.sh` only supports execution with no arguments.
 
-````bash
-
 #### Sample Output
 
 <details><summary>Click to expand sample output</summary>
 
-```plaintext
+```text
 Cisco WNC Development Scripts
 -------------------------------
 
@@ -325,6 +323,6 @@ PROJECT STRUCTURE:
         +-- log.sh         Colour, log lines and the banner
         +-- env.sh         Toolchain and project-directory checks
         +-- gotest.sh      The gotestsum runs behind the test targets
-````
+```
 
 </details>

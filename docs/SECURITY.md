@@ -1,12 +1,12 @@
-# 🔐 Security Guide
+# Security Guide
 
 This document provides an overview of security practices for using this SDK.
 
-## 🛡️ Checklist
+## Checklist
 
 This section lists essential security checks for pre‑deployment and ongoing review.
 
-### ✅ Pre‑Deployment
+### Pre‑Deployment
 
 - [ ] Enable TLS certificate verification and set `InsecureSkipVerify` to false, supplying a private CA with `WithRootCAs` where one is needed. → See [TLS Verification](#tls-verification)
 - [ ] Store authentication tokens in a secure credential manager. → See [Secure Storage](#token-storage)
@@ -17,7 +17,7 @@ This section lists essential security checks for pre‑deployment and ongoing re
 - [ ] Use service accounts with minimal permissions. → See [Network & Access](#network-access)
 - [ ] Apply timeouts to all API requests using contexts. → See [Context & Timeouts](#context-timeouts)
 
-### 🔍 Periodic Review
+### Periodic Review
 
 - [ ] Rotate authentication tokens on a regular schedule. → See [Token Rotation](#token-rotation)
 - [ ] Review API access logs monthly for anomalies. → See [Logging](#logging)
@@ -27,7 +27,9 @@ This section lists essential security checks for pre‑deployment and ongoing re
 - [ ] Test backup or fallback authentication mechanisms. → See [Token Handling](#token-handling)
 - [ ] Validate firewall rules, ACLs, and rate limits are enforced. → See [Network & Access](#network-access)
 
-## 🔒 TLS Verification <a id="tls-verification"></a>
+<a id="tls-verification"></a>
+
+## TLS Verification
 
 Strict certificate validation is enforced unless you explicitly opt out via option.
 
@@ -50,11 +52,13 @@ privateCAClient, err := wnc.NewClient(
 > [!CAUTION]
 > The `wnc.WithInsecureSkipVerify(true)` option disables TLS certificate verification. This should only be used in development environments or when connecting to controllers with self-signed certificates. **Never use this option in production environments** as it compromises security.
 
-## 🔑 Token Handling <a id="token-handling"></a>
+<a id="token-handling"></a>
+
+## Token Handling
 
 Handle authentication tokens securely with isolated storage, periodic rotation, and no exposure in logs.
 
-### ✅ Recommended
+### Recommended
 
 1. **Environment Variables**: Store tokens in environment variables, never in source code: <a id="token-env"></a>
 
@@ -110,7 +114,7 @@ Handle authentication tokens securely with isolated storage, periodic rotation, 
     apData, err := client.AP().GetOperational(ctx)
    ```
 
-### ❌ Avoid
+### Avoid
 
 Avoid these practices to reduce exposure, preserve accountability, and prevent secret leakage.
 
@@ -120,12 +124,14 @@ Avoid these practices to reduce exposure, preserve accountability, and prevent s
 - Logging Authorization headers — Risks credential disclosure in logs.
 - Sharing tokens between individuals — Breaks accountability and auditability.
 
-## 🌐 Network & Access <a id="network-access"></a>
+<a id="network-access"></a>
+
+## Network & Access
 
 This section defines network controls and access policies to protect the controller and data.
 
 | Control       | Recommendation                                  |
-| ------------- | ----------------------------------------------- |
+| :------------ | :---------------------------------------------- |
 | Transport     | Use HTTPS for all requests.                     |
 | Port          | Expose only port 443 for RESTCONF.              |
 | Segmentation  | Limit controller access to a mgmt VLAN or VPN.  |
@@ -133,7 +139,9 @@ This section defines network controls and access policies to protect the control
 | Rate limiting | Apply rate limits on the controller or a proxy. |
 | Auditing      | Review authentication logs regularly.           |
 
-## 📝 Logging <a id="logging"></a>
+<a id="logging"></a>
+
+## Logging
 
 Prefer structured logs, exclude secrets, and log only necessary context for operations and audits.
 
@@ -166,7 +174,7 @@ Ordinary reads populate twelve typed fields, so a log path that dumps a decoded 
 `wlan.WlanCfgEntry.PSK` is the one of the twelve typed `wlan.Secret`, whose `String` and `LogValue` redact and whose `Reveal` returns the key; `WlanCfgEntry.LogValue` keeps it out of a record built from the whole entry. `Secret.MarshalJSON` redacts the JSON path too, so the `%#v` verb is the one that still renders it, and a write payload has to take the key from `Reveal`. The other eleven fields are plain strings.
 
 | Field                                        | Route                                                            |
-| -------------------------------------------- | ---------------------------------------------------------------- |
+| :------------------------------------------- | :--------------------------------------------------------------- |
 | `wlan.WlanCfgEntry.PSK`                      | `Cisco-IOS-XE-wireless-wlan-cfg:wlan-cfg-data`                   |
 | `general.WlcManagementDataInfo.SscAuthToken` | `Cisco-IOS-XE-wireless-general-cfg:general-cfg-data`             |
 | `site.UserMgmt.Password`                     | `Cisco-IOS-XE-wireless-site-cfg:site-cfg-data`                   |
@@ -180,7 +188,9 @@ Ordinary reads populate twelve typed fields, so a log path that dumps a decoded 
 | `ap.ApNtpServerInfo.TrustKey`                | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
 | `ap.ApIoxOperData.CafToken`                  | `Cisco-IOS-XE-wireless-access-point-oper:access-point-oper-data` |
 
-## 🏭 Environment Isolation <a id="environment-isolation"></a>
+<a id="environment-isolation"></a>
+
+## Environment Isolation
 
 Use separate clients and credentials for dev, staging, and prod to limit blast radius and enforce tailored timeouts.
 
@@ -191,18 +201,18 @@ prod, _ := wnc.NewClient("wnc1.example.internal", os.Getenv("WNC_PROD_TOKEN"), w
 _, _, _ = dev, staging, prod
 ```
 
-### 📊 Monitoring
+### Monitoring
 
 Monitor authentication, request volume, latency, and TLS signals to detect issues early and guide response.
 
 | Area    | Metric / Signal                                                 |
-| ------- | --------------------------------------------------------------- |
+| :------ | :-------------------------------------------------------------- |
 | Auth    | Track failed versus successful authentications.                 |
 | Volume  | Monitor request volume per service such as AP, Client, and RRM. |
 | Latency | Watch the 95th percentile request duration.                     |
 | TLS     | Alert on TLS handshake failures.                                |
 
-### 🔧 Error Handling
+### Error Handling
 
 Log actionable context for operators, return generic messages to users, and prevent any secret leakage.
 
@@ -217,7 +227,9 @@ if err != nil {
 }
 ```
 
-## 📖 References <a id="references"></a>
+<a id="references"></a>
+
+## References
 
 - [Go Security Best Practices](https://go.dev/security/)
 - [RESTCONF Security Best Practices](https://tools.ietf.org/html/rfc8040#section-2.5)
