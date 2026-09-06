@@ -449,4 +449,4 @@ I launched this project with the help of **GitHub Copilot Coding Agent**, and I 
 
 ## 📄 License
 
-[MIT](./LICENSE)
+MIT. The module carries no third-party dependency, so [`LICENSE`](LICENSE) is the only notice a consumer reproduces.
