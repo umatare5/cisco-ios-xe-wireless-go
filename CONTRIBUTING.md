@@ -1,4 +1,4 @@
-# 🤝 Contribution Guide
+# Contribution Guide
 
 Thank you for your interest in contributing to the **Cisco Catalyst 9800 WNC Go SDK**!
 
@@ -7,24 +7,24 @@ This document explains how you can get involved, the development workflow, and o
 > [!WARNING]
 > This SDK is under **active development**, so expect breaking changes. Open an issue before contributing.
 
-## 💡 How to Contribute
+## How to Contribute
 
 I welcome all kinds of contributions, including:
 
-- 🐞 Bug reports
-- 📄 Documentation improvements
-- 💡 Feature requests
-- 🛠 Code contributions (new features, bug fixes, refactoring)
+- Bug reports
+- Documentation improvements
+- Feature requests
+- Code contributions (new features, bug fixes, refactoring)
 
 **Before you start coding:**
 
 1. Check the [Issues](https://github.com/umatare5/cisco-ios-xe-wireless-go/issues) to avoid duplicate work.
 2. Open a new issue if your change is significant or affects functionality.
 3. Fork this repository and create a feature branch from `main`.
-4. Follow the [Development](#️-development) and [Testing](#-testing) guidelines below.
+4. Follow the [Development](#development) and [Testing](#testing) guidelines below.
 5. Submit a pull request to the `main` branch.
 
-## 🛠️ Development
+## Development
 
 I provide `make` commands and helper scripts for building, testing, and debugging this SDK.
 
@@ -37,7 +37,7 @@ make deps                # Install build and test dependencies
 make pre-commit-install  # Set up pre-commit hooks for code quality
 ```
 
-`make deps` installs Go tooling only, so install [pre-commit](https://pre-commit.com/#install) yourself first. `make pre-commit-install` then registers the hooks declared in [.pre-commit-config.yaml](./.pre-commit-config.yaml).
+`make deps` installs Go tooling only, so install [pre-commit](https://pre-commit.com/#install) yourself first. `make pre-commit-install` then registers the hooks declared in [`.pre-commit-config.yaml`](./.pre-commit-config.yaml).
 
 Every commit is gated on `golangci-lint`, `gitleaks`, `markdownlint-cli2` and a guard that keeps `main` free of direct commits. Run `make pre-commit-test` to check the whole tree without committing.
 
@@ -57,7 +57,7 @@ make test-unit-coverage  # Check unit test coverage
 make test-integration    # Run integration test using live WNC
 ```
 
-## 🧪 Testing
+## Testing
 
 This SDK includes **unit, contract, integration and scenario tests** for reliability against Cisco Catalyst 9800 controllers.
 
@@ -66,17 +66,17 @@ This SDK includes **unit, contract, integration and scenario tests** for reliabi
 - **Integration tests** require a live WNC instance and valid credentials.
 - **Scenario tests** perform end-to-end operations on a live WNC and may modify its state.
 
-For detailed testing instructions, see **[TESTING.md](./docs/TESTING.md)**.
+For detailed testing instructions, see **[`TESTING.md`](./docs/TESTING.md)**.
 
-## 📜 Scripts
+## Scripts
 
 Every Make target above runs one script from the `scripts/` directory.
 
-Each takes no arguments and wraps the Go toolchain, so `make` is the only entry point you need. For what each one does, see **[SCRIPT_REFERENCE.md](./docs/SCRIPT_REFERENCE.md)**.
+Each takes no arguments and wraps the Go toolchain, so `make` is the only entry point you need. For what each one does, see **[`SCRIPT_REFERENCE.md`](./docs/SCRIPT_REFERENCE.md)**.
 
-## ♻️ Change Review Process: For Maintainers
+## Change Review Process: For Maintainers
 
-> [!Note]
+> [!NOTE]
 >
 > This section is for maintainers. Contributors do not need to perform these steps.
 
@@ -119,9 +119,9 @@ go test ./tests/scenario/wlan/ -tags=scenario -run TagLifecycleManagement -v
 
 #### 4. Run the Example Application
 
-Run the example application listed in the [README.md](../README.md#-usecases) **Usecases** section.
+Run the example application listed in the [`README.md`](README.md#-usecases) **Usecases** section.
 
-> [!Warning]
+> [!WARNING]
 >
 > **About Destructive Examples**
 >
@@ -147,9 +147,9 @@ Commit coverage artifacts and badge:
 
 Push the coverage artifacts and badge to the PR.
 
-## 🚀 Release Process: For Maintainers
+## Release Process: For Maintainers
 
-> [!Note]
+> [!NOTE]
 >
 > This section is for maintainers. Contributors do not need to perform these steps.
 
@@ -173,9 +173,9 @@ While this SDK is on a `0.x` line, a **MINOR release may ship breaking changes**
 
 ### Toolchain Requirement
 
-The `go` directive in [go.mod](./go.mod) and the `go_version` inputs under [.github/workflows](./.github/workflows) move together. Raising the directive lifts the toolchain floor of every consumer, so it ships as a MINOR release with the new floor named in the release notes.
+The `go` directive in [`go.mod`](./go.mod) and the `go_version` inputs under [.github/workflows](./.github/workflows) move together. Raising the directive lifts the toolchain floor of every consumer, so it ships as a MINOR release with the new floor named in the release notes.
 
-## 🔢 Typing Rules for Wire Values
+## Typing Rules for Wire Values
 
 This platform encodes **per leaf, not per container**: one body carries bare numbers and quoted strings side by side.
 
@@ -193,7 +193,7 @@ Type every field from a measured response, never from the YANG model.
 - Pointerize any leaf whose absence carries meaning, and give it `,omitempty`.
 - An omitted configuration leaf means its default is in force, and that default is often `true`.
 
-## 📖 Reference
+## Reference
 
 ### Adding New Service
 
@@ -203,10 +203,10 @@ Copy the shape of an existing service, then satisfy each rule below. [tests/cont
 - **Envelope**: one field per accessor, tagged with the node the route ends in.
 - **Qualification**: qualify only that outermost tag — a prefix below it never matches.
 - **Read options**: every read forwards `opts ...core.GetOption`, delegating reads included.
-- **Leaf types**: follow [Typing Rules for Wire Values](#-typing-rules-for-wire-values).
+- **Leaf types**: follow [Typing Rules for Wire Values](#typing-rules-for-wire-values).
 - **Leaf comments**: `(Live: IOS-XE <version>)` when measured, `(YANG: IOS-XE <version>)` otherwise.
 - **Keyed reads**: reject an empty key with `core.ErrResourceNotFound`, then normalize it.
-- **Registration**: one facade accessor, a `doc.go`, and a row in [README.md](./README.md#supported-services).
+- **Registration**: one facade accessor, a `doc.go`, and a row in [`README.md`](./README.md#supported-services).
 - **Tests**: name unit tests `Test<Service>ServiceUnit_<Area>_<Case>`.
 - **Scenario tests**: only when the operation changes controller state.
 

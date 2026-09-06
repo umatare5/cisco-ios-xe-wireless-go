@@ -1,0 +1,5 @@
+include_fragments = "full"
+require_https = true
+exclude_all_private = true
+# cisco.com answers 403 to any non-browser client, so its pages cannot be probed.
+exclude = ["^https://www\\.cisco\\.com/"]

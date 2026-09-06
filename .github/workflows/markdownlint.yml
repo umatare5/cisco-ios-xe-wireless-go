@@ -1,0 +1,16 @@
+name: markdownlint
+
+on:
+  push:
+    branches: ["main"]
+    paths: ["**/*.md", ".markdownlint-cli2.jsonc", ".github/workflows/markdownlint.yml"]
+  pull_request:
+    branches: ["main"]
+    paths: ["**/*.md", ".markdownlint-cli2.jsonc", ".github/workflows/markdownlint.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  markdownlint:
+    uses: umatare5/common/.github/workflows/markdownlint.yml@8044b3c0ce0dce6411ec179c3ec0e675219c117f # v0.21.0

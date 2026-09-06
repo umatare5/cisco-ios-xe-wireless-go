@@ -1,18 +1,18 @@
-# 🧪 Testing
+# Testing
 
 This guide explains the testing strategy, conventions, and execution procedures for the Cisco IOS-XE Wireless Go SDK.
 
 > [!NOTE]
-> Integration tests require an accessible Cisco C9800 and these variables: See [Prerequisites](#-prerequisites)
+> Integration tests require an accessible Cisco C9800 and these variables: See [Prerequisites](#prerequisites)
 
-## 🎯 Testing Strategy
+## Testing Strategy
 
 ### Test Categories
 
 The SDK implements **standardized test patterns** using the unified `pkg/testutil` API:
 
 | Category             | Purpose                   | Implementation Pattern        | Coverage Target |
-| -------------------- | ------------------------- | ----------------------------- | --------------- |
+| :------------------- | :------------------------ | :---------------------------- | :-------------- |
 | **1. Service Tests** | Service construction      | Direct service instantiation  | 100%            |
 | **2. Get Tests**     | Mock-based GET operations | `testutil.NewMockServer()`    | Get/List: 100%  |
 | **3. Set Tests**     | Mock-based RPC operations | `testutil.NewMockServer()`    | Set/Admin: 90%+ |
@@ -28,11 +28,11 @@ The SDK implements **standardized test patterns** using the unified `pkg/testuti
 - **Repository overall**: **80% minimum**
 - **Service package** (`service/`): **90% minimum**
 
-## 📂 Test Organization
+## Test Organization
 
 ### Directory Structure
 
-```plaintext
+```text
 cisco-ios-xe-wireless-go/
 ├── service/
 │   └── {service}/
@@ -94,14 +94,14 @@ Mock payloads take their **shape** from a real controller response, but every id
 synthetic. MAC addresses come from one locally administered block, `aa:bb:cc:dd:ee:00/40`, whose
 last octet encodes the role of the device, so a fixture reads without cross-referencing anything:
 
-| Range       | Role                                                    |
-| ----------- | ------------------------------------------------------- |
-| `:00`       | Controller management interface                         |
-| `:01`-`:0f` | AP radio base MAC — `TEST-APnn` pairs with `:nn`        |
-| `:11`-`:1f` | AP Ethernet MAC — `TEST-APnn` pairs with `:1n`          |
-| `:a1`-`:af` | Associated client stations                              |
-| `:b1`-`:bf` | BSSIDs advertised by fixture APs                        |
-| `:f1`-`:ff` | Rogue and otherwise unmanaged devices                   |
+| Range       | Role                                             |
+| :---------- | :----------------------------------------------- |
+| `:00`       | Controller management interface                  |
+| `:01`-`:0f` | AP radio base MAC — `TEST-APnn` pairs with `:nn` |
+| `:11`-`:1f` | AP Ethernet MAC — `TEST-APnn` pairs with `:1n`   |
+| `:a1`-`:af` | Associated client stations                       |
+| `:b1`-`:bf` | BSSIDs advertised by fixture APs                 |
+| `:f1`-`:ff` | Rogue and otherwise unmanaged devices            |
 
 The first octet `0xaa` has the I/G bit clear and the U/L bit set, so no fixture address can be a
 multicast address or collide with a real vendor assignment. The other identities follow the same
@@ -122,14 +122,14 @@ into a committed fixture. `tests/testutil/integration` redacts every one of thos
 it writes -- `captureSerial` alone matches the shape a Cisco serial takes -- but a value pasted by
 hand reaches the tree without passing through it.
 
-## 🧰 Prerequisites
+## Prerequisites
 
 ### For Unit Tests (Layers 1-3)
 
 Unit tests require no special configuration and can be run in any Go development environment.
 
 | Requirement | Version | Notes                              |
-| ----------- | ------- | ---------------------------------- |
+| :---------- | :------ | :--------------------------------- |
 | Go          | 1.27+   | Uses stdlib testing + pkg/testutil |
 | make        | Latest  | Convenience targets                |
 
@@ -142,7 +142,7 @@ Integration and E2E tests require a real Cisco Catalyst 9800 WNC. Please refer t
 #### 2. Environment Variables
 
 | Variable                | Description            | Example                             |
-| ----------------------- | ---------------------- | ----------------------------------- |
+| :---------------------- | :--------------------- | :---------------------------------- |
 | `WNC_CONTROLLER`        | Controller host/IP     | `wnc1.example.internal`             |
 | `WNC_ACCESS_TOKEN`      | Base64 `user:pass`     | `$(echo -n 'admin:pass' \| base64)` |
 | `WNC_AP_MAC_ADDR`       | Test AP's Radio MAC    | `aa:bb:cc:dd:ee:01`                 |
@@ -167,9 +167,9 @@ export WNC_AP_NEIGHBOR_BSSID="<test-ap-neighbor-bssid>"
 > Run the example commands in [README.md - Usecases](../README.md#-usecases) to find values for `WNC_AP_MAC_ADDR`, `WNC_CLIENT_MAC_ADDR` and the other environment variables.
 
 > [!CAUTION]
-> Never commit real tokens or `.env` files. Please refer to [SECURITY.md](./SECURITY.md).
+> Never commit real tokens or `.env` files. Please refer to [`SECURITY.md`](./SECURITY.md).
 
-## 🚀 Running Tests
+## Running Tests
 
 ### Quick Start
 
@@ -243,7 +243,7 @@ go test ./tests/scenario/wlan/ -tags=scenario -v
 > [!NOTE]
 > Tag operations in scenario tests **MUST** use newly created tags to avoid communication impact.
 
-## 📈 Coverage Reports
+## Coverage Reports
 
 ### Coverage Analysis
 
@@ -263,7 +263,7 @@ go test -cover ./service/...
 go test -cover ./...
 ```
 
-## 📚 Appendix
+## Appendix
 
 ### Testing Tips
 
@@ -279,16 +279,16 @@ go test -cover ./...
 
 ### Troubleshooting
 
-| Issue                  | Solution                                                                                 |
-| ---------------------- | ---------------------------------------------------------------------------------------- |
-| Missing env vars       | Ensure all required `WNC_*` variables are set                                            |
-| Unreachable controller | Verify DNS/IP connectivity                                                               |
-| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only                |
-| Auth failures          | Ensure token is Base64 of `user:pass`                                                    |
-| TestClient creation    | Use `testutil.NewTestClient(mockServer)` in-module — from outside, use `wnc.NewClient`   |
+| Issue                  | Solution                                                                               |
+| :--------------------- | :------------------------------------------------------------------------------------- |
+| Missing env vars       | Ensure all required `WNC_*` variables are set                                          |
+| Unreachable controller | Verify DNS/IP connectivity                                                             |
+| TLS errors             | Check certificate validity; use `WithInsecureSkipVerify` for testing only              |
+| Auth failures          | Ensure token is Base64 of `user:pass`                                                  |
+| TestClient creation    | Use `testutil.NewTestClient(mockServer)` in-module — from outside, use `wnc.NewClient` |
 
 ### References
 
-- 📖 [Cisco Catalyst 9800-CL Wireless Controller for Cloud Deployment Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/c9800-cl-dg.html)
-- 📖 [Cisco Catalyst 9800 Series Wireless Controller Programmability Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/programmability-guide/b_c9800_programmability_cg/cisco-catalyst-9800-series-wireless-controller-programmability-guide.html)
-- 📖 [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme)
+- [Cisco Catalyst 9800-CL Wireless Controller for Cloud Deployment Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/c9800-cl-dg.html)
+- [Cisco Catalyst 9800 Series Wireless Controller Programmability Guide](https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/programmability-guide/b_c9800_programmability_cg/cisco-catalyst-9800-series-wireless-controller-programmability-guide.html)
+- [YANG Models and Platform Capabilities for Cisco IOS XE 17.12.1](https://github.com/YangModels/yang/tree/main/vendor/cisco/xe/17121#readme)

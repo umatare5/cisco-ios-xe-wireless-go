@@ -29,7 +29,7 @@ Install required tools (one-time):
 
 - `make deps` installs `golangci-lint`, `goreleaser`, `gotestsum` and `gitleaks`
 - `markdownlint-cli2` comes from npm and is not installed here — `make lint` skips Markdown when it is absent
-- `make pre-commit-install` symlinks [.githooks/pre-commit](.githooks/pre-commit) into `.git/hooks/`, which every worktree shares
+- `make pre-commit-install` runs `pre-commit install`, which writes the hooks [.pre-commit-config.yaml](.pre-commit-config.yaml) declares into `.git/hooks/`, shared by every worktree
 
 Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/MAKE_REFERENCE.md)):
 
@@ -40,7 +40,7 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 
 ## Code Style
 
-- The git hook scans the staged index with `gitleaks` and refuses a commit on `main` (see [.githooks/pre-commit](.githooks/pre-commit)).
+- The pre-commit hooks scan the staged index with `gitleaks` and refuse a commit on `main` — see [.pre-commit-config.yaml](.pre-commit-config.yaml) and [.githooks/no-commit-to-main](.githooks/no-commit-to-main).
 - Format and lint are CI's, not the hook's — [.github/workflows/go-test-fmt.yml](.github/workflows/go-test-fmt.yml) pins its own `golangci-lint`, so the hook keeps no second copy of the version.
 - [.golangci.yml](.golangci.yml) owns lint, formatting, initialism casing, and suppressions — add a suppression there with its reason rather than inline.
 - Run `make lint` and `make test-unit` before declaring work finished; the hook fires only at commit time.
