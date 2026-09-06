@@ -2,19 +2,19 @@
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
   "config": {
     "default": true,
-    "MD003": {"style": "atx"},
-    "MD004": {"style": "dash"},
+    "MD003": { "style": "atx" },
+    "MD004": { "style": "dash" },
     "MD013": false,
-    "MD024": {"siblings_only": true},
+    "MD024": { "siblings_only": true },
     // Two adjacent GitHub alerts need no blank line between them
     "MD028": false,
-    "MD029": {"style": "ordered"},
-    "MD046": {"style": "fenced"},
-    "MD048": {"style": "backtick"},
-    "MD050": {"style": "asterisk"},
-    "MD054": {"url_inline": false},
-    "MD055": {"style": "leading_and_trailing"},
-    "MD060": {"style": "aligned", "aligned_delimiter": true}
+    "MD029": { "style": "ordered" },
+    "MD046": { "style": "fenced" },
+    "MD048": { "style": "backtick" },
+    "MD050": { "style": "asterisk" },
+    "MD054": { "url_inline": false },
+    "MD055": { "style": "leading_and_trailing" },
+    "MD060": { "style": "aligned", "aligned_delimiter": true }
   },
   "overrides": [
     {
@@ -26,12 +26,9 @@
         "MD043": {
           "match_case": true,
           "headings": [
-            "## SDK Version",
-            "*",
-            "## Description",
-            "*",
-            "## Actual Behavior",
-            "*",
+            "## SDK Version", "*",
+            "## Description", "*",
+            "## Actual Behavior", "*",
             "## Expected Behavior"
           ]
         }
@@ -46,10 +43,8 @@
         "MD043": {
           "match_case": true,
           "headings": [
-            "## WHAT",
-            "*",
-            "## WHY",
-            "*",
+            "## WHAT", "*",
+            "## WHY", "*",
             "## CHECKS"
           ]
         }
@@ -63,20 +58,13 @@
           "match_case": true,
           "headings": [
             "# Repository Instructions",
-            "## Tech Stack",
-            "*",
-            "## Repository Structure",
-            "*",
-            "## Setup and Commands",
-            "*",
-            "## Code Style",
-            "*",
-            "## Testing Instructions",
-            "*",
-            "## Commits and PRs",
-            "*",
-            "## Domain Knowledge",
-            "*",
+            "## Tech Stack", "*",
+            "## Repository Structure", "*",
+            "## Setup and Commands", "*",
+            "## Code Style", "*",
+            "## Testing Instructions", "*",
+            "## Commits and PRs", "*",
+            "## Domain Knowledge", "*",
             "## References"
           ]
         }
@@ -90,18 +78,12 @@
           "match_case": true,
           "headings": [
             "# Contributor Covenant Code of Conduct",
-            "## Our Pledge",
-            "*",
-            "## Our Standards",
-            "*",
-            "## Enforcement Responsibilities",
-            "*",
-            "## Scope",
-            "*",
-            "## Enforcement",
-            "*",
-            "## Enforcement Guidelines",
-            "*",
+            "## Our Pledge", "*",
+            "## Our Standards", "*",
+            "## Enforcement Responsibilities", "*",
+            "## Scope", "*",
+            "## Enforcement", "*",
+            "## Enforcement Guidelines", "*",
             "## Attribution"
           ]
         }
@@ -115,22 +97,14 @@
           "match_case": true,
           "headings": [
             "# Contribution Guide",
-            "## How to Contribute",
-            "*",
-            "## Development",
-            "*",
-            "## Testing",
-            "*",
-            "## Scripts",
-            "*",
-            "## Change Review Process: For Maintainers",
-            "*",
-            "## Release Process: For Maintainers",
-            "*",
-            "## Typing Rules for Wire Values",
-            "*",
-            "## Reference",
-            "*"
+            "## How to Contribute", "*",
+            "## Development", "*",
+            "## Testing", "*",
+            "## Scripts", "*",
+            "## Change Review Process: For Maintainers", "*",
+            "## Release Process: For Maintainers", "*",
+            "## Typing Rules for Wire Values", "*",
+            "## Reference", "*"
           ]
         }
       }
@@ -139,30 +113,23 @@
       "filter": ["README.md"],
       "combine": "merge",
       "config": {
-    // The logo, badges and title block are HTML; the heading they carry is an <h1>
-        "MD033": {"allowed_elements": ["a", "br", "details", "div", "h1", "img", "p", "picture", "source", "summary", "u"]},
-        "MD041": {"allow_preamble": true},
+        // The logo, badges and title block are HTML; the heading they carry is an <h1>
+        "MD033": {
+          "allowed_elements": ["a", "br", "details", "div", "h1", "img", "p", "picture", "source", "summary", "u"]
+        },
+        "MD041": { "allow_preamble": true },
         "MD043": {
           "match_case": true,
           "headings": [
-            "## \u2728\ufe0f Key Features",
-            "*",
-            "## \ud83d\udce1 Supported Environment",
-            "*",
-            "## \ud83d\udce6 Installation",
-            "*",
-            "## \ud83d\ude80 Quick Start",
-            "*",
-            "## \ud83c\udf10 API Reference",
-            "*",
-            "## \ud83d\udd16 Usecases",
-            "*",
-            "## \ud83d\udce6 Used By",
-            "*",
-            "## \ud83e\udd1d Contributing",
-            "*",
-            "## \ud83d\ude4f Acknowledgments",
-            "*",
+            "## \u2728\ufe0f Key Features", "*",
+            "## \ud83d\udce1 Supported Environment", "*",
+            "## \ud83d\udce6 Installation", "*",
+            "## \ud83d\ude80 Quick Start", "*",
+            "## \ud83c\udf10 API Reference", "*",
+            "## \ud83d\udd16 Usecases", "*",
+            "## \ud83d\udce6 Used By", "*",
+            "## \ud83e\udd1d Contributing", "*",
+            "## \ud83d\ude4f Acknowledgments", "*",
             "## \ud83d\udcc4 License"
           ]
         }
@@ -176,10 +143,8 @@
           "match_case": true,
           "headings": [
             "# Make Command Reference",
-            "## Commands",
-            "*",
-            "## Examples",
-            "*",
+            "## Commands", "*",
+            "## Examples", "*",
             "## About Underlying Scripts"
           ]
         }
@@ -190,23 +155,17 @@
       "combine": "merge",
       "config": {
         // Sample output sits in <details>, and the H3 anchors give the summary table its link targets
-        "MD033": {"allowed_elements": ["a", "details", "summary"]},
+        "MD033": { "allowed_elements": ["a", "details", "summary"] },
         "MD043": {
           "match_case": true,
           "headings": [
             "# Scripts Reference",
-            "## Scripts",
-            "*",
-            "## Structure",
-            "*",
-            "## Development Scripts",
-            "*",
-            "## Testing Scripts",
-            "*",
-            "## Quality Scripts",
-            "*",
-            "## Help Script",
-            "*"
+            "## Scripts", "*",
+            "## Structure", "*",
+            "## Development Scripts", "*",
+            "## Testing Scripts", "*",
+            "## Quality Scripts", "*",
+            "## Help Script", "*"
           ]
         }
       }
@@ -216,23 +175,17 @@
       "combine": "merge",
       "config": {
         // The <a id> anchors give the checklist its link targets
-        "MD033": {"allowed_elements": ["a"]},
+        "MD033": { "allowed_elements": ["a"] },
         "MD043": {
           "match_case": true,
           "headings": [
             "# Security Guide",
-            "## Checklist",
-            "*",
-            "## TLS Verification",
-            "*",
-            "## Token Handling",
-            "*",
-            "## Network & Access",
-            "*",
-            "## Logging",
-            "*",
-            "## Environment Isolation",
-            "*",
+            "## Checklist", "*",
+            "## TLS Verification", "*",
+            "## Token Handling", "*",
+            "## Network & Access", "*",
+            "## Logging", "*",
+            "## Environment Isolation", "*",
             "## References"
           ]
         }
@@ -243,23 +196,17 @@
       "combine": "merge",
       "config": {
         // Sample output sits in <details>
-        "MD033": {"allowed_elements": ["details", "summary"]},
+        "MD033": { "allowed_elements": ["details", "summary"] },
         "MD043": {
           "match_case": true,
           "headings": [
             "# Testing",
-            "## Testing Strategy",
-            "*",
-            "## Test Organization",
-            "*",
-            "## Prerequisites",
-            "*",
-            "## Running Tests",
-            "*",
-            "## Coverage Reports",
-            "*",
-            "## Appendix",
-            "*"
+            "## Testing Strategy", "*",
+            "## Test Organization", "*",
+            "## Prerequisites", "*",
+            "## Running Tests", "*",
+            "## Coverage Reports", "*",
+            "## Appendix", "*"
           ]
         }
       }
