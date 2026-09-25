@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Terminal output for the scripts/ commands: colour decision, log lines, step counters and
+# Terminal output for the scripts/ commands: color decision, log lines, step counters and
 # the banner box. The only place in this tree that spells an ANSI escape.
 
 # Idempotent so a second source cannot fail on readonly, and overridable for a capture run.
@@ -11,7 +11,7 @@
 : "${COLOR_RED:=\033[31m}"
 : "${COLOR_GREEN:=\033[32m}"
 
-# NO_COLOR and CI are honoured as the literal "true"; a non-terminal stdout disables colour
+# NO_COLOR and CI are honored as the literal "true"; a non-terminal stdout disables color
 # on its own, which is what makes every captured run plain.
 is_no_color_enabled() {
     [[ "${NO_COLOR:-}" == "true" || "${CI:-}" == "true" || ! -t 1 ]]
@@ -54,7 +54,7 @@ format_step_message() {
     printf '%b[%s]%b %s\n' "$COLOR_BLUE" "$step" "$COLOR_RESET" "$message"
 }
 
-# Centre one line inside the box.
+# Center one line inside the box.
 _banner_line() {
     local -r text="$1" width="$2"
     local -r space=$((width - ${#text})) left=$(((width - ${#text}) / 2))
