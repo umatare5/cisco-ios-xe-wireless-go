@@ -13,7 +13,7 @@ const (
 	ControllerReloadRPC = RESTCONFOperationsPath + "/Cisco-IOS-XE-rpc:reload"
 
 	// ControllerSaveConfigRPC defines the RPC that copies the running configuration to the startup
-	// configuration. cisco-ia is the one module name here that is neither capitalised nor
+	// configuration. cisco-ia is the one module name here that is neither capitalized nor
 	// Cisco-IOS-XE-* prefixed, and the controller publishes it in that form.
 	ControllerSaveConfigRPC = RESTCONFOperationsPath + "/cisco-ia:save-config"
 )

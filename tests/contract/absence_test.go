@@ -221,7 +221,7 @@ const trueByDefaultLeafCount = 15
 // with omitempty. It is not the same property as TestEveryPublishedLeafCanBeAbsent: that gate asks
 // whether a consumer can withhold a series, this one asks whether the SDK can report the value at
 // all. A default-false leaf is deliberately absent from the list — decoding its absence as false
-// gives the right answer, so pointerising it would be symmetry rather than a fix.
+// gives the right answer, so pointerizing it would be symmetry rather than a fix.
 //
 // Most of the leaves listed were already pointers before this gate existed, which is what makes a
 // pass meaningful: they are the positive control that the predicate matches the shape the tree

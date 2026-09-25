@@ -82,7 +82,7 @@ _coverage_summary() {
     [[ "$percent" == 'unknown' ]] || info "Total coverage: $percent"
 }
 
-# Capitalise the type for the banner and the summary line.
+# Capitalize the type for the banner and the summary line.
 _label_for() {
     printf '%s%s\n' "$(tr '[:lower:]' '[:upper:]' <<<"${1:0:1}")" "${1:1}"
 }

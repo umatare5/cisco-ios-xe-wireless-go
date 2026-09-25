@@ -216,7 +216,7 @@ type DTLSEventStats struct {
 	ConnectEstablished int    `json:"connect-established"` // Connections established (YANG: IOS-XE 17.12.1)
 	Close              int    `json:"close"`               // Connections closed (YANG: IOS-XE 17.12.1)
 	KeyPlumbStart      int    `json:"key-plumb-start"`     // Data plane key plumb requests (YANG: IOS-XE 17.12.1)
-	KeyPlumbAcked      int    `json:"key-plumb-acked"`     // Data plane key plumb acknowledgements (YANG: IOS-XE 17.12.1)
+	KeyPlumbAcked      int    `json:"key-plumb-acked"`     // Data plane key plumb acknowledgments (YANG: IOS-XE 17.12.1)
 	TunnelType         string `json:"tunnel-type"`         // CAPWAP mobility tunnel type (YANG: IOS-XE 17.12.1)
 }
 
