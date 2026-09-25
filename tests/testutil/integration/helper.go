@@ -133,7 +133,7 @@ func createTestContext(baseCtx context.Context, config TestSuiteConfig) context.
 	testCtx, cancel := context.WithTimeout(baseCtx, duration)
 
 	// Note: We can't defer cancel() here as the context needs to live beyond this function
-	// The caller should handle cancellation or use a parent context that gets cancelled
+	// The caller should handle cancellation or use a parent context that gets canceled
 	_ = cancel // Mark as intentionally unused to avoid context leak warning
 	return testCtx
 }
