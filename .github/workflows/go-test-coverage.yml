@@ -12,7 +12,17 @@ permissions:
 
 jobs:
   coverage:
-    uses: umatare5/common/.github/workflows/go-test-coverage.yml@3df623d482350006c12656381399db14f8879fcc # v0.19.0
+    uses: umatare5/common/.github/workflows/go-test-coverage.yml@2dc181f4ceb6cd36a063f968d42c22953b554efd # v0.22.0
     with:
       go_version: "1.27.0"
       coverage_threshold: 90
+      enable_badge: true
+
+  badge:
+    needs: coverage
+    if: ${{ !cancelled() && needs.coverage.outputs.badge != '' }}
+    permissions:
+      contents: write
+    uses: umatare5/common/.github/workflows/coverage-badge.yml@2dc181f4ceb6cd36a063f968d42c22953b554efd # v0.22.0
+    with:
+      badge: ${{ needs.coverage.outputs.badge }}

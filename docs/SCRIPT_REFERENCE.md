@@ -116,13 +116,11 @@ DONE 932 tests, 77 skipped in 8.463s
 
 ### test_coverage.sh <a id="test_coverage.sh"></a> <!-- anchor for internal links -->
 
-Runs the unit tests with a coverprofile, then renders the HTML report and the artifact
-`.octocov.yml` reads for the README badge.
+Runs the unit tests with a coverprofile, then renders the HTML report and a copy of the profile.
 
 #### Usage
 
-Three optional positional arguments, so a verification run can redirect every output away
-from the tracked defaults.
+Three optional positional arguments, so a verification run can redirect every output away from the defaults.
 
 ```bash
 scripts/test_coverage.sh [coverprofile] [html] [report]

@@ -9,7 +9,6 @@
 - **No third-party dependencies** — `go.mod` carries no `require` block and there is no `go.sum`, in production and in test code
 - [`golangci-lint`](https://golangci-lint.run/) — the authority for lint, formatting, and suppressions; exits non-zero on any finding (see [.golangci.yml](.golangci.yml))
 - [`goreleaser`](https://goreleaser.com/) v2 — cross-platform release builds (see [.goreleaser.yml](.goreleaser.yml))
-- [`octocov`](https://github.com/k1LoW/octocov) — coverage gate (see [.octocov.yml](.octocov.yml))
 
 ## Repository Structure
 
@@ -53,7 +52,7 @@ Make targets ([Makefile](Makefile), documented in [docs/MAKE_REFERENCE.md](docs/
 - Base a mock payload on a real controller response, never on a YANG model.
 - Assertions use the hand-rolled helpers in `internal/testutil/`, not a third-party library.
 - Simulate a release gap by mocking `404`, not by branching on a version.
-- Coverage threshold is enforced by [.octocov.yml](.octocov.yml); see [docs/TESTING.md](docs/TESTING.md) for the four tiers.
+- Coverage threshold is enforced by [.github/workflows/go-test-coverage.yml](.github/workflows/go-test-coverage.yml); see [docs/TESTING.md](docs/TESTING.md) for the four tiers.
 
 ## Commits and PRs
 
