@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 #
-# Runs the unit tests with a coverprofile, then renders the HTML report and the artifact
-# octocov reads. The three paths are positional so a verification run can redirect them:
+# Runs the unit tests with a coverprofile, then renders the HTML report and a copy of the
+# profile. The three paths are positional so a verification run can redirect them:
 #
 #   test_coverage.sh [coverprofile] [html] [report]
-#
-# coverage/report.out is tracked and .octocov.yml reads it for the README badge, so the
-# defaults write in place. Do not relocate them.
 
 set -Eeuo pipefail
 
@@ -45,14 +42,11 @@ _announce_report() {
     printf '%s\n' "  open $html_output"
 }
 
-# octocov reads report.out, so a missing mode header would fail the badge silently.
 _write_artifact() {
     local -r coverage_file="$1" report_output="$2"
 
     cp "$coverage_file" "$report_output" 2>/dev/null ||
         warn "Failed to write coverprofile to $report_output"
-    head -1 "$report_output" 2>/dev/null | grep -q '^mode:' ||
-        warn "report.out missing mode header; octocov may fail"
 }
 
 _render_html() {

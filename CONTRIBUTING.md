@@ -128,25 +128,6 @@ Run the example application listed in the [`README.md`](README.md#-usecases) **U
 > - `example/reset_ap` and `example/reload_controller` will reboot the AP and controller. This causes downtime.
 > - `example/save_config` overwrites the startup configuration, which cannot be undone.
 
-#### 5. Generate Coverage Reports and Badge
-
-Generate and commit coverage reports:
-
-```bash
-make test-unit-coverage # writes coverage/report.html and coverage/report.out
-octocov badge coverage --out docs/assets/coverage.svg # generates coverage badge
-```
-
-Commit coverage artifacts and badge:
-
-- `coverage/report.out` - coverprofile `.octocov.yml` reads to build the badge
-- `coverage/report.html` - human-readable report
-- `docs/assets/coverage.svg` - coverage badge
-
-#### 6. Push the Changes
-
-Push the coverage artifacts and badge to the PR.
-
 ## Release Process: For Maintainers
 
 > [!NOTE]
