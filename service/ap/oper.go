@@ -1390,7 +1390,7 @@ type RadioOperStats struct {
 	FailedCount           int           `json:"failed-count"`              // Number of failed transmission attempts (Live: IOS-XE 17.12.6a)
 	RetryCount            int           `json:"retry-count"`               // Number of frame retransmission attempts (Live: IOS-XE 17.12.6a)
 	FrameDuplicateCount   int           `json:"frame-duplicate-count"`     // Number of duplicate frames received (Live: IOS-XE 17.12.6a)
-	AckFailureCount       int           `json:"ack-failure-count"`         // Number of acknowledgment failures (Live: IOS-XE 17.12.6a)
+	AckFailureCount       int           `json:"ack-failure-count"`         // Number of acknowledgement failures (Live: IOS-XE 17.12.6a)
 	FcsErrorCount         int           `json:"fcs-error-count"`           // Number of frames with frame check sequence errors (Live: IOS-XE 17.12.6a)
 	MACDecryErrFrameCount int           `json:"mac-decry-err-frame-count"` // Number of frames with MAC decryption errors (Live: IOS-XE 17.12.6a)
 	MACMicErrFrameCount   int           `json:"mac-mic-err-frame-count"`   // MAC MIC error frame count (Live: IOS-XE 17.12.6a)

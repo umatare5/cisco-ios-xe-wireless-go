@@ -216,7 +216,7 @@ type DTLSEventStats struct {
 	ConnectEstablished int    `json:"connect-established"` // Connections established (YANG: IOS-XE 17.12.1)
 	Close              int    `json:"close"`               // Connections closed (YANG: IOS-XE 17.12.1)
 	KeyPlumbStart      int    `json:"key-plumb-start"`     // Data plane key plumb requests (YANG: IOS-XE 17.12.1)
-	KeyPlumbAcked      int    `json:"key-plumb-acked"`     // Data plane key plumb acknowledgments (YANG: IOS-XE 17.12.1)
+	KeyPlumbAcked      int    `json:"key-plumb-acked"`     // Data plane key plumb acknowledgements (YANG: IOS-XE 17.12.1)
 	TunnelType         string `json:"tunnel-type"`         // CAPWAP mobility tunnel type (YANG: IOS-XE 17.12.1)
 }
 
@@ -250,8 +250,8 @@ type MsgStats struct {
 	MobilityHandoffEndReceived     int `json:"mobility-handoff-end-received"`     // Mobility handoff end messages received count (YANG: IOS-XE 17.12.1)
 	MobilityRevokeSent             int `json:"mobility-revoke-sent"`              // Mobility revoke messages sent count (YANG: IOS-XE 17.12.1)
 	MobilityRevokeReceived         int `json:"mobility-revoke-received"`          // Mobility revoke messages received count (YANG: IOS-XE 17.12.1)
-	MobilityRevokeAckSent          int `json:"mobility-revoke-ack-sent"`          // Mobility revoke acknowledgment messages sent count (YANG: IOS-XE 17.12.1)
-	MobilityRevokeAckReceived      int `json:"mobility-revoke-ack-received"`      // Mobility revoke acknowledgment messages received count (YANG: IOS-XE 17.12.1)
+	MobilityRevokeAckSent          int `json:"mobility-revoke-ack-sent"`          // Mobility revoke acknowledgement messages sent count (YANG: IOS-XE 17.12.1)
+	MobilityRevokeAckReceived      int `json:"mobility-revoke-ack-received"`      // Mobility revoke acknowledgement messages received count (YANG: IOS-XE 17.12.1)
 	MobilityDirectiveAddSent       int `json:"mobility-directive-add-sent"`       // Mobility directive add messages sent count (YANG: IOS-XE 17.12.1)
 	MobilityDirectiveAddReceived   int `json:"mobility-directive-add-received"`   // Mobility directive add messages received count (YANG: IOS-XE 17.12.1)
 	MobilityDirectiveDelSent       int `json:"mobility-directive-del-sent"`       // Mobility directive delete messages sent count (YANG: IOS-XE 17.12.1)
