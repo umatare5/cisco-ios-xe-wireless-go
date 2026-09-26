@@ -1,9 +1,9 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/umatare5/cisco-ios-xe-wireless-go/main/docs/assets/logo_dark.png" width="400px" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/umatare5/cisco-ios-xe-wireless-go/main/docs/assets/logo.png" width="400px" />
-  <img alt="cisco-ios-xe-wireless-go" src="https://raw.githubusercontent.com/umatare5/cisco-ios-xe-wireless-go/main/docs/assets/logo.png" width="400px" />
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/logo_dark.png" width="400px" />
+  <source media="(prefers-color-scheme: light)" srcset="./docs/assets/logo.png" width="400px" />
+  <img alt="cisco-ios-xe-wireless-go" src="./docs/assets/logo.png" width="400px" />
 </picture>
 
   <h1>cisco-ios-xe-wireless-go</h1>
